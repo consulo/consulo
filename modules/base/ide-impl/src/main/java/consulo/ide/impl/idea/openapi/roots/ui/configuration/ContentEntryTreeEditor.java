@@ -16,56 +16,60 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ide.setting.module.ModuleConfigurationState;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.dataContext.DataProvider;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ToolbarLabelAction;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
-import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeBuilder;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
+import consulo.ide.impl.idea.openapi.fileChooser.tree.FileRenderer;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.roots.ContentFoldersSupportUtil;
+import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.psi.PsiPackageSupportProvider;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.module.extension.ModuleExtension;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.util.lang.ComparatorUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.roots.ContentFoldersSupportUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ComparatorUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Set;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Oct 9, 2003
- *         Time: 1:19:47 PM
+ * Date: Oct 9, 2003
+ * Time: 1:19:47 PM
  */
 public class ContentEntryTreeEditor {
   private final Project myProject;
@@ -108,7 +112,7 @@ public class ContentEntryTreeEditor {
       @Override
       public void update(@Nonnull AnActionEvent e) {
         super.update(e);
-       e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
+        e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Mark as:"));
       }
     });
     Set<ContentFolderTypeProvider> folders = ContentFoldersSupportUtil.getSupportedFolders(myState.getRootModel());
@@ -122,10 +126,6 @@ public class ContentEntryTreeEditor {
       }     */
       myEditingActionsGroup.add(action);
     }
-  }
-
-  protected TreeCellRenderer getContentEntryCellRenderer() {
-    return new ContentEntryTreeCellRenderer(this);
   }
 
   /**
@@ -144,7 +144,6 @@ public class ContentEntryTreeEditor {
       myContentEntryEditor = null;
     }
     if (contentEntryEditor == null) {
-      ((DefaultTreeModel)myTree.getModel()).setRoot(EMPTY_TREE_ROOT);
       myTreePanel.setVisible(false);
       return;
     }
@@ -166,15 +165,30 @@ public class ContentEntryTreeEditor {
       myFileSystemTree.select(file, null);
     };
 
-    myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, getContentEntryCellRenderer(), init, null) {
+    myFileSystemTree = new FileSystemTreeImpl(myProject, myDescriptor, myTree, null, init, null) {
       @Override
-      protected AbstractTreeBuilder createTreeBuilder(JTree tree,
-                                                      DefaultTreeModel treeModel,
-                                                      AbstractTreeStructure treeStructure,
-                                                      Comparator<NodeDescriptor> comparator,
-                                                      FileChooserDescriptor descriptor,
-                                                      final Runnable onInitialized) {
-        return new MyFileTreeBuilder(tree, treeModel, treeStructure, comparator, descriptor, onInitialized);
+      protected TreeCellRenderer createFileRender() {
+        return new FileRenderer() {
+          @Override
+          @RequiredUIAccess
+          protected void customize(SimpleColoredComponent renderer, Object value, boolean selected, boolean focused) {
+            super.customize(renderer, value, selected, focused);
+
+            if (value instanceof FileNode) {
+              VirtualFile treeFile = ((FileNode)value).getFile();
+              if (treeFile != null && treeFile.isDirectory()) {
+                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                renderer.setIcon(updateIcon(contentEntry, treeFile, renderer.getIcon()));
+              }
+            }
+            else if (value instanceof VirtualFile virtualFile) {
+              if (virtualFile.isDirectory()) {
+                final ContentEntry contentEntry = getContentEntryEditor().getContentEntry();
+                renderer.setIcon(updateIcon(contentEntry, virtualFile, renderer.getIcon()));
+              }
+            }
+          }
+        }.forTree();
       }
     };
     myFileSystemTree.showHiddens(true);
@@ -186,6 +200,36 @@ public class ContentEntryTreeEditor {
     mousePopupGroup.addSeparator();
     mousePopupGroup.add(newFolderAction);
     myFileSystemTree.registerMouseListener(mousePopupGroup);
+  }
+
+  @RequiredReadAction
+  private Image updateIcon(final ContentEntry entry, final VirtualFile file, Image originalIcon) {
+    Image icon = originalIcon;
+    VirtualFile currentRoot = null;
+    for (ContentFolder contentFolder : entry.getFolders(LanguageContentFolderScopes.all())) {
+      final VirtualFile contentPath = contentFolder.getFile();
+      if (file.equals(contentPath)) {
+        icon = ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
+      }
+      else if (contentPath != null && VfsUtilCore.isAncestor(contentPath, file, true)) {
+        if (currentRoot != null && VfsUtilCore.isAncestor(contentPath, currentRoot, false)) {
+          continue;
+        }
+
+        boolean hasSupport = false;
+        for (ModuleExtension moduleExtension : getContentEntryEditor().getModel().getExtensions()) {
+          for (PsiPackageSupportProvider supportProvider : PsiPackageSupportProvider.EP_NAME.getExtensionList()) {
+            if (supportProvider.isSupported(moduleExtension)) {
+              hasSupport = true;
+              break;
+            }
+          }
+        }
+        icon = hasSupport ? contentFolder.getType().getChildDirectoryIcon(null, null) : AllIcons.Nodes.TreeOpen;
+        currentRoot = contentPath;
+      }
+    }
+    return icon;
   }
 
   public ContentEntryEditor getContentEntryEditor() {
@@ -209,20 +253,20 @@ public class ContentEntryTreeEditor {
 
   public void update() {
     updateMarkActions();
-    if (myFileSystemTree != null) {
-      myFileSystemTree.updateTree();
-      final DefaultTreeModel model = (DefaultTreeModel)myTree.getModel();
-      final int visibleRowCount = myTree.getVisibleRowCount();
-      for (int row = 0; row < visibleRowCount; row++) {
-        final TreePath pathForRow = myTree.getPathForRow(row);
-        if (pathForRow != null) {
-          final TreeNode node = (TreeNode)pathForRow.getLastPathComponent();
-          if (node != null) {
-            model.nodeChanged(node);
-          }
-        }
-      }
-    }
+//    if (myFileSystemTree != null) {
+//      myFileSystemTree.updateTree();
+//      final AsyncTreeModel model = (AsyncTreeModel)myTree.getModel();
+//      final int visibleRowCount = myTree.getVisibleRowCount();
+//      for (int row = 0; row < visibleRowCount; row++) {
+//        final TreePath pathForRow = myTree.getPathForRow(row);
+//        if (pathForRow != null) {
+//          final TreeNode node = (TreeNode)pathForRow.getLastPathComponent();
+//          if (node != null) {
+//            model.nodeChanged(node);
+//          }
+//        }
+//      }
+//    }
   }
 
   private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
@@ -239,23 +283,9 @@ public class ContentEntryTreeEditor {
 
   private static class MyNewFolderAction extends NewFolderAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"), ActionsBundle.message("action.FileChooser.NewFolder.description"), AllIcons.Actions.NewFolder);
-    }
-  }
-
-  private static class MyFileTreeBuilder extends FileTreeBuilder {
-    public MyFileTreeBuilder(JTree tree,
-                             DefaultTreeModel treeModel,
-                             AbstractTreeStructure treeStructure,
-                             Comparator<NodeDescriptor> comparator,
-                             FileChooserDescriptor descriptor,
-                             @Nullable Runnable onInitialized) {
-      super(tree, treeModel, treeStructure, comparator, descriptor, onInitialized);
-    }
-
-    @Override
-    protected boolean isAlwaysShowPlus(NodeDescriptor nodeDescriptor) {
-      return false; // need this in order to not show plus for empty directories
+      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
+            ActionsBundle.message("action.FileChooser.NewFolder.description"),
+            AllIcons.Actions.NewFolder);
     }
   }
 

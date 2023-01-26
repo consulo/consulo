@@ -16,19 +16,17 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.actions;
 
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
-import consulo.ide.impl.idea.openapi.fileChooser.ex.FileNodeDescriptor;
-import consulo.application.dumb.DumbAware;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +49,7 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
   }
 
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(true);
@@ -76,13 +74,7 @@ public abstract class ContentEntryEditingAction extends ToggleAction implements 
     }
     final List<VirtualFile> selected = new ArrayList<VirtualFile>();
     for (TreePath treePath : selectionPaths) {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getLastPathComponent();
-      final Object nodeDescriptor = node.getUserObject();
-      if (!(nodeDescriptor instanceof FileNodeDescriptor)) {
-        return VirtualFile.EMPTY_ARRAY;
-      }
-      final FileElement fileElement = ((FileNodeDescriptor)nodeDescriptor).getElement();
-      final VirtualFile file = fileElement.getFile();
+      VirtualFile file = FileSystemTreeImpl.getVirtualFile(treePath);
       if (file != null) {
         selected.add(file);
       }
