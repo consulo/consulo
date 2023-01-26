@@ -23,6 +23,7 @@ import consulo.language.Language;
 import consulo.language.editor.intention.ErrorQuickFixProvider;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.QuickFixAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
@@ -57,7 +58,7 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
     final PsiFile containingFile = errorElement.getContainingFile();
     final VirtualFile virtualFile = containingFile.getVirtualFile();
     final Language language = ((TemplateLanguageFileViewProvider) containingFile.getViewProvider()).getTemplateDataLanguage();
-    return new IntentionAction() {
+    return new SyntheticIntentionAction() {
 
       @Override
       @Nonnull
