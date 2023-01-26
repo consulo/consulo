@@ -18,7 +18,6 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>Consulo.app/Contents/platform/buildSNAPSHOT/modules/consulo.desktop.awt/lib</outputDirectory>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-desktop-ide-impl</include>

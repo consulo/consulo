@@ -36,14 +36,21 @@
       <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/desktop-swt/shared/</directory>
+      <directory>${project.basedir}/platform/consulo/shared/</directory>
       <includes>
         <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/desktop-swt/win</directory>
+      <directory>${project.basedir}/platform/consulo.desktop.swt/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo.desktop.swt/win</directory>
       <includes>
         <include>*/**</include>
       </includes>

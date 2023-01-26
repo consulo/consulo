@@ -26,4 +26,28 @@
     <componentDescriptor>${project.basedir}/src/platform.base.xml</componentDescriptor>
     <componentDescriptor>${project.basedir}/src/platform.web.xml</componentDescriptor>
   </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/boot/win/</directory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo.web/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+  </fileSets>
 </assembly>

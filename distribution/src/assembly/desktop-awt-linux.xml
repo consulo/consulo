@@ -16,7 +16,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-  <id>desktop-awt-linux</id>
+  <id>consulo.desktop.awt-linux</id>
   <formats>
     <format>zip</format>
   </formats>
@@ -36,14 +36,21 @@
       <outputDirectory>${file.separator}Consulo${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/desktop-awt/shared/</directory>
+      <directory>${project.basedir}/platform/consulo/shared/</directory>
       <includes>
         <include>*/**</include>
       </includes>
       <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/platform/desktop-awt/linux</directory>
+      <directory>${project.basedir}/platform/consulo.desktop.awt/shared/</directory>
+      <includes>
+        <include>*/**</include>
+      </includes>
+      <outputDirectory>${file.separator}Consulo${file.separator}platform${file.separator}buildSNAPSHOT${file.separator}</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/platform/consulo.desktop.awt/linux</directory>
       <includes>
         <include>*/**</include>
       </includes>

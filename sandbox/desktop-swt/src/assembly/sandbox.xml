@@ -36,21 +36,28 @@
       <outputDirectory>Consulo/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../../distribution/platform/desktop-swt/shared/</directory>
+      <directory>${project.basedir}/../../distribution/platform/consulo/shared/</directory>
       <includes>
         <include>**</include>
       </includes>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../../distribution/platform/desktop-swt/win</directory>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.swt/shared/</directory>
       <includes>
         <include>**</include>
       </includes>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../../distribution/platform/desktop-swt/linux</directory>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.swt/win</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.swt/linux</directory>
       <includes>
         <include>**</include>
       </includes>
@@ -60,7 +67,7 @@
       <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../../distribution/platform/desktop-swt/mac</directory>
+      <directory>${project.basedir}/../../distribution/platform/consulo.desktop.swt/mac</directory>
       <includes>
         <include>**</include>
       </includes>

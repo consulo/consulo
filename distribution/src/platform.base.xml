@@ -18,7 +18,6 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>Consulo/platform/buildSNAPSHOT/modules/consulo/lib</outputDirectory>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-annotation</include>
