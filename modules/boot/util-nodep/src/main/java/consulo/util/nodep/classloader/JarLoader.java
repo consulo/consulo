@@ -312,64 +312,6 @@ class JarLoader extends Loader {
     return null;
   }
 
-  private Map<String, String> buildRemapMultiVersions(Iterator<String> zipNameIterator) {
-    SimpleMultiMap<Integer, String> byVersions = SimpleMultiMap.newHashMap();
-
-    while (zipNameIterator.hasNext()) {
-      String name = zipNameIterator.next();
-
-      String prefix = "META-INF/versions/";
-      if (name.startsWith(prefix)) {
-        try {
-          int endIndex = name.indexOf('/', prefix.length());
-          if (endIndex == -1 || name.charAt(name.length() - 1) == '/') {
-            continue;
-          }
-
-          int ver = Integer.parseInt(name.substring(prefix.length(), endIndex));
-
-          String normalizeUrl = name.substring(endIndex + 1, name.length());
-
-          byVersions.putValue(ver, normalizeUrl);
-        }
-        catch (Exception e) {
-          error("url: " + myFilePath, e);
-        }
-      }
-    }
-
-    if (byVersions.isEmpty()) {
-      return Collections.emptyMap();
-    }
-
-    JavaVersion javaVersion = JavaVersion.current();
-
-    Map<String, String> toRemap = new HashMap<String, String>();
-
-    // if version is 14, array will be 14,13,12,11,10,9,8
-    for (int ver = javaVersion.feature; ver != 7; ver--) {
-      Collection<String> urls = byVersions.get(ver);
-
-      if (urls.isEmpty()) {
-        continue;
-      }
-
-      for (String url : urls) {
-        if (toRemap.containsKey(url)) {
-          continue;
-        }
-
-        toRemap.put(url, buildVersionableUrl(ver, url));
-      }
-    }
-
-    return toRemap;
-  }
-
-  private static String buildVersionableUrl(int ver, String url) {
-    return "META-INF/versions/" + ver + "/" + url;
-  }
-
   protected Resource instantiateResource(URL url, ZipEntry entry) throws IOException {
     return new MyResource(url, entry);
   }
