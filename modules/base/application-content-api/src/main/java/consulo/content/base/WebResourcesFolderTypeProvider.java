@@ -18,6 +18,7 @@ package consulo.content.base;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
@@ -25,19 +26,22 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * This content folder type allow select directories as web resources.
- * By default modules not allow marking directories for this type. Use {@link consulo.module.content.layer.ContentFolderSupportPatcher}
+ * By default modules not allow marking directories for this type. Use {@link ContentFolderSupportPatcher}
  *
  * @author VISTALL
  * @since 07.11.13
  */
 @ExtensionImpl
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
+  private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.of();
+
   @Nonnull
   public static ContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtensionOrFail(WebResourcesFolderTypeProvider.class);
+    return INSTANCE.get();
   }
 
   public WebResourcesFolderTypeProvider() {

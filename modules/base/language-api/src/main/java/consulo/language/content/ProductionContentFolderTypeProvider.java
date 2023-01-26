@@ -17,7 +17,7 @@ package consulo.language.content;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.content.ContentFolderTypeProvider;
+import consulo.component.extension.ExtensionInstance;
 import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -26,6 +26,7 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -34,10 +35,11 @@ import javax.annotation.Nonnull;
 @ExtensionImpl
 public class ProductionContentFolderTypeProvider extends PackageBasedContentFolderTypeProvider {
   private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
+  private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.of();
 
   @Nonnull
   public static ProductionContentFolderTypeProvider getInstance() {
-    return ContentFolderTypeProvider.EP_NAME.findExtensionOrFail(ProductionContentFolderTypeProvider.class);
+    return INSTANCE.get();
   }
 
   public ProductionContentFolderTypeProvider() {

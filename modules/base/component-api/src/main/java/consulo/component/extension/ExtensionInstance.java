@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 public final class ExtensionInstance<T> implements Supplier<T> {
   @Nonnull
   @SuppressWarnings("unchecked")
-  public static <K> Supplier<K> current() {
+  public static <K> Supplier<K> of() {
     // since static fields init before new () - we need register this instance to thread local
     // and factory will set instance value
     // another method will be like

@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class SandBundleType extends SdkType {
-  public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.current();
+  public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.of();
 
   public SandBundleType() {
     super("SAND_BUNDLE");

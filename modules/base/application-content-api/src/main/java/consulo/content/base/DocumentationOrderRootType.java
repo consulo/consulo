@@ -16,9 +16,11 @@
 package consulo.content.base;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -26,9 +28,11 @@ import javax.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DocumentationOrderRootType extends OrderRootType {
+  private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.of();
+
   @Nonnull
   public static DocumentationOrderRootType getInstance() {
-    return getOrderRootType(DocumentationOrderRootType.class);
+    return INSTANCE.get();
   }
 
   public DocumentationOrderRootType() {
