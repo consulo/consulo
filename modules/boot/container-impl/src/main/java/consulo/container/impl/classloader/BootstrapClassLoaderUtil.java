@@ -56,7 +56,7 @@ public class BootstrapClassLoaderUtil {
       }
 
       mark = stat.mark(moduleDirectory.getName() + ".load");
-      PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(moduleDirectory, false, true, containerLogger);
+      PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(moduleDirectory, true, containerLogger);
 
       if (descriptor == null) {
         mark.run();
@@ -109,7 +109,7 @@ public class BootstrapClassLoaderUtil {
   private static PluginDescriptorImpl initializePlatformBase(File modulesDirectory, ContainerLogger containerLogger, Java9ModuleProcessor processor) throws Exception {
     File platformBaseDirectory = new File(modulesDirectory, CONSULO_BASE);
 
-    PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, false, true, containerLogger);
+    PluginDescriptorImpl platformBasePlugin = PluginDescriptorLoader.loadDescriptor(platformBaseDirectory, true, containerLogger);
 
     if (platformBasePlugin == null) {
       throw new StartupError("No base module. Broken installation. Path: " + platformBaseDirectory);

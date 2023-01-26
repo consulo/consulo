@@ -15,18 +15,11 @@
  */
 package consulo.container.impl;
 
-import consulo.container.plugin.PluginId;
 import consulo.util.nodep.ArrayUtilRt;
-import consulo.util.nodep.Comparing;
 import consulo.util.nodep.io.FileUtilRt;
-import consulo.util.nodep.text.StringUtilRt;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLDecoder;
-import java.util.*;
+import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -37,114 +30,97 @@ import java.util.zip.ZipFile;
 public class PluginDescriptorLoader {
   public static final String PLUGIN_XML = "plugin.xml";
 
-  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
-    return loadDescriptor(pluginPath, PLUGIN_XML, isHeadlessMode, isPreInstalledPath, containerLogger);
+  public static PluginDescriptorImpl loadDescriptor(final File pluginPath,
+                                                    boolean isPreInstalledPath,
+                                                    ContainerLogger containerLogger) {
+    return loadDescriptor(pluginPath, PLUGIN_XML, isPreInstalledPath, containerLogger);
   }
 
-  public static PluginDescriptorImpl loadDescriptor(final File pluginPath, final String fileName, boolean isHeadlessMode, boolean isPreInstalledPath, ContainerLogger containerLogger) {
-    PluginDescriptorImpl descriptor = null;
+  public static PluginDescriptorImpl loadDescriptor(final File pluginPath,
+                                                    final String fileName,
+                                                    boolean isPreInstalledPath,
+                                                    ContainerLogger containerLogger) {
+    if (!pluginPath.isDirectory()) {
+      // single jar not supported
+      return null;
+    }
 
-    if (pluginPath.isDirectory()) {
-      File libDir = new File(pluginPath, "lib");
-      if (!libDir.isDirectory()) {
-        return null;
-      }
+    File pluginMetaInfoDir = new File(pluginPath, "META-INF");
+    if (pluginMetaInfoDir.exists()) {
+      File icon = new File(pluginMetaInfoDir, "pluginIcon.svg");
+      File iconDark = new File(pluginMetaInfoDir, "pluginIcon_dark.svg");
 
-      File[] markerFiles = libDir.listFiles(new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-          return pathname.getName().endsWith(".jar.marker");
+      byte[] iconBytes = null, darkIconBytes = null;
+
+      if (icon.exists()) {
+        try {
+          iconBytes = Files.readAllBytes(icon.toPath());
         }
-      });
-
-      if (markerFiles != null && markerFiles.length == 1) {
-        String simpleJarFile = markerFiles[0].getName().replace(".jar.marker", ".jar");
-        File jarFile = new File(libDir, simpleJarFile);
-        return loadDescriptorFromJar(jarFile, pluginPath, fileName, isHeadlessMode, isPreInstalledPath, containerLogger);
+        catch (Throwable e) {
+          containerLogger.error("Fail to load " + icon, e);
+        }
       }
 
-      final File[] files = libDir.listFiles();
-      if (files == null || files.length == 0) {
-        return null;
+      if (iconDark.exists()) {
+        try {
+          darkIconBytes = Files.readAllBytes(iconDark.toPath());
+        }
+        catch (Throwable e) {
+          containerLogger.error("Fail to load " + iconDark, e);
+        }
       }
 
-      for (final File f : files) {
-        if (FileUtilRt.isJarOrZip(f)) {
-          descriptor = loadDescriptorFromJar(f, pluginPath, fileName, isHeadlessMode, isPreInstalledPath, containerLogger);
-          if (descriptor != null) {
-            break;
-          }
+      PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, darkIconBytes, isPreInstalledPath);
+      File pluginXmlFile = new File(pluginMetaInfoDir, PLUGIN_XML);
+      try (FileInputStream stream = new FileInputStream(pluginXmlFile)) {
+        descriptor.readExternal(stream, containerLogger);
+      }
+      catch (Throwable e) {
+        containerLogger.error("Fail to load " + pluginXmlFile, e);
+      }
+      return descriptor;
+    }
+
+    File libDir = new File(pluginPath, "lib");
+    if (!libDir.isDirectory()) {
+      return null;
+    }
+
+    File[] markerFiles = libDir.listFiles(new FileFilter() {
+      @Override
+      public boolean accept(File pathname) {
+        return pathname.getName().endsWith(".jar.marker");
+      }
+    });
+
+    if (markerFiles != null && markerFiles.length == 1) {
+      String simpleJarFile = markerFiles[0].getName().replace(".jar.marker", ".jar");
+      File jarFile = new File(libDir, simpleJarFile);
+      return loadDescriptorFromJar(jarFile, pluginPath, fileName, isPreInstalledPath, containerLogger);
+    }
+
+    final File[] files = libDir.listFiles();
+    if (files == null || files.length == 0) {
+      return null;
+    }
+
+    for (final File f : files) {
+      if (FileUtilRt.isJarOrZip(f)) {
+        PluginDescriptorImpl descriptor = loadDescriptorFromJar(f, pluginPath, fileName, isPreInstalledPath, containerLogger);
+        if (descriptor != null) {
+          return descriptor;
         }
       }
     }
 
-    if (descriptor != null && descriptor.getOptionalConfigs() != null && !descriptor.getOptionalConfigs().isEmpty()) {
-      final Map<PluginId, PluginDescriptorImpl> descriptors = new HashMap<PluginId, PluginDescriptorImpl>(descriptor.getOptionalConfigs().size());
-      for (Map.Entry<PluginId, String> entry : descriptor.getOptionalConfigs().entrySet()) {
-        String optionalDescriptorName = entry.getValue();
-        assert !Comparing.equal(fileName, optionalDescriptorName) : "recursive dependency: " + fileName;
-
-        PluginDescriptorImpl optionalDescriptor = loadDescriptor(pluginPath, optionalDescriptorName, isHeadlessMode, isPreInstalledPath, containerLogger);
-        if (optionalDescriptor == null && !FileUtilRt.isJarOrZip(pluginPath)) {
-          for (URL url : getClassLoaderUrls()) {
-            if ("file".equals(url.getProtocol())) {
-              optionalDescriptor = loadDescriptor(new File(decodeUrl(url.getFile())), optionalDescriptorName, isHeadlessMode, isPreInstalledPath, containerLogger);
-              if (optionalDescriptor != null) {
-                break;
-              }
-            }
-          }
-        }
-        if (optionalDescriptor != null) {
-          descriptors.put(entry.getKey(), optionalDescriptor);
-        }
-        else {
-          containerLogger.info("Cannot find optional descriptor " + optionalDescriptorName + ", Plugin: " + descriptor);
-        }
-      }
-      descriptor.setOptionalDescriptors(descriptors);
-    }
-
-    return descriptor;
+    return null;
   }
 
-  private static String decodeUrl(String file) {
-    String quotePluses = StringUtilRt.replace(file, "+", "%2B");
-    try {
-      return URLDecoder.decode(quotePluses, "UTF-8");
-    }
-    catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  static Collection<URL> getClassLoaderUrls() {
-    final ClassLoader classLoader = PluginDescriptorLoader.class.getClassLoader();
-    final Class<? extends ClassLoader> aClass = classLoader.getClass();
-    try {
-      return (List<URL>)aClass.getMethod("getUrls").invoke(classLoader);
-    }
-    catch (IllegalAccessException ignored) {
-    }
-    catch (InvocationTargetException ignored) {
-    }
-    catch (NoSuchMethodException ignored) {
-    }
-
-    if (classLoader instanceof URLClassLoader) {
-      return Arrays.asList(((URLClassLoader)classLoader).getURLs());
-    }
-
-    return Collections.emptyList();
-  }
-
-  public static PluginDescriptorImpl loadDescriptorFromJar( File jarFile,
-                                                            File pluginPath,
-                                                            String fileName,
-                                                           boolean isHeadlessMode,
+  public static PluginDescriptorImpl loadDescriptorFromJar(File jarFile,
+                                                           File pluginPath,
+                                                           String fileName,
                                                            boolean isPreInstalledPath,
-                                                            ContainerLogger logger) {
+                                                           ContainerLogger logger) {
     try {
       ZipFile zipFile = new ZipFile(jarFile.getPath());
       try {
@@ -166,7 +142,7 @@ public class PluginDescriptorLoader {
           InputStream inputStream = zipFile.getInputStream(entry);
 
           PluginDescriptorImpl descriptor = new PluginDescriptorImpl(pluginPath, iconBytes, darkIconBytes, isPreInstalledPath);
-          descriptor.readExternal(inputStream, zipFile, logger);
+          descriptor.readExternal(inputStream, logger);
           return descriptor;
         }
       }

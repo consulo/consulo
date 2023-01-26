@@ -15,14 +15,8 @@
  */
 package consulo.container.impl.parser;
 
-//@Tag("depends")
 public class PluginDependency {
-  //@Attribute("optional")
   public boolean optional;
 
-  //@Attribute("config-file")
-  public String configFile;
-
-  //@Text
   public String pluginId;
 }

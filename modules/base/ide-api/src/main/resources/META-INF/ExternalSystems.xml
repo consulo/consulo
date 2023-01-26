@@ -14,38 +14,6 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <actions>
-    <action id="ExternalSystem.RefreshAllProjects"
-            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
-            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-    <action id="ExternalSystem.RefreshProject"
-            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshExternalProjectAction"
-            icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-    <action id="ExternalSystem.AttachProject"
-            class="consulo.ide.impl.idea.openapi.externalSystem.action.AttachExternalProjectAction"/>
-    <action id="ExternalSystem.DetachProject"
-            class="consulo.ide.impl.idea.openapi.externalSystem.action.DetachExternalProjectAction"
-            use-shortcut-of="$Delete"/>
-    <action id="ExternalSystem.OpenConfig"
-            class="consulo.ide.impl.idea.openapi.externalSystem.action.OpenExternalConfigAction"
-            use-shortcut-of="EditSource"/>
-
-    <!--Tool window actions-->
-    <group id="ExternalSystem.ToolWindow.Toolbar">
-      <reference id="ExternalSystem.RefreshAllProjects"/>
-      <reference id="ExternalSystem.AttachProject"/>
-      <reference ref="ExternalSystem.DetachProject"/>
-    </group>
-
-    <!--Context menu action-->
-    <group id="ExternalSystem.Tree.Context" popup="true">
-      <reference ref="ExternalSystem.OpenConfig"/>
-      <reference id="ExternalSystem.RefreshProject"/>
-      <reference ref="ExternalSystem.DetachProject"/>
-      <separator/>
-      <reference ref="RunContextGroup"/>
-    </group>
-  </actions>
 
   <extensionPoints>
     <extensionPoint name="externalSystemManager" interface="consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager"/>

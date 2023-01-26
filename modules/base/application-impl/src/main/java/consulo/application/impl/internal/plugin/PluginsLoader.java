@@ -161,8 +161,6 @@ public class PluginsLoader {
       idToDescriptorMap.put(descriptor.getPluginId(), descriptor);
     }
 
-    mergeOptionalConfigs(idToDescriptorMap);
-
     final Graph<PluginId> graph = createPluginIdGraph(idToDescriptorMap);
     final DFSTBuilder<PluginId> builder = new DFSTBuilder<>(graph);
     if (!builder.isAcyclic()) {
@@ -282,7 +280,7 @@ public class PluginsLoader {
 
   @Nullable
   public static PluginDescriptor loadPluginDescriptor(File file) {
-    return PluginDescriptorLoader.loadDescriptor(file, false, false, PluginsLoader.C_LOG);
+    return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
   }
 
   @Nonnull
@@ -324,7 +322,7 @@ public class PluginsLoader {
       int i = result.size();
       for (File file : files) {
         Runnable mark = stat.mark(file.getName());
-        final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isHeadlessMode, isPreInstalledPath, C_LOG);
+        final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, C_LOG);
         if (descriptor == null) {
           mark.run();
           continue;
@@ -448,20 +446,6 @@ public class PluginsLoader {
       return message;
     }
     return null;
-  }
-
-  static void mergeOptionalConfigs(Map<PluginId, PluginDescriptorImpl> descriptors) {
-    final Map<PluginId, PluginDescriptorImpl> descriptorsWithModules = new HashMap<>(descriptors);
-    for (PluginDescriptorImpl descriptor : descriptors.values()) {
-      final Map<PluginId, PluginDescriptorImpl> optionalDescriptors = descriptor.getOptionalDescriptors();
-      if (optionalDescriptors != null && !optionalDescriptors.isEmpty()) {
-        for (Map.Entry<PluginId, PluginDescriptorImpl> entry : optionalDescriptors.entrySet()) {
-          if (descriptorsWithModules.containsKey(entry.getKey())) {
-            descriptor.mergeOptionalConfig(entry.getValue());
-          }
-        }
-      }
-    }
   }
 
   static Comparator<PluginDescriptor> getPluginDescriptorComparator(Map<PluginId, PluginDescriptorImpl> idToDescriptorMap) {

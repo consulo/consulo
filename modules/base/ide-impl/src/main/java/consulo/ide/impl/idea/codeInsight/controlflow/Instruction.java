@@ -17,13 +17,14 @@ package consulo.ide.impl.idea.codeInsight.controlflow;
 
 import consulo.language.psi.PsiElement;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
  * @author oleg
  */
 public interface Instruction {
-  @javax.annotation.Nullable
+  @Nullable
   PsiElement getElement();
 
   Collection<Instruction> allSucc();

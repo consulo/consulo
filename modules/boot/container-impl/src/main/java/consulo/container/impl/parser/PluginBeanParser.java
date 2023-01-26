@@ -49,25 +49,6 @@ public class PluginBeanParser {
     pluginBean.changeNotes = rootTag.getChildText("change-notes");
     pluginBean.url = rootTag.getAttributeValue("url");
     pluginBean.experimental = Boolean.parseBoolean(rootTag.getChildText("experimental"));
-
-    List<String> imports = new ArrayList<String>();
-
-    List<SimpleXmlElement> anImport = rootTag.getChildren("import");
-    if (!anImport.isEmpty()) {
-      for (SimpleXmlElement element : anImport) {
-        imports.add(element.getAttributeValue("path"));
-      }
-    }
-
-    List<SimpleXmlElement> xiInclude = rootTag.getChildren("xi:include");
-    if (!xiInclude.isEmpty()) {
-      for (SimpleXmlElement element : xiInclude) {
-        imports.add(element.getAttributeValue("href"));
-      }
-    }
-
-    pluginBean.imports = imports;
-
     pluginBean.actions = expandChildren(rootTag, "actions");
 
     SimpleXmlElement vendorElement = rootTag.getChild("vendor");
@@ -85,7 +66,6 @@ public class PluginBeanParser {
       PluginDependency pluginDependency = new PluginDependency();
       pluginDependencies.add(pluginDependency);
 
-      pluginDependency.configFile = dependsElement.getAttributeValue("config-file");
       pluginDependency.optional = Boolean.parseBoolean(dependsElement.getAttributeValue("optional", "false"));
       pluginDependency.pluginId = dependsElement.getText();
     }

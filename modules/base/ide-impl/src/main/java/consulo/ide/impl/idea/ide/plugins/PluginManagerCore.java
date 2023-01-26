@@ -109,7 +109,7 @@ public class PluginManagerCore {
   @Deprecated
   @DeprecationInfo("Must be never used from plugin or platform")
   public static PluginDescriptor loadPluginDescriptor(File file) {
-    return PluginDescriptorLoader.loadDescriptor(file, false, false, PluginsLoader.C_LOG);
+    return PluginDescriptorLoader.loadDescriptor(file, false, PluginsLoader.C_LOG);
   }
 
   @Deprecated
@@ -130,7 +130,7 @@ public class PluginManagerCore {
     if (files != null) {
       int i = result.size();
       for (File file : files) {
-        final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isHeadlessMode, isPreInstalledPath, PluginsLoader.C_LOG);
+        final PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(file, isPreInstalledPath, PluginsLoader.C_LOG);
         if (descriptor == null) continue;
         if (progress != null) {
           progress.showProgress(descriptor.getName(), PLUGINS_PROGRESS_MAX_VALUE * ((float)++i / pluginsCount));

@@ -684,6 +684,7 @@
         <version>${maven.jar.plugin}</version>
         <configuration>
           <archive>
+            <index>true</index>
             <manifestEntries>
               <Consulo-Build-Number>${build.number}</Consulo-Build-Number>
               <Consulo-Build-Date>${build.date}</Consulo-Build-Date>

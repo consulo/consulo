@@ -26,11 +26,8 @@ import consulo.util.nodep.xml.SimpleXmlReader;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * @author mike
@@ -57,8 +54,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   private PluginId[] myDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myOptionalDependencies = PluginId.EMPTY_ARRAY;
   private PluginId[] myIncompatibleWithPluginds = PluginId.EMPTY_ARRAY;
-  private Map<PluginId, String> myOptionalConfigs;
-  private Map<PluginId, PluginDescriptorImpl> myOptionalDescriptors;
 
   private List<SimpleXmlElement> myActionsElements = Collections.emptyList();
 
@@ -88,12 +83,12 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     return myPath;
   }
 
-  public void readExternal(InputStream stream, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
+  public void readExternal(InputStream stream, ContainerLogger log) throws SimpleXmlParsingException {
     SimpleXmlElement element = SimpleXmlReader.parse(stream);
-    readExternal(element, zipFile, log);
+    readExternal(element, log);
   }
 
-  private void readExternal(SimpleXmlElement element, ZipFile zipFile, ContainerLogger log) throws SimpleXmlParsingException {
+  private void readExternal(SimpleXmlElement element, ContainerLogger log) throws SimpleXmlParsingException {
     final PluginBean pluginBean = PluginBeanParser.parseBean(element, null);
     assert pluginBean != null;
     url = pluginBean.url;
@@ -127,7 +122,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
     Set<PluginId> optionalDependentPlugins = new LinkedHashSet<PluginId>();
     if (pluginBean.dependencies != null) {
-      myOptionalConfigs = new HashMap<PluginId, String>();
       for (PluginDependency dependency : pluginBean.dependencies) {
         String text = dependency.pluginId;
         if (!StringUtilRt.isEmpty(text)) {
@@ -135,9 +129,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
           dependentPlugins.add(id);
           if (dependency.optional) {
             optionalDependentPlugins.add(id);
-            if (!StringUtilRt.isEmpty(dependency.configFile)) {
-              myOptionalConfigs.put(id, dependency.configFile);
-            }
           }
         }
       }
@@ -179,40 +170,8 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
       }
     }
 
-    extendPlugin(pluginBean);
-
-    if (zipFile != null) {
-      for (String importPath : pluginBean.imports) {
-        if (importPath.charAt(0) == '/') {
-          importPath = importPath.substring(1, importPath.length());
-        }
-
-        ZipEntry entry = zipFile.getEntry(importPath);
-        if (entry != null) {
-          try {
-            InputStream childImportSteam = zipFile.getInputStream(entry);
-            SimpleXmlElement childImportElement = SimpleXmlReader.parse(childImportSteam);
-
-            PluginBean importBean = PluginBeanParser.parseBean(childImportElement, pluginBean.id);
-
-            if (importBean == null) {
-              continue;
-            }
-
-            extendPlugin(importBean);
-          }
-          catch (IOException e) {
-            throw new SimpleXmlParsingException(e);
-          }
-        }
-      }
-    }
+    myActionsElements = pluginBean.actions;
   }
-
-  private void extendPlugin(PluginBean pluginBean) {
-    myActionsElements = mergeElements(myActionsElements, pluginBean.actions);
-  }
-
 
   private static <T> List<T> mergeElements(List<T> original, List<T> additional) {
     if (additional.isEmpty()) {
@@ -228,10 +187,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
     }
 
     return result;
-  }
-
-  public void mergeOptionalConfig(final PluginDescriptorImpl descriptor) {
-    myActionsElements = mergeElements(myActionsElements, descriptor.myActionsElements);
   }
 
   @Override
@@ -466,19 +421,6 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
 
   public void setStatus(PluginDescriptorStatus status) {
     myStatus = status;
-  }
-
-  public Map<PluginId, String> getOptionalConfigs() {
-    return myOptionalConfigs;
-  }
-
-
-  public Map<PluginId, PluginDescriptorImpl> getOptionalDescriptors() {
-    return myOptionalDescriptors;
-  }
-
-  public void setOptionalDescriptors(final Map<PluginId, PluginDescriptorImpl> optionalDescriptors) {
-    myOptionalDescriptors = optionalDescriptors;
   }
 
   @Override

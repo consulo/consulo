@@ -50,8 +50,6 @@ public class PluginBean {
 
   public List<String> incompatibleWith = Collections.emptyList();
 
-  public List<String> imports = Collections.emptyList();
-
   //@Tag("category")
   public String category;
 
