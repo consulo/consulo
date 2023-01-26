@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi;
+package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.presentation.TypePresentationService;
 import consulo.language.Language;
 import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.language.impl.psi.RenameableFakePsiElement;
 import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.pom.PomTarget;

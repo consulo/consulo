@@ -16,7 +16,7 @@
 package consulo.language.impl.internal.pom;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.impl.internal.psi.PomTargetPsiElementImpl;
+import consulo.language.impl.psi.PomTargetPsiElementImpl;
 import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;
