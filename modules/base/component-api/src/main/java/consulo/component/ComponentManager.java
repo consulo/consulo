@@ -18,10 +18,10 @@ package consulo.component;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.MessageBus;
-import consulo.disposer.Disposable;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerOwner;
+import consulo.component.messagebus.MessageBus;
+import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
 
@@ -146,5 +146,10 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
   default int getProfiles() {
     return ComponentProfiles.DEFAULT;
+  }
+
+  @Nullable
+  default ComponentManager getParent() {
+    return null;
   }
 }

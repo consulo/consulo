@@ -26,6 +26,7 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
+import consulo.component.internal.ExtensionInstanceRef;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.container.plugin.PluginDescriptor;
@@ -66,7 +67,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       ExtensionImpl extensionImplAnnotation = extensionImplClass.getAnnotation(ExtensionImpl.class);
       // extension impl can be null if extension added by ExtensionExtender
       if (extensionImplAnnotation != null) {
-        myOrderId = StringUtil.isEmptyOrSpaces(extensionImplAnnotation.id()) ? extensionImplClass.getSimpleName() : extensionImplAnnotation.id();
+        myOrderId =
+          StringUtil.isEmptyOrSpaces(extensionImplAnnotation.id()) ? extensionImplClass.getSimpleName() : extensionImplAnnotation.id();
         myLoadingOrder = LoadingOrder.readOrder(extensionImplAnnotation.order());
       }
       else {
@@ -80,11 +82,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       if (PluginIds.isPlatformPlugin(myValue.getValue().getPluginId())) {
         return;
       }
-      
+
       if (myLoadingOrder == LoadingOrder.FIRST || myLoadingOrder == LoadingOrder.LAST) {
         if (apiPlugin.getPluginId() != myValue.getValue().getPluginId()) {
           LOG.error("Usage order [first, last] is restricted for not owner plugin impl. Class: %s, Plugin: %s, Owner Plugin: %s"
-                            .formatted(myValue.getKey().toString(), myValue.getValue().getPluginId().getIdString(), apiPlugin.getPluginId().getIdString()));
+                      .formatted(myValue.getKey().toString(),
+                                 myValue.getValue().getPluginId().getIdString(),
+                                 apiPlugin.getPluginId().getIdString()));
           myLoadingOrder = LoadingOrder.ANY;
         }
       }
@@ -146,7 +150,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private volatile Boolean myHasAnyExtension;
 
   @SuppressWarnings("unchecked")
-  public NewExtensionPointImpl(String apiClassName, List<InjectingBinding> bindings, ComponentManager componentManager, Runnable checkCanceled, ComponentScope componentScope) {
+  public NewExtensionPointImpl(String apiClassName,
+                               List<InjectingBinding> bindings,
+                               ComponentManager componentManager,
+                               Runnable checkCanceled,
+                               ComponentScope componentScope) {
     myApiClassName = apiClassName;
     myCheckCanceled = checkCanceled;
     myComponentManager = componentManager;
@@ -234,7 +242,24 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       try {
         myCheckCanceled.run();
 
+        boolean isRootManager = myComponentManager.getParent() == null;
+
+        ExtensionInstanceRef instanceRef = null;
+
+        if (isRootManager) {
+          instanceRef = new ExtensionInstanceRef();
+          ExtensionInstanceRef.CURRENT_CREATION.set(instanceRef);
+        }
+
         extension = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+
+        if (instanceRef != null) {
+          ExtensionInstanceRef.CURRENT_CREATION.remove();
+
+          if (instanceRef.setter != null) {
+            instanceRef.setter.accept(extension);
+          }
+        }
 
         if (!apiClass.isInstance(extension)) {
           LOG.error("Extension " + extension.getClass() + " does not implement " + myApiClass);
@@ -281,7 +306,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       ExtensionImplOrderable<T> orderable = new ExtensionImplOrderable<>(pair);
 
       orderable.reportFirstLastRestriction(apiPlugin);
-      
+
       orders.add(orderable);
     }
 

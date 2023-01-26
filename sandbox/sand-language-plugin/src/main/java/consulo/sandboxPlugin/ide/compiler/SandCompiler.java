@@ -20,6 +20,7 @@ import consulo.compiler.CompileContext;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.TranslatingCompiler;
+import consulo.sandboxPlugin.ide.bundle.SandBundleType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,6 +44,8 @@ public class SandCompiler implements TranslatingCompiler {
 
   @Override
   public void compile(CompileContext context, Chunk<Module> moduleChunk, VirtualFile[] files, OutputSink sink) {
+    SandBundleType sandBundleType = SandBundleType.INSTANCE.get();
+
     try {
       context.addMessage(CompilerMessageCategory.WARNING, "my warning", null, -1, -1);
       Thread.sleep(5000L);

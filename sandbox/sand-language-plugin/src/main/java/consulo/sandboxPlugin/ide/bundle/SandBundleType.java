@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.ide.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.SdkType;
@@ -24,6 +25,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -31,6 +33,8 @@ import javax.annotation.Nullable;
  */
 @ExtensionImpl
 public class SandBundleType extends SdkType {
+  public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.current();
+
   public SandBundleType() {
     super("SAND_BUNDLE");
   }

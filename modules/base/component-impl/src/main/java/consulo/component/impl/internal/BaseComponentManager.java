@@ -122,6 +122,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     myInjectingContainer = builder.build();
   }
 
+  @Nullable
+  @Override
+  public ComponentManager getParent() {
+    return myParent;
+  }
+
   @Override
   public int getProfiles() {
     return ComponentProfiles.PRODUCTION;
