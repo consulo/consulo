@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.impl.idea.util.containers.SortedList;
+import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ import java.util.List;
 public class ProjectStructureProblemsSettingsBase implements StructureProblemsSettings, PersistentStateComponent<ProjectStructureProblemsSettingsBase> {
   @AbstractCollection(surroundWithTag = false, elementTag = "problem", elementValueAttribute = "id")
   @Tag("ignored-problems")
-  public List<String> myIgnoredProblems = new SortedList<String>(String.CASE_INSENSITIVE_ORDER);
+  public List<String> myIgnoredProblems = Lists.newSortedList(String.CASE_INSENSITIVE_ORDER);
 
   @Override
   public ProjectStructureProblemsSettingsBase getState() {

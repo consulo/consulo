@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.util.lang.ObjectUtil;
-import consulo.execution.debug.frame.*;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.SortedList;
 import consulo.execution.debug.evaluation.InlineDebuggerHelper;
-import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.execution.debug.frame.*;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.collection.Lists;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -86,7 +86,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
         newChildren = new ArrayList<>(children.size());
         if (myValueChildren == null) {
           if (!myAlreadySorted && XDebuggerSettingsManager.getInstance().getDataViewSettings().isSortValues()) {
-            myValueChildren = new SortedList<>(XValueNodeImpl.COMPARATOR);
+            myValueChildren = Lists.newSortedList(XValueNodeImpl.COMPARATOR);
           }
           else {
             myValueChildren = new ArrayList<>(children.size());

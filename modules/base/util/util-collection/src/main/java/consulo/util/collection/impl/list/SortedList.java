@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.containers;
+package consulo.util.collection.impl.list;
+
+import consulo.util.collection.ContainerUtil;
 
 import java.util.*;
 
@@ -27,7 +29,7 @@ public class SortedList<T> extends AbstractList<T>{
 
   public SortedList(final Comparator<T> comparator) {
     myComparator = comparator;
-    myMap = new TreeMap<T, List<T>>(comparator);
+    myMap = new TreeMap<>(comparator);
   }
 
   public Comparator<T> getComparator() {

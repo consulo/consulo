@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.list.LockFreeCopyOnWriteArrayList;
+import consulo.util.collection.impl.list.SortedList;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -51,6 +52,11 @@ public final class Lists {
   @Contract(pure = true)
   public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
     return new LockFreeCopyOnWriteArrayList<>(c);
+  }
+
+  @Nonnull
+  @Contract(pure = true)public static <T> List<T> newSortedList(@Nonnull Comparator<T> comparator) {
+    return new SortedList<>(comparator);
   }
 
   @Nonnull
@@ -139,8 +145,8 @@ public final class Lists {
    */
   private static <T> int med3(@Nonnull List<T> x, Comparator<? super T> comparator, int a, int b, int c) {
     return comparator.compare(x.get(a), x.get(b)) < 0
-           ? comparator.compare(x.get(b), x.get(c)) < 0 ? b : comparator.compare(x.get(a), x.get(c)) < 0 ? c : a
-           : comparator.compare(x.get(c), x.get(b)) < 0 ? b : comparator.compare(x.get(c), x.get(a)) < 0 ? c : a;
+      ? comparator.compare(x.get(b), x.get(c)) < 0 ? b : comparator.compare(x.get(a), x.get(c)) < 0 ? c : a
+      : comparator.compare(x.get(c), x.get(b)) < 0 ? b : comparator.compare(x.get(c), x.get(a)) < 0 ? c : a;
   }
 
   /*

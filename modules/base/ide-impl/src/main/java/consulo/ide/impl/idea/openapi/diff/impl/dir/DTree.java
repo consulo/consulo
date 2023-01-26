@@ -19,15 +19,12 @@ import consulo.ide.impl.idea.ide.diff.DiffElement;
 import consulo.ide.impl.idea.ide.diff.DiffErrorElement;
 import consulo.ide.impl.idea.ide.diff.DiffType;
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
-import consulo.ide.impl.idea.util.containers.SortedList;
+import consulo.util.collection.Lists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 import static consulo.ide.impl.idea.ide.diff.DiffType.ERROR;
 
@@ -52,7 +49,7 @@ public class DTree {
   private HashMap<String, DTree> myChildren;
   private String myName;
   private final boolean isContainer;
-  private SortedList<DTree> myChildrenList;
+  private List<DTree> myChildrenList;
   private DiffElement<?> mySource;
   private DiffElement<?> myTarget;
   private DiffType myType;
@@ -70,7 +67,7 @@ public class DTree {
   public Collection<DTree> getChildren() {
     init();
     if (myChildrenList == null) {
-      myChildrenList = new SortedList<DTree>(COMPARATOR);
+      myChildrenList = Lists.newSortedList(COMPARATOR);
       myChildrenList.addAll(myChildren.values());
     }
     return myChildrenList;

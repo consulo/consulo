@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.util.containers.SortedList;
 import consulo.ui.ex.awt.AnActionButton;
+import consulo.util.collection.Lists;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -45,7 +45,7 @@ public class ToolbarDecoratorActionPromoter implements ActionPromoter {
 
   @Override
   public List<AnAction> promote(List<AnAction> actions, DataContext context) {
-    final SortedList<AnAction> result = new SortedList<AnAction>(ACTION_BUTTONS_SORTER);
+    final List<AnAction> result = Lists.newSortedList(ACTION_BUTTONS_SORTER);
     result.addAll(actions);
     return result;
   }
