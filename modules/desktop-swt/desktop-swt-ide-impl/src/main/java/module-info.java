@@ -8,6 +8,7 @@ module consulo.desktop.swt.ide.impl {
   requires consulo.desktop.ide.impl;
   requires consulo.platform.impl;
   requires consulo.bootstrap;
+  requires consulo.application.ui.impl;
 
   // TODO this impl is wrong for swt impl
   requires java.desktop;
