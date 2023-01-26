@@ -48,6 +48,7 @@ public class ClassPath {
   final boolean myPreloadJarContents;
   final boolean myCanHavePersistentIndex;
   final boolean myLazyClassloadingCaches;
+  final boolean myEnableJarIndex;
   private final CachePoolImpl myCachePool;
   private final UrlClassLoader.CachingCondition myCachingCondition;
   final boolean myLogErrorOnMissingJar;
@@ -58,6 +59,7 @@ public class ClassPath {
                    boolean acceptUnescapedUrls,
                    boolean preloadJarContents,
                    boolean canHavePersistentIndex,
+                   boolean enableJarIndex,
                    CachePoolImpl cachePool,
                    UrlClassLoader.CachingCondition cachingCondition,
                    boolean logErrorOnMissingJar,
@@ -68,6 +70,7 @@ public class ClassPath {
     myCanUseCache = canUseCache && !myLazyClassloadingCaches;
     myAcceptUnescapedUrls = acceptUnescapedUrls;
     myPreloadJarContents = preloadJarContents;
+    myEnableJarIndex = enableJarIndex;
     myCachePool = cachePool;
     myCachingCondition = cachingCondition;
     myCanHavePersistentIndex = canHavePersistentIndex;
@@ -114,6 +117,8 @@ public class ClassPath {
 
       Loader loader;
       while ((loader = getLoader(i++)) != null) {
+        if (!loader.containsPath(s)) continue;
+
         if (myCanUseCache) {
           if (!loader.containsName(s, shortName)) continue;
         }
@@ -436,7 +441,8 @@ public class ClassPath {
       Runtime.getRuntime().addShutdownHook(new Thread("Shutdown hook for tracing classloading information") {
         @Override
         public void run() {
-          System.out.println("Classloading requests:" + ClassPath.class.getClassLoader() + "," + ourTotalRequests + ", time:" + (ourTotalTime.get() / 1000000) + "ms");
+          System.out.println("Classloading requests:" + ClassPath.class.getClassLoader() + "," + ourTotalRequests + ", time:" + (ourTotalTime
+            .get() / 1000000) + "ms");
         }
       });
     }

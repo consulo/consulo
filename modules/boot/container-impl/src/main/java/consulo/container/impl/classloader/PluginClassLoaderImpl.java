@@ -32,13 +32,14 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   private final PluginDescriptor myPluginDescriptor;
   private final List<File> myLibDirectories;
 
-  private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<ProxyDescription, ProxyFactory>();
+  private ConcurrentMap<ProxyDescription, ProxyFactory> myProxyFactories = new ConcurrentHashMap<>();
 
   /**
    * Constructor for main platform plugins, it will set parent for ClassLoader - it's need for correct parent resolving for ServiceLoader
    */
   public PluginClassLoaderImpl(List<URL> urls, ClassLoader parent, PluginDescriptor pluginDescriptor) {
-    super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).parent(parent).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache());
+    super(pluginDescriptor.getPluginId().getIdString(),
+          build().urls(urls).parent(parent).enableJarIndex().urlsWithProtectionDomain(new HashSet<>(urls)).allowLock().noPreload());
     myParents = new ClassLoader[]{parent};
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(pluginDescriptor.getPath(), "lib");
@@ -46,7 +47,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   }
 
   public PluginClassLoaderImpl(List<URL> urls, ClassLoader[] parents, PluginDescriptor pluginDescriptor) {
-    super(pluginDescriptor.getPluginId().getIdString(), build().urls(urls).urlsWithProtectionDomain(new HashSet<URL>(urls)).allowLock().useCache().noPreload());
+    super(pluginDescriptor.getPluginId().getIdString(),
+          build().urls(urls).enableJarIndex().urlsWithProtectionDomain(new HashSet<>(urls)).allowLock().noPreload());
     myParents = parents;
     myPluginDescriptor = pluginDescriptor;
     File libDir = new File(myPluginDescriptor.getPath(), "lib");
@@ -93,7 +95,12 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
       }
 
       if (parent instanceof PluginClassLoaderImpl) {
-        Result resource = actionWithPluginClassLoader.execute(name, (PluginClassLoaderImpl)parent, visited, actionWithPluginClassLoader, actionWithClassloader, parameter);
+        Result resource = actionWithPluginClassLoader.execute(name,
+                                                              (PluginClassLoaderImpl)parent,
+                                                              visited,
+                                                              actionWithPluginClassLoader,
+                                                              actionWithClassloader,
+                                                              parameter);
         if (resource != null) {
           return resource;
         }
@@ -107,7 +114,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return null;
   }
 
-  private static final ActionWithPluginClassLoader<Class, Void> loadClassInPluginCL = new ActionWithPluginClassLoader<Class, Void>() {
+  private static final ActionWithPluginClassLoader<Class, Void> loadClassInPluginCL = new ActionWithPluginClassLoader<>() {
     @Override
     Class execute(String name,
                   PluginClassLoaderImpl classloader,
@@ -124,7 +131,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     }
   };
 
-  private static final ActionWithClassloader<Class, Void> loadClassInCl = new ActionWithClassloader<Class, Void>() {
+  private static final ActionWithClassloader<Class, Void> loadClassInCl = new ActionWithClassloader<>() {
     @Override
     public Class execute(String name, ClassLoader classloader, Void parameter) {
       try {
@@ -175,10 +182,7 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
       try {
         c = _findClass(name);
       }
-      catch (IncompatibleClassChangeError e) {
-        throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, getPluginId());
-      }
-      catch (UnsupportedClassVersionError e) {
+      catch (IncompatibleClassChangeError | UnsupportedClassVersionError e) {
         throw new PluginException("While loading class " + name + ": " + e.getMessage(), e, getPluginId());
       }
       if (c != null) {
@@ -189,14 +193,14 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     }
   }
 
-  private static final ActionWithPluginClassLoader<URL, Void> findResourceInPluginCL = new ActionWithPluginClassLoader<URL, Void>() {
+  private static final ActionWithPluginClassLoader<URL, Void> findResourceInPluginCL = new ActionWithPluginClassLoader<>() {
     @Override
     protected URL doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
       return classloader.findOwnResource(name);
     }
   };
 
-  private static final ActionWithClassloader<URL, Void> findResourceInCl = new ActionWithClassloader<URL, Void>() {
+  private static final ActionWithClassloader<URL, Void> findResourceInCl = new ActionWithClassloader<>() {
     @Override
     public URL execute(String name, ClassLoader classloader, Void parameter) {
       return classloader.getResource(name);
@@ -218,14 +222,15 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return null;
   }
 
-  private static final ActionWithPluginClassLoader<InputStream, Void> getResourceAsStreamInPluginCL = new ActionWithPluginClassLoader<InputStream, Void>() {
-    @Override
-    protected InputStream doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
-      return classloader.getOwnResourceAsStream(name);
-    }
-  };
+  private static final ActionWithPluginClassLoader<InputStream, Void> getResourceAsStreamInPluginCL =
+    new ActionWithPluginClassLoader<>() {
+      @Override
+      protected InputStream doExecute(String name, PluginClassLoaderImpl classloader, Void parameter) {
+        return classloader.getOwnResourceAsStream(name);
+      }
+    };
 
-  private static final ActionWithClassloader<InputStream, Void> getResourceAsStreamInCl = new ActionWithClassloader<InputStream, Void>() {
+  private static final ActionWithClassloader<InputStream, Void> getResourceAsStreamInCl = new ActionWithClassloader<>() {
     @Override
     public InputStream execute(String name, ClassLoader classloader, Void parameter) {
       return classloader.getResourceAsStream(name);
@@ -246,34 +251,36 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
     return null;
   }
 
-  private static final ActionWithPluginClassLoader<Void, List<Enumeration<URL>>> findResourcesInPluginCL = new ActionWithPluginClassLoader<Void, List<Enumeration<URL>>>() {
-    @Override
-    protected Void doExecute(String name, PluginClassLoaderImpl classloader, List<Enumeration<URL>> enumerations) {
-      try {
-        enumerations.add(classloader.findOwnResources(name));
+  private static final ActionWithPluginClassLoader<Void, List<Enumeration<URL>>> findResourcesInPluginCL =
+    new ActionWithPluginClassLoader<>() {
+      @Override
+      protected Void doExecute(String name, PluginClassLoaderImpl classloader, List<Enumeration<URL>> enumerations) {
+        try {
+          enumerations.add(classloader.findOwnResources(name));
+        }
+        catch (IOException ignore) {
+        }
+        return null;
       }
-      catch (IOException ignore) {
-      }
-      return null;
-    }
-  };
+    };
 
-  private static final ActionWithClassloader<Void, List<Enumeration<URL>>> findResourcesInCl = new ActionWithClassloader<Void, List<Enumeration<URL>>>() {
-    @Override
-    public Void execute(String name, ClassLoader classloader, List<Enumeration<URL>> enumerations) {
-      try {
-        enumerations.add(classloader.getResources(name));
+  private static final ActionWithClassloader<Void, List<Enumeration<URL>>> findResourcesInCl =
+    new ActionWithClassloader<>() {
+      @Override
+      public Void execute(String name, ClassLoader classloader, List<Enumeration<URL>> enumerations) {
+        try {
+          enumerations.add(classloader.getResources(name));
+        }
+        catch (IOException ignore) {
+        }
+        return null;
       }
-      catch (IOException ignore) {
-      }
-      return null;
-    }
-  };
+    };
 
 
   @Override
   public Enumeration<URL> findResources(String name) throws IOException {
-    @SuppressWarnings("unchecked") List<Enumeration<URL>> resources = new ArrayList<Enumeration<URL>>();
+    @SuppressWarnings("unchecked") List<Enumeration<URL>> resources = new ArrayList<>();
     resources.add(findOwnResources(name));
     processResourcesInParents(name, findResourcesInPluginCL, findResourcesInCl, null, resources);
     return new DeepEnumeration(resources.toArray(new Enumeration[resources.size()]));
@@ -315,7 +322,8 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   }
 
   @Override
-  public ProxyFactory registerOrGetProxy(final ProxyDescription description, final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
+  public ProxyFactory registerOrGetProxy(final ProxyDescription description,
+                                         final Function<ProxyDescription, ProxyFactory> proxyFactoryFunction) {
     return myProxyFactories.computeIfAbsent(description, proxyFactoryFunction);
   }
 

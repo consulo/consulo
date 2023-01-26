@@ -51,13 +51,6 @@ class SecureJarLoader extends JarLoader {
   protected Resource instantiateResource(URL url, ZipEntry entry) throws IOException {
     return new MySecureResource(url, (JarEntry)entry);
   }
-
-
-  @Override
-  protected ZipFile createZipFile(String path) throws IOException {
-    return new JarFile(path);
-  }
-
   private class MySecureMemoryResource extends MemoryResource {
     private final CodeSigner[] myCodeSigners;
 
@@ -87,7 +80,7 @@ class SecureJarLoader extends JarLoader {
 
     @Override
     public byte[] getBytes() throws IOException {
-      JarFile file = (JarFile)getZipFile();
+      JarFile file = (JarFile)getJarFile();
       InputStream stream = null;
       byte[] result;
       try {

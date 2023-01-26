@@ -13,7 +13,7 @@ import java.net.URL;
 abstract class Loader {
   private final URL myURL;
   private final int myIndex;
-  private ClasspathCache.NameFilter myLoadingFilter;
+  protected ClasspathCache.NameFilter myLoadingFilter;
 
   Loader(URL url, int index) {
     myURL = url;
@@ -30,6 +30,10 @@ abstract class Loader {
 
   int getIndex() {
     return myIndex;
+  }
+
+  boolean containsPath(String name) {
+    return true;
   }
 
   boolean containsName(String name, String shortName) {

@@ -3,22 +3,19 @@ package consulo.util.nodep.classloader;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
  * @author Dmitry Avdeev
  */
-public class JarMemoryLoader {
-  private static final JarMemoryLoader EMPTY = new JarMemoryLoader(Collections.<String, Resource>emptyMap());
+public class PreloadedJar {
+  private static final PreloadedJar EMPTY = new PreloadedJar(Collections.<String, Resource>emptyMap());
 
   private final Map<String, Resource> myResources;
 
-  private JarMemoryLoader(Map<String, Resource> resources) {
+  private PreloadedJar(Map<String, Resource> resources) {
     myResources = resources;
   }
 
@@ -30,7 +27,7 @@ public class JarMemoryLoader {
     return myResources;
   }
 
-  static JarMemoryLoader load(ZipFile zipFile, URL baseUrl, JarLoader attributesProvider) throws IOException {
+  static PreloadedJar load(ZipFile zipFile, URL baseUrl, JarLoader attributesProvider) throws IOException {
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
     if (!entries.hasMoreElements()) return EMPTY;
 
@@ -40,6 +37,6 @@ public class JarMemoryLoader {
       MemoryResource resource = attributesProvider.createMemoryResource(baseUrl, zipFile, entry, attributesProvider.getAttributes());
       resources.put(entry.getName(), resource);
     }
-    return new JarMemoryLoader(resources);
+    return new PreloadedJar(resources);
   }
 }

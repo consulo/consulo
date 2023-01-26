@@ -88,7 +88,7 @@ public class BootstrapClassLoaderUtil {
         loader = ServiceLoader.load(moduleLayer, ContainerStartup.class);
       }
       else {
-        loader= ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
+        loader = ServiceLoader.load(ContainerStartup.class, pluginDescriptor.getPluginClassLoader());
       }
 
       Optional<ContainerStartup> first = loader.findFirst();

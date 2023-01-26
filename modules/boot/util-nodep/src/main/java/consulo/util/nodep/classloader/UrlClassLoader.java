@@ -87,6 +87,7 @@ public class UrlClassLoader extends ClassLoader {
     private ClassLoader myParent;
     private boolean myLockJars;
     private boolean myUseCache;
+    private boolean myEnableJarIndex;
     private boolean myUsePersistentClasspathIndex;
     private boolean myAcceptUnescaped;
     private boolean myPreload = true;
@@ -94,9 +95,7 @@ public class UrlClassLoader extends ClassLoader {
     private boolean myErrorOnMissingJar = true;
     private boolean myLazyClassloadingCaches;
 
-
     private CachePoolImpl myCachePool;
-
 
     private CachingCondition myCachingCondition;
 
@@ -217,6 +216,11 @@ public class UrlClassLoader extends ClassLoader {
       return this;
     }
 
+    public Builder enableJarIndex() {
+      myEnableJarIndex = true;
+      return this;
+    }
+
     /**
      * Package contents information in Jar/File loaders will be lazily retrieved / cached upon classloading.
      * Important: this option will result in much smaller initial overhead but for bulk classloading (like complete IDE start) it is less
@@ -247,8 +251,12 @@ public class UrlClassLoader extends ClassLoader {
    */
   @Deprecated
   public UrlClassLoader(ClassLoader parent) {
-    this(build().urls(((URLClassLoader)parent).getURLs()).parent(parent.getParent()).allowLock().useCache().usePersistentClasspathIndexForLocalClassDirectories()
-                 .useLazyClassloadingCaches(Boolean.parseBoolean(System.getProperty("idea.lazy.classloading.caches", "false"))));
+    this(build().urls(((URLClassLoader)parent).getURLs())
+                .parent(parent.getParent())
+                .allowLock()
+                .useCache()
+                .usePersistentClasspathIndexForLocalClassDirectories()
+                .useLazyClassloadingCaches(Boolean.parseBoolean(System.getProperty("idea.lazy.classloading.caches", "false"))));
   }
 
   /**
@@ -264,7 +272,8 @@ public class UrlClassLoader extends ClassLoader {
     });
     myClassPath = createClassPath(builder);
     myAllowBootstrapResources = builder.myAllowBootstrapResources;
-    myClassLoadingLocks = ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+    myClassLoadingLocks =
+      ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
   }
 
   protected UrlClassLoader(Builder builder) {
@@ -277,12 +286,23 @@ public class UrlClassLoader extends ClassLoader {
     });
     myClassPath = createClassPath(builder);
     myAllowBootstrapResources = builder.myAllowBootstrapResources;
-    myClassLoadingLocks = ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+    myClassLoadingLocks =
+      ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
   }
 
   protected final ClassPath createClassPath(Builder builder) {
-    return new ClassPath(myURLs, builder.myLockJars, builder.myUseCache, builder.myAcceptUnescaped, builder.myPreload, builder.myUsePersistentClasspathIndex, builder.myCachePool,
-                         builder.myCachingCondition, builder.myErrorOnMissingJar, builder.myLazyClassloadingCaches, builder.myURLsWithProtectionDomain);
+    return new ClassPath(myURLs,
+                         builder.myLockJars,
+                         builder.myUseCache,
+                         builder.myAcceptUnescaped,
+                         builder.myPreload,
+                         builder.myUsePersistentClasspathIndex,
+                         builder.myEnableJarIndex,
+                         builder.myCachePool,
+                         builder.myCachingCondition,
+                         builder.myErrorOnMissingJar,
+                         builder.myLazyClassloadingCaches,
+                         builder.myURLsWithProtectionDomain);
   }
 
   public static URL internProtocol(URL url) {
@@ -365,8 +385,14 @@ public class UrlClassLoader extends ClassLoader {
       Package pkg = getDefinedPackage(pkgName);
       if (pkg == null) {
         try {
-          definePackage(pkgName, res.getValue(Resource.Attribute.SPEC_TITLE), res.getValue(Resource.Attribute.SPEC_VERSION), res.getValue(Resource.Attribute.SPEC_VENDOR),
-                        res.getValue(Resource.Attribute.IMPL_TITLE), res.getValue(Resource.Attribute.IMPL_VERSION), res.getValue(Resource.Attribute.IMPL_VENDOR), null);
+          definePackage(pkgName,
+                        res.getValue(Resource.Attribute.SPEC_TITLE),
+                        res.getValue(Resource.Attribute.SPEC_VERSION),
+                        res.getValue(Resource.Attribute.SPEC_VENDOR),
+                        res.getValue(Resource.Attribute.IMPL_TITLE),
+                        res.getValue(Resource.Attribute.IMPL_VERSION),
+                        res.getValue(Resource.Attribute.IMPL_VENDOR),
+                        null);
         }
         catch (IllegalArgumentException e) {
           // do nothing, package already defined by some other thread
