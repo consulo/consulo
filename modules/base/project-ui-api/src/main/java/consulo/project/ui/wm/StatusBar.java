@@ -106,6 +106,9 @@ public interface StatusBar extends StatusBarInfo, Disposable {
   @Nullable
   Project getProject();
 
+  @Nullable
+  String getInfo();
+
   @Nonnull
   default consulo.ui.Component getUIComponent() {
     throw new AbstractMethodError();

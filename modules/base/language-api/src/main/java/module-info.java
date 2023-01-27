@@ -53,6 +53,9 @@ module consulo.language.api {
   exports consulo.language.internal.custom to consulo.ide.impl;
 
   exports consulo.language.psi.util;
+
+  // cache value impl visitor
+  opens consulo.language.psi.stub to consulo.component.impl;
   opens consulo.language.psi.util to consulo.ide.impl, consulo.language.impl, consulo.application.impl;
 
   exports consulo.language.template;

@@ -34,6 +34,4 @@ public interface StatusBarInfo {
   void setInfo(@Nullable String s);
 
   void setInfo(@Nullable String s, @Nullable String requestor);
-  
-  String getInfo();
 }

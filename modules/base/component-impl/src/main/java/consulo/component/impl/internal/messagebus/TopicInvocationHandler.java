@@ -76,6 +76,7 @@ public class TopicInvocationHandler<L> implements InvocationHandler, Function<Me
   }
 
   private Object reflectionCall(Method method, Object[] args) {
+    LOG.error("Calling topic by reflection " + method + ", class: " + myTopicClass);
     myMessageBus.sendMessage(new ReflectionMessage<>(myTopicClass, method, args));
     return ObjectUtil.NULL;
   }
