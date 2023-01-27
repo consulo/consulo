@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.base;
+package consulo.component.internal;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.component.extension.ExtensionInstance;
-import consulo.content.OrderRootType;
+import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 17.08.14
+ * @since 27/01/2023
  */
-@ExtensionImpl
-public class DocumentationOrderRootType extends OrderRootType {
-  private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
+public class LazyExtensionInstance<Api, Impl extends Api> implements Supplier<Impl> {
 
-  @Nonnull
-  public static DocumentationOrderRootType getInstance() {
-    return INSTANCE.get();
+  private final LazyValue<Impl> myInstance;
+
+  public LazyExtensionInstance(Class<Api> apiClass, Class<Impl> implClass) {
+    myInstance = LazyValue.notNull(() -> RootComponentHolder.getRootComponent().getExtensionPoint(apiClass).findExtensionOrFail(implClass));
   }
 
-  public DocumentationOrderRootType() {
-    super("documentation");
+  @Override
+  public Impl get() {
+    return myInstance.get();
   }
 }

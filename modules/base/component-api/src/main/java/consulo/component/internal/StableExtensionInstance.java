@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.base;
+package consulo.component.internal;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.component.extension.ExtensionInstance;
-import consulo.content.OrderRootType;
-
-import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 17.08.14
+ * @since 27/01/2023
  */
-@ExtensionImpl
-public class DocumentationOrderRootType extends OrderRootType {
-  private static final Supplier<DocumentationOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
+public class StableExtensionInstance<Impl> implements Supplier<Impl> {
+  private Impl myValue;
 
-  @Nonnull
-  public static DocumentationOrderRootType getInstance() {
-    return INSTANCE.get();
+  public StableExtensionInstance() {
   }
 
-  public DocumentationOrderRootType() {
-    super("documentation");
+  public void setValue(Impl value) {
+    myValue = value;
+  }
+
+  @Override
+  public Impl get() {
+    return Objects.requireNonNull(myValue);
   }
 }

@@ -35,7 +35,8 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.of();
+  private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
+  );
 
   private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 

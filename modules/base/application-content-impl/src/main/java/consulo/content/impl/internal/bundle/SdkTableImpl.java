@@ -229,7 +229,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   public static SdkTypeId findSdkTypeByName(String sdkTypeName) {
     for (final SdkType type : SdkType.EP_NAME.getExtensionList()) {
-      if (type.getName().equals(sdkTypeName)) {
+      if (type.getId().equals(sdkTypeName)) {
         return type;
       }
     }

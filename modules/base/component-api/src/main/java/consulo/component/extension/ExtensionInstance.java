@@ -16,41 +16,31 @@
 package consulo.component.extension;
 
 import consulo.component.internal.ExtensionInstanceRef;
+import consulo.component.internal.LazyExtensionInstance;
+import consulo.component.internal.StableExtensionInstance;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 26/01/2023
  */
-public final class ExtensionInstance<T> implements Supplier<T> {
+public final class ExtensionInstance {
   @Nonnull
   @SuppressWarnings("unchecked")
-  public static <K> Supplier<K> of() {
-    // since static fields init before new () - we need register this instance to thread local
-    // and factory will set instance value
-    // another method will be like
-    // Class caller = getCallerClass()
-    // Application.getExtensionPoint(ApiClass).getExtensionImpl(caller)
+  public static <Api, Impl extends Api> Supplier<Impl> from(@Nonnull Class<Api> clazz) {
+
+    // called before extension creating
     ExtensionInstanceRef ref = ExtensionInstanceRef.CURRENT_CREATION.get();
     if (ref == null) {
-      throw new IllegalArgumentException("Illegal call. Require init inside extension creation");
+      Class<Impl> implClazz = (Class<Impl>)StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+      return new LazyExtensionInstance<>(clazz, implClazz);
     }
-
-    ExtensionInstance<K> instance = new ExtensionInstance<>();
-    ref.setter = o -> instance.myValue = (K)o;
-    return instance;
-  }
-
-  private T myValue;
-
-  private ExtensionInstance() {
-  }
-
-  @Override
-  public T get() {
-    return Objects.requireNonNull(myValue);
+    else {
+      StableExtensionInstance<Impl> instance = new StableExtensionInstance<>();
+      ref.setter = o -> instance.setValue((Impl)o);
+      return instance;
+    }
   }
 }

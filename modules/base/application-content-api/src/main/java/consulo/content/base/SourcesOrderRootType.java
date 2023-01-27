@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class SourcesOrderRootType extends OrderRootType {
-  private static final Supplier<SourcesOrderRootType> INSTANCE = ExtensionInstance.of();
+  private static final Supplier<SourcesOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
 
   @Nonnull
   public static SourcesOrderRootType getInstance() {

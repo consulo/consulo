@@ -184,7 +184,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     if (mySdkType != null) {
       final Element sdkType = new Element(ELEMENT_TYPE);
-      sdkType.setAttribute(ATTRIBUTE_VALUE, mySdkType.getName());
+      sdkType.setAttribute(ATTRIBUTE_VALUE, mySdkType.getId());
       element.addContent(sdkType);
     }
 

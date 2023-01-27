@@ -37,7 +37,8 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.of();
+  private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
+  );
 
   @Nonnull
   public static ContentFolderTypeProvider getInstance() {

@@ -33,7 +33,9 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE = ExtensionInstance.of();
+  private static final Supplier<ProductionResourceContentFolderTypeProvider> INSTANCE =
+    ExtensionInstance.from(ContentFolderTypeProvider.class
+    );
 
   @Nonnull
   public static ProductionResourceContentFolderTypeProvider getInstance() {

@@ -124,7 +124,7 @@ public abstract class SdkType implements SdkTypeId {
   @Nonnull
   public abstract Image getIcon();
 
-  @Nullable
+  @Nonnull
   public Image getGroupIcon() {
     return ImageEffects.transparent(getIcon(), 0.5f);
   }
