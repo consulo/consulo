@@ -250,6 +250,34 @@ public class URLUtil {
     }
   }
 
+  @Nonnull
+  public static String parseHostFromSshUrl(@Nonnull String sshUrl) {
+    // [ssh://]git@github.com:user/project.git
+    String host = sshUrl;
+    int at = host.lastIndexOf('@');
+    if (at > 0) {
+      host = host.substring(at + 1);
+    }
+    else {
+      int firstColon = host.indexOf(':');
+      if (firstColon > 0) {
+        host = host.substring(firstColon + 3);
+      }
+    }
+
+    int colon = host.indexOf(':');
+    if (colon > 0) {
+      host = host.substring(0, colon);
+    }
+    else {
+      int slash = host.indexOf('/');
+      if (slash > 0) {
+        host = host.substring(0, slash);
+      }
+    }
+    return host;
+  }
+
   private static int decode(char c) {
     if ((c >= '0') && (c <= '9')) return c - '0';
     if ((c >= 'a') && (c <= 'f')) return c - 'a' + 10;
