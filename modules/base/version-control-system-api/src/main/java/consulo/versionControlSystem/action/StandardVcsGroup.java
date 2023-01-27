@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.actions;
+package consulo.versionControlSystem.action;
 
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nullable;
 
 public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
   public abstract AbstractVcs getVcs(Project project);
 
+  @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project != null) {
       final String vcsName = getVcsName(project);
       presentation.setVisible(vcsName != null &&
@@ -43,11 +45,11 @@ public abstract class StandardVcsGroup extends DefaultActionGroup implements Dum
     presentation.setEnabled(presentation.isVisible());
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @NonNls
   public String getVcsName(Project project) {
     final AbstractVcs vcs = getVcs(project);
     // if the parent group was customized and then the plugin was disabled, we could have an action group with no VCS
-    return vcs != null ? vcs.getName() : null;
+    return vcs != null ? vcs.getDisplayName() : null;
   }
 }

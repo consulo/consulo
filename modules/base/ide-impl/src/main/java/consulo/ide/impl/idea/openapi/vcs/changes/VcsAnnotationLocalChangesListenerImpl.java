@@ -20,6 +20,8 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.change.BaseRevision;
+import consulo.versionControlSystem.change.VcsAnnotationRefresher;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;

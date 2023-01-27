@@ -22,7 +22,7 @@ import consulo.ide.ServiceManager;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.versionControlSystem.root.VcsRoot;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.versionControlSystem.log.VcsLogProvider;

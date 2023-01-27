@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.annotate;
+package consulo.versionControlSystem.annotate;
 
 import consulo.codeEditor.EditorGutterAction;
-import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 
 import java.awt.*;
 
@@ -40,6 +39,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
     myShowByDefault = showByDefault;
   }
 
+  @Override
   public String getTooltipText(int lineNumber) {
     return null;
   }
@@ -54,6 +54,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
     return myShowByDefault;
   }
 
+  @Override
   public Cursor getCursor(final int lineNum) {
     return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
   }

@@ -20,7 +20,7 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListByDateComparator;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
+import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;

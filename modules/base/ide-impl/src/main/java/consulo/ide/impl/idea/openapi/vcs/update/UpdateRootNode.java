@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
 

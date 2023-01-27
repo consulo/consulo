@@ -20,14 +20,12 @@
  * Date: 20.10.2006
  * Time: 17:18:38
  */
-package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
+package consulo.versionControlSystem.versionBrowser;
 
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,14 +48,17 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     myNumber = number;
   }
 
+  @Override
   public String getCommitterName() {
     return myCommitterName;
   }
 
+  @Override
   public Date getCommitDate() {
     return myCommitDate;
   }
 
+  @Override
   public long getNumber() {
     return myNumber;
   }
@@ -67,10 +68,12 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     return null;
   }
 
+  @Override
   public AbstractVcs getVcs() {
     return null;
   }
 
+  @Override
   public Collection<Change> getChangesWithMovedTrees() {
     return getChangesWithMovedTreesImpl(this);
   }
@@ -89,15 +92,18 @@ public class CommittedChangeListImpl implements CommittedChangeList {
     return list.getChanges();
   }
 
+  @Override
   public Collection<Change> getChanges() {
     return myChanges;
   }
 
+  @Override
   @Nonnull
   public String getName() {
     return myName;
   }
 
+  @Override
   public String getComment() {
     return myComment;
   }

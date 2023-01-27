@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.BaseRevision;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.status.FileStatus;

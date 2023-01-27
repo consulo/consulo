@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.versionBrowser;
+package consulo.versionControlSystem.history;
 
-import consulo.versionControlSystem.history.VcsRevisionNumber;
+import javax.annotation.Nullable;
+import java.util.Date;
 
 /**
- * For classes that are capable to return {@link VcsRevisionNumber}.
- *
- * @author Kirill Likhodedov
+ * User: Irina.Chernushina
+ * Date: 9/14/11
+ * Time: 5:57 PM
  */
-public interface VcsRevisionNumberAware {
-
-  @javax.annotation.Nullable
-  VcsRevisionNumber getRevisionNumber();
-
+public interface VcsFileRevisionDvcsSpecific {
+  @Nullable
+  Date getDateForRevisionsOrdering();
 }

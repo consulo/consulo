@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2000-2012 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.history;
+package consulo.versionControlSystem.change;
 
-import java.util.Date;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
+import consulo.versionControlSystem.VcsKey;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
- * Date: 9/14/11
- * Time: 5:57 PM
+ * Date: 11/19/12
+ * Time: 4:30 PM
  */
-public interface VcsFileRevisionDvcsSpecific {
-  @javax.annotation.Nullable
-  Date getDateForRevisionsOrdering();
+@TopicAPI(ComponentScope.PROJECT)
+public interface VcsAnnotationRefresher {
+  void dirtyUnder(VirtualFile file);
+
+  void dirty(BaseRevision currentRevision);
+
+  void dirty(String path);
+
+  void configurationChanged(final VcsKey key);
 }

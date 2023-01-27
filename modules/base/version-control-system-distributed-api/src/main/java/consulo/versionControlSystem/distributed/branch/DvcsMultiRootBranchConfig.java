@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.branch;
+package consulo.versionControlSystem.distributed.branch;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 import javax.annotation.Nonnull;

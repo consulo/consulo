@@ -37,8 +37,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrows
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RepositoryChangesBrowser;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeListImpl;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeListImpl;
+import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;

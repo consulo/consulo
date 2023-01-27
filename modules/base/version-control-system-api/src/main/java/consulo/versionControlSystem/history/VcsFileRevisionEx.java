@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.history;
+package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsFileRevision;

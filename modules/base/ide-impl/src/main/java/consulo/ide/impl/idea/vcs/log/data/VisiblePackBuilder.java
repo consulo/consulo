@@ -29,7 +29,7 @@ import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl.VcsLogFilterCollectionBuilder;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogHashFilterImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import consulo.ide.impl.idea.vcs.log.util.StopWatch;
+import consulo.versionControlSystem.util.StopWatch;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.table.ComponentsListFocusTraversalPolicy;
-import consulo.ide.impl.idea.vcs.CommittedChangeListForRevision;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeListForRevision;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogProgress;

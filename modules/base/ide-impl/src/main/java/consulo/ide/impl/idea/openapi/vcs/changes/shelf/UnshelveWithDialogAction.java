@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDifferentiatedDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchMode;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;

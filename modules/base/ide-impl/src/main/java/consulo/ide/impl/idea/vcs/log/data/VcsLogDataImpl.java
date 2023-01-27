@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.log.data;
 import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
 import consulo.component.ProcessCanceledException;
@@ -37,7 +36,7 @@ import consulo.ide.impl.idea.vcs.log.data.index.VcsLogPersistentIndex;
 import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogCachesInvalidator;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
-import consulo.ide.impl.idea.vcs.log.util.StopWatch;
+import consulo.versionControlSystem.util.StopWatch;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.application.progress.ProgressManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;

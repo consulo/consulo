@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs;
+package consulo.versionControlSystem.versionBrowser;
 
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.history.LongRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeListImpl;
-import consulo.ide.impl.idea.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 

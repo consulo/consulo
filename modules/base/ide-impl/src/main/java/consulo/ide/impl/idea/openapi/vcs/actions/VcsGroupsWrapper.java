@@ -27,6 +27,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.versionControlSystem.action.StandardVcsGroup;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -50,7 +51,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
                                                                          0));
       for (AnAction child : children) {
         if (!(child instanceof StandardVcsGroup)) {
-          LOG.error("Any version control group should extends consulo.ide.impl.idea.openapi.vcs.actions.StandardVcsGroup class. Groupd class: " +
+          LOG.error("Any version control group should extends consulo.versionControlSystem.action.StandardVcsGroup class. Groupd class: " +
                     child.getClass().getName() + ", group ID: " + ActionManager.getInstance().getId(child));
         }
         else {

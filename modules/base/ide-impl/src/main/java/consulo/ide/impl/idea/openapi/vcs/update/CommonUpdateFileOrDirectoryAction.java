@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.update;
 
 
+import consulo.versionControlSystem.update.ActionInfo;
 
 public class CommonUpdateFileOrDirectoryAction extends AbstractCommonUpdateAction {
   public CommonUpdateFileOrDirectoryAction() {

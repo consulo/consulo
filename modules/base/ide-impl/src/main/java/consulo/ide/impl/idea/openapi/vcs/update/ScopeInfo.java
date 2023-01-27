@@ -22,6 +22,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;

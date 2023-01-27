@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.print;
 
-import consulo.ide.impl.idea.vcs.log.graph.GraphColorManager;
+import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;

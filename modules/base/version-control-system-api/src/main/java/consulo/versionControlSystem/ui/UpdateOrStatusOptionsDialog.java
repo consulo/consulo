@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.versionControlSystem.ui;
 
 import consulo.application.HelpManager;
 import consulo.ui.ex.awt.Messages;
@@ -32,7 +32,7 @@ import java.util.*;
 
 public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
   private final JComponent myMainPanel;
-  private final Map<AbstractVcs, Configurable> myEnvToConfMap = new HashMap<AbstractVcs, Configurable>();
+  private final Map<AbstractVcs, Configurable> myEnvToConfMap = new HashMap<>();
   protected final Project myProject;
 
 
@@ -48,8 +48,8 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
     }
     else {
       myMainPanel = new JBTabbedPane();
-      final ArrayList<AbstractVcs> vcses = new ArrayList<AbstractVcs>(confs.values());
-      Collections.sort(vcses, new Comparator<AbstractVcs>() {
+      final ArrayList<AbstractVcs> vcses = new ArrayList<>(confs.values());
+      Collections.sort(vcses, new Comparator<>() {
         public int compare(final AbstractVcs o1, final AbstractVcs o2) {
           return o1.getDisplayName().compareTo(o2.getDisplayName());
         }
@@ -64,11 +64,11 @@ public abstract class UpdateOrStatusOptionsDialog extends OptionsDialog {
 
   @Override
   protected String getDimensionServiceKey() {
-    return "consulo.ide.impl.idea.openapi.vcs.update.UpdateOrStatusOptionsDialog" + getActionNameForDimensions();
+    return "consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog" + getActionNameForDimensions();
   }
 
   private static Map<AbstractVcs, Configurable> revertMap(final Map<Configurable, AbstractVcs> confs) {
-    final HashMap<AbstractVcs, Configurable> result = new HashMap<AbstractVcs, Configurable>();
+    final HashMap<AbstractVcs, Configurable> result = new HashMap<>();
     for (Configurable configurable : confs.keySet()) {
       result.put(confs.get(configurable), configurable);
     }

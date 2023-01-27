@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.ui;
+package consulo.versionControlSystem.ui;
 
-import consulo.component.util.NamedRunnable;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.component.util.NamedRunnable;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.versionControlSystem.VcsToolWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +35,8 @@ import javax.swing.event.HyperlinkEvent;
  * Use the special method or supply additional parameter to the constructor to show the balloon over the Version Control View.
  */
 public class VcsBalloonProblemNotifier implements Runnable {
-  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages", ChangesViewContentManager.TOOLWINDOW_ID, true);
+  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Common Version Control Messages",
+                                                                                               VcsToolWindow.ID, true);
   private final Project myProject;
   private final String myMessage;
   private final NotificationType myMessageType;
@@ -59,15 +60,24 @@ public class VcsBalloonProblemNotifier implements Runnable {
     myNotificationListener = notificationListener;
   }
 
-  public static void showOverChangesView(@Nonnull final Project project, @Nonnull final String message, final NotificationType type, final NamedRunnable... notificationListener) {
+  public static void showOverChangesView(@Nonnull final Project project,
+                                         @Nonnull final String message,
+                                         final NotificationType type,
+                                         final NamedRunnable... notificationListener) {
     show(project, message, type, true, notificationListener);
   }
 
-  public static void showOverVersionControlView(@Nonnull final Project project, @Nonnull final String message, final NotificationType type) {
+  public static void showOverVersionControlView(@Nonnull final Project project,
+                                                @Nonnull final String message,
+                                                final NotificationType type) {
     show(project, message, type, false, null);
   }
 
-  private static void show(final Project project, final String message, final NotificationType type, final boolean showOverChangesView, @Nullable final NamedRunnable[] notificationListener) {
+  private static void show(final Project project,
+                           final String message,
+                           final NotificationType type,
+                           final boolean showOverChangesView,
+                           @Nullable final NamedRunnable[] notificationListener) {
     final Application application = ApplicationManager.getApplication();
     if (application.isHeadlessEnvironment()) return;
     final Runnable showErrorAction = new Runnable() {

@@ -22,7 +22,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
-import consulo.ide.impl.idea.openapi.vcs.history.VcsFileRevisionDvcsSpecific;
+import consulo.versionControlSystem.history.VcsFileRevisionDvcsSpecific;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

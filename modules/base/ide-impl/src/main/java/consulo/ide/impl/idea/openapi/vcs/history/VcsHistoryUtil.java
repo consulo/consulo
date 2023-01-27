@@ -35,6 +35,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.util.io.CharsetToolkit;
 import consulo.versionControlSystem.history.VcsFileRevision;
+import consulo.versionControlSystem.history.VcsFileRevisionEx;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs.actions;
+package consulo.versionControlSystem.distributed.action;
 
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListContentProvider;
+import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -35,7 +35,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
   public List<AnAction> getVcsActions(@Nullable Project project, @Nullable AbstractVcs activeVcs,
                                       @Nullable DataContext dataContext) {
 
-    if (activeVcs == null || !getVcsName().equals(activeVcs.getName())) {
+    if (activeVcs == null || !getVcsName().equals(activeVcs.getId())) {
       return null;
     }
 
@@ -64,7 +64,7 @@ public abstract class DvcsQuickListContentProvider implements VcsQuickListConten
 
   @Override
   public boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext) {
-    return getVcsName().equals(activeVcs.getName());
+    return getVcsName().equals(activeVcs.getId());
   }
 
   protected static void addSeparator(@Nonnull final List<AnAction> actions) {

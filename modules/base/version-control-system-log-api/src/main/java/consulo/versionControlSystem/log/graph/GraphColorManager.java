@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.graph;
+package consulo.versionControlSystem.log.graph;
 
 import consulo.versionControlSystem.log.VcsLogRefManager;
 

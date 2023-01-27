@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.dvcs.branch;
 
 import consulo.versionControlSystem.distributed.DvcsUtil;
+import consulo.versionControlSystem.distributed.branch.DvcsMultiRootBranchConfig;
 import consulo.versionControlSystem.distributed.branch.DvcsSyncSettings;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;

@@ -10,7 +10,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
 import consulo.versionControlSystem.history.VcsFileRevision;
-import consulo.ide.impl.idea.openapi.vcs.history.VcsFileRevisionEx;
+import consulo.versionControlSystem.history.VcsFileRevisionEx;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;

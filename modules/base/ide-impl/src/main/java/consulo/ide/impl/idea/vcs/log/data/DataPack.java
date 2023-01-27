@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.vcs.log.graph.GraphColorManagerImpl;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.PermanentGraphImpl;
-import consulo.ide.impl.idea.vcs.log.util.StopWatch;
+import consulo.versionControlSystem.util.StopWatch;
 import gnu.trove.TIntHashSet;
 import javax.annotation.Nonnull;
 

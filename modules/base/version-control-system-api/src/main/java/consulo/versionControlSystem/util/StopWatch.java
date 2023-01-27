@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.vcs.log.util;
+package consulo.versionControlSystem.util;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class StopWatch {
@@ -41,7 +41,7 @@ public class StopWatch {
   private StopWatch(@Nonnull String operation) {
     myOperation = operation;
     myStartTime = System.currentTimeMillis();
-    myDurationPerRoot = ContainerUtil.newHashMap();
+    myDurationPerRoot = new HashMap<>();
   }
 
   @Nonnull

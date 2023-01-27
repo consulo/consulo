@@ -304,4 +304,7 @@ public abstract class ProjectLevelVcsManager {
 
   @Nonnull
   public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();
+
+  @Nonnull
+  public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
 }

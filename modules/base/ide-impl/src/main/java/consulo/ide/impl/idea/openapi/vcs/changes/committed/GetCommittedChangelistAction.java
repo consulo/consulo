@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
-import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import javax.annotation.Nonnull;

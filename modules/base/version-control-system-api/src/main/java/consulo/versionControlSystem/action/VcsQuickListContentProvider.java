@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.openapi.vcs.actions;
+package consulo.versionControlSystem.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;

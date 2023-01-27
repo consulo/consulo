@@ -34,6 +34,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesTreeB
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.FileGroup;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;

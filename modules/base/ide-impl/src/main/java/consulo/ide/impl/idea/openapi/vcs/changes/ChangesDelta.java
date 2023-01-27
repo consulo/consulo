@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.ide.impl.idea.util.BeforeAfter;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinusModify;
+import consulo.versionControlSystem.change.BaseRevision;
 
 import java.util.Collection;
 import java.util.HashSet;

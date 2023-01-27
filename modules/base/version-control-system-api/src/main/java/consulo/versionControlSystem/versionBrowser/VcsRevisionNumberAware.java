@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.versionBrowser;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
-import consulo.versionControlSystem.VcsKey;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+
+import javax.annotation.Nullable;
 
 /**
- * User: Irina.Chernushina
- * Date: 11/19/12
- * Time: 4:30 PM
+ * For classes that are capable to return {@link VcsRevisionNumber}.
+ *
+ * @author Kirill Likhodedov
  */
-@TopicAPI(ComponentScope.PROJECT)
-public interface VcsAnnotationRefresher {
-  void dirtyUnder(VirtualFile file);
-
-  void dirty(BaseRevision currentRevision);
-
-  void dirty(String path);
-
-  void configurationChanged(final VcsKey key);
+public interface VcsRevisionNumberAware {
+  @Nullable
+  VcsRevisionNumber getRevisionNumber();
 }

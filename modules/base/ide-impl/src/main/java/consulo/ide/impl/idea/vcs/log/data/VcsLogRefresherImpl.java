@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.impl.RequirementsImpl;
-import consulo.ide.impl.idea.vcs.log.util.StopWatch;
+import consulo.versionControlSystem.util.StopWatch;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;

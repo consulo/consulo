@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.*;
-import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
 import consulo.versionControlSystem.internal.ContentRevisionCache;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;

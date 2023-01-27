@@ -39,7 +39,7 @@ import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogTextFilterImpl;
 import consulo.ide.impl.idea.vcs.log.util.PersistentSet;
 import consulo.ide.impl.idea.vcs.log.util.PersistentSetImpl;
-import consulo.ide.impl.idea.vcs.log.util.StopWatch;
+import consulo.versionControlSystem.util.StopWatch;
 import consulo.ide.impl.idea.vcs.log.util.TroveUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;

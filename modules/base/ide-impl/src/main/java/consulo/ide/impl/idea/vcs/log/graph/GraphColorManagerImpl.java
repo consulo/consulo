@@ -20,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
+import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

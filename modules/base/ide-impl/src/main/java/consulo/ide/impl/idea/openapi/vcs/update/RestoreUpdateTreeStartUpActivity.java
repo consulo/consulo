@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
+import consulo.versionControlSystem.update.ActionInfo;
 
 import javax.annotation.Nonnull;
 

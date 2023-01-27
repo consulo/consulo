@@ -10,6 +10,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.action.*;
+import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * @author Roman.Chernyatchik
  *
  * Context aware VCS actions quick list.
- * May be customized using consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListContentProvider extension point.
+ * May be customized using consulo.versionControlSystem.action.VcsQuickListContentProvider extension point.
  */
 public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements DumbAware {
 

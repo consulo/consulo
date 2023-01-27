@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.Details;
 import consulo.ide.impl.idea.openapi.vcs.GenericDetailsLoader;
-import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.Ticket;
 import consulo.ide.impl.idea.util.continuation.ModalityIgnorantBackgroundableTask;
 import consulo.logging.Logger;

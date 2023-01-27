@@ -21,7 +21,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.vcs.log.graph.GraphColorManager;
+import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommitImpl;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.graph.VisibleGraph;

@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.update.ActionInfo;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateInfoTree;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.update.UpdatedFiles;
+import consulo.project.Project;
 import consulo.ui.ex.content.ContentManager;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsShowSettingOption;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.update.ActionInfo;
+import consulo.versionControlSystem.update.UpdatedFiles;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
@@ -35,9 +34,6 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
   }
 
   public abstract ContentManager getContentManager();
-
-  @Nonnull
-  public abstract VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option);
 
   @Nonnull
   public abstract VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option);

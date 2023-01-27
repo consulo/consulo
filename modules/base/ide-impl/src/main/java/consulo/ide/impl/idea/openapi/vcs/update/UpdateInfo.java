@@ -22,6 +22,7 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.application.util.DateFormatUtil;
+import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
