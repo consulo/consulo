@@ -22,4 +22,6 @@ module consulo.execution.test.api {
   exports consulo.execution.test.export;
   exports consulo.execution.test.ui;
   exports consulo.execution.test.internal to consulo.ide.impl;
+
+  opens consulo.execution.test.autotest to consulo.util.xml.serializer;
 }

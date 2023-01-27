@@ -50,7 +50,7 @@ public class PluginDescriptorLoader {
       File icon = new File(pluginMetaInfoDir, "pluginIcon.svg");
       File iconDark = new File(pluginMetaInfoDir, "pluginIcon_dark.svg");
 
-      byte[] iconBytes = null, darkIconBytes = null;
+      byte[] iconBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY, darkIconBytes = ArrayUtilRt.EMPTY_BYTE_ARRAY;
 
       if (icon.exists()) {
         try {

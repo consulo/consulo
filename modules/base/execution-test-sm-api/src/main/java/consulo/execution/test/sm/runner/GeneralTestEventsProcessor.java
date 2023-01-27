@@ -15,6 +15,7 @@
  */
 package consulo.execution.test.sm.runner;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
 import consulo.execution.test.sm.runner.event.*;
@@ -291,7 +292,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
   @Deprecated(forRemoval = true)
   public void addToInvokeLater(final Runnable runnable) {
-    runnable.run();
+    Application.get().invokeLater(runnable);
   }
 
   protected static <T> boolean isTreeComplete(Collection<T> runningTests, SMTestProxy.SMRootTestProxy rootNode) {

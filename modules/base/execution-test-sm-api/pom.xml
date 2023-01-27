@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>consulo</groupId>
-    <artifactId>arch.managment</artifactId>
+    <artifactId>arch.bind</artifactId>
     <version>3-SNAPSHOT</version>
     <relativePath>../../../arch/managment/pom.xml</relativePath>
   </parent>

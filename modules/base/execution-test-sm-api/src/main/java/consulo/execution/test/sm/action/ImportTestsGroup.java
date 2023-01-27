@@ -30,10 +30,7 @@ import consulo.util.collection.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class ImportTestsGroup extends ActionGroup {
   private SMTRunnerConsoleProperties myProperties;
@@ -55,13 +52,8 @@ public class ImportTestsGroup extends ActionGroup {
     if (project == null) return EMPTY_ARRAY;
     final Collection<String> filePaths = TestHistoryConfiguration.getInstance(project).getFiles();
     final File testHistoryRoot = TestStateStorage.getTestHistoryRoot(project);
-    final List<File> fileNames = ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName));
-    Collections.sort(fileNames, new Comparator<File>() {
-      @Override
-      public int compare(File f1, File f2) {
-        return f1.lastModified() > f2.lastModified() ? -1 : 1;
-      }
-    });
+    final List<File> fileNames = new ArrayList<>(ContainerUtil.map(filePaths, fileName -> new File(testHistoryRoot, fileName)));
+    Collections.sort(fileNames, (f1, f2) -> f1.lastModified() > f2.lastModified() ? -1 : 1);
     final int historySize = fileNames.size();
     final AnAction[] actions = new AnAction[historySize + 2];
     for (int i = 0; i < historySize; i++) {

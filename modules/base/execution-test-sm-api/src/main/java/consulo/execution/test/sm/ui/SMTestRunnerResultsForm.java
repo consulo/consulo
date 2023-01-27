@@ -347,7 +347,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     final TestsUIUtil.TestResultPresentation presentation = new TestsUIUtil.TestResultPresentation(testsRoot, myStartTime > 0, null)
             .getPresentation(myFailedTestCount, Math.max(0, myFinishedTestCount - myFailedTestCount - myIgnoredTestCount),
                              myTotalTestCount - myFinishedTestCount, myIgnoredTestCount);
-    TestsUIUtil.notifyByBalloon(myProperties.getProject(), testsRoot, myProperties, presentation);
+    Application.get().invokeLater(() -> TestsUIUtil.notifyByBalloon(myProperties.getProject(), testsRoot, myProperties, presentation));
     addToHistory(testsRoot, myProperties, this);
   }
 

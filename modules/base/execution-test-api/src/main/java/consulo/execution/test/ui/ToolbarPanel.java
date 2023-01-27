@@ -129,9 +129,9 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     properties.appendAdditionalActions(secondaryGroup, parent, properties);
     actionGroup.add(secondaryGroup);
 
-    add(ActionManager.getInstance().
-            createActionToolbar(ActionPlaces.TESTTREE_VIEW_TOOLBAR, actionGroup, true).
-            getComponent(), BorderLayout.CENTER);
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.TESTTREE_VIEW_TOOLBAR, actionGroup, true);
+    toolbar.setTargetComponent(this);
+    add(toolbar.getComponent(), BorderLayout.CENTER);
   }
 
   public void setModel(final TestFrameworkRunningModel model) {

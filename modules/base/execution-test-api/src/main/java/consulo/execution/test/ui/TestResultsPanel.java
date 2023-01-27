@@ -175,7 +175,9 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     final Color editorBackground = TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground());
     console.setBorder(new CompoundBorder(IdeBorderFactory.createBorder(SideBorder.RIGHT | SideBorder.TOP), new SideBorder(editorBackground, SideBorder.LEFT)));
     outputTab.add(console, BorderLayout.CENTER);
-    final ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, new DefaultActionGroup(consoleActions), false);
+    final ActionToolbar toolbar =
+      ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, new DefaultActionGroup(consoleActions), false);
+    toolbar.setTargetComponent(outputTab);
     outputTab.add(toolbar.getComponent(), BorderLayout.EAST);
     return outputTab;
   }
