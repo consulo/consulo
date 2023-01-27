@@ -16,12 +16,16 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.scratch.ScratchUtil;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.scratch.RootType;
+import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.psi.ResolveScopeEnlarger;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,9 +34,19 @@ import javax.annotation.Nullable;
  */
 @ExtensionImpl
 public class ScratchResolveScopeEnlarger extends ResolveScopeEnlarger {
+  private final Provider<ScratchFileService> myScratchFileServiceProvider;
+
+  @Inject
+  public ScratchResolveScopeEnlarger(Provider<ScratchFileService> scratchFileServiceProvider) {
+    myScratchFileServiceProvider = scratchFileServiceProvider;
+  }
+
   @Nullable
   @Override
   public SearchScope getAdditionalResolveScope(@Nonnull VirtualFile file, Project project) {
-    return ScratchUtil.isScratch(file) ? GlobalSearchScope.fileScope(project, file) : null;
+    ScratchFileService scratchFileService = myScratchFileServiceProvider.get();
+
+    RootType rootType = scratchFileService.getRootType(file);
+    return rootType != null && !rootType.isHidden() ? GlobalSearchScope.fileScope(project, file) : null;
   }
 }

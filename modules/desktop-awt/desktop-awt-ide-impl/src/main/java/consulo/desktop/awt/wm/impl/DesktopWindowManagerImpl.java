@@ -16,6 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
@@ -74,7 +75,7 @@ import java.util.Set;
 @ServiceImpl
 @Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
-public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {
+public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DesktopWindowManagerImpl.class);
 
   @NonNls
@@ -130,11 +131,7 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     myDataManager = dataManager;
     myActionManager = actionManager;
 
-    if (!application.isUnitTestMode()) {
-      Disposer.register(application, () -> disposeRootFrame());
-    }
-
-    myWindowWatcher = new DesktopWindowWatcher(application);
+    myWindowWatcher = new DesktopWindowWatcher(application, dataManager);
     final KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     keyboardFocusManager.addPropertyChangeListener(FOCUSED_WINDOW_PROPERTY_NAME, myWindowWatcher);
     myLayout = new ToolWindowLayout();
@@ -186,6 +183,11 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
         }
       }, AWTEvent.CONTAINER_EVENT_MASK, application);
     }
+  }
+
+  @Override
+  public void dispose() {
+    disposeRootFrame();
   }
 
   @Override

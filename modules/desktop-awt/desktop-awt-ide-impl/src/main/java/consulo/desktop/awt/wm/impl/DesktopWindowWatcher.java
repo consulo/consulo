@@ -57,6 +57,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
 
   private final Map<consulo.ui.Window, WindowInfo> myWindow2Info = ContainerUtil.createWeakMap();
   private final Application myApplication;
+  private final DataManager myDataManager;
   /**
    * Currenly focused window (window which has focused component). Can be <code>null</code> if there is no focused
    * window at all.
@@ -67,8 +68,9 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
    */
   private final Set<consulo.ui.Window> myFocusedWindows = new HashSet<>();
 
-  public DesktopWindowWatcher(Application application) {
+  public DesktopWindowWatcher(Application application, DataManager dataManager) {
     myApplication = application;
+    myDataManager = dataManager;
   }
 
   /**
@@ -94,10 +96,10 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         myWindow2Info.put(window, new WindowInfo(window, true));
       }
       myFocusedWindow = window;
-      final Project project = DataManager.getInstance().getDataContext(myFocusedWindow).getData(CommonDataKeys.PROJECT);
+      final Project project = myDataManager.getDataContext(myFocusedWindow).getData(CommonDataKeys.PROJECT);
       for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
         final consulo.ui.Window w = i.next();
-        final DataContext dataContext = DataManager.getInstance().getDataContext(TargetAWT.to(w));
+        final DataContext dataContext = myDataManager.getDataContext(TargetAWT.to(w));
         if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
           i.remove();
         }
@@ -310,7 +312,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
           continue outer;
         }
       }
-      final DataContext dataContext = DataManager.getInstance().getDataContext(awtWindow);
+      final DataContext dataContext = myDataManager.getDataContext(awtWindow);
       if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
         return awtWindow;
       }

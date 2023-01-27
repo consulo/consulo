@@ -38,7 +38,7 @@ public interface AppLifecycleListener {
   }
 
   @Deprecated
-  @DeprecationInfo("Use 'consulo.ide.impl.idea.ide.AppLifecycleListener' instead")
+  @DeprecationInfo("Use 'AppLifecycleListener' instead")
   abstract class Adapter implements AppLifecycleListener {
 
     @Override

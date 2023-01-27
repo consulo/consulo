@@ -15,18 +15,20 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
-import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ui.ex.awt.util.GraphicsUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.AntialiasingType;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -35,12 +37,14 @@ import java.util.List;
 public class DesktopStyleManagerImpl extends StyleManagerImpl {
   public static final DesktopStyleManagerImpl ourInstance = new DesktopStyleManagerImpl();
 
+  private final Supplier<LafManager> myLafManager = LazyValue.notNull(LafManager::getInstance);
+
   private DesktopStyleManagerImpl() {
   }
 
   @Override
   public void setCurrentStyle(@Nonnull Style newStyle) {
-    LafManager lafManager = LafManager.getInstance();
+    LafManager lafManager = myLafManager.get();
     Style oldStyle = lafManager.getCurrentStyle();
     lafManager.setCurrentStyle(newStyle);
     fireStyleChanged(oldStyle, newStyle);
@@ -49,18 +53,18 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
   @Nonnull
   @Override
   public List<Style> getStyles() {
-    return LafManager.getInstance().getStyles();
+    return myLafManager.get().getStyles();
   }
 
   @Nonnull
   @Override
   public Style getCurrentStyle() {
-    return LafManager.getInstance().getCurrentStyle();
+    return myLafManager.get().getCurrentStyle();
   }
 
   @Override
   public void refreshUI() {
-    LafManager.getInstance().updateUI();
+    myLafManager.get().updateUI();
   }
 
   @Override

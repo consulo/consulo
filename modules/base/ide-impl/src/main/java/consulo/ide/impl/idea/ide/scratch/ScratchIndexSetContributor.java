@@ -16,12 +16,16 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.application.Application;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.psi.stub.IndexableSetContributor;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -29,16 +33,28 @@ import java.util.Set;
 
 @ExtensionImpl
 public class ScratchIndexSetContributor extends IndexableSetContributor {
+  private final Application myApplication;
+  private final Provider<ScratchFileService> myScratchFileServiceProvider;
+  private final LocalFileSystem myLocalFileSystem;
+
+  @Inject
+  public ScratchIndexSetContributor(Application application,
+                                    Provider<ScratchFileService> scratchFileServiceProvider,
+                                    VirtualFileManager virtualFileManager) {
+    myApplication = application;
+    myScratchFileServiceProvider = scratchFileServiceProvider;
+    myLocalFileSystem = LocalFileSystem.get(virtualFileManager);
+  }
+
   @Nonnull
   @Override
   public Set<VirtualFile> getAdditionalRootsToIndex() {
-    ScratchFileService instance = ScratchFileService.getInstance();
-    LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+    ScratchFileService scratchFileService = myScratchFileServiceProvider.get();
     HashSet<VirtualFile> result = new HashSet<>();
-    for (RootType rootType : RootType.getAllRootTypes()) {
-      if (rootType.isHidden()) continue;
-      ContainerUtil.addIfNotNull(result, fileSystem.findFileByPath(instance.getRootPath(rootType)));
-    }
+    myApplication.getExtensionPoint(RootType.class).forEachExtensionSafe(rootType -> {
+      if (rootType.isHidden()) return;
+      ContainerUtil.addIfNotNull(result, myLocalFileSystem.findFileByPath(scratchFileService.getRootPath(rootType)));
+    });
     return result;
   }
 }

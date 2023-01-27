@@ -17,9 +17,7 @@ package consulo.desktop.awt.application;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.FrameStateManager;
@@ -27,24 +25,23 @@ import consulo.application.ui.event.FrameStateListener;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.SaveAndSyncHandler;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.ui.ex.awt.util.SingleAlarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.RefreshSession;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.ui.ModalityState;
+import consulo.ui.ex.awt.util.SingleAlarm;
+import consulo.virtualFileSystem.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,6 +54,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 
+  private final Application myApplication;
   private final Runnable myIdleListener;
   private final PropertyChangeListener myGeneralSettingsListener;
   private final GeneralSettings mySettings;
@@ -67,16 +65,18 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   private volatile long myRefreshSessionId;
 
   @Inject
-  public DesktopSaveAndSyncHandlerImpl(@Nonnull GeneralSettings generalSettings,
+  public DesktopSaveAndSyncHandlerImpl(@Nonnull Application application,
+                                       @Nonnull GeneralSettings generalSettings,
                                        @Nonnull ProgressManager progressManager,
                                        @Nonnull FrameStateManager frameStateManager,
                                        @Nonnull FileDocumentManager fileDocumentManager) {
     mySettings = generalSettings;
+    myApplication = application;
     myProgressManager = progressManager;
 
     myIdleListener = () -> {
       if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
+        TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
       }
     };
     IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
@@ -98,7 +98,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       @Override
       public void onFrameDeactivated() {
         LOG.debug("save(): enter");
-        TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> {
+        TransactionGuard.submitTransaction(myApplication, () -> {
           if (canSyncOrSave()) {
             saveProjectsAndDocuments();
           }
@@ -108,7 +108,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
       @Override
       public void onFrameActivated() {
-        if (!ApplicationManager.getApplication().isDisposed() && mySettings.isSyncOnFrameActivation()) {
+        if (!myApplication.isDisposed() && mySettings.isSyncOnFrameActivation()) {
           scheduleRefresh();
         }
       }
@@ -128,9 +128,8 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   @Override
   public void saveProjectsAndDocuments() {
-    Application app = ApplicationManager.getApplication();
-    if (!app.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
-      app.saveAll();
+    if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
+      myApplication.saveAll();
     }
   }
 
@@ -143,10 +142,10 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     if (canSyncOrSave()) {
       refreshOpenFiles();
     }
-    maybeRefresh(IdeaModalityState.NON_MODAL);
+    maybeRefresh(myApplication.getNoneModalityState());
   }
 
-  public void maybeRefresh(@Nonnull IdeaModalityState modalityState) {
+  public void maybeRefresh(@Nonnull ModalityState modalityState) {
     if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
       RefreshQueue queue = RefreshQueue.getInstance();
       queue.cancelSession(myRefreshSessionId);
@@ -164,7 +163,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   @Override
   public void refreshOpenFiles() {
-    List<VirtualFile> files = ContainerUtil.newArrayList();
+    List<VirtualFile> files = new ArrayList<>();
 
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       for (VirtualFile file : FileEditorManager.getInstance(project).getSelectedFiles()) {

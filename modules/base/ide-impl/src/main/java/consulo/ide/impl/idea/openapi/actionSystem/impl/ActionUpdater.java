@@ -68,15 +68,23 @@ public class ActionUpdater {
   private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
   private final UpdateStrategy myRealUpdateStrategy;
   private final UpdateStrategy myCheapStrategy;
+  private final ActionManager myActionManager;
   private final Utils.ActionGroupVisitor myVisitor;
 
   private boolean myAllowPartialExpand = true;
 
-  public ActionUpdater(boolean isInModalContext, PresentationFactory presentationFactory, DataContext dataContext, String place, boolean isContextMenuAction, boolean isToolbarAction) {
-    this(isInModalContext, presentationFactory, dataContext, place, isContextMenuAction, isToolbarAction, null);
+  public ActionUpdater(ActionManager actionManager,
+                       boolean isInModalContext,
+                       PresentationFactory presentationFactory,
+                       DataContext dataContext,
+                       String place,
+                       boolean isContextMenuAction,
+                       boolean isToolbarAction) {
+    this(actionManager, isInModalContext, presentationFactory, dataContext, place, isContextMenuAction, isToolbarAction, null);
   }
 
-  public ActionUpdater(boolean isInModalContext,
+  public ActionUpdater(ActionManager actionManager,
+                       boolean isInModalContext,
                        PresentationFactory presentationFactory,
                        DataContext dataContext,
                        String place,
@@ -84,6 +92,7 @@ public class ActionUpdater {
                        boolean isToolbarAction,
                        Utils.ActionGroupVisitor visitor) {
     myProject = dataContext.getData(Project.KEY);
+    myActionManager = actionManager;
     myModalContext = isInModalContext;
     myFactory = presentationFactory;
     myDataContext = dataContext;
@@ -98,8 +107,16 @@ public class ActionUpdater {
       Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation), myVisitor);
       boolean success = callAction(action, "update", doUpdate);
       return success ? presentation : null;
-    }, group -> callAction(group, "getChildren", () -> group.getChildren(createActionEvent(group, orDefault(group, myUpdatedPresentations.get(group))))),
-                                              group -> callAction(group, "canBePerformed", () -> group.canBePerformed(getDataContext(group))));
+    },
+                                              group -> callAction(group,
+                                                                  "getChildren",
+                                                                  () -> group.getChildren(createActionEvent(group,
+                                                                                                            orDefault(group,
+                                                                                                                      myUpdatedPresentations
+                                                                                                                        .get(group))))),
+                                              group -> callAction(group,
+                                                                  "canBePerformed",
+                                                                  () -> group.canBePerformed(getDataContext(group))));
     myCheapStrategy = new UpdateStrategy(myFactory::getPresentation, group -> group.getChildren(null), group -> true);
   }
 
@@ -283,7 +300,7 @@ public class ActionUpdater {
       int nullIndex = ArrayUtil.indexOf(children, null);
       if (nullIndex < 0) return Arrays.asList(children);
 
-      LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + ActionManager.getInstance().getId(group));
+      LOG.error("action is null: i=" + nullIndex + " group=" + group + " group id=" + myActionManager.getId(group));
       return ContainerUtil.filter(children, Conditions.notNull());
     });
   }
@@ -372,7 +389,11 @@ public class ActionUpdater {
         return null;
       }
       return getGroupChildren(oo, strategy);
-    }).withRoots(getGroupChildren(group, strategy)).unique().traverse(TreeTraversal.LEAVES_DFS).filter(o -> !(o instanceof AnSeparator) && !(isDumb && !o.isDumbAware())).take(1000);
+    }).withRoots(getGroupChildren(group, strategy))
+      .unique()
+      .traverse(TreeTraversal.LEAVES_DFS)
+      .filter(o -> !(o instanceof AnSeparator) && !(isDumb && !o.isDumbAware()))
+      .take(1000);
   }
 
 
@@ -404,7 +425,14 @@ public class ActionUpdater {
   }
 
   private AnActionEvent createActionEvent(AnAction action, Presentation presentation) {
-    AnActionEvent event = new AnActionEvent(null, getDataContext(action), myPlace, presentation, ActionManager.getInstance(), 0, myContextMenuAction, myToolbarAction);
+    AnActionEvent event = new AnActionEvent(null,
+                                            getDataContext(action),
+                                            myPlace,
+                                            presentation,
+                                            myActionManager,
+                                            0,
+                                            myContextMenuAction,
+                                            myToolbarAction);
     event.setInjectedContext(action.isInInjectedContext());
     return event;
   }
@@ -459,8 +487,8 @@ public class ActionUpdater {
     return false;
   }
 
-  private static void handleUpdateException(AnAction action, Presentation presentation, Throwable exc) {
-    String id = ActionManager.getInstance().getId(action);
+  private void handleUpdateException(AnAction action, Presentation presentation, Throwable exc) {
+    String id = myActionManager.getId(action);
     if (id != null) {
       LOG.error("update failed for AnAction(" + action.getClass().getName() + ") with ID=" + id, exc);
     }
@@ -484,7 +512,7 @@ public class ActionUpdater {
   }
 
   // returns false if exception was thrown and handled
-  static boolean doUpdate(boolean isInModalContext, AnAction action, AnActionEvent e, Utils.ActionGroupVisitor visitor) {
+  boolean doUpdate(boolean isInModalContext, AnAction action, AnActionEvent e, Utils.ActionGroupVisitor visitor) {
     if (ApplicationManager.getApplication().isDisposed()) return false;
 
     if (visitor != null && !visitor.beginUpdate(action, e)) return true;
@@ -516,7 +544,9 @@ public class ActionUpdater {
     final NotNullFunction<ActionGroup, AnAction[]> getChildren;
     final Predicate<ActionGroup> canBePerformed;
 
-    UpdateStrategy(NullableFunction<AnAction, Presentation> update, NotNullFunction<ActionGroup, AnAction[]> getChildren, Predicate<ActionGroup> canBePerformed) {
+    UpdateStrategy(NullableFunction<AnAction, Presentation> update,
+                   NotNullFunction<ActionGroup, AnAction[]> getChildren,
+                   Predicate<ActionGroup> canBePerformed) {
       this.update = update;
       this.getChildren = getChildren;
       this.canBePerformed = canBePerformed;

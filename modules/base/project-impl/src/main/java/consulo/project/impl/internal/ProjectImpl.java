@@ -22,12 +22,12 @@ import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.util.TimedReference;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.logging.Logger;
+import consulo.module.ModuleManager;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -45,6 +45,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -53,6 +54,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ProjectImpl extends PlatformComponentManagerImpl implements ProjectEx {
   public static final int NORMAL_PROJECT_PROFILE = 1 << 30;
@@ -74,6 +76,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
   public static final Key<String> CREATION_TRACE = Key.create("ProjectImpl.CREATION_TRACE");
+
+  private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
+  private Supplier<ModuleManager> myModuleManagerProvider = LazyValue.notNull(() -> getInstance(ModuleManager.class));
 
   public ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
     super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT);
@@ -123,7 +128,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     if (!projectName.equals(name)) {
       myName = projectName;
-      StartupManager.getInstance(this).runWhenProjectIsInitialized(new DumbAwareRunnable() {
+      myStartupManagerProvider.get().runWhenProjectIsInitialized(new DumbAwareRunnable() {
         @Override
         public void run() {
           if (isDisposed()) return;
@@ -160,7 +165,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   protected void notifyAboutInitialization(float percentOfLoad, Object component) {
-    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+    ProgressIndicator indicator = getApplication().getProgressManager().getProgressIndicator();
     if (indicator != null) {
       indicator.setText2(component.getClass().getName());
     }
@@ -176,13 +181,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     if (isDisposed()) {
       return false;
     }
-    return isOpen() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
+    return isOpen() && ((StartupManagerEx)myStartupManagerProvider.get()).startupActivityPassed();
   }
 
   @Override
   public boolean  isModulesReady() {
-    ModuleManagerImpl moduleManager = ModuleManagerImpl.getInstanceImpl(this);
-    return moduleManager.isReady();
+    return ((ModuleManagerImpl)myModuleManagerProvider.get()).isReady();
   }
 
   @Override

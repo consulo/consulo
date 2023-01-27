@@ -44,18 +44,25 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   private static final Logger LOG = Logger.getInstance(FileChangedNotificationProvider.class);
 
   private final Project myProject;
+  private final GeneralSettings myGeneralSettings;
+  private final EditorNotifications myEditorNotifications;
 
   @Inject
-  public FileChangedNotificationProvider(@Nonnull Project project, @Nonnull FrameStateManager frameStateManager) {
+  public FileChangedNotificationProvider(@Nonnull Project project,
+                                         @Nonnull FrameStateManager frameStateManager,
+                                         @Nonnull GeneralSettings generalSettings,
+                                         @Nonnull FileEditorManager fileEditorManager,
+                                         @Nonnull EditorNotifications editorNotifications) {
     myProject = project;
+    myGeneralSettings = generalSettings;
+    myEditorNotifications = editorNotifications;
 
     frameStateManager.addListener(new FrameStateListener() {
       @Override
       public void onFrameActivated() {
-        if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-          EditorNotifications notifications = EditorNotifications.getInstance(myProject);
-          for (VirtualFile file : FileEditorManager.getInstance(myProject).getSelectedFiles()) {
-            notifications.updateNotifications(file);
+        if (!myProject.isDisposed() && !generalSettings.isSyncOnFrameActivation()) {
+          for (VirtualFile file : fileEditorManager.getSelectedFiles()) {
+            editorNotifications.updateNotifications(file);
           }
         }
       }
@@ -65,13 +72,12 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
-        if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
-          Set<VirtualFile> openFiles = Set.of(FileEditorManager.getInstance(myProject).getSelectedFiles());
-          EditorNotifications notifications = EditorNotifications.getInstance(myProject);
+        if (!myProject.isDisposed() && !generalSettings.isSyncOnFrameActivation()) {
+          Set<VirtualFile> openFiles = Set.of(fileEditorManager.getSelectedFiles());
           for (VFileEvent event : events) {
             VirtualFile file = event.getFile();
             if (file != null && openFiles.contains(file)) {
-              notifications.updateNotifications(file);
+              editorNotifications.updateNotifications(file);
             }
           }
         }
@@ -88,8 +94,10 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
-    if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {
+  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file,
+                                                     @Nonnull FileEditor fileEditor,
+                                                     @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    if (!myProject.isDisposed() && !myGeneralSettings.isSyncOnFrameActivation()) {
       VirtualFileSystem fs = file.getFileSystem();
       if (fs instanceof LocalFileSystem) {
         FileAttributes attributes = ((LocalFileSystem)fs).getAttributes(file);
@@ -110,7 +118,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     builder.withAction(IdeLocalize.fileChangedExternallyReload(), (i) -> {
       if (!myProject.isDisposed()) {
         file.refresh(false, false);
-        EditorNotifications.getInstance(myProject).updateNotifications(file);
+        myEditorNotifications.updateNotifications(file);
       }
     });
     return builder;

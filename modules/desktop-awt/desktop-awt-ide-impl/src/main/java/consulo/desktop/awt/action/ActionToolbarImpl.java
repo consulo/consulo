@@ -133,7 +133,11 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     this(place, actionGroup, horizontal, decorateButtons, false);
   }
 
-  public ActionToolbarImpl(@Nonnull String place, @Nonnull ActionGroup actionGroup, final boolean horizontal, final boolean decorateButtons, boolean updateActionsNow) {
+  public ActionToolbarImpl(@Nonnull String place,
+                           @Nonnull ActionGroup actionGroup,
+                           final boolean horizontal,
+                           final boolean decorateButtons,
+                           boolean updateActionsNow) {
     super(null);
     myActionManager = ActionManagerEx.getInstanceEx();
     myPlace = place;
@@ -255,11 +259,13 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     if (myLayoutPolicy == AUTO_LAYOUT_POLICY && myAutoPopupRec != null) {
       if (myOrientation == SwingConstants.HORIZONTAL) {
         final int dy = myAutoPopupRec.height / 2 - AllIcons.Ide.Link.getHeight() / 2;
-        TargetAWT.to(AllIcons.Ide.Link).paintIcon(this, g, (int)myAutoPopupRec.getMaxX() - AllIcons.Ide.Link.getWidth() - 1, myAutoPopupRec.y + dy);
+        TargetAWT.to(AllIcons.Ide.Link)
+                 .paintIcon(this, g, (int)myAutoPopupRec.getMaxX() - AllIcons.Ide.Link.getWidth() - 1, myAutoPopupRec.y + dy);
       }
       else {
         final int dx = myAutoPopupRec.width / 2 - AllIcons.Ide.Link.getWidth() / 2;
-        TargetAWT.to(AllIcons.Ide.Link).paintIcon(this, g, myAutoPopupRec.x + dx, (int)myAutoPopupRec.getMaxY() - AllIcons.Ide.Link.getWidth() - 1);
+        TargetAWT.to(AllIcons.Ide.Link)
+                 .paintIcon(this, g, myAutoPopupRec.x + dx, (int)myAutoPopupRec.getMaxY() - AllIcons.Ide.Link.getWidth() - 1);
       }
     }
   }
@@ -304,11 +310,15 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     }
 
     if (mySecondaryActions.getChildrenCount() > 0) {
-      mySecondaryActionsButton = new ActionButtonImpl(mySecondaryActions, myPresentationFactory.getPresentation(mySecondaryActions), myPlace, getMinimumButtonSize()) {
+      mySecondaryActionsButton = new ActionButtonImpl(mySecondaryActions,
+                                                      myPresentationFactory.getPresentation(mySecondaryActions),
+                                                      myPlace,
+                                                      getMinimumButtonSize()) {
         @Override
         @ButtonState
         public int getPopState() {
-          return mySecondaryButtonPopupStateModifier != null && mySecondaryButtonPopupStateModifier.willModify() ? mySecondaryButtonPopupStateModifier.getModifiedPopupState() : super.getPopState();
+          return mySecondaryButtonPopupStateModifier != null && mySecondaryButtonPopupStateModifier.willModify() ? mySecondaryButtonPopupStateModifier
+            .getModifiedPopupState() : super.getPopState();
         }
       };
       mySecondaryActionsButton.setNoIconsInPopup(true);
@@ -371,12 +381,15 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
                                                  @Nonnull Presentation presentation,
                                                  @Nonnull Size minimumSize) {
     if (action.displayTextInToolbar()) {
-      int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
+      int mnemonic =
+        KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(action.getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
 
       ActionButtonWithText buttonWithText = new ActionButtonWithText(action, presentation, place, minimumSize);
 
       if (mnemonic != KeyEvent.VK_UNDEFINED) {
-        buttonWithText.registerKeyboardAction(__ -> buttonWithText.click(), KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), WHEN_IN_FOCUSED_WINDOW);
+        buttonWithText.registerKeyboardAction(__ -> buttonWithText.click(),
+                                              KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK),
+                                              WHEN_IN_FOCUSED_WINDOW);
       }
       tweakActionComponentUI(buttonWithText);
       return buttonWithText;
@@ -395,7 +408,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
 
   @Nonnull
   private ActionButtonImpl createToolbarButton(@Nonnull AnAction action) {
-    return createToolbarButton(action, myMinimalMode, myDecorateButtons, myPlace, myPresentationFactory.getPresentation(action), myMinimumButtonSize);
+    return createToolbarButton(action,
+                               myMinimalMode,
+                               myDecorateButtons,
+                               myPlace,
+                               myPresentationFactory.getPresentation(action),
+                               myMinimumButtonSize);
   }
 
   @Override
@@ -873,10 +891,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
         Component c = getComponent(0);
         Dimension firstSize = c.getPreferredSize();
         if (myOrientation == SwingConstants.HORIZONTAL) {
-          return new Dimension(firstSize.width + AllIcons.Ide.Link.getWidth() + i.left + i.right, Math.max(firstSize.height, minSize.height) + i.top + i.bottom);
+          return new Dimension(firstSize.width + AllIcons.Ide.Link.getWidth() + i.left + i.right,
+                               Math.max(firstSize.height, minSize.height) + i.top + i.bottom);
         }
         else {
-          return new Dimension(Math.max(firstSize.width, AllIcons.Ide.Link.getWidth()) + i.left + i.right, firstSize.height + minSize.height + i.top + i.bottom);
+          return new Dimension(Math.max(firstSize.width, AllIcons.Ide.Link.getWidth()) + i.left + i.right,
+                               firstSize.height + minSize.height + i.top + i.bottom);
         }
       }
       return new Dimension(AllIcons.Ide.Link.getWidth() + i.left + i.right, minSize.height + i.top + i.bottom);
@@ -1014,9 +1034,16 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
 
   private void updateActionsImpl(boolean transparentOnly, boolean forced) {
     DataContext dataContext = getDataContext();
-    boolean async = myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(this) && isShowing();
+    boolean async =
+      myAlreadyUpdated && Registry.is("actionSystem.update.actions.asynchronously") && ActionToolbarsHolder.contains(this) && isShowing();
     ActionUpdater updater =
-            new ActionUpdater(LaterInvocator.isInModalContext(), myPresentationFactory, async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext, myPlace, false, true);
+      new ActionUpdater(myActionManager,
+                        LaterInvocator.isInModalContext(),
+                        myPresentationFactory,
+                        async ? DataManager.getInstance().createAsyncDataContext(dataContext) : dataContext,
+                        myPlace,
+                        false,
+                        true);
     if (async) {
       if (myLastUpdate != null) myLastUpdate.cancel();
 
@@ -1099,11 +1126,12 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
 
   @Nonnull
   protected DataContext getDataContext() {
-    if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null && !ApplicationManager.getApplication().isUnitTestMode()) {
+    if (myTargetComponent == null && getClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING) == null && !ApplicationManager.getApplication()
+                                                                                                                        .isUnitTestMode()) {
       putClientProperty(SUPPRESS_TARGET_COMPONENT_WARNING, true);
       LOG.warn("'" + myPlace + "' toolbar by default uses any focused component to update its actions. " +
-               "Toolbar actions that need local UI context would be incorrectly disabled. " +
-               "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
+                 "Toolbar actions that need local UI context would be incorrectly disabled. " +
+                 "Please call toolbar.setTargetComponent() explicitly.", myCreationTrace);
     }
     Component target = myTargetComponent != null ? myTargetComponent : IJSwingUtilities.getFocusedComponentInWindowOrSelf(this);
     return myDataManager.getDataContext(target);
@@ -1162,14 +1190,22 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
 
 
     final ComponentPopupBuilder builder = JBPopupFactory.getInstance().createComponentPopupBuilder(popupToolbar, null);
-    builder.setResizable(false).setMovable(true) // fit the screen automatically
-            .setRequestFocus(false).setTitle(null).setCancelOnClickOutside(true).setCancelOnOtherWindowOpen(true).setCancelCallback(() -> {
-      final boolean toClose = myActionManager.isActionPopupStackEmpty();
-      if (toClose) {
-        myUpdater.updateActions(false, true);
-      }
-      return toClose;
-    }).setCancelOnMouseOutCallback(event -> myAutoPopupRec != null && myActionManager.isActionPopupStackEmpty() && !new RelativeRectangle(this, myAutoPopupRec).contains(new RelativePoint(event)));
+    builder.setResizable(false)
+           .setMovable(true) // fit the screen automatically
+           .setRequestFocus(false)
+           .setTitle(null)
+           .setCancelOnClickOutside(true)
+           .setCancelOnOtherWindowOpen(true)
+           .setCancelCallback(() -> {
+             final boolean toClose = myActionManager.isActionPopupStackEmpty();
+             if (toClose) {
+               myUpdater.updateActions(false, true);
+             }
+             return toClose;
+           })
+           .setCancelOnMouseOutCallback(event -> myAutoPopupRec != null && myActionManager.isActionPopupStackEmpty() && !new RelativeRectangle(
+             this,
+             myAutoPopupRec).contains(new RelativePoint(event)));
 
     builder.addListener(new JBPopupAdapter() {
       @Override

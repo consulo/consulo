@@ -15,8 +15,8 @@
  */
 package consulo.application.progress;
 
+import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.component.internal.RootComponentHolder;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  */
 public abstract class ProgressIndicatorProvider {
   public static ProgressIndicatorProvider getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(ProgressIndicatorProvider.class);
+    return Application.get().getProgressManager();
   }
 
   public abstract ProgressIndicator getProgressIndicator();

@@ -66,7 +66,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
         if (scope != null) break;
       }
       if (scope == null) scope = getInherentResolveScope(key);
-      for (ResolveScopeEnlarger enlarger : ResolveScopeEnlarger.EP_NAME.getExtensions()) {
+      for (ResolveScopeEnlarger enlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
         final SearchScope extra = enlarger.getAdditionalResolveScope(key, myProject);
         if (extra != null) {
           scope = scope.union(extra);
@@ -188,7 +188,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
     }
 
     GlobalSearchScope targetScope = pair.getFirst();
-    for (ResolveScopeEnlarger scopeEnlarger : ResolveScopeEnlarger.EP_NAME.getExtensions()) {
+    for (ResolveScopeEnlarger scopeEnlarger : ResolveScopeEnlarger.EP_NAME.getExtensionList()) {
       SearchScope scope = scopeEnlarger.getAdditionalUseScope(pair.getSecond(), element.getProject());
       if(scope != null) {
         targetScope = targetScope.union(scope);
