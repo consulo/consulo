@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.credentialStorage;
+package consulo.credentialStorage.impl.internal;
 
+import consulo.credentialStorage.PasswordSafeException;
 import consulo.project.Project;
 import javax.annotation.Nullable;
 
