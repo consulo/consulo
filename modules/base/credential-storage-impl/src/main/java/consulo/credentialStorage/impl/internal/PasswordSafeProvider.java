@@ -15,8 +15,6 @@
  */
 package consulo.credentialStorage.impl.internal;
 
-import consulo.credentialStorage.PasswordStorage;
-
 /**
  * The provider for password safe component
  */

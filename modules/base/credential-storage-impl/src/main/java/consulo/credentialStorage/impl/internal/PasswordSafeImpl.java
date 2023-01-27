@@ -16,13 +16,13 @@
 package consulo.credentialStorage.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.logging.Logger;
 import consulo.credentialStorage.PasswordSafe;
 import consulo.credentialStorage.PasswordSafeException;
 import consulo.credentialStorage.impl.internal.provider.MasterKeyPasswordSafe;
 import consulo.credentialStorage.impl.internal.provider.MemoryPasswordSafe;
 import consulo.credentialStorage.impl.internal.provider.NilProvider;
 import consulo.credentialStorage.impl.internal.provider.masterKey.PasswordDatabase;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -106,6 +106,7 @@ public class PasswordSafeImpl implements PasswordSafe {
   /**
    * {@inheritDoc}
    */
+  @Override
   public String getPassword(@Nullable Project project, Class requester, String key) throws PasswordSafeException {
     if (mySettings.getProviderType().equals(PasswordSafeSettings.ProviderType.MASTER_PASSWORD)) {
       String password = getMemoryProvider().getPassword(project, requester, key);
@@ -124,6 +125,7 @@ public class PasswordSafeImpl implements PasswordSafe {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void removePassword(@Nullable Project project, Class requester, String key) throws PasswordSafeException {
     if (mySettings.getProviderType().equals(PasswordSafeSettings.ProviderType.MASTER_PASSWORD)) {
       getMemoryProvider().removePassword(project, requester, key);
@@ -134,8 +136,13 @@ public class PasswordSafeImpl implements PasswordSafe {
   /**
    * {@inheritDoc}
    */
-  public void storePassword(@Nullable Project project, Class requester, String key, String value) throws PasswordSafeException {
-    if (mySettings.getProviderType().equals(PasswordSafeSettings.ProviderType.MASTER_PASSWORD)) {
+  @Override
+  public void storePassword(@Nullable Project project,
+                            Class requester,
+                            String key,
+                            String value,
+                            boolean recordPassword) throws PasswordSafeException {
+    if (mySettings.getProviderType().equals(PasswordSafeSettings.ProviderType.MASTER_PASSWORD) && recordPassword) {
       getMemoryProvider().storePassword(project, requester, key, value);
     }
     provider().storePassword(project, requester, key, value);
