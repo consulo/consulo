@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import consulo.ide.impl.idea.ide.SaveAndSyncHandler;
+import consulo.application.SaveAndSyncHandler;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.UIBundle;

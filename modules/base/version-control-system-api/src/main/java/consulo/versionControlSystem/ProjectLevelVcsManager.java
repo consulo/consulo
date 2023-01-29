@@ -28,7 +28,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.versionControlSystem.internal.ContentRevisionCache;
+import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;

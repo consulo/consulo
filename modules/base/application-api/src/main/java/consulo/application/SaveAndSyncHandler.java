@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.ApplicationManager;
 
 /**
  * @author Kirill Likhodedov
@@ -25,7 +24,7 @@ import consulo.application.ApplicationManager;
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class SaveAndSyncHandler {
   public static SaveAndSyncHandler getInstance() {
-    return ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);
+    return Application.get().getInstance(SaveAndSyncHandler.class);
   }
 
   public abstract void saveProjectsAndDocuments();

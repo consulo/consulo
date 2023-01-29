@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.internal;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.Change;

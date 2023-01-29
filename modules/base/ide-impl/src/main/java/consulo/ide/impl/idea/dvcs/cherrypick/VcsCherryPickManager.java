@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.versionControlSystem.VcsNotifier;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerEx;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;

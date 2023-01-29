@@ -22,7 +22,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.internal.ContentRevisionCache;
+import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.internal.CurrentRevisionProvider;
 import consulo.virtualFileSystem.VirtualFile;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.versionControlSystem.internal;
+package consulo.versionControlSystem.change;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Throwable2Computable;
@@ -27,9 +27,8 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsKey;
-import consulo.versionControlSystem.change.FilePathsHelper;
-import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.internal.CurrentRevisionProvider;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import org.jetbrains.annotations.Contract;

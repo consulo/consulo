@@ -23,6 +23,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
 

@@ -23,13 +23,13 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
 import consulo.disposer.Disposer;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.internal.ChangeListManagerEx;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

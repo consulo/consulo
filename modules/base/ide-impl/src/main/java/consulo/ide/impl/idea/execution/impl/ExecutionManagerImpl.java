@@ -43,7 +43,7 @@ import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
-import consulo.ide.impl.idea.ide.SaveAndSyncHandler;
+import consulo.application.SaveAndSyncHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AppUIUtil;
