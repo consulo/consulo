@@ -27,8 +27,6 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract class ChangeListManagerEx extends ChangeListManager {
-  public abstract boolean isInUpdate();
-
   @Nonnull
   public abstract Collection<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes);
 
@@ -37,9 +35,6 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
 
   @Nonnull
   public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@Nonnull Collection<Change> changes, @Nonnull List<Change> validChanges);
-
-  @Nonnull
-  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
 
   /**
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.

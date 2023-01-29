@@ -38,7 +38,7 @@ import java.util.function.Consumer;
  * @author max
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
-public abstract class ChangeListManager implements ChangeListModification {
+public abstract class ChangeListManager {
   @Nonnull
   public static ChangeListManager getInstance(Project project) {
     return project.getInstance(ChangeListManager.class);
@@ -48,13 +48,38 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract void scheduleUpdate(boolean updateUnversionedFiles);
 
-  public abstract void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, final String title, final ModalityState state);
+  public abstract void invokeAfterUpdate(final Runnable afterUpdate,
+                                         final InvokeAfterUpdateMode mode,
+                                         final String title,
+                                         final ModalityState state);
 
   public abstract void invokeAfterUpdate(final Runnable afterUpdate,
                                          final InvokeAfterUpdateMode mode,
                                          final String title,
                                          final Consumer<VcsDirtyScopeManager> dirtyScopeManager,
                                          final ModalityState state);
+
+
+  @Nonnull
+  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable String comment, @Nullable Object data);
+
+  public abstract LocalChangeList addChangeList(@Nonnull String name, @Nullable final String comment);
+
+  public abstract void setDefaultChangeList(@Nonnull LocalChangeList list);
+
+  public abstract void removeChangeList(final String name);
+
+  public abstract void removeChangeList(final LocalChangeList list);
+
+  public abstract void moveChangesTo(final LocalChangeList list, final Change... changes);
+
+  // added - since ChangeListManager wouldn't pass internal lists, only copies
+  public abstract boolean setReadOnly(final String name, final boolean value);
+
+  public abstract boolean editName(@Nonnull String fromName, @Nonnull String toName);
+
+  @Nullable
+  public abstract String editComment(@Nonnull String fromName, final String newComment);
 
   @TestOnly
   public abstract boolean ensureUpToDate(boolean canBeCanceled);
@@ -90,8 +115,6 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   @Nullable
   public abstract LocalChangeList getChangeList(String id);
-//  public abstract LocalChangeList addChangeList(@NotNull String name, final String comment);
-//  public abstract void setDefaultChangeList(@NotNull LocalChangeList list);
 
   /**
    * Returns currently active changelist
@@ -187,5 +210,9 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public boolean areChangeListsEnabled() {
     return true;
+  }
+
+  public boolean isInUpdate() {
+    return false;
   }
 }
