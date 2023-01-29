@@ -342,17 +342,6 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     return myNewExtensionArea.getExtensionPoints();
   }
 
-  private static final Set<String> ourLogSet = ConcurrentHashMap.newKeySet();
-
-  @Nonnull
-  @Override
-  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointId) {
-    if (ourLogSet.add(extensionPointId.getName())) {
-      LOG.error("Calling old extension point: " + extensionPointId);
-    }
-    return new EmptyExtensionPoint<>();
-  }
-
   @Nonnull
   @Override
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {

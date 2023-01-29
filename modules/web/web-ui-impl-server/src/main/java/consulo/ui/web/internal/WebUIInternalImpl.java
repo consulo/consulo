@@ -430,7 +430,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
-    // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, npt vo
+    // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, not on visible
     com.vaadin.ui.Component vaadinComponent = TargetVaddin.to(component);
 
     SimpleReference<Registration> ref = SimpleReference.create();

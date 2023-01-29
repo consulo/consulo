@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.ExternalProjectSettings;
@@ -13,9 +15,10 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 7/16/13 3:36 PM
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemConfigLocator {
 
-  ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create("consulo.externalSystemConfigLocator");
+  ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create(ExternalSystemConfigLocator.class);
 
   @Nonnull
   ProjectSystemId getTargetExternalSystemId();

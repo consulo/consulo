@@ -21,7 +21,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.application.dumb.DumbAware;
-import consulo.versionControlSystem.CheckoutProvider;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 
 public class CheckoutAction extends AnAction implements DumbAware {

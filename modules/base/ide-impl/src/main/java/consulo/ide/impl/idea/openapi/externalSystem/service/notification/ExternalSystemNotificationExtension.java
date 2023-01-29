@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
@@ -27,10 +29,11 @@ import javax.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 8/5/13 8:52 AM
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemNotificationExtension {
 
   ExtensionPointName<ExternalSystemNotificationExtension> EP_NAME
-          = ExtensionPointName.create("consulo.externalSystemNotificationExtension");
+          = ExtensionPointName.create(ExternalSystemNotificationExtension.class);
 
   @Nonnull
   ProjectSystemId getTargetExternalSystemId();

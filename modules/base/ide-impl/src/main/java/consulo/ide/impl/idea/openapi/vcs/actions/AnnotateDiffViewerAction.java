@@ -15,15 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.DiffContextEx;
-import consulo.ide.impl.idea.diff.DiffExtension;
-import consulo.ide.impl.idea.diff.FrameDiffTool.DiffViewer;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.internal.BackgroundTaskUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.Editor;
 import consulo.diff.content.DiffContent;
 import consulo.diff.content.FileContent;
-import consulo.ide.impl.idea.diff.merge.TextMergeViewer;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
+import consulo.ide.impl.idea.diff.DiffContextEx;
+import consulo.ide.impl.idea.diff.merge.TextMergeViewer;
 import consulo.ide.impl.idea.diff.tools.fragmented.UnifiedDiffViewer;
 import consulo.ide.impl.idea.diff.tools.simple.SimpleThreesideDiffViewer;
 import consulo.ide.impl.idea.diff.tools.simple.ThreesideTextDiffViewerEx;
@@ -33,50 +37,43 @@ import consulo.ide.impl.idea.diff.tools.util.base.DiffViewerListener;
 import consulo.ide.impl.idea.diff.tools.util.side.OnesideTextDiffViewer;
 import consulo.ide.impl.idea.diff.tools.util.side.TwosideTextDiffViewer;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.diff.util.Side;
-import consulo.diff.util.ThreeSide;
+import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
+import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
+import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
+import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.application.progress.ProgressManager;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.versionControlSystem.VcsNotifier;
-import consulo.versionControlSystem.annotate.AnnotationProvider;
-import consulo.versionControlSystem.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
 import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.CurrentContentRevision;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
-import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.versionControlSystem.VcsNotifier;
+import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.AnnotationProviderEx;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesUtil;
+import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.change.CurrentContentRevision;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
@@ -91,7 +88,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   private static final Key<boolean[]> ANNOTATIONS_SHOWN_KEY = Key.create("Diff.AnnotateAction.AnnotationShown");
 
   private static final ViewerAnnotatorFactory[] ANNOTATORS =
-          new ViewerAnnotatorFactory[]{new TwosideAnnotatorFactory(), new OnesideAnnotatorFactory(), new UnifiedAnnotatorFactory(), new ThreesideAnnotatorFactory(), new TextMergeAnnotatorFactory()};
+    new ViewerAnnotatorFactory[]{new TwosideAnnotatorFactory(), new OnesideAnnotatorFactory(), new UnifiedAnnotatorFactory(), new ThreesideAnnotatorFactory(), new TextMergeAnnotatorFactory()};
 
   public AnnotateDiffViewerAction() {
     ActionUtil.copyFrom(this, "Annotate");
@@ -142,7 +139,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     return null;
   }
 
-  private static boolean isEnabled(AnActionEvent e) {
+  public static boolean isEnabled(AnActionEvent e) {
     EventData data = collectEventData(e);
     if (data == null) return false;
 
@@ -150,18 +147,18 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     return data.annotator.createAnnotationsLoader() != null;
   }
 
-  private static boolean isSuspended(AnActionEvent e) {
+  public static boolean isSuspended(AnActionEvent e) {
     EventData data = collectEventData(e);
     return data != null && data.annotator.getBackgroundableLock().isLocked();
   }
 
-  private static boolean isAnnotated(AnActionEvent e) {
+  public static boolean isAnnotated(AnActionEvent e) {
     EventData data = collectEventData(e);
     assert data != null;
     return data.annotator.isAnnotationShown();
   }
 
-  private static void perform(AnActionEvent e, boolean selected) {
+  public static void perform(AnActionEvent e, boolean selected) {
     EventData data = collectEventData(e);
     assert data != null;
 
@@ -209,7 +206,10 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
           VcsException exception = loader.getException();
           if (exception != null) {
-            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.createNotification("Can't Load Annotations", exception.getMessage(), NotificationType.ERROR, null);
+            Notification notification = VcsNotifier.IMPORTANT_ERROR_NOTIFICATION.createNotification("Can't Load Annotations",
+                                                                                                    exception.getMessage(),
+                                                                                                    NotificationType.ERROR,
+                                                                                                    null);
             showNotification(viewer, notification);
             LOG.warn(exception);
             return;
@@ -225,7 +225,9 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @Nullable
-  private static FileAnnotationLoader createThreesideAnnotationsLoader(@Nonnull Project project, @Nonnull DiffRequest request, @Nonnull ThreeSide side) {
+  private static FileAnnotationLoader createThreesideAnnotationsLoader(@Nonnull Project project,
+                                                                       @Nonnull DiffRequest request,
+                                                                       @Nonnull ThreeSide side) {
     if (request instanceof ContentDiffRequest) {
       ContentDiffRequest requestEx = (ContentDiffRequest)request;
       if (requestEx.getContents().size() == 3) {
@@ -239,7 +241,9 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @Nullable
-  private static FileAnnotationLoader createTwosideAnnotationsLoader(@Nonnull Project project, @Nonnull DiffRequest request, @Nonnull Side side) {
+  private static FileAnnotationLoader createTwosideAnnotationsLoader(@Nonnull Project project,
+                                                                     @Nonnull DiffRequest request,
+                                                                     @Nonnull Side side) {
     Change change = request.getUserData(ChangeDiffRequestProducer.CHANGE_KEY);
     if (change != null) {
       ContentRevision revision = side.select(change.getBeforeRevision(), change.getAfterRevision());
@@ -289,7 +293,9 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @Nullable
-  private static FileAnnotationLoader doCreateAnnotationsLoader(@Nonnull Project project, @Nullable AbstractVcs vcs, @Nullable final VirtualFile file) {
+  private static FileAnnotationLoader doCreateAnnotationsLoader(@Nonnull Project project,
+                                                                @Nullable AbstractVcs vcs,
+                                                                @Nullable final VirtualFile file) {
     if (vcs == null || file == null) return null;
     final AnnotationProvider annotationProvider = vcs.getAnnotationProvider();
     if (annotationProvider == null) return null;
@@ -324,17 +330,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     };
   }
 
-  public static class MyDiffExtension extends DiffExtension {
-    @Override
-    public void onViewerCreated(@Nonnull DiffViewer diffViewer, @Nonnull DiffContext context, @Nonnull DiffRequest request) {
-      if (diffViewer instanceof DiffViewerBase) {
-        DiffViewerBase viewer = (DiffViewerBase)diffViewer;
-        viewer.addListener(new MyDiffViewerListener(viewer));
-      }
-    }
-  }
-
-  private static class MyDiffViewerListener extends DiffViewerListener {
+  public static class MyDiffViewerListener extends DiffViewerListener {
     @Nonnull
     private final DiffViewerBase myViewer;
 
@@ -843,25 +839,4 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     }
   }
 
-  public static class Provider implements AnnotateToggleAction.Provider {
-    @Override
-    public boolean isEnabled(AnActionEvent e) {
-      return AnnotateDiffViewerAction.isEnabled(e);
-    }
-
-    @Override
-    public boolean isSuspended(AnActionEvent e) {
-      return AnnotateDiffViewerAction.isSuspended(e);
-    }
-
-    @Override
-    public boolean isAnnotated(AnActionEvent e) {
-      return AnnotateDiffViewerAction.isAnnotated(e);
-    }
-
-    @Override
-    public void perform(AnActionEvent e, boolean selected) {
-      AnnotateDiffViewerAction.perform(e, selected);
-    }
-  }
 }

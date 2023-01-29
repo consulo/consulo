@@ -17,7 +17,6 @@ package consulo.component;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerOwner;
 import consulo.component.messagebus.MessageBus;
@@ -84,23 +83,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   MessageBus getMessageBus();
 
-  @Nonnull
-  @Deprecated
-  default <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionPoint(extensionPointName).getExtensions();
-  }
-
-  @Nonnull
-  @Deprecated
-  default <T> List<T> getExtensionList(@Nonnull ExtensionPointName<T> extensionPointName) {
-    return getExtensionPoint(extensionPointName).getExtensionList();
-  }
-
-  @Nonnull
-  @Deprecated
-  default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointName<T> extensionPointName) {
-    throw new UnsupportedOperationException();
-  }
 
   @Nonnull
   default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
@@ -110,12 +92,6 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   @Nonnull
   default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
     throw new UnsupportedOperationException();
-  }
-
-  @Nullable
-  @Deprecated
-  default <T, K extends T> K findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<K> extensionClass) {
-    return getExtensionPoint(extensionPointName).findExtension(extensionClass);
   }
 
   /**

@@ -27,6 +27,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.root.VcsRoot;

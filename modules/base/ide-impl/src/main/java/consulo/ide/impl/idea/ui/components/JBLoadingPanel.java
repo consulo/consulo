@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.ui.components;
 
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.AsyncProcessIcon;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.NotNullFunction;
+import consulo.ui.ex.awt.AsyncProcessIcon;
+import consulo.ui.ex.awt.LoadingDecorator;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.util.collection.Lists;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -36,7 +36,7 @@ import java.util.Collection;
 public class JBLoadingPanel extends JPanel {
   private final JPanel myPanel;
   final LoadingDecorator myDecorator;
-  private final Collection<JBLoadingPanelListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final Collection<JBLoadingPanelListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   public JBLoadingPanel(@Nullable LayoutManager manager, @Nonnull Disposable parent) {
     this(manager, parent, -1);

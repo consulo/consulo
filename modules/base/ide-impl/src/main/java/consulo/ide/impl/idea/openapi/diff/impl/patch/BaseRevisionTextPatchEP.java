@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.FilePath;
@@ -24,6 +25,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
@@ -38,6 +40,7 @@ import java.util.Map;
  * Date: 9/15/11
  * Time: 1:20 PM
  */
+@ExtensionImpl
 public class BaseRevisionTextPatchEP implements PatchEP {
   public final static Key<Boolean> ourPutBaseRevisionTextKey = Key.create("consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP.ourPutBaseRevisionTextKey");
   public static final Key<List<FilePath>> ourBaseRevisionPaths = Key.create("consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP.ourBaseRevisionPaths");
@@ -48,6 +51,7 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   private final ChangeListManager myChangeListManager;
   private final String myBaseDir;
 
+  @Inject
   public BaseRevisionTextPatchEP(final Project project) {
     myProject = project;
     myBaseDir = myProject.getBaseDir().getPath();

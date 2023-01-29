@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.versionControlSystem.CheckoutProvider;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.diff;
+package consulo.versionControlSystem.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
-import consulo.diff.request.DiffRequest;
-import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.annotation.Nonnull;
+import consulo.ui.ex.action.AnActionEvent;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class DiffExtension {
-  public static final ExtensionPointName<DiffExtension> EP_NAME = ExtensionPointName.create(DiffExtension.class);
+public interface AnnotateToggleActionProvider {
+  boolean isEnabled(AnActionEvent e);
 
-  @RequiredUIAccess
-  public abstract void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer viewer,
-                                       @Nonnull DiffContext context,
-                                       @Nonnull DiffRequest request);
+  boolean isSuspended(AnActionEvent e);
+
+  boolean isAnnotated(AnActionEvent e);
+
+  void perform(AnActionEvent e, boolean selected);
 }

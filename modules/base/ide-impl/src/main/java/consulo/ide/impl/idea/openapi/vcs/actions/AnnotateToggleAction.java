@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
@@ -41,6 +42,7 @@ import consulo.util.lang.Couple;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
 import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.annotate.LineAnnotationAspect;
@@ -61,18 +63,16 @@ import java.util.Map;
  * @author: lesya
  */
 public class AnnotateToggleAction extends ToggleAction implements DumbAware {
-  public static final ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("consulo.openapi.vcs.actions.AnnotateToggleAction.Provider");
-
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    Provider provider = getProvider(e);
+    AnnotateToggleActionProvider provider = getProvider(e);
     e.getPresentation().setEnabled(provider != null && !provider.isSuspended(e));
   }
 
   @Override
   public boolean isSelected(AnActionEvent e) {
-    Provider provider = getProvider(e);
+    AnnotateToggleActionProvider provider = getProvider(e);
     return provider != null && provider.isAnnotated(e);
   }
 
@@ -87,7 +87,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
       }
     }
 
-    Provider provider = getProvider(e);
+    AnnotateToggleActionProvider provider = getProvider(e);
     if (provider != null) provider.perform(e, selected);
   }
 
@@ -102,7 +102,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
   public static void doAnnotate(@Nonnull final Editor editor,
                                 @Nonnull final Project project,
-                                @javax.annotation.Nullable final VirtualFile currentFile,
+                                @Nullable final VirtualFile currentFile,
                                 @Nonnull final FileAnnotation fileAnnotation,
                                 @Nonnull final AbstractVcs vcs,
                                 @Nonnull final UpToDateLineNumberProvider upToDateLineNumbers) {
@@ -228,7 +228,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private static Map<VcsRevisionNumber, Integer> computeLineNumbers(@Nonnull FileAnnotation fileAnnotation) {
     final Map<VcsRevisionNumber, Integer> numbers = new HashMap<>();
     final List<VcsFileRevision> fileRevisionList = fileAnnotation.getRevisions();
@@ -290,22 +290,12 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
     return Couple.of(commitOrderColors.size() > 1 ? commitOrderColors : null, commitAuthorColors.size() > 1 ? commitAuthorColors : null);
   }
 
-  @javax.annotation.Nullable
-  private static Provider getProvider(AnActionEvent e) {
-    for (Provider provider : EP_NAME.getExtensionList()) {
+  @Nullable
+  private static AnnotateToggleActionProvider getProvider(AnActionEvent e) {
+    for (AnnotateToggleActionProvider provider : Application.get().getExtensionList(AnnotateToggleActionProvider.class)) {
       if (provider.isEnabled(e)) return provider;
     }
     return null;
-  }
-
-  public interface Provider {
-    boolean isEnabled(AnActionEvent e);
-
-    boolean isSuspended(AnActionEvent e);
-
-    boolean isAnnotated(AnActionEvent e);
-
-    void perform(AnActionEvent e, boolean selected);
   }
 
   private static class MyEditorNotificationPanel extends EditorNotificationPanel {

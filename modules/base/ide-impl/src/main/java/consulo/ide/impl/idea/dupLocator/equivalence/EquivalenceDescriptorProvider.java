@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.dupLocator.equivalence;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.TokenSet;
@@ -9,9 +11,10 @@ import javax.annotation.Nullable;
 /**
  * @author Eugene.Kudelevsky
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EquivalenceDescriptorProvider {
   public static final ExtensionPointName<EquivalenceDescriptorProvider> EP_NAME =
-    ExtensionPointName.create("consulo.equivalenceDescriptorProvider");
+    ExtensionPointName.create(EquivalenceDescriptorProvider.class);
 
   // for using in tests only !!!
   public static boolean ourUseDefaultEquivalence = false;

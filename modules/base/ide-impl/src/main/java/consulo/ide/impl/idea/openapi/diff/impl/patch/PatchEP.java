@@ -15,33 +15,41 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.change.CommitContext;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * @author irengrig
- *         Date: 7/11/11
- *         Time: 11:43 AM
+ * Date: 7/11/11
+ * Time: 11:43 AM
  */
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface PatchEP {
-  ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create("consulo.patch.extension");
+  ExtensionPointName<PatchEP> EP_NAME = ExtensionPointName.create(PatchEP.class);
+
   @Nonnull
   String getName();
+
   /**
-   * @param path - before path, if exist, otherwise after path
+   * @param path          - before path, if exist, otherwise after path
    * @param commitContext
    */
   @Nullable
   CharSequence provideContent(@Nonnull final String path, CommitContext commitContext);
+
   /**
-   * @param path - before path, if exist, otherwise after path
+   * @param path          - before path, if exist, otherwise after path
    * @param commitContext
    */
   void consumeContent(@Nonnull final String path, @Nonnull final CharSequence content, CommitContext commitContext);
+
   /**
-   * @param path - before path, if exist, otherwise after path
+   * @param path          - before path, if exist, otherwise after path
    * @param commitContext
    */
   void consumeContentBeforePatchApplied(@Nonnull final String path,

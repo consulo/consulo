@@ -15,33 +15,31 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.logging.Logger;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.annotate.AnnotationProvider;
-import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.action.VcsContextFactory;
+import consulo.versionControlSystem.annotate.AnnotationProvider;
+import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -50,8 +48,8 @@ import static consulo.util.lang.ObjectUtil.assertNotNull;
 public class AnnotateLocalFileAction {
   private static final Logger LOG = Logger.getInstance(AnnotateLocalFileAction.class);
 
-  private static boolean isEnabled(AnActionEvent e) {
-    VcsContext context = VcsContextFactory.SERVICE.getInstance().createContextOn(e);
+  public static boolean isEnabled(AnActionEvent e) {
+    VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
 
     Project project = context.getProject();
     if (project == null || project.isDisposed()) return false;
@@ -73,29 +71,24 @@ public class AnnotateLocalFileAction {
     return true;
   }
 
-  private static boolean isSuspended(AnActionEvent e) {
-    VirtualFile file = assertNotNull(VcsContextFactory.SERVICE.getInstance().createContextOn(e).getSelectedFile());
+  public static boolean isSuspended(AnActionEvent e) {
+    VirtualFile file = assertNotNull(VcsContextFactory.getInstance().createContextOn(e).getSelectedFile());
     return VcsAnnotateUtil.getBackgroundableLock(e.getRequiredData(CommonDataKeys.PROJECT), file).isLocked();
   }
 
-  private static boolean isAnnotated(AnActionEvent e) {
-    VcsContext context = VcsContextFactory.SERVICE.getInstance().createContextOn(e);
+  public static boolean isAnnotated(AnActionEvent e) {
+    VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
 
     Editor editor = context.getEditor();
     if (editor != null) {
       return editor.getGutter().isAnnotationsShown();
     }
 
-    return ContainerUtil.exists(getEditors(context), new Condition<Editor>() {
-      @Override
-      public boolean value(Editor editor) {
-        return editor.getGutter().isAnnotationsShown();
-      }
-    });
+    return ContainerUtil.exists(getEditors(context), editor1 -> editor1.getGutter().isAnnotationsShown());
   }
 
-  private static void perform(AnActionEvent e, boolean selected) {
-    final VcsContext context = VcsContextFactory.SERVICE.getInstance().createContextOn(e);
+  public static void perform(AnActionEvent e, boolean selected) {
+    final VcsContext context = VcsContextFactory.getInstance().createContextOn(e);
 
     if (!selected) {
       for (Editor editor : getEditors(context)) {
@@ -181,25 +174,4 @@ public class AnnotateLocalFileAction {
     return VcsAnnotateUtil.getEditors(project, file);
   }
 
-  public static class Provider implements AnnotateToggleAction.Provider {
-    @Override
-    public boolean isEnabled(AnActionEvent e) {
-      return AnnotateLocalFileAction.isEnabled(e);
-    }
-
-    @Override
-    public boolean isSuspended(AnActionEvent e) {
-      return AnnotateLocalFileAction.isSuspended(e);
-    }
-
-    @Override
-    public boolean isAnnotated(AnActionEvent e) {
-      return AnnotateLocalFileAction.isAnnotated(e);
-    }
-
-    @Override
-    public void perform(AnActionEvent e, boolean selected) {
-      AnnotateLocalFileAction.perform(e, selected);
-    }
-  }
 }

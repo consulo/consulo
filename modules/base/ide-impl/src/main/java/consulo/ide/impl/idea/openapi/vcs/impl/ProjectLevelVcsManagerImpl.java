@@ -42,6 +42,7 @@ import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsAnnotationLocalChangesListenerImpl;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CompositeCheckoutListener;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.*;
 import consulo.versionControlSystem.update.ActionInfo;

@@ -20,7 +20,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,42 +36,32 @@ import java.util.function.Predicate;
 @Deprecated
 @DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")
 public class ExtensionPointName<T> {
-  private final String myId;
   private final Class<? extends T> myIdClass;
-
-
-  @SuppressWarnings("deprecation")
-  public static <T> ExtensionPointName<T> create(@Nonnull String name) {
-    return new ExtensionPointName<>(name);
-  }
 
   @SuppressWarnings("deprecation")
   public static <T> ExtensionPointName<T> create(@Nonnull Class<? extends T> idClass) {
-    return new ExtensionPointName<>(idClass.getName(), idClass);
+    return new ExtensionPointName<>(idClass);
   }
 
   @Deprecated
   @DeprecationInfo("Use #create()")
-  public ExtensionPointName(@Nonnull String name) {
-    myId = name;
-    myIdClass = null;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #create()")
-  public ExtensionPointName(@Nonnull String name, @Nonnull Class<? extends T> idClass) {
-    myId = name;
+  public ExtensionPointName(@Nonnull Class<? extends T> idClass) {
     myIdClass = idClass;
   }
 
   @Nonnull
+  public Class<? extends T> getIdClass() {
+    return myIdClass;
+  }
+
+  @Nonnull
   public String getName() {
-    return myId;
+    return myIdClass.getName();
   }
 
   @Override
   public String toString() {
-    return myId;
+    return myIdClass.toString();
   }
 
   @Nonnull
@@ -98,10 +87,7 @@ public class ExtensionPointName<T> {
   @Nonnull
   @SuppressWarnings("unchecked")
   private ExtensionPoint<T> getExtensionPoint(@Nonnull ComponentManager componentManager) {
-    if (myIdClass != null) {
-      return componentManager.getExtensionPoint((Class<T>)myIdClass);
-    }
-    return componentManager.getExtensionPoint(this);
+    return componentManager.getExtensionPoint((Class<T>)myIdClass);
   }
 
   @Nonnull

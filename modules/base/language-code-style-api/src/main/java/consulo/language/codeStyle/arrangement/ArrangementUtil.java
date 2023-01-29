@@ -288,7 +288,7 @@ public class ArrangementUtil {
                                                         @Nonnull List<ArrangementSettingsToken> tokens,
                                                         @Nonnull ArrangementColorsProvider colorsProvider,
                                                         @Nonnull ArrangementStandardSettingsManager settingsManager) throws IllegalArgumentException {
-    for (ArrangementUiComponent.Factory factory : ArrangementUiComponent.Factory.EP_NAME.getExtensionList()) {
+    for (ArrangementUiComponentFactory factory : ArrangementUiComponentFactory.EP_NAME.getExtensionList()) {
       ArrangementUiComponent result = factory.build(role, tokens, colorsProvider, settingsManager);
       if (result != null) {
         return result;

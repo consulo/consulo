@@ -34,11 +34,6 @@
     <!--id="delete.in.column.mode"/>-->
 
 
-    <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.BaseRevisionTextPatchEP"/>
-    <patch.extension implementation="consulo.ide.impl.idea.openapi.diff.impl.patch.CharsetEP"/>
-
-
-    <checkoutListener implementation="consulo.ide.impl.idea.openapi.vcs.checkout.ProjectImporterCheckoutListener"/>
 
 
     <projectService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -57,10 +52,6 @@
         implementation="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionManagerSettings$IntentionSearchableOptionContributor"/>
 
     <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
-
-
-    <rearranger.ui
-        implementation="consulo.ide.impl.idea.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
 
     <patternDialectProvider implementation="consulo.ide.impl.idea.packageDependencies.ui.ProjectPatternProvider" id="file"/>

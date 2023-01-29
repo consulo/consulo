@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.extension.ExtensionPointName;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.CheckoutProvider;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.checkout.*;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +56,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
         if (myFirstDirectory == null) {
           myFirstDirectory = directory;
         }
-        notifyCheckoutListeners(directory, CheckoutListener.EP_NAME);
+        notifyCheckoutListeners(directory, PreCheckoutListener.class);
       }
     }
   }
@@ -64,6 +64,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
   private static VirtualFile refreshVFS(final File directory) {
     final Ref<VirtualFile> result = new Ref<VirtualFile>();
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
+      @Override
       public void run() {
         final LocalFileSystem lfs = LocalFileSystem.getInstance();
         final VirtualFile vDir = lfs.refreshAndFindFileByIoFile(directory);
@@ -81,13 +82,13 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     return result.get();
   }
 
-  private void notifyCheckoutListeners(final File directory, final ExtensionPointName<CheckoutListener> epName) {
-    final List<CheckoutListener> listeners = epName.getExtensionList();
+  private void notifyCheckoutListeners(final File directory, final Class<? extends CheckoutListener> checkoutListenerEP) {
+    final List<? extends CheckoutListener> listeners = Application.get().getExtensionList(checkoutListenerEP);
     for (CheckoutListener listener: listeners) {
       myFoundProject = listener.processCheckedOutDirectory(myProject, directory);
       if (myFoundProject) break;
     }
-    if (!myFoundProject && !epName.equals(CheckoutListener.COMPLETED_EP_NAME)) {
+    if (!myFoundProject && checkoutListenerEP != CompletedCheckoutListener.class) {
       final List<VcsAwareCheckoutListener> vcsAwareExtensions = VcsAwareCheckoutListener.EP_NAME.getExtensionList();
       for (VcsAwareCheckoutListener extension : vcsAwareExtensions) {
         myFoundProject = extension.processCheckedOutDirectory(myProject, directory, myVcsKey);
@@ -103,9 +104,10 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     }
   }
 
+  @Override
   public void checkoutCompleted() {
     if (!myFoundProject && myFirstDirectory != null) {
-      notifyCheckoutListeners(myFirstDirectory, CheckoutListener.COMPLETED_EP_NAME);
+      notifyCheckoutListeners(myFirstDirectory, CompletedCheckoutListener.class);
     }
   }
 

@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class CredentialsLanguageContribution<T> {
 
   public static final ExtensionPointName<CredentialsLanguageContribution> EP_NAME
-    = ExtensionPointName.create("consulo.remote.credentialsLanguageContribution");
+    = ExtensionPointName.create(CredentialsLanguageContribution.class);
 
   public abstract CredentialsTypeEx getType();
 

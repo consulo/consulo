@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
-import consulo.language.codeStyle.arrangement.std.StdArrangementTokenUiRole;
+import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementAtomMatchConditionComponent;
 
 import javax.annotation.Nonnull;
@@ -31,7 +29,8 @@ import java.util.List;
  * @author Denis Zhdanov
  * @since 3/12/13 2:23 PM
  */
-public class DefaultArrangementUiComponentFactory implements ArrangementUiComponent.Factory {
+@ExtensionImpl(order = "last")
+public class DefaultArrangementUiComponentFactory implements ArrangementUiComponentFactory {
 
   @Nullable
   @Override

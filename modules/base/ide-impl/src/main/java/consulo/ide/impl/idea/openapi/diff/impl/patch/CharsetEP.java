@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.FilePathsHelper;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 import java.io.File;
@@ -33,12 +36,14 @@ import java.util.Map;
  * Date: 10/17/11
  * Time: 7:35 PM
  */
+@ExtensionImpl
 public class CharsetEP implements PatchEP {
   private final static Key<Map<String, String>> ourName = Key.create("Charset");
   
   private final Project myProject;
   private final String myBaseDir;
 
+  @Inject
   public CharsetEP(Project project) {
     myProject = project;
     myBaseDir = myProject.getBaseDir().getPath();

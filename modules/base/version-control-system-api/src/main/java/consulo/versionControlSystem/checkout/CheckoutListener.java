@@ -13,30 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.checkout;
+package consulo.versionControlSystem.checkout;
+
+import consulo.project.Project;
 
 import java.io.File;
 
 /**
- * author: lesya
+ * @author yole
+ * @since 7.0
  */
-public class SimpleCheckoutStrategy extends CheckoutStrategy {
-  public SimpleCheckoutStrategy(File selectedLocation, File cvsPath, boolean isForFile) {
-    super(selectedLocation, cvsPath, isForFile);
-  }
+public interface CheckoutListener {
+  boolean processCheckedOutDirectory(Project project, File directory);
 
-  @Override
-  public boolean useAlternativeCheckoutLocation() {
-    return false;
-  }
-
-  @Override
-  public File getResult() {
-    return new File(getSelectedLocation(), getCvsPath().getPath());
-  }
-
-  @Override
-  public File getCheckoutDirectory() {
-    return getSelectedLocation();
-  }
+  void processOpenedProject(Project lastOpenedProject);
 }

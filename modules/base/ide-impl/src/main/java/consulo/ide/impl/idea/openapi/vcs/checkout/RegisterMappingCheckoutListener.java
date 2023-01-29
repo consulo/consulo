@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.VcsKey;
+import consulo.versionControlSystem.checkout.VcsAwareCheckoutListener;
 
 import java.io.File;
 import java.util.Collections;

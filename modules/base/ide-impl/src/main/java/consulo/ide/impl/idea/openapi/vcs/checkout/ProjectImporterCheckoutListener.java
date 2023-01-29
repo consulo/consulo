@@ -15,19 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkout;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.ide.impl.project.ProjectOpenProcessors;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.checkout.PreCheckoutListener;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
 
-public class ProjectImporterCheckoutListener implements CheckoutListener {
+@ExtensionImpl(order = "last")
+public class ProjectImporterCheckoutListener implements PreCheckoutListener {
   @Override
   public boolean processCheckedOutDirectory(Project project, File directory) {
     final File[] files = directory.listFiles();

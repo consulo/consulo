@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -14,8 +16,9 @@ import java.util.stream.Collectors;
  *
  * @author yole
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class MetaLanguage extends Language {
-  public static final ExtensionPointName<MetaLanguage> EP_NAME = ExtensionPointName.create("consulo.metaLanguage");
+  public static final ExtensionPointName<MetaLanguage> EP_NAME = ExtensionPointName.create(MetaLanguage.class);
 
   protected MetaLanguage(@Nonnull String ID) {
     super(ID);

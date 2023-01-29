@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions.diff;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.ProcessCanceledException;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.util.dataholder.UserDataHolder;
+import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPointName;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
-import consulo.versionControlSystem.change.Change;
+import consulo.project.Project;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
+import consulo.versionControlSystem.change.Change;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeDiffRequestProvider {
-  ExtensionPointName<ChangeDiffRequestProvider> EP_NAME =
-          ExtensionPointName.create("consulo.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider");
+  ExtensionPointName<ChangeDiffRequestProvider> EP_NAME = ExtensionPointName.create(ChangeDiffRequestProvider.class);
 
   @Nonnull
   ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);

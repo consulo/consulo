@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.inspection.reference;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.psi.PsiElement;
@@ -26,8 +28,9 @@ import consulo.language.psi.PsiElement;
  * @author anna
  * @see GlobalInspectionTool#getAnnotator
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RefGraphAnnotator {
-  public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create("consulo.refGraphAnnotator");
+  public static final ExtensionPointName<RefGraphAnnotator> EP_NAME = ExtensionPointName.create(RefGraphAnnotator.class);
   /**
    * Called before the references to the specified element have been collected.
    *

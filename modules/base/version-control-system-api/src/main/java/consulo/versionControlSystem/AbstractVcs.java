@@ -31,6 +31,7 @@ import consulo.versionControlSystem.change.ChangeProvider;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
+import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
 import consulo.versionControlSystem.history.VcsHistoryProvider;

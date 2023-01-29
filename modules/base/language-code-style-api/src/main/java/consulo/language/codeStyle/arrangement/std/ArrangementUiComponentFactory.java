@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2011 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.checkout;
+package consulo.language.codeStyle.arrangement.std;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.versionControlSystem.VcsKey;
-import consulo.project.Project;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 
-import java.io.File;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
-/**
- * User: Irina.Chernushina
- * Date: 11/19/11
- * Time: 1:48 PM
- */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface VcsAwareCheckoutListener {
-  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
+public interface ArrangementUiComponentFactory {
+  ExtensionPointName<ArrangementUiComponentFactory> EP_NAME = ExtensionPointName.create(ArrangementUiComponentFactory.class);
 
-  boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
+  @Nullable
+  ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
+                               @Nonnull List<ArrangementSettingsToken> tokens,
+                               @Nonnull ArrangementColorsProvider colorsProvider,
+                               @Nonnull ArrangementStandardSettingsManager settingsManager);
 }

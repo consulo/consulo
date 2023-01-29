@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.checkout;
+package consulo.versionControlSystem.checkout;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.versionControlSystem.VcsKey;
 import consulo.project.Project;
 
 import java.io.File;
 
 /**
- * @author yole
- * @since 7.0
+ * User: Irina.Chernushina
+ * Date: 11/19/11
+ * Time: 1:48 PM
  */
-public interface CheckoutListener {
-  ExtensionPointName<CheckoutListener> EP_NAME = ExtensionPointName.create("consulo.checkoutListener");
-  ExtensionPointName<CheckoutListener> COMPLETED_EP_NAME = ExtensionPointName.create("consulo.checkoutCompletedListener");
-  
-  boolean processCheckedOutDirectory(Project project, File directory);
+@ExtensionAPI(ComponentScope.APPLICATION)
+public interface VcsAwareCheckoutListener {
+  ExtensionPointName<VcsAwareCheckoutListener> EP_NAME = ExtensionPointName.create(VcsAwareCheckoutListener.class);
 
-  void processOpenedProject(Project lastOpenedProject);
+  boolean processCheckedOutDirectory(final Project project, final File directory, final VcsKey vcsKey);
 }

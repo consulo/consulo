@@ -37,7 +37,8 @@ public class Extensions {
   @Nonnull
   @SuppressWarnings({"unchecked"})
   @Deprecated
-  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName, @Nullable ComponentManager areaInstance) {
-    return areaInstance == null ? getExtensions(extensionPointName) : areaInstance.getExtensions(extensionPointName);
+  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> name, @Nullable ComponentManager areaInstance) {
+    if (areaInstance == null) return getExtensions(name);
+    else return areaInstance.getExtensionPoint(name.getIdClass()).getExtensions();
   }
 }

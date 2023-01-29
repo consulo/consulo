@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.execution.dashboard;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.RunContentDescriptor;
@@ -28,8 +30,9 @@ import consulo.application.util.registry.Registry;
  *
  * @author konstantin.aleev
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunDashboardContributor {
-  public static final ExtensionPointName<RunDashboardContributor> EP_NAME = ExtensionPointName.create("consulo.runDashboardContributor");
+  public static final ExtensionPointName<RunDashboardContributor> EP_NAME = ExtensionPointName.create(RunDashboardContributor.class);
 
   private final ConfigurationType myType;
 

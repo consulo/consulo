@@ -23,6 +23,7 @@ module consulo.ui.api {
   exports consulo.ui.image;
   exports consulo.ui.image.canvas;
   exports consulo.ui.layout;
+  exports consulo.ui.layout.event;
   exports consulo.ui.model;
   exports consulo.ui.style;
   exports consulo.ui.util;
