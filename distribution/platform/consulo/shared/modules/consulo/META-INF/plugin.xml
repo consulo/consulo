@@ -725,6 +725,7 @@
         <group id="ToggleFullScreenGroup">
           <separator/>
           <action id="TogglePresentationMode" class="consulo.ide.impl.idea.ide.actions.TogglePresentationModeAction"/>
+          <action id="TogglePresentationAssistant" class="consulo.ide.impl.presentationAssistant.action.TogglePresentationAssistantAction"/>
           <action id="ToggleFullScreen" class="consulo.ide.impl.idea.ide.actions.ToggleFullScreenAction"/>
         </group>
       </group>

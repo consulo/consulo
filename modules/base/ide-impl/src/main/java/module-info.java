@@ -146,6 +146,8 @@ open module consulo.ide.impl {
 
   exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl;
 
+  //opens consulo.ide.impl.presentationAssistant to consulo.util.xml.serializer;
+
   exports consulo.ide.impl;
   exports consulo.ide.impl.actionSystem.ex;
   exports consulo.ide.impl.actionSystem.impl;
