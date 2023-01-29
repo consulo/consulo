@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
+package consulo.externalSystem.service.notification;
 
+import consulo.navigation.Navigatable;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.event.HyperlinkEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,10 @@ public class NotificationData {
   private final NotificationSource myNotificationSource;
   @Nonnull
   private NotificationListener myListener;
-  @Nullable private String myFilePath;
-  @Nullable private Navigatable navigatable;
+  @Nullable
+  private String myFilePath;
+  @Nullable
+  private Navigatable navigatable;
   private int myLine;
   private int myColumn;
   private boolean myBalloonNotification;
@@ -69,7 +72,7 @@ public class NotificationData {
     myMessage = message;
     myNotificationCategory = notificationCategory;
     myNotificationSource = notificationSource;
-    myListenerMap = ContainerUtil.newHashMap();
+    myListenerMap = new HashMap<>();
     myListener = new NotificationListener.Adapter() {
       @Override
       protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
@@ -162,12 +165,12 @@ public class NotificationData {
     myListenerMap.put(listenerId, listener);
   }
 
-  boolean hasLinks() {
+  public boolean hasLinks() {
     return !myListenerMap.isEmpty();
   }
 
   public List<String> getRegisteredListenerIds() {
-    return ContainerUtil.newArrayList(myListenerMap.keySet());
+    return new ArrayList<>(myListenerMap.keySet());
   }
 
   @Nullable

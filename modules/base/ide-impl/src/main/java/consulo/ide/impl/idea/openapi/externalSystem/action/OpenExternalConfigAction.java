@@ -7,7 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
-import consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
+import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.fileEditor.FileEditorManager;

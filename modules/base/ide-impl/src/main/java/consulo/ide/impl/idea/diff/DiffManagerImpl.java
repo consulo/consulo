@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.SimpleDiffRequestChain;
 import consulo.ide.impl.idea.diff.editor.ChainDiffVirtualFile;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class DiffManagerImpl extends DiffManagerEx {
   @RequiredUIAccess
   @Override

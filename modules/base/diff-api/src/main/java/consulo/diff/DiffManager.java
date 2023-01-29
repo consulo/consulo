@@ -15,6 +15,8 @@
  */
 package consulo.diff;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.merge.MergeRequest;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DiffManager {
   @Nonnull
   public static DiffManager getInstance() {

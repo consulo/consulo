@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.openapi.externalSystem.service.settings;
+package consulo.externalSystem.service.setting;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;

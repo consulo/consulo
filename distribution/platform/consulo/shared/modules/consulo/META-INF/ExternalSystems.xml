@@ -16,16 +16,11 @@
 <consulo-plugin>
 
   <extensionPoints>
-    <extensionPoint name="externalSystemManager" interface="consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager"/>
-    <extensionPoint name="externalProjectDataService"
-                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataService"/>
+
     <extensionPoint name="externalSystemNotificationExtension"
-                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
-    <extensionPoint name="externalSystemConfigLocator"
-                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator"/>
-    <extensionPoint name="externalSystemTaskNotificationListener"
-                    interface="consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener"/>
-  </extensionPoints>
+                    interface="consulo.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
+
+   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
 

@@ -55,12 +55,12 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.ImportCanceledExcept
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
-import consulo.ide.impl.idea.openapi.externalSystem.service.notification.NotificationSource;
+import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
-import consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator;
+import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
