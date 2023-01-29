@@ -17,6 +17,7 @@ package consulo.process;
 
 import consulo.application.Application;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.io.BaseOutputReader;
 
 import javax.annotation.Nonnull;
 
@@ -40,8 +41,17 @@ public interface ProcessHandlerBuilder {
   @Nonnull
   ProcessHandlerBuilder killable();
 
+  /**
+   * {@link BaseOutputReader.Options#forMostlySilentProcess()}
+   */
   @Nonnull
   ProcessHandlerBuilder silentReader();
+
+  /**
+   * {@link BaseOutputReader.Options#BLOCKING}
+   */
+  @Nonnull
+  ProcessHandlerBuilder blockingReader();
 
   @Nonnull
   ProcessHandlerBuilder consoleType(@Nonnull ProcessConsoleType type);

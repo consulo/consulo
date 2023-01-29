@@ -36,8 +36,9 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
   private boolean myColored = false;
   private boolean myKillable = false;
-  private boolean mySilentReader = false;
   private Boolean myShouldDestroyProcessRecursively;
+
+  private BaseOutputReader.Options myReaderOptions;
 
   private final GeneralCommandLine myCommandLine;
 
@@ -62,7 +63,14 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   @Nonnull
   @Override
   public ProcessHandlerBuilder silentReader() {
-    mySilentReader = true;
+    myReaderOptions = BaseOutputReader.Options.forMostlySilentProcess();
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ProcessHandlerBuilder blockingReader() {
+    myReaderOptions = BaseOutputReader.Options.BLOCKING;
     return this;
   }
 
@@ -97,10 +105,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
         processHandler = handler;
         break;
       case EXTERNAL:
-        if (mySilentReader) {
-          throw new IllegalArgumentException("Silent reader not support for EXTERNAL console");
+        if (myReaderOptions != null) {
+          throw new IllegalArgumentException("Reader options not support for console");
         }
-        
+
         Platform.OperatingSystem os = Platform.current().os();
         if (!os.isWindows()) {
           throw new ExecutionException("Can't create process with EXTERNAL console at OS " + os.name());
@@ -128,7 +136,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
-            return mySilentReader ? BaseOutputReader.Options.forMostlySilentProcess() : super.readerOptions();
+            if (myReaderOptions != null) {
+              return myReaderOptions;
+            }
+            return super.readerOptions();
           }
         };
       }
@@ -137,7 +148,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
-            return mySilentReader ? BaseOutputReader.Options.forMostlySilentProcess() : super.readerOptions();
+            if (myReaderOptions != null) {
+              return myReaderOptions;
+            }
+            return super.readerOptions();
           }
         };
       }
@@ -148,7 +162,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
-            return mySilentReader ? BaseOutputReader.Options.forMostlySilentProcess() : super.readerOptions();
+            if (myReaderOptions != null) {
+              return myReaderOptions;
+            }
+            return super.readerOptions();
           }
         };
       }
@@ -157,7 +174,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
-            return mySilentReader ? BaseOutputReader.Options.forMostlySilentProcess() : super.readerOptions();
+            if (myReaderOptions != null) {
+              return myReaderOptions;
+            }
+            return super.readerOptions();
           }
         };
       }
