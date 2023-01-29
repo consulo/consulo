@@ -36,7 +36,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.diagnostic.errordialog.*;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;

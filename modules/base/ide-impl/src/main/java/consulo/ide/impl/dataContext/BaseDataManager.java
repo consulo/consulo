@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.base;
+package consulo.ide.impl.dataContext;
 
-import consulo.ide.impl.idea.ide.impl.dataRules.*;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
@@ -28,7 +23,9 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.internal.DataRuleHoler;
-import consulo.ide.impl.DataValidators;
+import consulo.ide.impl.idea.ide.impl.dataRules.*;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
@@ -40,6 +37,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
@@ -287,7 +285,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
     DataContext dataContext = getDataContext(component);
 
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    Component focusedComponent = ((WindowManagerEx)myWindowManager.get()).getFocusedComponent(project);
+    Component focusedComponent = myWindowManager.get().getFocusedComponent(project);
     if (focusedComponent != null) {
       dataContext = getDataContext(focusedComponent);
     }

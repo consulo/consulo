@@ -52,7 +52,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;

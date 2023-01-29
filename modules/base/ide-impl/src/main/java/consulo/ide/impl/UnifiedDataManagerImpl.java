@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

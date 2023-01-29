@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.LangDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.DataValidators;
+import consulo.ide.impl.dataContext.DataValidators;
 import javax.annotation.Nonnull;
 
 /**

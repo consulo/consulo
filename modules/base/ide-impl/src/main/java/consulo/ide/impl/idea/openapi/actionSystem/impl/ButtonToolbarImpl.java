@@ -8,7 +8,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 
 import javax.annotation.Nonnull;
 

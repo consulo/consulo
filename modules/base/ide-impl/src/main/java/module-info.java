@@ -143,6 +143,9 @@ open module consulo.ide.impl {
   requires transitive org.slf4j;
 
   provides consulo.ui.image.IconLibraryDescriptor with consulo.ide.impl.ui.impl.LightIconLibraryDescriptor, consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
+
+  exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl;
+
   exports consulo.ide.impl;
   exports consulo.ide.impl.actionSystem.ex;
   exports consulo.ide.impl.actionSystem.impl;

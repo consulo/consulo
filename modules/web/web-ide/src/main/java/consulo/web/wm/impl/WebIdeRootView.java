@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.actionSystem.impl.UnifiedActionUtil;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;

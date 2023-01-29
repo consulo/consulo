@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.ide.impl.dataContext;
 
-import consulo.ide.impl.idea.ide.impl.DataValidator;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.dataContext.DataValidator;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.application.util.NotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -55,7 +54,8 @@ public class DataValidators {
     public T[] findInvalid(final Key<T[]> dataId, T[] array, final Object dataSource) {
       for (T element : array) {
         if (element == null) {
-          LOG.error("Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass().getName() + " (" + dataSource.toString() + ")");
+          LOG.error("Data isn't valid. " + dataId + "=null Provided by: " + dataSource.getClass()
+                                                                                      .getName() + " (" + dataSource.toString() + ")");
         }
         T invalid = myElementValidator.findInvalid(myElementValidator.getKey(), element, dataSource);
         if (invalid != null) {
@@ -68,11 +68,11 @@ public class DataValidators {
     }
   }
 
-  private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<VirtualFile>() {
+  private static final DataValidator<VirtualFile> VIRTUAL_FILE_VALIDATOR = new DataValidator<>() {
     @Nonnull
     @Override
     public Key<VirtualFile> getKey() {
-      return PlatformDataKeys.VIRTUAL_FILE;
+      return VirtualFile.KEY;
     }
 
     @Override
@@ -81,11 +81,11 @@ public class DataValidators {
     }
   };
 
-  private static final DataValidator<Project> PROJECT_VALIDATOR = new DataValidator<Project>() {
+  private static final DataValidator<Project> PROJECT_VALIDATOR = new DataValidator<>() {
     @Nonnull
     @Override
     public Key<Project> getKey() {
-      return CommonDataKeys.PROJECT;
+      return Project.KEY;
     }
 
     @Override
@@ -94,22 +94,24 @@ public class DataValidators {
     }
   };
 
-  private static NotNullLazyValue<Map<Key, DataValidator>> ourCache = NotNullLazyValue.createValue(() -> {
-    Map<Key, DataValidator> map = new IdentityHashMap<>();
-    map.put(PlatformDataKeys.VIRTUAL_FILE, DataValidators.VIRTUAL_FILE_VALIDATOR);
-    map.put(PlatformDataKeys.VIRTUAL_FILE_ARRAY, new DataValidators.ArrayValidator<>(DataValidators.VIRTUAL_FILE_VALIDATOR));
-    map.put(CommonDataKeys.PROJECT, DataValidators.PROJECT_VALIDATOR);
+  private static final ExtensionPointCacheKey<DataValidator, Map<Key, DataValidator>> CACHE_KEY =
+    ExtensionPointCacheKey.create("DataValidator", dataValidators -> {
+      Map<Key, DataValidator> map = new IdentityHashMap<>();
+      map.put(VirtualFile.KEY, DataValidators.VIRTUAL_FILE_VALIDATOR);
+      map.put(VirtualFile.KEY_OF_ARRAY, new DataValidators.ArrayValidator<>(DataValidators.VIRTUAL_FILE_VALIDATOR));
+      map.put(Project.KEY, DataValidators.PROJECT_VALIDATOR);
 
-    for (DataValidator validator : DataValidator.EP_NAME.getExtensionList()) {
-      map.put(validator.getKey(), validator);
-    }
-    return map;
-  });
+      for (DataValidator validator : dataValidators) {
+        map.put(validator.getKey(), validator);
+      }
+      return map;
+    });
 
   @Nullable
   @SuppressWarnings("unchecked")
   private static <T> DataValidator<T> getValidator(Key<T> dataId) {
-    return ourCache.getValue().get(dataId);
+    Map<Key, DataValidator> map = Application.get().getExtensionPoint(DataValidator.class).getOrBuildCache(CACHE_KEY);
+    return map.get(dataId);
   }
 
   public static <T> T findInvalidData(Key<T> dataId, T data, final Object dataSource) {

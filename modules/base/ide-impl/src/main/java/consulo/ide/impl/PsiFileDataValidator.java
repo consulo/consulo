@@ -16,7 +16,7 @@
 package consulo.ide.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.impl.DataValidator;
+import consulo.dataContext.DataValidator;
 import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;

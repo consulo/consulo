@@ -27,7 +27,7 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
-import consulo.ide.impl.base.BaseDataManager;
+import consulo.ide.impl.dataContext.BaseDataManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
