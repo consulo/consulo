@@ -242,7 +242,7 @@
       <dependency>
         <groupId>consulo.internal</groupId>
         <artifactId>forms_rt</artifactId>
-        <version>1.0</version>
+        <version>3.0.1</version>
       </dependency>
       <dependency>
         <groupId>org.jmock</groupId>
