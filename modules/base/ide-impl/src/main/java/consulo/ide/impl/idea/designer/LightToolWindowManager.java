@@ -15,21 +15,18 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAwareRunnable;
+import consulo.component.PropertiesComponent;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.util.ParameterizedRunnable;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.ui.UIAccess;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -49,7 +46,7 @@ import javax.swing.*;
 public abstract class LightToolWindowManager implements Disposable {
   public static final String EDITOR_MODE = "UI_DESIGNER_EDITOR_MODE.";
 
-  private final MergingUpdateQueue myWindowQueue = new MergingUpdateQueue(getClass().getSimpleName(), 200, true, null);
+  private final MergingUpdateQueue myWindowQueue = new MergingUpdateQueue(getClientPropertyName(), 200, true, null);
   protected final Project myProject;
   protected final FileEditorManager myFileEditorManager;
   protected volatile ToolWindow myToolWindow;
@@ -92,24 +89,13 @@ public abstract class LightToolWindowManager implements Disposable {
   protected LightToolWindowManager(Project project, FileEditorManager fileEditorManager) {
     myProject = project;
     myFileEditorManager = fileEditorManager;
-    myPropertiesComponent = PropertiesComponent.getInstance(myProject);
+    myPropertiesComponent = ProjectPropertiesComponent.getInstance(myProject);
     myEditorModeKey = EDITOR_MODE + getClass().getSimpleName() + ".STATE";
+
+    initListeners();
   }
 
-  public void projectOpened() {
-    UIAccess lastUIAccess = Application.get().getLastUIAccess();
-    lastUIAccess.giveAndWaitIfNeed(this::initToolWindow);
-
-    StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new DumbAwareRunnable() {
-      public void run() {
-        if (getEditorMode() == null) {
-          initListeners();
-          bindToDesigner(getActiveDesigner());
-        }
-      }
-    });
-  }
-
+  @Override
   public void dispose() {
     if (!myToolWindowDisposed) {
       disposeComponent();
@@ -146,6 +132,11 @@ public abstract class LightToolWindowManager implements Disposable {
     return null;
   }
 
+  // obsolete?
+  public void bindToActiveDesigner() {
+    bindToDesigner(getActiveDesigner());
+  }
+
   private void bindToDesigner(final DesignerEditorPanelFacade designer) {
     myWindowQueue.cancelAllUpdates();
     myWindowQueue.queue(new Update("update") {
@@ -154,18 +145,14 @@ public abstract class LightToolWindowManager implements Disposable {
         if (myToolWindowDisposed) {
           return;
         }
-        if (myToolWindow == null) {
-          if (designer == null) {
-            return;
-          }
-          initToolWindow();
+        if (myToolWindow == null && designer == null) {
+          return;
         }
+
         updateToolWindow(designer);
       }
     });
   }
-
-  protected abstract void initToolWindow();
 
   protected abstract void updateToolWindow(@Nullable DesignerEditorPanelFacade designer);
 
@@ -213,7 +200,7 @@ public abstract class LightToolWindowManager implements Disposable {
   }
 
   protected final Object getContent(@Nonnull DesignerEditorPanelFacade designer) {
-    LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClass().getSimpleName());
+    LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClientPropertyName());
     return toolWindow.getContent();
   }
 
@@ -227,38 +214,26 @@ public abstract class LightToolWindowManager implements Disposable {
                                                 @Nonnull JComponent focusedComponent,
                                                 int defaultWidth,
                                                 @Nullable AnAction[] actions) {
-    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject, myPropertiesComponent, getClass().getSimpleName(),
-                               defaultWidth, actions);
+    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this,
+                               myProject, myPropertiesComponent, getClientPropertyName(), defaultWidth, actions);
   }
 
   protected final void disposeContent(DesignerEditorPanelFacade designer) {
-    String key = getClass().getSimpleName();
+    String key = getClientPropertyName();
     LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(key);
     designer.putClientProperty(key, null);
     toolWindow.dispose();
   }
 
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myCreateAction = new ParameterizedRunnable<DesignerEditorPanelFacade>() {
-    @Override
-    public void run(DesignerEditorPanelFacade designer) {
-      designer.putClientProperty(getClass().getSimpleName(), createContent(designer));
-    }
+  private final ParameterizedRunnable<DesignerEditorPanelFacade> myCreateAction =
+    designer -> designer.putClientProperty(getClientPropertyName(), createContent(designer));
+
+  private final ParameterizedRunnable<DesignerEditorPanelFacade> myUpdateAnchorAction = designer -> {
+    LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClientPropertyName());
+    toolWindow.updateAnchor(getEditorMode());
   };
 
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myUpdateAnchorAction = new ParameterizedRunnable<DesignerEditorPanelFacade>() {
-    @Override
-    public void run(DesignerEditorPanelFacade designer) {
-      LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClass().getSimpleName());
-      toolWindow.updateAnchor(getEditorMode());
-    }
-  };
-
-  private final ParameterizedRunnable<DesignerEditorPanelFacade> myDisposeAction = new ParameterizedRunnable<DesignerEditorPanelFacade>() {
-    @Override
-    public void run(DesignerEditorPanelFacade designer) {
-      disposeContent(designer);
-    }
-  };
+  private final ParameterizedRunnable<DesignerEditorPanelFacade> myDisposeAction = designer -> disposeContent(designer);
 
   private void runUpdateContent(ParameterizedRunnable<DesignerEditorPanelFacade> action) {
     for (FileEditor editor : myFileEditorManager.getAllEditors()) {
@@ -280,6 +255,11 @@ public abstract class LightToolWindowManager implements Disposable {
       return getAnchor();
     }
     return value.equals("ToolWindow") ? null : ToolWindowAnchor.fromText(value);
+  }
+
+  @Nonnull
+  protected String getClientPropertyName() {
+    return getClass().getSimpleName();
   }
 
   final void setEditorMode(@Nullable ToolWindowAnchor newState) {

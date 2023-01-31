@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.application.AllIcons;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.component.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -25,12 +28,11 @@ import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
-import consulo.application.AllIcons;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -38,8 +40,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.ide.impl.ui.ToolwindowPaintUtil;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
