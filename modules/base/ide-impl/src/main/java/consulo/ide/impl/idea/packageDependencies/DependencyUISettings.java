@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.packageDependencies;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.component.extension.Extensions;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -28,6 +27,8 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.packageDependencies.ui.PatternDialectProvider;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
+
+import java.util.List;
 
 @Singleton
 @State(name = "DependencyUISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
@@ -42,7 +43,7 @@ public class DependencyUISettings implements PersistentStateComponent<Dependency
   public boolean UI_FILTER_OUT_OF_CYCLE_PACKAGES = true;
   public boolean UI_GROUP_BY_SCOPE_TYPE = true;
   public boolean UI_COMPACT_EMPTY_MIDDLE_PACKAGES = true;
-  public String SCOPE_TYPE = Extensions.getExtensions(PatternDialectProvider.EP_NAME)[0].getShortName();
+  public String SCOPE_TYPE;
 
   public static DependencyUISettings getInstance() {
     return ServiceManager.getService(DependencyUISettings.class);
@@ -56,5 +57,18 @@ public class DependencyUISettings implements PersistentStateComponent<Dependency
   @Override
   public void loadState(DependencyUISettings state) {
     XmlSerializerUtil.copyBean(state, this);
+  }
+
+  public String getScopeType() {
+    if (SCOPE_TYPE == null) {
+      // return last if not selected
+      List<PatternDialectProvider> list = PatternDialectProvider.EP_NAME.getExtensionList();
+      return list.get(list.size() - 1).getId();
+    }
+    return SCOPE_TYPE;
+  }
+
+  public void setScopeType(String scopeType) {
+    SCOPE_TYPE = scopeType;
   }
 }

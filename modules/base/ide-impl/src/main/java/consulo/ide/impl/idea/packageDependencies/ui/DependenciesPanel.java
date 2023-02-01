@@ -21,7 +21,6 @@ import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
-import consulo.component.extension.Extensions;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
 import consulo.dataContext.DataProvider;
@@ -92,13 +91,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private final MyTree myRightTree = new MyTree();
   private final DependenciesUsagesPanel myUsagesPanel;
 
-  private static final HashSet<PsiFile> EMPTY_FILE_SET = new HashSet<PsiFile>(0);
+  private static final HashSet<PsiFile> EMPTY_FILE_SET = new HashSet<>(0);
   private final TreeExpansionMonitor myRightTreeExpansionMonitor;
   private final TreeExpansionMonitor myLeftTreeExpansionMonitor;
 
   private final Marker myRightTreeMarker;
   private final Marker myLeftTreeMarker;
-  private Set<PsiFile> myIllegalsInRightTree = new HashSet<PsiFile>();
+  private Set<PsiFile> myIllegalsInRightTree = new HashSet<>();
 
   private final Project myProject;
   private List<DependenciesBuilder> myBuilders;
@@ -112,7 +111,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private final int myTransitiveBorder;
 
   public DependenciesPanel(Project project, final DependenciesBuilder builder){
-    this(project, Collections.singletonList(builder), new HashSet<PsiFile>());
+    this(project, Collections.singletonList(builder), new HashSet<>());
   }
 
   public DependenciesPanel(Project project, final List<DependenciesBuilder> builders, final Set<PsiFile> excluded) {
@@ -123,8 +122,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     myForward = !main.isBackward();
     myScopeOfInterest = main.getScopeOfInterest();
     myTransitiveBorder = main.getTransitiveBorder();
-    myDependencies = new HashMap<PsiFile, Set<PsiFile>>();
-    myIllegalDependencies = new HashMap<PsiFile, Map<DependencyRule, Set<PsiFile>>>();
+    myDependencies = new HashMap<>();
+    myIllegalDependencies = new HashMap<>();
     for (DependenciesBuilder builder : builders) {
       myDependencies.putAll(builder.getDependencies());
       myIllegalDependencies.putAll(builder.getIllegalDependencies());
@@ -212,7 +211,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             final Set<PsiFile> searchFor = getSelectedScope(myRightTree);
             if (searchIn.isEmpty() || searchFor.isEmpty()) {
               myUsagesPanel.setToInitialPosition();
-              processDependencies(searchIn, searchFor, new Processor<List<PsiFile>>() { //todo do not show too many usages
+              processDependencies(searchIn, searchFor, new Processor<>() { //todo do not show too many usages
                 @Override
                 public boolean process(final List<PsiFile> path) {
                   searchFor.add(path.get(1));
@@ -246,12 +245,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private void processDependencies(final Set<PsiFile> searchIn, final Set<PsiFile> searchFor, Processor<List<PsiFile>> processor) {
     if (myTransitiveBorder == 0) return;
-    Set<PsiFile> initialSearchFor = new HashSet<PsiFile>(searchFor);
+    Set<PsiFile> initialSearchFor = new HashSet<>(searchFor);
     for (DependenciesBuilder builder : myBuilders) {
       for (PsiFile from : searchIn) {
         for (PsiFile to : initialSearchFor) {
           final List<List<PsiFile>> paths = builder.findPaths(from, to);
-          Collections.sort(paths, new Comparator<List<PsiFile>>() {
+          Collections.sort(paths, new Comparator<>() {
             @Override
             public int compare(final List<PsiFile> p1, final List<PsiFile> p2) {
               return p1.size() - p2.size();
@@ -324,7 +323,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   }
 
   private void rebuild() {
-    myIllegalDependencies = new HashMap<PsiFile, Map<DependencyRule, Set<PsiFile>>>();
+    myIllegalDependencies = new HashMap<>();
     for (DependenciesBuilder builder : myBuilders) {
       myIllegalDependencies.putAll(builder.getIllegalDependencies());
     }
@@ -349,9 +348,9 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   }
 
   private void updateRightTreeModel() {
-    Set<PsiFile> deps = new HashSet<PsiFile>();
+    Set<PsiFile> deps = new HashSet<>();
     Set<PsiFile> scope = getSelectedScope(myLeftTree);
-    myIllegalsInRightTree = new HashSet<PsiFile>();
+    myIllegalsInRightTree = new HashSet<>();
     for (PsiFile psiFile : scope) {
       Map<DependencyRule, Set<PsiFile>> illegalDeps = myIllegalDependencies.get(psiFile);
       if (illegalDeps != null) {
@@ -394,8 +393,8 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   }
 
   private TreeModel buildTreeModel(Set<PsiFile> deps, Marker marker) {
-    return PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE).createTreeModel(myProject, deps, marker,
-                                                                                                             mySettings);
+    return PatternDialectProvider.findById(mySettings.SCOPE_TYPE).createTreeModel(myProject, deps, marker,
+                                                                                  mySettings);
   }
 
   private void updateLeftTreeModel() {
@@ -430,7 +429,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private Set<PsiFile> getSelectedScope(final Tree tree) {
     TreePath[] paths = tree.getSelectionPaths();
     if (paths == null ) return EMPTY_FILE_SET;
-    Set<PsiFile> result = new HashSet<PsiFile>();
+    Set<PsiFile> result = new HashSet<>();
     for (TreePath path : paths) {
       PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
       node.fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);
@@ -475,13 +474,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   private static class MyTreeCellRenderer extends ColoredTreeCellRenderer {
     @Override
     public void customizeCellRenderer(
-    JTree tree,
-    Object value,
-    boolean selected,
-    boolean expanded,
-    boolean leaf,
-    int row,
-    boolean hasFocus
+      @Nonnull JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
   ){
       PackageDependenciesNode node = (PackageDependenciesNode)value;
       if (node.isValid()) {
@@ -500,8 +499,9 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             AllIcons.Actions.Cancel);
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       Disposer.dispose(myUsagesPanel);
       DependenciesToolWindow.getInstance(myProject).closeContent(myContent);
       mySettings.copyToApplicationDependencySettings();
@@ -516,12 +516,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_FLATTEN_PACKAGES;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_FLATTEN_PACKAGES = flag;
       mySettings.UI_FLATTEN_PACKAGES = flag;
       rebuild();
@@ -535,12 +535,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_SHOW_FILES;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_SHOW_FILES = flag;
       mySettings.UI_SHOW_FILES = flag;
       if (!flag && myLeftTree.getSelectionPath() != null && myLeftTree.getSelectionPath().getLastPathComponent() instanceof FileNode){
@@ -574,12 +574,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_SHOW_MODULES;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_SHOW_MODULES = flag;
       mySettings.UI_SHOW_MODULES = flag;
       rebuild();
@@ -592,19 +592,19 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_SHOW_MODULE_GROUPS;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_SHOW_MODULE_GROUPS = flag;
       mySettings.UI_SHOW_MODULE_GROUPS = flag;
       rebuild();
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(mySettings.UI_SHOW_MODULES);
     }
@@ -617,19 +617,19 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_GROUP_BY_SCOPE_TYPE;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_GROUP_BY_SCOPE_TYPE = flag;
       mySettings.UI_GROUP_BY_SCOPE_TYPE = flag;
       rebuild();
     }
 
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
     }
   }
@@ -642,12 +642,12 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     }
 
     @Override
-    public boolean isSelected(AnActionEvent event) {
+    public boolean isSelected(@Nonnull AnActionEvent event) {
       return mySettings.UI_FILTER_LEGALS;
     }
 
     @Override
-    public void setSelected(AnActionEvent event, boolean flag) {
+    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
       DependencyUISettings.getInstance().UI_FILTER_LEGALS = flag;
       mySettings.UI_FILTER_LEGALS = flag;
       rebuild();
@@ -683,12 +683,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     public void removeSettingsChangedListener(ChangeListener listener) {
     }
 
+    @Nonnull
     @Override
     public String getReportText() {
       final Element rootElement = new Element("root");
       rootElement.setAttribute("isBackward", String.valueOf(!myForward));
-      final List<PsiFile> files = new ArrayList<PsiFile>(myDependencies.keySet());
-      Collections.sort(files, new Comparator<PsiFile>() {
+      final List<PsiFile> files = new ArrayList<>(myDependencies.keySet());
+      Collections.sort(files, new Comparator<>() {
         @Override
         public int compare(PsiFile f1, PsiFile f2) {
           final VirtualFile virtualFile1 = f1.getVirtualFile();
@@ -713,13 +714,14 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       return JDOMUtil.writeDocument(new Document(rootElement), SystemProperties.getLineSeparator());
     }
 
+    @Nonnull
     @Override
     public String getDefaultFilePath() {
       return "";
     }
 
     @Override
-    public void exportedTo(String filePath) {
+    public void exportedTo(@Nonnull String filePath) {
     }
 
     @Override
@@ -735,8 +737,9 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
     }
 
+    @RequiredUIAccess
     @Override
-    public void update(AnActionEvent e) {
+    public void update(@Nonnull AnActionEvent e) {
       boolean enabled = true;
       for (DependenciesBuilder builder : myBuilders) {
         enabled &= builder.getScope().isValid();
@@ -744,14 +747,15 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       e.getPresentation().setEnabled(enabled);
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       DependenciesToolWindow.getInstance(myProject).closeContent(myContent);
       mySettings.copyToApplicationDependencySettings();
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          final List<AnalysisScope> scopes = new ArrayList<AnalysisScope>();
+          final List<AnalysisScope> scopes = new ArrayList<>();
           for (DependenciesBuilder builder : myBuilders) {
             final AnalysisScope scope = builder.getScope();
             scope.invalidate();
@@ -795,6 +799,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       super("Show indirect dependencies");
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(final AnActionEvent e) {
       @NonNls final String delim = "&nbsp;-&gt;&nbsp;";
@@ -816,10 +821,11 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
         .setMovable(true).createPopup().showInBestPositionFor(e.getDataContext());
     }
 
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       final boolean[] direct = new boolean[]{true};
-      processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), new Processor<List<PsiFile>>() {
+      processDependencies(getSelectedScope(myLeftTree), getSelectedScope(myRightTree), new Processor<>() {
         @Override
         public boolean process(final List<PsiFile> path) {
           direct [0] = false;
@@ -835,14 +841,16 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       super("Remove from scope");
     }
 
+    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(!getSelectedScope(myLeftTree).isEmpty());
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
       final Set<PsiFile> selectedScope = getSelectedScope(myLeftTree);
       exclude(selectedScope);
       myExcluded.addAll(selectedScope);
@@ -858,14 +866,16 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       super("Add to scope");
     }
 
+    @RequiredUIAccess
     @Override
-    public void update(final AnActionEvent e) {
+    public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
       e.getPresentation().setEnabled(getScope() != null);
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(final AnActionEvent e) {
+    public void actionPerformed(@Nonnull final AnActionEvent e) {
       final AnalysisScope scope = getScope();
       LOG.assertTrue(scope != null);
       final DependenciesBuilder builder;
@@ -894,11 +904,11 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     @Nullable
     private AnalysisScope getScope() {
       final Set<PsiFile> selectedScope = getSelectedScope(myRightTree);
-      Set<PsiFile> result = new HashSet<PsiFile>();
+      Set<PsiFile> result = new HashSet<>();
       ((PackageDependenciesNode)myLeftTree.getModel().getRoot()).fillFiles(result, !mySettings.UI_FLATTEN_PACKAGES);
       selectedScope.removeAll(result);
       if (selectedScope.isEmpty()) return null;
-      List<VirtualFile> files = new ArrayList<VirtualFile>();
+      List<VirtualFile> files = new ArrayList<>();
       final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
       for (PsiFile psiFile : selectedScope) {
         final VirtualFile file = psiFile.getVirtualFile();
@@ -919,14 +929,16 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       super(AnalysisScopeBundle.message("action.select.in.left.tree"), AnalysisScopeBundle.message("action.select.in.left.tree.description"), null);
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       PackageDependenciesNode node = myRightTree.getSelectedNode();
       e.getPresentation().setEnabled(node != null && node.canSelectInLeftTree(myDependencies));
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       PackageDependenciesNode node = myRightTree.getSelectedNode();
       if (node != null) {
         PsiElement elt = node.getPsiElement();
@@ -960,8 +972,9 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             AllIcons.Actions.Lightning);
     }
 
+    @RequiredUIAccess
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@Nonnull AnActionEvent e) {
       final PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
       final PackageDependenciesNode rightNode = myRightTree.getSelectedNode();
       if (leftNode != null && rightNode != null) {
@@ -986,7 +999,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
             }
           }
         }
-        final PatternDialectProvider provider = PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE);
+        final PatternDialectProvider provider = PatternDialectProvider.findById(mySettings.SCOPE_TYPE);
         PackageSet leftPackageSet = provider.createPackageSet(leftNode, true);
         if (leftPackageSet == null) {
           leftPackageSet = provider.createPackageSet(leftNode, false);
@@ -1009,6 +1022,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       }
     }
 
+    @RequiredUIAccess
     @Override
     public void update(final AnActionEvent e) {
       final Presentation presentation = e.getPresentation();
@@ -1016,7 +1030,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       final PackageDependenciesNode leftNode = myLeftTree.getSelectedNode();
       final PackageDependenciesNode rightNode = myRightTree.getSelectedNode();
       if (leftNode != null && rightNode != null) {
-        final PatternDialectProvider provider = PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE);
+        final PatternDialectProvider provider = PatternDialectProvider.findById(mySettings.SCOPE_TYPE);
         presentation.setEnabled((provider.createPackageSet(leftNode, true) != null || provider.createPackageSet(leftNode, false) != null) &&
                                 (provider.createPackageSet(rightNode, true) != null || provider.createPackageSet(rightNode, false) != null));
       }
@@ -1028,12 +1042,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     @Nonnull
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup group = new DefaultActionGroup();
-      for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
+      for (final PatternDialectProvider provider : PatternDialectProvider.EP_NAME.getExtensionList()) {
         group.add(new AnAction(provider.getDisplayName()) {
+          @RequiredUIAccess
           @Override
-          public void actionPerformed(final AnActionEvent e) {
-            mySettings.SCOPE_TYPE = provider.getShortName();
-            DependencyUISettings.getInstance().SCOPE_TYPE = provider.getShortName();
+          public void actionPerformed(@Nonnull final AnActionEvent e) {
+            mySettings.SCOPE_TYPE = provider.getId();
+            DependencyUISettings.getInstance().setScopeType(provider.getId());
             rebuild();
           }
         });
@@ -1045,7 +1060,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
-      final PatternDialectProvider provider = PatternDialectProvider.getInstance(mySettings.SCOPE_TYPE);
+      final PatternDialectProvider provider = PatternDialectProvider.findById(mySettings.SCOPE_TYPE);
       e.getPresentation().setText(provider.getDisplayName());
       e.getPresentation().setIcon(provider.getIcon());
     }
@@ -1070,7 +1085,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       UI_SHOW_MODULE_GROUPS = settings.UI_SHOW_MODULE_GROUPS;
       UI_FILTER_LEGALS = settings.UI_FILTER_LEGALS;
       UI_GROUP_BY_SCOPE_TYPE = settings.UI_GROUP_BY_SCOPE_TYPE;
-      SCOPE_TYPE = settings.SCOPE_TYPE;
+      SCOPE_TYPE = settings.getScopeType();
       UI_COMPACT_EMPTY_MIDDLE_PACKAGES = settings.UI_COMPACT_EMPTY_MIDDLE_PACKAGES;
       UI_FILTER_OUT_OF_CYCLE_PACKAGES = settings.UI_FILTER_OUT_OF_CYCLE_PACKAGES;
     }
@@ -1083,7 +1098,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       settings.UI_SHOW_MODULE_GROUPS = UI_SHOW_MODULE_GROUPS;
       settings.UI_FILTER_LEGALS = UI_FILTER_LEGALS;
       settings.UI_GROUP_BY_SCOPE_TYPE = UI_GROUP_BY_SCOPE_TYPE;
-      settings.SCOPE_TYPE = SCOPE_TYPE;
+      settings.setScopeType(SCOPE_TYPE);
       settings.UI_COMPACT_EMPTY_MIDDLE_PACKAGES = UI_COMPACT_EMPTY_MIDDLE_PACKAGES;
       settings.UI_FILTER_OUT_OF_CYCLE_PACKAGES = UI_FILTER_OUT_OF_CYCLE_PACKAGES;
     }

@@ -297,7 +297,7 @@ public class ScopeEditorPanel {
       for (TreePath path : paths) {
         if (!e.isAddedPath(path)) continue;
         final PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
-        if (PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE).createPackageSet(node, rec) != null) {
+        if (PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createPackageSet(node, rec) != null) {
           return true;
         }
       }
@@ -310,7 +310,7 @@ public class ScopeEditorPanel {
     if (paths != null) {
       for (TreePath path : paths) {
         final PackageDependenciesNode node = (PackageDependenciesNode)path.getLastPathComponent();
-        if (PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE).createPackageSet(node, rec) != null) {
+        if (PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createPackageSet(node, rec) != null) {
           return true;
         }
       }
@@ -407,7 +407,8 @@ public class ScopeEditorPanel {
     final ArrayList<PackageSet> result = new ArrayList<PackageSet>();
     for (int row : rows) {
       final PackageDependenciesNode node = (PackageDependenciesNode)myPackageTree.getPathForRow(row).getLastPathComponent();
-      final PackageSet set = PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE).createPackageSet(node, recursively);
+      final PackageSet set = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createPackageSet(node,
+                                                                                                                                 recursively);
       if (set != null) {
         result.add(set);
       }
@@ -575,7 +576,7 @@ public class ScopeEditorPanel {
             if (myProject.isDisposed()) return;
             try {
               myTreeExpansionMonitor.freeze();
-              final TreeModel model = PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE).createTreeModel(myProject, myTreeMarker);
+              final TreeModel model = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType()).createTreeModel(myProject, myTreeMarker);
               ((PackageDependenciesNode)model.getRoot()).sortChildren();
               if (myErrorMessage == null) {
                 myMatchingCountLabel
@@ -703,11 +704,11 @@ public class ScopeEditorPanel {
     @Nonnull
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
       final DefaultActionGroup group = new DefaultActionGroup();
-      for (final PatternDialectProvider provider : Extensions.getExtensions(PatternDialectProvider.EP_NAME)) {
+      for (final PatternDialectProvider provider : PatternDialectProvider.EP_NAME.getExtensionList()) {
         group.add(new AnAction(provider.getDisplayName()) {
           @Override
           public void actionPerformed(final AnActionEvent e) {
-            DependencyUISettings.getInstance().SCOPE_TYPE = provider.getShortName();
+            DependencyUISettings.getInstance().setScopeType(provider.getId());
             myUpdate.run();
           }
         });
@@ -719,7 +720,7 @@ public class ScopeEditorPanel {
     @Override
     public void update(@Nonnull final AnActionEvent e) {
       super.update(e);
-      final PatternDialectProvider provider = PatternDialectProvider.getInstance(DependencyUISettings.getInstance().SCOPE_TYPE);
+      final PatternDialectProvider provider = PatternDialectProvider.findById(DependencyUISettings.getInstance().getScopeType());
       e.getPresentation().setText(provider.getDisplayName());
       e.getPresentation().setIcon(provider.getIcon());
     }

@@ -48,7 +48,7 @@ import java.util.Set;
 @ExtensionImpl(id = ProjectPatternProvider.FILE, order = "last")
 public class ProjectPatternProvider extends PatternDialectProvider {
 
-  @NonNls public static final String FILE = "file";
+  public static final String FILE = "file";
 
   private static final Logger LOG = Logger.getInstance(ProjectPatternProvider.class);
 
@@ -73,7 +73,7 @@ public class ProjectPatternProvider extends PatternDialectProvider {
 
   @Override
   @Nonnull
-  public String getShortName() {
+  public String getId() {
     return FILE;
   }
 
@@ -153,11 +153,11 @@ public class ProjectPatternProvider extends PatternDialectProvider {
     public void update(final AnActionEvent e) {
       super.update(e);
       Project eventProject = e.getData(CommonDataKeys.PROJECT);
-      if(eventProject == null) {
+      if (eventProject == null) {
         return;
       }
       e.getPresentation()
-              .setVisible(FILE.equals(DependencyUISettings.getInstance().SCOPE_TYPE) && PsiPackageSupportProviders.isPackageSupported(eventProject));
+       .setVisible(FILE.equals(DependencyUISettings.getInstance().getScopeType()) && PsiPackageSupportProviders.isPackageSupported(eventProject));
     }
   }
 }

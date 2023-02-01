@@ -22,39 +22,44 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.PackageSet;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PatternDialectProvider {
+  private static final ExtensionPointCacheKey<PatternDialectProvider, Map<String, PatternDialectProvider>> CACHE_KEY =
+    ExtensionPointCacheKey.groupBy("PatternDialectProvider", PatternDialectProvider::getId);
   public static final ExtensionPointName<PatternDialectProvider> EP_NAME = ExtensionPointName.create(PatternDialectProvider.class);
 
-  public static PatternDialectProvider getInstance(String shortName) {
-    for (PatternDialectProvider provider : EP_NAME.getExtensionList()) {
-      if (Comparing.strEqual(provider.getShortName(), shortName)) return provider;
-    }
-    return null; //todo replace with File
+  @Nullable
+  public static PatternDialectProvider findById(String id) {
+    Map<String, PatternDialectProvider> map =
+      Application.get().getExtensionPoint(PatternDialectProvider.class).getOrBuildCache(CACHE_KEY);
+    return map.get(id);
   }
 
   public abstract TreeModel createTreeModel(Project project, Marker marker);
 
-  public abstract TreeModel createTreeModel(Project project, Set<PsiFile> deps, Marker marker, final DependenciesPanel.DependencyPanelSettings settings);
+  public abstract TreeModel createTreeModel(Project project,
+                                            Set<PsiFile> deps,
+                                            Marker marker,
+                                            final DependenciesPanel.DependencyPanelSettings settings);
 
   public abstract String getDisplayName();
 
-  @NonNls
   @Nonnull
-  public abstract String getShortName();
+  public abstract String getId();
 
   public abstract AnAction[] createActions(Project project, final Runnable update);
 
