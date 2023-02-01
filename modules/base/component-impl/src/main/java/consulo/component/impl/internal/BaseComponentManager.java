@@ -22,8 +22,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.impl.internal.extension.EmptyExtensionPoint;
 import consulo.component.impl.internal.extension.NewExtensionAreaImpl;
 import consulo.component.impl.internal.messagebus.MessageBusFactory;
 import consulo.component.impl.internal.messagebus.MessageBusImpl;
