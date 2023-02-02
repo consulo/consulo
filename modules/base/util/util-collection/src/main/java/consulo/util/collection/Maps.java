@@ -16,19 +16,13 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.CollectionFactory;
-import consulo.util.collection.impl.map.ConcurrentSoftHashMap;
-import consulo.util.collection.impl.map.ConcurrentSoftKeySoftValueHashMap;
-import consulo.util.collection.impl.map.ConcurrentSoftValueHashMap;
-import consulo.util.collection.impl.map.ConcurrentWeakKeySoftValueHashMap;
-import consulo.util.collection.impl.map.ConcurrentWeakKeyWeakValueHashMap;
-import consulo.util.collection.impl.map.ConcurrentWeakValueHashMap;
-import consulo.util.collection.impl.map.SoftValueHashMap;
 import consulo.util.collection.impl.map.*;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -277,5 +271,16 @@ public final class Maps {
 
   public static void trimToSize(@Nonnull Map<?, ?> map) {
     ourFactory.trimToSize(map);
+  }
+
+  @Contract(value = "_ -> new", pure = true)
+  @Nonnull
+  public static <K, V> Map<K, V> newLinkedHashMap(@Nonnull Predicate<Map<K, V>> removeEldestEntryFunc) {
+    return new LinkedHashMap<>() {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<K, V> eldest, K key, V value) {
+        return removeEldestEntryFunc.test(this);
+      }
+    };
   }
 }
