@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots;
+package consulo.module.content.util;
 
 import consulo.application.WriteAction;
 import consulo.module.Module;
@@ -25,6 +25,7 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.Collections;
 import java.util.List;
