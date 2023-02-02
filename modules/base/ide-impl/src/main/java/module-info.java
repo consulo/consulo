@@ -106,6 +106,7 @@ open module consulo.ide.impl {
   requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
   requires consulo.remote.server.impl;
+  requires consulo.task.impl;
 
   // TODO [VISTALL] remove this dependency
   requires gnu.trove;
@@ -815,7 +816,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.indexing.provided;
   exports consulo.ide.impl.idea.util.io;
   exports consulo.ide.impl.idea.util.io.storage;
-  exports consulo.ide.impl.idea.util.io.zip;
   exports consulo.ide.impl.idea.util.net;
   exports consulo.ide.impl.idea.util.net.ssl;
   exports consulo.ide.impl.idea.util.properties;

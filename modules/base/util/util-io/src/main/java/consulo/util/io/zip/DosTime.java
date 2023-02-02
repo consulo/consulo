@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.zip;
+package consulo.util.io.zip;
 
 import java.util.Date;
 

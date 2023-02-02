@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.zip;
+package consulo.util.io.zip;
 
 /**
  * Utility class that represents a four byte integer with conversion

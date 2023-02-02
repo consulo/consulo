@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package consulo.ide.impl.idea.tasks.actions;
+package consulo.task.impl.internal.action;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
@@ -43,7 +43,8 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
     super(text, description, icon);
   }
 
-  public void update(AnActionEvent event){
+  @Override
+  public void update(AnActionEvent event) {
     event.getPresentation().setEnabled(getProject(event) != null);
   }
 
@@ -60,7 +61,7 @@ public abstract class BaseTaskAction extends AnAction implements DumbAware {
     }
     return TaskManager.getManager(project);
   }
-  
+
   @Nullable
   public static LocalTask getActiveTask(AnActionEvent event) {
     TaskManager manager = getTaskManager(event);

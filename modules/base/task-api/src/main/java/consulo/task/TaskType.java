@@ -16,14 +16,30 @@
 
 package consulo.task;
 
+import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+
 /**
  * @author Dmitry Avdeev
  */
 public enum TaskType {
-
   BUG,
   EXCEPTION,
   FEATURE,
+  OTHER;
 
-  OTHER
+  public Image getIcon(boolean issue) {
+    switch (this) {
+      case BUG:
+        return TasksIcons.Bug;
+      case EXCEPTION:
+        return TasksIcons.Exception;
+      case FEATURE:
+        return PlatformIconGroup.nodesFavorite();
+      default:
+      case OTHER:
+        return issue ? AllIcons.FileTypes.Any_type : AllIcons.FileTypes.Unknown;
+    }
+  }
 }

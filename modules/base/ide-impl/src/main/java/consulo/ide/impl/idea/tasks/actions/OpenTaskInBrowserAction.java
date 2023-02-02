@@ -16,14 +16,15 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
-import javax.annotation.Nullable;
-
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.task.TaskManager;
+import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

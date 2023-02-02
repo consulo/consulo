@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.impl;
+package consulo.task.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.notification.NotificationGroup;
@@ -28,8 +28,10 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class TaskManagerNotificationGroupContributor implements NotificationGroupContributor {
+  public static final NotificationGroup TASKS_NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Tasks");
+
   @Override
   public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
-    registrator.accept(TaskManagerImpl.TASKS_NOTIFICATION_GROUP);
+    registrator.accept(TASKS_NOTIFICATION_GROUP);
   }
 }

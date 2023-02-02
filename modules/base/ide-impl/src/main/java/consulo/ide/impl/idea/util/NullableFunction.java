@@ -21,6 +21,7 @@ import java.util.function.Function;
 /**
  * @author peter
  */
+@Deprecated
 public interface NullableFunction<Param, Result> extends Function<Param, Result> {
   @Override
   @Nullable

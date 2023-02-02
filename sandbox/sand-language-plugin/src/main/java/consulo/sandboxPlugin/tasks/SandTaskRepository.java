@@ -16,9 +16,8 @@
 package consulo.sandboxPlugin.tasks;
 
 import consulo.application.progress.ProgressIndicator;
-import consulo.task.Task;
 import consulo.task.BaseRepository;
-import consulo.ide.impl.idea.tasks.impl.LocalTaskImpl;
+import consulo.task.Task;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,19 +29,11 @@ import java.util.Map;
  * @since 15/12/2021
  */
 public class SandTaskRepository extends BaseRepository {
-  private Map<String, LocalTaskImpl> myTasks = new LinkedHashMap<>();
+  private Map<String, Task> myTasks = new LinkedHashMap<>();
 
   public SandTaskRepository() {
-    addTask(1);
-    addTask(10);
-    addTask(115);
-    addTask(2555);
   }
 
-  private void addTask(int id) {
-    LocalTaskImpl task = new LocalTaskImpl("SD-" + id, "sand task by ud " + id);
-    myTasks.put(task.getId(), task);
-  }
 
   @Override
   public Task[] getIssues(@Nullable String query, int offset, int limit, boolean withClosed, @Nonnull ProgressIndicator cancelled) throws Exception {

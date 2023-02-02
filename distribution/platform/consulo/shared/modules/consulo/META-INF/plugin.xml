@@ -2903,7 +2903,7 @@
       <action id="tasks.analyze.stacktrace" class="consulo.ide.impl.idea.tasks.actions.AnalyzeTaskStacktraceAction"
               text="Analyze _Stacktrace From Task..."/>
       <separator/>
-      <action id="tasks.configure.servers" class="consulo.ide.impl.idea.tasks.actions.ConfigureServersAction"
+      <action id="tasks.configure.servers" class="consulo.task.impl.internal.action.ConfigureServersAction"
               text="Configure Servers..."/>
     </group>
 

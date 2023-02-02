@@ -141,6 +141,7 @@
     <module>modules/base/external-service-impl</module>
     <module>modules/base/external-system-api</module>
     <module>modules/base/task-api</module>
+    <module>modules/base/task-impl</module>
     <module>modules/base/http-api</module>
     <module>modules/base/http-impl</module>
     <module>modules/base/repository-ui-api</module>

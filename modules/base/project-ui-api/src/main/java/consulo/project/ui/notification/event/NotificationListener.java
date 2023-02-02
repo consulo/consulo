@@ -17,12 +17,14 @@ package consulo.project.ui.notification.event;
 
 import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.net.URL;
 
 public interface NotificationListener {
+  @RequiredUIAccess
   void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event);
 
   abstract class Adapter implements NotificationListener {

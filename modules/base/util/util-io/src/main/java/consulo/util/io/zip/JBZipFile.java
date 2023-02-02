@@ -17,9 +17,9 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.zip;
+package consulo.util.io.zip;
 
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.task.Comment;

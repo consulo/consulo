@@ -15,13 +15,10 @@
  */
 package consulo.configurable;
 
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * Named component which provides a configuration user interface.
@@ -107,17 +104,7 @@ public interface Configurable extends UnnamedConfigurable {
   interface NoMargin {
   }
 
-  interface HoldPreferredFocusedComponent {
-    @Nullable
-    @RequiredUIAccess
-    default JComponent getPreferredFocusedComponent() {
-      return null;
-    }
-
-    @RequiredUIAccess
-    @Nullable
-    default Component getPreferredFocusedUIComponent() {
-      return null;
-    }
+  @Deprecated
+  interface HoldPreferredFocusedComponent extends UnnamedConfigurable {
   }
 }

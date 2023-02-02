@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package consulo.ide.impl.idea.tasks.actions;
+package consulo.task.impl.internal.action;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.task.Task;
 import consulo.task.TaskManager;
+import consulo.task.impl.internal.TaskManagerImpl;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;

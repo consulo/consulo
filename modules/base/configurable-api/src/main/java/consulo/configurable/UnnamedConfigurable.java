@@ -78,6 +78,18 @@ public interface UnnamedConfigurable {
     return null;
   }
 
+  @Nullable
+  @RequiredUIAccess
+  default JComponent getPreferredFocusedComponent() {
+    return null;
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  default Component getPreferredFocusedUIComponent() {
+    return null;
+  }
+
   /**
    * Checks if the settings in the user interface component were modified by the user and
    * need to be saved.

@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
@@ -25,7 +26,7 @@ import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
+import consulo.task.impl.internal.context.WorkingContextManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

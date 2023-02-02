@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.Project;
 import consulo.fileEditor.FileEditorManager;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.tasks.actions.BaseTaskAction;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
+import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 

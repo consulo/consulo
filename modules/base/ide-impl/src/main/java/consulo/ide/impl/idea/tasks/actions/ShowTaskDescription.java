@@ -21,6 +21,7 @@ import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.task.LocalTask;
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

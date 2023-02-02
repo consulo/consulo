@@ -16,12 +16,13 @@
 
 package consulo.ide.impl.idea.tasks.actions;
 
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.util.TaskUtil;
 
 /**

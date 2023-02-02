@@ -17,8 +17,6 @@ package consulo.configurable;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.swing.*;
-
 @Deprecated
 @DeprecationInfo("Use own impl for #isModified()")
 public abstract class BaseConfigurable implements Configurable, Configurable.HoldPreferredFocusedComponent {
@@ -31,14 +29,5 @@ public abstract class BaseConfigurable implements Configurable, Configurable.Hol
 
   protected void setModified(final boolean modified) {
     myModified = modified;
-  }
-
-  /**
-   * @return component which should be focused when the dialog appears
-   *         on the screen.
-   */
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return null;
   }
 }

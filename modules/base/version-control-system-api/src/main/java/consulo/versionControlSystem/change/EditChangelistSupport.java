@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.changes.ui;
+package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.versionControlSystem.change.LocalChangeList;
-import java.util.function.Consumer;
 import consulo.language.editor.ui.awt.EditorTextField;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.Consumer;
 
 /**
  * @author Dmitry Avdeev

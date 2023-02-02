@@ -17,10 +17,11 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.zip;
+package consulo.util.io.zip;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

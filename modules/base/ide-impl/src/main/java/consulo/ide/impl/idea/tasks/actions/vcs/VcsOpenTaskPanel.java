@@ -24,7 +24,7 @@ import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.ui.TaskDialogPanel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBCheckBox;

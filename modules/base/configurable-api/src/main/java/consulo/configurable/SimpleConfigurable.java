@@ -53,8 +53,8 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
     // nothing
   }
 
+  @Override
   @Nullable
-  // usage if implement Configurable.HoldPreferredFocusedComponent
   public final Component getPreferredFocusedUIComponent() {
     if (myComponent != null) {
       return getPreferredFocusedComponent(myComponent);

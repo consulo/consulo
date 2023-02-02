@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.options.binding.BindableConfigurable;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
 import consulo.application.util.NotNullLazyValue;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.project.Project;
 import consulo.task.TaskSettings;
 import consulo.ui.annotation.RequiredUIAccess;

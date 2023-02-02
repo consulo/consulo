@@ -20,8 +20,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.tasks.actions.BaseTaskAction;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
+import consulo.task.impl.internal.action.BaseTaskAction;
+import consulo.task.impl.internal.context.WorkingContextManager;
 
 /**
  * @author Dmitry Avdeev

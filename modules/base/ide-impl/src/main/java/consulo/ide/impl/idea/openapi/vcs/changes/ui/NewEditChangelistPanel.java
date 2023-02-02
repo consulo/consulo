@@ -22,6 +22,7 @@ import consulo.ide.ServiceManager;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
 import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;

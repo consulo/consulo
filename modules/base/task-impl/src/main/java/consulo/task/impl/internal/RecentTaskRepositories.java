@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.config;
+package consulo.task.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.task.TaskRepository;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -50,21 +49,24 @@ public class RecentTaskRepositories implements PersistentStateComponent<Element>
   private final Set<TaskRepository> myRepositories = Sets.newHashSet(HASHING_STRATEGY);
 
   private static final HashingStrategy<TaskRepository> HASHING_STRATEGY = new HashingStrategy<TaskRepository>() {
+    @Override
     public int hashCode(TaskRepository object) {
       return object.getUrl() == null ? 0 : object.getUrl().hashCode();
     }
 
+    @Override
     public boolean equals(TaskRepository o1, TaskRepository o2) {
       return Comparing.equal(o1.getUrl(), o2.getUrl());
     }
   };
 
   public static RecentTaskRepositories getInstance() {
-    return ServiceManager.getService(RecentTaskRepositories.class);
+    return Application.get().getInstance(RecentTaskRepositories.class);
   }
 
   public Set<TaskRepository> getRepositories() {
-    return Sets.newHashSet(ContainerUtil.findAll(myRepositories, repository -> !StringUtil.isEmptyOrSpaces(repository.getUrl())), HASHING_STRATEGY);
+    return Sets.newHashSet(ContainerUtil.findAll(myRepositories, repository -> !StringUtil.isEmptyOrSpaces(repository.getUrl())),
+                           HASHING_STRATEGY);
   }
 
   public void addRepositories(Collection<TaskRepository> repositories) {
@@ -86,10 +88,12 @@ public class RecentTaskRepositories implements PersistentStateComponent<Element>
     return false;
   }
 
+  @Override
   public Element getState() {
     return XmlSerializer.serialize(myRepositories.toArray(new TaskRepository[myRepositories.size()]));
   }
 
+  @Override
   public void loadState(Element state) {
     myRepositories.clear();
     myRepositories.addAll(TaskManagerImpl.loadRepositories(state));

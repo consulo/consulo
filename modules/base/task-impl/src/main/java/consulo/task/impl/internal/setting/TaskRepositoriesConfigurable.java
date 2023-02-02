@@ -1,19 +1,19 @@
-package consulo.ide.impl.idea.tasks.config;
+package consulo.task.impl.internal.setting;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.configurable.*;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.IconWithTextAction;
-import consulo.ide.impl.idea.openapi.util.Disposer;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.task.TaskManager;
 import consulo.task.TaskRepository;
 import consulo.task.TaskRepositorySubtype;
 import consulo.task.TaskRepositoryType;
+import consulo.task.impl.internal.RecentTaskRepositories;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.ui.TaskRepositoryEditor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -21,6 +21,7 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.ContainerUtil;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
@@ -38,7 +39,7 @@ import java.util.function.Consumer;
  * @author Dmitry Avdeev
  */
 @ExtensionImpl
-public class TaskRepositoriesConfigurable extends BaseConfigurable implements Configurable.NoScroll, ProjectConfigurable, NonDefaultProjectConfigurable {
+public class TaskRepositoriesConfigurable implements Configurable.NoScroll, ProjectConfigurable, NonDefaultProjectConfigurable {
 
   private static final String EMPTY_PANEL = "empty.panel";
   private JPanel myPanel;
@@ -79,7 +80,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     for (final TaskRepositoryType repositoryType : groups) {
       for (final TaskRepositorySubtype subtype : (List<TaskRepositorySubtype>)repositoryType.getAvailableSubtypes()) {
         String description = "New " + subtype.getName() + " server";
-        createActions.add(new IconWithTextAction(subtype.getName(), description, subtype.getIcon()) {
+        createActions.add(new AnAction(subtype.getName(), description, subtype.getIcon()) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             TaskRepository repository = repositoryType.createRepository(subtype);
@@ -103,7 +104,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
         if (!repositories.isEmpty()) {
           group.add(AnSeparator.getInstance());
           for (final TaskRepository repository : repositories) {
-            group.add(new IconWithTextAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
+            group.add(new AnAction(repository.getUrl(), repository.getUrl(), repository.getIcon()) {
               @Override
               public void actionPerformed(AnActionEvent e) {
                 addRepository(repository);
@@ -142,6 +143,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     myServersPanel.add(toolbarDecorator.createPanel(), BorderLayout.CENTER);
 
     myRepositoriesList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         TaskRepository repository = getSelectedRepository();
         if (repository != null) {
@@ -191,6 +193,7 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     return (TaskRepository)myRepositoriesList.getSelectedValue();
   }
 
+  @Override
   @Nls
   public String getDisplayName() {
     return "Servers";
@@ -208,19 +211,26 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     return StandardConfigurableIds.TASKS_GROUP;
   }
 
+  @Override
+  @RequiredUIAccess
   public JComponent createComponent() {
     return myPanel;
   }
 
+  @RequiredUIAccess
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myRepositoriesList;
   }
 
+  @Override
+  @RequiredUIAccess
   public boolean isModified() {
     return !myRepositories.equals(getReps());
   }
 
+  @Override
+  @RequiredUIAccess
   public void apply() throws ConfigurationException {
     List<TaskRepository> newRepositories = ContainerUtil.map(myRepositories, taskRepository -> taskRepository.clone());
     myManager.setRepositories(newRepositories);
@@ -228,6 +238,8 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     RecentTaskRepositories.getInstance().addRepositories(myRepositories);
   }
 
+  @Override
+  @RequiredUIAccess
   public void reset() {
     myRepoNames.clear();
     myRepositoryEditor.removeAll();
@@ -258,6 +270,8 @@ public class TaskRepositoriesConfigurable extends BaseConfigurable implements Co
     return Arrays.asList(myManager.getAllRepositories());
   }
 
+  @Override
+  @RequiredUIAccess
   public void disposeUIResources() {
     for (TaskRepositoryEditor editor : myEditors) {
       Disposer.dispose(editor);

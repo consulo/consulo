@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.impl;
+package consulo.task.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* @author Dmitry Avdeev
-*/
+ * @author Dmitry Avdeev
+ */
 @Singleton
 @State(name = "TaskProjectConfiguration", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/misc.xml"))
 @ServiceAPI(ComponentScope.PROJECT)
@@ -56,7 +56,7 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
   @AbstractCollection(surroundWithTag = false, elementTag = "server")
   public List<SharedServer> servers = new ArrayList<SharedServer>();
 
-  private final TaskManagerImpl myManager;
+  private final TaskManager myManager;
 
   // for serialization
   public TaskProjectConfiguration() {
@@ -65,19 +65,19 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
 
   @Inject
   public TaskProjectConfiguration(@Nonnull TaskManager manager) {
-    myManager = (TaskManagerImpl) manager;
+    myManager = manager;
   }
 
   public TaskProjectConfiguration getState() {
     servers.clear();
-      for (TaskRepository repository : myManager.getAllRepositories()) {
-        if (repository.isShared()) {
-          SharedServer server = new SharedServer();
-          server.type = repository.getRepositoryType().getName();
-          server.url = repository.getUrl();
-          servers.add(server);
-        }
+    for (TaskRepository repository : myManager.getAllRepositories()) {
+      if (repository.isShared()) {
+        SharedServer server = new SharedServer();
+        server.type = repository.getRepositoryType().getName();
+        server.url = repository.getUrl();
+        servers.add(server);
       }
+    }
     return this;
   }
 

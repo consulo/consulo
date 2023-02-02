@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ide.impl.idea.tasks.impl.TaskStateCombo;
 import consulo.task.util.TaskUtil;
 import consulo.project.Project;

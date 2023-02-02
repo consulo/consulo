@@ -18,14 +18,14 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.EditChangelistSupport;
-import consulo.ide.impl.idea.tasks.actions.TaskAutoCompletionListProvider;
+import consulo.task.impl.internal.action.TaskAutoCompletionListProvider;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionContributor;
 import consulo.project.Project;
 import consulo.task.ChangeListInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
+import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
 

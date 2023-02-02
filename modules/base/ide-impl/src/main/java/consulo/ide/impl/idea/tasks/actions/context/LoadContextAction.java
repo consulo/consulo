@@ -18,26 +18,27 @@ package consulo.ide.impl.idea.tasks.actions.context;
 
 import consulo.application.util.DateFormatUtil;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.tasks.actions.BaseTaskAction;
+import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ide.impl.idea.tasks.actions.SwitchTaskAction;
-import consulo.ide.impl.idea.tasks.context.ContextInfo;
 import consulo.ide.impl.idea.tasks.context.LoadContextUndoableAction;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.task.LocalTask;
 import consulo.task.TaskManager;
 import consulo.task.TasksIcons;
+import consulo.task.impl.internal.context.ContextInfo;
+import consulo.task.impl.internal.context.WorkingContextManager;
 import consulo.task.util.TaskUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
@@ -45,7 +46,6 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author Dmitry Avdeev
@@ -53,6 +53,7 @@ import java.util.function.Function;
 public class LoadContextAction extends BaseTaskAction {
   private static final int MAX_ROW_COUNT = 10;
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     final Project project = getProject(e);
@@ -60,35 +61,31 @@ public class LoadContextAction extends BaseTaskAction {
     DefaultActionGroup group = new DefaultActionGroup();
     final WorkingContextManager manager = WorkingContextManager.getInstance(project);
     List<ContextInfo> history = manager.getContextHistory();
-    List<ContextHolder> infos = new ArrayList<ContextHolder>(ContainerUtil.map2List(history, new Function<ContextInfo, ContextHolder>() {
-      public ContextHolder apply(final ContextInfo info) {
-        return new ContextHolder() {
-          @Override
-          void load(final boolean clear) {
-            LoadContextUndoableAction undoableAction = LoadContextUndoableAction.createAction(manager, clear, info.name);
-            UndoableCommand.execute(project, undoableAction, "Load context " + info.comment, "Context");
-          }
+    List<ContextHolder> infos = new ArrayList<ContextHolder>(ContainerUtil.map2List(history, info -> new ContextHolder() {
+      @Override
+      void load(final boolean clear) {
+        LoadContextUndoableAction undoableAction = LoadContextUndoableAction.createAction(manager, clear, info.name);
+        UndoableCommand.execute(project, undoableAction, "Load context " + info.comment, "Context");
+      }
 
-          @Override
-          void remove() {
-            manager.removeContext(info.name);
-          }
+      @Override
+      void remove() {
+        manager.removeContext(info.name);
+      }
 
-          @Override
-          Date getDate() {
-            return new Date(info.date);
-          }
+      @Override
+      Date getDate() {
+        return new Date(info.date);
+      }
 
-          @Override
-          String getComment() {
-            return info.comment;
-          }
+      @Override
+      String getComment() {
+        return info.comment;
+      }
 
-          @Override
-          Image getIcon() {
-            return TasksIcons.SavedContext;
-          }
-        };
+      @Override
+      Image getIcon() {
+        return TasksIcons.SavedContext;
       }
     }));
     final TaskManager taskManager = TaskManager.getManager(project);
@@ -149,7 +146,14 @@ public class LoadContextAction extends BaseTaskAction {
     }
 
     final ListPopupImpl popup =
-            (ListPopupImpl)JBPopupFactory.getInstance().createActionGroupPopup("Load Context", group, e.getDataContext(), JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false, null, MAX_ROW_COUNT);
+      (ListPopupImpl)JBPopupFactory.getInstance()
+                                   .createActionGroupPopup("Load Context",
+                                                           group,
+                                                           e.getDataContext(),
+                                                           JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                           false,
+                                                           null,
+                                                           MAX_ROW_COUNT);
     popup.setAdText("Press SHIFT to merge with current context");
     popup.registerAction("shiftPressed", KeyStroke.getKeyStroke("shift pressed SHIFT"), new AbstractAction() {
       public void actionPerformed(ActionEvent e) {

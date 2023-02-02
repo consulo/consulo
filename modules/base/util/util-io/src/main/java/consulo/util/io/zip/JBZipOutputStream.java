@@ -17,8 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.zip;
-
+package consulo.util.io.zip;
 
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 
@@ -85,7 +84,7 @@ class JBZipOutputStream {
    * Creates a new ZIP OutputStream writing to a File.  Will use
    * random access if possible.
    *
-   * @param file the file to zip to
+   * @param file            the file to zip to
    * @param currentCDOffset
    * @throws IOException on error
    * @since 1.14
@@ -178,8 +177,8 @@ class JBZipOutputStream {
   }
 
   /*
-  * Various ZIP constants
-  */
+   * Various ZIP constants
+   */
   /**
    * local file header signature
    *
@@ -298,10 +297,10 @@ class JBZipOutputStream {
   /**
    * Writes the &quot;End of central dir record&quot;.
    *
-   * @throws IOException on error
-   * @since 1.1
    * @param cdLength
    * @param cdOffset
+   * @throws IOException on error
+   * @since 1.1
    */
   protected void writeCentralDirectoryEnd(long cdLength, long cdOffset) throws IOException {
     writeOut(EOCD_SIG);

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package consulo.ide.impl.idea.tasks.context;
+package consulo.task.impl.internal.context;
 
 import javax.annotation.Nullable;
 

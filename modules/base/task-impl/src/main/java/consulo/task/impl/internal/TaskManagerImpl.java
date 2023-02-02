@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.impl;
+package consulo.task.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -25,27 +26,20 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.disposer.Disposable;
 import consulo.http.HttpRequests;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.change.ChangeListAdapter;
-import consulo.ide.impl.idea.tasks.actions.TaskSearchSupport;
-import consulo.ide.impl.idea.tasks.config.TaskRepositoriesConfigurable;
-import consulo.ide.impl.idea.tasks.context.WorkingContextManager;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.event.NotificationListener;
+import consulo.proxy.EventDispatcher;
 import consulo.task.*;
 import consulo.task.event.TaskListener;
+import consulo.task.impl.internal.action.TaskSearchSupport;
+import consulo.task.impl.internal.context.WorkingContextManager;
+import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.ui.ex.awt.Messages;
@@ -53,6 +47,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializationException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
@@ -64,6 +60,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.VcsType;
 import consulo.versionControlSystem.change.ChangeList;
+import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
@@ -74,7 +71,6 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.Timer;
-import javax.swing.event.HyperlinkEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.SocketTimeoutException;
@@ -84,6 +80,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 
 /**
@@ -100,9 +97,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     int i = Comparing.compare(o2.getUpdated(), o1.getUpdated());
     return i == 0 ? Comparing.compare(o2.getCreated(), o1.getCreated()) : i;
   };
-  private static final Convertor<Task, String> KEY_CONVERTOR = o -> o.getId();
-
-  public static final NotificationGroup TASKS_NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Tasks");
+  private static final Function<Task, String> KEY_CONVERTOR = Task::getId;
 
   private final Project myProject;
 
@@ -143,7 +138,10 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   private Set<TaskRepository> myBadRepositories = ContainerUtil.newConcurrentSet();
 
   @Inject
-  public TaskManagerImpl(Project project, WorkingContextManager contextManager, ChangeListManager changeListManager, StartupManager startupManager) {
+  public TaskManagerImpl(Project project,
+                         WorkingContextManager contextManager,
+                         ChangeListManager changeListManager,
+                         StartupManager startupManager) {
     myProject = project;
     myContextManager = contextManager;
     myChangeListManager = changeListManager;
@@ -261,7 +259,12 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   @Override
-  public List<Task> getIssues(@Nullable String query, int offset, int limit, final boolean withClosed, @Nonnull ProgressIndicator indicator, boolean forceRequest) {
+  public List<Task> getIssues(@Nullable String query,
+                              int offset,
+                              int limit,
+                              final boolean withClosed,
+                              @Nonnull ProgressIndicator indicator,
+                              boolean forceRequest) {
     List<Task> tasks = getIssuesFromRepositories(query, offset, limit, withClosed, forceRequest, indicator);
     if (tasks == null) {
       return getCachedIssues(withClosed);
@@ -482,13 +485,16 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     addTask(task);
     if (task.isIssue()) {
       StartupManager.getInstance(myProject)
-              .runWhenProjectIsInitialized(() -> ProgressManager.getInstance().run(new consulo.application.progress.Task.Backgroundable(myProject, "Updating " + task.getPresentableId()) {
+                    .runWhenProjectIsInitialized(() -> ProgressManager.getInstance()
+                                                                      .run(new consulo.application.progress.Task.Backgroundable(myProject,
+                                                                                                                                "Updating " + task
+                                                                                                                                  .getPresentableId()) {
 
-                @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
-                  updateIssue(task.getId());
-                }
-              }));
+                                                                        @Override
+                                                                        public void run(@Nonnull ProgressIndicator indicator) {
+                                                                          updateIssue(task.getId());
+                                                                        }
+                                                                      }));
     }
     LocalTask oldActiveTask = myActiveTask;
     boolean isChanged = !task.equals(oldActiveTask);
@@ -601,7 +607,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
       for (Object o : element.getChildren()) {
         if (((Element)o).getName().equals(repositoryType.getName())) {
           try {
-            @SuppressWarnings({"unchecked"}) TaskRepository repository = (TaskRepository)XmlSerializer.deserialize((Element)o, repositoryType.getRepositoryClass());
+            @SuppressWarnings({"unchecked"}) TaskRepository repository =
+              (TaskRepository)XmlSerializer.deserialize((Element)o, repositoryType.getRepositoryClass());
             if (repository != null) {
               repository.setRepositoryType(repositoryType);
               repositories.add(repository);
@@ -668,7 +675,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   private TaskProjectConfiguration getProjectConfiguration() {
-    return ServiceManager.getService(myProject, TaskProjectConfiguration.class);
+    return myProject.getInstance(TaskProjectConfiguration.class);
   }
 
   @Override
@@ -786,7 +793,12 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   @Nullable
-  private List<Task> getIssuesFromRepositories(@Nullable String request, int offset, int limit, boolean withClosed, boolean forceRequest, @Nonnull final ProgressIndicator cancelled) {
+  private List<Task> getIssuesFromRepositories(@Nullable String request,
+                                               int offset,
+                                               int limit,
+                                               boolean withClosed,
+                                               boolean forceRequest,
+                                               @Nonnull final ProgressIndicator cancelled) {
     List<Task> issues = null;
     for (final TaskRepository repository : getAllRepositories()) {
       if (!repository.isConfigured() || (!forceRequest && myBadRepositories.contains(repository))) {
@@ -796,7 +808,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         long start = System.currentTimeMillis();
         Task[] tasks = repository.getIssues(request, offset, limit, withClosed, cancelled);
         long timeSpent = System.currentTimeMillis() - start;
-        LOG.info(String.format("Total %s ms to download %d issues from '%s' (pattern '%s')", timeSpent, tasks.length, repository.getUrl(), request));
+        LOG.info(String.format("Total %s ms to download %d issues from '%s' (pattern '%s')",
+                               timeSpent,
+                               tasks.length,
+                               repository.getUrl(),
+                               request));
         myBadRepositories.remove(repository);
         if (issues == null) {
           issues = new ArrayList<>(tasks.length);
@@ -841,15 +857,11 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     if (!StringUtil.isEmpty(details)) {
       content = "<p>" + details + "</p>" + content;
     }
-    TASKS_NOTIFICATION_GROUP.createNotification("Cannot connect to " + repository.getUrl(), content, NotificationType.WARNING, new NotificationListener() {
-      @Override
-      public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-        TaskRepositoriesConfigurable configurable = new TaskRepositoriesConfigurable(myProject);
-        ShowSettingsUtil.getInstance().editConfigurable(myProject, configurable);
-        if (!ArrayUtil.contains(repository, getAllRepositories())) {
-          notification.expire();
-        }
-      }
+    NotificationGroup group = TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP;
+    group.createNotification("Cannot connect to " + repository.getUrl(), content, NotificationType.WARNING, (notification, event) -> {
+
+      Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, TaskRepositoriesConfigurable.class);
+      notification.expire();
     }).notify(myProject);
   }
 
@@ -945,7 +957,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   public String getChangelistName(Task task) {
-    String name = task.isIssue() && myConfig.changelistNameFormat != null ? TaskUtil.formatTask(task, myConfig.changelistNameFormat) : task.getSummary();
+    String name = task.isIssue() && myConfig.changelistNameFormat != null ? TaskUtil.formatTask(task,
+                                                                                                myConfig.changelistNameFormat) : task.getSummary();
     return StringUtil.shortenTextWithEllipsis(name, 100, 0);
   }
 

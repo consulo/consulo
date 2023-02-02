@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.actions;
+package consulo.task.impl.internal.action;
 
+import consulo.document.Document;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.document.Document;
+import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.task.Task;
 import consulo.task.TaskManager;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.language.editor.ui.awt.TextFieldWithAutoCompletionListProvider;
+import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -9,4 +9,5 @@ module consulo.util.io {
   requires org.slf4j;
 
   exports consulo.util.io;
+  exports consulo.util.io.zip;
 }

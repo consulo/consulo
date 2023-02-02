@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.tasks.context;
+package consulo.task.impl.internal.context;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.zip.JBZipEntry;
-import consulo.ide.impl.idea.util.io.zip.JBZipFile;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.task.Task;
 import consulo.task.context.WorkingContextProvider;
+import consulo.task.impl.internal.TaskManagerNotificationGroupContributor;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.io.zip.JBZipEntry;
+import consulo.util.io.zip.JBZipFile;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
@@ -63,20 +62,19 @@ import java.util.List;
 public class WorkingContextManager {
 
   private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
-  @NonNls private static final String TASKS_FOLDER = "tasks";
+  @NonNls
+  private static final String TASKS_FOLDER = "tasks";
 
   private final Project myProject;
-  @NonNls private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
-  @NonNls private static final String TASK_XML_POSTFIX = ".task.xml";
+  @NonNls
+  private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
+  @NonNls
+  private static final String TASK_XML_POSTFIX = ".task.xml";
   private static final String CONTEXT_ZIP_POSTFIX = ".contexts.zip";
-  private static final Comparator<JBZipEntry> ENTRY_COMPARATOR = new Comparator<JBZipEntry>() {
-    public int compare(JBZipEntry o1, JBZipEntry o2) {
-      return Long.signum(o2.getTime() - o1.getTime());
-    }
-  };
+  private static final Comparator<JBZipEntry> ENTRY_COMPARATOR = (o1, o2) -> Long.signum(o2.getTime() - o1.getTime());
 
   public static WorkingContextManager getInstance(Project project) {
-    return ServiceManager.getService(project, WorkingContextManager.class);
+    return project.getInstance(WorkingContextManager.class);
   }
 
   @Inject
@@ -134,7 +132,8 @@ public class WorkingContextManager {
         int i = archive.getEntries().size();
         do {
           entryName = "context" + i++;
-        } while (archive.getEntry("/" + entryName) != null);
+        }
+        while (archive.getEntry("/" + entryName) != null);
       }
       JBZipEntry entry = archive.getOrCreateEntry("/" + entryName);
       if (comment != null) {
@@ -163,9 +162,11 @@ public class WorkingContextManager {
       JBZipFile zipFile = null;
       try {
         zipFile = new JBZipFile(file);
-        Notifications.Bus.notify(new Notification(TaskManagerImpl.TASKS_NOTIFICATION_GROUP, "Context Data Corrupted",
+        Notifications.Bus.notify(new Notification(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP,
+                                                  "Context Data Corrupted",
                                                   "Context information history for " + myProject.getName() + " was corrupted.\n" +
-                                                  "The history was replaced with empty one.", NotificationType.ERROR), myProject);
+                                                    "The history was replaced with empty one.",
+                                                  NotificationType.ERROR), myProject);
       }
       catch (IOException e1) {
         LOG.error("Can't repair form context data corruption", e1);
@@ -230,7 +231,10 @@ public class WorkingContextManager {
     try {
       archive = getTasksArchive(zipPostfix);
       List<JBZipEntry> entries = archive.getEntries();
-      return ContainerUtil.mapNotNull(entries, entry -> entry.getName().startsWith("/context") ? new ContextInfo(entry.getName(), entry.getTime(), entry.getComment()) : null);
+      return ContainerUtil.mapNotNull(entries,
+                                      entry -> entry.getName().startsWith("/context") ? new ContextInfo(entry.getName(),
+                                                                                                        entry.getTime(),
+                                                                                                        entry.getComment()) : null);
     }
     catch (IOException e) {
       LOG.error(e);
