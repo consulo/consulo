@@ -23,8 +23,8 @@ import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
 import consulo.container.util.StatCollector;
 import consulo.desktop.swt.application.impl.DesktopSwtApplicationImpl;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.logging.Logger;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -54,7 +54,18 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  protected void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+    System.setProperty("swt.autoScale", "exact");
+
+    super.initApplication(isHeadlessMode, args, stat);
+  }
+
+  @Override
+  protected void main(StatCollector stat,
+                      Runnable appInitializeMark,
+                      ApplicationEx app,
+                      boolean newConfigFolder,
+                      @Nonnull CommandLineArgs args) {
     appInitializeMark.run();
 
     stat.dump("Startup statistics", LOG::info);
