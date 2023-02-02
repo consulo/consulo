@@ -15,8 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.PerformInBackgroundOption;
 
+@Deprecated
+@DeprecationInfo("Use consulo.application.progress.PerformInBackgroundOption.ALWAYS_BACKGROUND")
 public class BackgroundFromStartOption implements PerformInBackgroundOption {
   private final static BackgroundFromStartOption ourInstance = new BackgroundFromStartOption();
 

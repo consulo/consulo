@@ -19,6 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
+import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;

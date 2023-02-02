@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.refactoring.actions;
+package consulo.language.editor.refactoring.action;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.refactoring.ElementsHandler;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.ElementsHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
-import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.function.Condition;
@@ -41,8 +39,8 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
   @Override
   protected final RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
     PsiElement element = null;
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    Editor editor = dataContext.getData(Editor.KEY);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
     if (editor != null && file != null) {
       element = getElementAtCaret(editor, file);
       if (element != null) {

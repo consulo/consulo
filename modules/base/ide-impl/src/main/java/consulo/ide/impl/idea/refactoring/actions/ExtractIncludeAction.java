@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.refactoring.actions;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.language.Language;
 import consulo.language.editor.refactoring.LanguageExtractIncludeHandler;
+import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.refactoring.actions;
 
+import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
+
 public abstract class ExtractSuperActionBase extends BasePlatformRefactoringAction {
 
   @Override
