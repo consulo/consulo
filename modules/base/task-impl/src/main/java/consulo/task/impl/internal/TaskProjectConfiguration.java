@@ -68,12 +68,13 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
     myManager = manager;
   }
 
+  @Override
   public TaskProjectConfiguration getState() {
     servers.clear();
     for (TaskRepository repository : myManager.getAllRepositories()) {
       if (repository.isShared()) {
         SharedServer server = new SharedServer();
-        server.type = repository.getRepositoryType().getName();
+        server.type = repository.getRepositoryType().getId();
         server.url = repository.getUrl();
         servers.add(server);
       }
@@ -81,6 +82,7 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
     return this;
   }
 
+  @Override
   public void loadState(TaskProjectConfiguration state) {
     servers.clear();
     for (final SharedServer server : state.servers) {

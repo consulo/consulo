@@ -79,8 +79,8 @@ public class TaskRepositoriesConfigurable implements Configurable.NoScroll, Proj
     final List<AnAction> createActions = new ArrayList<AnAction>();
     for (final TaskRepositoryType repositoryType : groups) {
       for (final TaskRepositorySubtype subtype : (List<TaskRepositorySubtype>)repositoryType.getAvailableSubtypes()) {
-        String description = "New " + subtype.getName() + " server";
-        createActions.add(new AnAction(subtype.getName(), description, subtype.getIcon()) {
+        String description = "New " + subtype.getPresentableName() + " server";
+        createActions.add(new AnAction(subtype.getPresentableName().get(), description, subtype.getIcon()) {
           @Override
           public void actionPerformed(AnActionEvent e) {
             TaskRepository repository = repositoryType.createRepository(subtype);

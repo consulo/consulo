@@ -18,6 +18,7 @@ package consulo.task;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.image.Image;
@@ -38,19 +39,25 @@ import java.util.function.Consumer;
 public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
 
   public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);
-  
+
   public static List<TaskRepositoryType> getRepositoryTypes() {
     return EP_NAME.getExtensionList();
   }
 
   @Nonnull
-  public abstract String getName();
+  public abstract String getId();
 
+  @Nonnull
+  public abstract LocalizeValue getPresentableName();
+
+  @Override
   @Nonnull
   public abstract Image getIcon();
 
   @Nullable
-  public String getAdvertiser() { return null; }
+  public String getAdvertiser() {
+    return null;
+  }
 
   @Nonnull
   public abstract TaskRepositoryEditor createEditor(T repository, Project project, Consumer<T> changeListener);
@@ -64,6 +71,7 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
     return subtype.createRepository();
   }
 
+  @Override
   @Nonnull
   public abstract TaskRepository createRepository();
 

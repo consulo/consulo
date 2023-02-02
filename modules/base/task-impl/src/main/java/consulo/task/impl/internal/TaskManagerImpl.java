@@ -195,12 +195,12 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         List<TaskProjectConfiguration.SharedServer> servers = getProjectConfiguration().servers;
         TaskRepositoryType type = repository.getRepositoryType();
         for (TaskProjectConfiguration.SharedServer server : servers) {
-          if (repository.getUrl().equals(server.url) && type.getName().equals(server.type)) {
+          if (repository.getUrl().equals(server.url) && type.getId().equals(server.type)) {
             continue reps;
           }
         }
         TaskProjectConfiguration.SharedServer server = new TaskProjectConfiguration.SharedServer();
-        server.type = type.getName();
+        server.type = type.getId();
         server.url = repository.getUrl();
         servers.add(server);
       }
@@ -605,7 +605,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     ArrayList<TaskRepository> repositories = new ArrayList<>();
     for (TaskRepositoryType repositoryType : TaskRepositoryType.getRepositoryTypes()) {
       for (Object o : element.getChildren()) {
-        if (((Element)o).getName().equals(repositoryType.getName())) {
+        if (((Element)o).getName().equals(repositoryType.getId())) {
           try {
             @SuppressWarnings({"unchecked"}) TaskRepository repository =
               (TaskRepository)XmlSerializer.deserialize((Element)o, repositoryType.getRepositoryClass());
@@ -632,7 +632,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
         continue;
       }
       for (TaskRepositoryType<?> repositoryType : TaskRepositoryType.getRepositoryTypes()) {
-        if (repositoryType.getName().equals(server.type)) {
+        if (repositoryType.getId().equals(server.type)) {
           for (TaskRepository repository : myRepositories) {
             if (!repositoryType.equals(repository.getRepositoryType())) {
               continue;

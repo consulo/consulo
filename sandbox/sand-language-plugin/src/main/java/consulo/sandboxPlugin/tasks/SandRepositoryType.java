@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.tasks;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.task.TaskRepository;
 import consulo.task.BaseRepositoryType;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -31,8 +32,14 @@ import javax.annotation.Nonnull;
 public class SandRepositoryType extends BaseRepositoryType<SandTaskRepository> {
   @Nonnull
   @Override
-  public String getName() {
+  public String getId() {
     return "Sand";
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of("Sand");
   }
 
   @Nonnull
