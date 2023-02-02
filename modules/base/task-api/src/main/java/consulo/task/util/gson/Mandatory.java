@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.tasks.impl.gson;
+package consulo.task.util.gson;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Mandatory
-{
-	// empty
+public @interface Mandatory {
+  // empty
 }

@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.tasks.impl;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.ide.actions.TemplateKindCombo;
-import consulo.ide.impl.idea.tasks.impl.TaskUiUtil.ComboBoxUpdater;
+import consulo.task.util.TaskUiUtil.ComboBoxUpdater;
 import consulo.ide.impl.idea.util.PlatformIcons;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

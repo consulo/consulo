@@ -753,7 +753,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.tasks.context;
   exports consulo.ide.impl.idea.tasks.doc;
   exports consulo.ide.impl.idea.tasks.impl;
-  exports consulo.ide.impl.idea.tasks.impl.gson;
   exports consulo.ide.impl.idea.tasks.timeTracking;
   exports consulo.ide.impl.idea.testIntegration;
   exports consulo.ide.impl.idea.tools;

@@ -20,13 +20,12 @@
  * Date: 12.07.2006
  * Time: 13:51:49
  */
-package consulo.ide.impl.idea.openapi.vcs.changes;
+package consulo.versionControlSystem.change;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.versionControlSystem.change.LocalChangeList;
 
 /**
  * Allows to modify the painting of changelists in the Changes view. Classes implementing this

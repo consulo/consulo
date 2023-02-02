@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.tasks.impl;
+package consulo.task;
 
-import consulo.task.Comment;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Date;
 
 /**
