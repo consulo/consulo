@@ -14,5 +14,7 @@ module consulo.task.impl {
 
   opens consulo.task.impl.internal to consulo.util.xml.serializer;
 
+  // TODO remove in future
   requires java.desktop;
+  requires forms.rt;
 }

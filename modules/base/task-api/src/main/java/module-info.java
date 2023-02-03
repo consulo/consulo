@@ -5,6 +5,7 @@
 module consulo.task.api {
   // TODO remove in future
   requires java.desktop;
+  requires forms.rt;
   requires consulo.ui.ex.awt.api;
 
   requires transitive consulo.project.api;
