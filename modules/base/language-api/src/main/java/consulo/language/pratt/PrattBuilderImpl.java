@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.pratt;
+package consulo.language.pratt;
 
-import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.LangBundle;
-import consulo.language.parser.PsiBuilder;
-import consulo.language.impl.internal.parser.PsiBuilderImpl;
-import consulo.language.lexer.Lexer;
-import consulo.util.lang.Trinity;
 import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.ITokenTypeRemapper;
+import consulo.language.parser.PsiBuilder;
+import consulo.util.lang.Trinity;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class PrattBuilderImpl extends PrattBuilder {
 
   @Override
   public Lexer getLexer() {
-    return ((PsiBuilderImpl) myBuilder).getLexer();
+    return myBuilder.getLexer();
   }
 
   @Override

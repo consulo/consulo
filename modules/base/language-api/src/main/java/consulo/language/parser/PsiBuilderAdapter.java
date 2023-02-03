@@ -19,6 +19,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.TokenSet;
+import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
@@ -182,6 +183,12 @@ public class PsiBuilderAdapter implements PsiBuilder {
   @Override
   public PsiFile getContainingFile() {
     return myDelegate.getContainingFile();
+  }
+
+  @Nonnull
+  @Override
+  public Lexer getLexer() {
+    return myDelegate.getLexer();
   }
 
   @Override

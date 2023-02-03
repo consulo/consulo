@@ -20,6 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.TokenSet;
+import consulo.language.lexer.Lexer;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
@@ -356,6 +357,9 @@ public interface PsiBuilder extends UserDataHolder {
 
   @Nullable
   PsiFile getContainingFile();
+
+  @Nonnull
+  Lexer getLexer();
 
   void registerWhitespaceToken(@Nonnull IElementType type);
 }

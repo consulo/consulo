@@ -23,6 +23,7 @@ module consulo.language.api {
   exports consulo.language.file.light;
   exports consulo.language.lexer;
   exports consulo.language.parser;
+  exports consulo.language.pratt;
   exports consulo.language.plain;
   exports consulo.language.plain.ast;
   exports consulo.language.plain.psi;

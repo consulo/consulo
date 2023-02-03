@@ -17,22 +17,23 @@
 /**
  * @author cdr
  */
-package consulo.ide.impl.idea.openapi.roots.impl;
+package consulo.module.content.util;
 
 import consulo.content.OrderRootType;
-import consulo.module.Module;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.orderEntry.*;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.orderEntry.*;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.Processor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class OrderEntryUtil {
   private OrderEntryUtil() {
@@ -97,7 +98,8 @@ public class OrderEntryUtil {
     if (orderEntry1 instanceof ModuleExtensionWithSdkOrderEntry && orderEntry2 instanceof ModuleExtensionWithSdkOrderEntry) {
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry1 = (ModuleExtensionWithSdkOrderEntry)orderEntry1;
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry2 = (ModuleExtensionWithSdkOrderEntry)orderEntry2;
-      return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) && Comparing.strEqual(sdkOrderEntry1.getSdkName(), sdkOrderEntry2.getSdkName());
+      return Comparing.equal(sdkOrderEntry1.getSdk(), sdkOrderEntry2.getSdk()) && Comparing.strEqual(sdkOrderEntry1.getSdkName(),
+                                                                                                     sdkOrderEntry2.getSdkName());
     }
     if (orderEntry1 instanceof LibraryOrderEntry && orderEntry2 instanceof LibraryOrderEntry) {
       final LibraryOrderEntry jdkOrderEntry1 = (LibraryOrderEntry)orderEntry1;
@@ -182,11 +184,13 @@ public class OrderEntryUtil {
     }
   }
 
-  public static <T extends OrderEntry> void processOrderEntries(@Nonnull Module module, @Nonnull Class<T> orderEntryClass, @Nonnull Processor<T> processor) {
+  public static <T extends OrderEntry> void processOrderEntries(@Nonnull Module module,
+                                                                @Nonnull Class<T> orderEntryClass,
+                                                                @Nonnull Predicate<T> processor) {
     OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
     for (OrderEntry orderEntry : orderEntries) {
       if (orderEntryClass.isInstance(orderEntry)) {
-        if (!processor.process(orderEntryClass.cast(orderEntry))) {
+        if (!processor.test(orderEntryClass.cast(orderEntry))) {
           break;
         }
       }

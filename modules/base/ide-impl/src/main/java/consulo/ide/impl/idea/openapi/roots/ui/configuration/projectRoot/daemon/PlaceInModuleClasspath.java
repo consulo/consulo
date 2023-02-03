@@ -20,7 +20,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.impl.OrderEntryUtil;
+import consulo.module.content.util.OrderEntryUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 

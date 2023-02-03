@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.pratt;
+package consulo.language.pratt;
 
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
+
+import javax.annotation.Nullable;
 
 /**
  * @author peter
  */
-public interface ParseResultVisitor<T> {
-  T append();
-  T error();
-  T done(@Nonnull IElementType type);
+public abstract class AppendTokenParser extends TokenParser {
+  public static final AppendTokenParser JUST_APPEND = new AppendTokenParser() {
+    @Override
+    @Nullable
+    protected IElementType parseAppend(final PrattBuilder builder) {
+      return null;
+    }
+  };
+
+  @Override
+  public boolean parseToken(final PrattBuilder builder) {
+    final MutableMarker marker = builder.mark();
+    builder.advance();
+    marker.finish(parseAppend(builder));
+    return true;
+  }
+
+  @Nullable
+  protected abstract IElementType parseAppend(PrattBuilder builder);
+
 }

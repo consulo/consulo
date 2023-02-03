@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.ui.ex;
+package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 

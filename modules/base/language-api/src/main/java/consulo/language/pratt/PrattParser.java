@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.pratt;
+package consulo.language.pratt;
 
-import consulo.language.version.LanguageVersion;
-import consulo.language.parser.PsiParser;
 import consulo.language.ast.ASTNode;
-import consulo.language.parser.PsiBuilder;
 import consulo.language.ast.IElementType;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.language.version.LanguageVersion;
+
 import javax.annotation.Nonnull;
 
 /**

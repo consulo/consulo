@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
 import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.impl.idea.openapi.ui.ex.MultiLineLabel;
+import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifact;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 

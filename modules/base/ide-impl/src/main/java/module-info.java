@@ -490,7 +490,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.lang.documentation;
   exports consulo.ide.impl.idea.lang.folding;
   exports consulo.ide.impl.idea.lang.parameterInfo;
-  exports consulo.ide.impl.idea.lang.pratt;
   exports consulo.ide.impl.idea.model.search.impl;
   exports consulo.ide.impl.idea.moduleDependencies;
   exports consulo.ide.impl.idea.navigation;
@@ -628,7 +627,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
   exports consulo.ide.impl.idea.openapi.roots.ui.util;
   exports consulo.ide.impl.idea.openapi.ui;
-  exports consulo.ide.impl.idea.openapi.ui.ex;
   exports consulo.ide.impl.idea.openapi.ui.impl;
   exports consulo.ide.impl.idea.openapi.ui.playback;
   exports consulo.ide.impl.idea.openapi.ui.playback.commands;

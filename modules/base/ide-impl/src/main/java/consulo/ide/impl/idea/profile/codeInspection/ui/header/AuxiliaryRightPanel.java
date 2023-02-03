@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
-import consulo.ide.impl.idea.openapi.ui.ex.MultiLineLabel;
+import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;

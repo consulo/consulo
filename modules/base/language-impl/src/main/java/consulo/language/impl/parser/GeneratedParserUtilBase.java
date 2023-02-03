@@ -846,10 +846,6 @@ public class GeneratedParserUtilBase {
       state = state_;
       parser = parser_;
     }
-
-    public Lexer getLexer() {
-      return ((PsiBuilderImpl)myDelegate).getLexer();
-    }
   }
 
   public static PsiBuilder adapt_builder_(IElementType root, PsiBuilder builder, PsiParser parser) {

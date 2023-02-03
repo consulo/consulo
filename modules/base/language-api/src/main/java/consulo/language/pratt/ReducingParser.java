@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.pratt;
+package consulo.language.pratt;
 
-import consulo.language.Language;
-import consulo.language.psi.PsiBundle;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
+
 import javax.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author peter
  */
-public class PrattTokenType extends IElementType {
+public abstract class ReducingParser extends TokenParser {
+  @Override
+  public final boolean parseToken(final PrattBuilder builder) {
+    builder.advance();
+    final IElementType type = parseFurther(builder);
+    if (type == null) return false;
 
-
-  public PrattTokenType(@Nonnull @NonNls final String debugName,
-                        @Nullable final Language language) {
-    super(debugName, language);
+    builder.reduce(type);
+    return true;
   }
 
-  public String getExpectedText(final PrattBuilder builder) {
-    return PsiBundle.message("0.expected", toString());
-  }
-
+  @Nullable
+  public abstract IElementType parseFurther(final PrattBuilder builder);
 }

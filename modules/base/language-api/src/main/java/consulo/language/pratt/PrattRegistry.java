@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.lang.pratt;
+package consulo.language.pratt;
 
-import consulo.util.lang.Trinity;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Trinity;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**

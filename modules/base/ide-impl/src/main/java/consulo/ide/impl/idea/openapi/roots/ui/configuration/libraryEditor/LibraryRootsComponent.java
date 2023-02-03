@@ -41,7 +41,7 @@ import consulo.content.library.LibraryType;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.ui.ex.MultiLineLabel;
+import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
