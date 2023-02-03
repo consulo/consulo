@@ -1,5 +1,6 @@
 package consulo.task.impl.internal.action;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.configurable.internal.ShowConfigurableService;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
 /**
  * User: Evgeny Zakrevsky
  */
+@ActionImpl(id = "tasks.configure.servers")
 public class ConfigureServersAction extends BaseTaskAction {
   public ConfigureServersAction() {
     super("Configure Servers...", null, AllIcons.General.Settings);
