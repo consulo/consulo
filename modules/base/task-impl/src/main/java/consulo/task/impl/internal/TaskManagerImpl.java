@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -43,7 +44,6 @@ import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
@@ -70,9 +70,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
@@ -125,7 +122,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
   @Nonnull
   private LocalTask myActiveTask = createDefaultTask();
-  private Timer myCacheRefreshTimer;
+  private Future<?> myCacheRefreshTimer;
 
   private volatile boolean myUpdating;
   private final Config myConfig = new Config();
@@ -678,23 +675,13 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     return myProject.getInstance(TaskProjectConfiguration.class);
   }
 
-  @Override
-  public void afterLoadState() {
-    if (myProject.isDefault()) {
-      return;
-    }
-
-    myCacheRefreshTimer = UIUtil.createNamedTimer("TaskManager refresh", myConfig.updateInterval * 60 * 1000, new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        if (myConfig.updateEnabled && !myUpdating) {
-          LOG.debug("Updating issues cache (every " + myConfig.updateInterval + " min)");
-          updateIssues(null);
-        }
+  public void startUpdate() {
+    myCacheRefreshTimer = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(() -> {
+      if (myConfig.updateEnabled && !myUpdating) {
+        LOG.info("Updating issues cache (every " + myConfig.updateInterval + " min)");
+        updateIssues(null);
       }
-    });
-    myCacheRefreshTimer.setInitialDelay(0);
-    myStartupManager.registerPostStartupActivity((ui) -> myCacheRefreshTimer.start());
+    }, 0, myConfig.updateInterval, TimeUnit.MINUTES);
 
     // make sure that the default task is exist
     LocalTask defaultTask = findTask(LocalTaskImpl.DEFAULT_TASK_ID);
@@ -737,7 +724,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   @Override
   public void dispose() {
     if (myCacheRefreshTimer != null) {
-      myCacheRefreshTimer.stop();
+      myCacheRefreshTimer.cancel(false);
+      myCacheRefreshTimer = null;
     }
     myChangeListManager.removeChangeListListener(myChangeListListener);
   }
