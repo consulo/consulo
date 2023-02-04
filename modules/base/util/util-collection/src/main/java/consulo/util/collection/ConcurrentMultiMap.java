@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.containers;
-
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.util.collection.MultiMap;
+package consulo.util.collection;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -31,13 +29,13 @@ public class ConcurrentMultiMap<K, V> extends MultiMap<K, V> {
   @Nonnull
   @Override
   protected ConcurrentMap<K, Collection<V>> createMap() {
-    return ContainerUtil.newConcurrentMap();
+    return new ConcurrentHashMap<>();
   }
 
   @Nonnull
   @Override
   protected Collection<V> createCollection() {
-    return ContainerUtil.createLockFreeCopyOnWriteList();
+    return Lists.newLockFreeCopyOnWriteList();
   }
 
   @Override
@@ -45,7 +43,7 @@ public class ConcurrentMultiMap<K, V> extends MultiMap<K, V> {
     Collection<V> collection = myMap.get(key);
     if (collection == null) {
       Collection<V> newCollection = createCollection();
-      collection = ConcurrencyUtil.cacheOrGet((ConcurrentMap<K, Collection<V>>)myMap, key, newCollection);
+      collection = Maps.cacheOrGet((ConcurrentMap<K, Collection<V>>)myMap, key, newCollection);
     }
     collection.add(value);
   }
