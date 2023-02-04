@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItem
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PackAndPutIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PutSourceItemIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.SourceItemNavigateAction;
-import consulo.ide.impl.idea.ui.treeStructure.SimpleTreeBuilder;
+import consulo.ui.ex.awt.tree.SimpleTreeBuilder;
 import consulo.ui.ex.awt.tree.SimpleTreeStructure;
 import consulo.ui.ex.awt.tree.WeightBasedComparator;
 import consulo.application.ApplicationManager;

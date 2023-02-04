@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.internal.psiView.formattingblocks;
 
 import consulo.ui.ex.tree.IndexComparator;
-import consulo.ide.impl.idea.ui.treeStructure.SimpleTreeBuilder;
+import consulo.ui.ex.awt.tree.SimpleTreeBuilder;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

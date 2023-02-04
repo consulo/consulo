@@ -23,7 +23,7 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.ui.ToggleActionButton;
 import consulo.ide.impl.idea.ui.popup.util.DetailController;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;

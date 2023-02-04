@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.treeStructure;
+package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.awt.tree.PatchedDefaultMutableTreeNode;
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ui.ex.awt.tree.SimpleTreeStructure;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.ThreeStateCheckBox;
+import consulo.ui.ex.awt.UIUtil;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -35,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 /**
- * This is parent of {@link consulo.ide.impl.idea.ui.CheckboxTreeBase} but did not support policy, for support it override {@link #adjustParentsAndChildren}
+ * This is parent of {@link CheckboxTreeBase} but did not support policy, for support it override {@link #adjustParentsAndChildren}
  */
 public class CheckboxTreeNoPolicy extends Tree {
 
@@ -149,7 +147,7 @@ public class CheckboxTreeNoPolicy extends Tree {
     final Object root = getModel().getRoot();
     if (!(root instanceof CheckedTreeNode)) {
       throw new IllegalStateException(
-              "The root must be instance of the " + CheckedTreeNode.class.getName() + ": " + root.getClass().getName());
+        "The root must be instance of the " + CheckedTreeNode.class.getName() + ": " + root.getClass().getName());
     }
     new Object() {
       @SuppressWarnings("unchecked")
@@ -164,7 +162,7 @@ public class CheckboxTreeNoPolicy extends Tree {
         }
         else {
           for (int i = 0; i < node.getChildCount(); i++) {
-            final TreeNode child = node.getChildAt(i);
+            final javax.swing.tree.TreeNode child = node.getChildAt(i);
             if (child instanceof CheckedTreeNode) {
               collect((CheckedTreeNode)child);
             }
@@ -223,7 +221,7 @@ public class CheckboxTreeNoPolicy extends Tree {
   }
 
   protected void adjustParents(final CheckedTreeNode node, final boolean checked) {
-    TreeNode parentNode = node.getParent();
+    javax.swing.tree.TreeNode parentNode = node.getParent();
     if (!(parentNode instanceof CheckedTreeNode)) return;
     CheckedTreeNode parent = (CheckedTreeNode)parentNode;
 
@@ -239,7 +237,7 @@ public class CheckboxTreeNoPolicy extends Tree {
 
   private static boolean isAllChildrenUnchecked(final CheckedTreeNode node) {
     for (int i = 0; i < node.getChildCount(); i++) {
-      final TreeNode o = node.getChildAt(i);
+      final javax.swing.tree.TreeNode o = node.getChildAt(i);
       if ((o instanceof CheckedTreeNode) && ((CheckedTreeNode)o).isChecked()) {
         return false;
       }
@@ -249,7 +247,7 @@ public class CheckboxTreeNoPolicy extends Tree {
 
   private static boolean isAllChildrenChecked(final CheckedTreeNode node) {
     for (int i = 0; i < node.getChildCount(); i++) {
-      final TreeNode o = node.getChildAt(i);
+      final javax.swing.tree.TreeNode o = node.getChildAt(i);
       if ((o instanceof CheckedTreeNode) && !((CheckedTreeNode)o).isChecked()) {
         return false;
       }
@@ -275,7 +273,14 @@ public class CheckboxTreeNoPolicy extends Tree {
       myTextRenderer = new ColoredTreeCellRenderer() {
         @RequiredUIAccess
         @Override
-        public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) { }
+        public void customizeCellRenderer(JTree tree,
+                                          Object value,
+                                          boolean selected,
+                                          boolean expanded,
+                                          boolean leaf,
+                                          int row,
+                                          boolean hasFocus) {
+        }
       };
       myTextRenderer.setOpaque(opaque);
       add(myCheckbox, BorderLayout.WEST);
@@ -288,7 +293,13 @@ public class CheckboxTreeNoPolicy extends Tree {
 
     @Override
     @RequiredUIAccess
-    public final Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public final Component getTreeCellRendererComponent(JTree tree,
+                                                        Object value,
+                                                        boolean selected,
+                                                        boolean expanded,
+                                                        boolean leaf,
+                                                        int row,
+                                                        boolean hasFocus) {
       invalidate();
       if (value instanceof CheckedTreeNode) {
         CheckedTreeNode node = (CheckedTreeNode)value;
@@ -327,8 +338,8 @@ public class CheckboxTreeNoPolicy extends Tree {
 
       for (int i = 0; i < node.getChildCount(); i++) {
         TreeNode child = node.getChildAt(i);
-        NodeState childStatus = child instanceof CheckedTreeNode? getNodeStatus((CheckedTreeNode)child) :
-                                checked? NodeState.FULL : NodeState.CLEAR;
+        NodeState childStatus = child instanceof CheckedTreeNode ? getNodeStatus((CheckedTreeNode)child) :
+          checked ? NodeState.FULL : NodeState.CLEAR;
         if (childStatus == NodeState.PARTIAL) return NodeState.PARTIAL;
         if (result == null) {
           result = childStatus;
@@ -384,6 +395,8 @@ public class CheckboxTreeNoPolicy extends Tree {
 
 
   public enum NodeState {
-    FULL, CLEAR, PARTIAL
+    FULL,
+    CLEAR,
+    PARTIAL
   }
 }

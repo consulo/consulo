@@ -22,11 +22,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 

@@ -24,6 +24,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;

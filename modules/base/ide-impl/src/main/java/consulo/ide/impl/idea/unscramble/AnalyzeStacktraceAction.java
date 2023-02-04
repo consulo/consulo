@@ -20,6 +20,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
+import consulo.execution.unscramble.UnscrambleService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -34,9 +35,13 @@ public class AnalyzeStacktraceAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(Project.KEY);
-    UnscrambleDialog dialog = new UnscrambleDialog(project, null);
-    dialog.showAsync();
+    Project project = e.getData(Project.KEY);
+    if (project == null) {
+      return;
+    }
+
+    UnscrambleService unscrambleService = project.getInstance(UnscrambleService.class);
+    unscrambleService.showAsync();
   }
 
   @RequiredUIAccess

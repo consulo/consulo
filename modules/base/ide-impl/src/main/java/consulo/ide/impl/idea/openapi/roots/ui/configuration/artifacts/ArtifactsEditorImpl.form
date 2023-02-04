@@ -81,7 +81,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="4157d" class="consulo.ide.impl.idea.util.ui.ThreeStateCheckBox" binding="myShowContentCheckBox" custom-create="true">
+          <component id="4157d" class="consulo.ui.ex.awt.ThreeStateCheckBox" binding="myShowContentCheckBox" custom-create="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>

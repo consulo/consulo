@@ -41,7 +41,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ide.impl.idea.ui.treeStructure.SimpleTreeBuilder;
+import consulo.ui.ex.awt.tree.SimpleTreeBuilder;
 import consulo.ui.ex.awt.tree.SimpleTreeStructure;
 import consulo.ui.ex.awt.tree.WeightBasedComparator;
 import consulo.ide.impl.idea.util.ArrayUtil;

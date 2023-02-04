@@ -21,7 +21,7 @@ import consulo.component.util.Iconable;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.language.icon.IconDescriptorUpdaters;
 

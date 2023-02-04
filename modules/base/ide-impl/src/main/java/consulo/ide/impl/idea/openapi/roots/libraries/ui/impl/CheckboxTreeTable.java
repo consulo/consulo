@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
-import consulo.ide.impl.idea.ui.CheckboxTree;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
 import consulo.ide.impl.idea.ui.treeStructure.treetable.ListTreeTableModelOnColumns;

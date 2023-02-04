@@ -23,7 +23,7 @@ import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;

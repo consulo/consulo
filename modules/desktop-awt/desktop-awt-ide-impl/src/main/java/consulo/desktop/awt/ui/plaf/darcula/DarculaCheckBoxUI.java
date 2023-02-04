@@ -6,7 +6,7 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;
+import consulo.ui.ex.awt.ThreeStateCheckBox;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

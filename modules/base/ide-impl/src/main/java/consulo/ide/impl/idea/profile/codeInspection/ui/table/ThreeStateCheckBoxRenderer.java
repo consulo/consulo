@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui.table;
 import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.InspectionsConfigTreeTable;
 import consulo.util.collection.SmartList;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;
+import consulo.ui.ex.awt.ThreeStateCheckBox;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nullable;
 

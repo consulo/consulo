@@ -50,7 +50,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.ArchivePackagingElement;
 import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.ui.ThreeStateCheckBox;
+import consulo.ui.ex.awt.ThreeStateCheckBox;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

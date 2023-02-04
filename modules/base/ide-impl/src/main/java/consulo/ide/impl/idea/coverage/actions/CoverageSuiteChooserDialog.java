@@ -2,8 +2,8 @@ package consulo.ide.impl.idea.coverage.actions;
 
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.ui.CheckboxTree;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.application.util.DateFormatUtil;

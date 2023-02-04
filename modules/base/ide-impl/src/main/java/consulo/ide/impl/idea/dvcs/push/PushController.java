@@ -24,7 +24,7 @@ import consulo.ide.ServiceManager;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.dvcs.push.ui.*;
 import consulo.versionControlSystem.distributed.DvcsBundle;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

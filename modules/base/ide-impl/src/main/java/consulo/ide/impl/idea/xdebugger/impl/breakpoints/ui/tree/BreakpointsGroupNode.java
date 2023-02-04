@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree;
 
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 
 class BreakpointsGroupNode<G extends XBreakpointGroup> extends CheckedTreeNode {

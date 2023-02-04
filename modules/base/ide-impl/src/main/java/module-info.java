@@ -788,7 +788,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.tabs.impl.table;
   exports consulo.ide.impl.idea.ui.tree;
   exports consulo.ide.impl.idea.ui.tree.project;
-  exports consulo.ide.impl.idea.ui.treeStructure;
   exports consulo.ide.impl.idea.ui.treeStructure.filtered;
   exports consulo.ide.impl.idea.ui.treeStructure.treetable;
   exports consulo.ide.impl.idea.ui.util;

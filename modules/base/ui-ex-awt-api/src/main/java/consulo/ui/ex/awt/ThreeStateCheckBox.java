@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.EmptyIcon;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;

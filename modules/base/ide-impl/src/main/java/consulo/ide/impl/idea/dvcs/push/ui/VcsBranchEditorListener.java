@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
-import consulo.ide.impl.idea.ui.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

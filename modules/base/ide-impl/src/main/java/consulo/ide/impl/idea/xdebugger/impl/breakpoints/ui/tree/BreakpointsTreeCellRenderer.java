@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.ui.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
