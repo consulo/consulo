@@ -22,6 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.task.event.TaskListener;
 import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
 
 import javax.annotation.Nonnull;
@@ -124,14 +125,7 @@ public abstract class TaskManager {
 
   public abstract void removeTask(LocalTask task);
 
-  @Deprecated // use {@code consulo.task.TaskManager.addTaskListener(consulo.ide.impl.idea.tasks.TaskListener, consulo.ide.impl.idea.openapi.Disposable)}
-  public abstract void addTaskListener(TaskListener listener);
-
   public abstract void addTaskListener(@Nonnull TaskListener listener, @Nonnull Disposable parentDisposable);
-
-  @Deprecated // use {@code consulo.task.TaskManager.addTaskListener(consulo.ide.impl.idea.tasks.TaskListener, consulo.ide.impl.idea.openapi.Disposable)}
-  public abstract void removeTaskListener(TaskListener listener);
-  // repositories management
 
   public abstract TaskRepository[] getAllRepositories();
 
@@ -140,4 +134,9 @@ public abstract class TaskManager {
   public abstract void setTrackContextForNewChangelist(boolean value);
 
   public abstract boolean isTrackContextForNewChangelist();
+
+  @Nonnull
+  public abstract String suggestBranchName(@Nonnull Task task);
+
+  public abstract void addBranches(LocalTask task, VcsTaskHandler.TaskInfo[] info, boolean original);
 }

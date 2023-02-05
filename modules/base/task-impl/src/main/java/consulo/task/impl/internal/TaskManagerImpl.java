@@ -218,18 +218,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   }
 
   @Override
-  public void addTaskListener(TaskListener listener) {
-    myDispatcher.addListener(listener);
-  }
-
-  @Override
   public void addTaskListener(@Nonnull TaskListener listener, @Nonnull Disposable parentDisposable) {
     myDispatcher.addListener(listener, parentDisposable);
-  }
-
-  @Override
-  public void removeTaskListener(TaskListener listener) {
-    myDispatcher.removeListener(listener);
   }
 
   @Nonnull
@@ -458,7 +448,8 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     }
   }
 
-  public static void addBranches(LocalTask task, VcsTaskHandler.TaskInfo[] info, boolean original) {
+  @Override
+  public void addBranches(LocalTask task, VcsTaskHandler.TaskInfo[] info, boolean original) {
     for (VcsTaskHandler.TaskInfo taskInfo : info) {
       List<BranchInfo> branchInfos = BranchInfo.fromTaskInfo(taskInfo, original);
       for (BranchInfo branchInfo : branchInfos) {

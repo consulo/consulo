@@ -180,8 +180,8 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
       VcsTaskHandler.TaskInfo branch = (VcsTaskHandler.TaskInfo)myUseBranchCombo.getSelectedItem();
       if (branch != null) {
         VcsTaskHandler.TaskInfo[] tasks = myVcsTaskHandler.getCurrentTasks();
-        TaskManagerImpl.addBranches(myPreviousTask, tasks, true);
-        myVcsTaskHandler.switchToTask(branch, () -> TaskManagerImpl.addBranches(localTask, new VcsTaskHandler.TaskInfo[]{branch}, false));
+        myTaskManager.addBranches(myPreviousTask, tasks, true);
+        myVcsTaskHandler.switchToTask(branch, () -> myTaskManager.addBranches(localTask, new VcsTaskHandler.TaskInfo[]{branch}, false));
       }
     }
   }
