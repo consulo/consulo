@@ -21,9 +21,17 @@
       <ThresholdFilter level="INFO"/>
     </Console>
 
+    <Async name="ASYNC_CONSOLE">
+      <AppenderRef ref="CONSOLE"/>
+    </Async>
+
     <Dialog name="DIALOG">
       <ThresholdFilter level="ERROR"/>
     </Dialog>
+
+    <Async name="ASYNC_DIALOG">
+      <AppenderRef ref="DIALOG"/>
+    </Async>
 
     <RollingFile name="FILE" fileName="$LOG_DIR$/consulo.log" filePattern="$LOG_DIR$/consulo.log.%i">
       <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %4p - %30.30c - %m \n"/>
@@ -32,13 +40,17 @@
       </Policies>
       <DefaultRolloverStrategy max="10"/>
     </RollingFile>
+
+    <Async name="ASYNC_FILE">
+      <AppenderRef ref="FILE"/>
+    </Async>
   </Appenders>
 
   <Loggers>
     <Root level="INFO">
-      <AppenderRef ref="DIALOG"/>
-      <AppenderRef ref="CONSOLE"/>
-      <AppenderRef ref="FILE"/>
+      <AppenderRef ref="ASYNC_DIALOG"/>
+      <AppenderRef ref="ASYNC_CONSOLE"/>
+      <AppenderRef ref="ASYNC_FILE"/>
     </Root>
   </Loggers>
 </Configuration>
