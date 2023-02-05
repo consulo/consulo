@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.text;
-
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.CharSequenceSubSequence;
+package consulo.util.lang;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
-
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isNotNegativeNumber;
 
 /**
  * Holds <a href="http://semver.org">Semantic Version</a>.
+ *
+ * @see Version
+ * @see VersionComparatorUtil
  */
 public final class SemVer implements Comparable<SemVer> {
 
@@ -106,7 +103,8 @@ public final class SemVer implements Comparable<SemVer> {
     if (o == null || getClass() != o.getClass()) return false;
 
     SemVer semVer = (SemVer)o;
-    return myMajor == semVer.myMajor && myMinor == semVer.myMinor && myPatch == semVer.myPatch && Objects.equals(myPreRelease, semVer.myPreRelease);
+    return myMajor == semVer.myMajor && myMinor == semVer.myMinor && myPatch == semVer.myPatch && Objects.equals(myPreRelease,
+                                                                                                                 semVer.myPreRelease);
   }
 
   @Override
@@ -152,15 +150,15 @@ public final class SemVer implements Comparable<SemVer> {
 
       CharSequence segment1 = new CharSequenceSubSequence(pre1, start1, end1);
       CharSequence segment2 = new CharSequenceSubSequence(pre2, start2, end2);
-      if (isNotNegativeNumber(segment1)) {
-        if (!isNotNegativeNumber(segment2)) {
+      if (StringUtil.isNotNegativeNumber(segment1)) {
+        if (!StringUtil.isNotNegativeNumber(segment2)) {
           // According to SemVer specification numeric segments has lower precedence
           // than non-numeric segments
           return -1;
         }
         diff = compareNumeric(segment1, segment2);
       }
-      else if (isNotNegativeNumber(segment2)) {
+      else if (StringUtil.isNotNegativeNumber(segment2)) {
         return 1;
       }
       else {

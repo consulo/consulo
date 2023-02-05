@@ -18,6 +18,9 @@ package consulo.util.lang;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @see SemVer
+ */
 public class Version {
   public final int major;
   public final int minor;
