@@ -2,12 +2,10 @@
 package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.ArrayUtilRt;
-import consulo.util.nodep.JavaVersion;
 import consulo.util.nodep.LoggerRt;
 import consulo.util.nodep.Pair;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.io.UnsyncByteArrayInputStream;
-import consulo.util.nodep.map.SimpleMultiMap;
 import consulo.util.nodep.reference.SoftReference;
 
 import java.io.File;
@@ -87,7 +85,7 @@ class JarLoader extends Loader {
       if (paths != null && !paths.isEmpty()) {
         return true;
       }
-      
+
       // if we have index and name not from index - skip loader for loading, and processing
       return false;
     }
@@ -390,7 +388,7 @@ class JarLoader extends Loader {
   }
 
   protected JarFile createZipFile(String path) throws IOException {
-    return new JarFile(path);
+    return JarFileFactory.create(new File(path));
   }
 
   protected void releaseZipFile(ZipFile zipFile) throws IOException {
