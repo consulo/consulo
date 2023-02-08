@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.paths;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.document.util.TextRange;
-import consulo.language.editor.impl.internal.psi.path.StaticPathReferenceProvider;
+import consulo.language.psi.path.StaticPathReferenceProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.PathReference;

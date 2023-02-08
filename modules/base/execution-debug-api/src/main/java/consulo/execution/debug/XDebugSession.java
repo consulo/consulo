@@ -33,6 +33,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
@@ -208,4 +209,10 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
   @Nullable
   XValueMarkers<?, ?> getValueMarkers();
+
+  void addRestartActions(AnAction... restartActions);
+
+  void addExtraActions(AnAction... extraActions);
+
+  void addExtraStopActions(AnAction... extraStopActions);
 }

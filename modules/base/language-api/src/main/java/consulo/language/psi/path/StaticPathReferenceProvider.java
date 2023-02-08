@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.internal.psi.path;
+package consulo.language.psi.path;
 
-import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.language.psi.path.PathReference;
-import consulo.language.psi.path.PathReferenceProviderBase;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.fileType.FileType;
 

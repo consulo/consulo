@@ -32,7 +32,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.NullUtils;
+import consulo.util.lang.NullUtils;
 import consulo.ide.impl.idea.ui.tabs.UiDecorator;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.ObjectUtil;

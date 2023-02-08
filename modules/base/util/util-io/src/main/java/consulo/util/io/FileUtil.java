@@ -1438,4 +1438,18 @@ public class FileUtil {
     }
     return found;
   }
+
+  public static boolean isJarOrZip(File file) {
+    return isJarOrZip(file, true);
+  }
+
+  public static boolean isJarOrZip(File file, boolean isCheckIsDirectory) {
+    if (isCheckIsDirectory && file.isDirectory()) {
+      return false;
+    }
+
+    // do not use getName to avoid extra String creation (File.getName() calls substring)
+    final String path = file.getPath();
+    return StringUtil.endsWithIgnoreCase(path, ".jar") || StringUtil.endsWithIgnoreCase(path, ".zip");
+  }
 }

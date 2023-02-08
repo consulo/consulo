@@ -15,19 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
-import consulo.execution.debug.event.XDebuggerManagerListener;
-import consulo.execution.ui.console.OpenFileHyperlinkInfo;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.xdebugger.impl.breakpoints.*;
-import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
-import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
-import consulo.execution.debug.frame.XValueMarkers;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesViewImpl;
-import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionData;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -43,10 +30,8 @@ import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
 import consulo.execution.debug.event.XDebugSessionListener;
-import consulo.execution.debug.frame.XExecutionStack;
-import consulo.execution.debug.frame.XStackFrame;
-import consulo.execution.debug.frame.XSuspendContext;
-import consulo.execution.debug.frame.XValueMarkerProvider;
+import consulo.execution.debug.event.XDebuggerManagerListener;
+import consulo.execution.debug.frame.*;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
@@ -55,11 +40,22 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.xdebugger.impl.breakpoints.*;
+import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;
+import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
+import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesViewImpl;
+import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionData;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -187,6 +183,7 @@ public class XDebugSessionImpl implements XDebugSession {
     return myRestartActions;
   }
 
+  @Override
   public void addRestartActions(AnAction... restartActions) {
     if (restartActions != null) {
       Collections.addAll(myRestartActions, restartActions);
@@ -198,6 +195,7 @@ public class XDebugSessionImpl implements XDebugSession {
     return myExtraActions;
   }
 
+  @Override
   public void addExtraActions(AnAction... extraActions) {
     if (extraActions != null) {
       Collections.addAll(myExtraActions, extraActions);
@@ -208,6 +206,7 @@ public class XDebugSessionImpl implements XDebugSession {
     return myExtraStopActions;
   }
 
+  @Override
   public void addExtraStopActions(AnAction... extraStopActions) {
     if (extraStopActions != null) {
       Collections.addAll(myExtraStopActions, extraStopActions);
@@ -288,7 +287,7 @@ public class XDebugSessionImpl implements XDebugSession {
       initBreakpoints();
     }
 
-    myDebugProcess.getProcessHandler().addProcessListener(new ProcessAdapter() {
+    myDebugProcess.getProcessHandler().addProcessListener(new ProcessListener() {
       @Override
       public void processTerminated(final ProcessEvent event) {
         stopImpl();
