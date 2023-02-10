@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
@@ -385,5 +386,21 @@ public interface Document extends UserDataHolder {
    * @see BulkAwareDocumentListener
    */
   default void setInBulkUpdate(boolean value) {
+  }
+
+  /**
+   * Get all range markers
+   * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
+   */
+  default boolean processRangeMarkers(@Nonnull Processor<? super RangeMarker> processor) {
+    return processRangeMarkersOverlappingWith(0, getTextLength(), processor);
+  }
+
+  /**
+   * Get range markers which {@link TextRange#intersects(int, int)} the specified range
+   * and hand them to the {@code processor} in their {@link RangeMarker#getStartOffset()} order
+   */
+  default boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeMarker> processor) {
+    return true;
   }
 }
