@@ -36,7 +36,7 @@ public interface ProcessHandlerBuilder {
   ProcessHandlerBuilder colored();
 
   /**
-   * @return object instance of {@link KillableProcess}
+   * @return object instance of {@link KillableProcessHandler}
    */
   @Nonnull
   ProcessHandlerBuilder killable();
@@ -58,6 +58,14 @@ public interface ProcessHandlerBuilder {
 
   @Nonnull
   ProcessHandlerBuilder shouldDestroyProcessRecursively(boolean destroyRecursive);
+
+  /**
+   * Sets whether the process will be terminated gracefully.
+   *
+   * @param killProcessSoftly true, if graceful process termination should be attempted first (i.e. soft kill)
+   */
+  @Nonnull
+  ProcessHandlerBuilder shouldKillProcessSoftly(boolean killProcessSoftly);
 
   @Nonnull
   ProcessHandler build() throws ExecutionException;

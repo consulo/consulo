@@ -25,7 +25,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
-import consulo.process.KillableProcess;
+import consulo.process.KillableProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
@@ -544,7 +544,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   private void waitForProcess(final RunContentDescriptor descriptor, final boolean modal) {
     final ProcessHandler processHandler = descriptor.getProcessHandler();
-    final boolean killable = !modal && (processHandler instanceof KillableProcess) && ((KillableProcess)processHandler).canKillProcess();
+    final boolean killable = !modal && (processHandler instanceof KillableProcessHandler) && ((KillableProcessHandler)processHandler).canKillProcess();
 
     String title = ExecutionBundle.message("terminating.process.progress.title", descriptor.getDisplayName());
     ProgressManager.getInstance().run(new Task.Backgroundable(myProject, title, true) {
@@ -612,7 +612,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
       @Override
       public void onCancel() {
         if (killable && !processHandler.isProcessTerminated()) {
-          ((KillableProcess)processHandler).killProcess();
+          ((KillableProcessHandler)processHandler).killProcess();
         }
       }
     });

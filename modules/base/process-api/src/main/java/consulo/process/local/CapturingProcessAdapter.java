@@ -16,8 +16,8 @@
 package consulo.process.local;
 
 import consulo.process.ProcessOutputTypes;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author traff
  */
-public class CapturingProcessAdapter extends ProcessAdapter {
+public class CapturingProcessAdapter implements ProcessListener {
   private final ProcessOutput myOutput;
 
   public CapturingProcessAdapter() {

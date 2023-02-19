@@ -9,7 +9,7 @@ import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;
-import consulo.process.local.CapturingProcessHandler;
+import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.local.ProcessOutput;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

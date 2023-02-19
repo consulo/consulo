@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.application.util.Patches;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.IdeBundle;

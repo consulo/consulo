@@ -16,26 +16,25 @@
 package consulo.ide.impl.idea.execution.process;
 
 import consulo.process.ExecutionException;
-import consulo.process.KillableProcess;
+import consulo.process.KillableProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.io.BaseOutputReader;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 /**
- * This process handler supports both ANSI coloring (see {@link ColoredProcessHandler})
- * and "soft-kill" feature (see {@link KillableProcessHandler}).
+ * This process handler supports both ANSI coloring (see {@link ColoredProcessHandlerImpl})
+ * and "soft-kill" feature (see {@link KillableProcessHandlerImpl}).
  */
-public class KillableColoredProcessHandler extends ColoredProcessHandler implements KillableProcess {
-  public KillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+public class KillableColoredProcessHandlerImpl extends ColoredProcessHandlerImpl implements KillableProcessHandler {
+  public KillableColoredProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     this(commandLine, false);
   }
 
   /**
    * Starts a process with a {@link RunnerMediator mediator} when {@code withMediator} is set to {@code true} and the platform is Windows.
    */
-  public KillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
+  public KillableColoredProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
     super(mediate(commandLine, withMediator));
     setShouldKillProcessSoftly(true);
   }
@@ -43,7 +42,7 @@ public class KillableColoredProcessHandler extends ColoredProcessHandler impleme
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
+  public KillableColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     setShouldKillProcessSoftly(true);
   }
@@ -51,26 +50,14 @@ public class KillableColoredProcessHandler extends ColoredProcessHandler impleme
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
+  public KillableColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
     super(process, commandLine, charset);
     setShouldKillProcessSoftly(true);
   }
 
-  /** @deprecated use {@link #KillableColoredProcessHandler(GeneralCommandLine, boolean)} (to be removed in IDEA 17) */
+  /** @deprecated use {@link #KillableColoredProcessHandlerImpl(GeneralCommandLine, boolean)} (to be removed in IDEA 17) */
   @SuppressWarnings("unused")
-  public static KillableColoredProcessHandler create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new KillableColoredProcessHandler(commandLine, true);
-  }
-
-  public static class Silent extends KillableColoredProcessHandler {
-    public Silent(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-      super(commandLine);
-    }
-
-    @Nonnull
-    @Override
-    protected BaseOutputReader.Options readerOptions() {
-      return BaseOutputReader.Options.forMostlySilentProcess();
-    }
+  public static KillableColoredProcessHandlerImpl create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    return new KillableColoredProcessHandlerImpl(commandLine, true);
   }
 }

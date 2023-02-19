@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.process;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
-import consulo.process.KillableProcess;
+import consulo.process.KillableProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.internal.UnixProcessManager;
@@ -29,20 +29,20 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * This process handler supports the "soft-kill" feature (see {@link KillableProcessHandler}).
+ * This process handler supports the "soft-kill" feature (see {@link KillableProcessHandlerImpl}).
  * At first "stop" button send SIGINT signal to process, if it still hangs user can terminate it recursively with SIGKILL signal.
  * <p>
  * Soft kill works on Unix, and also on Windows if a mediator process was used.
  */
-public class KillableProcessHandler extends OSProcessHandler implements KillableProcess {
+public class KillableProcessHandlerImpl extends OSProcessHandler implements KillableProcessHandler {
 
-  private static final Logger LOG = Logger.getInstance(KillableProcessHandler.class);
-  private static final Key<Boolean> MEDIATOR_KEY = Key.create("KillableProcessHandler.Mediator.Process");
+  private static final Logger LOG = Logger.getInstance(KillableProcessHandlerImpl.class);
+  private static final Key<Boolean> MEDIATOR_KEY = Key.create("KillableProcessHandlerImpl.Mediator.Process");
 
   private boolean myShouldKillProcessSoftly = true;
   private final boolean myMediatedProcess;
 
-  public KillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public KillableProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     myMediatedProcess = MEDIATOR_KEY.get(commandLine) == Boolean.TRUE;
   }
@@ -50,14 +50,14 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   /**
    * Starts a process with a {@link RunnerMediator mediator} when {@code withMediator} is set to {@code true} and the platform is Windows.
    */
-  public KillableProcessHandler(@Nonnull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
+  public KillableProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine, boolean withMediator) throws ExecutionException {
     this(mediate(commandLine, withMediator));
   }
 
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
+  public KillableProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     myMediatedProcess = false;
   }
@@ -65,7 +65,7 @@ public class KillableProcessHandler extends OSProcessHandler implements Killable
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public KillableProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
+  public KillableProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
     super(process, commandLine, charset);
     myMediatedProcess = false;
   }

@@ -5,7 +5,7 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.BaseProcessHandler;
-import consulo.process.local.CapturingProcessHandler;
+import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.local.OSProcessUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

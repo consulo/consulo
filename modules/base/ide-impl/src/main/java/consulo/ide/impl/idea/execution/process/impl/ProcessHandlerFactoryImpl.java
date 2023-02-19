@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.execution.process.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
-import consulo.ide.impl.idea.execution.process.ColoredProcessHandler;
-import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandler;
-import consulo.ide.impl.idea.execution.process.KillableProcessHandler;
+import consulo.ide.impl.idea.execution.process.ColoredProcessHandlerImpl;
+import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandlerImpl;
+import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.ide.impl.idea.execution.process.RunnerMediator;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
@@ -43,7 +43,7 @@ public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
         return new OSProcessHandler(commandLine);
       case EXTERNAL_EMULATION:
         PtyCommandLine ptyCommandLine = new PtyCommandLine(commandLine);
-        OSProcessHandler handler = new ColoredProcessHandler(ptyCommandLine);
+        OSProcessHandler handler = new ColoredProcessHandlerImpl(ptyCommandLine);
         handler.setHasPty(true);
         return handler;
       case EXTERNAL:
@@ -61,18 +61,18 @@ public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
   @Override
   @Nonnull
   public OSProcessHandler createColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new ColoredProcessHandler(commandLine);
+    return new ColoredProcessHandlerImpl(commandLine);
   }
 
   @Nonnull
   @Override
   public ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new KillableProcessHandler(commandLine, true);
+    return new KillableProcessHandlerImpl(commandLine, true);
   }
 
   @Nonnull
   @Override
   public ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new KillableColoredProcessHandler(commandLine);
+    return new KillableColoredProcessHandlerImpl(commandLine);
   }
 }

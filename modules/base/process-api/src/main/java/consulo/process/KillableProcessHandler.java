@@ -18,15 +18,8 @@ package consulo.process;
 /**
  * @author nik
  */
-public interface KillableProcess {
+public interface KillableProcessHandler {
   boolean canKillProcess();
 
   void killProcess();
-
-  /**
-   * Sets whether the process will be terminated gracefully.
-   *
-   * @param shouldKillProcessSoftly true, if graceful process termination should be attempted first (i.e. soft kill)
-   */
-  void setShouldKillProcessSoftly(boolean shouldKillProcessSoftly);
 }

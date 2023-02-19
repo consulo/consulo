@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.util;
+package consulo.process.local;
 
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessHandler;
-import consulo.process.local.ProcessOutput;
 import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.CapturingProcessHandler;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +132,7 @@ public class ExecUtil {
 
   @Nonnull
   public static String getWindowsShellName() {
-    return SystemInfo.isWin2kOrNewer ? "cmd.exe" : "command.com";
+    return "cmd.exe";
   }
 
   @Nonnull
@@ -154,12 +153,8 @@ public class ExecUtil {
   @Nullable
   public static String readFirstLine(@Nonnull InputStream stream, @Nullable Charset cs) {
     try {
-      BufferedReader reader = new BufferedReader(cs == null ? new InputStreamReader(stream) : new InputStreamReader(stream, cs));
-      try {
+      try (BufferedReader reader = new BufferedReader(cs == null ? new InputStreamReader(stream) : new InputStreamReader(stream, cs))) {
         return reader.readLine();
-      }
-      finally {
-        reader.close();
       }
     }
     catch (IOException ignored) {
@@ -187,7 +182,7 @@ public class ExecUtil {
       return commandLine;
     }
 
-    List<String> command = ContainerUtil.newArrayList();
+    List<String> command = new ArrayList<>();
     command.add(commandLine.getExePath());
     command.addAll(commandLine.getParametersList().getList());
 
@@ -201,13 +196,13 @@ public class ExecUtil {
       sudoCommandLine = new GeneralCommandLine(getOsascriptPath(), "-e", escapedScript);
     }
     else if (hasGkSudo.getValue()) {
-      List<String> sudoCommand = ContainerUtil.newArrayList();
+      List<String> sudoCommand = new ArrayList<>();
       sudoCommand.addAll(Arrays.asList("gksudo", "--message", prompt, "--"));
       sudoCommand.addAll(command);
       sudoCommandLine = new GeneralCommandLine(sudoCommand);
     }
     else if (hasKdeSudo.getValue()) {
-      List<String> sudoCommand = ContainerUtil.newArrayList();
+      List<String> sudoCommand = new ArrayList<>();
       sudoCommand.addAll(Arrays.asList("kdesudo", "--comment", prompt, "--"));
       sudoCommand.addAll(command);
       sudoCommandLine = new GeneralCommandLine(sudoCommand);
@@ -293,36 +288,5 @@ public class ExecUtil {
   @Nonnull
   public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
     return new CapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
-  }
-
-  // deprecated stuff
-
-  /** @deprecated use {@code new GeneralCommandLine(command).createProcess().waitFor()} (to be removed in IDEA 16) */
-  public static int execAndGetResult(String... command) throws ExecutionException, InterruptedException {
-    assert command != null && command.length > 0;
-    return new GeneralCommandLine(command).createProcess().waitFor();
-  }
-
-  /** @deprecated use {@code new GeneralCommandLine(command).createProcess().waitFor()} (to be removed in IDEA 16) */
-  public static int execAndGetResult(@Nonnull List<String> command) throws ExecutionException, InterruptedException {
-    return new GeneralCommandLine(command).createProcess().waitFor();
-  }
-
-  /** @deprecated use {@link #execAndGetOutput(GeneralCommandLine)} instead (to be removed in IDEA 16) */
-  public static ProcessOutput execAndGetOutput(@Nonnull List<String> command, @Nullable String workDir) throws ExecutionException {
-    GeneralCommandLine commandLine = new GeneralCommandLine(command).withWorkDirectory(workDir);
-    return new CapturingProcessHandler(commandLine).runProcess();
-  }
-
-  /** @deprecated use {@link #execAndReadLine(GeneralCommandLine)} instead (to be removed in IDEA 16) */
-  public static String execAndReadLine(String... command) {
-    return execAndReadLine(new GeneralCommandLine(command));
-  }
-
-  /** @deprecated use {@link #execAndReadLine(GeneralCommandLine)} instead (to be removed in IDEA 16) */
-  public static String execAndReadLine(@Nullable Charset charset, String... command) {
-    GeneralCommandLine commandLine = new GeneralCommandLine(command);
-    if (charset != null) commandLine = commandLine.withCharset(charset);
-    return execAndReadLine(commandLine);
   }
 }

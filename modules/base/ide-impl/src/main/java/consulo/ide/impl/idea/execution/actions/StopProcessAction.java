@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.process.KillableProcess;
+import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.application.AllIcons;
 import consulo.process.ProcessHandlerStopper;
@@ -55,8 +55,8 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
     String description = templatePresentation.getDescription();
     if (processHandler != null && !processHandler.isProcessTerminated()) {
       enable = true;
-      if (processHandler.isProcessTerminating() && processHandler instanceof KillableProcess) {
-        KillableProcess killableProcess = (KillableProcess) processHandler;
+      if (processHandler.isProcessTerminating() && processHandler instanceof KillableProcessHandler) {
+        KillableProcessHandler killableProcess = (KillableProcessHandler) processHandler;
         if (killableProcess.canKillProcess()) {
           // 'force quite' action presentation
           icon = AllIcons.Debugger.KillProcess;

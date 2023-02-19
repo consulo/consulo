@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.browsers;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.ide.setting.ShowSettingsUtil;

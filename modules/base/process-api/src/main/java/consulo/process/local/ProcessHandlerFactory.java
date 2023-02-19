@@ -21,10 +21,15 @@ import consulo.application.Application;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessConsoleType;
 import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @see ProcessHandlerBuilder
+ */
+@Deprecated
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProcessHandlerFactory {
 
@@ -46,7 +51,7 @@ public abstract class ProcessHandlerFactory {
    * <p>
    * Soft kill works on Unix, and also on Windows if a mediator process was used.
    *
-   * Instance of KillableProcess
+   * Instance of KillableProcessHandler
    */
   @Nonnull
   public abstract ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
@@ -54,7 +59,7 @@ public abstract class ProcessHandlerFactory {
   /**
    * Returns a new instance of the {@link #createKillableProcessHandler(GeneralCommandLine)} which is aware of ANSI coloring output.
    *
-   * Instance of KillableProcess
+   * Instance of KillableProcessHandler
    */
   @Nonnull
   public abstract ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;

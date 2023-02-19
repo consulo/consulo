@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.application.util.NullableLazyValue;

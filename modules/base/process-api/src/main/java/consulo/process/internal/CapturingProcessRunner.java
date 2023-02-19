@@ -1,14 +1,16 @@
 /*
  * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
-package consulo.process.local;
+package consulo.process.internal;
 
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
-import consulo.process.event.ProcessAdapter;
+import consulo.logging.Logger;
+import consulo.process.event.ProcessListener;
+import consulo.process.local.BaseProcessHandler;
+import consulo.process.local.CapturingProcessAdapter;
+import consulo.process.local.ProcessOutput;
 
 import javax.annotation.Nonnull;
-
 import java.util.function.Function;
 
 public class CapturingProcessRunner {
@@ -23,7 +25,7 @@ public class CapturingProcessRunner {
     this(processHandler, CapturingProcessAdapter::new);
   }
 
-  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessAdapter> processAdapterProducer) {
+  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
     myOutput = new ProcessOutput();
     myProcessHandler = processHandler;
     myProcessHandler.addProcessListener(processAdapterProducer.apply(myOutput));

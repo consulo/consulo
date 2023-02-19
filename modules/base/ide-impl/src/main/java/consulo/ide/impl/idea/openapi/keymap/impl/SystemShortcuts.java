@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;

@@ -20,6 +20,7 @@ import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.internal.CapturingProcessHandler;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
@@ -200,8 +201,8 @@ public final class ScriptRunnerUtil {
       return;
     }
     processHandler.destroyProcess();
-    if (processHandler instanceof KillableProcess) {
-      KillableProcess killableProcess = (KillableProcess)processHandler;
+    if (processHandler instanceof KillableProcessHandler) {
+      KillableProcessHandler killableProcess = (KillableProcessHandler)processHandler;
       if (killableProcess.canKillProcess()) {
         if (!processHandler.waitFor(millisTimeout)) {
           // doing 'force quite'
@@ -210,5 +211,4 @@ public final class ScriptRunnerUtil {
       }
     }
   }
-
 }

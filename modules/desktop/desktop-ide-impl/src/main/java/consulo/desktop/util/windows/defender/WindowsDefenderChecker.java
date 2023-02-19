@@ -8,7 +8,7 @@ import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

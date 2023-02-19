@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
+import consulo.process.KillableProcessHandler;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
@@ -18,7 +19,6 @@ import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.language.editor.CommonDataKeys;
-import consulo.process.KillableProcess;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -77,7 +77,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         if (!processHandler.isProcessTerminating()) {
           enable = true;
         }
-        else if (processHandler instanceof KillableProcess && ((KillableProcess)processHandler).canKillProcess()) {
+        else if (processHandler instanceof KillableProcessHandler && ((KillableProcessHandler)processHandler).canKillProcess()) {
           enable = true;
           icon = AllIcons.Debugger.KillProcess;
           description = ExecutionBundle.message("action.terminating.process.progress.kill.description");
@@ -257,7 +257,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
     @Nullable ProcessHandler processHandler = descriptor != null ? descriptor.getProcessHandler() : null;
     return processHandler != null &&
            !processHandler.isProcessTerminated() &&
-           (!processHandler.isProcessTerminating() || processHandler instanceof KillableProcess && ((KillableProcess)processHandler).canKillProcess());
+           (!processHandler.isProcessTerminating() || processHandler instanceof KillableProcessHandler && ((KillableProcessHandler)processHandler).canKillProcess());
   }
 
   private static void _showStopRunningBar(@Nonnull List<? extends RunContentDescriptor> stoppableDescriptors) {

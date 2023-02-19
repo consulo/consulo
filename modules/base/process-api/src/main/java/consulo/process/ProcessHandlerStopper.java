@@ -25,10 +25,10 @@ public class ProcessHandlerStopper {
   public static void stop(@Nonnull ProcessHandler processHandler) {
     processHandler.putUserData(ProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
 
-    if (processHandler instanceof KillableProcess && processHandler.isProcessTerminating()) {
+    if (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating()) {
       // process termination was requested, but it's still alive
       // in this case 'force quit' will be performed
-      ((KillableProcess)processHandler).killProcess();
+      ((KillableProcessHandler)processHandler).killProcess();
       return;
     }
 

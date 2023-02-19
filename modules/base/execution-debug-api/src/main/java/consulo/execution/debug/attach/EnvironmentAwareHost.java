@@ -5,7 +5,7 @@ import consulo.execution.debug.attach.osHandler.AttachOSHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.BaseProcessHandler;
-import consulo.process.local.CapturingProcessRunner;
+import consulo.process.internal.CapturingProcessRunner;
 import consulo.process.local.ProcessOutput;
 
 import javax.annotation.Nonnull;

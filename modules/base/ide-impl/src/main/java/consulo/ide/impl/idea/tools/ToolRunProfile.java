@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.execution.ui.console.RegexpFilter;
-import consulo.ide.impl.idea.execution.process.ColoredProcessHandler;
+import consulo.ide.impl.idea.execution.process.ColoredProcessHandlerImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionResult;
@@ -111,7 +111,7 @@ public class ToolRunProfile implements ModuleRunProfile {
       @Nonnull
       protected OSProcessHandler startProcess() throws ExecutionException {
         final GeneralCommandLine commandLine = createCommandLine();
-        final OSProcessHandler processHandler = new ColoredProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
+        final OSProcessHandler processHandler = new ColoredProcessHandlerImpl(commandLine.createProcess(), commandLine.getCommandLineString());
         ProcessTerminatedListener.attach(processHandler);
         return processHandler;
       }

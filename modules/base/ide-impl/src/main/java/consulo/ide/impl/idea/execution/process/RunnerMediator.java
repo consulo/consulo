@@ -80,7 +80,7 @@ public class RunnerMediator {
       injectRunnerCommand(commandLine);
     }
 
-    return new CustomDestroyProcessHandler(commandLine, useSoftKill);
+    return new CustomDestroyProcessHandlerImpl(commandLine, useSoftKill);
   }
 
   @Nullable
@@ -150,14 +150,14 @@ public class RunnerMediator {
     }
   }
 
-  public static class CustomDestroyProcessHandler extends ColoredProcessHandler {
+  public static class CustomDestroyProcessHandlerImpl extends ColoredProcessHandlerImpl {
     private final boolean mySoftKill;
 
-    public CustomDestroyProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    public CustomDestroyProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
       this(commandLine, false);
     }
 
-    public CustomDestroyProcessHandler(@Nonnull GeneralCommandLine commandLine, final boolean softKill) throws ExecutionException {
+    public CustomDestroyProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine, final boolean softKill) throws ExecutionException {
       super(commandLine);
       mySoftKill = softKill;
     }

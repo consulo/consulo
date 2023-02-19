@@ -27,15 +27,15 @@ import java.util.List;
 
 /**
  * <p>This process handler supports ANSI coloring.</p>
- * <p>Although it supports the {@link KillableProcessHandler"soft-kill" feature}, it is turned off by default for compatibility reasons.
- * To turn it on either call {@link #setShouldKillProcessSoftly(boolean)}, or extend from {@link KillableColoredProcessHandler}.
+ * <p>Although it supports the {@link KillableProcessHandlerImpl "soft-kill" feature}, it is turned off by default for compatibility reasons.
+ * To turn it on either call {@link #setShouldKillProcessSoftly(boolean)}, or extend from {@link KillableColoredProcessHandlerImpl}.
  */
-public class ColoredProcessHandler extends KillableProcessHandler implements AnsiEscapeDecoder.ColoredTextAcceptor {
+public class ColoredProcessHandlerImpl extends KillableProcessHandlerImpl implements AnsiEscapeDecoder.ColoredTextAcceptor {
   private final AnsiEscapeDecoder myAnsiEscapeDecoder = new AnsiEscapeDecoder();
 
   private final List<AnsiEscapeDecoder.ColoredTextAcceptor> myColoredTextListeners = new ArrayList<>();
 
-  public ColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public ColoredProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -43,7 +43,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
+  public ColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine) {
     super(process, commandLine);
     setShouldKillProcessSoftly(false);
   }
@@ -51,7 +51,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public ColoredProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
+  public ColoredProcessHandlerImpl(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nonnull Charset charset) {
     super(process, commandLine, charset);
     setShouldKillProcessSoftly(false);
   }

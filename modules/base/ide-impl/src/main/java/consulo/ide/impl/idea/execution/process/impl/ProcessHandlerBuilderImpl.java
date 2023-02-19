@@ -16,10 +16,9 @@
 package consulo.ide.impl.idea.execution.process.impl;
 
 import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
-import consulo.ide.impl.idea.execution.process.ColoredProcessHandler;
-import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandler;
-import consulo.ide.impl.idea.execution.process.KillableProcessHandler;
-import consulo.ide.impl.idea.execution.process.RunnerMediator;
+import consulo.ide.impl.idea.execution.process.*;
+import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandlerImpl;
+import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.platform.Platform;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
@@ -37,6 +36,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   private boolean myColored = false;
   private boolean myKillable = false;
   private Boolean myShouldDestroyProcessRecursively;
+  private Boolean myShouldKillProcessSoftly;
 
   private BaseOutputReader.Options myReaderOptions;
 
@@ -90,6 +90,13 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   @Nonnull
   @Override
+  public ProcessHandlerBuilder shouldKillProcessSoftly(boolean killProcessSoftly) {
+    myShouldKillProcessSoftly = killProcessSoftly;
+    return this;
+  }
+
+  @Nonnull
+  @Override
   public ProcessHandler build() throws ExecutionException {
     ProcessHandler processHandler = null;
     switch (myConsoleType) {
@@ -120,8 +127,8 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
         throw new IllegalArgumentException("Unknown console type " + myConsoleType);
     }
 
-    if (myKillable && !(processHandler instanceof KillableProcess)) {
-      throw new IllegalArgumentException("Process created killable but not instance of " + KillableProcess.class);
+    if (myKillable && !(processHandler instanceof KillableProcessHandler)) {
+      throw new IllegalArgumentException("Process created killable but not instance of " + KillableProcessHandler.class);
     }
 
     return processHandler;
@@ -132,7 +139,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
     if (myKillable) {
       if (myColored) {
-        processHandler = new KillableColoredProcessHandler(commandLine) {
+        processHandler = new KillableColoredProcessHandlerImpl(commandLine) {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
@@ -144,7 +151,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
         };
       }
       else {
-        processHandler = new KillableProcessHandler(commandLine) {
+        processHandler = new KillableProcessHandlerImpl(commandLine) {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
@@ -158,7 +165,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     }
     else {
       if (myColored) {
-        processHandler = new ColoredProcessHandler(commandLine) {
+        processHandler = new ColoredProcessHandlerImpl(commandLine) {
           @Nonnull
           @Override
           protected BaseOutputReader.Options readerOptions() {
@@ -185,6 +192,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
     if (myShouldDestroyProcessRecursively != null) {
       processHandler.setShouldDestroyProcessRecursively(myShouldDestroyProcessRecursively);
+    }
+
+    if (myShouldKillProcessSoftly != null && processHandler instanceof KillableProcessHandlerImpl killableProcessHandler) {
+      killableProcessHandler.setShouldKillProcessSoftly(myShouldKillProcessSoftly);
     }
     return processHandler;
   }

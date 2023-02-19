@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.execution.internal.ExecutionNotificationGroupHolder;
 import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessHandler;
+import consulo.process.local.ExecUtil;
 import consulo.process.local.ProcessOutput;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -67,7 +67,9 @@ public abstract class ExecutableValidator {
    * @param notificationErrorDescription description of this notification with a link to fix it (link action is defined by
    *                                     {@link #showSettingsAndExpireIfFixed(Notification)}
    */
-  public ExecutableValidator(@Nonnull Project project, @Nonnull String notificationErrorTitle, @Nonnull String notificationErrorDescription) {
+  public ExecutableValidator(@Nonnull Project project,
+                             @Nonnull String notificationErrorTitle,
+                             @Nonnull String notificationErrorDescription) {
     myProject = project;
     myNotificationErrorTitle = notificationErrorTitle;
     myNotificationErrorDescription = notificationErrorDescription;
@@ -104,8 +106,7 @@ public abstract class ExecutableValidator {
       commandLine.setExePath(executable);
       commandLine.addParameters(processParameters);
       commandLine.setCharset(CharsetToolkit.getDefaultSystemCharset());
-      CapturingProcessHandler handler = new CapturingProcessHandler(commandLine);
-      ProcessOutput result = handler.runProcess(TIMEOUT_MS);
+      ProcessOutput result = ExecUtil.execAndGetOutput(commandLine, TIMEOUT_MS);
       boolean timeout = result.isTimeout();
       int exitCode = result.getExitCode();
       String stderr = result.getStderr();
@@ -221,8 +222,8 @@ public abstract class ExecutableValidator {
     String title = myNotificationErrorTitle;
     String description = myNotificationErrorDescription;
     return parentComponent != null
-           ? Messages.showOkCancelDialog(parentComponent, description, title, okText, cancelText, icon)
-           : Messages.showOkCancelDialog(myProject, description, title, okText, cancelText, icon);
+      ? Messages.showOkCancelDialog(parentComponent, description, title, okText, cancelText, icon)
+      : Messages.showOkCancelDialog(myProject, description, title, okText, cancelText, icon);
   }
 
   public boolean isExecutableValid() {

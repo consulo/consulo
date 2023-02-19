@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.browsers.BrowserLauncherAppless;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.editor.documentation.PlatformDocumentationUtil;
@@ -36,7 +36,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtilRt.newArrayList;
 
