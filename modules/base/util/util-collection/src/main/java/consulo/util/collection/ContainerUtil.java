@@ -1556,4 +1556,20 @@ public class ContainerUtil {
       }
     };
   }
+
+  /**
+   * @return read-only list consisting of the elements from the iterable converted by mapping with nulls filtered out
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> mapNotNull(@Nonnull Iterable<? extends T> iterable, @Nonnull Function<T, V> mapping) {
+    List<V> result = new ArrayList<V>();
+    for (T t : iterable) {
+      final V o = mapping.apply(t);
+      if (o != null) {
+        result.add(o);
+      }
+    }
+    return result.isEmpty() ? List.of() : result;
+  }
 }

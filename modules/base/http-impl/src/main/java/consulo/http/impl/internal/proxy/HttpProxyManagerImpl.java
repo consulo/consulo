@@ -464,6 +464,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     return properties.stream().map(p -> Pair.create(p.first, p.second)).collect(Collectors.toList());
   }
 
+  @Override
   @Nonnull
   public List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri) {
     if (!myState.USE_HTTP_PROXY && !myState.USE_PROXY_PAC) {

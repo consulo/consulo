@@ -30,6 +30,7 @@ import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.language.editor.rawHighlight.*;
+import consulo.language.editor.util.HighlightTypeUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -676,21 +677,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     if (type == ProblemHighlightType.LIKE_UNKNOWN_SYMBOL) return HighlightInfoType.WRONG_REF;
     if (type == ProblemHighlightType.LIKE_DEPRECATED) return HighlightInfoType.DEPRECATED;
     if (type == ProblemHighlightType.LIKE_MARKED_FOR_REMOVAL) return HighlightInfoType.MARKED_FOR_REMOVAL;
-    return convertSeverity(annotation.getSeverity());
-  }
-
-  @Nonnull
-  @SuppressWarnings("deprecation")
-  public static HighlightInfoType convertSeverity(@Nonnull HighlightSeverity severity) {
-    return severity == HighlightSeverity.ERROR
-           ? HighlightInfoType.ERROR
-           : severity == HighlightSeverity.WARNING
-             ? HighlightInfoType.WARNING
-             : severity == HighlightSeverity.INFO
-               ? HighlightInfoType.INFO
-               : severity == HighlightSeverity.WEAK_WARNING
-                 ? HighlightInfoType.WEAK_WARNING
-                 : severity == HighlightSeverity.GENERIC_SERVER_ERROR_OR_WARNING ? HighlightInfoType.GENERIC_WARNINGS_OR_ERRORS_FROM_SERVER : HighlightInfoType.INFORMATION;
+    return HighlightTypeUtil.convertSeverity(annotation.getSeverity());
   }
 
   public boolean hasHint() {

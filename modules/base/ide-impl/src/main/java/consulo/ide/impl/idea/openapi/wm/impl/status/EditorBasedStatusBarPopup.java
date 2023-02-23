@@ -1,12 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.popup.PopupState;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
@@ -23,12 +17,16 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.PopupState;
+import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -37,7 +35,9 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
+import consulo.util.collection.ImmutableMapBuilder;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
@@ -208,10 +208,10 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
     VirtualFile selectedFile = getSelectedFile();
-    return SimpleDataContext.getSimpleContext(ContainerUtil.<Key, Object>immutableMapBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
-                                                      .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
-                                                      .put(CommonDataKeys.PROJECT, getProject())
-                                                      .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
+    return SimpleDataContext.getSimpleContext(ImmutableMapBuilder.<Key, Object>newBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
+                                                                                  .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
+                                                                                  .put(CommonDataKeys.PROJECT, getProject())
+                                                                                  .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
   }
 
   @Override

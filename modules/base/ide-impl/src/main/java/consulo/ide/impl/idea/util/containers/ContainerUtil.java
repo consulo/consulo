@@ -506,7 +506,7 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <K, V> ImmutableMapBuilder<K, V> immutableMapBuilder() {
-    return new ImmutableMapBuilder<K, V>();
+    return ImmutableMapBuilder.newBuilder();
   }
 
   @Nonnull
@@ -529,20 +529,6 @@ public class ContainerUtil extends ContainerUtilRt {
   @Contract(pure = true)
   public static <T> T getOrElse(@Nonnull List<T> elements, int i, T defaultValue) {
     return elements.size() > i ? elements.get(i) : defaultValue;
-  }
-
-  public static class ImmutableMapBuilder<K, V> {
-    private final Map<K, V> myMap = new HashMap<K, V>();
-
-    public ImmutableMapBuilder<K, V> put(K key, V value) {
-      myMap.put(key, value);
-      return this;
-    }
-
-    @Contract(pure = true)
-    public Map<K, V> build() {
-      return Collections.unmodifiableMap(myMap);
-    }
   }
 
   private static class ImmutableListBackedByList<E> extends ImmutableList<E> {

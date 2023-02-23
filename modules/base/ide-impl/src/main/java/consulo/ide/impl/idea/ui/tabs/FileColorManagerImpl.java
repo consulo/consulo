@@ -23,13 +23,13 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.editor.FileColorManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.util.collection.ImmutableMapBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -56,7 +56,7 @@ public class FileColorManagerImpl extends FileColorManager implements Persistent
   private final FileColorsModel myModel;
   private FileColorSharedConfigurationManager mySharedConfigurationManager;
 
-  private static final Map<String, Color> ourDefaultColors = ContainerUtil.<String, Color>immutableMapBuilder()
+  private static final Map<String, Color> ourDefaultColors = ImmutableMapBuilder.<String, Color>newBuilder()
     .put("Blue", JBColor.namedColor("FileColor.Blue", new JBColor(0xeaf6ff, 0x4f556b)))
     .put("Green", JBColor.namedColor("FileColor.Green", new JBColor(0xeffae7, 0x49544a)))
     .put("Orange", JBColor.namedColor("FileColor.Orange", new JBColor(0xf6e9dc, 0x806052)))

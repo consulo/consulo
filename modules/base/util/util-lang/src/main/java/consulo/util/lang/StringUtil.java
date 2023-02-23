@@ -2905,4 +2905,12 @@ public final class StringUtil {
     }
     return escaped.toString();
   }
+
+  public static boolean trimEnd(@Nonnull StringBuilder buffer, @Nonnull CharSequence end) {
+    if (endsWith(buffer, end)) {
+      buffer.delete(buffer.length() - end.length(), buffer.length());
+      return true;
+    }
+    return false;
+  }
 }
