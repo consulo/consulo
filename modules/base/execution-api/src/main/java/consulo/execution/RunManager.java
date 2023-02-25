@@ -30,6 +30,7 @@ import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -205,7 +206,8 @@ public abstract class RunManager {
    * @return the configuration settings object.
    */
   @Nonnull
-  public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration runConfiguration, @Nonnull ConfigurationFactory factory);
+  public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration runConfiguration,
+                                                                     @Nonnull ConfigurationFactory factory);
 
   /**
    * Returns the template settings for the specified configuration type.
@@ -290,7 +292,9 @@ public abstract class RunManager {
   @Nonnull
   public abstract List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings);
 
-  public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
+  public abstract void setBeforeRunTasks(RunConfiguration runConfiguration,
+                                         List<BeforeRunTask> tasks,
+                                         boolean addEnabledTemplateTasksIfAbsent);
 
   @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
@@ -316,5 +320,20 @@ public abstract class RunManager {
       }
     }
     return null;
+  }
+
+  @SafeVarargs
+  public final void disableTasks(RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
+    for (Key<? extends BeforeRunTask> key : keys) {
+      List<? extends BeforeRunTask> tasks = getBeforeRunTasks(settings, key);
+      for (BeforeRunTask task : tasks) {
+        task.setEnabled(false);
+      }
+    }
+  }
+
+  @SafeVarargs
+  public final int getTasksCount(RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
+    return Arrays.stream(keys).mapToInt(key -> getBeforeRunTasks(settings, key).size()).sum();
   }
 }

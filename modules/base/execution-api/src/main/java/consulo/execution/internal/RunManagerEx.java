@@ -27,7 +27,6 @@ import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -89,17 +88,4 @@ public abstract class RunManagerEx extends RunManager {
 
   @Nonnull
   public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type);
-
-  public static void disableTasks(Project project, RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
-    for (Key<? extends BeforeRunTask> key : keys) {
-      List<? extends BeforeRunTask> tasks = getInstanceEx(project).getBeforeRunTasks(settings, key);
-      for (BeforeRunTask task : tasks) {
-        task.setEnabled(false);
-      }
-    }
-  }
-
-  public static int getTasksCount(Project project, RunConfiguration settings, Key<? extends BeforeRunTask>... keys) {
-    return Arrays.stream(keys).mapToInt(key -> getInstanceEx(project).getBeforeRunTasks(settings, key).size()).sum();
-  }
 }
