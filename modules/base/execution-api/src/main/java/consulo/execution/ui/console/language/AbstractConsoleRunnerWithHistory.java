@@ -25,8 +25,8 @@ import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
@@ -73,20 +73,18 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
    */
   public void initAndRun() throws ExecutionException {
     // Create Server process
-    final Process process = createProcess();
+    myProcessHandler = createProcessHandler();
     UIUtil.invokeLaterIfNeeded(() -> {
       // Init console view
       myConsoleView = createConsoleView();
       if (myConsoleView instanceof JComponent) {
         ((JComponent)myConsoleView).setBorder(new SideBorder(JBColor.border(), SideBorder.LEFT));
       }
-      myProcessHandler = createProcessHandler(process);
-
       myConsoleExecuteActionHandler = createExecuteActionHandler();
 
       ProcessTerminatedListener.attach(myProcessHandler);
 
-      myProcessHandler.addProcessListener(new ProcessAdapter() {
+      myProcessHandler.addProcessListener(new ProcessListener() {
         @Override
         public void processTerminated(ProcessEvent event) {
           finishConsole();
@@ -162,10 +160,8 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
 
   protected abstract T createConsoleView();
 
-  @Nullable
-  protected abstract Process createProcess() throws ExecutionException;
-
-  protected abstract ProcessHandler createProcessHandler(final Process process);
+  @Nonnull
+  protected abstract ProcessHandler createProcessHandler() throws ExecutionException;
 
   public static void registerActionShortcuts(final List<AnAction> actions, final JComponent component) {
     for (AnAction action : actions) {
