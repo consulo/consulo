@@ -5,6 +5,7 @@
 module consulo.execution.test.api {
   // TODO remove in future
   requires java.desktop;
+  requires forms.rt;
 
   requires transitive consulo.project.api;
   requires transitive consulo.language.api;

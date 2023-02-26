@@ -18,6 +18,7 @@ module consulo.language.editor.refactoring.api {
 
   // TODO remove this dependencies in future
   requires java.desktop;
+  requires forms.rt;
   requires consulo.ui.ex.awt.api;
 
   exports consulo.language.editor.refactoring;

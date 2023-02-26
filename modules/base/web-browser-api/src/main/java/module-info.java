@@ -5,6 +5,7 @@
 module consulo.web.browser.api {
   // TODO obsolete dependency
   requires java.desktop;
+  requires forms.rt;
   requires consulo.ui.ex.awt.api;
 
   requires transitive consulo.project.api;

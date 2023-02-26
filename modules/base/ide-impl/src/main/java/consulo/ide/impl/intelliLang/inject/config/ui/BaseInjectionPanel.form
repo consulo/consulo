@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <nested-form id="1d540" form-file="org/intellij/plugins/intelliLang/inject/config/ui/LanguagePanel.form" binding="myLanguagePanel" custom-create="true">
+      <nested-form id="1d540" form-file="consulo/ide/impl/intelliLang/inject/config/ui/LanguagePanel.form" binding="myLanguagePanel" custom-create="true">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -24,7 +24,7 @@
         <border type="none" title="Places Pattern"/>
         <children/>
       </grid>
-      <nested-form id="b6e0b" form-file="org/intellij/plugins/intelliLang/inject/config/ui/AdvancedPanel.form" binding="myAdvancedPanel" custom-create="true">
+      <nested-form id="b6e0b" form-file="consulo/ide/impl/intelliLang/inject/config/ui/AdvancedPanel.form" binding="myAdvancedPanel" custom-create="true">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

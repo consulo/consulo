@@ -12,6 +12,7 @@ module consulo.http.impl {
   // TODO remove in future
   requires java.desktop;
   requires consulo.ui.ex.awt.api;
+  requires forms.rt;
   
   requires org.apache.commons.codec;
   requires proxy.vole;

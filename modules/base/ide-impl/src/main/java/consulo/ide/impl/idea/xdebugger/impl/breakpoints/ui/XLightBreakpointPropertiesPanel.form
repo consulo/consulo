@@ -36,17 +36,17 @@
           </grid>
         </children>
       </grid>
-      <nested-form id="11152" form-file="com/intellij/xdebugger/impl/breakpoints/ui/XSuspendPolicyPanel.form" binding="mySuspendPolicyPanel">
+      <nested-form id="11152" form-file="consulo/ide/impl/idea/xdebugger/impl/breakpoints/ui/XSuspendPolicyPanel.form" binding="mySuspendPolicyPanel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
       </nested-form>
-      <nested-form id="e13dc" form-file="com/intellij/xdebugger/impl/breakpoints/ui/XBreakpointActionsPanel.form" binding="myActionsPanel">
+      <nested-form id="e13dc" form-file="consulo/ide/impl/idea/xdebugger/impl/breakpoints/ui/XBreakpointActionsPanel.form" binding="myActionsPanel">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
       </nested-form>
-      <nested-form id="26e47" form-file="com/intellij/xdebugger/impl/breakpoints/ui/XMasterBreakpointPanel.form" binding="myMasterBreakpointPanel">
+      <nested-form id="26e47" form-file="consulo/ide/impl/idea/xdebugger/impl/breakpoints/ui/XMasterBreakpointPanel.form" binding="myMasterBreakpointPanel">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>

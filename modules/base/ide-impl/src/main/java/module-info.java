@@ -137,6 +137,7 @@ open module consulo.ide.impl {
   requires winp;
 
   requires pty4j;
+  // TODO delete, awt dependency
   requires forms.rt;
 
   requires transitive jakarta.inject;
