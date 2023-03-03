@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.action;
+package consulo.application.internal;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.ide.impl.actions.AboutManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.Window;
 import consulo.util.lang.SemVer;
-import jakarta.inject.Singleton;
-
-import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-15
+ * @since 03/03/2023
  */
-@Singleton
-@ServiceImpl
-public class DesktopAboutManager implements AboutManager {
-  @RequiredUIAccess
-  @Override
-  public void showAsync(@Nullable Window parentWindow) {
-    new AboutNewDialog().showAsync();
-  }
+public class AppSemVer {
+  public static final SemVer STUB_VER = SemVer.parseFromText("1.0.0");
 }

@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.event.ApplicationListener;
+import consulo.application.internal.AppSemVer;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -28,6 +29,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
@@ -489,6 +491,11 @@ public interface Application extends ComponentManager {
   @Nonnull
   default LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Consulo");
+  }
+
+  @Nonnull
+  default SemVer getVersion() {
+    return AppSemVer.STUB_VER;
   }
 
   /**

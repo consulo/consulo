@@ -63,9 +63,11 @@ import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.DeprecatedMethodException;
+import consulo.util.lang.SemVer;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
@@ -193,6 +195,15 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   private final AtomicBoolean mySaveSettingsIsInProgress = new AtomicBoolean(false);
 
   private ProgressManager myProgressManager;
+
+  private final Supplier<SemVer> myVersionValue = LazyValue.notNull(() -> {
+    ApplicationInfo instance = ApplicationInfo.getInstance();
+    String majorVersion = instance.getMajorVersion();
+    String minorVersion = instance.getMinorVersion();
+
+    String version = majorVersion + "." + minorVersion + ".0";
+    return SemVer.parseFromText(version);
+  });
 
   public BaseApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(null, "Application", ComponentScope.APPLICATION);
@@ -474,6 +485,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nonnull
   @Override
+  public SemVer getVersion() {
+    return myVersionValue.get();
+  }
+
+  @Nonnull
+  @Override
   public AccessToken acquireReadActionLock() {
     DeprecatedMethodException.report("Use runReadAction() instead");
 
@@ -585,7 +602,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
-    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action only (see consulo.ide.impl.idea.openapi.application.Application.runWriteAction())");
+    LOG.assertTrue(isWriteAccessAllowed(),
+                   "Write access is allowed inside write-action only (see consulo.ide.impl.idea.openapi.application.Application.runWriteAction())");
   }
 
   @Override
@@ -625,9 +643,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       if (!myLock.isWriteLocked()) {
         int delay = ourDumpThreadsOnLongWriteActionWaiting;
         Future<?> reportSlowWrite = delay <= 0
-                                    ? null
-                                    : AppExecutorUtil.getAppScheduledExecutorService()
-                                            .scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true), delay, delay, TimeUnit.MILLISECONDS);
+          ? null
+          : AppExecutorUtil.getAppScheduledExecutorService()
+                           .scheduleWithFixedDelay(() -> PerformanceWatcher.getInstance().dumpThreads("waiting", true),
+                                                   delay,
+                                                   delay,
+                                                   TimeUnit.MILLISECONDS);
         long t = LOG.isDebugEnabled() ? System.currentTimeMillis() : 0;
         myLock.writeLock();
         if (LOG.isDebugEnabled()) {
@@ -718,7 +739,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return myLock.isWriteThread();
   }
 
-  protected <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableSupplier<T, E> computable) throws E {
+  protected <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz,
+                                                               @Nonnull ThrowableSupplier<T, E> computable) throws E {
     startWrite(clazz);
     try {
       return computable.get();
@@ -744,10 +766,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull consulo.ui.ModalityState modal, @Nonnull BooleanSupplier expired) {
+  public void invokeLaterOnWriteThread(@Nonnull Runnable action,
+                                       @Nonnull consulo.ui.ModalityState modal,
+                                       @Nonnull BooleanSupplier expired) {
     Runnable r = wrapLaterInvocation(action, (IdeaModalityState)modal);
     // EDT == Write Thread in legacy mode
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), modal, expired, null, !USE_SEPARATE_WRITE_THREAD);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r),
+                                           modal,
+                                           expired,
+                                           null,
+                                           !USE_SEPARATE_WRITE_THREAD);
   }
 
   @Nonnull
@@ -810,9 +838,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Override
   public String toString() {
     return "Application" +
-           (isDisposed() ? " (Disposed)" : "") +
-           (ApplicationProperties.isInSandbox() ? " (Sandbox)" : "") +
-           (isHeadlessEnvironment() ? " (Headless)" : "") +
-           (isCommandLine() ? " (Command line)" : "");
+      (isDisposed() ? " (Disposed)" : "") +
+      (ApplicationProperties.isInSandbox() ? " (Sandbox)" : "") +
+      (isHeadlessEnvironment() ? " (Headless)" : "") +
+      (isCommandLine() ? " (Command line)" : "");
   }
 }
