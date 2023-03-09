@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree.Inspectio
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.inspection.scheme.ScopeToolState;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
@@ -272,7 +272,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
     }
 
     private String getScopeName(final int rowIndex) {
-      return getScopeToolState(rowIndex).getExistedStates().get(0).getScopeName();
+      return getScopeToolState(rowIndex).getExistedStates().get(0).getScopeId();
     }
 
     @Nonnull
@@ -326,7 +326,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
         final String scopeName = myScopeNames[rowIndex];
         final List<ScopeToolState> nonDefaultTools = myInspectionProfile.getNonDefaultTools(keyName, myProject);
         for (final ScopeToolState nonDefaultTool : nonDefaultTools) {
-          if (Comparing.equal(scopeName, nonDefaultTool.getScopeName())) {
+          if (Comparing.equal(scopeName, nonDefaultTool.getScopeId())) {
             return nonDefaultTool;
           }
         }
@@ -339,7 +339,7 @@ public class ScopesAndSeveritiesTable extends JBTable {
       for (final String keyName : myKeyNames) {
         final List<ScopeToolState> nonDefaultTools = myInspectionProfile.getNonDefaultTools(keyName, myProject);
         for (final ScopeToolState tool : nonDefaultTools) {
-          scopesNames.add(tool.getScopeName());
+          scopesNames.add(tool.getScopeId());
         }
       }
       myScopeNames = ArrayUtil.toStringArray(scopesNames);

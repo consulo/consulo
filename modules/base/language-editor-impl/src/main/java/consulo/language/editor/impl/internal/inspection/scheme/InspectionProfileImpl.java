@@ -27,7 +27,9 @@ import consulo.component.util.graph.GraphGenerator;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
@@ -115,10 +117,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   private static synchronized Map<String, InspectionElementsMerger> getMergers() {
     if (ourMergers == null) {
-      ourMergers = new LinkedHashMap<String, InspectionElementsMerger>();
-      for (InspectionElementsMerger merger : InspectionElementsMerger.EP_NAME.getExtensionList()) {
-        ourMergers.put(merger.getMergedToolName(), merger);
-      }
+      ourMergers = new LinkedHashMap<>();
+      InspectionElementsMerger.EP_NAME.forEachExtensionSafe(it -> ourMergers.put(it.getMergedToolName(), it));
     }
     return ourMergers;
   }
@@ -160,8 +160,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     if (toolWrapper.isInitialized()) {
       @NonNls String tempRoot = "config";
       Element config = new Element(tempRoot);
-      toolWrapper.getTool().writeSettings(config);
-      inspectionTool.getTool().readSettings(config);
+      toolWrapper.writeExternal(config);
+      inspectionTool.readExternal(config);
     }
     return inspectionTool;
   }
@@ -375,13 +375,13 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   @Nullable
   @Override
-  public InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element) {
+  public InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element) {
     InspectionToolWrapper tool = getInspectionTool(shortName, element);
     return tool == null ? null : tool.getTool();
   }
 
   @Override
-  public <T extends InspectionProfileEntry> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element) {
+  public <T extends InspectionTool> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element) {
     //noinspection unchecked
     return (T)getUnwrappedTool(shortNameKey.toString(), element);
   }
@@ -399,11 +399,11 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   @Override
-  public <T extends InspectionProfileEntry> void modifyToolSettings(@Nonnull final Key<T> shortNameKey,
+  public <T extends InspectionTool> void modifyToolSettings(@Nonnull final Key<T> shortNameKey,
                                                                     @Nonnull final PsiElement psiElement,
                                                                     @Nonnull final java.util.function.Consumer<T> toolConsumer) {
     modifyProfile(model -> {
-      InspectionProfileEntry tool = model.getUnwrappedTool(shortNameKey.toString(), psiElement);
+      InspectionTool tool = model.getUnwrappedTool(shortNameKey.toString(), psiElement);
       //noinspection unchecked
       toolConsumer.accept((T)tool);
     });
@@ -662,17 +662,14 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
               tools.addTool(scope, toolWrapper, state.isEnabled(), state.getLevel());
             }
             else {
-              tools.addTool(state.getScopeName(), toolWrapper, state.isEnabled(), state.getLevel());
+              tools.addTool(state.getScopeId(), toolWrapper, state.isEnabled(), state.getLevel());
             }
           }
         }
         tools.setEnabled(toolList.isEnabled());
       }
     }
-    catch (WriteExternalException e) {
-      LOG.error(e);
-    }
-    catch (InvalidDataException e) {
+    catch (WriteExternalException | InvalidDataException e) {
       LOG.error(e);
     }
   }

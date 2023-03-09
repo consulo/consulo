@@ -20,6 +20,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
 import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProjectProfileManager;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
@@ -71,7 +72,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   private final ApplicationProfileManager myApplicationProfileManager;
 
-  private final Map<String, Profile> myProfiles = new HashMap<String, Profile>();
+  private final Map<String, InspectionProfile> myProfiles = new HashMap<>();
   protected final DependencyValidationManager myHolder;
 
   private final ProfileChangeAdapter myListenerPublisher;
@@ -99,7 +100,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   @Override
   public synchronized void updateProfile(@Nonnull Profile profile) {
-    myProfiles.put(profile.getName(), profile);
+    myProfiles.put(profile.getName(), (InspectionProfile)profile);
     myListenerPublisher.profileChanged(profile);
   }
 
@@ -149,7 +150,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     myProfiles.clear();
     XmlSerializer.deserializeInto(this, state);
     for (Element o : state.getChildren(PROFILE)) {
-      Profile profile = myApplicationProfileManager.createProfile();
+      InspectionProfile profile = (InspectionProfile)myApplicationProfileManager.createProfile();
       profile.setProfileManager(this);
       try {
         profile.readExternal(o);
@@ -189,7 +190,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   @Nonnull
   @Override
-  public synchronized Collection<Profile> getProfiles() {
+  public synchronized Collection<InspectionProfile> getProfiles() {
     getProjectProfileImpl();
     return myProfiles.values();
   }
@@ -236,7 +237,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
       projectProfile.copyFrom(myApplicationProfileManager.getRootProfile());
       projectProfile.setProjectLevel(true);
       projectProfile.setName(PROJECT_DEFAULT_PROFILE_NAME);
-      myProfiles.put(PROJECT_DEFAULT_PROFILE_NAME, projectProfile);
+      myProfiles.put(PROJECT_DEFAULT_PROFILE_NAME, (InspectionProfile)projectProfile);
     }
     else if (!myProfiles.containsKey(myProjectProfile)) {
       setProjectProfile(myProfiles.keySet().iterator().next());

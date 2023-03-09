@@ -115,15 +115,13 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     try {
       Element element = new Element("toCopy");
       for (InspectionToolWrapper wrapper : toolWrappers) {
-        wrapper.getTool().writeSettings(element);
+        wrapper.writeExternal(element);
         InspectionToolWrapper tw = psiElement == null ? model.getInspectionTool(wrapper.getShortName(), managerEx.getProject())
                                                       : model.getInspectionTool(wrapper.getShortName(), psiElement);
-        tw.getTool().readSettings(element);
+        tw.readExternal(element);
       }
     }
-    catch (WriteExternalException ignored) {
-    }
-    catch (InvalidDataException ignored) {
+    catch (WriteExternalException | InvalidDataException ignored) {
     }
     model.setEditable(toolWrapper.getDisplayName());
     final GlobalInspectionContextImpl inspectionContext = managerEx.createNewGlobalContext(false);

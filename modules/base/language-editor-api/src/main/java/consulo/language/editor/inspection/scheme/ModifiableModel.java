@@ -16,10 +16,11 @@
 
 package consulo.language.editor.inspection.scheme;
 
+import consulo.content.scope.NamedScope;
+import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
-import consulo.content.scope.NamedScope;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -69,7 +70,7 @@ public interface ModifiableModel extends Profile {
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 
-  InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   InspectionToolWrapper[] getInspectionTools(PsiElement element);
 

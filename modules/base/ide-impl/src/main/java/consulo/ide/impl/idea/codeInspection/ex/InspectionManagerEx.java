@@ -26,16 +26,14 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.codeInspection.InspectionManagerBase;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.SuppressIntentionAction;
@@ -48,6 +46,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.util.collection.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
@@ -101,7 +100,7 @@ public class InspectionManagerEx extends InspectionManagerBase {
 
   @Nullable
   public static SuppressIntentionAction[] getSuppressActions(@Nonnull InspectionToolWrapper toolWrapper) {
-    final InspectionProfileEntry tool = toolWrapper.getTool();
+    final InspectionTool tool = toolWrapper.getTool();
     if (tool instanceof CustomSuppressableInspectionTool) {
       return ((CustomSuppressableInspectionTool)tool).getSuppressActions(null);
     }

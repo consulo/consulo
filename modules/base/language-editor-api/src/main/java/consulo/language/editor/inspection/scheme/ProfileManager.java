@@ -31,7 +31,7 @@ public interface ProfileManager {
   NamedScopesHolder getScopesManager();
 
   @Nonnull
-  Collection<Profile> getProfiles();
+  Collection<? extends Profile> getProfiles();
 
   Profile getProfile(@Nonnull String name, boolean returnRootProfileIfNamedIsAbsent);
 

@@ -16,6 +16,7 @@
 
 package consulo.component.persist;
 
+import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
 import javax.annotation.Nullable;

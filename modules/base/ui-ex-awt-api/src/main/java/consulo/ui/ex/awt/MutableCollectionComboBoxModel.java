@@ -19,12 +19,13 @@ import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.util.List;
 
 /**
  * @author traff
  */
-public class MutableCollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> {
+public class MutableCollectionComboBoxModel<T> extends AbstractCollectionComboBoxModel<T> implements MutableComboBoxModel<T> {
   private List<T> myItems;
 
   public MutableCollectionComboBoxModel(@Nonnull List<T> items) {
@@ -55,5 +56,29 @@ public class MutableCollectionComboBoxModel<T> extends AbstractCollectionComboBo
     if (myItems.size() == 1 && getSelectedItem() == null && item != null) {
       setSelectedItem(item);
     }
+  }
+
+  @Override
+  public void addElement(T item) {
+    addItem(item);
+  }
+
+  @Override
+  public void removeElement(Object obj) {
+    int i = myItems.indexOf(obj);
+    if (i != -1) {
+      myItems.remove(i);
+      fireIntervalRemoved(this, i, i);
+    }
+  }
+
+  @Override
+  public void insertElementAt(T item, int index) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void removeElementAt(int index) {
+    throw new UnsupportedOperationException();
   }
 }

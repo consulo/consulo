@@ -18,7 +18,6 @@ package consulo.language.editor.inspection;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
@@ -32,7 +31,7 @@ import java.util.List;
  * @author max
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class LocalInspectionTool extends InspectionProfileEntry {
+public abstract class LocalInspectionTool extends InspectionTool {
   public static final LocalInspectionTool[] EMPTY_ARRAY = new LocalInspectionTool[0];
 
   private static final Logger LOG = Logger.getInstance(LocalInspectionTool.class);

@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.ui;
 
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.language.editor.inspection.InspectionTool;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -26,9 +26,9 @@ import java.lang.reflect.Field;
 
 public class MultipleCheckboxOptionsPanel extends JPanel {
 
-  private final InspectionProfileEntry owner;
+  private final InspectionTool owner;
 
-  public MultipleCheckboxOptionsPanel(InspectionProfileEntry owner) {
+  public MultipleCheckboxOptionsPanel(InspectionTool owner) {
     super(new GridBagLayout());
     this.owner = owner;
   }
@@ -53,20 +53,20 @@ public class MultipleCheckboxOptionsPanel extends JPanel {
     add(checkBox, constraints);
   }
 
-  private static void configureCheckbox(InspectionProfileEntry owner, String property, JCheckBox checkBox) {
+  private static void configureCheckbox(InspectionTool owner, String property, JCheckBox checkBox) {
     final ButtonModel model = checkBox.getModel();
     final CheckboxChangeListener changeListener = new CheckboxChangeListener(owner, property, model);
     model.addChangeListener(changeListener);
   }
 
-  public static void initAndConfigureCheckbox(InspectionProfileEntry owner, String property, JCheckBox checkBox) {
+  public static void initAndConfigureCheckbox(InspectionTool owner, String property, JCheckBox checkBox) {
     checkBox.setSelected(getPropertyValue(owner, property));
     configureCheckbox(owner, property, checkBox);
   }
 
-  private static boolean getPropertyValue(InspectionProfileEntry owner, String property) {
+  private static boolean getPropertyValue(InspectionTool owner, String property) {
     try {
-      final Class<? extends InspectionProfileEntry> aClass = owner.getClass();
+      final Class<? extends InspectionTool> aClass = owner.getClass();
       final Field field = aClass.getField(property);
       return field.getBoolean(owner);
     }
@@ -79,11 +79,11 @@ public class MultipleCheckboxOptionsPanel extends JPanel {
   }
 
   private static class CheckboxChangeListener implements ChangeListener {
-    private final InspectionProfileEntry owner;
+    private final InspectionTool owner;
     private final String property;
     private final ButtonModel model;
 
-    CheckboxChangeListener(InspectionProfileEntry owner, String property, ButtonModel model) {
+    CheckboxChangeListener(InspectionTool owner, String property, ButtonModel model) {
       this.owner = owner;
       this.property = property;
       this.model = model;
@@ -94,9 +94,9 @@ public class MultipleCheckboxOptionsPanel extends JPanel {
       setPropertyValue(owner, property, model.isSelected());
     }
 
-    private static void setPropertyValue(InspectionProfileEntry owner, String property, boolean selected) {
+    private static void setPropertyValue(InspectionTool owner, String property, boolean selected) {
       try {
-        final Class<? extends InspectionProfileEntry> aClass = owner.getClass();
+        final Class<? extends InspectionTool> aClass = owner.getClass();
         final Field field = aClass.getField(property);
         field.setBoolean(owner, selected);
       }

@@ -59,6 +59,7 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefVisitor;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.impl.file.SingleRootFileViewProvider;
@@ -281,7 +282,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     }
   }
 
-  public void ignoreElement(@Nonnull InspectionProfileEntry tool, @Nonnull PsiElement element) {
+  public void ignoreElement(@Nonnull InspectionTool tool, @Nonnull PsiElement element) {
     final RefElement refElement = getRefManager().getReference(element);
     final Tools tools = myTools.get(tool.getShortName());
     if (tools != null) {
@@ -656,7 +657,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
         }
         if (batchInspection != null && !myTools.containsKey(batchShortName)) {
           // add to existing inspections to run
-          InspectionProfileEntry batchTool = batchInspection.getTool();
+          InspectionTool batchTool = batchInspection.getTool();
           Tools newTool = new ToolsImpl(batchInspection, batchInspection.getDefaultLevel(), true, true);
           if (batchTool instanceof LocalInspectionTool) {
             localTools.add(newTool);

@@ -1,6 +1,5 @@
 package consulo.language.editor.inspection;
 
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ThreeState;
 
@@ -12,7 +11,7 @@ import javax.annotation.Nonnull;
  * <p/>
  * By default suppression fixes on injected elements are able to make suppression inside injection only.
  * Whereas implementation of this interface will be provided for suppressing inside injection and in injection host.
- * See {@link InspectionProfileEntry#getBatchSuppressActions(PsiElement)} for details.
+ * See {@link InspectionTool#getBatchSuppressActions(PsiElement)} for details.
  */
 public interface InjectionAwareSuppressQuickFix extends SuppressQuickFix {
   @Nonnull

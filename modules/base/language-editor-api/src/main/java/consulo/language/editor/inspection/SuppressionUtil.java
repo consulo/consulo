@@ -16,22 +16,24 @@
 
 package consulo.language.editor.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.Commenter;
 import consulo.language.Language;
-import consulo.language.psi.PsiComment;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiParserFacade;
-import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -176,5 +178,41 @@ public class SuppressionUtil {
 
   public static boolean inspectionResultSuppressed(@Nonnull PsiElement place, @Nonnull LocalInspectionTool tool) {
     return tool.isSuppressedFor(place);
+  }
+
+  @RequiredReadAction
+  @Nonnull
+  public static Set<InspectionSuppressor> getSuppressors(@Nonnull PsiElement element) {
+    PsiUtilCore.ensureValid(element);
+    PsiFile file = element.getContainingFile();
+    if (file == null) {
+      return Collections.emptySet();
+    }
+    FileViewProvider viewProvider = file.getViewProvider();
+    final List<InspectionSuppressor> elementLanguageSuppressor = InspectionSuppressor.forLanguage(element.getLanguage());
+    if (viewProvider instanceof TemplateLanguageFileViewProvider) {
+      Set<InspectionSuppressor> suppressors = new LinkedHashSet<>();
+      ContainerUtil.addAllNotNull(suppressors, InspectionSuppressor.forLanguage(viewProvider.getBaseLanguage()));
+      for (Language language : viewProvider.getLanguages()) {
+        ContainerUtil.addAllNotNull(suppressors, InspectionSuppressor.forLanguage(language));
+      }
+      ContainerUtil.addAllNotNull(suppressors, elementLanguageSuppressor);
+      return suppressors;
+    }
+    if (!element.getLanguage().isKindOf(viewProvider.getBaseLanguage())) {
+      Set<InspectionSuppressor> suppressors = new LinkedHashSet<>();
+      ContainerUtil.addAllNotNull(suppressors, InspectionSuppressor.forLanguage(viewProvider.getBaseLanguage()));
+      ContainerUtil.addAllNotNull(suppressors, elementLanguageSuppressor);
+      return suppressors;
+    }
+    int size = elementLanguageSuppressor.size();
+    switch (size) {
+      case 0:
+        return Collections.emptySet();
+      case 1:
+        return Collections.singleton(elementLanguageSuppressor.get(0));
+      default:
+        return new HashSet<>(elementLanguageSuppressor);
+    }
   }
 }

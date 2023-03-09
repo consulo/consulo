@@ -35,6 +35,7 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
@@ -222,7 +223,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
   }
 
   @Override
-  public boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool) {
+  public boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool) {
     final Tools tools = myTools.get(tool.getShortName());
     if (tools != null && file != null) {
       for (ScopeToolState state : tools.getTools()) {

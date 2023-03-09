@@ -64,6 +64,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.internal to consulo.ide.impl, consulo.language.editor.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.internal.intention to consulo.ide.impl, consulo.language.editor.impl;
   exports consulo.language.editor.internal.postfixTemplate to consulo.ide.impl, consulo.language.editor.impl;
+  exports consulo.language.editor.internal.inspection to consulo.ide.impl, consulo.language.editor.impl;
 
   opens consulo.language.editor.inspection.scheme to consulo.util.xml.serializer;
   opens consulo.language.editor to consulo.util.xml.serializer;

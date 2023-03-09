@@ -54,39 +54,19 @@ public class InspectionToolRegistrar {
   public void ensureInitialized() {
     if (!myInspectionComponentsLoaded.getAndSet(true)) {
       Application application = Application.get();
-      for (final LocalInspectionTool tool : application.getExtensionList(LocalInspectionTool.class)) {
-        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(tool));
-      }
 
-      for (final GlobalInspectionTool tool : application.getExtensionList(GlobalInspectionTool.class)) {
+      application.getExtensionPoint(LocalInspectionTool.class).forEachExtensionSafe(tool -> {
+        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(tool));
+      });
+
+      application.getExtensionPoint(GlobalInspectionTool.class) .forEachExtensionSafe(tool -> {
         myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(tool));
-      }
+      });
     }
   }
 
   public static InspectionToolRegistrar getInstance() {
     return Application.get().getInstance(InspectionToolRegistrar.class);
-  }
-
-  /**
-   * make sure that it is not too late
-   */
-  @Nonnull
-  public Supplier<InspectionToolWrapper> registerInspectionToolFactory(@Nonnull Supplier<InspectionToolWrapper> factory, boolean store) {
-    if (store) {
-      myInspectionToolFactories.add(factory);
-    }
-    return factory;
-  }
-
-  @Nonnull
-  private Supplier<InspectionToolWrapper> registerLocalInspection(final Class toolClass, boolean store) {
-    return registerInspectionToolFactory(() -> new LocalInspectionToolWrapper((LocalInspectionTool)Application.get().getUnbindedInstance(toolClass)), store);
-  }
-
-  @Nonnull
-  private Supplier<InspectionToolWrapper> registerGlobalInspection(@Nonnull final Class aClass, boolean store) {
-    return registerInspectionToolFactory(() -> new GlobalInspectionToolWrapper((GlobalInspectionTool)Application.get().getUnbindedInstance(aClass)), store);
   }
 
   @Nonnull

@@ -15,33 +15,33 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.ScopeToolState;
-import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.InspectionsAggregationUtil;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
 import consulo.ide.impl.idea.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.table.ThreeStateCheckBoxRenderer;
+import consulo.ide.impl.idea.util.NullableFunction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
+import consulo.language.editor.internal.inspection.ScopeToolState;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -473,7 +473,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
     public void put(@Nonnull final ScopeToolState defaultState, @Nonnull final List<ScopeToolState> nonDefault) {
       putOne(defaultState);
       if (myDefaultScopeName == null) {
-        myDefaultScopeName = defaultState.getScopeName();
+        myDefaultScopeName = defaultState.getScopeId();
       }
       for (final ScopeToolState scopeToolState : nonDefault) {
         putOne(scopeToolState);
@@ -484,7 +484,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
       if (!state.isEnabled()) {
         return;
       }
-      final String scopeName = state.getScopeName();
+      final String scopeName = state.getScopeId();
       final SeverityAndOccurrences severityAndOccurrences = myScopeToAverageSeverityMap.get(scopeName);
       final String inspectionName = state.getTool().getShortName();
       if (severityAndOccurrences == null) {

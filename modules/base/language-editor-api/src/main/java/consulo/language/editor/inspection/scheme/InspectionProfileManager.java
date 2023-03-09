@@ -30,6 +30,7 @@ import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,6 +54,9 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   }
 
   protected abstract void initProfiles();
+
+  @Nonnull
+  public abstract Collection<InspectionProfile> getProfiles();
 
   public abstract Profile loadProfile(@Nonnull String path) throws IOException, JDOMException;
 

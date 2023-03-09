@@ -76,7 +76,7 @@ public class InspectionConfigTreeNode extends DefaultMutableTreeNode {
   @Nullable
   public String getScopeName() {
     final ToolDescriptors descriptors = getDescriptors();
-    return descriptors != null ? descriptors.getDefaultScopeToolState().getScopeName() : null;
+    return descriptors != null ? descriptors.getDefaultScopeToolState().getScopeId() : null;
   }
 
   public boolean isProperSetting() {

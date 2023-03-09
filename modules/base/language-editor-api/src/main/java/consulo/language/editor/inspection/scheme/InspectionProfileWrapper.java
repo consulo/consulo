@@ -17,6 +17,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
@@ -60,7 +61,7 @@ public class InspectionProfileWrapper {
   public static void checkInspectionsDuplicates(@Nonnull InspectionToolWrapper[] toolWrappers) {
     if (alreadyChecked) return;
     alreadyChecked = true;
-    Set<InspectionProfileEntry> uniqTools = new HashSet<InspectionProfileEntry>(toolWrappers.length);
+    Set<InspectionTool> uniqTools = new HashSet<>(toolWrappers.length);
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       ProgressManager.checkCanceled();
       if (!uniqTools.add(toolWrapper.getTool())) {

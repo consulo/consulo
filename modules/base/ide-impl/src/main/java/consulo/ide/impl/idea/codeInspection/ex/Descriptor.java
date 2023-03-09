@@ -17,11 +17,11 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.ScopeToolState;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -56,9 +56,9 @@ public class Descriptor {
     InspectionToolWrapper tool = state.getTool();
     myText = tool.getDisplayName();
     final String[] groupPath = tool.getGroupPath();
-    myGroup = groupPath.length == 0 ? new String[]{InspectionProfileEntry.GENERAL_GROUP_NAME} : groupPath;
+    myGroup = groupPath.length == 0 ? new String[]{InspectionsBundle.message("inspection.general.tools.group.name")} : groupPath;
     myKey = HighlightDisplayKey.find(tool.getShortName());
-    myScopeName = state.getScopeName();
+    myScopeName = state.getScopeId();
     myScope = state.getScope(project);
     myLevel = inspectionProfile.getErrorLevel(myKey, myScope, project);
     myEnabled = inspectionProfile.isToolEnabled(myKey, myScope, project);
@@ -130,7 +130,7 @@ public class Descriptor {
   public static Element createConfigElement(InspectionToolWrapper toolWrapper) {
     Element element = new Element("options");
     try {
-      toolWrapper.getTool().writeSettings(element);
+      toolWrapper.writeExternal(element);
     }
     catch (WriteExternalException e) {
       LOG.error(e);

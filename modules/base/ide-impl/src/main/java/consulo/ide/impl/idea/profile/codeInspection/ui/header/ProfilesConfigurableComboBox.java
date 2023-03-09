@@ -16,38 +16,32 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.Profile;
-import consulo.ui.ex.awt.ListCellRendererWrapper;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.MutableCollectionComboBoxModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * @author Dmitry Batkovich
  */
 public abstract class ProfilesConfigurableComboBox extends JPanel {
-  private static final String COMBO_CARD = "combo.card";
-  private static final String EDIT_CARD = "edit.card";
+  private final ComboBox<InspectionProfile> myProfilesComboBox;
 
-  private final JComboBox myProfilesComboBox;
-  private final CardLayout myCardLayout;
-  private final ValidatedTextField mySubmitNameComponent;
-  private final SaveInputComponentValidator.Wrapper mySaveListener;
+  public ProfilesConfigurableComboBox(final ListCellRenderer<InspectionProfile> comboBoxItemsRenderer) {
+    super(new BorderLayout());
 
-  public ProfilesConfigurableComboBox(final ListCellRendererWrapper<Profile> comboBoxItemsRenderer) {
-    myCardLayout = new CardLayout();
-    setLayout(myCardLayout);
-
-    myProfilesComboBox = new JComboBox();
-    add(myProfilesComboBox, COMBO_CARD);
-
-    mySaveListener = new SaveInputComponentValidator.Wrapper();
-    mySubmitNameComponent = new ValidatedTextField(mySaveListener);
-    add(mySubmitNameComponent, EDIT_CARD);
+    myProfilesComboBox = new ComboBox<>();
+    add(myProfilesComboBox, BorderLayout.CENTER);
 
     myProfilesComboBox.setRenderer(comboBoxItemsRenderer);
     myProfilesComboBox.addActionListener(new ActionListener() {
@@ -59,45 +53,42 @@ public abstract class ProfilesConfigurableComboBox extends JPanel {
         }
       }
     });
-
-    showComboBoxCard();
   }
 
   protected abstract void onProfileChosen(final InspectionProfileImpl inspectionProfile);
 
   public void showEditCard(final String initialValue, final SaveInputComponentValidator inputValidator) {
-    mySaveListener.setDelegate(inputValidator);
-    mySubmitNameComponent.setText(initialValue);
-    myCardLayout.show(this, EDIT_CARD);
-    IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(mySubmitNameComponent);
+    String name = Messages.showInputDialog(this, "Enter name:", "Name", null, initialValue, new InputValidator() {
+      @RequiredUIAccess
+      @Override
+      public boolean checkInput(String inputString) {
+        return inputValidator.checkValid(initialValue);
+      }
+    });
+
+    if (name == null) {
+      inputValidator.cancel();
+    }
+    else {
+      inputValidator.doSave(name);
+    }
   }
 
-  public void reset(final Collection<Profile> profiles) {
-    final DefaultComboBoxModel aModel = new DefaultComboBoxModel();
-    myProfilesComboBox.setModel(aModel);
-    for (Profile profile : profiles) {
-      aModel.addElement(profile);
-    }
+  public void reset(final Collection<InspectionProfile> profiles) {
+    myProfilesComboBox.setModel(new MutableCollectionComboBoxModel<>(new ArrayList<>(profiles)));
     myProfilesComboBox.setSelectedIndex(0);
   }
 
-  public DefaultComboBoxModel getModel() {
-    return (DefaultComboBoxModel)myProfilesComboBox.getModel();
+  @SuppressWarnings("unchecked")
+  public MutableComboBoxModel<InspectionProfile> getModel() {
+    return (MutableComboBoxModel)myProfilesComboBox.getModel();
   }
 
   public InspectionProfileImpl getSelectedProfile() {
     return (InspectionProfileImpl)myProfilesComboBox.getSelectedItem();
   }
 
-  public JPanel getHintLabel() {
-    return mySubmitNameComponent.getHintLabel();
-  }
-
   public void selectProfile(Profile inspectionProfile) {
     myProfilesComboBox.setSelectedItem(inspectionProfile);
-  }
-
-  public void showComboBoxCard() {
-    myCardLayout.show(this, COMBO_CARD);
   }
 }

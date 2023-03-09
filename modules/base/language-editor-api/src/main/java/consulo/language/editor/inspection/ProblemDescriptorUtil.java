@@ -157,6 +157,8 @@ public class ProblemDescriptorUtil {
         return HighlightInfoType.WRONG_REF;
       case GENERIC_ERROR:
         return HighlightInfoType.ERROR;
+      case WARNING:
+        return HighlightInfoType.WARNING;
       case INFORMATION:
         final TextAttributesKey attributes = ((ProblemDescriptorBase)problemDescriptor).getEnforcedTextAttributes();
         if (attributes != null) {

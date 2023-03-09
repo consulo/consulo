@@ -33,6 +33,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -65,7 +66,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
-  private final SchemeManager<Profile, InspectionProfileImpl> mySchemeManager;
+  private final SchemeManager<InspectionProfile, InspectionProfileImpl> mySchemeManager;
   private final AtomicBoolean myProfilesAreInitialized = new AtomicBoolean(false);
   private final SeverityRegistrarImpl mySeverityRegistrar;
 
@@ -80,7 +81,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     myRegistrar = registrar;
     registerProvidedSeverities();
 
-    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<Profile, InspectionProfileImpl>() {
+    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<InspectionProfile, InspectionProfileImpl>() {
       @Nonnull
       @Override
       public InspectionProfileImpl readScheme(@Nonnull Element element) {
@@ -134,7 +135,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
       @Nonnull
       @Override
-      public String getName(@Nonnull Profile immutableElement) {
+      public String getName(@Nonnull InspectionProfile immutableElement) {
         return immutableElement.getName();
       }
     }, RoamingType.DEFAULT);
@@ -160,7 +161,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   @Nonnull
-  public Collection<Profile> getProfiles() {
+  public Collection<InspectionProfile> getProfiles() {
     initProfiles();
     return mySchemeManager.getAllSchemes();
   }
@@ -184,12 +185,12 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
     if (!LOAD_PROFILES) return;
 
     mySchemeManager.loadSchemes();
-    Collection<Profile> profiles = mySchemeManager.getAllSchemes();
+    Collection<InspectionProfile> profiles = mySchemeManager.getAllSchemes();
     if (profiles.isEmpty()) {
       createDefaultProfile();
     }
     else {
-      for (Profile profile : profiles) {
+      for (InspectionProfile profile : profiles) {
         addProfile(profile);
       }
     }
@@ -229,7 +230,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   public void updateProfile(@Nonnull Profile profile) {
-    mySchemeManager.addNewScheme(profile, true);
+    mySchemeManager.addNewScheme((InspectionProfile)profile, true);
     updateProfileImpl(profile);
   }
 
@@ -308,14 +309,14 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   public Profile getRootProfile() {
     Profile current = mySchemeManager.getCurrentScheme();
     if (current != null) return current;
-    Collection<Profile> profiles = getProfiles();
+    Collection<InspectionProfile> profiles = getProfiles();
     if (profiles.isEmpty()) return createSampleProfile();
     return profiles.iterator().next();
   }
 
   @Override
   public void deleteProfile(@Nonnull final String profile) {
-    Profile found = mySchemeManager.findSchemeByName(profile);
+    InspectionProfile found = mySchemeManager.findSchemeByName(profile);
     if (found != null) {
       mySchemeManager.removeScheme(found);
     }
@@ -323,7 +324,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   @Override
   public void addProfile(@Nonnull final Profile profile) {
-    mySchemeManager.addNewScheme(profile, true);
+    mySchemeManager.addNewScheme((InspectionProfile)profile, true);
   }
 
   @Override

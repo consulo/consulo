@@ -9,7 +9,10 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.colorScheme.*;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
@@ -19,13 +22,13 @@ import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.annotation.SuppressableProblemGroup;
-import consulo.language.editor.impl.internal.inspection.AnnotatorBasedInspection;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.CustomSuppressableInspectionTool;
-import consulo.language.editor.inspection.ProblemHighlightType;
-import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import consulo.language.editor.inspection.SuppressQuickFix;
-import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.impl.internal.inspection.AnnotatorBasedInspection;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
@@ -351,26 +354,26 @@ public class HighlightInfoImpl implements HighlightInfo {
     HighlightInfoImpl info = (HighlightInfoImpl)obj;
 
     return info.getSeverity() == getSeverity() &&
-           info.startOffset == startOffset &&
-           info.endOffset == endOffset &&
-           Comparing.equal(info.type, type) &&
-           Comparing.equal(info.gutterIconRenderer, gutterIconRenderer) &&
-           Comparing.equal(info.forcedTextAttributes, forcedTextAttributes) &&
-           Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey) &&
-           Comparing.strEqual(info.getDescription(), getDescription());
+      info.startOffset == startOffset &&
+      info.endOffset == endOffset &&
+      Comparing.equal(info.type, type) &&
+      Comparing.equal(info.gutterIconRenderer, gutterIconRenderer) &&
+      Comparing.equal(info.forcedTextAttributes, forcedTextAttributes) &&
+      Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey) &&
+      Comparing.strEqual(info.getDescription(), getDescription());
   }
 
   public boolean equalsByActualOffset(@Nonnull HighlightInfoImpl info) {
     if (info == this) return true;
 
     return info.getSeverity() == getSeverity() &&
-           info.getActualStartOffset() == getActualStartOffset() &&
-           info.getActualEndOffset() == getActualEndOffset() &&
-           Comparing.equal(info.type, type) &&
-           Comparing.equal(info.gutterIconRenderer, gutterIconRenderer) &&
-           Comparing.equal(info.forcedTextAttributes, forcedTextAttributes) &&
-           Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey) &&
-           Comparing.strEqual(info.getDescription(), getDescription());
+      info.getActualStartOffset() == getActualStartOffset() &&
+      info.getActualEndOffset() == getActualEndOffset() &&
+      Comparing.equal(info.type, type) &&
+      Comparing.equal(info.gutterIconRenderer, gutterIconRenderer) &&
+      Comparing.equal(info.forcedTextAttributes, forcedTextAttributes) &&
+      Comparing.equal(info.forcedTextAttributesKey, forcedTextAttributesKey) &&
+      Comparing.strEqual(info.getDescription(), getDescription());
   }
 
   @Override
@@ -611,9 +614,10 @@ public class HighlightInfoImpl implements HighlightInfo {
     public HighlightInfoImpl create() {
       HighlightInfoImpl info = createUnconditionally();
       LOG.assertTrue(psiElement != null ||
-                     severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY ||
-                     severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY ||
-                     ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1, "Custom type requires not-null element to detect its text attributes");
+                       severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY ||
+                       severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY ||
+                       ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1,
+                     "Custom type requires not-null element to detect its text attributes");
 
       if (!isAcceptedByFilters(info, psiElement)) return null;
 
@@ -627,8 +631,22 @@ public class HighlightInfoImpl implements HighlightInfo {
         severity = type.getSeverity(psiElement);
       }
 
-      return new HighlightInfoImpl(forcedTextAttributes, forcedTextAttributesKey, type, startOffset, endOffset, escapedDescription, escapedToolTip, severity, isAfterEndOfLine, myNeedsUpdateOnTyping,
-                                   isFileLevelAnnotation, navigationShift, problemGroup, inspectionToolId, gutterIconRenderer, group);
+      return new HighlightInfoImpl(forcedTextAttributes,
+                                   forcedTextAttributesKey,
+                                   type,
+                                   startOffset,
+                                   endOffset,
+                                   escapedDescription,
+                                   escapedToolTip,
+                                   severity,
+                                   isAfterEndOfLine,
+                                   myNeedsUpdateOnTyping,
+                                   isFileLevelAnnotation,
+                                   navigationShift,
+                                   problemGroup,
+                                   inspectionToolId,
+                                   gutterIconRenderer,
+                                   group);
     }
   }
 
@@ -652,9 +670,22 @@ public class HighlightInfoImpl implements HighlightInfo {
     TextAttributesKey key = annotation.getTextAttributes();
     TextAttributesKey forcedAttributesKey = forcedAttributes == null && key != HighlighterColors.NO_HIGHLIGHTING ? key : null;
 
-    HighlightInfoImpl info = new HighlightInfoImpl(forcedAttributes, forcedAttributesKey, convertType(annotation), annotation.getStartOffset(), annotation.getEndOffset(), annotation.getMessage(),
-                                                   annotation.getTooltip(), annotation.getSeverity(), annotation.isAfterEndOfLine(), annotation.needsUpdateOnTyping(),
-                                                   annotation.isFileLevelAnnotation(), 0, annotation.getProblemGroup(), null, annotation.getGutterIconRenderer(), Pass.UPDATE_ALL);
+    HighlightInfoImpl info = new HighlightInfoImpl(forcedAttributes,
+                                                   forcedAttributesKey,
+                                                   convertType(annotation),
+                                                   annotation.getStartOffset(),
+                                                   annotation.getEndOffset(),
+                                                   annotation.getMessage(),
+                                                   annotation.getTooltip(),
+                                                   annotation.getSeverity(),
+                                                   annotation.isAfterEndOfLine(),
+                                                   annotation.needsUpdateOnTyping(),
+                                                   annotation.isFileLevelAnnotation(),
+                                                   0,
+                                                   annotation.getProblemGroup(),
+                                                   null,
+                                                   annotation.getGutterIconRenderer(),
+                                                   Pass.UPDATE_ALL);
 
     List<? extends Annotation.QuickFixInfo> fixes = batchMode ? annotation.getBatchFixes() : annotation.getQuickFixes();
     if (fixes != null) {
@@ -718,7 +749,10 @@ public class HighlightInfoImpl implements HighlightInfo {
       this(action, null, null, icon);
     }
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable Image icon) {
+    public IntentionActionDescriptor(@Nonnull IntentionAction action,
+                                     @Nullable List<IntentionAction> options,
+                                     @Nullable String displayName,
+                                     @Nullable Image icon) {
       this(action, options, displayName, icon, null, null, null);
     }
 
@@ -798,8 +832,9 @@ public class HighlightInfoImpl implements HighlightInfo {
         myCanCleanup = toolWrapper.isCleanupTool();
 
         IntentionAction fixAllIntention = intentionManager.createFixAllIntention(toolWrapper, myAction);
-        InspectionProfileEntry wrappedTool =
-                toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool() : ((GlobalInspectionToolWrapper)toolWrapper).getTool();
+        InspectionTool wrappedTool =
+          toolWrapper instanceof LocalInspectionToolWrapper ? ((LocalInspectionToolWrapper)toolWrapper).getTool() : ((GlobalInspectionToolWrapper)toolWrapper)
+            .getTool();
         if (wrappedTool instanceof AnnotatorBasedInspection) {
           List<IntentionAction> actions = Collections.emptyList();
           if (myProblemGroup instanceof SuppressableProblemGroup) {
@@ -900,13 +935,18 @@ public class HighlightInfoImpl implements HighlightInfo {
   }
 
   @Override
-  public void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key) {
+  public void registerFix(@Nullable IntentionAction action,
+                          @Nullable List<IntentionAction> options,
+                          @Nullable String displayName,
+                          @Nullable TextRange fixRange,
+                          @Nullable HighlightDisplayKey key) {
     if (action == null) return;
     if (fixRange == null) fixRange = new TextRange(startOffset, endOffset);
     if (quickFixActionRanges == null) {
       quickFixActionRanges = Lists.newLockFreeCopyOnWriteList();
     }
-    IntentionActionDescriptor desc = new IntentionActionDescriptor(action, options, displayName, null, key, getProblemGroup(), getSeverity());
+    IntentionActionDescriptor desc =
+      new IntentionActionDescriptor(action, options, displayName, null, key, getProblemGroup(), getSeverity());
     quickFixActionRanges.add(Pair.create(desc, fixRange));
     fixStartOffset = Math.min(fixStartOffset, fixRange.getStartOffset());
     fixEndOffset = Math.max(fixEndOffset, fixRange.getEndOffset());

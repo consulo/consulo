@@ -19,7 +19,6 @@ package consulo.language.editor.inspection;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefManager;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.inspection.scheme.StdJobDescriptors;
 import consulo.language.editor.inspection.scheme.Tools;
@@ -94,11 +93,11 @@ public interface GlobalInspectionContext extends UserDataHolder {
 
   void cleanup();
 
-  default boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionProfileEntry tool) {
+  default boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionTool tool) {
     return isToCheckFile(owner.getContainingFile(), tool) && !owner.isSuppressed(tool.getShortName());
   }
 
-  boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool);
+  boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool);
 
   @Nullable
   Tools getTools(@Nonnull String shortName);

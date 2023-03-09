@@ -20,13 +20,13 @@ import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * User: anna
@@ -35,12 +35,6 @@ import javax.annotation.Nonnull;
 public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalInspectionTool> {
   public GlobalInspectionToolWrapper(@Nonnull GlobalInspectionTool globalInspectionTool) {
     super(globalInspectionTool);
-  }
-
-  @Nonnull
-  @Override
-  protected Class<? extends InspectionProfileEntry> getToolClass() {
-    return GlobalInspectionTool.class;
   }
 
   private GlobalInspectionToolWrapper(@Nonnull GlobalInspectionToolWrapper other) {
@@ -80,7 +74,7 @@ public class GlobalInspectionToolWrapper extends InspectionToolWrapper<GlobalIns
     return getTool().worksInBatchModeOnly();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public LocalInspectionToolWrapper getSharedLocalInspectionToolWrapper() {
     final LocalInspectionTool sharedTool = getTool().getSharedLocalInspectionTool();
     if (sharedTool == null) {

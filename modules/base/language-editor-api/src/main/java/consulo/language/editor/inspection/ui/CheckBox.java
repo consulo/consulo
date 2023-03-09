@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.ui;
 
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.language.editor.inspection.InspectionTool;
 import consulo.util.lang.function.BooleanConsumer;
 import org.jetbrains.annotations.NonNls;
 
@@ -28,7 +28,7 @@ import java.util.function.BooleanSupplier;
 
 public class CheckBox extends JCheckBox {
   @Deprecated
-  public CheckBox(@Nonnull String label, @Nonnull InspectionProfileEntry owner, @NonNls String property) {
+  public CheckBox(@Nonnull String label, @Nonnull InspectionTool owner, @NonNls String property) {
     super(label, getPropertyValue(owner, property));
     final ButtonModel model = getModel();
     final SingleCheckboxChangeListener listener = new SingleCheckboxChangeListener(owner, property, model);
@@ -41,9 +41,9 @@ public class CheckBox extends JCheckBox {
     model.addChangeListener(e -> setter.accept(model.isSelected()));
   }
 
-  private static boolean getPropertyValue(InspectionProfileEntry owner, String property) {
+  private static boolean getPropertyValue(InspectionTool owner, String property) {
     try {
-      final Class<? extends InspectionProfileEntry> aClass = owner.getClass();
+      final Class<? extends InspectionTool> aClass = owner.getClass();
       final Field field = aClass.getField(property);
       return field.getBoolean(owner);
     }
@@ -57,11 +57,11 @@ public class CheckBox extends JCheckBox {
 
   private static class SingleCheckboxChangeListener implements ChangeListener {
 
-    private final InspectionProfileEntry owner;
+    private final InspectionTool owner;
     private final String property;
     private final ButtonModel model;
 
-    SingleCheckboxChangeListener(InspectionProfileEntry owner, String property, ButtonModel model) {
+    SingleCheckboxChangeListener(InspectionTool owner, String property, ButtonModel model) {
       this.owner = owner;
       this.property = property;
       this.model = model;
@@ -71,9 +71,9 @@ public class CheckBox extends JCheckBox {
       setPropertyValue(owner, property, model.isSelected());
     }
 
-    private static void setPropertyValue(InspectionProfileEntry owner, String property, boolean selected) {
+    private static void setPropertyValue(InspectionTool owner, String property, boolean selected) {
       try {
-        final Class<? extends InspectionProfileEntry> aClass = owner.getClass();
+        final Class<? extends InspectionTool> aClass = owner.getClass();
         final Field field = aClass.getField(property);
         field.setBoolean(owner, selected);
       }

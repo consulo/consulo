@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.ui;
 
-import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
+import consulo.language.editor.inspection.InspectionTool;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -31,11 +31,11 @@ import java.text.ParseException;
 
 public class SingleIntegerFieldOptionsPanel extends JPanel {
 
-  public SingleIntegerFieldOptionsPanel(String labelString, final InspectionProfileEntry owner, @NonNls final String property) {
+  public SingleIntegerFieldOptionsPanel(String labelString, final InspectionTool owner, @NonNls final String property) {
     this(labelString, owner, property, 2);
   }
 
-  public SingleIntegerFieldOptionsPanel(String labelString, final InspectionProfileEntry owner, @NonNls final String property, int integerFieldColumns) {
+  public SingleIntegerFieldOptionsPanel(String labelString, final InspectionTool owner, @NonNls final String property, int integerFieldColumns) {
     super(new GridBagLayout());
     final JLabel label = new JLabel(labelString);
     final JFormattedTextField valueField = createIntegerFieldTrackingValue(owner, property, integerFieldColumns);
@@ -57,7 +57,7 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
     add(valueField, constraints);
   }
 
-  public static JFormattedTextField createIntegerFieldTrackingValue(@Nonnull InspectionProfileEntry owner, @Nonnull String property, int integerFieldColumns) {
+  public static JFormattedTextField createIntegerFieldTrackingValue(@Nonnull InspectionTool owner, @Nonnull String property, int integerFieldColumns) {
     JFormattedTextField valueField = new JFormattedTextField();
     valueField.setColumns(integerFieldColumns);
     setupIntegerFieldTrackingValue(valueField, owner, property);
@@ -73,7 +73,7 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
    * @param owner     an object whose field is synchronized with {@code textField}
    * @param property  object's field name for synchronization
    */
-  public static void setupIntegerFieldTrackingValue(final JFormattedTextField textField, final InspectionProfileEntry owner, final String property) {
+  public static void setupIntegerFieldTrackingValue(final JFormattedTextField textField, final InspectionTool owner, final String property) {
     NumberFormat formatter = NumberFormat.getIntegerInstance();
     formatter.setParseIntegerOnly(true);
     textField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(formatter)));
@@ -107,7 +107,7 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
     });
   }
 
-  private static void setPropertyValue(InspectionProfileEntry owner, String property, int value) {
+  private static void setPropertyValue(InspectionTool owner, String property, int value) {
     try {
       owner.getClass().getField(property).setInt(owner, value);
     }
@@ -116,7 +116,7 @@ public class SingleIntegerFieldOptionsPanel extends JPanel {
     }
   }
 
-  private static int getPropertyValue(InspectionProfileEntry owner, String property) {
+  private static int getPropertyValue(InspectionTool owner, String property) {
     try {
       return owner.getClass().getField(property).getInt(owner);
     }

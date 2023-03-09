@@ -15,67 +15,85 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.application.Application;
-import consulo.component.bind.InjectingBinding;
-import consulo.component.internal.inject.InjectingBindingLoader;
+import consulo.component.persist.ComponentSerializationUtil;
 import consulo.language.Language;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
 import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.InspectionTool;
+import consulo.language.editor.inspection.InspectionToolState;
+import consulo.language.editor.internal.inspection.DummyInspectionToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.ResourceUtil;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
+import consulo.util.xml.serializer.XmlSerializer;
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Dmitry Avdeev
  * Date: 9/28/11
  */
-public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
+public abstract class InspectionToolWrapper<T extends InspectionTool> {
   private static final Logger LOG = Logger.getInstance(InspectionToolWrapper.class);
+  private static final SkipDefaultValuesSerializationFilters ourFilter = new SkipDefaultValuesSerializationFilters();
 
+  @Nonnull
   protected final T myTool;
+  protected InspectionToolState<Object> myStateProvider;
 
   protected InspectionToolWrapper(@Nonnull T tool) {
     myTool = tool;
   }
 
-  @SuppressWarnings("unchecked")
   protected InspectionToolWrapper(@Nonnull InspectionToolWrapper<T> other) {
-    // find injecting binding and create new instance
-    Map<String, List<InjectingBinding>> bindings = InjectingBindingLoader.INSTANCE.getHolder(ExtensionAPI.class, ComponentScope.APPLICATION).getBindings();
-    List<InjectingBinding> injectingBindings = bindings.get(getToolClass().getName());
-
-    InjectingBinding binding = null;
-    for (InjectingBinding injectingBinding : injectingBindings) {
-      try {
-        if (injectingBinding.getImplClass() == other.myTool.getClass())  {
-          binding = injectingBinding;
-          break;
-        }
-      }
-      catch (Exception ignored) {
-      }
-    }
-
-    if (binding == null) {
-      throw new IllegalArgumentException("Can't find injecting binding for " + other.myTool.getClass());
-    }
-
-    final InjectingBinding finalBinding = binding;
-    myTool = (T)Application.get().getUnbindedInstance((Class)other.myTool.getClass(), binding.getParameterTypes(), args -> (T)finalBinding.create(args));
+    myTool = other.myTool;
+    // reset state - it will inited again and loaded
+    myStateProvider = null;
   }
 
-  @Nonnull
-  protected abstract Class<? extends InspectionProfileEntry> getToolClass();
+  public void readExternal(Element element) {
+    InspectionToolState<Object> provider = getState();
+    if (provider instanceof DummyInspectionToolState) {
+      return;
+    }
+
+    Class<Object> stateClass = ComponentSerializationUtil.getStateClass(provider.getClass());
+
+    Object o = XmlSerializer.deserialize(element, stateClass);
+    if (o != null) {
+      provider.loadState(o);
+    }
+  }
+
+  public void writeExternal(@Nonnull Element element) {
+    InspectionToolState provider = getState();
+    if (provider instanceof DummyInspectionToolState) {
+      return;
+    }
+
+    Object state = provider.getState();
+    if (state != null) {
+      Element serializeElement = XmlSerializer.serialize(state, ourFilter);
+
+      if (!JDOMUtil.isEmpty(serializeElement)) {
+        for (Attribute attribute : serializeElement.getAttributes()) {
+          element.setAttribute(attribute.clone());
+        }
+
+        for (Element child : serializeElement.getChildren()) {
+          element.addContent(child.clone());
+        }
+      }
+    }
+  }
 
   public void initialize(@Nonnull GlobalInspectionContext context) {
   }
@@ -84,21 +102,27 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   public abstract InspectionToolWrapper<T> createCopy();
 
   @Nonnull
+  @SuppressWarnings("unchecked")
+  public InspectionToolState<Object> getState() {
+    if (myStateProvider == null) {
+      myStateProvider = (InspectionToolState<Object>)myTool.createStateProvider();
+    }
+    return myStateProvider;
+  }
+
+  @Nonnull
   public T getTool() {
     return myTool;
   }
 
   public boolean isInitialized() {
-    return myTool != null;
+    // deprecated?
+    return true;
   }
 
   @Nullable
   public Language getLanguage() {
     return getTool().getLanguage();
-  }
-
-  public boolean isApplicable(@Nonnull Language language) {
-    return getLanguage() == language;
   }
 
   public boolean isCleanupTool() {
@@ -132,14 +156,6 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   @Nonnull
   public String[] getGroupPath() {
     return getTool().getGroupPath();
-  }
-
-  public void projectOpened(@Nonnull Project project) {
-
-  }
-
-  public void projectClosed(@Nonnull Project project) {
-
   }
 
   public String getStaticDescription() {
@@ -181,7 +197,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
   }
 
   @Nonnull
-  public Class<? extends InspectionProfileEntry> getDescriptionContextClass() {
+  public Class<? extends InspectionTool> getDescriptionContextClass() {
     return getTool().getClass();
   }
 
@@ -196,9 +212,7 @@ public abstract class InspectionToolWrapper<T extends InspectionProfileEntry> {
 
   public void cleanup(Project project) {
     T tool = myTool;
-    if (tool != null) {
-      tool.cleanup(project);
-    }
+    tool.cleanup(project);
   }
 
   @Nonnull

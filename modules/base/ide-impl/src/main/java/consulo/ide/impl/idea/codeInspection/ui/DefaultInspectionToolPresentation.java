@@ -26,6 +26,7 @@ import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.internal.intention.ActionClassHolder;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -779,7 +780,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
   @Override
   @Nullable
   public IntentionAction findQuickFixes(@Nonnull final CommonProblemDescriptor problemDescriptor, final String hint) {
-    InspectionProfileEntry tool = getToolWrapper().getTool();
+    InspectionTool tool = getToolWrapper().getTool();
     if (!(tool instanceof GlobalInspectionTool)) return null;
     final QuickFix fix = ((GlobalInspectionTool)tool).getQuickFix(hint);
     if (fix == null) {

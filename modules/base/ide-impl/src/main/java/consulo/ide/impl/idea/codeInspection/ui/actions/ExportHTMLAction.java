@@ -43,7 +43,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.RefModule;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.ScopeToolState;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.inspection.scheme.Tools;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -18,6 +18,8 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.content.scope.NamedScope;
+import consulo.language.editor.inspection.InspectionTool;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
@@ -51,12 +53,12 @@ public interface InspectionProfile extends Profile {
   /**
    * Returns (unwrapped) inspection
    */
-  InspectionProfileEntry getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   /**
    * Returns (unwrapped) inspection
    */
-  <T extends InspectionProfileEntry> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
+  <T extends InspectionTool> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
 
   void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
 
@@ -69,7 +71,7 @@ public interface InspectionProfile extends Profile {
    * @param toolConsumer the callback that receives the tool.
    * @since 12.1
    */
-  <T extends InspectionProfileEntry> void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
+  <T extends InspectionTool> void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
 
   /**
    * @param element context element

@@ -18,6 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -37,11 +38,11 @@ public class GlobalInspectionContextUtil {
   }
 
 
-  public static boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
+  public static boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
     return isToCheckFile(owner.getContainingFile(), tool, tools, profileManager) && !owner.isSuppressed(tool.getShortName());
   }
 
-  public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionProfileEntry tool, Tools tools, ProfileManager profileManager) {
+  public static boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool, Tools tools, ProfileManager profileManager) {
     if (tools != null && file != null) {
       for (ScopeToolState state : tools.getTools()) {
         final NamedScope namedScope = state.getScope(file.getProject());
