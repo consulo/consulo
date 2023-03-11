@@ -34,7 +34,7 @@ import java.util.function.*;
  */
 public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
   @Nonnull
-  static ConfigurableBuilder<EmptyConfigurableBuilderState> newBuilder() {
+  static ConfigurableBuilder<ConfigurableBuilderState> newBuilder() {
     return newBuilder(() -> EmptyConfigurableBuilderState.INSTANCE);
   }
 
