@@ -65,7 +65,7 @@ public interface ModifiableModel extends Profile {
   void resetToEmpty(Project project);
 
   /**
-   * @return {@link consulo.ide.impl.idea.codeInspection.ex.InspectionToolWrapper}
+   * @return {@link InspectionToolWrapper}
    * @see #getUnwrappedTool(String, PsiElement)
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);

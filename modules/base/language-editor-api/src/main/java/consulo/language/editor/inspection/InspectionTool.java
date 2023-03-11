@@ -112,6 +112,11 @@ public abstract class InspectionTool implements BatchSuppressableTool {
   }
 
   @Nonnull
+  public static String getShortName(@Nonnull Class<? extends InspectionTool> clazz) {
+    return getShortName(clazz.getSimpleName());
+  }
+
+  @Nonnull
   public static String getShortName(@Nonnull String className) {
     return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"), "InspectionBase");
   }

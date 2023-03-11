@@ -55,6 +55,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -399,13 +400,13 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   @Override
-  public <T extends InspectionTool> void modifyToolSettings(@Nonnull final Key<T> shortNameKey,
+  public <T extends InspectionTool, S> void modifyToolSettings(@Nonnull final String shortName,
                                                                     @Nonnull final PsiElement psiElement,
-                                                                    @Nonnull final java.util.function.Consumer<T> toolConsumer) {
+                                                                    @Nonnull final BiConsumer<T, S> toolConsumer) {
     modifyProfile(model -> {
-      InspectionTool tool = model.getUnwrappedTool(shortNameKey.toString(), psiElement);
+      InspectionToolWrapper wrapper = model.getInspectionTool(shortName, psiElement);
       //noinspection unchecked
-      toolConsumer.accept((T)tool);
+      toolConsumer.accept((T)wrapper.getTool(), (S)wrapper.getState().getState());
     });
   }
 

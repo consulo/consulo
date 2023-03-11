@@ -29,6 +29,7 @@ import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -66,12 +67,12 @@ public interface InspectionProfile extends Profile {
    * Allows a plugin to modify the settings of the inspection tool with the specified ID programmatically, without going through
    * the settings dialog.
    *
-   * @param shortNameKey the ID of the tool to change.
+   * @param shortName the ID of the tool to change.
    * @param psiElement   the element for which the settings should be changed.
    * @param toolConsumer the callback that receives the tool.
    * @since 12.1
    */
-  <T extends InspectionTool> void modifyToolSettings(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement psiElement, @Nonnull Consumer<T> toolConsumer);
+  <T extends InspectionTool, S> void modifyToolSettings(@Nonnull String shortName, @Nonnull PsiElement psiElement, @Nonnull BiConsumer<T, S> toolConsumer);
 
   /**
    * @param element context element

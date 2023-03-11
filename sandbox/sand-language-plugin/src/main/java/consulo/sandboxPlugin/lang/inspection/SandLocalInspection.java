@@ -19,11 +19,15 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
+import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
+import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,6 +38,40 @@ import javax.annotation.Nullable;
  */
 @ExtensionImpl
 public class SandLocalInspection extends LocalInspectionTool {
+  private static final String SHORT_NAME = getShortName(SandLocalInspection.class);
+
+  private static final class SandClassDisableFix implements LocalQuickFix {
+
+    @Nls
+    @Nonnull
+    @Override
+    public String getName() {
+      return "Disable class check";
+    }
+
+    @Nls
+    @Nonnull
+    @Override
+    public String getFamilyName() {
+      return "Disable class check";
+    }
+
+    @Override
+    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+      InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
+      profile.<SandLocalInspection, SandLocalInspectionState>modifyToolSettings(SHORT_NAME,
+                                                                                descriptor.getPsiElement(), (tool, state) -> {
+          state.setCheckClass(false);
+        });
+    }
+  }
+
+  @Nonnull
+  @Override
+  public String getShortName() {
+    return SHORT_NAME;
+  }
+
   @Nonnull
   @Override
   public String getGroupDisplayName() {
@@ -80,7 +118,11 @@ public class SandLocalInspection extends LocalInspectionTool {
           if (checkClass) {
             PsiElement nameIdentifier = ((SandClass)element).getNameIdentifier();
             if (nameIdentifier != null) {
-              holder.registerProblem(nameIdentifier, "Test Error", ProblemHighlightType.ERROR, new TextRange(0, nameIdentifier.getTextLength()));
+              holder.registerProblem(nameIdentifier,
+                                     "Test Error",
+                                     ProblemHighlightType.ERROR,
+                                     new TextRange(0, nameIdentifier.getTextLength()),
+                                     new SandClassDisableFix());
             }
           }
         }
