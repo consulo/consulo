@@ -86,6 +86,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -288,7 +289,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       }
     };
 
-    PsiElementVisitor visitor = InspectionEngine.createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool);
+    Object state = toolWrapper.getState().getState();
+
+    PsiElementVisitor visitor = InspectionEngine.createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool, state);
 
     synchronized (init) {
       init.add(new InspectionContext(toolWrapper, holder, holder.getResultCount(), visitor, dialectIdsSpecifiedForTool));
@@ -306,12 +309,14 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                                            @Nonnull final LocalInspectionToolSession session,
                                            @Nonnull List<InspectionContext> init,
                                            @Nonnull final Set<String> elementDialectIds) {
-    Processor<InspectionContext> processor = context -> {
+    Predicate<InspectionContext> processor = context -> {
       indicator.checkCanceled();
       ApplicationManager.getApplication().assertReadAccessAllowed();
       InspectionEngine.acceptElements(elements, context.visitor, elementDialectIds, context.dialectIdsSpecifiedForTool);
       advanceProgress(1);
-      context.tool.getTool().inspectionFinished(session, context.holder);
+
+      Object state = context.tool.getState().getState();
+      context.tool.getTool().inspectionFinished(session, context.holder, state);
 
       if (context.holder.hasResults()) {
         List<ProblemDescriptor> allProblems = context.holder.getResults();
@@ -685,6 +690,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       indicator.checkCanceled();
       final LocalInspectionToolWrapper wrapper = pair.getKey();
       final LocalInspectionTool tool = wrapper.getTool();
+      Object state = wrapper.getState().getState();
       if (host != null && myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(host, tool)) {
         continue;
       }
@@ -700,8 +706,9 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
 
       LocalInspectionToolSession injSession = new LocalInspectionToolSession(injectedPsi, 0, injectedPsi.getTextLength());
       Set<String> dialectIdsSpecifiedForTool = pair.getValue();
-      InspectionEngine.createVisitorAndAcceptElements(tool, holder, isOnTheFly, injSession, elements, elementDialectIds, dialectIdsSpecifiedForTool);
-      tool.inspectionFinished(injSession, holder);
+      InspectionEngine.createVisitorAndAcceptElements(tool, holder, isOnTheFly, injSession, elements, elementDialectIds, dialectIdsSpecifiedForTool,
+                                                      state);
+      tool.inspectionFinished(injSession, holder, state);
       List<ProblemDescriptor> problems = holder.getResults();
       if (!problems.isEmpty()) {
         appendDescriptors(injectedPsi, problems, wrapper);

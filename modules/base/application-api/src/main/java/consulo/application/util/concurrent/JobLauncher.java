@@ -5,15 +5,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Processor;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Invitation-only service for running short-lived computing-intensive IO-free tasks on all available CPU cores.
@@ -40,7 +40,7 @@ public abstract class JobLauncher {
    * or we were unable to start read action in at least one thread
    * @throws ProcessCanceledException if at least one task has thrown ProcessCanceledException
    */
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Processor<? super T> thingProcessor)
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor)
           throws ProcessCanceledException;
 
   /**
@@ -56,10 +56,10 @@ public abstract class JobLauncher {
    * or threw an exception,
    * or we were unable to start read action in at least one thread
    * @throws ProcessCanceledException if at least one task has thrown ProcessCanceledException
-   * @deprecated use {@link #invokeConcurrentlyUnderProgress(List, ProgressIndicator, Processor)} instead
+   * @deprecated use {@link #invokeConcurrentlyUnderProgress(List, ProgressIndicator, Predicate)} instead
    */
   @Deprecated
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, @Nonnull Processor<? super T> thingProcessor)
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, @Nonnull Predicate<? super T> thingProcessor)
           throws ProcessCanceledException {
     return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
   }
@@ -69,7 +69,7 @@ public abstract class JobLauncher {
                                                               ProgressIndicator progress,
                                                               boolean runInReadAction,
                                                               boolean failFastOnAcquireReadAction,
-                                                              @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException;
+                                                              @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException;
 
   /**
    * NEVER EVER submit runnable which can lock itself for indeterminate amount of time.

@@ -15,13 +15,12 @@
  */
 package consulo.test.light.impl;
 
-import consulo.application.internal.ApplicationEx;
 import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.Job;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  */
 public class LightJobLauncher extends JobLauncher {
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     ApplicationEx app = (ApplicationEx)Application.get();
     return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
   }
@@ -46,9 +46,9 @@ public class LightJobLauncher extends JobLauncher {
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     for (T thing : things) {
-      if (!thingProcessor.process(thing)) return false;
+      if (!thingProcessor.test(thing)) return false;
     }
     return true;
   }

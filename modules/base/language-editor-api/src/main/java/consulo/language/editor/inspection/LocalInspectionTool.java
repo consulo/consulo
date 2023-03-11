@@ -17,6 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -26,6 +27,7 @@ import org.intellij.lang.annotations.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author max
@@ -104,10 +106,14 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @param holder     where visitor will register problems found.
    * @param isOnTheFly true if inspection was run in non-batch mode
    * @param session    the session in the context of which the tool runs.
+   * @param state state from {@link #createStateProvider()} {@link PersistentStateComponent#getState()}
    * @return not-null visitor for this inspection.
    */
   @Nonnull
-  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, final boolean isOnTheFly, @Nonnull LocalInspectionToolSession session) {
+  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder,
+                                        final boolean isOnTheFly,
+                                        @Nonnull LocalInspectionToolSession session,
+                                        @Nonnull Object state) {
     return buildVisitor(holder, isOnTheFly);
   }
 
@@ -132,8 +138,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
       private void addDescriptors(final ProblemDescriptor[] descriptors) {
         if (descriptors != null) {
           for (ProblemDescriptor descriptor : descriptors) {
-            LOG.assertTrue(descriptor != null, LocalInspectionTool.this.getClass().getName());
-            holder.registerProblem(descriptor);
+            holder.registerProblem(Objects.requireNonNull(descriptor));
           }
         }
       }
@@ -148,25 +153,36 @@ public abstract class LocalInspectionTool extends InspectionTool {
     return (PsiFile)psiElement;
   }
 
+  public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly, Object state) {
+    inspectionStarted(session, isOnTheFly);
+  }
+
+  @Deprecated
   public void inspectionStarted(@Nonnull LocalInspectionToolSession session, boolean isOnTheFly) {
   }
 
+  public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder, @Nonnull Object state) {
+    inspectionFinished(session, problemsHolder);
+  }
+
+  @Deprecated
   public void inspectionFinished(@Nonnull LocalInspectionToolSession session, @Nonnull ProblemsHolder problemsHolder) {
     inspectionFinished(session);
   }
 
-  @Deprecated()
+  @Deprecated
   public void inspectionFinished(@Nonnull LocalInspectionToolSession session) {
   }
 
   @Nonnull
-  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager) {
+  public List<ProblemDescriptor> processFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, @Nonnull Object state) {
     final ProblemsHolder holder = new ProblemsHolder(manager, file, false);
     LocalInspectionToolSession session = new LocalInspectionToolSession(file, 0, file.getTextLength());
-    final PsiElementVisitor customVisitor = buildVisitor(holder, false, session);
-    LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor), "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + customVisitor);
+    final PsiElementVisitor customVisitor = buildVisitor(holder, false, session, state);
+    LOG.assertTrue(!(customVisitor instanceof PsiRecursiveVisitor),
+                   "The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + customVisitor);
 
-    inspectionStarted(session, false);
+    inspectionStarted(session, false, state);
 
     file.accept(new PsiRecursiveElementWalkingVisitor() {
       @Override
@@ -176,7 +192,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
       }
     });
 
-    inspectionFinished(session, holder);
+    inspectionFinished(session, holder, state);
 
     return holder.getResults();
   }

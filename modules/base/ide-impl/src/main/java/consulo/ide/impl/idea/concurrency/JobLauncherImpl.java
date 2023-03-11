@@ -27,6 +27,7 @@ import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author cdr
@@ -38,7 +39,7 @@ public class JobLauncherImpl extends JobLauncher {
   static final int CORES_FORK_THRESHOLD = 1;
 
   @Override
-  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Processor<? super T> thingProcessor) throws ProcessCanceledException {
+  public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     ApplicationEx app = (ApplicationEx)Application.get();
     return invokeConcurrentlyUnderProgress(things, progress, app.isReadAccessAllowed(), app.isInImpatientReader(), thingProcessor);
   }
@@ -48,7 +49,7 @@ public class JobLauncherImpl extends JobLauncher {
                                                      ProgressIndicator progress,
                                                      boolean runInReadAction,
                                                      boolean failFastOnAcquireReadAction,
-                                                     @Nonnull final Processor<? super T> thingProcessor) throws ProcessCanceledException {
+                                                     @Nonnull final Predicate<? super T> thingProcessor) throws ProcessCanceledException {
     // supply our own indicator even if we haven't given one - to support cancellation
     // use StandardProgressIndicator by default to avoid assertion in SensitiveProgressWrapper() ctr later
     final ProgressIndicator wrapper = progress == null ? new StandardProgressIndicatorBase() : new SensitiveProgressWrapper(progress);
@@ -57,7 +58,7 @@ public class JobLauncherImpl extends JobLauncher {
     if (result != null) return result.booleanValue();
 
     ProgressManager pm = ProgressManager.getInstance();
-    Processor<? super T> processor = ((CoreProgressManager)pm).isPrioritizedThread(Thread.currentThread()) ? t -> pm.computePrioritized(() -> thingProcessor.process(t)) : thingProcessor;
+    Predicate<? super T> processor = ((CoreProgressManager)pm).isPrioritizedThread(Thread.currentThread()) ? t -> pm.computePrioritized(() -> thingProcessor.test(t)) : thingProcessor;
 
     List<ApplierCompleter<T>> failedSubTasks = Collections.synchronizedList(new ArrayList<>());
     ApplierCompleter<T> applier = new ApplierCompleter<>(null, runInReadAction, failFastOnAcquireReadAction, wrapper, things, processor, 0, things.size(), failedSubTasks, null);
@@ -109,7 +110,7 @@ public class JobLauncherImpl extends JobLauncher {
   private static <T> Boolean processImmediatelyIfTooFew(@Nonnull final List<? extends T> things,
                                                         @Nonnull final ProgressIndicator progress,
                                                         boolean runInReadAction,
-                                                        @Nonnull final Processor<? super T> thingProcessor) {
+                                                        @Nonnull final Predicate<? super T> thingProcessor) {
     // commit can be invoked from within write action
     //if (runInReadAction && ApplicationManager.getApplication().isWriteAccessAllowed()) {
     //  throw new RuntimeException("Must not run invokeConcurrentlyUnderProgress() from under write action because of imminent deadlock");
@@ -122,7 +123,7 @@ public class JobLauncherImpl extends JobLauncher {
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < things.size(); i++) {
           T thing = things.get(i);
-          if (!thingProcessor.process(thing)) {
+          if (!thingProcessor.test(thing)) {
             result.set(false);
             break;
           }

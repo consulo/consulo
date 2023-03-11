@@ -16,6 +16,7 @@
 package consulo.sandboxPlugin.lang.inspection;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -54,7 +55,7 @@ public class SandLocalInspection extends LocalInspectionTool {
   @Nonnull
   @Override
   public HighlightDisplayLevel getDefaultLevel() {
-    return HighlightDisplayLevel.WARNING;
+    return HighlightDisplayLevel.ERROR;
   }
 
   @Nullable
@@ -67,14 +68,20 @@ public class SandLocalInspection extends LocalInspectionTool {
   @Override
   public PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder,
                                         boolean isOnTheFly,
-                                        @Nonnull LocalInspectionToolSession session) {
+                                        @Nonnull LocalInspectionToolSession session,
+                                        @Nonnull Object state) {
+    SandLocalInspectionState sandState = (SandLocalInspectionState)state;
     return new PsiElementVisitor() {
       @Override
       public void visitElement(PsiElement element) {
         if (element instanceof SandClass) {
-          PsiElement nameIdentifier = ((SandClass)element).getNameIdentifier();
-          if (nameIdentifier != null) {
-            holder.registerProblem(nameIdentifier, "Test Error", ProblemHighlightType.WARNING, nameIdentifier.getTextRange());
+          boolean checkClass = sandState.isCheckClass();
+
+          if (checkClass) {
+            PsiElement nameIdentifier = ((SandClass)element).getNameIdentifier();
+            if (nameIdentifier != null) {
+              holder.registerProblem(nameIdentifier, "Test Error", ProblemHighlightType.ERROR, new TextRange(0, nameIdentifier.getTextLength()));
+            }
           }
         }
       }

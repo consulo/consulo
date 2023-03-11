@@ -18,10 +18,9 @@ package consulo.ide.impl.idea.concurrency;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
 
 import javax.annotation.Nonnull;
@@ -29,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;
+import java.util.function.Predicate;
 
 /**
  * Executes processor on array elements in range from lo (inclusive) to hi (exclusive).
@@ -50,7 +50,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   @Nonnull
   private final List<? extends T> array;
   @Nonnull
-  private final Processor<? super T> processor;
+  private final Predicate<? super T> processor;
   private final int lo;
   private final int hi;
   private final ApplierCompleter<T> next; // keeps track of right-hand-side tasks
@@ -73,7 +73,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
                    boolean failFastOnAcquireReadAction,
                    @Nonnull ProgressIndicator progressIndicator,
                    @Nonnull List<? extends T> array,
-                   @Nonnull Processor<? super T> processor,
+                   @Nonnull Predicate<? super T> processor,
                    int lo,
                    int hi,
                    @Nonnull Collection<ApplierCompleter<T>> failedSubTasks,
@@ -132,7 +132,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     try {
       for (int i = lo; i < hi; ++i) {
         ProgressManager.checkCanceled();
-        if (!processor.process(array.get(i))) {
+        if (!processor.test(array.get(i))) {
           throw new ComputationAbortedException();
         }
         long finish = System.currentTimeMillis();
@@ -246,7 +246,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
       ApplicationManager.getApplication().runReadAction(() -> task.wrapInReadActionAndIndicator(() -> {
         for (int i = task.lo; i < task.hi; ++i) {
           ProgressManager.checkCanceled();
-          if (!task.processor.process(task.array.get(i))) {
+          if (!task.processor.test(task.array.get(i))) {
             result[0] = false;
             break;
           }

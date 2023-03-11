@@ -15,39 +15,39 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.impl.internal.highlight.Divider;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.inspection.reference.RefElement;
-import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
-import consulo.language.editor.inspection.reference.RefVisitor;
-import consulo.application.util.concurrent.JobLauncher;
-import consulo.language.Language;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.util.lang.function.Conditions;
+import consulo.application.util.concurrent.JobLauncher;
+import consulo.application.util.function.CommonProcessors;
 import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.reference.RefElement;
+import consulo.language.editor.inspection.reference.RefEntity;
+import consulo.language.editor.inspection.reference.RefVisitor;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiRecursiveVisitor;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.SmartHashSet;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartHashSet;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 public class InspectionEngine {
   private static final Logger LOG = Logger.getInstance(InspectionEngine.class);
@@ -71,8 +71,9 @@ public class InspectionEngine {
                                                                  @Nonnull LocalInspectionToolSession session,
                                                                  @Nonnull List<PsiElement> elements,
                                                                  @Nonnull Set<String> elementDialectIds,
-                                                                 @Nullable Set<String> dialectIdsSpecifiedForTool) {
-    PsiElementVisitor visitor = tool.buildVisitor(holder, isOnTheFly, session);
+                                                                 @Nullable Set<String> dialectIdsSpecifiedForTool,
+                                                                 @Nonnull Object stateObject) {
+    PsiElementVisitor visitor = tool.buildVisitor(holder, isOnTheFly, session, stateObject);
     //noinspection ConstantConditions
     if(visitor == null) {
       LOG.error("Tool " + tool + " (" + tool.getClass()+ ") must not return null from the buildVisitor() method");
@@ -81,7 +82,7 @@ public class InspectionEngine {
       LOG.error("The visitor returned from LocalInspectionTool.buildVisitor() must not be recursive: " + tool);
     }
 
-    tool.inspectionStarted(session, isOnTheFly);
+    tool.inspectionStarted(session, isOnTheFly, stateObject);
     acceptElements(elements, visitor, elementDialectIds, dialectIdsSpecifiedForTool);
     return visitor;
   }
@@ -168,13 +169,13 @@ public class InspectionEngine {
     Map<LocalInspectionToolWrapper, Set<String>> toolToSpecifiedDialectIds = getToolsToSpecifiedLanguages(toolWrappers);
     List<Entry<LocalInspectionToolWrapper, Set<String>>> entries = new ArrayList<>(toolToSpecifiedDialectIds.entrySet());
     final Map<String, List<ProblemDescriptor>> resultDescriptors = new ConcurrentHashMap<>();
-    Processor<Entry<LocalInspectionToolWrapper, Set<String>>> processor = entry -> {
+    Predicate<Entry<LocalInspectionToolWrapper, Set<String>>> processor = entry -> {
       ProblemsHolder holder = new ProblemsHolder(iManager, file, isOnTheFly);
       final LocalInspectionTool tool = entry.getKey().getTool();
+      Object toolState = entry.getKey().getState().getState();
       Set<String> dialectIdsSpecifiedForTool = entry.getValue();
-      createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool);
-
-      tool.inspectionFinished(session, holder);
+      createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool, toolState);
+      tool.inspectionFinished(session, holder, toolState);
 
       if (holder.hasResults()) {
         resultDescriptors.put(tool.getShortName(), ContainerUtil.filter(holder.getResults(), descriptor -> {

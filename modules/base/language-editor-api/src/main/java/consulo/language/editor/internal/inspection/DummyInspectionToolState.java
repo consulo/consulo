@@ -16,6 +16,7 @@
 package consulo.language.editor.internal.inspection;
 
 import consulo.language.editor.inspection.InspectionToolState;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +30,7 @@ public class DummyInspectionToolState implements InspectionToolState<Object> {
   @Nullable
   @Override
   public Object getState() {
-    return null;
+    return ObjectUtil.NULL;
   }
 
   @Override

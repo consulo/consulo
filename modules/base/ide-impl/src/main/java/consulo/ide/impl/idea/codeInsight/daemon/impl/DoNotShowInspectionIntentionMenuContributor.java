@@ -2,44 +2,44 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.util.concurrent.JobLauncher;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInspection.InspectionEngine;
+import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
+import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.highlight.HighlightingLevelManager;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.ide.impl.idea.codeInspection.*;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
-import consulo.application.util.concurrent.JobLauncher;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
-import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @ExtensionImpl(id = "dontShow")
 public class DoNotShowInspectionIntentionMenuContributor implements IntentionMenuContributor {
@@ -113,8 +113,9 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
 
     final Set<String> dialectIds = InspectionEngine.calcElementDialectIds(elements);
     final LocalInspectionToolSession session = new LocalInspectionToolSession(hostFile, 0, hostFile.getTextLength());
-    final Processor<LocalInspectionToolWrapper> processor = toolWrapper -> {
+    final Predicate<LocalInspectionToolWrapper> processor = toolWrapper -> {
       final LocalInspectionTool localInspectionTool = toolWrapper.getTool();
+      final Object toolState = toolWrapper.getState().getState();
       final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
       final String displayName = toolWrapper.getDisplayName();
       final ProblemsHolder holder = new ProblemsHolder(InspectionManager.getInstance(project), hostFile, true) {
@@ -137,8 +138,8 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
           }
         }
       };
-      InspectionEngine.createVisitorAndAcceptElements(localInspectionTool, holder, true, session, elements, dialectIds, InspectionEngine.getDialectIdsSpecifiedForTool(toolWrapper));
-      localInspectionTool.inspectionFinished(session, holder);
+      InspectionEngine.createVisitorAndAcceptElements(localInspectionTool, holder, true, session, elements, dialectIds, InspectionEngine.getDialectIdsSpecifiedForTool(toolWrapper), toolState);
+      localInspectionTool.inspectionFinished(session, holder, toolState);
       return true;
     };
     // indicator can be null when run from EDT
