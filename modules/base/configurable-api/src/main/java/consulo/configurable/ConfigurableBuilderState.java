@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.configurable.internal;
+package consulo.configurable;
 
-import consulo.ui.ValueComponent;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
- * @since 05/03/2023
+ * @since 11/03/2023
  */
-public record ValueComponentProperty(Supplier<? extends ValueComponent> factory, Supplier getter, Consumer setter, BiConsumer instanceSetter) {
+public interface ConfigurableBuilderState {
+  @RequiredUIAccess
+  default void uiCreated() {
+  }
 }

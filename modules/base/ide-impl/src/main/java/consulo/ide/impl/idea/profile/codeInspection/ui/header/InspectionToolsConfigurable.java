@@ -656,6 +656,8 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
     for (SingleInspectionProfilePanel panel : myPanels.values()) {
       panel.disposeUI();
     }
+
+    myWholePanel = null;
     myPanels.clear();
     if (mySelectionAlarm != null) {
       Disposer.dispose(mySelectionAlarm);

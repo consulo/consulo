@@ -77,7 +77,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.FocusManager;
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -269,24 +268,18 @@ public class SingleInspectionProfilePanel extends JPanel {
   @RequiredUIAccess
   private static void setConfigPanel(final JPanel configPanelAnchor, final ScopeToolState state, Disposable parentDisposable) {
     configPanelAnchor.removeAll();
+
+    if (!state.isEnabled()) {
+      return;
+    }
+    
     final consulo.ui.Component additionalConfigPanel = state.getConfigurablePanel(parentDisposable);
     //configPanelAnchor.setVisible(additionalConfigPanel != null);
     if (additionalConfigPanel == null) {
       return;
     }
 
-    final JScrollPane pane = ScrollPaneFactory.createScrollPane(TargetAWT.to(additionalConfigPanel), true);
-    FocusManager.getCurrentManager().addPropertyChangeListener("focusOwner", evt -> {
-      if (!(evt.getNewValue() instanceof JComponent)) {
-        return;
-      }
-      final JComponent component = (JComponent)evt.getNewValue();
-      if (component.isAncestorOf(pane)) {
-        pane.scrollRectToVisible(component.getBounds());
-      }
-    });
-    configPanelAnchor.add(pane);
-    UIUtil.setEnabled(configPanelAnchor, state.isEnabled(), true);
+    configPanelAnchor.add(TargetAWT.to(additionalConfigPanel));
   }
 
   private static InspectionConfigTreeNode getGroupNode(InspectionConfigTreeNode root, String[] groupPath) {

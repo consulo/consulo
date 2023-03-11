@@ -16,9 +16,13 @@
 package consulo.sandboxPlugin.lang.inspection;
 
 import consulo.configurable.ConfigurableBuilder;
+import consulo.configurable.ConfigurableBuilderState;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.language.editor.inspection.InspectionToolState;
 import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.TextBox;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
 import javax.annotation.Nullable;
@@ -28,7 +32,21 @@ import javax.annotation.Nullable;
  * @since 04/03/2023
  */
 public class SandLocalInspectionState implements InspectionToolState<SandLocalInspectionState> {
+  private static class ConfigurableState implements ConfigurableBuilderState {
+    public CheckBox myClassCheckBox;
+
+    public TextBox myTestCheckBox;
+
+    @RequiredUIAccess
+    @Override
+    public void uiCreated() {
+      myClassCheckBox.addValueListener(event -> myTestCheckBox.setEnabled(event.getValue()));
+      myTestCheckBox.setEnabled(false);
+    }
+  }
+
   private boolean myCheckClass;
+  private String mySomeString;
 
   public boolean isCheckClass() {
     return myCheckClass;
@@ -38,11 +56,20 @@ public class SandLocalInspectionState implements InspectionToolState<SandLocalIn
     myCheckClass = checkClass;
   }
 
+  public String getSomeString() {
+    return mySomeString;
+  }
+
+  public void setSomeString(String someString) {
+    mySomeString = someString;
+  }
+
   @Nullable
   @Override
   public UnnamedConfigurable createConfigurable() {
-    ConfigurableBuilder builder = ConfigurableBuilder.newBuilder();
-    builder.checkBox(LocalizeValue.localizeTODO("Check Class"), this::isCheckClass, this::setCheckClass);
+    ConfigurableBuilder<ConfigurableState> builder = ConfigurableBuilder.newBuilder(ConfigurableState::new);
+    builder.checkBox(LocalizeValue.localizeTODO("Check Class"), this::isCheckClass, this::setCheckClass, (o, box) -> o.myClassCheckBox = box);
+    builder.textBox(this::getSomeString, this::setSomeString, (o, box) -> o.myTestCheckBox = box);
     return builder.buildUnnamed();
   }
 

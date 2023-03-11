@@ -105,7 +105,7 @@ public class DesktopTextBoxWithExpandAction {
 
     @Nonnull
     @Override
-    public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
+    public TextBoxWithExpandAction withDialogTitle(@Nonnull String text) {
       return this;
     }
 
@@ -193,7 +193,7 @@ public class DesktopTextBoxWithExpandAction {
 
     @Nonnull
     @Override
-    public TextBoxWithExpandAction setDialogTitle(@Nonnull String text) {
+    public TextBoxWithExpandAction withDialogTitle(@Nonnull String text) {
       myDialogTitle = text;
       return this;
     }

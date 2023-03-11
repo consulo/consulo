@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -27,6 +26,7 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.desktop.awt.ui.impl.validableComponent.DocumentSwingValidator;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,16 +59,16 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
     public void updateUI() {
       super.updateUI();
 
-      updateForegroudColor();
+      updateForegroundColor();
     }
 
     public void setForegroundColor(@Nullable ColorValue color) {
       myForegroundColor = color;
 
-      updateForegroudColor();
+      updateForegroundColor();
     }
 
-    private void updateForegroudColor() {
+    private void updateForegroundColor() {
       if (myForegroundColor == null) {
         setForeground(null);
       }

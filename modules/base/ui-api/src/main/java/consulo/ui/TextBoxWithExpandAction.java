@@ -38,5 +38,5 @@ public interface TextBoxWithExpandAction extends TextBox {
   }
 
   @Nonnull
-  TextBoxWithExpandAction setDialogTitle(@Nonnull String text);
+  TextBoxWithExpandAction withDialogTitle(@Nonnull String text);
 }

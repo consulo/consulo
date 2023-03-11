@@ -16,34 +16,112 @@
 package consulo.configurable;
 
 import consulo.configurable.internal.ConfigurableBuilderImpl;
+import consulo.configurable.internal.EmptyConfigurableBuilderState;
 import consulo.localize.LocalizeValue;
-import consulo.ui.CheckBox;
-import consulo.ui.ValueComponent;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.util.lang.function.BooleanConsumer;
 
 import javax.annotation.Nonnull;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.*;
 
 /**
  * @author VISTALL
  * @since 05/03/2023
  */
-public interface ConfigurableBuilder {
+public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
   @Nonnull
-  static ConfigurableBuilder newBuilder() {
-    return new ConfigurableBuilderImpl();
+  static ConfigurableBuilder<EmptyConfigurableBuilderState> newBuilder() {
+    return newBuilder(() -> EmptyConfigurableBuilderState.INSTANCE);
   }
 
   @Nonnull
-  default ConfigurableBuilder checkBox(@Nonnull LocalizeValue label, @Nonnull Supplier<Boolean> getter, @Nonnull Consumer<Boolean> setter) {
-    return valueComponent(() -> CheckBox.create(label), getter, setter);
+  static <I extends ConfigurableBuilderState> ConfigurableBuilder<I> newBuilder(@Nonnull Supplier<I> instanceFactory) {
+    return new ConfigurableBuilderImpl<>(instanceFactory);
+  }
+
+  // region CheckBox
+  @Nonnull
+  default ConfigurableBuilder<S> checkBox(@Nonnull LocalizeValue label,
+                                          @Nonnull BooleanSupplier getter,
+                                          @Nonnull BooleanConsumer setter) {
+    return checkBox(label, getter, setter, (instance, checkBox) -> {
+    });
   }
 
   @Nonnull
-  <V> ConfigurableBuilder valueComponent(@Nonnull @RequiredUIAccess Supplier<ValueComponent<V>> valueComponentFactory,
-                                         @Nonnull Supplier<V> getter,
-                                         @Nonnull Consumer<V> setter);
+  default ConfigurableBuilder<S> checkBox(@Nonnull LocalizeValue label,
+                                          @Nonnull BooleanSupplier getter,
+                                          @Nonnull BooleanConsumer setter,
+                                          @Nonnull BiConsumer<S, CheckBox> instanceSetter) {
+    return valueComponent(() -> CheckBox.create(label), getter::getAsBoolean, setter::accept, instanceSetter);
+  }
+  // endregion
+
+  // region TextBox
+  @Nonnull
+  default ConfigurableBuilder<S> textBox(@Nonnull Supplier<String> getter,
+                                         @Nonnull Consumer<String> setter) {
+    return textBox(getter, setter, (instance, textBox) -> {
+    });
+  }
+
+  @Nonnull
+  default ConfigurableBuilder<S> textBox(@Nonnull Supplier<String> getter,
+                                         @Nonnull Consumer<String> setter,
+                                         @Nonnull BiConsumer<S, TextBox> instanceSetter) {
+    return valueComponent(TextBox::create, getter, setter, instanceSetter);
+  }
+
+  @Nonnull
+  default ConfigurableBuilder<S> textBoxWithExpandAction(@Nullable Image editButtonImage,
+                                                         @Nonnull String dialogTitle,
+                                                         @Nonnull Function<String, List<String>> parser,
+                                                         @Nonnull Function<List<String>, String> joiner,
+                                                         @Nonnull Supplier<String> getter,
+                                                         @Nonnull Consumer<String> setter) {
+    return textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner, getter, setter, (instance, valueComponent) -> {
+    });
+  }
+  //endregion
+
+  // region TextBoxWithExpandAction
+  @Nonnull
+  default ConfigurableBuilder<S> textBoxWithExpandAction(@Nullable Image editButtonImage,
+                                                         @Nonnull String dialogTitle,
+                                                         @Nonnull Function<String, List<String>> parser,
+                                                         @Nonnull Function<List<String>, String> joiner,
+                                                         @Nonnull Supplier<String> getter,
+                                                         @Nonnull Consumer<String> setter,
+                                                         @Nonnull BiConsumer<S, TextBoxWithExpandAction> instanceSetter) {
+    return valueComponent(() -> TextBoxWithExpandAction.create(editButtonImage, dialogTitle, parser, joiner),
+                          getter,
+                          setter,
+                          instanceSetter);
+  }
+  // endregion
+
+  // region ValueComponent
+  @Nonnull
+  default <V, C extends ValueComponent<V>> ConfigurableBuilder<S> valueComponent(@Nonnull @RequiredUIAccess Supplier<C> valueComponentFactory,
+                                                                                 @Nonnull Supplier<V> getter,
+                                                                                 @Nonnull Consumer<V> setter) {
+    return valueComponent(valueComponentFactory, getter, setter, (instance, valueComponent) -> {
+    });
+  }
+
+  @Nonnull
+  <V, C extends ValueComponent<V>> ConfigurableBuilder<S> valueComponent(@Nonnull @RequiredUIAccess Supplier<C> valueComponentFactory,
+                                                                         @Nonnull Supplier<V> getter,
+                                                                         @Nonnull Consumer<V> setter,
+                                                                         @Nonnull BiConsumer<S, C> instanceSetter);
+  // endregion
+
+  @Nonnull
+  ConfigurableBuilder<S> component(@Nonnull Component component);
 
   @Nonnull
   UnnamedConfigurable buildUnnamed();

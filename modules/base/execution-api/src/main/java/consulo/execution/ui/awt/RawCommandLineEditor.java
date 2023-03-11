@@ -52,7 +52,7 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
   }
 
   public void setDialogCaption(String dialogCaption) {
-    myTextBoxWithExpandAction.setDialogTitle(dialogCaption);
+    myTextBoxWithExpandAction.withDialogTitle(dialogCaption);
   }
 
   @Override

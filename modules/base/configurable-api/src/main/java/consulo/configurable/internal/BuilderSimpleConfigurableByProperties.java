@@ -15,6 +15,7 @@
  */
 package consulo.configurable.internal;
 
+import consulo.configurable.ConfigurableBuilderState;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
@@ -24,16 +25,21 @@ import consulo.ui.layout.VerticalLayout;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 05/03/2023
  */
-public class BuilderSimpleConfigurableByProperties extends SimpleConfigurableByProperties {
-  private final List<ValueComponentProperty> myValueComponentProperties;
+public class BuilderSimpleConfigurableByProperties<Instance extends ConfigurableBuilderState> extends SimpleConfigurableByProperties {
+  private final List<Object> myEntries;
+  private final Supplier<Instance> myInstanceFactory;
 
-  public BuilderSimpleConfigurableByProperties(List<ValueComponentProperty> valueComponentProperties) {
-    myValueComponentProperties = valueComponentProperties;
+  private Instance myInstance;
+
+  public BuilderSimpleConfigurableByProperties(Supplier<Instance> instanceFactory, List<Object> entries) {
+    myEntries = entries;
+    myInstanceFactory = instanceFactory;
   }
 
   @RequiredUIAccess
@@ -42,12 +48,31 @@ public class BuilderSimpleConfigurableByProperties extends SimpleConfigurableByP
   @SuppressWarnings("unchecked")
   protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder,
                                    @Nonnull Disposable uiDisposable) {
+    myInstance = myInstanceFactory.get();
+
     VerticalLayout layout = VerticalLayout.create();
-    for (ValueComponentProperty property : myValueComponentProperties) {
-      ValueComponent component = property.factory().get();
-      layout.add(component);
-      propertyBuilder.add(component, property.getter(), property.setter());
+    for (Object entry : myEntries) {
+      if (entry instanceof ValueComponentProperty valueComponentProperty) {
+        ValueComponent component = valueComponentProperty.factory().get();
+
+        layout.add(component);
+
+        valueComponentProperty.instanceSetter().accept(myInstance, component);
+
+        propertyBuilder.add(component, valueComponentProperty.getter(), valueComponentProperty.setter());
+      }
+      else if (entry instanceof Component component) {
+        layout.add(component);
+      }
     }
+
+    myInstance.uiCreated();
     return layout;
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void disposeUIResources(@Nonnull LayoutWrapper component) {
+    myInstance = null;
   }
 }

@@ -16,12 +16,15 @@
 package consulo.configurable.internal;
 
 import consulo.configurable.ConfigurableBuilder;
+import consulo.configurable.ConfigurableBuilderState;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,22 +32,35 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 05/03/2023
  */
-public class ConfigurableBuilderImpl implements ConfigurableBuilder {
+public class ConfigurableBuilderImpl<Instance extends ConfigurableBuilderState> implements ConfigurableBuilder<Instance> {
 
-  private final List<ValueComponentProperty> myProperties = new ArrayList<>();
+  private final Supplier<Instance> myInstanceFactory;
+  private final List<Object> myEntries = new ArrayList<>();
+
+  public ConfigurableBuilderImpl(Supplier<Instance> instanceFactory) {
+    myInstanceFactory = instanceFactory;
+  }
 
   @Nonnull
   @Override
-  public <V> ConfigurableBuilder valueComponent(@Nonnull Supplier<ValueComponent<V>> valueComponentFactory,
-                                                @Nonnull Supplier<V> getter,
-                                                @Nonnull Consumer<V> setter) {
-    myProperties.add(new ValueComponentProperty(valueComponentFactory, getter, setter));
+  public <V, C extends ValueComponent<V>> ConfigurableBuilder<Instance> valueComponent(@Nonnull Supplier<C> valueComponentFactory,
+                                                             @Nonnull Supplier<V> getter,
+                                                             @Nonnull Consumer<V> setter,
+                                                             @Nonnull BiConsumer<Instance, C> instanceSetter) {
+    myEntries.add(new ValueComponentProperty(valueComponentFactory, getter, setter, instanceSetter));
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public ConfigurableBuilder<Instance> component(@Nonnull Component component) {
+    myEntries.add(component);
     return this;
   }
 
   @Nonnull
   @Override
   public UnnamedConfigurable buildUnnamed() {
-    return new BuilderSimpleConfigurableByProperties(List.copyOf(myProperties));
+    return new BuilderSimpleConfigurableByProperties<>(myInstanceFactory, List.copyOf(myEntries));
   }
 }
