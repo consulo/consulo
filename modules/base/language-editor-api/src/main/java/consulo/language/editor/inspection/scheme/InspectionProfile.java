@@ -24,7 +24,6 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,14 +51,15 @@ public interface InspectionProfile extends Profile {
   InspectionToolWrapper getToolById(@Nonnull String id, @Nonnull PsiElement element);
 
   /**
-   * Returns (unwrapped) inspection
+   * @return tool by shortName and scope
    */
-  InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  <T extends InspectionTool> T getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
 
   /**
-   * Returns (unwrapped) inspection
+   * @return nullable if tool by shortName not found
    */
-  <T extends InspectionTool> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element);
+  @Nullable
+  <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element);
 
   void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer);
 

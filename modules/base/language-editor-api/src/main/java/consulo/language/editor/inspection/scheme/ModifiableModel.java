@@ -70,7 +70,16 @@ public interface ModifiableModel extends Profile {
    */
   InspectionToolWrapper getInspectionTool(String shortName, PsiElement element);
 
-  InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+  /**
+   * @return tool by shortName and scope
+   */
+  <T extends InspectionTool> T getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element);
+
+  /**
+   * @return nullable if tool by shortName not found
+   */
+  @Nullable
+  <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element);
 
   InspectionToolWrapper[] getInspectionTools(PsiElement element);
 

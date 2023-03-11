@@ -38,7 +38,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.interner.Interner;
 import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.Comparing;
@@ -56,6 +55,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -376,19 +376,22 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   @Nullable
   @Override
-  public InspectionTool getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element) {
+  @SuppressWarnings("unchecked")
+  public <T extends InspectionTool> T getUnwrappedTool(@Nonnull String shortName, @Nonnull PsiElement element) {
     InspectionToolWrapper tool = getInspectionTool(shortName, element);
-    return tool == null ? null : tool.getTool();
+    return tool == null ? null : (T)tool.getTool();
+  }
+
+  @Nullable
+  @Override
+  @SuppressWarnings("unchecked")
+  public <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element) {
+    InspectionToolWrapper tool = getInspectionTool(shortName, element);
+    return tool == null ? null : (S)tool.getState().getState();
   }
 
   @Override
-  public <T extends InspectionTool> T getUnwrappedTool(@Nonnull Key<T> shortNameKey, @Nonnull PsiElement element) {
-    //noinspection unchecked
-    return (T)getUnwrappedTool(shortNameKey.toString(), element);
-  }
-
-  @Override
-  public void modifyProfile(@Nonnull java.util.function.Consumer<ModifiableModel> modelConsumer) {
+  public void modifyProfile(@Nonnull Consumer<ModifiableModel> modelConsumer) {
     ModifiableModel model = getModifiableModel();
     modelConsumer.accept(model);
     try {
