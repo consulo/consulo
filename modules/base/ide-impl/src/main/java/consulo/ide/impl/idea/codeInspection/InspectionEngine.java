@@ -172,7 +172,7 @@ public class InspectionEngine {
     Predicate<Entry<LocalInspectionToolWrapper, Set<String>>> processor = entry -> {
       ProblemsHolder holder = new ProblemsHolder(iManager, file, isOnTheFly);
       final LocalInspectionTool tool = entry.getKey().getTool();
-      Object toolState = entry.getKey().getState().getState();
+      Object toolState = entry.getKey().getToolState().getState();
       Set<String> dialectIdsSpecifiedForTool = entry.getValue();
       createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool, toolState);
       tool.inspectionFinished(session, holder, toolState);
@@ -203,14 +203,15 @@ public class InspectionEngine {
       if (toolWrapper instanceof LocalInspectionToolWrapper) {
         return inspect(Collections.singletonList((LocalInspectionToolWrapper)toolWrapper), file, inspectionManager, false, false, new EmptyProgressIndicator());
       }
-      if (toolWrapper instanceof GlobalInspectionToolWrapper) {
-        final GlobalInspectionTool globalTool = ((GlobalInspectionToolWrapper)toolWrapper).getTool();
+      if (toolWrapper instanceof GlobalInspectionToolWrapper globalInspectionToolWrapper) {
+        final GlobalInspectionTool globalTool = globalInspectionToolWrapper.getTool();
+        Object state = globalInspectionToolWrapper.getToolState().getState();
+
         final List<ProblemDescriptor> descriptors = new ArrayList<>();
-        if (globalTool instanceof GlobalSimpleInspectionTool) {
-          GlobalSimpleInspectionTool simpleTool = (GlobalSimpleInspectionTool)globalTool;
+        if (globalTool instanceof GlobalSimpleInspectionTool simpleTool) {
           ProblemsHolder problemsHolder = new ProblemsHolder(inspectionManager, file, false);
           ProblemDescriptionsProcessor collectProcessor = new ProblemDescriptionsProcessor() {
-            @javax.annotation.Nullable
+            @Nullable
             @Override
             public CommonProblemDescriptor[] getDescriptions(@Nonnull RefEntity refEntity) {
               return descriptors.toArray(new CommonProblemDescriptor[descriptors.size()]);
@@ -222,7 +223,7 @@ public class InspectionEngine {
             }
 
             @Override
-            public void addProblemElement(@javax.annotation.Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors) {
+            public void addProblemElement(@Nullable RefEntity refEntity, @Nonnull CommonProblemDescriptor... commonProblemDescriptors) {
               if (!(refEntity instanceof RefElement)) return;
               PsiElement element = ((RefElement)refEntity).getPsiElement();
               convertToProblemDescriptors(element, commonProblemDescriptors, descriptors);
@@ -233,7 +234,7 @@ public class InspectionEngine {
               throw new RuntimeException();
             }
           };
-          simpleTool.checkFile(file, inspectionManager, problemsHolder, inspectionContext, collectProcessor);
+          simpleTool.checkFile(file, inspectionManager, problemsHolder, inspectionContext, collectProcessor, state);
           return descriptors;
         }
         RefElement fileRef = refManager.getReference(file);
@@ -242,7 +243,7 @@ public class InspectionEngine {
         fileRef.accept(new RefVisitor(){
           @Override
           public void visitElement(@Nonnull RefEntity elem) {
-            CommonProblemDescriptor[] elemDescriptors = globalTool.checkElement(elem, scope, inspectionManager, inspectionContext);
+            CommonProblemDescriptor[] elemDescriptors = globalTool.checkElement(elem, scope, inspectionManager, inspectionContext, globalInspectionToolWrapper.getState());
             if (elemDescriptors != null) {
               convertToProblemDescriptors(file, elemDescriptors, descriptors);
             }

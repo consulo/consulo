@@ -60,7 +60,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
   }
 
   public void readExternal(Element element) {
-    InspectionToolState<Object> provider = getState();
+    InspectionToolState<Object> provider = getToolState();
     if (provider instanceof DummyInspectionToolState) {
       return;
     }
@@ -74,7 +74,7 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
   }
 
   public void writeExternal(@Nonnull Element element) {
-    InspectionToolState provider = getState();
+    InspectionToolState provider = getToolState();
     if (provider instanceof DummyInspectionToolState) {
       return;
     }
@@ -103,11 +103,16 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
 
   @Nonnull
   @SuppressWarnings("unchecked")
-  public InspectionToolState<Object> getState() {
+  public InspectionToolState<Object> getToolState() {
     if (myStateProvider == null) {
       myStateProvider = (InspectionToolState<Object>)myTool.createStateProvider();
     }
     return myStateProvider;
+  }
+
+  @Nonnull
+  public Object getState() {
+    return getToolState().getState();
   }
 
   @Nonnull

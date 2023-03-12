@@ -2,20 +2,19 @@
 package consulo.ide.impl.idea.concurrency;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.util.ApplicationUtil;
-import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.Job;
 import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.util.function.Processor;
-import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -250,7 +249,7 @@ public class JobLauncherImpl extends JobLauncher {
                                   @Nonnull final Queue<T> failedToProcess,
                                   @Nonnull final ProgressIndicator progress,
                                   @Nonnull final T tombStone,
-                                  @Nonnull final Processor<? super T> thingProcessor) {
+                                  @Nonnull final Predicate<? super T> thingProcessor) {
     class MyTask implements Callable<Boolean> {
       private final int mySeq;
       private boolean result;
@@ -274,7 +273,7 @@ public class JobLauncherImpl extends JobLauncher {
                 break;
               }
               try {
-                if (!thingProcessor.process(element)) {
+                if (!thingProcessor.test(element)) {
                   result = false;
                   break;
                 }

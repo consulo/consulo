@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
  * (when the &quot;Analyze / Inspect Code&quot; is invoked) and can access the
  * complete graph of references between classes, methods and other elements in the scope
  * selected for the analysis.
- *
+ * <p>
  * Global inspections can use a shared local inspection tool for highlighting the cases
  * that do not need global analysis in the editor by implementing {@link #getSharedLocalInspectionTool()}
  * The shared local inspection tools shares settings and documentation with the global inspection tool.
@@ -62,8 +62,24 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @see #isGraphNeeded
    */
   @Nullable
+  @Deprecated
   public RefGraphAnnotator getAnnotator(@Nonnull RefManager refManager) {
     return null;
+  }
+
+  /**
+   * Returns the annotator which will receive callbacks while the reference graph
+   * is being built. The annotator can be used to add additional markers to reference
+   * graph nodes, through calls to {@link RefEntity#putUserData(Key, Object)}.
+   *
+   * @param refManager the reference graph manager instance
+   * @return the annotator instance, or null if the inspection does not need any
+   * additional markers or does not use the reference graph at all.
+   * @see #isGraphNeeded
+   */
+  @Nullable
+  public RefGraphAnnotator getAnnotator(@Nonnull RefManager refManager, @Nonnull Object state) {
+    return getAnnotator(refManager);
   }
 
   /**
@@ -80,11 +96,13 @@ public abstract class GlobalInspectionTool extends InspectionTool {
   public void runInspection(@Nonnull final AnalysisScope scope,
                             @Nonnull final InspectionManager manager,
                             @Nonnull final GlobalInspectionContext globalContext,
-                            @Nonnull final ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+                            @Nonnull final ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                            @Nonnull Object state) {
     globalContext.getRefManager().iterate(new RefVisitor() {
-      @Override public void visitElement(@Nonnull RefEntity refEntity) {
+      @Override
+      public void visitElement(@Nonnull RefEntity refEntity) {
         if (!globalContext.shouldCheck(refEntity, GlobalInspectionTool.this)) return;
-        CommonProblemDescriptor[] descriptors = checkElement(refEntity, scope, manager, globalContext, problemDescriptionsProcessor);
+        CommonProblemDescriptor[] descriptors = checkElement(refEntity, scope, manager, globalContext, problemDescriptionsProcessor, state);
         if (descriptors != null) {
           problemDescriptionsProcessor.addProblemElement(refEntity, descriptors);
         }
@@ -105,7 +123,8 @@ public abstract class GlobalInspectionTool extends InspectionTool {
   public CommonProblemDescriptor[] checkElement(@Nonnull RefEntity refEntity,
                                                 @Nonnull AnalysisScope scope,
                                                 @Nonnull InspectionManager manager,
-                                                @Nonnull GlobalInspectionContext globalContext) {
+                                                @Nonnull GlobalInspectionContext globalContext,
+                                                @Nonnull Object state) {
     return null;
   }
 
@@ -124,8 +143,9 @@ public abstract class GlobalInspectionTool extends InspectionTool {
                                                 @Nonnull AnalysisScope scope,
                                                 @Nonnull InspectionManager manager,
                                                 @Nonnull GlobalInspectionContext globalContext,
-                                                @Nonnull ProblemDescriptionsProcessor processor) {
-    return checkElement(refEntity, scope, manager, globalContext);
+                                                @Nonnull ProblemDescriptionsProcessor processor,
+                                                @Nonnull Object state) {
+    return checkElement(refEntity, scope, manager, globalContext, state);
   }
 
   /**
@@ -170,17 +190,20 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param manager                      the inspection manager instance for the project on which the inspection was run.
    * @param globalContext                the context for the current global inspection run.
    * @param problemDescriptionsProcessor the collector for problems reported by the inspection.
+   * @param state                        the state of inspectionTool, see {@link #createStateProvider()}
    * @return true if a repeated call to this method is required after the queued usage processors
-   *         have completed work, false otherwise.
+   * have completed work, false otherwise.
    */
   public boolean queryExternalUsagesRequests(@Nonnull InspectionManager manager,
                                              @Nonnull GlobalInspectionContext globalContext,
-                                             @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor){
+                                             @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                             @Nonnull Object state) {
     return false;
   }
 
   /**
    * Allows TeamCity plugin to reconstruct quickfixes from server side data
+   *
    * @param hint a hint to distinguish different quick fixes for one problem
    * @return quickfix to be shown in editor when server side inspections are enabled
    */
@@ -191,6 +214,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
 
   /**
    * Allows TeamCity plugin to serialize quick fixes on server in order to reconstruct them in idea
+   *
    * @param fix fix to be serialized
    * @return hint to be stored on server
    */
@@ -201,9 +225,10 @@ public abstract class GlobalInspectionTool extends InspectionTool {
 
   /**
    * Allows additional description to refEntity problems
-   * @param buf page content with problem description
+   *
+   * @param buf       page content with problem description
    * @param refEntity entity to describe
-   * @param composer provides sample api to compose html
+   * @param composer  provides sample api to compose html
    */
   public void compose(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity, @Nonnull HTMLComposer composer) {
   }
@@ -229,7 +254,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * Returns the local inspection tool used for highlighting in the editor. Meant for global inspections which have a local component.
    * The local inspection tool is not required to report on the exact same problems, and naturally can't use global analysis. The local
    * inspection tool is not used in batch mode.
-   *
+   * <p>
    * For example a global inspection that reports a package could have a local inspection tool which highlights
    * the package statement in a file.
    */
@@ -238,6 +263,11 @@ public abstract class GlobalInspectionTool extends InspectionTool {
     return null;
   }
 
+  public void initialize(@Nonnull GlobalInspectionContext context, @Nonnull Object state) {
+    initialize(context);
+  }
+
+  @Deprecated
   public void initialize(@Nonnull GlobalInspectionContext context) {
   }
 }

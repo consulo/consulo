@@ -47,6 +47,7 @@ public class SandLocalInspectionState implements InspectionToolState<SandLocalIn
 
   private boolean myCheckClass;
   private String mySomeString;
+  private String[] values = new String[]{"test", "test1", "test2"};
 
   public boolean isCheckClass() {
     return myCheckClass;

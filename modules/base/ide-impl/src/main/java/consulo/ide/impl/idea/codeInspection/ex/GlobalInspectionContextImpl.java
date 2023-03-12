@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -106,6 +107,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Predicate;
 
 public class GlobalInspectionContextImpl extends GlobalInspectionContextBase implements GlobalInspectionContext {
   private static final Logger LOG = Logger.getInstance(GlobalInspectionContextImpl.class);
@@ -390,7 +392,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     for (Tools tools : globalSimpleTools) {
       GlobalInspectionToolWrapper toolWrapper = (GlobalInspectionToolWrapper)tools.getTool();
       GlobalSimpleInspectionTool tool = (GlobalSimpleInspectionTool)toolWrapper.getTool();
-      tool.inspectionStarted(inspectionManager, this, getPresentation(toolWrapper));
+      tool.inspectionStarted(inspectionManager, this, getPresentation(toolWrapper), toolWrapper.getToolState().getState());
     }
 
     final boolean headlessEnvironment = ApplicationManager.getApplication().isHeadlessEnvironment();
@@ -401,24 +403,18 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
     // use original progress indicator here since we don't want it to cancel on write action start
     startIterateScope(scope, localScopeFiles, headlessEnvironment, filesToInspect, progressIndicator);
 
-    Processor<PsiFile> processor = new Processor<PsiFile>() {
-      @Override
-      public boolean process(final PsiFile file) {
-        ProgressManager.checkCanceled();
-        if (!((ApplicationEx)Application.get()).tryRunReadAction(new Runnable() {
-          @Override
-          public void run() {
-            if (!file.isValid()) {
-              return;
-            }
-            inspectFile(file, inspectionManager, localTools, globalSimpleTools, map);
-          }
-        })) {
-          throw new ProcessCanceledException();
+    Predicate<PsiFile> processor = file -> {
+      ProgressManager.checkCanceled();
+      if (!((ApplicationEx)Application.get()).tryRunReadAction(() -> {
+        if (!file.isValid()) {
+          return;
         }
-
-        return true;
+        inspectFile(file, inspectionManager, localTools, globalSimpleTools, map);
+      })) {
+        throw new ProcessCanceledException();
       }
+
+      return true;
     };
     while (true) {
       Disposable disposable = Disposable.newDisposable();
@@ -451,7 +447,7 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       GlobalInspectionToolWrapper toolWrapper = (GlobalInspectionToolWrapper)tools.getTool();
       GlobalSimpleInspectionTool tool = (GlobalSimpleInspectionTool)toolWrapper.getTool();
       ProblemDescriptionsProcessor problemDescriptionProcessor = getProblemDescriptionProcessor(toolWrapper, map);
-      tool.inspectionFinished(inspectionManager, this, problemDescriptionProcessor);
+      tool.inspectionFinished(inspectionManager, this, problemDescriptionProcessor, toolWrapper.getState());
     }
   }
 
@@ -473,13 +469,14 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       pass.doInspectInBatch(this, inspectionManager, lTools);
 
       final List<GlobalInspectionToolWrapper> tools = getWrappersFromTools(globalSimpleTools, file);
-      JobLauncher.getInstance().invokeConcurrentlyUnderProgress(tools, myProgressIndicator, false, new Processor<GlobalInspectionToolWrapper>() {
+      JobLauncher.getInstance().invokeConcurrentlyUnderProgress(tools, myProgressIndicator, false, new Predicate<GlobalInspectionToolWrapper>() {
         @Override
-        public boolean process(GlobalInspectionToolWrapper toolWrapper) {
+        @RequiredReadAction
+        public boolean test(GlobalInspectionToolWrapper toolWrapper) {
           GlobalSimpleInspectionTool tool = (GlobalSimpleInspectionTool)toolWrapper.getTool();
           ProblemsHolder holder = new ProblemsHolder(inspectionManager, file, false);
           ProblemDescriptionsProcessor problemDescriptionProcessor = getProblemDescriptionProcessor(toolWrapper, wrappersMap);
-          tool.checkFile(file, inspectionManager, holder, GlobalInspectionContextImpl.this, problemDescriptionProcessor);
+          tool.checkFile(file, inspectionManager, holder, GlobalInspectionContextImpl.this, problemDescriptionProcessor, toolWrapper.getState());
           InspectionToolPresentation toolPresentation = getPresentation(toolWrapper);
           LocalDescriptorsUtil.addProblemDescriptors(holder.getResults(), false, GlobalInspectionContextImpl.this, null, CONVERT, toolPresentation);
           return true;
@@ -605,9 +602,9 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
             }
           }
           Runnable action = () -> {
-            tool.runInspection(scope, inspectionManager, GlobalInspectionContextImpl.this, toolPresentation);
+            tool.runInspection(scope, inspectionManager, GlobalInspectionContextImpl.this, toolPresentation, toolWrapper.getState());
             //skip phase when we are sure that scope already contains everything
-            if (canBeExternalUsages && tool.queryExternalUsagesRequests(inspectionManager, GlobalInspectionContextImpl.this, toolPresentation)) {
+            if (canBeExternalUsages && tool.queryExternalUsagesRequests(inspectionManager, GlobalInspectionContextImpl.this, toolPresentation, toolWrapper.getState())) {
               needRepeatSearchRequest.add(toolWrapper);
             }
           };

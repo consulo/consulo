@@ -99,7 +99,7 @@ public class OfflineProblemDescriptorNode extends ProblemDescriptionNode {
           PsiFile containingFile = psiElement.getContainingFile();
           final ProblemsHolder holder = new ProblemsHolder(inspectionManager, containingFile, false);
           final LocalInspectionTool localTool = ((LocalInspectionToolWrapper)myToolWrapper).getTool();
-          Object localToolState = myToolWrapper.getState().getState();
+          Object localToolState = myToolWrapper.getToolState().getState();
           final int startOffset = psiElement.getTextRange().getStartOffset();
           final int endOffset = psiElement.getTextRange().getEndOffset();
           LocalInspectionToolSession session = new LocalInspectionToolSession(containingFile, startOffset, endOffset);

@@ -115,7 +115,7 @@ public class ScopeToolState {
       return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);
     }
 
-    UnnamedConfigurable configurable = myToolWrapper.getState().createConfigurable();
+    UnnamedConfigurable configurable = myToolWrapper.getToolState().createConfigurable();
     myConfigurableRef = SimpleReference.create(configurable);
     if (configurable == null) return null;
     else {

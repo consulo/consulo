@@ -289,7 +289,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       }
     };
 
-    Object state = toolWrapper.getState().getState();
+    Object state = toolWrapper.getToolState().getState();
 
     PsiElementVisitor visitor = InspectionEngine.createVisitorAndAcceptElements(tool, holder, isOnTheFly, session, elements, elementDialectIds, dialectIdsSpecifiedForTool, state);
 
@@ -315,7 +315,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       InspectionEngine.acceptElements(elements, context.visitor, elementDialectIds, context.dialectIdsSpecifiedForTool);
       advanceProgress(1);
 
-      Object state = context.tool.getState().getState();
+      Object state = context.tool.getToolState().getState();
       context.tool.getTool().inspectionFinished(session, context.holder, state);
 
       if (context.holder.hasResults()) {
@@ -690,7 +690,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
       indicator.checkCanceled();
       final LocalInspectionToolWrapper wrapper = pair.getKey();
       final LocalInspectionTool tool = wrapper.getTool();
-      Object state = wrapper.getState().getState();
+      Object state = wrapper.getToolState().getState();
       if (host != null && myIgnoreSuppressed && SuppressionUtil.inspectionResultSuppressed(host, tool)) {
         continue;
       }

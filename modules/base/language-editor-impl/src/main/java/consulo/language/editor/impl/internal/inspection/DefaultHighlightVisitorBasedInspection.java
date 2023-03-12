@@ -2,6 +2,7 @@
 
 package consulo.language.editor.impl.internal.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.Document;
@@ -50,12 +51,14 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
     return HighlightDisplayLevel.ERROR;
   }
 
+  @RequiredReadAction
   @Override
   public void checkFile(@Nonnull PsiFile originalFile,
                         @Nonnull InspectionManager manager,
                         @Nonnull ProblemsHolder problemsHolder,
                         @Nonnull GlobalInspectionContext globalContext,
-                        @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+                        @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                        @Nonnull Object state) {
     for (Pair<PsiFile, HighlightInfo> pair : runAnnotatorsInGeneralHighlighting(originalFile, highlightErrorElements, runAnnotators)) {
       PsiFile file = pair.first;
       HighlightInfoImpl info = (HighlightInfoImpl)pair.second;

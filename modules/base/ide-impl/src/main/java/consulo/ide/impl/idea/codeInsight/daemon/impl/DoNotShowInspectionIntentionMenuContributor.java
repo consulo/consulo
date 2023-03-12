@@ -115,7 +115,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
     final LocalInspectionToolSession session = new LocalInspectionToolSession(hostFile, 0, hostFile.getTextLength());
     final Predicate<LocalInspectionToolWrapper> processor = toolWrapper -> {
       final LocalInspectionTool localInspectionTool = toolWrapper.getTool();
-      final Object toolState = toolWrapper.getState().getState();
+      final Object toolState = toolWrapper.getToolState().getState();
       final HighlightDisplayKey key = HighlightDisplayKey.find(toolWrapper.getShortName());
       final String displayName = toolWrapper.getDisplayName();
       final ProblemsHolder holder = new ProblemsHolder(InspectionManager.getInstance(project), hostFile, true) {

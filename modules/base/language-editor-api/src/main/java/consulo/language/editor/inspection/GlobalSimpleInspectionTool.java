@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
@@ -27,23 +28,32 @@ import javax.annotation.Nonnull;
  * Basically it is a local inspection tool which cannot be selected in the inspection profile to be run on-the-fly.
  */
 public abstract class GlobalSimpleInspectionTool extends GlobalInspectionTool {
-  public void inspectionStarted(@Nonnull InspectionManager manager, @Nonnull GlobalInspectionContext globalContext, @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+  public void inspectionStarted(@Nonnull InspectionManager manager,
+                                @Nonnull GlobalInspectionContext globalContext,
+                                @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                @Nonnull Object state) {
   }
 
-  public void inspectionFinished(@Nonnull InspectionManager manager, @Nonnull GlobalInspectionContext globalContext, @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+  public void inspectionFinished(@Nonnull InspectionManager manager,
+                                 @Nonnull GlobalInspectionContext globalContext,
+                                 @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                 @Nonnull Object state) {
   }
 
+  @RequiredReadAction
   public abstract void checkFile(@Nonnull PsiFile file,
                                  @Nonnull InspectionManager manager,
                                  @Nonnull ProblemsHolder problemsHolder,
                                  @Nonnull GlobalInspectionContext globalContext,
-                                 @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor);
+                                 @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                 @Nonnull Object state);
 
   @Override
   public final void runInspection(@Nonnull AnalysisScope scope,
                                   @Nonnull InspectionManager manager,
                                   @Nonnull GlobalInspectionContext globalContext,
-                                  @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor) {
+                                  @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                  @Nonnull Object state) {
     throw new IncorrectOperationException("You must override checkFile() instead");
   }
 

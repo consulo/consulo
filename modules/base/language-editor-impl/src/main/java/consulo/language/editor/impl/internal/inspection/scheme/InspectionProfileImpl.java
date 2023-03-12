@@ -387,7 +387,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   @SuppressWarnings("unchecked")
   public <S> S getToolState(@Nonnull String shortName, @Nonnull PsiElement element) {
     InspectionToolWrapper tool = getInspectionTool(shortName, element);
-    return tool == null ? null : (S)tool.getState().getState();
+    return tool == null ? null : (S)tool.getToolState().getState();
   }
 
   @Override
@@ -409,7 +409,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     modifyProfile(model -> {
       InspectionToolWrapper wrapper = model.getInspectionTool(shortName, psiElement);
       //noinspection unchecked
-      toolConsumer.accept((T)wrapper.getTool(), (S)wrapper.getState().getState());
+      toolConsumer.accept((T)wrapper.getTool(), (S)wrapper.getToolState().getState());
     });
   }
 
