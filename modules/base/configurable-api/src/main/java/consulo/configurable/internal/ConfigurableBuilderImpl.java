@@ -53,7 +53,7 @@ public class ConfigurableBuilderImpl<Instance extends ConfigurableBuilderState> 
 
   @Nonnull
   @Override
-  public ConfigurableBuilder<Instance> component(@Nonnull Component component) {
+  public ConfigurableBuilder<Instance> component(@Nonnull Supplier<Component> component) {
     myEntries.add(component);
     return this;
   }

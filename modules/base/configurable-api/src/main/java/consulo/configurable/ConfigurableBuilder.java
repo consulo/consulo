@@ -61,6 +61,23 @@ public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
   }
   // endregion
 
+  // region IntBox
+  @Nonnull
+  default ConfigurableBuilder<S> intBox(@Nonnull IntSupplier getter,
+                                         @Nonnull IntConsumer setter) {
+    return intBox(getter, setter, (instance, textBox) -> {
+    });
+  }
+
+  @Nonnull
+  default ConfigurableBuilder<S> intBox(@Nonnull IntSupplier getter,
+                                         @Nonnull IntConsumer setter,
+                                         @Nonnull BiConsumer<S, IntBox> instanceSetter) {
+    return valueComponent(IntBox::create, getter::getAsInt, setter::accept, instanceSetter);
+  }
+
+  // endregion
+
   // region TextBox
   @Nonnull
   default ConfigurableBuilder<S> textBox(@Nonnull Supplier<String> getter,
@@ -76,6 +93,10 @@ public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
     return valueComponent(TextBox::create, getter, setter, instanceSetter);
   }
 
+  // endregion
+
+  // region TextBoxWithExpandAction
+
   @Nonnull
   default ConfigurableBuilder<S> textBoxWithExpandAction(@Nullable Image editButtonImage,
                                                          @Nonnull String dialogTitle,
@@ -86,9 +107,7 @@ public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
     return textBoxWithExpandAction(editButtonImage, dialogTitle, parser, joiner, getter, setter, (instance, valueComponent) -> {
     });
   }
-  //endregion
 
-  // region TextBoxWithExpandAction
   @Nonnull
   default ConfigurableBuilder<S> textBoxWithExpandAction(@Nullable Image editButtonImage,
                                                          @Nonnull String dialogTitle,
@@ -121,7 +140,7 @@ public interface ConfigurableBuilder<S extends ConfigurableBuilderState> {
   // endregion
 
   @Nonnull
-  ConfigurableBuilder<S> component(@Nonnull Component component);
+  ConfigurableBuilder<S> component(@Nonnull Supplier<Component> componentFactory);
 
   @Nonnull
   UnnamedConfigurable buildUnnamed();

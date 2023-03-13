@@ -61,8 +61,8 @@ public class BuilderSimpleConfigurableByProperties<Instance extends Configurable
 
         propertyBuilder.add(component, valueComponentProperty.getter(), valueComponentProperty.setter());
       }
-      else if (entry instanceof Component component) {
-        layout.add(component);
+      else if (entry instanceof Supplier componentFactory) {
+        layout.add((Component)componentFactory.get());
       }
     }
 
