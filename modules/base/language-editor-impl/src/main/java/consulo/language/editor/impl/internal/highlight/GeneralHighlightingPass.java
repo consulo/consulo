@@ -41,9 +41,7 @@ import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
@@ -53,14 +51,16 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingPass {
   private static final Logger LOG = Logger.getInstance(GeneralHighlightingPass.class);
   private static final String PRESENTABLE_NAME = DaemonBundle.message("pass.syntax");
   private static final Key<Boolean> HAS_ERROR_ELEMENT = Key.create("HAS_ERROR_ELEMENT");
-  public static final Condition<PsiFile> SHOULD_HIGHLIGHT_FILTER = file -> HighlightingLevelManager.getInstance(file.getProject()).shouldHighlight(file);
+  public static final Predicate<PsiFile> SHOULD_HIGHLIGHT_FILTER = file -> HighlightingLevelManager.getInstance(file.getProject()).shouldHighlight(file);
   private static final Random RESTART_DAEMON_RANDOM = new Random();
+  private static final Key<AtomicInteger> HIGHLIGHT_VISITOR_INSTANCE_COUNT = Key.create("HIGHLIGHT_VISITOR_INSTANCE_COUNT");
 
   protected final boolean myUpdateAll;
   protected final ProperTextRange myPriorityRange;
@@ -70,7 +70,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   protected volatile boolean myHasErrorElement;
   private volatile boolean myErrorFound;
   protected final EditorColorsScheme myGlobalScheme;
-  private volatile Supplier<HighlightVisitor[]> myHighlightVisitorProducer = this::cloneHighlightVisitors;
+  private volatile Supplier<List<HighlightVisitorFactory>> myHighlightVisitorProducer;
 
   public GeneralHighlightingPass(@Nonnull Project project,
                                  @Nonnull PsiFile file,
@@ -84,6 +84,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     super(project, document, PRESENTABLE_NAME, file, editor, TextRange.create(startOffset, endOffset), true, highlightInfoProcessor);
     myUpdateAll = updateAll;
     myPriorityRange = priorityRange;
+    myHighlightVisitorProducer = () -> project.getExtensionList(HighlightVisitorFactory.class);
 
     PsiUtilCore.ensureValid(file);
     boolean wholeFileHighlighting = isWholeFileHighlighting();
@@ -105,61 +106,40 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   @Nonnull
   @Override
   public Document getDocument() {
-    // this pass always get not-null document
-    //noinspection ConstantConditions
-    return super.getDocument();
-  }
-
-  private static final Key<AtomicInteger> HIGHLIGHT_VISITOR_INSTANCE_COUNT = new Key<>("HIGHLIGHT_VISITOR_INSTANCE_COUNT");
-
-  @Nonnull
-  private HighlightVisitor[] cloneHighlightVisitors() {
-    int oldCount = incVisitorUsageCount(1);
-    HighlightVisitor[] highlightVisitors = HighlightVisitor.EP_HIGHLIGHT_VISITOR.getExtensions(myProject);
-    if (oldCount != 0) {
-      HighlightVisitor[] clones = new HighlightVisitor[highlightVisitors.length];
-      for (int i = 0; i < highlightVisitors.length; i++) {
-        HighlightVisitor highlightVisitor = highlightVisitors[i];
-        HighlightVisitor cloned = highlightVisitor.clone();
-        assert cloned.getClass() == highlightVisitor.getClass() : highlightVisitor.getClass() +
-                                                                  ".clone() must return a copy of " +
-                                                                  highlightVisitor.getClass() +
-                                                                  "; but got: " +
-                                                                  cloned +
-                                                                  " of " +
-                                                                  cloned.getClass();
-        clones[i] = cloned;
-      }
-      highlightVisitors = clones;
-    }
-    return highlightVisitors;
+    return Objects.requireNonNull(super.getDocument());
   }
 
   @Nonnull
-  private HighlightVisitor[] filterVisitors(@Nonnull HighlightVisitor[] highlightVisitors, @Nonnull PsiFile psiFile) {
-    final List<HighlightVisitor> visitors = new ArrayList<>(highlightVisitors.length);
-    List<HighlightVisitor> list = Arrays.asList(highlightVisitors);
-    for (HighlightVisitor visitor : DumbService.getInstance(myProject).filterByDumbAwareness(list)) {
-      if (visitor instanceof RainbowVisitor && !RainbowHighlighter.isRainbowEnabledWithInheritance(getColorsScheme(), psiFile.getLanguage())) {
-        continue;
+  private List<HighlightVisitor> filterVisitors(@Nonnull List<HighlightVisitorFactory> highlightVisitorFactories, @Nonnull PsiFile psiFile) {
+    final List<HighlightVisitor> result = new ArrayList<>(highlightVisitorFactories.size());
+    DumbService dumbService = DumbService.getInstance(myProject);
+
+    dumbService.forEachDumAwareness(highlightVisitorFactories, highlightVisitorFactory -> {
+      // skip rainbow visitor if not enabled
+      if (highlightVisitorFactory instanceof RainbowVisitorFactory && !RainbowHighlighter.isRainbowEnabledWithInheritance(getColorsScheme(),
+                                                                                                                          psiFile.getLanguage())) {
+        return;
       }
-      if (visitor.suitableForFile(psiFile)) {
-        visitors.add(visitor);
+
+      if (highlightVisitorFactory.suitableForFile(psiFile)) {
+        incVisitorUsageCount(1);
+        result.add(highlightVisitorFactory.createVisitor());
       }
-    }
-    if (visitors.isEmpty()) {
-      LOG.error("No visitors registered. list=" + list + "; all visitors are:" + Arrays.asList(HighlightVisitor.EP_HIGHLIGHT_VISITOR.getExtensions(myProject)));
+    });
+
+    if (result.isEmpty()) {
+      LOG.error("No visitors registered. list=" + result + "; all visitors are:" + myProject.getExtensionList(HighlightVisitorFactory.class));
     }
 
-    return visitors.toArray(new HighlightVisitor[0]);
+    return result;
   }
 
-  public void setHighlightVisitorProducer(@Nonnull Supplier<HighlightVisitor[]> highlightVisitorProducer) {
+  public void setHighlightVisitorProducer(@Nonnull Supplier<List<HighlightVisitorFactory>> highlightVisitorProducer) {
     myHighlightVisitorProducer = highlightVisitorProducer;
   }
 
   @Nonnull
-  public HighlightVisitor[] getHighlightVisitors(@Nonnull PsiFile psiFile) {
+  public List<HighlightVisitor> getHighlightVisitors(@Nonnull PsiFile psiFile) {
     return filterVisitors(myHighlightVisitorProducer.get(), psiFile);
   }
 
@@ -167,7 +147,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   public int incVisitorUsageCount(int delta) {
     AtomicInteger count = myProject.getUserData(HIGHLIGHT_VISITOR_INSTANCE_COUNT);
     if (count == null) {
-      count = ((UserDataHolderEx)myProject).putUserDataIfAbsent(HIGHLIGHT_VISITOR_INSTANCE_COUNT, new AtomicInteger(0));
+      count = myProject.putUserDataIfAbsent(HIGHLIGHT_VISITOR_INSTANCE_COUNT, new AtomicInteger(0));
     }
     int old = count.getAndAdd(delta);
     assert old + delta >= 0 : old + ";" + delta;
@@ -180,7 +160,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     final List<HighlightInfo> insideResult = new ArrayList<>(100);
 
     final DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
-    final HighlightVisitor[] filteredVisitors = getHighlightVisitors(getFile());
+    final List<HighlightVisitor> filteredVisitors = getHighlightVisitors(getFile());
     try {
       List<Divider.DividedElements> dividedElements = new ArrayList<>();
       Divider.divideInsideAndOutsideAllRoots(getFile(), myRestrictRange, myPriorityRange, SHOULD_HIGHLIGHT_FILTER, new CommonProcessors.CollectProcessor<>(dividedElements));
@@ -261,7 +241,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                                     @Nonnull final List<? extends ProperTextRange> ranges1,
                                     @Nonnull final List<? extends PsiElement> elements2,
                                     @Nonnull final List<? extends ProperTextRange> ranges2,
-                                    @Nonnull final HighlightVisitor[] visitors,
+                                    @Nonnull final List<HighlightVisitor> visitors,
                                     @Nonnull final List<HighlightInfo> insideResult,
                                     @Nonnull final List<? super HighlightInfo> outsideResult,
                                     final boolean forceHighlightParents) {
@@ -293,13 +273,13 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     return success;
   }
 
-  private boolean analyzeByVisitors(@Nonnull final HighlightVisitor[] visitors, @Nonnull final HighlightInfoHolder holder, final int i, @Nonnull final Runnable action) {
+  private boolean analyzeByVisitors(@Nonnull final List<HighlightVisitor> visitors, @Nonnull final HighlightInfoHolder holder, final int i, @Nonnull final Runnable action) {
     final boolean[] success = {true};
-    if (i == visitors.length) {
+    if (i == visitors.size()) {
       action.run();
     }
     else {
-      if (!visitors[i].analyze(getFile(), myUpdateAll, holder, () -> success[0] = analyzeByVisitors(visitors, holder, i + 1, action))) {
+      if (!visitors.get(i).analyze(getFile(), myUpdateAll, holder, () -> success[0] = analyzeByVisitors(visitors, holder, i + 1, action))) {
         success[0] = false;
       }
     }
@@ -314,7 +294,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
                            @Nonnull List<? super HighlightInfo> insideResult,
                            @Nonnull List<? super HighlightInfo> outsideResult,
                            boolean forceHighlightParents,
-                           @Nonnull HighlightVisitor[] visitors,
+                           @Nonnull List<HighlightVisitor> visitors,
                            @Nonnull Stack<TextRange> nestedRange,
                            @Nonnull Stack<List<HighlightInfo>> nestedInfos) {
     boolean failed = false;

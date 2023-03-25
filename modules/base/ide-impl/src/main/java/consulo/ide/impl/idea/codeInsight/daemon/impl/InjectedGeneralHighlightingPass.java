@@ -16,43 +16,43 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
-import consulo.language.editor.impl.internal.highlight.Divider;
-import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
-import consulo.language.editor.util.CollectHighlightsUtil;
-import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.inject.impl.internal.PlaceImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.util.concurrent.JobLauncher;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributes;
+import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
+import consulo.language.editor.impl.internal.highlight.Divider;
+import consulo.language.editor.impl.internal.highlight.GeneralHighlightingPass;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
+import consulo.language.editor.util.CollectHighlightsUtil;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.PlaceImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
@@ -355,7 +355,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
   }
 
   private void runHighlightVisitorsForInjected(@Nonnull PsiFile injectedPsi, @Nonnull HighlightInfoHolder holder) {
-    HighlightVisitor[] filtered = getHighlightVisitors(injectedPsi);
+    List<HighlightVisitor> filtered = getHighlightVisitors(injectedPsi);
     try {
       final List<PsiElement> elements = CollectHighlightsUtil.getElementsInRange(injectedPsi, 0, injectedPsi.getTextLength());
       for (final HighlightVisitor visitor : filtered) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.language.editor.rawHighlight;
-
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
 /**
- * @see HighlightVisitorFactory
+ * @author VISTALL
+ * @since 25/03/2023
  */
-public interface HighlightVisitor {
-  void visit(@Nonnull PsiElement element);
-
-  boolean analyze(@Nonnull PsiFile file, final boolean updateWholeFile, @Nonnull HighlightInfoHolder holder, @Nonnull Runnable action);
+public interface RainbowVisitorFactory extends HighlightVisitorFactory {
+  @Nonnull
+  @Override
+  RainbowVisitor createVisitor();
 }

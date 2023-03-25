@@ -16,7 +16,6 @@
 package consulo.language.editor.impl.internal.highlight;
 
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -28,13 +27,13 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SoftReference;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Divider {
   private static final int STARTING_TREE_HEIGHT = 10;
@@ -67,19 +66,19 @@ public class Divider {
   public static void divideInsideAndOutsideAllRoots(@Nonnull PsiFile file,
                                                     @Nonnull TextRange restrictRange,
                                                     @Nonnull TextRange priorityRange,
-                                                    @Nonnull Condition<PsiFile> rootFilter,
-                                                    @Nonnull Processor<DividedElements> processor) {
+                                                    @Nonnull Predicate<PsiFile> rootFilter,
+                                                    @Nonnull Predicate<DividedElements> processor) {
     final FileViewProvider viewProvider = file.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
       final PsiFile root = viewProvider.getPsi(language);
-      if (!rootFilter.value(root)) {
+      if (!rootFilter.test(root)) {
         continue;
       }
       divideInsideAndOutsideInOneRoot(root, restrictRange, priorityRange, processor);
     }
   }
 
-  public static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange, @Nonnull Processor<DividedElements> processor) {
+  public static void divideInsideAndOutsideInOneRoot(@Nonnull PsiFile root, @Nonnull TextRange restrictRange, @Nonnull TextRange priorityRange, @Nonnull Predicate<DividedElements> processor) {
     long modificationStamp = root.getModificationStamp();
     DividedElements cached = SoftReference.dereference(root.getUserData(DIVIDED_ELEMENTS_KEY));
     DividedElements elements;
@@ -92,7 +91,7 @@ public class Divider {
     else {
       elements = cached;
     }
-    processor.process(elements);
+    processor.test(elements);
   }
 
   private static final PsiElement HAVE_TO_GET_CHILDREN = PsiUtilCore.NULL_PSI_ELEMENT;

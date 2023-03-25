@@ -1,8 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.rawHighlight;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.document.util.TextRange;
@@ -32,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@ExtensionImpl
-public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
+public final class DefaultHighlightVisitor implements HighlightVisitor {
   private AnnotationHolderImpl myAnnotationHolder;
   private final Map<Language, List<Annotator>> myAnnotators = ConcurrentFactoryMap.createMap(this::createAnnotators);
   private final Project myProject;
@@ -56,11 +54,6 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
     myRunAnnotators = runAnnotators;
     myDumbService = DumbService.getInstance(project);
     myBatchMode = batchMode;
-  }
-
-  @Override
-  public boolean suitableForFile(@Nonnull PsiFile file) {
-    return true;
   }
 
   @Override
@@ -97,6 +90,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
   }
 
   @Override
+  @RequiredReadAction
   public void visit(@Nonnull PsiElement element) {
     if (myRunAnnotators) {
       runAnnotators(element);
@@ -106,13 +100,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
     }
   }
 
-  @SuppressWarnings("CloneDoesntCallSuperClone")
-  @Override
-  @Nonnull
-  public HighlightVisitor clone() {
-    return new DefaultHighlightVisitor(myProject, myHighlightErrorElements, myRunAnnotators, myBatchMode);
-  }
-
+  @RequiredReadAction
   private void runAnnotators(@Nonnull PsiElement element) {
     List<Annotator> annotators = myAnnotators.get(element.getLanguage());
     if (!annotators.isEmpty()) {
@@ -132,6 +120,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
     }
   }
 
+  @RequiredReadAction
   private void visitErrorElement(@Nonnull PsiErrorElement element) {
     if (HighlightErrorFilter.EP_NAME.findFirstSafe(myProject, filter -> !filter.shouldHighlightErrorElement(element)) != null) {
       return;
@@ -140,6 +129,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
     myHolder.add(createErrorElementInfo(element));
   }
 
+  @RequiredReadAction
   private static HighlightInfoImpl createErrorElementInfo(@Nonnull PsiErrorElement element) {
     HighlightInfoImpl info = createInfoWithoutFixes(element);
     if (info != null) {
@@ -148,6 +138,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor, DumbAwar
     return info;
   }
 
+  @RequiredReadAction
   private static HighlightInfoImpl createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
     LocalizeValue errorDescription = element.getErrorDescriptionValue();

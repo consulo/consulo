@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -92,7 +93,9 @@ public abstract class DumbService {
   }
 
   @Nonnull
-  public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(@Nonnull Project project, @Nonnull C component, @Nonnull ExtensionList<T, C> extensionPoint) {
+  public static <C extends ComponentManager, T> List<T> getDumbAwareExtensions(@Nonnull Project project,
+                                                                               @Nonnull C component,
+                                                                               @Nonnull ExtensionList<T, C> extensionPoint) {
     List<T> list = extensionPoint.getExtensionList(component);
     if (list.isEmpty()) {
       return list;
@@ -247,6 +250,21 @@ public abstract class DumbService {
     }
 
     return new ArrayList<>(collection);
+  }
+
+  /**
+   * Iterable collection, and skip objects if project is dumb mode, and extension not support dumb mode
+   */
+  public <T> void forEachDumAwareness(@Nonnull Iterable<? extends T> collection, Consumer<T> consumer) {
+    if (isDumb()) {
+      for (T object : collection) {
+        if (isDumbAware(object)) {
+          consumer.accept(object);
+        }
+      }
+    } else {
+      collection.forEach(consumer);
+    }
   }
 
   /**

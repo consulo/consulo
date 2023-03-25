@@ -21,6 +21,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
+import consulo.language.editor.rawHighlight.HighlightVisitorFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
@@ -73,12 +74,20 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         element = file;
       }
 
-      GlobalInspectionUtil.createProblem(element, info, range.shiftRight(-element.getNode().getStartOffset()), info.getProblemGroup(), manager, problemDescriptionsProcessor, globalContext);
+      GlobalInspectionUtil.createProblem(element,
+                                         info,
+                                         range.shiftRight(-element.getNode().getStartOffset()),
+                                         info.getProblemGroup(),
+                                         manager,
+                                         problemDescriptionsProcessor,
+                                         globalContext);
     }
   }
 
   @Nonnull
-  public static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlighting(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
+  public static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlighting(@Nonnull PsiFile file,
+                                                                                      boolean highlightErrorElements,
+                                                                                      boolean runAnnotators) {
     ProgressIndicator indicator = ProgressManager.getGlobalProgressIndicator();
     MyPsiElementVisitor visitor = new MyPsiElementVisitor(highlightErrorElements, runAnnotators);
     if (indicator instanceof DaemonProgressIndicator) {
@@ -119,7 +128,9 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
   }
 
   @Nonnull
-  private static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlightingPass(@Nonnull PsiFile file, boolean highlightErrorElements, boolean runAnnotators) {
+  private static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlightingPass(@Nonnull PsiFile file,
+                                                                                           boolean highlightErrorElements,
+                                                                                           boolean runAnnotators) {
     Project project = file.getProject();
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     if (document == null) return Collections.emptyList();
@@ -130,12 +141,21 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
     List<TextEditorHighlightingPass> passes = passRegistrarEx.instantiateMainPasses(file, document, HighlightInfoProcessor.getEmpty());
     List<GeneralHighlightingPass> gpasses = ContainerUtil.filterIsInstance(passes, GeneralHighlightingPass.class);
     for (GeneralHighlightingPass gpass : gpasses) {
-      gpass.setHighlightVisitorProducer(() -> {
-        gpass.incVisitorUsageCount(1);
+      gpass.setHighlightVisitorProducer(() -> List.of(new HighlightVisitorFactory() {
 
-        HighlightVisitor visitor = new DefaultHighlightVisitor(project, highlightErrorElements, runAnnotators, true);
-        return new HighlightVisitor[]{visitor};
-      });
+        @Override
+        public boolean suitableForFile(@Nonnull PsiFile file) {
+          return true;
+        }
+
+        @Nonnull
+        @Override
+        public HighlightVisitor createVisitor() {
+          gpass.incVisitorUsageCount(1);
+
+          return new DefaultHighlightVisitor(project, highlightErrorElements, runAnnotators, true);
+        }
+      }));
     }
 
     List<Pair<PsiFile, HighlightInfo>> result = new ArrayList<>();

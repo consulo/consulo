@@ -24,13 +24,12 @@ import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @see RainbowVisitorFactory
+ */
 public abstract class RainbowVisitor implements HighlightVisitor {
   private HighlightInfoHolder myHolder;
   private RainbowHighlighter myRainbowHighlighter;
-
-  @Nonnull
-  @Override
-  public abstract HighlightVisitor clone();
 
   @Nonnull
   protected RainbowHighlighter getHighlighter() {
