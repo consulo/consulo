@@ -17,7 +17,7 @@ package consulo.language.spellchecker.editor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorEx;
-import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProviderr;
+import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.language.spellchecker.editor.SpellcheckerEngine;
 import consulo.language.spellchecker.editor.SpellcheckerEngineManager;
 import jakarta.inject.Inject;
@@ -34,12 +34,12 @@ import java.util.function.Consumer;
  */
 @ServiceImpl
 @Singleton
-public class SpellCheckingEditorCustomizationProviderrImpl implements SpellCheckingEditorCustomizationProviderr {
+public class SpellcheckingEditorCustomizationProviderImpl implements SpellcheckingEditorCustomizationProvider {
 
   private final SpellcheckerEngineManager mySpellcheckerEngineManager;
 
   @Inject
-  public SpellCheckingEditorCustomizationProviderrImpl(SpellcheckerEngineManager spellcheckerEngineManager) {
+  public SpellcheckingEditorCustomizationProviderImpl(SpellcheckerEngineManager spellcheckerEngineManager) {
     mySpellcheckerEngineManager = spellcheckerEngineManager;
   }
 
