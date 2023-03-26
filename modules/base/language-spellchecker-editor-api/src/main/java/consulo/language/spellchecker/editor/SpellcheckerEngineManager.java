@@ -18,7 +18,9 @@ package consulo.language.spellchecker.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -28,4 +30,13 @@ import javax.annotation.Nullable;
 public interface SpellcheckerEngineManager {
   @Nullable
   SpellcheckerEngine getActiveEngine();
+
+  @Nonnull
+  default List<String> getSuggestions(@Nonnull String text) {
+    SpellcheckerEngine engine = getActiveEngine();
+    if (engine == null) {
+      return List.of();
+    }
+    return engine.getSuggestions(text);
+  }
 }

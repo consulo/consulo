@@ -17,8 +17,10 @@ package consulo.language.spellchecker.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -30,5 +32,8 @@ public interface SpellcheckerEngine {
   String getId();
 
   @Nonnull
-  String getDisplayName();
+  LocalizeValue getDisplayName();
+
+  @Nonnull
+  List<String> getSuggestions(@Nonnull String text);
 }
