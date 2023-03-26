@@ -20,6 +20,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

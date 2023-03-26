@@ -26,7 +26,7 @@ import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

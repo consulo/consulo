@@ -16,6 +16,8 @@
 package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;

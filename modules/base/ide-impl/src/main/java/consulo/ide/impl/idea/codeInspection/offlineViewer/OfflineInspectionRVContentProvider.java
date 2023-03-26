@@ -33,7 +33,7 @@ import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.editor.inspection.reference.SmartRefElementPointer;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.TreeUtil;
 

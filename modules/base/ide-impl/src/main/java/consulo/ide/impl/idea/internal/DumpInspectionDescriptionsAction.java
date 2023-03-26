@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;

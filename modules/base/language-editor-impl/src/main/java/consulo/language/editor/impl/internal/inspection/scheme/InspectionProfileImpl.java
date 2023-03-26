@@ -25,6 +25,7 @@ import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.inspection.scheme.*;

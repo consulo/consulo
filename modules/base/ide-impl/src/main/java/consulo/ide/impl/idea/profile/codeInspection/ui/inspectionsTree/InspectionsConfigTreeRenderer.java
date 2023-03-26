@@ -22,9 +22,9 @@ package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
-import consulo.language.editor.impl.internal.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
 import consulo.ui.ex.JBColor;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.impl.internal.inspection.scheme;
+package consulo.language.editor.impl.inspection.scheme;
 
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
