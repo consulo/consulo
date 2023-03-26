@@ -17,7 +17,6 @@
 package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
@@ -57,6 +56,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -126,7 +126,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   @Nonnull
   public static InspectionProfileImpl createSimple(@Nonnull String name, @Nonnull Project project, @Nonnull final InspectionToolWrapper... toolWrappers) {
-    InspectionToolRegistrar registrar = new InspectionToolRegistrar() {
+    InspectionToolRegistrar registrar = new InspectionToolRegistrar(project.getApplication()) {
       @Nonnull
       @Override
       public List<InspectionToolWrapper> createTools() {
@@ -547,7 +547,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       final String shortName = toolWrapper.getShortName();
       HighlightDisplayKey key = HighlightDisplayKey.find(shortName);
       if (key == null) {
-        Computable<String> computable = () -> toolWrapper.getDisplayName();
+        Supplier<String> computable = () -> toolWrapper.getDisplayName();
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
           key = HighlightDisplayKey.register(shortName, computable, ((LocalInspectionToolWrapper)toolWrapper).getID(), ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
         }

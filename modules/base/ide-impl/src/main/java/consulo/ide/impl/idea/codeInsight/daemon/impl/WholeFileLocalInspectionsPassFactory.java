@@ -30,7 +30,7 @@ import consulo.language.editor.impl.highlight.VisibleHighlightingPassFactory;
 import consulo.language.editor.impl.internal.highlight.DefaultHighlightInfoProcessor;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.PsiElement;

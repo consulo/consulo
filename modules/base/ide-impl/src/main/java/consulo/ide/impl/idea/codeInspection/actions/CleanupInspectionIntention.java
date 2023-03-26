@@ -27,7 +27,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.ide.impl.idea.codeInspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.PerformFixesModalTask;
 import consulo.undoRedo.CommandProcessor;
 import consulo.logging.Logger;

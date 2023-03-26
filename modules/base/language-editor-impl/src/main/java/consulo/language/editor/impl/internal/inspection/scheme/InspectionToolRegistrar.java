@@ -20,23 +20,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.progress.ProgressManager;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.GlobalInspectionTool;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.logging.Logger;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
+import java.util.function.Consumer;
 
 /**
  * @author max
@@ -45,68 +38,35 @@ import java.util.function.Supplier;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InspectionToolRegistrar {
-  private static final Logger LOG = Logger.getInstance(InspectionToolRegistrar.class);
-
-  private final List<Supplier<InspectionToolWrapper>> myInspectionToolFactories = new ArrayList<>();
-
-  private final AtomicBoolean myInspectionComponentsLoaded = new AtomicBoolean(false);
-
-  public void ensureInitialized() {
-    if (!myInspectionComponentsLoaded.getAndSet(true)) {
-      Application application = Application.get();
-
-      application.getExtensionPoint(LocalInspectionTool.class).forEachExtensionSafe(tool -> {
-        myInspectionToolFactories.add(() -> new LocalInspectionToolWrapper(tool));
-      });
-
-      application.getExtensionPoint(GlobalInspectionTool.class) .forEachExtensionSafe(tool -> {
-        myInspectionToolFactories.add(() -> new GlobalInspectionToolWrapper(tool));
-      });
-    }
-  }
-
   public static InspectionToolRegistrar getInstance() {
     return Application.get().getInstance(InspectionToolRegistrar.class);
   }
 
+  private final Application myApplication;
+
+  @Inject
+  public InspectionToolRegistrar(Application application) {
+    myApplication = application;
+  }
+
   @Nonnull
   public List<InspectionToolWrapper> createTools() {
-    ensureInitialized();
-
-    final List<InspectionToolWrapper> tools = new ArrayList<>(myInspectionToolFactories.size());
-    final Set<Supplier<InspectionToolWrapper>> broken = new HashSet<>();
-    for (final Supplier<InspectionToolWrapper> factory : myInspectionToolFactories) {
-      ProgressManager.checkCanceled();
-      final InspectionToolWrapper toolWrapper = factory.get();
-      if (toolWrapper != null && checkTool(toolWrapper) == null) {
-        tools.add(toolWrapper);
-      }
-      else {
-        broken.add(factory);
-      }
-    }
-    myInspectionToolFactories.removeAll(broken);
-
+    final List<InspectionToolWrapper> tools = new ArrayList<>();
+    walkWrappers(tools::add);
     return tools;
   }
 
-  private static String checkTool(@Nonnull final InspectionToolWrapper toolWrapper) {
-    if (!(toolWrapper instanceof LocalInspectionToolWrapper)) {
-      return null;
+  private void walkWrappers(Consumer<InspectionToolWrapper<?>> consumer) {
+    List<LocalInspectionToolWrapper> localInspectionToolWrappers =
+      myApplication.getExtensionPoint(LocalInspectionTool.class).getOrBuildCache(InspectionToolWrappers.LOCAL_WRAPPERS);
+    for (LocalInspectionToolWrapper wrapper : localInspectionToolWrappers) {
+      consumer.accept(wrapper.createCopy());
     }
-    String message = null;
-    try {
-      final String id = ((LocalInspectionToolWrapper)toolWrapper).getID();
-      if (id == null || !LocalInspectionTool.isValidID(id)) {
-        message = InspectionsBundle.message("inspection.disabled.wrong.id", toolWrapper.getShortName(), id, LocalInspectionTool.VALID_ID_PATTERN);
-      }
+
+    List<GlobalInspectionToolWrapper> globalInspectionToolWrappers =
+      myApplication.getExtensionPoint(GlobalInspectionTool.class).getOrBuildCache(InspectionToolWrappers.GLOBAL_WRAPPERS);
+    for (GlobalInspectionToolWrapper globalInspectionToolWrapper : globalInspectionToolWrappers) {
+      consumer.accept(globalInspectionToolWrapper.createCopy());
     }
-    catch (Throwable t) {
-      message = InspectionsBundle.message("inspection.disabled.error", toolWrapper.getShortName(), t.getMessage());
-    }
-    if (message != null) {
-      LOG.error(message);
-    }
-    return message;
   }
 }

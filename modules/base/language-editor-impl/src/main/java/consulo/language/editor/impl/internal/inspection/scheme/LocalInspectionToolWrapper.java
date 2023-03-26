@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.inspection.scheme;
+package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 

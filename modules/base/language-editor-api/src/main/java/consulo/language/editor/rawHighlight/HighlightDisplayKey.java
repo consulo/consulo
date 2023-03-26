@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.rawHighlight;
 
-import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 
@@ -23,13 +22,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class HighlightDisplayKey {
   private static final Logger LOG = Logger.getInstance(HighlightDisplayKey.class);
 
   private static final Map<String, HighlightDisplayKey> ourNameToKeyMap = new HashMap<>();
   private static final Map<String, HighlightDisplayKey> ourIdToKeyMap = new HashMap<>();
-  private static final Map<HighlightDisplayKey, Computable<String>> ourKeyToDisplayNameMap = new HashMap<>();
+  private static final Map<HighlightDisplayKey, Supplier<String>> ourKeyToDisplayNameMap = new HashMap<>();
   private static final Map<HighlightDisplayKey, String> ourKeyToAlternativeIDMap = new HashMap<>();
 
   private final String myName;
@@ -58,7 +58,7 @@ public class HighlightDisplayKey {
   }
 
   /**
-   * @see #register(String, Computable)
+   * @see #register(String, Supplier)
    */
   @Nullable
   public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final String displayName) {
@@ -66,21 +66,21 @@ public class HighlightDisplayKey {
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull Computable<String> displayName) {
+  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull Supplier<String> displayName) {
     return register(name, displayName, name);
   }
 
 
   /**
-   * @see #register(String, Computable, String)
+   * @see #register(String, Supplier, String)
    */
   @Nullable
   public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final String displayName, @Nonnull final String id) {
-    return register(name, new Computable.PredefinedValueComputable<>(displayName), id);
+    return register(name, () -> displayName, id);
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final Computable<String> displayName, @Nonnull final String id) {
+  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final Supplier<String> displayName, @Nonnull final String id) {
     if (find(name) != null) {
       LOG.info("Key with name \'" + name + "\' already registered");
       return null;
@@ -91,7 +91,7 @@ public class HighlightDisplayKey {
   }
 
   @Nullable
-  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final Computable<String> displayName, @Nonnull final String id, @Nullable final String alternativeID) {
+  public static HighlightDisplayKey register(@Nonnull final String name, @Nonnull final Supplier<String> displayName, @Nonnull final String id, @Nullable final String alternativeID) {
     final HighlightDisplayKey key = register(name, displayName, id);
     if (alternativeID != null) {
       ourKeyToAlternativeIDMap.put(key, alternativeID);
@@ -120,8 +120,8 @@ public class HighlightDisplayKey {
       return null;
     }
     else {
-      final Computable<String> computable = ourKeyToDisplayNameMap.get(key);
-      return computable == null ? null : computable.compute();
+      final Supplier<String> computable = ourKeyToDisplayNameMap.get(key);
+      return computable == null ? null : computable.get();
     }
   }
 
@@ -143,6 +143,7 @@ public class HighlightDisplayKey {
     }
   }
 
+  @Override
   public String toString() {
     return myName;
   }

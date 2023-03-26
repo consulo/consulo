@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.impl.inspection.scheme;
+package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.GlobalInspectionContext;
@@ -22,7 +22,6 @@ import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
