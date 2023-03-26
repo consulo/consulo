@@ -85,7 +85,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
       if (myLoadingOrder == LoadingOrder.FIRST || myLoadingOrder == LoadingOrder.LAST) {
         if (apiPlugin.getPluginId() != myValue.getValue().getPluginId()) {
-          LOG.error("Usage order [first, last] is restricted for not owner plugin impl. Class: %s, Plugin: %s, Owner Plugin: %s"
+          LOG.error("Usage order [first, last] is restricted for owner plugin impl only. Class: %s, Plugin: %s, Owner Plugin: %s"
                       .formatted(myValue.getKey().toString(),
                                  myValue.getValue().getPluginId().getIdString(),
                                  apiPlugin.getPluginId().getIdString()));
