@@ -18,6 +18,7 @@ package consulo.language.spellchecker.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -36,4 +37,14 @@ public interface SpellcheckerEngine {
 
   @Nonnull
   List<String> getSuggestions(@Nonnull String text);
+
+  boolean hasProblem(@Nonnull String word);
+
+  default boolean canSaveUserWords() {
+    return false;
+  }
+
+  default void acceptWordAsCorrect(@Nonnull String word, Project project) {
+    throw new UnsupportedOperationException();
+  }
 }

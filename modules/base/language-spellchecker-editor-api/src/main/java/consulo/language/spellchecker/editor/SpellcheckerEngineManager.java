@@ -17,6 +17,7 @@ package consulo.language.spellchecker.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,5 +39,26 @@ public interface SpellcheckerEngineManager {
       return List.of();
     }
     return engine.getSuggestions(text);
+  }
+
+  default boolean hasProblem(@Nonnull String word) {
+    SpellcheckerEngine engine = getActiveEngine();
+    return engine != null && engine.hasProblem(word);
+  }
+
+  default boolean canSaveUserWords() {
+    SpellcheckerEngine engine = getActiveEngine();
+    return engine != null && engine.canSaveUserWords();
+  }
+
+  default void acceptWordAsCorrect(@Nonnull String word, Project project) {
+    if (!canSaveUserWords()) {
+      throw new IllegalArgumentException("#canSaveUserWords() return false");
+    }
+
+    SpellcheckerEngine engine = getActiveEngine();
+    if (engine != null) {
+      engine.acceptWordAsCorrect(word, project);
+    }
   }
 }
