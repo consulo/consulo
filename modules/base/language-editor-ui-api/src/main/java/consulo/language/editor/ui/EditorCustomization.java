@@ -19,6 +19,7 @@ import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Defines contract for functionality that is able to customize editors.
@@ -29,7 +30,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since Aug 20, 2010 4:26:04 PM
  */
-public interface EditorCustomization {
+public interface EditorCustomization extends Consumer<EditorEx> {
 
   /**
    * Applies this customization to the given editor.
@@ -39,4 +40,8 @@ public interface EditorCustomization {
    */
   void customize(@Nonnull EditorEx editor);
 
+  @Override
+  default void accept(EditorEx editorEx) {
+    customize(editorEx);
+  }
 }

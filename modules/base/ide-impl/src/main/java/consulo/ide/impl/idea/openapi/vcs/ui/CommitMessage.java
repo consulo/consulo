@@ -24,12 +24,10 @@ import consulo.dataContext.DataSink;
 import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractDataProviderPanel;
-import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.ui.*;
-import consulo.language.editor.ui.EditorCustomization;
-import consulo.language.editor.ui.SpellCheckerCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
+import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -41,7 +39,9 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.CommitMessageI;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsDataKeys;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
@@ -127,23 +127,14 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
    * @return a commit message editor
    */
   public static EditorTextField createCommitTextEditor(final Project project, boolean forceSpellCheckOn) {
-    Set<EditorCustomization> features = new HashSet<EditorCustomization>();
+    Set<Consumer<EditorEx>> features = new HashSet<>();
 
-    final SpellCheckerCustomization spellChecker = SpellCheckerCustomization.getInstance();
     VcsConfiguration configuration = VcsConfiguration.getInstance(project);
-    if (configuration != null) {
-      boolean enableSpellChecking = forceSpellCheckOn || configuration.CHECK_COMMIT_MESSAGE_SPELLING;
-      if(spellChecker.isEnabled()) {
-        features.add(spellChecker.getCustomization(enableSpellChecking));
-      }
-      features.add(new RightMarginEditorCustomization(configuration.USE_COMMIT_MESSAGE_MARGIN, configuration.COMMIT_MESSAGE_MARGIN_SIZE));
-      features.add(WrapWhenTypingReachesRightMarginCustomization.getInstance(configuration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN));
-    } else {
-      if(spellChecker.isEnabled()) {
-        features.add(spellChecker.getCustomization(true));
-      }
-      features.add(new RightMarginEditorCustomization(false, -1));
-    }
+    boolean enableSpellChecking = forceSpellCheckOn || configuration.CHECK_COMMIT_MESSAGE_SPELLING;
+
+    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(enableSpellChecking).ifPresent(features::add);
+    features.add(new RightMarginEditorCustomization(configuration.USE_COMMIT_MESSAGE_MARGIN, configuration.COMMIT_MESSAGE_MARGIN_SIZE));
+    features.add(WrapWhenTypingReachesRightMarginCustomization.getInstance(configuration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN));
 
     features.add(SoftWrapsEditorCustomization.ENABLED);
     features.add(AdditionalPageAtBottomEditorCustomization.DISABLED);
@@ -152,7 +143,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     return service.getEditorField(PlainTextLanguage.INSTANCE, project, features);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ActionGroup getToolbarActions() {
     return (ActionGroup)ActionManager.getInstance().getAction("Vcs.MessageActionGroup");
   }
@@ -188,6 +179,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     return myCheckSpelling;
   }
 
+  @Override
   public void setCheckSpelling(boolean check) {
     myCheckSpelling = check;
     Editor editor = myEditorField.getEditor();
@@ -196,12 +188,10 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     }
     EditorEx editorEx = (EditorEx)editor;
 
-    SpellCheckerCustomization spellCheckerCustomization = SpellCheckerCustomization.getInstance();
-    if(spellCheckerCustomization.isEnabled()) {
-      spellCheckerCustomization.getCustomization(check).customize(editorEx);
-    }
+    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(check).ifPresent(customizer -> customizer.accept(editorEx));
   }
 
+  @Override
   public void dispose() {
   }
 

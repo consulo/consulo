@@ -17,11 +17,13 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.codeEditor.EditorEx;
 import consulo.language.Language;
-import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Defines common contract for building {@link EditorTextField} with necessary combinations of features.
@@ -40,6 +42,6 @@ public interface EditorTextFieldProvider {
    * @return {@link EditorTextField} with specified customizations applied to its editor.
    */
   @Nonnull
-  EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<EditorCustomization> features);
+  EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<Consumer<EditorEx>> features);
 
 }

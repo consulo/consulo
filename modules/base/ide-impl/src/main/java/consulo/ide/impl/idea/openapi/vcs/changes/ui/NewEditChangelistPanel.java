@@ -16,29 +16,29 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.EditorEx;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
+import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;
+import consulo.ide.impl.idea.ui.OneLineEditorCustomization;
+import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProvider;
+import consulo.project.Project;
+import consulo.ui.ex.awt.JBUI;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.ui.EditorTextFieldProvider;
-import consulo.ide.impl.idea.ui.HorizontalScrollBarEditorCustomization;
-import consulo.ide.impl.idea.ui.OneLineEditorCustomization;
-import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.ui.EditorCustomization;
-import consulo.language.editor.ui.SpellCheckerCustomization;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.language.plain.PlainTextLanguage;
-import consulo.project.Project;
-import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -179,11 +179,8 @@ public abstract class NewEditChangelistPanel extends JPanel {
     final EditorTextFieldProvider service = ServiceManager.getService(project, EditorTextFieldProvider.class);
     final EditorTextField editorField;
 
-    final Set<EditorCustomization> editorFeatures = ContainerUtil.newHashSet();
-    final SpellCheckerCustomization spellChecker = SpellCheckerCustomization.getInstance();
-    if(spellChecker.isEnabled())  {
-      editorFeatures.add(spellChecker.getCustomization(true));
-    }
+    final Set<Consumer<EditorEx>> editorFeatures = new HashSet<>();
+    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(true).ifPresent(editorFeatures::add);
 
     if (defaultLines == 1) {
       editorFeatures.add(HorizontalScrollBarEditorCustomization.DISABLED);

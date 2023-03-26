@@ -16,24 +16,24 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.Language;
-import consulo.language.editor.ui.EditorCustomization;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.language.editor.ui.awt.LanguageTextField;
-import consulo.ui.ex.action.AnAction;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.ide.impl.idea.openapi.editor.actions.TextComponentEditorAction;
-import consulo.codeEditor.EditorEx;
+import consulo.language.Language;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.ui.EditorCustomization;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.Comparator;
+import java.util.function.Consumer;
 
 /**
  * Provides default implementation for {@link EditorTextFieldProvider} service and applies available
@@ -57,41 +57,38 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
    * <code>'expand/reduce selection by word'</code> editor action and <code>'change dialog width'</code> non-editor action
    * and we want to use the first one.
    */
-  private static final Comparator<? super AnAction> ACTIONS_COMPARATOR = new Comparator<AnAction>() {
-    @Override
-    public int compare(AnAction o1, AnAction o2) {
-      if (o1 instanceof EditorAction && o2 instanceof EditorAction) {
-        return 0;
-      }
-      if (o1 instanceof TextComponentEditorAction) {
-        return -1;
-      }
-      if (o2 instanceof TextComponentEditorAction) {
-        return 1;
-      }
-      if (o1 instanceof EditorAction) {
-        return 1;
-      }
-      if (o2 instanceof EditorAction) {
-        return -1;
-      }
+  private static final Comparator<? super AnAction> ACTIONS_COMPARATOR = (o1, o2) -> {
+    if (o1 instanceof EditorAction && o2 instanceof EditorAction) {
       return 0;
     }
+    if (o1 instanceof TextComponentEditorAction) {
+      return -1;
+    }
+    if (o2 instanceof TextComponentEditorAction) {
+      return 1;
+    }
+    if (o1 instanceof EditorAction) {
+      return 1;
+    }
+    if (o2 instanceof EditorAction) {
+      return -1;
+    }
+    return 0;
   };
 
   @Nonnull
   @Override
   public EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project,
-                                        @Nonnull final Iterable<EditorCustomization> features) {
+                                        @Nonnull final Iterable<Consumer<EditorEx>> features) {
     return new MyEditorTextField(language, project, features);
   }
 
   private static class MyEditorTextField extends LanguageTextField {
 
     @Nonnull
-    private final Iterable<EditorCustomization> myCustomizations;
+    private final Iterable<Consumer<EditorEx>> myCustomizations;
 
-    MyEditorTextField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<EditorCustomization> customizations) {
+    MyEditorTextField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<Consumer<EditorEx>> customizations) {
       super(language, project, "", false);
       myCustomizations = customizations;
     }
@@ -113,8 +110,8 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     private void applyCustomizations(@Nonnull EditorEx editor) {
-      for (EditorCustomization customization : myCustomizations) {
-        customization.customize(editor);
+      for (Consumer<EditorEx> customization : myCustomizations) {
+        customization.accept(editor);
       }
     }
 

@@ -852,5 +852,11 @@
         <option name="FOREGROUND" value="e08310"/>
       </value>
     </option>
+    <option name="TYPO">
+      <value>
+        <option name="EFFECT_COLOR" value="B0D1AB"/>
+        <option name="EFFECT_TYPE" value="2"/>
+      </value>
+    </option>
   </attributes>
 </scheme>

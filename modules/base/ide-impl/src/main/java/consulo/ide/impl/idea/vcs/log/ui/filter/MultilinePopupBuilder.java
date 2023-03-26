@@ -67,7 +67,7 @@ class MultilinePopupBuilder {
               @Override
               protected EditorEx createEditor() {
                 EditorEx editor = super.createEditor();
-                SoftWrapsEditorCustomization.ENABLED.customize(editor);
+                SoftWrapsEditorCustomization.ENABLED.accept(editor);
                 return editor;
               }
             };

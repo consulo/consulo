@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author max
  * @see Annotation
  */
-public class HighlightSeverity implements Comparable<HighlightSeverity> {
+public final class HighlightSeverity implements Comparable<HighlightSeverity> {
   public final String myName;
   public final int myVal;
 

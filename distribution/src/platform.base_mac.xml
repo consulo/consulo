@@ -128,6 +128,8 @@
         <include>consulo:consulo-repository-ui-api</include>
         <include>consulo:consulo-language-spellchecker-api</include>
         <include>consulo:consulo-language-spellchecker-impl</include>
+        <include>consulo:consulo-language-spellchecker-editor-api</include>
+        <include>consulo:consulo-language-spellchecker-editor-impl</include>
         <include>consulo:consulo-remote-server-api</include>
         <include>consulo:consulo-remote-server-impl</include>
         <include>consulo:consulo-credential-storage-api</include>
