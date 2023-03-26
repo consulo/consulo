@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.AbstractDataProviderPanel;
 import consulo.ide.impl.idea.ui.*;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProvider;
+import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProviderr;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -132,7 +132,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     VcsConfiguration configuration = VcsConfiguration.getInstance(project);
     boolean enableSpellChecking = forceSpellCheckOn || configuration.CHECK_COMMIT_MESSAGE_SPELLING;
 
-    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(enableSpellChecking).ifPresent(features::add);
+    SpellCheckingEditorCustomizationProviderr.getInstance().getCustomizationOpt(enableSpellChecking).ifPresent(features::add);
     features.add(new RightMarginEditorCustomization(configuration.USE_COMMIT_MESSAGE_MARGIN, configuration.COMMIT_MESSAGE_MARGIN_SIZE));
     features.add(WrapWhenTypingReachesRightMarginCustomization.getInstance(configuration.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN));
 
@@ -188,7 +188,7 @@ public class CommitMessage extends AbstractDataProviderPanel implements Disposab
     }
     EditorEx editorEx = (EditorEx)editor;
 
-    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(check).ifPresent(customizer -> customizer.accept(editorEx));
+    SpellCheckingEditorCustomizationProviderr.getInstance().getCustomizationOpt(check).ifPresent(customizer -> customizer.accept(editorEx));
   }
 
   @Override

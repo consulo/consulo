@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ui.OneLineEditorCustomization;
 import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProvider;
+import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProviderr;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
 import consulo.versionControlSystem.VcsBundle;
@@ -180,7 +180,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
     final EditorTextField editorField;
 
     final Set<Consumer<EditorEx>> editorFeatures = new HashSet<>();
-    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(true).ifPresent(editorFeatures::add);
+    SpellCheckingEditorCustomizationProviderr.getInstance().getCustomizationOpt(true).ifPresent(editorFeatures::add);
 
     if (defaultLines == 1) {
       editorFeatures.add(HorizontalScrollBarEditorCustomization.DISABLED);

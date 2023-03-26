@@ -29,9 +29,9 @@ import java.util.function.Consumer;
  * @since 26/03/2023
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface SpellCheckingEditorCustomizationProvider {
-  static SpellCheckingEditorCustomizationProvider getInstance() {
-    return Application.get().getInstance(SpellCheckingEditorCustomizationProvider.class);
+public interface SpellCheckingEditorCustomizationProviderr {
+  static SpellCheckingEditorCustomizationProviderr getInstance() {
+    return Application.get().getInstance(SpellCheckingEditorCustomizationProviderr.class);
   }
 
   @Nonnull

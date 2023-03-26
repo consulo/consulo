@@ -19,7 +19,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProvider;
+import consulo.language.spellchecker.editor.SpellCheckingEditorCustomizationProviderr;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -54,7 +54,7 @@ public class TextFieldWithCompletion extends LanguageTextField {
   @Override
   protected EditorEx createEditor() {
     EditorEx editor = super.createEditor();
-    SpellCheckingEditorCustomizationProvider.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
+    SpellCheckingEditorCustomizationProviderr.getInstance().getCustomizationOpt(false).ifPresent(it -> it.accept(editor));
     editor.putUserData(AutoPopupController.ALWAYS_AUTO_POPUP, myForceAutoPopup);
 
     if (myShowHint) {
