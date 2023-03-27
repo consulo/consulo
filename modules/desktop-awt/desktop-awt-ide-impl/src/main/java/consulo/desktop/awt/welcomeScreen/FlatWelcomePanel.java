@@ -17,7 +17,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
-import consulo.ide.impl.idea.ui.components.labels.ActionLink;
+import consulo.ui.ex.awt.ActionLink;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationProperties;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -184,7 +184,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
 
 
   /**
-   * Wraps an {@link consulo.ide.impl.idea.ui.components.labels.ActionLink} component and delegates accessibility support to it.
+   * Wraps an {@link ActionLink} component and delegates accessibility support to it.
    */
   public static class JActionLinkPanel extends JPanel {
     @Nonnull

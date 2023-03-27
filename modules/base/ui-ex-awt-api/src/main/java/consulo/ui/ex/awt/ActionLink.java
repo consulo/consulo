@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.components.labels;
+package consulo.ui.ex.awt;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
@@ -64,7 +60,8 @@ public class ActionLink extends LinkLabel implements DataProvider {
                                                       presentation,
                                                       ActionManager.getInstance(),
                                                       0);
-        ActionUtil.performDumbAwareUpdate(myAction, event, true);
+        ActionManagerEx actionManagerEx = ActionManagerEx.getInstanceEx();
+        actionManagerEx.performDumbAwareUpdate(myAction, event, true);
         if (event.getPresentation().isEnabled() && event.getPresentation().isVisible()) {
           myAction.actionPerformed(event);
           if (onDone != null) {
@@ -114,11 +111,11 @@ public class ActionLink extends LinkLabel implements DataProvider {
 
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
+    if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
       final Point p = SwingUtilities.getRoot(this).getLocationOnScreen();
       return new Rectangle(p.x, p.y + getHeight(), 0, 0);
     }
-    if (PlatformDataKeys.CONTEXT_MENU_POINT == dataId) {
+    if (UIExAWTDataKey.CONTEXT_MENU_POINT == dataId) {
       return SwingUtilities.convertPoint(this, 0, getHeight(), UIUtil.getRootPane(this));
     }
 

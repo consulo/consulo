@@ -29,7 +29,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.awt.*;
 import java.util.Comparator;
 
 /**
@@ -76,7 +75,6 @@ public interface PlatformDataKeys extends CommonDataKeys {
 
   Key<Object> SELECTED_ITEM = Key.create("selectedItem");
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
-  Key<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = Key.create("dominant.hint.rectangle");
   Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
   Key<ToolWindow> TOOL_WINDOW = ToolWindow.KEY;
   Key<StatusBar> STATUS_BAR = Key.create("STATUS_BAR");
@@ -94,11 +92,6 @@ public interface PlatformDataKeys extends CommonDataKeys {
 
   Key<Object> SPEED_SEARCH_COMPONENT = Key.create("speed.search.component.value");
   Key<String> SEARCH_INPUT_TEXT = Key.create("search.input.text.value");
-  /**
-   * Returns java.awt.Point to guess where to show context menu invoked by key.
-   * This point should be relative to the currently focused component
-   */
-  Key<Point> CONTEXT_MENU_POINT = Key.create("contextMenuPoint");
 
   /**
    * It's allowed to assign multiple actions to the same keyboard shortcut. Actions system filters them on the current

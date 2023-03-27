@@ -430,7 +430,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       }
     }
 
-    final Point point = dataContext.getData(PlatformDataKeys.CONTEXT_MENU_POINT);
+    final Point point = dataContext.getData(UIExAWTDataKey.CONTEXT_MENU_POINT);
     if (point != null) {
       return new RelativePoint(focusOwner, point);
     }

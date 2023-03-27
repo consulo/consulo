@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ui.AddEditDeleteListPanel;
+import consulo.ui.ex.awt.AddEditDeleteListPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;

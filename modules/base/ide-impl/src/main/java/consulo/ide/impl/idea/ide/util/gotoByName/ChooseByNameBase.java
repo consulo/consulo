@@ -295,7 +295,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         }
         return PsiUtilCore.toPsiElementArray(result);
       }
-      else if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
+      else if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         return getBounds();
       }
       return null;

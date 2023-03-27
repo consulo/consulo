@@ -31,4 +31,12 @@ public interface UIExAWTDataKey {
   @Deprecated
   @DeprecationInfo("Desktop only")
   Key<Component> CONTEXT_COMPONENT = Key.create("contextComponent");
+
+  /**
+   * Returns java.awt.Point to guess where to show context menu invoked by key.
+   * This point should be relative to the currently focused component
+   */
+  Key<Point> CONTEXT_MENU_POINT = Key.create("contextMenuPoint");
+
+  Key<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = Key.create("dominant.hint.rectangle");
 }

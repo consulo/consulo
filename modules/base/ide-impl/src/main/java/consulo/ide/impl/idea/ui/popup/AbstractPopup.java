@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -527,7 +526,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Nonnull
   private RelativePoint relativePointByQuickSearch(@Nonnull DataContext dataContext) {
-    Rectangle dominantArea = dataContext.getData(PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE);
+    Rectangle dominantArea = dataContext.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
 
     if (dominantArea != null) {
       final Component focusedComponent = getWndManager().getFocusedComponent(myProject);
@@ -595,7 +594,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Nonnull
   private RelativePoint getBestPositionFor(@Nonnull Editor editor) {
     DataContext context = ((EditorEx)editor).getDataContext();
-    Rectangle dominantArea = context.getData(PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE);
+    Rectangle dominantArea = context.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
     if (dominantArea != null && !myRequestFocus) {
       final JLayeredPane layeredPane = editor.getContentComponent().getRootPane().getLayeredPane();
       return relativePointWithDominantRectangle(layeredPane, dominantArea);

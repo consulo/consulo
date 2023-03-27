@@ -19,26 +19,26 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.text.CodeFoldingState;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
-import consulo.language.editor.folding.CodeFoldingManager;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.EditorNotifications;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.text.CodeFoldingState;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
+import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.fileEditor.EditorNotifications;
-import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
@@ -113,7 +113,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
     @Override
     public Object getData(@Nonnull final Key<?> dataId) {
-      if (PlatformDataKeys.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
+      if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
         final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {
           return lookup.getBounds();
