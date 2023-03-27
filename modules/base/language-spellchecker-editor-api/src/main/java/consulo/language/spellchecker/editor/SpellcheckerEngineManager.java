@@ -33,32 +33,32 @@ public interface SpellcheckerEngineManager {
   SpellcheckerEngine getActiveEngine();
 
   @Nonnull
-  default List<String> getSuggestions(@Nonnull String text) {
+  default List<String> getSuggestions(@Nonnull Project project, @Nonnull String text) {
     SpellcheckerEngine engine = getActiveEngine();
     if (engine == null) {
       return List.of();
     }
-    return engine.getSuggestions(text);
+    return engine.getSuggestions(project, text);
   }
 
-  default boolean hasProblem(@Nonnull String word) {
+  default boolean hasProblem(@Nonnull Project project, @Nonnull String word) {
     SpellcheckerEngine engine = getActiveEngine();
-    return engine != null && engine.hasProblem(word);
+    return engine != null && engine.hasProblem(project, word);
   }
 
-  default boolean canSaveUserWords() {
+  default boolean canSaveUserWords(@Nonnull Project project) {
     SpellcheckerEngine engine = getActiveEngine();
-    return engine != null && engine.canSaveUserWords();
+    return engine != null && engine.canSaveUserWords(project);
   }
 
-  default void acceptWordAsCorrect(@Nonnull String word, Project project) {
-    if (!canSaveUserWords()) {
-      throw new IllegalArgumentException("#canSaveUserWords() return false");
+  default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
+    if (!canSaveUserWords(project)) {
+      throw new IllegalArgumentException("#canSaveUserWords(Project) return false");
     }
 
     SpellcheckerEngine engine = getActiveEngine();
     if (engine != null) {
-      engine.acceptWordAsCorrect(word, project);
+      engine.acceptWordAsCorrect(project, word);
     }
   }
 }

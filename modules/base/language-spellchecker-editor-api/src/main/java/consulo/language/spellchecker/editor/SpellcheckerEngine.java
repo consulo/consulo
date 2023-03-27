@@ -36,15 +36,15 @@ public interface SpellcheckerEngine {
   LocalizeValue getDisplayName();
 
   @Nonnull
-  List<String> getSuggestions(@Nonnull String text);
+  List<String> getSuggestions(@Nonnull Project project, @Nonnull String text);
 
-  boolean hasProblem(@Nonnull String word);
+  boolean hasProblem(@Nonnull Project project, @Nonnull String word);
 
-  default boolean canSaveUserWords() {
+  default boolean canSaveUserWords(@Nonnull Project project) {
     return false;
   }
 
-  default void acceptWordAsCorrect(@Nonnull String word, Project project) {
+  default void acceptWordAsCorrect(@Nonnull Project project, @Nonnull String word) {
     throw new UnsupportedOperationException();
   }
 }
