@@ -15,6 +15,7 @@ module consulo.file.editor.api {
   requires transitive consulo.project.ui.api;
 
   exports consulo.fileEditor;
+  exports consulo.fileEditor.action;
   exports consulo.fileEditor.event;
   exports consulo.fileEditor.highlight;
   exports consulo.fileEditor.text;

@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.fileEditor.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorComposite;
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -42,8 +36,8 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
   @Nonnull
   protected List<Pair<FileEditorComposite, FileEditorWindow>> getFilesToClose(final AnActionEvent event) {
     final ArrayList<Pair<FileEditorComposite, FileEditorWindow>> res = new ArrayList<>();
-    final Project project = event.getData(CommonDataKeys.PROJECT);
-    final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
+    final Project project = event.getData(Project.KEY);
+    final FileEditorManager editorManager = FileEditorManager.getInstance(project);
     final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
     final FileEditorWindow[] windows;
     if (editorWindow != null) {
@@ -52,15 +46,12 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
     else {
       windows = editorManager.getWindows();
     }
-    final FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
-    if (fileStatusManager != null) {
-      for (int i = 0; i != windows.length; ++i) {
-        final FileEditorWindow window = windows[i];
-        final FileEditorComposite[] editors = window.getEditors();
-        for (final FileEditorComposite editor : editors) {
-          if (isFileToClose(editor, window)) {
-            res.add(Pair.create(editor, window));
-          }
+    for (int i = 0; i != windows.length; ++i) {
+      final FileEditorWindow window = windows[i];
+      final FileEditorComposite[] editors = window.getEditors();
+      for (final FileEditorComposite editor : editors) {
+        if (isFileToClose(editor, window)) {
+          res.add(Pair.create(editor, window));
         }
       }
     }
@@ -72,15 +63,17 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
   @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
+    final FileEditorWindow editorWindow = e.getData(FileEditorWindow.DATA_KEY);
+    final boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
     commandProcessor.executeCommand(project, () -> {
       List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(e);
       for (int i = 0; i != filesToClose.size(); ++i) {
         final Pair<FileEditorComposite, FileEditorWindow> we = filesToClose.get(i);
         we.getSecond().closeFile(we.getFirst().getFile());
       }
-    }, IdeBundle.message("command.close.all.unmodified.editors"), null);
+    }, getPresentationText(inSplitter), null);
   }
 
   @RequiredUIAccess
@@ -90,7 +83,7 @@ public abstract class CloseEditorsActionBase extends AnAction implements DumbAwa
     final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
     final boolean inSplitter = editorWindow != null && editorWindow.inSplitter();
     presentation.setText(getPresentationText(inSplitter));
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     boolean enabled = (project != null && isActionEnabled(project, event));
     if (ActionPlaces.isPopupPlace(event.getPlace())) {
       presentation.setVisible(enabled);
