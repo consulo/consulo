@@ -22,7 +22,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.RecursionManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
+import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
 import consulo.language.psi.stub.SingleEntryFileBasedIndexExtension;

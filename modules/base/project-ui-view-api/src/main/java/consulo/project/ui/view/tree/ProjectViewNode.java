@@ -16,7 +16,6 @@
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
@@ -26,7 +25,6 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
@@ -192,16 +190,9 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
 
   @Override
   protected boolean hasProblemFileBeneath() {
-    if (!Registry.is("projectView.showHierarchyErrors")) return false;
-
-    return WolfTheProblemSolver.getInstance(getProject()).hasProblemFilesBeneath(new Condition<VirtualFile>() {
-      @Override
-      public boolean value(final VirtualFile virtualFile) {
-        return contains(virtualFile)
-               // in case of flattened packages, when package node a.b.c contains error file, node a.b might not.
-               && (getValue() instanceof PsiElement && Comparing.equal(PsiUtilBase.getVirtualFile((PsiElement)getValue()), virtualFile) || someChildContainsFile(virtualFile));
-      }
-    });
+    return WolfTheProblemSolver.getInstance(getProject()).hasProblemFilesBeneath(virtualFile -> contains(virtualFile)
+           // in case of flattened packages, when package node a.b.c contains error file, node a.b might not.
+           && (getValue() instanceof PsiElement && Comparing.equal(PsiUtilBase.getVirtualFile((PsiElement)getValue()), virtualFile) || someChildContainsFile(virtualFile)));
   }
 
   /**

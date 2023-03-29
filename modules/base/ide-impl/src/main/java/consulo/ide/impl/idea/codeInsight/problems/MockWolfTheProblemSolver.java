@@ -17,15 +17,15 @@
 package consulo.ide.impl.idea.codeInsight.problems;
 
 import consulo.disposer.Disposable;
-import consulo.module.Module;
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author cdr
@@ -49,7 +49,7 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@Nonnull final Condition<VirtualFile> condition) {
+  public boolean hasProblemFilesBeneath(@Nonnull final Predicate<VirtualFile> condition) {
     return false;
   }
 

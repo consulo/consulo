@@ -110,30 +110,22 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
   private DnDSource myDragSource;
   private DnDManager myDndManager;
 
-  private void queueUpdateByProblem() {
-    if (Registry.is("projectView.showHierarchyErrors")) {
-      if (myTreeBuilder != null) {
-        myTreeBuilder.queueUpdate();
-      }
-    }
-  }
-
   protected AbstractProjectViewPane(@Nonnull Project project) {
     myProject = project;
     ProblemListener problemListener = new ProblemListener() {
       @Override
       public void problemsAppeared(@Nonnull VirtualFile file) {
-        queueUpdateByProblem();
+        queueUpdate();
       }
 
       @Override
       public void problemsChanged(@Nonnull VirtualFile file) {
-        queueUpdateByProblem();
+        queueUpdate();
       }
 
       @Override
       public void problemsDisappeared(@Nonnull VirtualFile file) {
-        queueUpdateByProblem();
+        queueUpdate();
       }
     };
     project.getMessageBus().connect(this).subscribe(ProblemListener.class, problemListener);
@@ -904,6 +896,14 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
 
   AsyncProjectViewSupport getAsyncSupport() {
     return null;
+  }
+
+  @Override
+  public void queueUpdate() {
+    AbstractTreeBuilder treeBuilder = getTreeBuilder();
+    if (treeBuilder != null) {
+      treeBuilder.queueUpdate();
+    }
   }
 
   @Nonnull

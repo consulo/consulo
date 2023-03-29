@@ -15,38 +15,37 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.application.AccessRule;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.application.ApplicationManager;
-import consulo.ide.navigationToolbar.NavBarModelExtension;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.content.bundle.SdkUtil;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.ProjectRootsUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
-import consulo.application.AccessRule;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.content.bundle.SdkUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -162,24 +161,21 @@ public class NavBarPresentation {
   }
 
   public static boolean wolfHasProblemFilesBeneath(final PsiElement scope) {
-    return WolfTheProblemSolver.getInstance(scope.getProject()).hasProblemFilesBeneath(new Condition<VirtualFile>() {
-      @Override
-      public boolean value(final VirtualFile virtualFile) {
-        if (scope instanceof PsiDirectory) {
-          final PsiDirectory directory = (PsiDirectory)scope;
-          if (!VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) return false;
-          return ModuleUtil.findModuleForFile(virtualFile, scope.getProject()) == ModuleUtil.findModuleForPsiElement(scope);
-        }
-        else if (scope instanceof PsiDirectoryContainer) { // TODO: remove. It doesn't look like we'll have packages in navbar ever again
-          final PsiDirectory[] psiDirectories = ((PsiDirectoryContainer)scope).getDirectories();
-          for (PsiDirectory directory : psiDirectories) {
-            if (VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
-              return true;
-            }
+    return WolfTheProblemSolver.getInstance(scope.getProject()).hasProblemFilesBeneath(virtualFile -> {
+      if (scope instanceof PsiDirectory) {
+        final PsiDirectory directory = (PsiDirectory)scope;
+        if (!VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) return false;
+        return ModuleUtil.findModuleForFile(virtualFile, scope.getProject()) == ModuleUtil.findModuleForPsiElement(scope);
+      }
+      else if (scope instanceof PsiDirectoryContainer) { // TODO: remove. It doesn't look like we'll have packages in navbar ever again
+        final PsiDirectory[] psiDirectories = ((PsiDirectoryContainer)scope).getDirectories();
+        for (PsiDirectory directory : psiDirectories) {
+          if (VfsUtil.isAncestor(directory.getVirtualFile(), virtualFile, false)) {
+            return true;
           }
         }
-        return false;
       }
+      return false;
     });
   }
 }

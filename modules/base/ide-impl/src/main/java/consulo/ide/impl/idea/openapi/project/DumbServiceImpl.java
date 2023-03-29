@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.IdeBundle;
+import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;

@@ -37,7 +37,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
@@ -54,6 +53,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 /**
  * @author cdr
@@ -297,12 +297,12 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@Nonnull Condition<VirtualFile> condition) {
+  public boolean hasProblemFilesBeneath(@Nonnull Predicate<VirtualFile> condition) {
     if (!myProject.isOpen()) return false;
     synchronized (myProblems) {
       if (!myProblems.isEmpty()) {
         for (VirtualFile problemFile : myProblems.keySet()) {
-          if (problemFile.isValid() && condition.value(problemFile)) return true;
+          if (problemFile.isValid() && condition.test(problemFile)) return true;
         }
       }
       return false;

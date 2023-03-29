@@ -21,12 +21,12 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author cdr
@@ -45,7 +45,7 @@ public abstract class WolfTheProblemSolver {
 
   public abstract void clearProblems(@Nonnull VirtualFile virtualFile);
 
-  public abstract boolean hasProblemFilesBeneath(@Nonnull Condition<VirtualFile> condition);
+  public abstract boolean hasProblemFilesBeneath(@Nonnull Predicate<VirtualFile> condition);
 
   public abstract boolean hasProblemFilesBeneath(@Nonnull Module scope);
 

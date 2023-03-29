@@ -69,4 +69,7 @@ public interface ProjectViewPane extends UserDataHolder, DataProvider, Disposabl
 
   @Nonnull
   Image getPresentableSubIdIcon(@Nonnull String subId);
+
+  default void queueUpdate() {
+  }
 }
