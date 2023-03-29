@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.compiler.artifact.element.*;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.compiler.CompilerBundle;
 import consulo.dataContext.DataSink;

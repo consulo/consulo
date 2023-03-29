@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex;
 
+// TODO move to consulo.ui.ex.tree
 public interface TreeExpander {
   void expandAll();
 

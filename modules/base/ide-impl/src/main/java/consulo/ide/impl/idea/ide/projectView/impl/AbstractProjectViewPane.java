@@ -14,7 +14,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.dnd.DnDEventImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;

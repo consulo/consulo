@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.hierarchy;
 
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.language.editor.hierarchy.HierarchyBrowser;
 import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.action.ContextHelpAction;

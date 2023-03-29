@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.codeInspection.ex.AppInspectionProfilesVisibleTreeS
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.ide.impl.idea.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState;
 import consulo.ide.impl.idea.codeInspection.ex.VisibleTreeState;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;

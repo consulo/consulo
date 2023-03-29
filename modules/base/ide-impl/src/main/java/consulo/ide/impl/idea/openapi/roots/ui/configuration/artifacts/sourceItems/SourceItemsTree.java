@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
 import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.SimpleDnDAwareTree;

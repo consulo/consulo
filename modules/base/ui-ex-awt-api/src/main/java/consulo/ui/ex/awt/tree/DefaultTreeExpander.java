@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide;
+package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

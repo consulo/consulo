@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.AutoScrollToSourceOptionProvider;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ide.impl.idea.ide.actions.*;
 import consulo.application.AllIcons;

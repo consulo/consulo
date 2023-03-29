@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.Label;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;

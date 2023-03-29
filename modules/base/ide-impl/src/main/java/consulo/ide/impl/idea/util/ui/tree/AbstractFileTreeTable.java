@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.ui.tree;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

@@ -25,7 +25,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.fileEditor.structureView.tree.ActionPresentation;
 import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
 import consulo.ide.impl.idea.execution.dashboard.tree.RunDashboardTreeStructure;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;

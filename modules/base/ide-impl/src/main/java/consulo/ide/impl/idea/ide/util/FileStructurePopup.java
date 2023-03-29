@@ -21,7 +21,7 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.actions.ViewStructureAction;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;

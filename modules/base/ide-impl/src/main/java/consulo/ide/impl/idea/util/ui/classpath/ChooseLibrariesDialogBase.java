@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;

@@ -5,7 +5,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.CopyProvider;
-import consulo.ide.impl.idea.ide.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ui.ex.awt.*;
