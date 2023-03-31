@@ -12,7 +12,7 @@ import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ContentRootData;
-import consulo.externalSystem.model.project.ExternalSystemSourceType;
+import consulo.externalSystem.rt.model.ExternalSystemSourceType;
 import consulo.externalSystem.model.project.ModuleData;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;

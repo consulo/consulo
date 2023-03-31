@@ -1,6 +1,7 @@
 package consulo.externalSystem.model.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.rt.model.ExternalSystemSourceType;
 import consulo.externalSystem.service.project.AbstractNamedData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
 import consulo.externalSystem.service.project.Identifiable;

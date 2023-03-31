@@ -12,6 +12,8 @@ module consulo.external.system.api {
   requires transitive consulo.execution.api;
   requires transitive consulo.execution.debug.api;
 
+  requires transitive consulo.external.system.rt;
+
   requires consulo.util.rmi;
   requires consulo.util.nodep;
 

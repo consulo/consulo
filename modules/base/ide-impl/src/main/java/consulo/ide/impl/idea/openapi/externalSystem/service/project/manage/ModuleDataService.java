@@ -6,7 +6,7 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.model.ProjectKeys;
-import consulo.externalSystem.model.project.ExternalSystemSourceType;
+import consulo.externalSystem.rt.model.ExternalSystemSourceType;
 import consulo.externalSystem.model.project.ModuleData;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;

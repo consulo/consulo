@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model;
+package consulo.externalSystem.rt.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class DefaultExternalTask implements ExternalTask {
   private String myQName;
   @Nullable
   private String myDescription;
-  @javax.annotation.Nullable
+  @Nullable
   private String myGroup;
 
   public DefaultExternalTask() {
@@ -64,17 +64,17 @@ public class DefaultExternalTask implements ExternalTask {
     myQName = QName;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getDescription() {
     return myDescription;
   }
 
-  public void setDescription(@javax.annotation.Nullable String description) {
+  public void setDescription(@Nullable String description) {
     myDescription = description;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getGroup() {
     return myGroup;

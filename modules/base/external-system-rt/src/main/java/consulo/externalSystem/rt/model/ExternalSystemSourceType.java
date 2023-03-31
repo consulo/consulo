@@ -1,4 +1,4 @@
-package consulo.externalSystem.model.project;
+package consulo.externalSystem.rt.model;
 
 /**
  * Enumerates module source types.

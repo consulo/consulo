@@ -1,6 +1,7 @@
 package consulo.externalSystem.model.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.rt.model.ExternalSystemSourceType;
 import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.util.io.FileUtil;

@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model;
-
-import consulo.externalSystem.model.project.IExternalSystemSourceType;
-import javax.annotation.Nonnull;
+package consulo.externalSystem.rt.model;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author Vladislav.Soroka
- * @since 7/14/2014
+ * @since 7/17/2014
  */
-public interface ExternalSourceSet extends Serializable {
-  @Nonnull
-  String getName();
-  //@NotNull
-  //ClasspathContainer getCompileClasspath();
+public interface IExternalSystemSourceType extends Serializable {
+  boolean isTest();
 
-  //@NotNull
-  //ClasspathContainer getRuntimeClasspath();
+  boolean isGenerated();
 
-  @Nonnull
-  Map<IExternalSystemSourceType, ExternalSourceDirectorySet> getSources();
+  boolean isResource();
+
+  boolean isExcluded();
 }

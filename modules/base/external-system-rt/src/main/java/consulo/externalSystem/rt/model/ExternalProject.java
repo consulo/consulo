@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model;
+package consulo.externalSystem.rt.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public interface ExternalProject extends Serializable {
   @Nonnull
   String getQName();
 
-  @javax.annotation.Nullable
+  @Nullable
   String getDescription();
 
   @Nonnull
@@ -55,7 +55,7 @@ public interface ExternalProject extends Serializable {
   @Nonnull
   File getBuildDir();
 
-  @javax.annotation.Nullable
+  @Nullable
   File getBuildFile();
 
   @Nonnull

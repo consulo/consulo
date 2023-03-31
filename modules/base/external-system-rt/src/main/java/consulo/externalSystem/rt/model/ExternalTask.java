@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalSystem.model.project;
+package consulo.externalSystem.rt.model;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
  * @author Vladislav.Soroka
- * @since 7/17/2014
+ * @since 7/14/2014
  */
-public interface IExternalSystemSourceType extends Serializable {
-  boolean isTest();
+public interface ExternalTask extends Serializable {
+  @Nonnull
+  String getName();
 
-  boolean isGenerated();
+  @Nonnull
+  String getQName();
 
-  boolean isResource();
+  @Nullable
+  String getDescription();
 
-  boolean isExcluded();
+  @Nullable
+  String getGroup();
 }
