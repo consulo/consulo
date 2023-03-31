@@ -545,7 +545,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor.textarea;
   exports consulo.ide.impl.idea.openapi.externalSystem.action;
   exports consulo.ide.impl.idea.openapi.externalSystem.importing;
-  exports consulo.ide.impl.idea.openapi.externalSystem.model;
   exports consulo.ide.impl.idea.openapi.externalSystem.model.settings;
   exports consulo.ide.impl.idea.openapi.externalSystem.psi.search;
   exports consulo.ide.impl.idea.openapi.externalSystem.service;
