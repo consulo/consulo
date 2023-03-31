@@ -51,6 +51,7 @@ import consulo.externalSystem.model.project.LibraryData;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.model.task.TaskCallback;
+import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.ParametersEnhancer;
 import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
 import consulo.externalSystem.service.execution.ExternalSystemRunConfiguration;

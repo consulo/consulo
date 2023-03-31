@@ -30,7 +30,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.model.ExternalSystemException;
+import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;

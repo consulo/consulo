@@ -19,7 +19,7 @@ import consulo.ide.ServiceManager;
 import consulo.externalSystem.ExternalSystemConfigurableAware;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
-import consulo.ide.impl.idea.openapi.externalSystem.model.LocationAwareExternalSystemException;
+import consulo.externalSystem.rt.model.LocationAwareExternalSystemException;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.ExternalSystemBundle;

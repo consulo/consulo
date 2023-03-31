@@ -1,4 +1,4 @@
-package consulo.externalSystem.model;
+package consulo.externalSystem.rt.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,8 +48,11 @@ public class ExternalSystemException extends RuntimeException {
     }
 
     StringWriter stringWriter = new StringWriter();
-    try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    try {
       cause.printStackTrace(printWriter);
+    } finally {
+      printWriter.close();
     }
     myOriginalReason = stringWriter.toString();
   }

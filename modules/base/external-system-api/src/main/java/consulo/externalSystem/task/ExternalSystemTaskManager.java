@@ -15,7 +15,7 @@
  */
 package consulo.externalSystem.task;
 
-import consulo.externalSystem.model.ExternalSystemException;
+import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;

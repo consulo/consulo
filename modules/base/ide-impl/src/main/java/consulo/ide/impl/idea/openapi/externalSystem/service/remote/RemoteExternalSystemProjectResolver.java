@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote;
 
 import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.model.ExternalSystemException;
+import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;

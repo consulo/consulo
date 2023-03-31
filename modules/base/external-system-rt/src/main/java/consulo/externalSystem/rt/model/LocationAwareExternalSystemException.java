@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.externalSystem.model;
-
-import consulo.externalSystem.model.ExternalSystemException;
+package consulo.externalSystem.rt.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +31,7 @@ public class LocationAwareExternalSystemException extends ExternalSystemExceptio
     this(message, null, filePath, -1, -1, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@javax.annotation.Nullable String message, String filePath, Integer line, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(@Nullable String message, String filePath, Integer line, @Nonnull String... quickFixes) {
     this(message, null, filePath, line, -1, quickFixes);
   }
 
@@ -41,7 +39,7 @@ public class LocationAwareExternalSystemException extends ExternalSystemExceptio
     this(message, null, filePath, line, column, quickFixes);
   }
 
-  public LocationAwareExternalSystemException(@javax.annotation.Nullable Throwable cause, String filePath, Integer line, Integer column, @Nonnull String... quickFixes) {
+  public LocationAwareExternalSystemException(@Nullable Throwable cause, String filePath, Integer line, Integer column, @Nonnull String... quickFixes) {
     this(null, cause, filePath, line, column, quickFixes);
   }
 
