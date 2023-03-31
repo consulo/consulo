@@ -93,4 +93,7 @@ public interface HttpProxyManager {
 
   @Nonnull
   List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri);
+
+  @Nonnull
+  List<String> getProxyExceptions();
 }

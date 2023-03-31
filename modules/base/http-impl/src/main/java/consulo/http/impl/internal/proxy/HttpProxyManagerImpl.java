@@ -521,6 +521,16 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     return result;
   }
 
+  @Nonnull
+  @Override
+  public List<String> getProxyExceptions() {
+    String proxyExceptions = myState.PROXY_EXCEPTIONS;
+    if (StringUtil.isEmpty(proxyExceptions)) {
+      return List.of();
+    }
+    return StringUtil.split(proxyExceptions, ",");
+  }
+
   public static boolean isRealProxy(@Nonnull Proxy proxy) {
     return !Proxy.NO_PROXY.equals(proxy) && !Proxy.Type.DIRECT.equals(proxy.type());
   }
