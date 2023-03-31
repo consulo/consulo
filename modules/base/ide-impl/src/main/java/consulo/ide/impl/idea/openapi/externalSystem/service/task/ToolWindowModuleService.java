@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
@@ -45,6 +46,7 @@ import java.util.function.Function;
  * @since 5/15/13 1:02 PM
  */
 @Order(ExternalSystemConstants.BUILTIN_TOOL_WINDOW_SERVICE_ORDER)
+@ExtensionImpl
 public class ToolWindowModuleService extends AbstractToolWindowService<ModuleData> {
 
   @Nonnull
@@ -57,7 +59,9 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   }
 
   @Override
-  protected void processData(@Nonnull final Collection<DataNode<ModuleData>> nodes, @Nonnull Project project, @javax.annotation.Nullable final ExternalSystemTasksTreeModel model) {
+  protected void processData(@Nonnull final Collection<DataNode<ModuleData>> nodes,
+                             @Nonnull Project project,
+                             @javax.annotation.Nullable final ExternalSystemTasksTreeModel model) {
     if (nodes.isEmpty()) {
       return;
     }

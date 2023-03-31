@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.language.content.ProductionContentFolderTypeProvider;
@@ -50,6 +51,7 @@ import java.util.Map;
  * @since 2/7/12 3:20 PM
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
+@ExtensionImpl
 public class ContentRootDataService implements ProjectDataService<ContentRootData, ContentEntry> {
 
   private static final Logger LOG = Logger.getInstance(ContentRootDataService.class);
@@ -61,7 +63,9 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   @Override
-  public void importData(@Nonnull final Collection<DataNode<ContentRootData>> toImport, @Nonnull final Project project, boolean synchronous) {
+  public void importData(@Nonnull final Collection<DataNode<ContentRootData>> toImport,
+                         @Nonnull final Project project,
+                         boolean synchronous) {
     if (toImport.isEmpty()) {
       return;
     }
@@ -70,7 +74,8 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ContentRootData>>> entry : byModule.entrySet()) {
       final Module module = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (module == null) {
-        LOG.warn(String.format("Can't import content roots. Reason: target module (%s) is not found at the ide. Content roots: %s", entry.getKey(),
+        LOG.warn(String.format("Can't import content roots. Reason: target module (%s) is not found at the ide. Content roots: %s",
+                               entry.getKey(),
                                entry.getValue()));
         continue;
       }
@@ -78,7 +83,9 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     }
   }
 
-  private static void importData(@Nonnull final Collection<DataNode<ContentRootData>> datas, @Nonnull final Module module, boolean synchronous) {
+  private static void importData(@Nonnull final Collection<DataNode<ContentRootData>> datas,
+                                 @Nonnull final Module module,
+                                 boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
       @RequiredUIAccess
       @Override
@@ -125,7 +132,11 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.RESOURCE)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), ProductionResourceContentFolderTypeProvider.getInstance(), false,
+              createSourceRootIfAbsent(contentEntry,
+                                       path,
+                                       module.getName(),
+                                       ProductionResourceContentFolderTypeProvider.getInstance(),
+                                       false,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.TEST_RESOURCE)) {

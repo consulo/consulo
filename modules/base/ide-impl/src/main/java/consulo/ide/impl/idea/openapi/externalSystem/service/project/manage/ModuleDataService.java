@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.externalSystem.model.DataNode;
@@ -49,6 +50,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2/7/12 2:49 PM
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
+@ExtensionImpl
 public class ModuleDataService implements ProjectDataService<ModuleData, Module> {
   public static ModuleDataService getInstance() {
     return EP_NAME.findExtension(ModuleDataService.class);

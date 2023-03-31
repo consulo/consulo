@@ -18,26 +18,23 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.application.util.NotNullLazyValue;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.Stack;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * Aggregates all {@link ProjectDataService#EP_NAME registered data services} and provides entry points for project data management.
+ * Aggregates all {@link ProjectDataService registered data services} and provides entry points for project data management.
  *
  * @author Denis Zhdanov
  * @since 4/16/13 11:38 AM
@@ -46,19 +43,15 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ProjectDataManager {
-
   private static final Logger LOG = Logger.getInstance(ProjectDataManager.class);
 
-  @Nonnull
-  private final NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>> myServices = new NotNullLazyValue<Map<Key<?>, List<ProjectDataService<?, ?>>>>() {
-    @Nonnull
-    @Override
-    protected Map<Key<?>, List<ProjectDataService<?, ?>>> compute() {
+  private static final ExtensionPointCacheKey<ProjectDataService, Map<Key<?>, List<ProjectDataService<?, ?>>>> CACHE_KEY =
+    ExtensionPointCacheKey.create("ProjectDataService", projectDataServices -> {
       Map<Key<?>, List<ProjectDataService<?, ?>>> result = new HashMap<>();
-      for (ProjectDataService service : ProjectDataService.EP_NAME.getExtensionList()) {
+      for (ProjectDataService service : projectDataServices) {
         List<ProjectDataService<?, ?>> services = result.get(service.getTargetDataKey());
         if (services == null) {
-          result.put(service.getTargetDataKey(), services = ContainerUtilRt.newArrayList());
+          result.put(service.getTargetDataKey(), services = new ArrayList<>());
         }
         services.add(service);
       }
@@ -68,15 +61,26 @@ public class ProjectDataManager {
       }
 
       return result;
-    }
-  };
+    });
+
+  private final Application myApplication;
+
+  @Inject
+  public ProjectDataManager(Application application) {
+    myApplication = application;
+  }
+
+  @Nonnull
+  private Map<Key<?>, List<ProjectDataService<?, ?>>> getServices() {
+    return myApplication.getExtensionPoint(ProjectDataService.class).getOrBuildCache(CACHE_KEY);
+  }
 
   @SuppressWarnings("unchecked")
   public <T> void importData(@Nonnull Collection<DataNode<?>> nodes, @Nonnull Project project, boolean synchronous) {
     Map<Key<?>, List<DataNode<?>>> grouped = ExternalSystemApiUtil.group(nodes);
     for (Map.Entry<Key<?>, List<DataNode<?>>> entry : grouped.entrySet()) {
       // Simple class cast makes ide happy but compiler fails.
-      Collection<DataNode<T>> dummy = ContainerUtilRt.newArrayList();
+      Collection<DataNode<T>> dummy = new ArrayList<>();
       for (DataNode<?> node : entry.getValue()) {
         dummy.add((DataNode<T>)node);
       }
@@ -87,9 +91,11 @@ public class ProjectDataManager {
   @SuppressWarnings("unchecked")
   public <T> void importData(@Nonnull Key<T> key, @Nonnull Collection<DataNode<T>> nodes, @Nonnull Project project, boolean synchronous) {
     ensureTheDataIsReadyToUse(nodes);
-    List<ProjectDataService<?, ?>> services = myServices.getValue().get(key);
+    List<ProjectDataService<?, ?>> services = getServices().get(key);
     if (services == null) {
-      LOG.warn(String.format("Can't import data nodes '%s'. Reason: no service is registered for key %s. Available services for %s", nodes, key, myServices.getValue().keySet()));
+      LOG.warn(String.format("Can't import data nodes '%s'. Reason: no service is registered for key %s. Available services for %s",
+                             nodes,
+                             key, getServices().keySet()));
     }
     else {
       for (ProjectDataService<?, ?> service : services) {
@@ -97,7 +103,7 @@ public class ProjectDataManager {
       }
     }
 
-    Collection<DataNode<?>> children = ContainerUtilRt.newArrayList();
+    Collection<DataNode<?>> children = new ArrayList<>();
     for (DataNode<T> node : nodes) {
       children.addAll(node.getChildren());
     }
@@ -106,8 +112,8 @@ public class ProjectDataManager {
 
   @SuppressWarnings("unchecked")
   private <T> void ensureTheDataIsReadyToUse(@Nonnull Collection<DataNode<T>> nodes) {
-    Map<Key<?>, List<ProjectDataService<?, ?>>> servicesByKey = myServices.getValue();
-    Stack<DataNode<T>> toProcess = ContainerUtil.newStack(nodes);
+    Map<Key<?>, List<ProjectDataService<?, ?>>> servicesByKey = getServices();
+    Stack<DataNode<T>> toProcess = new Stack<>(nodes);
     while (!toProcess.isEmpty()) {
       DataNode<T> node = toProcess.pop();
       List<ProjectDataService<?, ?>> services = servicesByKey.get(node.getKey());
@@ -125,7 +131,7 @@ public class ProjectDataManager {
 
   @SuppressWarnings("unchecked")
   public <T> void removeData(@Nonnull Key<?> key, @Nonnull Collection<T> toRemove, @Nonnull Project project, boolean synchronous) {
-    List<ProjectDataService<?, ?>> services = myServices.getValue().get(key);
+    List<ProjectDataService<?, ?>> services = getServices().get(key);
     for (ProjectDataService<?, ?> service : services) {
       ((ProjectDataService<?, T>)service).removeData(toRemove, project, synchronous);
     }

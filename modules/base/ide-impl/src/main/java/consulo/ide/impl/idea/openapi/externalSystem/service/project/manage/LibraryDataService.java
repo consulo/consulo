@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.logging.Logger;
 import consulo.externalSystem.model.DataNode;
@@ -40,6 +41,7 @@ import java.util.Set;
  * @since 2/15/12 11:32 AM
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
+@ExtensionImpl
 public class LibraryDataService implements ProjectDataService<LibraryData, Library> {
   public static LibraryDataService getInstance() {
     return EP_NAME.findExtension(LibraryDataService.class);
@@ -92,7 +94,10 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     return result;
   }
 
-  public void importLibrary(@Nonnull final String libraryName, @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles, @Nonnull final Project project, boolean synchronous) {
+  public void importLibrary(@Nonnull final String libraryName,
+                            @Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+                            @Nonnull final Project project,
+                            boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(project) {
       @RequiredUIAccess
       @Override
@@ -119,7 +124,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  public void registerPaths(@Nonnull final Map<OrderRootType, Collection<File>> libraryFiles, @Nonnull Library.ModifiableModel model, @Nonnull String libraryName) {
+  public void registerPaths(@Nonnull final Map<OrderRootType, Collection<File>> libraryFiles,
+                            @Nonnull Library.ModifiableModel model,
+                            @Nonnull String libraryName) {
     for (Map.Entry<OrderRootType, Collection<File>> entry : libraryFiles.entrySet()) {
       for (File file : entry.getValue()) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
@@ -137,7 +144,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         else {
           VirtualFile archiveRoot = ArchiveVfsUtil.getArchiveRootForLocalFile(virtualFile);
           if (archiveRoot == null) {
-            LOG.warn(String.format("Can't parse contents of the jar file at path '%s' for the library '%s''", file.getAbsolutePath(), libraryName));
+            LOG.warn(String.format("Can't parse contents of the jar file at path '%s' for the library '%s''",
+                                   file.getAbsolutePath(),
+                                   libraryName));
             continue;
           }
           model.addRoot(archiveRoot, entry.getKey());
@@ -175,7 +184,10 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
     });
   }
 
-  public void syncPaths(@Nonnull final LibraryData externalLibrary, @Nonnull final Library ideLibrary, @Nonnull final Project project, boolean synchronous) {
+  public void syncPaths(@Nonnull final LibraryData externalLibrary,
+                        @Nonnull final Library ideLibrary,
+                        @Nonnull final Project project,
+                        boolean synchronous) {
     if (externalLibrary.isUnresolved()) {
       return;
     }

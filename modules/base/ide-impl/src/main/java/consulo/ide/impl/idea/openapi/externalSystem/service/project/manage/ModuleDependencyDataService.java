@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.model.ProjectKeys;
@@ -53,6 +54,7 @@ import static consulo.externalSystem.model.ProjectKeys.MODULE;
  * @since 4/15/13 8:37 AM
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
+@ExtensionImpl
 public class ModuleDependencyDataService extends AbstractDependencyDataService<ModuleDependencyData, ModuleOrderEntry> {
 
   private static final Logger LOG = Logger.getInstance(ModuleDependencyDataService.class);
@@ -65,7 +67,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
 
   @Override
   public void importData(@Nonnull Collection<DataNode<ModuleDependencyData>> toImport, @Nonnull Project project, boolean synchronous) {
-    Map<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> byModule= ExternalSystemApiUtil.groupBy(toImport, MODULE);
+    Map<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> byModule = ExternalSystemApiUtil.groupBy(toImport, MODULE);
     for (Map.Entry<DataNode<ModuleData>, List<DataNode<ModuleDependencyData>>> entry : byModule.entrySet()) {
       Module ideModule = ProjectStructureHelper.findIdeModule(entry.getKey().getData(), project);
       if (ideModule == null) {
@@ -85,21 +87,21 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
 
   public void importData(@Nonnull final Collection<DataNode<ModuleDependencyData>> toImport,
                          @Nonnull final Module module,
-                         final boolean synchronous)
-  {
+                         final boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(module) {
       @RequiredUIAccess
       @Override
       public void execute() {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-        Map<Pair<String /* dependency module internal name */, /* dependency module scope */DependencyScope>, ModuleOrderEntry> toRemove = ContainerUtilRt.newHashMap();
+        Map<Pair<String /* dependency module internal name */, /* dependency module scope */DependencyScope>, ModuleOrderEntry> toRemove =
+          ContainerUtilRt.newHashMap();
         for (OrderEntry entry : moduleRootManager.getOrderEntries()) {
           if (entry instanceof ModuleOrderEntry) {
             ModuleOrderEntry e = (ModuleOrderEntry)entry;
             toRemove.put(Pair.create(e.getModuleName(), e.getScope()), e);
           }
         }
-        
+
         final ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
         try {
           for (DataNode<ModuleDependencyData> dependencyNode : toImport) {

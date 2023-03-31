@@ -17,9 +17,9 @@ package consulo.externalSystem.service.notification;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,9 +32,6 @@ import javax.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemNotificationExtension {
 
-  ExtensionPointName<ExternalSystemNotificationExtension> EP_NAME
-          = ExtensionPointName.create(ExternalSystemNotificationExtension.class);
-
   @Nonnull
   ProjectSystemId getTargetExternalSystemId();
 
@@ -42,10 +39,8 @@ public interface ExternalSystemNotificationExtension {
    * Allows to customize external system processing notification.
    *
    * @param notificationData notification data
-   * @param project target ide project
-   * @param error   error occurred during external system processing
+   * @param project          target ide project
+   * @param error            error occurred during external system processing
    */
-  void customize(@Nonnull NotificationData notificationData,
-                 @Nonnull Project project,
-                 @Nullable Throwable error);
+  void customize(@Nonnull NotificationData notificationData, @Nonnull Project project, @Nullable Throwable error);
 }

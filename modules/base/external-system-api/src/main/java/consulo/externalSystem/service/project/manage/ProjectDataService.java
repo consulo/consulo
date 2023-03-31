@@ -51,6 +51,7 @@ import java.util.Collection;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ProjectDataService<E, I> {
 
+  @Deprecated
   ExtensionPointName<ProjectDataService> EP_NAME = ExtensionPointName.create(ProjectDataService.class);
 
   /**

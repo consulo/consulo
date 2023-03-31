@@ -131,7 +131,7 @@ public class ExternalSystemNotificationManager {
                     title, message, notificationCategory, NotificationSource.PROJECT_SYNC,
                     filePath, ObjectUtil.notNull(line, -1), ObjectUtil.notNull(column, -1), false);
 
-    for (ExternalSystemNotificationExtension extension : ExternalSystemNotificationExtension.EP_NAME.getExtensionList()) {
+    for (ExternalSystemNotificationExtension extension : myProject.getApplication().getExtensionList(ExternalSystemNotificationExtension.class)) {
       if (!externalSystemId.equals(extension.getTargetExternalSystemId())) {
         continue;
       }

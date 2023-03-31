@@ -472,6 +472,7 @@ public class ExternalSystemApiUtil {
     return new ArtifactInfo(matcher.group(1), null, matcher.group(2));
   }
 
+  @Deprecated
   public static void orderAwareSort(@Nonnull List<?> data) {
     Collections.sort(data, ORDER_AWARE_COMPARATOR);
   }

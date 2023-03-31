@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.externalSystem.service.project.manage.ProjectDataService;
@@ -37,6 +38,7 @@ import java.util.Collection;
  * @author Denis Zhdanov
  * @since 2/21/13 2:40 PM
  */
+@ExtensionImpl
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, Project> {
   

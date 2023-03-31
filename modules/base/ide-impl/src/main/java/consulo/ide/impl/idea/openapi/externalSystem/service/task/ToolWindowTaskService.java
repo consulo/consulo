@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
@@ -46,6 +47,7 @@ import java.util.function.Function;
  * @since 5/15/13 7:21 PM
  */
 @Order(ExternalSystemConstants.BUILTIN_TOOL_WINDOW_SERVICE_ORDER)
+@ExtensionImpl
 public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
 
   @Nonnull
