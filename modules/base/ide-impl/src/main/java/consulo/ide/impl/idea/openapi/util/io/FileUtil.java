@@ -1096,35 +1096,7 @@ public class FileUtil extends FileUtilRt {
    */
   @Nullable
   public static String findFileInProvidedPath(String providedPath, String... fileNames) {
-    if (StringUtil.isEmpty(providedPath)) {
-      return "";
-    }
-
-    File providedFile = new File(providedPath);
-    if (providedFile.exists() && ArrayUtil.indexOf(fileNames, providedFile.getName()) >= 0) {
-      return toSystemDependentName(providedFile.getPath());
-    }
-
-    if (providedFile.isDirectory()) {  //user chose folder with file
-      for (String fileName : fileNames) {
-        File file = new File(providedFile, fileName);
-        if (fileName.equals(file.getName()) && file.exists()) {
-          return toSystemDependentName(file.getPath());
-        }
-      }
-    }
-
-    providedFile = providedFile.getParentFile();  //users chose wrong file in same directory
-    if (providedFile != null && providedFile.exists()) {
-      for (String fileName : fileNames) {
-        File file = new File(providedFile, fileName);
-        if (fileName.equals(file.getName()) && file.exists()) {
-          return toSystemDependentName(file.getPath());
-        }
-      }
-    }
-
-    return null;
+    return consulo.util.io.FileUtil.findFileInProvidedPath(providedPath, fileNames);
   }
 
   public static boolean isAbsolutePlatformIndependent(@Nonnull String path) {

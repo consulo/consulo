@@ -1452,4 +1452,46 @@ public class FileUtil {
     final String path = file.getPath();
     return StringUtil.endsWithIgnoreCase(path, ".jar") || StringUtil.endsWithIgnoreCase(path, ".zip");
   }
+
+  /**
+   * Returns empty string for empty path.
+   * First checks whether provided path is a path of a file with sought-for name.
+   * Unless found, checks if provided file was a directory. In this case checks existence
+   * of child files with given names in order "as provided". Finally checks filename among
+   * brother-files of provided. Returns null if nothing found.
+   *
+   * @return path of the first of found files or empty string or null.
+   */
+  @Nullable
+  public static String findFileInProvidedPath(String providedPath, String... fileNames) {
+    if (StringUtil.isEmpty(providedPath)) {
+      return "";
+    }
+
+    File providedFile = new File(providedPath);
+    if (providedFile.exists() && ArrayUtil.indexOf(fileNames, providedFile.getName()) >= 0) {
+      return toSystemDependentName(providedFile.getPath());
+    }
+
+    if (providedFile.isDirectory()) {  //user chose folder with file
+      for (String fileName : fileNames) {
+        File file = new File(providedFile, fileName);
+        if (fileName.equals(file.getName()) && file.exists()) {
+          return toSystemDependentName(file.getPath());
+        }
+      }
+    }
+
+    providedFile = providedFile.getParentFile();  //users chose wrong file in same directory
+    if (providedFile != null && providedFile.exists()) {
+      for (String fileName : fileNames) {
+        File file = new File(providedFile, fileName);
+        if (fileName.equals(file.getName()) && file.exists()) {
+          return toSystemDependentName(file.getPath());
+        }
+      }
+    }
+
+    return null;
+  }
 }
