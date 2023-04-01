@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 01-Sep-22
  */
-@ExtensionImpl(order = "first")
+@ExtensionImpl(order = "last")
 public class RawStacktraceAnalyzer implements StacktraceAnalyzer {
   @Nonnull
   @Override
@@ -38,7 +38,7 @@ public class RawStacktraceAnalyzer implements StacktraceAnalyzer {
 
   @Override
   public boolean isPreferredForProject(@Nonnull Project project) {
-    return false;
+    return true;
   }
 
   @Override
