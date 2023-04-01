@@ -82,7 +82,7 @@ public class UnscrambleDialog extends DialogWrapper {
     myAnalyzerBox.setRenderer(new ColoredListCellRenderer<StacktraceAnalyzer>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, StacktraceAnalyzer value, int index, boolean selected, boolean hasFocus) {
-        append(value.getName().get());
+        append(value == null ? "" : value.getName().get());
       }
     });
 
