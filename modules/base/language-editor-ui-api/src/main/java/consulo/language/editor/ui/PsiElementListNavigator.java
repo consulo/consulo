@@ -2,7 +2,6 @@
 
 package consulo.language.editor.ui;
 
-import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
@@ -101,11 +100,10 @@ public class PsiElementListNavigator {
                                               final ListCellRenderer listRenderer,
                                               @Nullable final BackgroundUpdaterTask listUpdaterTask,
                                               @Nonnull final Consumer<Object[]> consumer) {
-    PsiElementListNavigator navigator = Application.get().getInstance(PsiElementListNavigator.class);
-    return navigator.builder(targets, title).setFindUsagesTitle(findUsagesTitle).setListRenderer(listRenderer).setListUpdaterTask(listUpdaterTask).setTargetsConsumer(consumer).build();
+    return builder(targets, title).setFindUsagesTitle(findUsagesTitle).setListRenderer(listRenderer).setListUpdaterTask(listUpdaterTask).setTargetsConsumer(consumer).build();
   }
 
-  public NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
+  private static NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
     return LanguageEditorPopupFactory.getInstance().builder(targets, title);
   }
 
