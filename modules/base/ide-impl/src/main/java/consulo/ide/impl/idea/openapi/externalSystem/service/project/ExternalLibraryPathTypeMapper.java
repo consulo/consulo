@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 1/17/13 3:51 PM
  */
-@ServiceAPI(ComponentScope.PROJECT)
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalLibraryPathTypeMapper {
   @Nonnull
   OrderRootType map(@Nonnull LibraryPathType type);
