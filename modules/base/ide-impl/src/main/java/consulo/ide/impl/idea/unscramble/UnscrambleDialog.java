@@ -92,7 +92,7 @@ public class UnscrambleDialog extends DialogWrapper {
     else {
       for (StacktraceAnalyzer analyzer : analyzers) {
         if (analyzer.isPreferredForProject(project)) {
-          myAnalyzerBox.setSelectedItem(stacktraceAnalyzer);
+          myAnalyzerBox.setSelectedItem(analyzer);
           break;
         }
       }
