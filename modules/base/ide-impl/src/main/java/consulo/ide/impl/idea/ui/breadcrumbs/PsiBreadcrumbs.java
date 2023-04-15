@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.Application;
 import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.UIBundle;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Breadcrumbs;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
@@ -102,8 +102,9 @@ final class PsiBreadcrumbs extends Breadcrumbs {
         };
         final IdeTooltipManagerImpl tooltipManager = IdeTooltipManagerImpl.getInstanceImpl();
         final Component component = event == null ? null : event.getComponent();
-        tooltipLazy = ReadAction.nonBlocking(() -> crumb.getTooltip()).expireWhen(() -> !tooltipManager.isProcessing(component))
-                .finishOnUiThread(IdeaModalityState.any(), toolTipText -> tooltipManager.updateShownTooltip(component)).submit(AppExecutorUtil.getAppExecutorService()).onError(throwable -> {
+        tooltipLazy = ReadAction.nonBlocking(crumb::getTooltip)
+                                .expireWhen(() -> !tooltipManager.isProcessing(component))
+                                .finishOnUiThread(Application::getAnyModalityState, toolTipText -> tooltipManager.updateShownTooltip(component)).submit(AppExecutorUtil.getAppExecutorService()).onError(throwable -> {
                   if (!(throwable instanceof CancellationException)) {
                     LOG.error("Exception in LazyTooltipCrumb", throwable);
                   }

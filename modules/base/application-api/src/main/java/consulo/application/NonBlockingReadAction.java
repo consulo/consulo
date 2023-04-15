@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * A utility for running non-blocking read actions in background thread.
@@ -71,7 +72,7 @@ public interface NonBlockingReadAction<T> {
    * are invoked on UI thread, and no write action is allowed to interfere before that and possibly invalidate the result.
    */
   @Contract(pure = true)
-  NonBlockingReadAction<T> finishOnUiThread(@Nonnull ModalityState modality, @Nonnull Consumer<? super T> uiThreadAction);
+  NonBlockingReadAction<T> finishOnUiThread(@Nonnull Function<Application, ModalityState> modalityGetter, @Nonnull Consumer<? super T> uiThreadAction);
 
   /**
    * Merges together similar computations by cancelling the previous ones when a new one is submitted.

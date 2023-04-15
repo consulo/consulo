@@ -5,11 +5,11 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
@@ -718,8 +718,11 @@ public final class CtrlMouseHandler {
         return;
       }
 
-      myExecutionProgress = ReadAction.nonBlocking(() -> doExecute()).withDocumentsCommitted(myProject).expireWhen(() -> isTaskOutdated(myHostEditor))
-              .finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).submit(AppExecutorUtil.getAppExecutorService());
+      myExecutionProgress = ReadAction.nonBlocking(this::doExecute)
+                                      .withDocumentsCommitted(myProject)
+                                      .expireWhen(() -> isTaskOutdated(myHostEditor))
+                                      .finishOnUiThread(Application::getDefaultModalityState, Runnable::run)
+                                      .submit(AppExecutorUtil.getAppExecutorService());
     }
 
     private Runnable createDisposalContinuation() {
@@ -850,7 +853,7 @@ public final class CtrlMouseHandler {
           showDumbModeNotification(myProject);
           return createDisposalContinuation();
         }
-      }).finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).expireWith(hintDisposable).expireWhen(() -> !info.isValid(editor.getDocument()))
+      }).finishOnUiThread(Application::getDefaultModalityState, Runnable::run).withDocumentsCommitted(myProject).expireWith(hintDisposable).expireWhen(() -> !info.isValid(editor.getDocument()))
               .coalesceBy(hint).submit(AppExecutorUtil.getAppExecutorService()));
     }
 

@@ -1,9 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
@@ -61,7 +61,7 @@ public class EditorHighlighterUpdater {
             .expireWith(myProject)
             .expireWhen(() -> (myFile != null && !myFile.isValid()) || myEditor.isDisposed())
             .coalesceBy(EditorHighlighterUpdater.class, myEditor)
-            .finishOnUiThread(IdeaModalityState.any(), myEditor::setHighlighter)
+            .finishOnUiThread(Application::getAnyModalityState, myEditor::setHighlighter)
             .submit(NonUrgentExecutor.getInstance());
   }
 
@@ -91,8 +91,8 @@ public class EditorHighlighterUpdater {
   }
 
   @TestOnly
-  public static void completeAsyncTasks() {
-    NonBlockingReadActionImpl.waitForAsyncTaskCompletion();
+  public static void completeAsyncTasks(Application application) {
+    NonBlockingReadActionImpl.waitForAsyncTaskCompletion(application);
   }
 
   /**

@@ -15,31 +15,30 @@
  */
 package consulo.ide.impl.psi.codeStyle;
 
-import consulo.language.codeStyle.CodeStyle;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import consulo.document.Document;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.progress.DumbProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.project.Project;
-import consulo.util.lang.EmptyRunnable;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.document.Document;
+import consulo.ide.impl.idea.util.Time;
 import consulo.ide.impl.psi.codeStyle.autodetect.IndentOptionsAdjuster;
 import consulo.ide.impl.psi.codeStyle.autodetect.IndentOptionsDetectorImpl;
-import consulo.ide.impl.idea.util.Time;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.EmptyRunnable;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
-
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -107,7 +106,7 @@ class DetectAndAdjustIndentOptionsTask {
           return EmptyRunnable.INSTANCE;
         }
         return indentAdjuster;
-      }).finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).submit(BOUNDED_EXECUTOR);
+      }).finishOnUiThread(Application::getDefaultModalityState, Runnable::run).withDocumentsCommitted(myProject).submit(BOUNDED_EXECUTOR);
     }
   }
 

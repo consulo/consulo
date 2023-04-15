@@ -15,7 +15,6 @@
  */
 package consulo.application;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jetbrains.annotations.Contract;
@@ -25,7 +24,6 @@ import java.util.concurrent.Callable;
 
 @Nonnull
 @Deprecated
-@DeprecationInfo("Use AccessRule.writeAsync()")
 public final class ReadAction<T>  {
   @Deprecated
   public static AccessToken start() {

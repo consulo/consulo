@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -183,7 +184,7 @@ public class BreadcrumbsWrapper extends JComponent implements Disposable {
     int offset = myEditor.getCaretModel().getOffset();
     Boolean forcedShown = BreadcrumbsForceShownSettings.getForcedShown(myEditor);
     ReadAction.nonBlocking(() -> myBreadcrumbsCollector.computeCrumbs(myFile, document, offset, forcedShown)).withDocumentsCommitted(myProject).expireWith(this).coalesceBy(this)
-            .finishOnUiThread(IdeaModalityState.any(), (_crumbs) -> {
+            .finishOnUiThread(Application::getAnyModalityState, (_crumbs) -> {
               Iterable<? extends Crumb> crumbs = breadcrumbs.isShowing() || ApplicationManager.getApplication().isHeadlessEnvironment() ? _crumbs : EMPTY_BREADCRUMBS;
               breadcrumbs.setFont(getNewFont(myEditor));
               breadcrumbs.setCrumbs(crumbs);

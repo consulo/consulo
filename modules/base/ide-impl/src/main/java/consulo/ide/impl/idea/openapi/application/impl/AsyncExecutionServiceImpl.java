@@ -5,6 +5,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
@@ -19,8 +20,11 @@ import java.util.concurrent.Callable;
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   private static long ourWriteActionCounter = 0;
 
+  private final Application myApplication;
+
   @Inject
   public AsyncExecutionServiceImpl(Application app) {
+    myApplication = app;
     app.addApplicationListener(new ApplicationListener() {
       @Override
       public void writeActionStarted(@Nonnull Object action) {
@@ -38,20 +42,20 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   //
   @Nonnull
   @Override
-  protected AppUIExecutor createUIExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
+  protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
     return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.EDT);
   }
 
   @Nonnull
   @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
+  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
     return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.WT);
   }
 
   @Nonnull
   @Override
   public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation) {
-    return new NonBlockingReadActionImpl<>(computation);
+    return new NonBlockingReadActionImpl<>(myApplication, computation);
   }
 
   static long getWriteActionCounter() {

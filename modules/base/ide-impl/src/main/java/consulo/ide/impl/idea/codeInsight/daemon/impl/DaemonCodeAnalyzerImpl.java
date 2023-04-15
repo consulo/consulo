@@ -59,6 +59,7 @@ import consulo.language.psi.resolve.RefResolveService;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.SmartList;
@@ -112,11 +113,8 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private volatile boolean myDisposed;     // the only possible transition: false -> true
   private volatile boolean myInitialized;  // the only possible transition: false -> true
 
-  @NonNls
   private static final String DISABLE_HINTS_TAG = "disable_hints";
-  @NonNls
   private static final String FILE_TAG = "file";
-  @NonNls
   private static final String URL_ATT = "url";
   private final PassExecutorService myPassExecutorService;
 
@@ -286,7 +284,9 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
   @TestOnly
-  public void runPasses(@Nonnull PsiFile file,
+  @RequiredUIAccess
+  public void runPasses(@Nonnull Application application,
+                        @Nonnull PsiFile file,
                         @Nonnull Document document,
                         @Nonnull List<? extends TextEditor> textEditors,
                         @Nonnull int[] toIgnore,
@@ -294,7 +294,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
                         @Nullable final Runnable callbackWhileWaiting) throws ProcessCanceledException {
     assert myInitialized;
     assert !myDisposed;
-    Application application = ApplicationManager.getApplication();
     application.assertIsDispatchThread();
     if (application.isWriteAccessAllowed()) {
       throw new AssertionError("Must not start highlighting from within write action, or deadlock is imminent");
@@ -323,7 +322,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
     FileStatusMapImpl fileStatusMap = getFileStatusMap();
 
-    NonBlockingReadActionImpl.waitForAsyncTaskCompletion(); // wait for async editor loading
+    NonBlockingReadActionImpl.waitForAsyncTaskCompletion(application); // wait for async editor loading
     Map<FileEditor, HighlightingPass[]> map = new HashMap<>();
     for (TextEditor textEditor : textEditors) {
       TextEditorBackgroundHighlighter highlighter = (TextEditorBackgroundHighlighter)textEditor.getBackgroundHighlighter();

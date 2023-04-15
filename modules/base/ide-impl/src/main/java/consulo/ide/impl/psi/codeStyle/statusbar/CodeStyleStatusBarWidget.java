@@ -1,8 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -161,7 +161,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   @Override
   protected void registerCustomListeners() {
     Project project = getProject();
-    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(IdeaModalityState.any(), manager -> {
+    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(Application::getAnyModalityState, manager -> {
       manager.addListener(this);
       Disposer.register(this, () -> CodeStyleSettingsManager.removeListener(project, this));
     }).submit(NonUrgentExecutor.getInstance());

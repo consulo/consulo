@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -22,12 +22,12 @@ import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
 import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionConfidence;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -133,7 +133,7 @@ public abstract class CompletionPhase implements Disposable {
         loadContributorsOutsideEdt(completionEditor, file);
 
         return completionEditor;
-      }).withDocumentsCommitted(project).expireWith(phase).expireWhen(() -> phase.isExpired()).finishOnUiThread(IdeaModalityState.current(), completionEditor -> {
+      }).withDocumentsCommitted(project).expireWith(phase).expireWhen(phase::isExpired).finishOnUiThread(Application::getCurrentModalityState, completionEditor -> {
         if (completionEditor != null) {
           int time = prevIndicator == null ? 0 : prevIndicator.getInvocationCount();
           CodeCompletionHandlerBase handler = CodeCompletionHandlerBase.createHandler(completionType, false, autopopup, false);

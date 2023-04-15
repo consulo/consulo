@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.fileEditor.EditorNotifications;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
@@ -25,6 +24,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
+import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.FileEditorsSplitters;
@@ -126,7 +126,7 @@ public class AsyncEditorLoader {
       });
       future.complete(runnable);
       return runnable;
-    }).expireWith(myEditorComponent).expireWith(myProject).finishOnUiThread(IdeaModalityState.any(), result -> loadingFinished(result)).submit(ourExecutor);
+    }).expireWith(myEditorComponent).expireWith(myProject).finishOnUiThread(Application::getAnyModalityState, result -> loadingFinished(result)).submit(ourExecutor);
     return future;
   }
 

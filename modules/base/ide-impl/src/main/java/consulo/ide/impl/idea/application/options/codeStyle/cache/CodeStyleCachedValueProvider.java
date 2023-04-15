@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.application.options.codeStyle.cache;
 
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -17,6 +16,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.lang.ObjectUtil;
 
@@ -138,8 +138,11 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
 
     private void start() {
       if (isRunOnBackground()) {
-        myPromise = ReadAction.nonBlocking(() -> computeSettings()).expireWith(myProject).expireWhen(() -> myFileRef.get() == null)
-                .finishOnUiThread(IdeaModalityState.NON_MODAL, val -> notifyCachedValueComputed()).submit(ourExecutorService);
+        myPromise = ReadAction.nonBlocking(() -> computeSettings())
+                              .expireWith(myProject)
+                              .expireWhen(() -> myFileRef.get() == null)
+                              .finishOnUiThread(Application::getNoneModalityState, val -> notifyCachedValueComputed())
+                              .submit(ourExecutorService);
       }
       else {
         ReadAction.run((() -> computeSettings()));
