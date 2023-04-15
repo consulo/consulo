@@ -46,7 +46,7 @@ public class JBTerminalWidget extends JediTermWidget implements Disposable, Term
                                                 @Nonnull StyleState styleState,
                                                 @Nonnull TerminalTextBuffer textBuffer) {
     JBTerminalPanel panel =
-      new JBTerminalPanel((JBTerminalSystemSettingsProvider)settingsProvider, textBuffer, styleState, myTerminalConsoleSettings);
+      new JBTerminalPanel((JBTerminalSystemSettingsProvider)settingsProvider, textBuffer, styleState);
     Disposer.register(this, panel);
     return panel;
   }

@@ -87,6 +87,10 @@ public class JBTerminalSystemSettingsProvider extends DefaultTabbedSettingsProvi
     });
   }
 
+  public TerminalConsoleSettings getTerminalConsoleSettings() {
+    return myTerminalConsoleSettings;
+  }
+
   @Override
   public KeyStroke[] getCopyKeyStrokes() {
     return getKeyStrokesByActionId("$Copy");

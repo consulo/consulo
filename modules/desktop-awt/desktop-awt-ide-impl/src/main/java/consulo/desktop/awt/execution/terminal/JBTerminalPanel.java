@@ -26,7 +26,6 @@ import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
-import consulo.execution.ui.terminal.TerminalConsoleSettings;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ui.ex.action.*;
@@ -86,20 +85,12 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
     "ShowSettings"
   };
 
-  private final JBTerminalSystemSettingsProvider mySettingsProvider;
-
-  private final TerminalConsoleSettings myTerminalConsoleSettings;
-
   private List<AnAction> myActionsToSkip;
 
   public JBTerminalPanel(@Nonnull JBTerminalSystemSettingsProvider settingsProvider,
                          @Nonnull TerminalTextBuffer backBuffer,
-                         @Nonnull StyleState styleState,
-                         TerminalConsoleSettings terminalConsoleSettings) {
+                         @Nonnull StyleState styleState) {
     super(settingsProvider, backBuffer, styleState);
-
-    myTerminalConsoleSettings = terminalConsoleSettings;
-    mySettingsProvider = settingsProvider;
 
     JBTerminalWidget.convertActions(this, getActions(), input ->
     {
@@ -111,7 +102,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
     addFocusListener(this);
 
-    mySettingsProvider.addListener(this);
+    ((JBTerminalSystemSettingsProvider)mySettingsProvider).addListener(this);
   }
 
   private static void registerKeymapActions(final TerminalPanel terminalPanel) {
@@ -263,7 +254,8 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
   }
 
   private void installKeyDispatcher() {
-    if (myTerminalConsoleSettings.isOverrideIdeShortcuts()) {
+    JBTerminalSystemSettingsProvider settingsProvider = (JBTerminalSystemSettingsProvider)mySettingsProvider;
+    if (settingsProvider.getTerminalConsoleSettings().isOverrideIdeShortcuts()) {
       myActionsToSkip = setupActionsToSkip();
       IdeEventQueue.getInstance().addDispatcher(this, this);
     }
@@ -301,7 +293,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
   }
 
   public FontInfo fontForChar(final char c, @JdkConstants.FontStyle int style) {
-    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, mySettingsProvider.getColorScheme()
+    return ComplementaryFontsRegistry.getFontAbleToDisplay(c, style, ((JBTerminalSystemSettingsProvider)mySettingsProvider).getColorScheme()
                                                                                        .getConsoleFontPreferences());
   }
 
@@ -312,7 +304,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
 
   @Override
   public void dispose() {
-    mySettingsProvider.removeListener(this);
+    ((JBTerminalSystemSettingsProvider)mySettingsProvider).removeListener(this);
   }
 }
 
