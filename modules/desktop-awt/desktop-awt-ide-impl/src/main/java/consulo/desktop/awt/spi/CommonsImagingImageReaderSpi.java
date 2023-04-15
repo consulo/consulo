@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.spi;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
 import org.apache.commons.imaging.*;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 
@@ -130,7 +130,7 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
 
     @Override
     public byte[] getAll() throws IOException {
-      return FileUtil.loadBytes(getInputStream());
+      return StreamUtil.loadFromStream(getInputStream());
     }
 
     @Override
