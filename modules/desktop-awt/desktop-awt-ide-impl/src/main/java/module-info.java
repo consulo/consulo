@@ -39,6 +39,9 @@ open module consulo.desktop.awt.ide.impl {
   // TODO remove
   requires gnu.trove;
 
+  requires pty4j;
+  requires jediterm;
+
   requires consulo.desktop.awt.bootstrap;
   requires consulo.desktop.awt.hacking;
   requires consulo.desktop.awt.eawt.wrapper;

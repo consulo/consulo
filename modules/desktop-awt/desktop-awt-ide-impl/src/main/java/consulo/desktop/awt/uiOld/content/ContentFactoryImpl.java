@@ -20,9 +20,9 @@ import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
 import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
-import consulo.ide.impl.wm.impl.UnifiedContentImpl;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
@@ -31,6 +31,7 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 
 @Singleton
 @ServiceImpl
@@ -50,7 +51,11 @@ public class ContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
-    return new UnifiedContentImpl(component, displayName, isLockable);
+    if (component == null) {
+      return new ContentImpl(null, displayName, isLockable);
+    }
+
+    return new ContentImpl((JComponent)TargetAWT.to(component), displayName, isLockable);
   }
 
   // TODO [VISTALL] AWT & Swing dependency

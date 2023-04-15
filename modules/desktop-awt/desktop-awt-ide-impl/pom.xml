@@ -113,5 +113,9 @@
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jediterm</artifactId>
+    </dependency>
   </dependencies>
 </project>

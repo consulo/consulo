@@ -171,6 +171,7 @@
         <include>consulo.internal:forms_rt</include>
         <include>consulo.internal:svg-salamander</include>
         <include>consulo.internal:pty4j</include>
+        <include>consulo.internal:jediterm</include>
         <include>consulo.internal:build.serviceMessages</include>
         <include>consulo.internal:purejavacomm</include>
         <include>consulo:kava.beans</include>
