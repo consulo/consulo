@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.codeEditor.impl.SettingsImpl;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;

@@ -24,6 +24,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Set;
 
@@ -93,6 +94,7 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
     }
   }
 
+  @Nullable
   public CodeStyleAbstractPanel getPanel() {
     return myPanel;
   }
@@ -104,6 +106,9 @@ public abstract class CodeStyleAbstractConfigurable implements Configurable, Opt
   }
 
   public void onSomethingChanged() {
+    if (myPanel == null) {
+      return;
+    }
     myPanel.onSomethingChanged();
   }
 

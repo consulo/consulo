@@ -11,7 +11,7 @@ import consulo.build.ui.*;
 import consulo.build.ui.event.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

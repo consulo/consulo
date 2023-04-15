@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 
 public class ToggleUseSoftWrapsInPreviewAction extends AbstractToggleUseSoftWrapsAction {
   public ToggleUseSoftWrapsInPreviewAction() {

@@ -24,7 +24,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ApplicationConfigurable;

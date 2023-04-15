@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;

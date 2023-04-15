@@ -17,9 +17,7 @@
 package consulo.ide.impl.idea.application.options.codeStyle;
 
 import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
-import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.ui.components.labels.SwingActionLink;
 import consulo.language.Language;
@@ -28,8 +26,8 @@ import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModel;
 import consulo.language.codeStyle.ui.setting.CodeStyleSchemesModelListener;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -41,9 +39,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStylePanel.TabChangeListener  {
   private final CardLayout myLayout = new CardLayout();
@@ -51,7 +46,6 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
 
   private final Map<String, NewCodeStyleSettingsPanel> mySettingsPanels = new HashMap<>();
 
-  private Future<?> myAlarm = CompletableFuture.completedFuture(null);
   private final CodeStyleSchemesModel myModel;
   private final CodeStyleSettingsPanelFactory myFactory;
   private final CodeStyleSchemesPanel mySchemesPanel;
@@ -141,23 +135,15 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
 
   public void onCurrentSchemeChanged() {
     myLayout.show(mySettingsPanel, WAIT_CARD);
-    final Runnable replaceLayout = new Runnable() {
-      @Override
-      public void run() {
-        if (!myIsDisposed) {
-          ensureCurrentPanel().onSomethingChanged();
-          String schemeName = myModel.getSelectedScheme().getName();
-          updateSetFrom();
-          myLayout.show(mySettingsPanel, schemeName);
-        }
+
+    SwingUtilities.invokeLater(() -> {
+      if (!myIsDisposed) {
+        ensureCurrentPanel().onSomethingChanged();
+        String schemeName = myModel.getSelectedScheme().getName();
+        updateSetFrom();
+        myLayout.show(mySettingsPanel, schemeName);
       }
-    };
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      replaceLayout.run();
-    } else {
-      myAlarm.cancel(false);
-      myAlarm = EdtExecutorService.getScheduledExecutorInstance().schedule(replaceLayout, 200, TimeUnit.MILLISECONDS);
-    }
+    });
   }
 
   private void updateSetFrom() {
@@ -255,7 +241,6 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   }
 
   public void disposeUIResources() {
-    myAlarm.cancel(false);
     clearPanels();
     myIsDisposed = true;
     if (myUiDisposable != null) {

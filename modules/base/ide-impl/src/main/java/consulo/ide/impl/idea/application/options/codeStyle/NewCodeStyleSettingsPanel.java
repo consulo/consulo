@@ -60,8 +60,8 @@ public class NewCodeStyleSettingsPanel implements TabbedLanguageCodeStylePanel.T
   }
 
   public void updatePreview() {
-    if (myTab instanceof CodeStyleAbstractConfigurable) {
-      ((CodeStyleAbstractConfigurable)myTab).getPanel().onSomethingChanged();
+    if (myTab instanceof CodeStyleAbstractConfigurable configurable) {
+      configurable.onSomethingChanged();
     }
   }
 

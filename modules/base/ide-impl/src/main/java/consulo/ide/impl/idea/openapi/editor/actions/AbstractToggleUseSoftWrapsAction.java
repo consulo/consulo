@@ -24,7 +24,7 @@ import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SettingsImpl;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.application.dumb.DumbAware;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

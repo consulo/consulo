@@ -14,7 +14,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.event.EditorColorsListener;

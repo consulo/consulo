@@ -27,6 +27,7 @@ package consulo.codeEditor.impl;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;

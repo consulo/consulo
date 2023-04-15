@@ -15,11 +15,11 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.BidiTextDirection;
+import consulo.codeEditor.PersistentEditorSettings;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -32,16 +32,12 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 @State(name = "EditorSettings", storages = {@Storage("editor.xml")})
-public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
+public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet>, PersistentEditorSettings {
   public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);
   public static final UINumericRange TOOLTIPS_DELAY_RANGE = new UINumericRange(500, 1, 5000);
 
@@ -150,7 +146,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
       return new EditorSettingsExternalizable();
     }
     else {
-      return application.getInstance(EditorSettingsExternalizable.class);
+      return (EditorSettingsExternalizable) application.getInstance(PersistentEditorSettings.class);
     }
   }
 

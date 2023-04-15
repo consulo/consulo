@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
+import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 
