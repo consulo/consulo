@@ -215,8 +215,14 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
   private NewCodeStyleSettingsPanel ensurePanel(@Nonnull CodeStyleScheme scheme) {
     String name = scheme.getName();
     if (!mySettingsPanels.containsKey(name)) {
+      if (myUiDisposable == null) {
+        myUiDisposable = Disposable.newDisposable();
+      }
+
       NewCodeStyleSettingsPanel panel = myFactory.createPanel(scheme);
+      JComponent panelUI = panel.getPanel(myUiDisposable);
       panel.reset();
+      // we need set model after #reset() due it will call refresh model, and recreate UI (and lock ui due stackoverflow)
       panel.setModel(myModel);
       CodeStyleAbstractPanel settingsPanel = panel.getSelectedPanel();
       if (settingsPanel instanceof TabbedLanguageCodeStylePanel) {
@@ -227,10 +233,9 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
           tabbedPanel.changeTab(currentTab);
         }
       }
-      mySettingsPanels.put(name, panel);
 
-      myUiDisposable = Disposable.newDisposable();
-      mySettingsPanel.add(scheme.getName(), panel.getPanel(myUiDisposable));
+      mySettingsPanels.put(name, panel);
+      mySettingsPanel.add(scheme.getName(), panelUI);
     }
 
     return mySettingsPanels.get(name);
