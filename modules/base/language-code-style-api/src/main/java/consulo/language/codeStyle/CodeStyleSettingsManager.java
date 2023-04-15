@@ -17,11 +17,15 @@ package consulo.language.codeStyle;
 
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.util.ModificationTracker;
+import consulo.component.util.SimpleModificationTracker;
+import consulo.disposer.Disposable;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.proxy.EventDispatcher;
 import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
@@ -41,6 +45,9 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   public volatile String PREFERRED_PROJECT_CODE_STYLE = null;
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
+
+  private final SimpleModificationTracker myTracker = new SimpleModificationTracker();
+  private final EventDispatcher<CodeStyleSettingsListener> myEventDispatcher = EventDispatcher.create(CodeStyleSettingsListener.class);
 
   private final List<CodeStyleSettingsListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
@@ -123,24 +130,13 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     return myIsLoaded;
   }
 
+  @Deprecated
   public void addListener(@Nonnull CodeStyleSettingsListener listener) {
-    myListeners.add(listener);
+    myEventDispatcher.addListener(listener);
   }
 
-  private void removeListener(@Nonnull CodeStyleSettingsListener listener) {
-    myListeners.remove(listener);
-  }
-
-  public static void removeListener(@Nullable Project project, @Nonnull CodeStyleSettingsListener listener) {
-    if (project == null || project.isDefault()) {
-      getInstance().removeListener(listener);
-    }
-    else {
-      if (!project.isDisposed()) {
-        CodeStyleSettingsManager projectInstance = ProjectCodeStyleSettingsManager.getInstance(project);
-        projectInstance.removeListener(listener);
-      }
-    }
+  public void addListener(@Nonnull CodeStyleSettingsListener listener, @Nonnull Disposable disposable) {
+    myEventDispatcher.addListener(listener, disposable);
   }
 
   /**
@@ -149,7 +145,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
    * code style update and refresh their settings accordingly.
    *
    * @see CodeStyleSettingsListener
-   * @see #addListener(CodeStyleSettingsListener)
+   * @see #addListener(CodeStyleSettingsListener, Disposable)
    */
   public final void notifyCodeStyleSettingsChanged() {
     updateSettingsTracker();
@@ -159,11 +155,18 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   public void updateSettingsTracker() {
     CodeStyleSettings settings = getCurrentSettings();
     settings.getModificationTracker().incModificationCount();
+
+    myTracker.incModificationCount();
   }
 
   public void fireCodeStyleSettingsChanged(@Nullable PsiFile file) {
     for (CodeStyleSettingsListener listener : myListeners) {
       listener.codeStyleSettingsChanged(new CodeStyleSettingsChangeEvent(file));
     }
+  }
+
+  @Nonnull
+  public final ModificationTracker getModificationTracker() {
+    return myTracker;
   }
 }

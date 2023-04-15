@@ -2,7 +2,8 @@
 package consulo.language.codeStyle.event;
 
 import javax.annotation.Nonnull;
+import java.util.EventListener;
 
-public interface CodeStyleSettingsListener {
+public interface CodeStyleSettingsListener extends EventListener {
   void codeStyleSettingsChanged(@Nonnull CodeStyleSettingsChangeEvent event);
 }

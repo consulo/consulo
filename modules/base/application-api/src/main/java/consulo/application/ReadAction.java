@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jetbrains.annotations.Contract;
@@ -31,7 +32,7 @@ public final class ReadAction<T>  {
   }
 
   @Deprecated
-  public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+  public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
     AccessRule.read(action);
   }
 
@@ -45,7 +46,7 @@ public final class ReadAction<T>  {
    */
   @Nonnull
   @Contract(pure = true)
-  public static NonBlockingReadAction<Void> nonBlocking(@Nonnull Runnable task) {
+  public static NonBlockingReadAction<Void> nonBlocking(@RequiredReadAction  @Nonnull Runnable task) {
     return nonBlocking(() -> {
       task.run();
       return null;

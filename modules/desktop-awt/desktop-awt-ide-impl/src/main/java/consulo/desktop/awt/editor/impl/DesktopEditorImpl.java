@@ -433,7 +433,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     myDocument.addPropertyChangeListener(propertyChangeListener);
     Disposer.register(myDisposable, () -> myDocument.removePropertyChangeListener(propertyChangeListener));
 
-    CodeStyleSettingsManager.getInstance(myProject).addListener(this);
+    CodeStyleSettingsManager.getInstance(myProject).addListener(this, myDisposable);
 
     myFocusModeModel = new FocusModeModel(this);
     Disposer.register(myDisposable, myFocusModeModel);
@@ -783,8 +783,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     myGutterComponent.removeMouseListener(myMouseListener);
     myEditorComponent.removeMouseMotionListener(myMouseMotionListener);
     myGutterComponent.removeMouseMotionListener(myMouseMotionListener);
-
-    CodeStyleSettingsManager.removeListener(myProject, this);
 
     Disposer.dispose(myDisposable);
     myVerticalScrollBar.setUI(null); // clear error panel's cached image

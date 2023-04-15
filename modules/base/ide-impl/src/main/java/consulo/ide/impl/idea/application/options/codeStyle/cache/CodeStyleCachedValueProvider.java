@@ -1,10 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.application.options.codeStyle.cache;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.util.SimpleModificationTracker;
@@ -106,6 +105,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     else {
       dependencies.add(settings.getModificationTracker());
     }
+    dependencies.add(computation.mySettingsManager.getModificationTracker());
     dependencies.add(computation.getTracker());
     return ArrayUtil.toObjectArray(dependencies);
   }
@@ -145,7 +145,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
                               .submit(ourExecutorService);
       }
       else {
-        ReadAction.run((() -> computeSettings()));
+        ReadAction.run((this::computeSettings));
         notifyOnEdt();
       }
     }
@@ -171,20 +171,21 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     }
 
     private boolean isRunOnBackground() {
-      final Application application = ApplicationManager.getApplication();
+      final Application application = Application.get();
       return !application.isUnitTestMode() && !application.isHeadlessEnvironment() && application.isDispatchThread();
     }
 
     private void notifyOnEdt() {
-      final Application application = ApplicationManager.getApplication();
+      final Application application = Application.get();
       if (application.isDispatchThread()) {
         notifyCachedValueComputed();
       }
       else {
-        application.invokeLater(() -> notifyCachedValueComputed(), IdeaModalityState.any());
+        application.invokeLater(this::notifyCachedValueComputed, application.getAnyModalityState());
       }
     }
 
+    @RequiredReadAction
     private void computeSettings() {
       final PsiFile file = myFileRef.get();
       if (file == null) {

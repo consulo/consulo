@@ -6,7 +6,6 @@ import consulo.application.ReadAction;
 import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier;
@@ -162,8 +161,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   protected void registerCustomListeners() {
     Project project = getProject();
     ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(Application::getAnyModalityState, manager -> {
-      manager.addListener(this);
-      Disposer.register(this, () -> CodeStyleSettingsManager.removeListener(project, this));
+      manager.addListener(this, this);
     }).submit(NonUrgentExecutor.getInstance());
   }
 
