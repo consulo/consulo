@@ -15,7 +15,6 @@
  */
 package consulo.web.startup;
 
-import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 
 import javax.annotation.Nonnull;
@@ -26,6 +25,7 @@ import java.io.File;
  * @since 2019-12-07
  */
 class WebContainerPathManager extends ContainerPathManager {
+  public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
 
   @Nonnull
   @Override
@@ -60,7 +60,7 @@ class WebContainerPathManager extends ContainerPathManager {
   @Nonnull
   @Override
   public String[] getPluginsPaths() {
-    String pluginsPath = System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS);
+    String pluginsPath = System.getProperty(CONSULO_PLUGINS_PATHS);
     if(pluginsPath != null) {
       return pluginsPath.split(File.pathSeparator);
     }

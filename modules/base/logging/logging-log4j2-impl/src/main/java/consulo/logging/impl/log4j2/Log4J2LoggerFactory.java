@@ -15,13 +15,12 @@
  */
 package consulo.logging.impl.log4j2;
 
-import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.internal.ShowError;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -38,6 +37,8 @@ import java.nio.charset.StandardCharsets;
  * @since 2018-08-15
  */
 public class Log4J2LoggerFactory implements LoggerFactory {
+  public static final String CONSULO_MAVEN_CONSOLE_LOG = "consulo.maven.console.log";
+
   private static final String SYSTEM_MACRO = "$SYSTEM_DIR$";
   private static final String APPLICATION_MACRO = "$APPLICATION_DIR$";
   private static final String LOG_DIR_MACRO = "$LOG_DIR$";
@@ -73,7 +74,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
   @Nullable
   private static LoggerContext init() {
     try {
-      String fileRef = Boolean.getBoolean(ApplicationProperties.CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2-default.xml";
+      String fileRef = Boolean.getBoolean(CONSULO_MAVEN_CONSOLE_LOG) ? "/log4j2-console.xml" : "/log4j2-default.xml";
 
       String text = FileUtil.loadTextAndClose(Log4J2LoggerFactory.class.getResourceAsStream(fileRef));
       text = StringUtil.replace(text, SYSTEM_MACRO, StringUtil.replace(ContainerPathManager.get().getSystemPath(), "\\", "\\\\"));

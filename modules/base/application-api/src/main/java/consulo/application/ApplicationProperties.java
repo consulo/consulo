@@ -25,14 +25,14 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 04.04.2016
  */
-public class ApplicationProperties {
+public final class ApplicationProperties {
   /**
    * @type boolean
    */
   @Nonnull
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
-  public static final String IDEA_IS_INTERNAL = "idea.is.internal";
+  private static final String IDEA_IS_INTERNAL = "idea.is.internal";
 
   public static boolean isInternal() {
     return Boolean.getBoolean(IDEA_IS_INTERNAL);
@@ -49,55 +49,4 @@ public class ApplicationProperties {
   public static boolean isInSandbox() {
     return ourInSandboxValue.get();
   }
-
-  /**
-   * @type boolean
-   */
-  @Nonnull
-  @Deprecated
-  public static final String CONSULO_IN_UNIT_TEST = "consulo.is.unit.test";
-
-  /**
-   * Disable using external platform directory for platform updates
-   *
-   * @type boolean
-   */
-  @Nonnull
-  public static final String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
-
-  /**
-   * Path to boot application home
-   *
-   * @type String
-   */
-  @Nonnull
-  public static final String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Old idea plugins path. See #CONSULO_PLUGINS_PATHS")
-  public static final String IDEA_PLUGINS_PATH = "idea.plugins.path";
-
-  /**
-   * Path for plugin install directory. Not included in plugin path list
-   *
-   * @type
-   */
-  @Nonnull
-  public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
-
-  /**
-   * List of plugin directories for loading. If size more that one - CONSULO_INSTALL_PLUGINS_PATH must be installed
-   *
-   * @type String[]
-   */
-  @Nonnull
-  public static final String CONSULO_PLUGINS_PATHS = "consulo.plugins.paths";
-
-  /**
-   * Redirect log to console. Used when running from maven
-   *
-   * @type boolean
-   */
-  public static final String CONSULO_MAVEN_CONSOLE_LOG = "consulo.maven.console.log";
 }

@@ -32,7 +32,7 @@ public abstract class ContainerPathManager {
   private static final String PLUGINS_FOLDER = "plugins";
   private static final String BIN_FOLDER = "bin";
   private static final String OPTIONS_FOLDER = "options";
-  private static final String SCRATCHES_FOLDER = "scratches";
+  protected static final String SCRATCHES_FOLDER = "scratches";
 
   public static ContainerPathManager get() {
     ContainerPathManager manager = PathManagerHolder.getInstance();
@@ -87,7 +87,7 @@ public abstract class ContainerPathManager {
   }
 
   public String getScratchPath() {
-    return getConfigPath();
+    return getConfigPath() + File.separator + SCRATCHES_FOLDER;
   }
 
   public String getOptionsPath() {

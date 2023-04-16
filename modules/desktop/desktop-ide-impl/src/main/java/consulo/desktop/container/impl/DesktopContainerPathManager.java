@@ -15,13 +15,12 @@
  */
 package consulo.desktop.container.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
@@ -38,20 +37,44 @@ import static consulo.util.lang.SystemProperties.getUserHome;
  * @since 2019-12-07
  */
 public class DesktopContainerPathManager extends ContainerPathManager {
-  @Deprecated
-  public static final String OLD_PROPERTIES_FILE = "idea.properties.file";
-  public static final String PROPERTIES_FILE = "consulo.properties.file";
+  public static final String[] PROPERTIES_FILE = {
+    "consulo.properties.file",
+    "idea.properties.file"
+  };
 
-  public static final String PROPERTY_SYSTEM_PATH = "idea.system.path";
-  public static final String PROPERTY_SCRATCH_PATH = "idea.scratch.path";
-  public static final String PROPERTY_CONFIG_PATH = "idea.config.path";
-  @Deprecated
-  @DeprecationInfo("See ApplicationProperties#CONSULO_PLUGINS_PATHS")
-  public static final String PROPERTY_PLUGINS_PATH = ApplicationProperties.IDEA_PLUGINS_PATH;
-  public static final String PROPERTY_HOME_PATH = "consulo.home.path";
-  @Deprecated
-  public static final String OLD_PROPERTY_HOME_PATH = "idea.home.path";
-  public static final String PROPERTY_LOG_PATH = "idea.log.path";
+  public static final String[] PROPERTY_SYSTEM_PATH = {
+    "consulo.system.path",
+    "idea.system.path"
+  };
+
+  public static final String[] PROPERTY_SCRATCH_PATH = {
+    "consulo.scratch.path",
+    "idea.scratch.path",
+  };
+
+  public static final String[] PROPERTY_CONFIG_PATH = {
+    "consulo.config.path",
+    "idea.config.path"
+  };
+
+  public static final String[] PROPERTY_HOME_PATH = {
+    "consulo.home.path",
+    "idea.home.path"
+  };
+
+  public static final String[] PROPERTY_LOG_PATH = {
+    "consulo.log.path",
+    "idea.log.path"
+  };
+
+  public static final String[] CONSULO_PLUGINS_PATHS = {
+    "consulo.plugins.paths",
+    "idea.plugins.path"
+  };
+
+  public static final String CONSULO_INSTALL_PLUGINS_PATH = "consulo.install.plugins.path";
+  public static final String CONSULO_APP_HOME_PATH = "consulo.app.home.path";
+  public static final String CONSULO_NO_EXTERNAL_PLATFORM = "consulo.no.external.platform";
 
   private static final String PLATFORM_FOLDER = "platform";
   private static final String LIB_FOLDER = "lib";
@@ -76,14 +99,9 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public String getHomePath() {
     if (ourHomePath != null) return ourHomePath;
 
-    if (System.getProperty(PROPERTY_HOME_PATH) != null) {
-      ourHomePath = getAbsolutePath(System.getProperty(PROPERTY_HOME_PATH));
-      if (!new File(ourHomePath).isDirectory()) {
-        throw new RuntimeException("Invalid home path '" + ourHomePath + "'");
-      }
-    }
-    else if (System.getProperty(OLD_PROPERTY_HOME_PATH) != null) {
-      ourHomePath = getAbsolutePath(System.getProperty(OLD_PROPERTY_HOME_PATH));
+    String propertyValue = selectPropertyValue(PROPERTY_HOME_PATH);
+    if (propertyValue != null) {
+      ourHomePath = getAbsolutePath(propertyValue);
       if (!new File(ourHomePath).isDirectory()) {
         throw new RuntimeException("Invalid home path '" + ourHomePath + "'");
       }
@@ -114,7 +132,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
 
     // force platform inside distribution directory
-    if (Boolean.getBoolean(ApplicationProperties.CONSULO_NO_EXTERNAL_PLATFORM) || ApplicationProperties.isInSandbox()) {
+    if (Boolean.getBoolean(CONSULO_NO_EXTERNAL_PLATFORM) || ApplicationProperties.isInSandbox()) {
       return defaultPath;
     }
     return DefaultPaths.getInstance().getExternalPlatformDirectory(defaultPath);
@@ -126,7 +144,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   @Override
   @Nonnull
   public File getAppHomeDirectory() {
-    String appHomePath = System.getProperty(ApplicationProperties.CONSULO_APP_HOME_PATH);
+    String appHomePath = System.getProperty(CONSULO_APP_HOME_PATH);
     if (appHomePath != null) {
       return new File(getAbsolutePath(trimPathQuotes(appHomePath)));
     }
@@ -160,8 +178,9 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public String getConfigPath() {
     if (ourConfigPath != null) return ourConfigPath;
 
-    if (System.getProperty(PROPERTY_CONFIG_PATH) != null) {
-      ourConfigPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_CONFIG_PATH)));
+    String propertyValue = selectPropertyValue(PROPERTY_CONFIG_PATH);
+    if (propertyValue != null) {
+      ourConfigPath = getAbsolutePath(trimPathQuotes(propertyValue));
     }
     else {
       ourConfigPath = DefaultPaths.getInstance().getRoamingSettingsDir();
@@ -180,11 +199,12 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public String getScratchPath() {
     if (ourScratchPath != null) return ourScratchPath;
 
-    if (System.getProperty(PROPERTY_SCRATCH_PATH) != null) {
-      ourScratchPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_SCRATCH_PATH)));
+    String propertyValue = selectPropertyValue(PROPERTY_SCRATCH_PATH);
+    if (propertyValue != null) {
+      ourScratchPath = getAbsolutePath(trimPathQuotes(propertyValue));
     }
     else {
-      ourScratchPath = getConfigPath();
+      ourScratchPath = getConfigPath() + "/" + ContainerPathManager.SCRATCHES_FOLDER;
     }
 
     return ourScratchPath;
@@ -213,7 +233,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       return ourInstallPluginsPath;
     }
 
-    String property = System.getProperty(ApplicationProperties.CONSULO_INSTALL_PLUGINS_PATH);
+    String property = System.getProperty(CONSULO_INSTALL_PLUGINS_PATH);
     if (property != null) {
       ourInstallPluginsPath = getAbsolutePath(trimPathQuotes(property));
     }
@@ -238,28 +258,23 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public String[] getPluginsPaths() {
     if (ourPluginsPaths != null) return ourPluginsPaths;
 
-    String pathFromProperty = System.getProperty(ApplicationProperties.IDEA_PLUGINS_PATH);
-    if (pathFromProperty != null) {
-      pathFromProperty = getAbsolutePath(trimPathQuotes(pathFromProperty));
+    String propertyValue = selectPropertyValue(CONSULO_PLUGINS_PATHS);
+    if (propertyValue != null) {
+      if (propertyValue.contains(File.pathSeparator)) {
+        String[] splittedPaths = propertyValue.split(File.pathSeparator);
+        for (int i = 0; i < splittedPaths.length; i++) {
+          String splitValue = splittedPaths[i];
 
-      //noinspection UseOfSystemOutOrSystemErr
-      System.out.println("Using obsolete property: " + ApplicationProperties.IDEA_PLUGINS_PATH);
+          splittedPaths[i] = getAbsolutePath(trimPathQuotes(splitValue));
+        }
 
-      ourPluginsPaths = new String[]{getAbsolutePath(trimPathQuotes(pathFromProperty))};
-    }
-    else if (System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS) != null) {
-      pathFromProperty = System.getProperty(ApplicationProperties.CONSULO_PLUGINS_PATHS);
-
-      String[] splittedPaths = pathFromProperty.split(File.pathSeparator);
-      for (int i = 0; i < splittedPaths.length; i++) {
-        String splitValue = splittedPaths[i];
-
-        splittedPaths[i] = getAbsolutePath(trimPathQuotes(splitValue));
+        ourPluginsPaths = splittedPaths;
       }
-
-      ourPluginsPaths = splittedPaths;
+      else {
+        ourPluginsPaths = new String[]{getAbsolutePath(trimPathQuotes(propertyValue))};
+      }
     }
-    else if (System.getProperty(PROPERTY_CONFIG_PATH) != null) {
+    else if (selectPropertyValue(PROPERTY_CONFIG_PATH) != null) {
       // if config path overridden, use another logic for plugins
       ourPluginsPaths = new String[]{getConfigPath() + File.separatorChar + "plugins"};
     }
@@ -281,8 +296,10 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public String getSystemPath() {
     if (ourSystemPath != null) return ourSystemPath;
 
-    if (System.getProperty(PROPERTY_SYSTEM_PATH) != null) {
-      ourSystemPath = getAbsolutePath(trimPathQuotes(System.getProperty(PROPERTY_SYSTEM_PATH)));
+    String propertyValue = selectPropertyValue(PROPERTY_SYSTEM_PATH);
+
+    if (propertyValue != null) {
+      ourSystemPath = getAbsolutePath(trimPathQuotes(propertyValue));
     }
     else {
       ourSystemPath = DefaultPaths.getInstance().getLocalSettingsDir();
@@ -334,10 +351,11 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   public File getLogPath() {
     if (ourLogPath != null) return ourLogPath;
 
-    if (System.getProperty(PROPERTY_LOG_PATH) != null) {
-      ourLogPath = getAbsoluteFile(trimPathQuotes(System.getProperty(PROPERTY_LOG_PATH)));
+    String propertyValue = selectPropertyValue(PROPERTY_LOG_PATH);
+    if (propertyValue != null) {
+      ourLogPath = getAbsoluteFile(trimPathQuotes(propertyValue));
     }
-    else if (System.getProperty(PROPERTY_SYSTEM_PATH) != null) {
+    else if (selectPropertyValue(PROPERTY_SYSTEM_PATH) != null) {
       // if system path overridden, use another logic for logs
       ourLogPath = new File(getSystemPath(), "logs");
     }
@@ -356,8 +374,10 @@ public class DesktopContainerPathManager extends ContainerPathManager {
 
   public void loadProperties() {
     List<String> paths = new ArrayList<>();
-    paths.add(System.getProperty(PROPERTIES_FILE));
-    paths.add(System.getProperty(OLD_PROPERTIES_FILE));
+    String propertyValue = selectPropertyValue(PROPERTIES_FILE);
+    if (propertyValue != null) {
+      paths.add(propertyValue);
+    }
     paths.add(new File(getAppHomeDirectory(), "consulo.properties").getPath());
     paths.add(getUserHome() + "/consulo.properties");
 
@@ -448,5 +468,15 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       }
     }
     return false;
+  }
+
+  private static String selectPropertyValue(String... properties) {
+    for (String property : properties) {
+      String propertyValue = System.getProperty(property);
+      if (!StringUtil.isEmpty(propertyValue)) {
+        return propertyValue;
+      }
+    }
+    return null;
   }
 }
