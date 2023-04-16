@@ -3,6 +3,7 @@ package consulo.desktop.awt.application.ui.impl;
 
 import consulo.application.ui.WindowState;
 import consulo.application.ui.WindowStateService;
+import consulo.application.ui.impl.internal.BaseWindowStateBean;
 import consulo.application.ui.impl.internal.UnifiedWindowStateServiceImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -22,6 +23,11 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
 
   protected DesktopAWTWindowStateServiceImpl(@Nullable Project project) {
     super(project);
+  }
+
+  @Override
+  protected BaseWindowStateBean newWindowStateBean() {
+    return new WindowStateBean();
   }
 
   @Override

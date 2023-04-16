@@ -39,6 +39,6 @@ public interface WindowState {
    * @param window a window to apply this state
    */
   default void applyTo(@Nonnull Window window) {
-    throw new AbstractMethodError("Desktop only");
+    throw new AbstractMethodError("Desktop only: " + getClass());
   }
 }
