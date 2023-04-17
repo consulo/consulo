@@ -45,7 +45,7 @@
         </constraints>
         <properties>
           <font style="1"/>
-          <text resource-bundle="messages/RefactoringBundle" key="change.signature.feel.lucky"/>
+          <text resource-bundle="consulo/language/editor/refactoring/RefactoringBundle" key="change.signature.feel.lucky"/>
         </properties>
       </component>
       <component id="a623e" class="javax.swing.JLabel" binding="myFeelLuckyDescription">
@@ -64,7 +64,7 @@
         </constraints>
         <properties>
           <font style="1"/>
-          <text resource-bundle="messages/RefactoringBundle" key="change.signature.use.selected.value"/>
+          <text resource-bundle="consulo/language/editor/refactoring/RefactoringBundle" key="change.signature.use.selected.value"/>
         </properties>
       </component>
       <component id="10901" class="consulo.language.editor.ui.awt.EditorTextField" binding="myValueEditor">
