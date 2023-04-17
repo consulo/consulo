@@ -17,6 +17,7 @@
 package consulo.util.lang.xml;
 
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.internal.Verifier;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -149,26 +150,26 @@ public class XmlStringUtil {
    * @see <a href="https://www.w3.org/International/questions/qa-controls">https://www.w3.org/International/questions/qa-controls</a>
    * @see Verifier#isXMLCharacter(int)
    */
-  //@Nonnull
-  //public static String escapeIllegalXmlChars(@Nonnull String text) {
-  //  StringBuilder b = null;
-  //  int lastPos = 0;
-  //  for (int i = 0; i < text.length(); i++) {
-  //    int c = text.codePointAt(i);
-  //    if (Character.isSupplementaryCodePoint(c)) {
-  //      //noinspection AssignmentToForLoopParameter
-  //      i++;
-  //    }
-  //    if (c == '#' || !Verifier.isXMLCharacter(c)) {
-  //      if (b == null) b = new StringBuilder(text.length() + 5); // assuming there's one 'large' char (e.g. 0xFFFF) to escape numerically
-  //      b.append(text, lastPos, i).append('#');
-  //      if (c != '#') b.append(Integer.toHexString(c));
-  //      b.append('#');
-  //      lastPos = i + 1;
-  //    }
-  //  }
-  //  return b == null ? text : b.append(text, lastPos, text.length()).toString();
-  //}
+  @Nonnull
+  public static String escapeIllegalXmlChars(@Nonnull String text) {
+    StringBuilder b = null;
+    int lastPos = 0;
+    for (int i = 0; i < text.length(); i++) {
+      int c = text.codePointAt(i);
+      if (Character.isSupplementaryCodePoint(c)) {
+        //noinspection AssignmentToForLoopParameter
+        i++;
+      }
+      if (c == '#' || !Verifier.isXMLCharacter(c)) {
+        if (b == null) b = new StringBuilder(text.length() + 5); // assuming there's one 'large' char (e.g. 0xFFFF) to escape numerically
+        b.append(text, lastPos, i).append('#');
+        if (c != '#') b.append(Integer.toHexString(c));
+        b.append('#');
+        lastPos = i + 1;
+      }
+    }
+    return b == null ? text : b.append(text, lastPos, text.length()).toString();
+  }
 
   /**
    * @see XmlStringUtil#escapeIllegalXmlChars(String)
