@@ -19,26 +19,26 @@
  */
 package consulo.language.editor.impl.intention;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.inspection.LocalQuickFix;
-import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-public class RenameFileFix implements IntentionAction, LocalQuickFix {
+public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
   private final String myNewFileName;
 
   /**
