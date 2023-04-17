@@ -158,8 +158,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
         }
       }
     });
-
-    monitor.scanSourcesForCompilableFiles(project);
   }
 
   @Override

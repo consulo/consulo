@@ -21,13 +21,15 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
 import consulo.application.util.function.Computable;
 import consulo.compiler.*;
 import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.compiler.*;
+import consulo.ide.impl.compiler.CompilerIOUtil;
+import consulo.ide.impl.compiler.TranslatingCompilerFilesMonitor;
+import consulo.ide.impl.compiler.TranslationCompilerFilesMonitorVfsListener;
+import consulo.ide.impl.compiler.TranslationCompilerProjectMonitor;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -44,7 +46,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.startup.StartupManager;
 import consulo.util.collection.SLRUCache;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
@@ -734,77 +735,76 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     });
   }
 
-  @Override
-  public void scanSourcesForCompilableFiles(final Project project) {
-    final int projectId = getProjectId(project);
+  public void runScan(ProgressIndicator indicator, Project project) {
+    int projectId = getProjectId(project);
+
     if (isSuspended(projectId)) {
       return;
     }
-    startAsyncScan(projectId);
-    StartupManager.getInstance(project).registerPostStartupActivity((ui) -> new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
-      @Override
-      public void run(@Nonnull final ProgressIndicator indicator) {
-        indicator.setIndeterminate(false);
+    
+    indicator.setIndeterminate(false);
 
-        final ProjectRef projRef = new ProjectRef(project);
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
-        }
-        try {
-          final IntermediateOutputCompiler[] compilers = CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
 
-          final Set<VirtualFile> intermediateRoots = new HashSet<>();
-          if (compilers.length > 0) {
-            final Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(projRef.get()).getModules());
-            for (IntermediateOutputCompiler compiler : compilers) {
-              for (Module module : modules) {
-                if (module.isDisposed() || module.getModuleDirUrl() == null) {
-                  continue;
-                }
-                final VirtualFile outputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
-                if (outputRoot != null) {
-                  intermediateRoots.add(outputRoot);
-                }
-                final VirtualFile testsOutputRoot = LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
-                if (testsOutputRoot != null) {
-                  intermediateRoots.add(testsOutputRoot);
-                }
-              }
+    final ProjectRef projRef = new ProjectRef(project);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Initial sources scan for project hash=" + projectId + "; url=" + projRef.get().getPresentableUrl());
+    }
+    try {
+      final IntermediateOutputCompiler[] compilers =
+        CompilerManager.getInstance(projRef.get()).getCompilers(IntermediateOutputCompiler.class);
+
+      final Set<VirtualFile> intermediateRoots = new HashSet<>();
+      if (compilers.length > 0) {
+        final Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(projRef.get()).getModules());
+        for (IntermediateOutputCompiler compiler : compilers) {
+          for (Module module : modules) {
+            if (module.isDisposed() || module.getModuleDirUrl() == null) {
+              continue;
+            }
+            final VirtualFile outputRoot =
+              LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, false));
+            if (outputRoot != null) {
+              intermediateRoots.add(outputRoot);
+            }
+            final VirtualFile testsOutputRoot =
+              LocalFileSystem.getInstance().refreshAndFindFileByPath(CompilerPaths.getGenerationOutputPath(compiler, module, true));
+            if (testsOutputRoot != null) {
+              intermediateRoots.add(testsOutputRoot);
             }
           }
-
-          final List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
-          final int totalRootsCount = projectRoots.size() + intermediateRoots.size();
-          scanSourceContent(projRef, projectRoots, totalRootsCount, true);
-
-          if (!intermediateRoots.isEmpty()) {
-            final Consumer<VirtualFile> processor = file -> {
-              if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
-                final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
-                if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
-                  addSourceForRecompilation(projectId, file, srcInfo);
-                }
-              }
-            };
-            int processed = projectRoots.size();
-            for (VirtualFile root : intermediateRoots) {
-              projRef.get();
-              indicator.setText2(root.getPresentableUrl());
-              indicator.setFraction(++processed / (double)totalRootsCount);
-
-              TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);
-            }
-          }
-
-          markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
-        }
-        catch (ProjectRef.ProjectClosedException ignored) {
-        }
-        finally {
-          terminateAsyncScan(projectId, false);
         }
       }
-    }.queue());
+
+      final List<VirtualFile> projectRoots = Arrays.asList(getRootsForScan(projRef.get()));
+      final int totalRootsCount = projectRoots.size() + intermediateRoots.size();
+      scanSourceContent(projRef, projectRoots, totalRootsCount, true);
+
+      if (!intermediateRoots.isEmpty()) {
+        final Consumer<VirtualFile> processor = file -> {
+          if (!isMarkedForRecompilation(projectId, Math.abs(getFileId(file)))) {
+            final TranslationSourceFileInfo srcInfo = TranslationSourceFileInfo.loadSourceInfo(file);
+            if (srcInfo == null || srcInfo.getTimestamp(projectId) != file.getTimeStamp()) {
+              addSourceForRecompilation(projectId, file, srcInfo);
+            }
+          }
+        };
+        int processed = projectRoots.size();
+        for (VirtualFile root : intermediateRoots) {
+          projRef.get();
+          indicator.setText2(root.getPresentableUrl());
+          indicator.setFraction(++processed / (double)totalRootsCount);
+
+          TranslationCompilerFilesMonitorVfsListener.processRecursively(root, false, processor);
+        }
+      }
+
+      markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
+    }
+    catch (ProjectRef.ProjectClosedException ignored) {
+    }
+    finally {
+      terminateAsyncScan(projectId, false);
+    }
   }
 
   protected void terminateAsyncScan(int projectId, final boolean clearCounter) {
@@ -822,6 +822,10 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         }
       }
     }
+  }
+
+  public void startAsyncScan(Project project) {
+    startAsyncScan(getProjectId(project));
   }
 
   protected void startAsyncScan(final int projectId) {

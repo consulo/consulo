@@ -77,7 +77,5 @@ public abstract class TranslatingCompilerFilesMonitor {
 
   public abstract void ensureInitializationCompleted(Project project, ProgressIndicator indicator);
 
-  public abstract void scanSourcesForCompilableFiles(Project project);
-
   public abstract boolean isMarkedForCompilation(Project project, VirtualFile file);
 }
