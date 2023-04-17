@@ -505,15 +505,6 @@ public final class DaemonListeners implements Disposable {
     public void profileActivated(Profile oldProfile, @Nullable Profile profile) {
       stopDaemonAndRestartAllFiles("Profile activated");
     }
-
-    @Override
-    public void profilesInitialized() {
-      UIUtil.invokeLaterIfNeeded(() -> {
-        if (myProject.isDisposed()) return;
-
-        stopDaemonAndRestartAllFiles("Inspection profiles activated");
-      });
-    }
   }
 
   private class MyAnActionListener implements AnActionListener {

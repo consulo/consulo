@@ -82,9 +82,6 @@ public class InspectionProfileWrapper {
     return myProfile.getInspectionTool(shortName, element);
   }
 
-  public void init(@Nonnull Project project) {
-  }
-
   public void cleanup(@Nonnull Project project) {
     myProfile.cleanup(project);
   }

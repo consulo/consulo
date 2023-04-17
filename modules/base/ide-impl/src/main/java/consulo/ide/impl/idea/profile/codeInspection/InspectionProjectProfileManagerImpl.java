@@ -16,19 +16,16 @@
 package consulo.ide.impl.idea.profile.codeInspection;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
@@ -53,7 +50,6 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
   private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<>();
   private final SeverityRegistrarImpl mySeverityRegistrar;
   private final NamedScopeManager myLocalScopesHolder;
-  private NamedScopesHolder.ScopeListener myScopeListener;
 
   @Inject
   public InspectionProjectProfileManagerImpl(@Nonnull Project project,
@@ -103,62 +99,36 @@ public class InspectionProjectProfileManagerImpl extends InspectionProjectProfil
     }
   }
 
-  public void initProfiles() {
+  @Override
+  public void afterLoadState() {
     final Set<Profile> profiles = new HashSet<>();
     profiles.add(getProjectProfileImpl());
     profiles.addAll(getProfiles());
     profiles.addAll(InspectionProfileManager.getInstance().getProfiles());
-    final Application app = ApplicationManager.getApplication();
-    Runnable initInspectionProfilesRunnable = new Runnable() {
-      @Override
-      public void run() {
-        for (Profile profile : profiles) {
-          initProfileWrapper(profile);
-        }
-        fireProfilesInitialized();
-      }
-    };
 
-    if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
-      initInspectionProfilesRunnable.run();
-      UIUtil.dispatchAllInvocationEvents(); //do not restart daemon in the middle of the test
+    for (Profile profile : profiles) {
+      initProfileWrapper(profile);
     }
-    else {
-      app.executeOnPooledThread(initInspectionProfilesRunnable);
-    }
-    myScopeListener = () -> {
+
+    NamedScopesHolder.ScopeListener scopeListener = () -> {
       for (Profile profile : getProfiles()) {
         ((InspectionProfile)profile).scopesChanged();
       }
     };
-    myHolder.addScopeListener(myScopeListener, myProject);
-    myLocalScopesHolder.addScopeListener(myScopeListener, myProject);
+    myHolder.addScopeListener(scopeListener, myProject);
+    myLocalScopesHolder.addScopeListener(scopeListener, myProject);
   }
 
   @Override
   public void initProfileWrapper(@Nonnull Profile profile) {
     final InspectionProfileWrapper wrapper = new InspectionProfileWrapper((InspectionProfile)profile);
-    wrapper.init(myProject);
     myName2Profile.put(profile.getName(), wrapper);
   }
 
   @Override
   public void dispose() {
-    final Application app = ApplicationManager.getApplication();
-    Runnable cleanupInspectionProfilesRunnable = new Runnable() {
-      @Override
-      public void run() {
-        for (InspectionProfileWrapper wrapper : myName2Profile.values()) {
-          wrapper.cleanup(myProject);
-        }
-        fireProfilesShutdown();
-      }
-    };
-    if (app.isUnitTestMode() || app.isHeadlessEnvironment()) {
-      cleanupInspectionProfilesRunnable.run();
-    }
-    else {
-      app.executeOnPooledThread(cleanupInspectionProfilesRunnable);
+    for (InspectionProfileWrapper wrapper : myName2Profile.values()) {
+      wrapper.cleanup(myProject);
     }
   }
 

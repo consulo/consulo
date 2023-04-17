@@ -2,36 +2,36 @@
 
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
-import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.FileHighlightingSettingListener;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.application.AllIcons;
-import consulo.application.PowerSaveMode;
-import consulo.application.ApplicationManager;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
-import java.util.function.Consumer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
   public static final String ID = "InspectionProfile";
@@ -88,11 +88,6 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     super.install(statusBar);
     myConnection.subscribe(PowerSaveModeListener.class, this::updateStatus);
     myConnection.subscribe(ProfileChangeAdapter.class, new ProfileChangeAdapter() {
-      @Override
-      public void profilesInitialized() {
-        updateStatus();
-      }
-
       @Override
       public void profileActivated(@Nullable Profile oldProfile, @Nullable Profile profile) {
         updateStatus();

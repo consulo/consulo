@@ -53,8 +53,6 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
   public InspectionProfileManager() {
   }
 
-  protected abstract void initProfiles();
-
   @Nonnull
   public abstract Collection<InspectionProfile> getProfiles();
 

@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.inspection.scheme;
 import consulo.component.persist.MainConfigurationStateSplitter;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.disposer.Disposable;
 import consulo.language.editor.inspection.scheme.ApplicationProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.Profile;
@@ -77,7 +76,6 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   private final ProfileChangeAdapter myListenerPublisher;
 
-  @NonNls
   private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
   public DefaultProjectProfileManager(@Nonnull final Project project, @Nonnull ApplicationProfileManager applicationProfileManager, @Nonnull DependencyValidationManager holder) {
@@ -247,11 +245,6 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     return profile;
   }
 
-  @Deprecated
-  public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter profilesListener, @Nonnull Disposable parent) {
-    myProject.getMessageBus().connect(parent).subscribe(ProfileChangeAdapter.class, profilesListener);
-  }
-
   public static class ProfileStateSplitter extends MainConfigurationStateSplitter {
     @Nonnull
     @Override
@@ -275,13 +268,5 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     protected String getSubStateTagName() {
       return PROFILE;
     }
-  }
-
-  protected void fireProfilesInitialized() {
-    myListenerPublisher.profilesInitialized();
-  }
-
-  protected void fireProfilesShutdown() {
-    myListenerPublisher.profilesShutdown();
   }
 }

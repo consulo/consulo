@@ -28,10 +28,4 @@ public interface ProfileChangeAdapter {
 
   default void profileActivated(@Nullable Profile oldProfile, @Nullable Profile profile) {
   }
-
-  default void profilesInitialized() {
-  }
-
-  default void profilesShutdown() {
-  }
 }

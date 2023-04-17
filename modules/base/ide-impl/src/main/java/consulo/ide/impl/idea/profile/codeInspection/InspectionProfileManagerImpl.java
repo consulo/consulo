@@ -21,17 +21,17 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.persist.*;
-import consulo.ide.ServiceManager;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
-import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -51,14 +51,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
 @State(name = "InspectionProfileManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
@@ -67,7 +65,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
   private final SchemeManager<InspectionProfile, InspectionProfileImpl> mySchemeManager;
-  private final AtomicBoolean myProfilesAreInitialized = new AtomicBoolean(false);
   private final SeverityRegistrarImpl mySeverityRegistrar;
 
   protected static final Logger LOG = Logger.getInstance(InspectionProfileManagerImpl.class);
@@ -129,7 +126,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
       public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
         Profile current = mySchemeManager.getCurrentScheme();
         if (current != null) {
-          fireProfileChanged((Profile)oldCurrentScheme, current, null);
+          fireProfileChanged(oldCurrentScheme, current, null);
         }
       }
 
@@ -162,28 +159,11 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   @Override
   @Nonnull
   public Collection<InspectionProfile> getProfiles() {
-    initProfiles();
     return mySchemeManager.getAllSchemes();
   }
 
-  private volatile boolean LOAD_PROFILES = !ApplicationManager.getApplication().isUnitTestMode();
-
-  @TestOnly
-  public void forceInitProfiles(boolean flag) {
-    LOAD_PROFILES = flag;
-    myProfilesAreInitialized.set(false);
-  }
-
   @Override
-  public void initProfiles() {
-    if (myProfilesAreInitialized.getAndSet(true)) {
-      if (mySchemeManager.getAllSchemes().isEmpty()) {
-        createDefaultProfile();
-      }
-      return;
-    }
-    if (!LOAD_PROFILES) return;
-
+  public void afterLoadState() {
     mySchemeManager.loadSchemes();
     Collection<InspectionProfile> profiles = mySchemeManager.getAllSchemes();
     if (profiles.isEmpty()) {
@@ -210,10 +190,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
       try {
         return InspectionProfileLoadUtil.load(file, myRegistrar, this);
       }
-      catch (IOException e) {
-        throw e;
-      }
-      catch (JDOMException e) {
+      catch (IOException | JDOMException e) {
         throw e;
       }
       catch (Exception ignored) {
