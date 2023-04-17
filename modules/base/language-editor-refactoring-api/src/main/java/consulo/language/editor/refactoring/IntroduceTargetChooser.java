@@ -86,8 +86,11 @@ public class IntroduceTargetChooser {
       }
     });
     builder.setItemSelectedCallback(expr -> {
+      if (expr == null) {
+        return;
+      }
       highlighter.dropHighlight();
-      final ArrayList<PsiElement> toExtract = new ArrayList<PsiElement>();
+      final ArrayList<PsiElement> toExtract = new ArrayList<>();
       toExtract.add(expr);
       highlighter.highlight(expr, toExtract);
     });
