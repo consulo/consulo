@@ -25,7 +25,6 @@ import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.compiler.TranslatingCompilerFilesMonitor;
 import consulo.ide.impl.compiler.TranslationCompilerProjectMonitor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -34,12 +33,15 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
 * @author VISTALL
@@ -49,7 +51,6 @@ import java.util.*;
 class TranslationCompilerProjectListener implements ProjectManagerListener {
   private static final Logger LOG = Logger.getInstance(TranslationCompilerProjectListener.class);
 
-  private final Map<Project, MessageBusConnection> myConnections = new HashMap<>();
   private final Provider<TranslatingCompilerFilesMonitor> myMonitorProvider;
 
   @Inject
@@ -62,7 +63,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
     TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
 
     final MessageBusConnection conn = project.getMessageBus().connect();
-    myConnections.put(project, conn);
     final TranslatingCompilerFilesMonitorImpl.ProjectRef projRef = new TranslatingCompilerFilesMonitorImpl.ProjectRef(project);
     final int projectId = monitor.getProjectId(project);
 
@@ -168,7 +168,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
     final int projectId = monitor.getProjectId(project);
     monitor.terminateAsyncScan(projectId, true);
-    myConnections.remove(project).disconnect();
     synchronized (monitor.myDataLock) {
       monitor.mySourcesToRecompile.remove(projectId);
       monitor.myOutputsToDelete.remove(projectId);  // drop cache to save memory
