@@ -15,39 +15,35 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.compiler.util.ModuleCompilerUtil;
-import consulo.ide.impl.idea.compiler.impl.*;
 import consulo.application.ApplicationManager;
+import consulo.compiler.Compiler;
 import consulo.compiler.*;
+import consulo.compiler.event.CompilationStatusListener;
 import consulo.compiler.scope.CompileModuleScopeFactory;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.scope.FileIndexCompileScope;
 import consulo.compiler.scope.ModuleCompileScope;
 import consulo.compiler.setting.ExcludedEntriesConfiguration;
-import consulo.compiler.Compiler;
-import consulo.compiler.event.CompilationStatusListener;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.compiler.impl.CompileDriver;
+import consulo.ide.impl.idea.compiler.impl.CompositeScope;
+import consulo.ide.impl.idea.compiler.impl.OneProjectItemCompileScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.Chunk;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.util.graph.Graph;
-import consulo.component.util.graph.GraphGenerator;
-import consulo.component.util.graph.InboundSemiGraph;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -55,7 +51,6 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -83,17 +78,10 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   private final Project myProject;
 
   private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
-  private final List<TranslatingCompiler> myTranslatingCompilers = new ArrayList<>();
-  private final List<Compiler> myCompilers = new ArrayList<>();
-  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerInputFileTypes = new HashMap<>();
-  private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<>();
 
   private CompilationStatusListener myEventPublisher;
   private Set<LocalFileSystem.WatchRequest> myWatchRoots;
   private final Semaphore myCompilationSemaphore = new Semaphore(1, true);
-
-  private final Set<FileType> myCompilableFileTypes = new HashSet<>();
-  private Compiler[] myAllCompilers;
 
   @Inject
   public CompilerManagerImpl(final Project project) {
@@ -105,29 +93,6 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     }
 
     myEventPublisher = project.getMessageBus().syncPublisher(CompilationStatusListener.class);
-
-    List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
-    for (Compiler compiler : Compiler.EP_NAME.getExtensionList(project)) {
-      compiler.registerCompilableFileTypes(myCompilableFileTypes::add);
-
-      if (compiler instanceof TranslatingCompiler) {
-        TranslatingCompiler translatingCompiler = (TranslatingCompiler)compiler;
-
-        translatingCompilers.add(translatingCompiler);
-
-        myTranslatingCompilerInputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getInputFileTypes()));
-        myTranslatingCompilerOutputFileTypes.put(translatingCompiler, Arrays.asList(translatingCompiler.getOutputFileTypes()));
-      }
-      else {
-        myCompilers.add(compiler);
-      }
-    }
-
-    final List<Chunk<TranslatingCompiler>> chunks = ModuleCompilerUtil.getSortedChunks(createCompilerGraph(translatingCompilers));
-
-    for (Chunk<TranslatingCompiler> chunk : chunks) {
-      myTranslatingCompilers.addAll(chunk.getNodes());
-    }
 
     final File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
     projectGeneratedSrcRoot.mkdirs();
@@ -144,27 +109,19 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Nonnull
   @Override
   public Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler) {
-    final Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
-    return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
+    return CompilerExtensionCache.get(myProject).getRegisteredInputTypes(compiler);
   }
 
   @Nonnull
   @Override
   public Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler) {
-    final Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
-    return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
+    return CompilerExtensionCache.get(myProject).getRegisteredOutputTypes(compiler);
   }
 
   @Nonnull
   @Override
   public Compiler[] getAllCompilers() {
-    if (myAllCompilers == null) {
-      List<Compiler> list = new ArrayList<>(myCompilers.size() + myTranslatingCompilers.size());
-      list.addAll(myCompilers);
-      list.addAll(myTranslatingCompilers);
-      myAllCompilers = list.toArray(new Compiler[list.size()]);
-    }
-    return myAllCompilers;
+    return myProject.getExtensionPoint(Compiler.class).getExtensions();
   }
 
   @Override
@@ -177,64 +134,24 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Nonnull
   @SuppressWarnings("unchecked")
   public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Condition<Compiler> filter) {
-    final List<T> compilers = new ArrayList<>(myCompilers.size());
-    for (final Compiler item : myCompilers) {
-      if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
-        compilers.add((T)item);
-      }
-    }
-    for (final Compiler item : myTranslatingCompilers) {
-      if (compilerClass.isAssignableFrom(item.getClass()) && filter.value(item)) {
-        compilers.add((T)item);
-      }
-    }
-    final T[] array = (T[])Array.newInstance(compilerClass, compilers.size());
-    return compilers.toArray(array);
-  }
-
-  private Graph<TranslatingCompiler> createCompilerGraph(final List<TranslatingCompiler> compilers) {
-    return GraphGenerator.generate(new InboundSemiGraph<TranslatingCompiler>() {
-      @Override
-      public Collection<TranslatingCompiler> getNodes() {
-        return compilers;
-      }
-
-      @Override
-      public Iterator<TranslatingCompiler> getIn(TranslatingCompiler compiler) {
-        final Collection<FileType> compilerInput = myTranslatingCompilerInputFileTypes.get(compiler);
-        if (compilerInput == null || compilerInput.isEmpty()) {
-          return Collections.<TranslatingCompiler>emptySet().iterator();
-        }
-
-        final Set<TranslatingCompiler> inCompilers = new HashSet<>();
-
-        for (Map.Entry<TranslatingCompiler, Collection<FileType>> entry : myTranslatingCompilerOutputFileTypes.entrySet()) {
-          final Collection<FileType> outputs = entry.getValue();
-          TranslatingCompiler comp = entry.getKey();
-          if (outputs != null && ContainerUtil.intersects(compilerInput, outputs)) {
-            inCompilers.add(comp);
-          }
-        }
-        return inCompilers.iterator();
-      }
-    });
+    return CompilerExtensionCache.get(myProject).getCompilers(compilerClass, filter);
   }
 
   @Override
   public boolean isCompilableFileType(@Nonnull FileType type) {
-    return myCompilableFileTypes.contains(type);
+    return CompilerExtensionCache.get(myProject).isCompilableFileType(type);
   }
 
   @Override
   @Nonnull
   public List<? extends CompileTask> getBeforeTasks() {
-    return Application.get().getExtensionList(BeforeCompileTask.class);
+    return myProject.getApplication().getExtensionList(BeforeCompileTask.class);
   }
 
   @Override
   @Nonnull
   public List<? extends CompileTask> getAfterTasks() {
-    return Application.get().getExtensionList(AfterCompilerTask.class);
+    return myProject.getApplication().getExtensionList(AfterCompilerTask.class);
   }
 
   @Override

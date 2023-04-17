@@ -61,6 +61,8 @@ public abstract class CompilerManager {
   public abstract Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler);
   
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use Compiler extension point")
   public abstract Compiler[] getAllCompilers();
 
   /**
