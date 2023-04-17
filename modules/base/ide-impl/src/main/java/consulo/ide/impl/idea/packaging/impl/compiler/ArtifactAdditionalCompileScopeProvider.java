@@ -24,10 +24,10 @@ import consulo.compiler.scope.CompileScope;
 import consulo.compiler.scope.ModuleCompileScope;
 import consulo.ide.impl.idea.compiler.impl.AdditionalCompileScopeProvider;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -35,12 +35,12 @@ import java.util.Set;
 @ExtensionImpl
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
   @Override
-  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Condition<Compiler> filter, @Nonnull final Project project) {
+  public CompileScope getAdditionalScope(@Nonnull final CompileScope baseScope, @Nonnull Predicate<Compiler> filter, @Nonnull final Project project) {
     if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
       return null;
     }
     final ArtifactsCompiler compiler = ArtifactsCompiler.getInstance(project);
-    if (compiler == null || !filter.value(compiler)) {
+    if (compiler == null || !filter.test(compiler)) {
       return null;
     }
     ThrowableComputable<ModuleCompileScope,RuntimeException> action = () -> {

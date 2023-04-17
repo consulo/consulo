@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * A "root" class in compiler subsystem - allows one to register a custom compiler or a compilation task, register/unregister a compilation listener
@@ -82,7 +83,7 @@ public abstract class CompilerManager {
    * @return all registered compilers of the specified class.
    */
   @Nonnull
-  public abstract <T  extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Condition<Compiler> filter);
+  public abstract <T  extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Predicate<Compiler> filter);
 
   /**
    * Checks if files of the specified type can be compiled by one of registered compilers.

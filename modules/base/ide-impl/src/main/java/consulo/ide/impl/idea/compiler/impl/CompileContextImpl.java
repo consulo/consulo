@@ -65,7 +65,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final Project myProject;
   private final CompilerTask myTask;
   private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =
-          new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
+    new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
   private CompileScope myCompileScope;
   private final CompositeDependencyCache myDependencyCache;
   private final boolean myMake;
@@ -76,7 +76,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<VirtualFile, Module>();
   private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<Module, Set<VirtualFile>>();
   private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap =
-          new HashMap<VirtualFile, Pair<SourceGeneratingCompiler, Module>>();
+    new HashMap<VirtualFile, Pair<SourceGeneratingCompiler, Module>>();
   private final Set<VirtualFile> myGeneratedTestRoots = new java.util.HashSet<VirtualFile>();
   private VirtualFile[] myOutputDirectories;
   private Set<VirtualFile> myTestOutputDirectories;
@@ -221,7 +221,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   @Override
   public void addMessage(CompilerMessageCategory category, String message, String url, int lineNum, int columnNum) {
     CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
+      new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, null);
     addMessage(msg);
   }
 
@@ -233,7 +233,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
                          int columnNum,
                          Navigatable navigatable) {
     CompilerMessageImpl msg =
-            new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
+      new CompilerMessageImpl(myProject, category, message, findPresentableFileForMessage(url), lineNum, columnNum, navigatable);
     addMessage(msg);
   }
 
@@ -302,7 +302,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     final int type = translateCategory(category);
     final String[] text = ProblemsView.convertMessage(message.getMessage());
     final String groupName = file != null ? file.getPresentableUrl() : category.getPresentableText();
-    ProblemsView.getInstance(myProject).addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
+    ProblemsView.getInstance(myProject)
+                .addMessage(type, text, groupName, navigatable, message.getExportTextPrefix(), message.getRenderTextPrefix());
   }
 
   private static int translateCategory(CompilerMessageCategory category) {
@@ -431,7 +432,8 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     Set<VirtualFile> additionalRoots = myModuleToRootsMap.get(module);
-    VirtualFile[] moduleRoots = ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
+    VirtualFile[] moduleRoots =
+      ModuleRootManager.getInstance(module).getContentFolderFiles(LanguageContentFolderScopes.productionAndTest());
     if (additionalRoots == null || additionalRoots.isEmpty()) {
       myModuleToRootsCache.put(module, moduleRoots);
       return moduleRoots;

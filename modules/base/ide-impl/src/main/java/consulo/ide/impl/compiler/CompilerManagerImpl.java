@@ -17,7 +17,6 @@ package consulo.ide.impl.compiler;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.compiler.Compiler;
 import consulo.compiler.*;
@@ -53,6 +52,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.function.Predicate;
 
 @Singleton
 @State(name = "CompilerManager", storages = @Storage("compiler.xml"))
@@ -100,7 +100,8 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
     myWatchRoots = lfs.addRootsToWatch(Collections.singletonList(FileUtil.toCanonicalPath(projectGeneratedSrcRoot.getPath())), true);
     Disposer.register(project, () -> {
       lfs.removeWatchedRoots(myWatchRoots);
-      if (ApplicationManager.getApplication().isUnitTestMode()) {    // force cleanup for created compiler system directory with generated sources
+      if (ApplicationManager.getApplication()
+                            .isUnitTestMode()) {    // force cleanup for created compiler system directory with generated sources
         FileUtil.delete(CompilerPaths.getCompilerSystemDirectory(project));
       }
     });
@@ -133,7 +134,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Override
   @Nonnull
   @SuppressWarnings("unchecked")
-  public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Condition<Compiler> filter) {
+  public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Predicate<Compiler> filter) {
     return CompilerExtensionCache.get(myProject).getCompilers(compilerClass, filter);
   }
 
@@ -279,7 +280,9 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   @Nonnull
-  public CompileScope createModuleGroupCompileScope(@Nonnull final Project project, @Nonnull final Module[] modules, final boolean includeDependentModules) {
+  public CompileScope createModuleGroupCompileScope(@Nonnull final Project project,
+                                                    @Nonnull final Module[] modules,
+                                                    final boolean includeDependentModules) {
     List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
       list.add(createModuleCompileScope(module, includeDependentModules));

@@ -22,10 +22,10 @@ import consulo.compiler.Compiler;
 import consulo.compiler.scope.CompileScope;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author nik
@@ -35,5 +35,5 @@ public abstract class AdditionalCompileScopeProvider {
   public static final ExtensionPointName<AdditionalCompileScopeProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(AdditionalCompileScopeProvider.class);
 
   @Nullable
-  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope, @Nonnull Condition<Compiler> filter, @Nonnull Project project);
+  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope, @Nonnull Predicate<Compiler> filter, @Nonnull Project project);
 }
