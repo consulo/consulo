@@ -93,7 +93,7 @@ public abstract class VcsVFSListener implements Disposable {
     myProject = project;
     myVcs = vcs;
     myChangeListManager = ChangeListManager.getInstance(project);
-    myDirtyScopeManager = VcsDirtyScopeManager.getInstance(myProject);
+    myDirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
 
     final MyVirtualFileListener myVFSListener = new MyVirtualFileListener();
     final MyCommandAdapter myCommandListener = new MyCommandAdapter();
@@ -102,11 +102,11 @@ public abstract class VcsVFSListener implements Disposable {
     myAddOption = myVcsManager.getStandardConfirmation(VcsConfiguration.StandardConfirmation.ADD, vcs);
     myRemoveOption = myVcsManager.getStandardConfirmation(VcsConfiguration.StandardConfirmation.REMOVE, vcs);
 
-    MessageBusConnection busConnection = project.getApplication().getMessageBus().connect();
+    MessageBusConnection busConnection = project.getApplication().getMessageBus().connect(this);
     busConnection.subscribe(VirtualFileListener.class, myVFSListener);
     busConnection.subscribe(CommandListener.class, myCommandListener);
 
-    myVcsFileListenerContextHelper = VcsFileListenerContextHelper.getInstance(myProject);
+    myVcsFileListenerContextHelper = VcsFileListenerContextHelper.getInstance(project);
   }
 
   @Override
