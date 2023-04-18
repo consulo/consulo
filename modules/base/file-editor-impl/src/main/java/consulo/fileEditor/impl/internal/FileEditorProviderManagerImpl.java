@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -24,15 +25,14 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.fileEditor.*;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.util.xml.serializer.annotation.MapAnnotation;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,15 +45,15 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
-public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerImpl> {
+public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerState> {
 
-  private final List<FileEditorProvider> myProviders = ContainerUtil.createConcurrentList();
+  private final Application myApplication;
+
+  private FileEditorProviderManagerState myState = new FileEditorProviderManagerState();
 
   @Inject
-  public FileEditorProviderManagerImpl() {
-    for (FileEditorProvider fileEditorProvider : FileEditorProvider.EP_FILE_EDITOR_PROVIDER.getExtensionList()) {
-      registerProvider(fileEditorProvider);
-    }
+  public FileEditorProviderManagerImpl(Application application) {
+    myApplication = application;
   }
 
   @Override
@@ -62,7 +62,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     // Collect all possible editors
     List<FileEditorProvider> sharedProviders = new ArrayList<>();
     boolean doNotShowTextEditor = false;
-    for (final FileEditorProvider provider : myProviders) {
+    for (final FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       ThrowableComputable<Boolean, RuntimeException> action = () -> {
         if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
           return false;
@@ -89,7 +89,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   @Override
   @Nullable
   public FileEditorProvider getProvider(@Nonnull String editorTypeId) {
-    for (FileEditorProvider provider : myProviders) {
+    for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
       if (provider.getEditorTypeId().equals(editorTypeId)) {
         return provider;
       }
@@ -97,38 +97,22 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     return null;
   }
 
-  private void registerProvider(@Nonnull FileEditorProvider provider) {
-    String editorTypeId = provider.getEditorTypeId();
-    if (getProvider(editorTypeId) != null) {
-      throw new IllegalArgumentException("attempt to register provider with non unique editorTypeId: " + editorTypeId);
-    }
-    myProviders.add(provider);
-  }
-
-  private void unregisterProvider(@Nonnull FileEditorProvider provider) {
-    final boolean b = myProviders.remove(provider);
-    assert b;
-  }
-
-  @Nullable
+  @Nonnull
   @Override
-  public FileEditorProviderManagerImpl getState() {
-    return this;
+  public FileEditorProviderManagerState getState() {
+    return myState;
   }
 
   @Override
-  public void loadState(FileEditorProviderManagerImpl state) {
-    mySelectedProviders.clear();
-    mySelectedProviders.putAll(state.mySelectedProviders);
+  public void loadState(FileEditorProviderManagerState state) {
+    XmlSerializerUtil.copyBean(this, myState);
   }
 
-  private final Map<String, String> mySelectedProviders = new HashMap<>();
-
-  void providerSelected(FileEditorComposite composite) {
+  public void providerSelected(FileEditorComposite composite) {
     if (!(composite instanceof FileEditorWithProviderComposite)) return;
     FileEditorProvider[] providers = ((FileEditorWithProviderComposite)composite).getProviders();
     if (providers.length < 2) return;
-    mySelectedProviders.put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
+    myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
   }
 
   private static String computeKey(FileEditorProvider[] providers) {
@@ -136,30 +120,15 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Nullable
-  FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManagerImpl editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+ public FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
     FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
     if (provider != null || providers.length < 2) {
       return provider;
     }
-    String id = mySelectedProviders.get(computeKey(providers));
+    String id = myState.getSelectedProviders().get(computeKey(providers));
     return id == null ? null : getProvider(id);
   }
 
-  @MapAnnotation(surroundKeyWithTag = false, surroundValueWithTag = false)
-  public Map<String, String> getSelectedProviders() {
-    return mySelectedProviders;
-  }
-
-  @SuppressWarnings("unused")
-  public void setSelectedProviders(Map<String, String> selectedProviders) {
-    mySelectedProviders.clear();
-    mySelectedProviders.putAll(selectedProviders);
-  }
-
-  @TestOnly
-  public void clearSelectedProviders() {
-    mySelectedProviders.clear();
-  }
 
   private static final class MyComparator implements Comparator<FileEditorProvider> {
     public static final MyComparator ourInstance = new MyComparator();

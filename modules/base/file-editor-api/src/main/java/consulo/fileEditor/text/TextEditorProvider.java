@@ -48,7 +48,7 @@ import java.util.List;
 public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
   @Nonnull
   public static TextEditorProvider getInstance() {
-    return EP_FILE_EDITOR_PROVIDER.findExtension(TextEditorProvider.class);
+    return EP_FILE_EDITOR_PROVIDER.findExtensionOrFail(TextEditorProvider.class);
   }
 
   @TestOnly

@@ -43,7 +43,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
 

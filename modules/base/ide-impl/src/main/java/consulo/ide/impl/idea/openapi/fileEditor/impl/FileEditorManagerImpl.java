@@ -50,6 +50,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.IdeBundle;

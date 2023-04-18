@@ -43,4 +43,7 @@ public interface EditorHistoryManager {
   FileEditorState getState(@Nonnull VirtualFile file, final FileEditorProvider provider);
 
   void removeFile(@Nonnull final VirtualFile file);
+
+  @Nullable
+  FileEditorProvider getSelectedProvider(final VirtualFile file);
 }
