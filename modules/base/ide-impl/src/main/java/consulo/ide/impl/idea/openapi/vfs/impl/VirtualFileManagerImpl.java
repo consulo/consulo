@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
-import consulo.virtualFileSystem.VirtualFilePresentation;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.virtualFileSystem.StandardFileSystems;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
-import consulo.virtualFileSystem.CachingVirtualFileSystem;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ComponentManager;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.util.Iconable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
@@ -46,11 +45,11 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private static final Logger LOG = Logger.getInstance(VirtualFileManagerImpl.class);
 
   private final EventDispatcher<VirtualFileListener> myVirtualFileListenerMulticaster = EventDispatcher.create(VirtualFileListener.class);
-  private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = Lists.newLockFreeCopyOnWriteList();
 
   private final Map<String, VirtualFileSystem> myVirtualFileSystems = new HashMap<>();
   private final List<VirtualFileSystem> myRefreshableFileSystems = new ArrayList<>();
-  private final List<AsyncFileListener> myAsyncFileListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<AsyncFileListener> myAsyncFileListeners = Lists.newLockFreeCopyOnWriteList();
   private int myRefreshCount = 0;
 
   @Inject
@@ -67,7 +66,10 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       addVirtualFileListener(new LoggingListener());
     }
 
-    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
+    MessageBusConnection connect = application.getMessageBus().connect();
+    connect.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
+
+    addVirtualFileListener(application.getMessageBus().syncPublisher(VirtualFileListener.class));
   }
 
   private void registerFileSystem(@Nonnull VirtualFileSystem fileSystem) {
@@ -205,7 +207,10 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   }
 
   @Override
-  public void notifyPropertyChanged(@Nonnull final VirtualFile virtualFile, @Nonnull final String property, final Object oldValue, final Object newValue) {
+  public void notifyPropertyChanged(@Nonnull final VirtualFile virtualFile,
+                                    @Nonnull final String property,
+                                    final Object oldValue,
+                                    final Object newValue) {
     final Application application = ApplicationManager.getApplication();
     final Runnable runnable = new Runnable() {
       @Override
@@ -214,7 +219,8 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
           application.runWriteAction(new Runnable() {
             @Override
             public void run() {
-              List<VFilePropertyChangeEvent> events = Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
+              List<VFilePropertyChangeEvent> events =
+                Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
               BulkFileListener listener = application.getMessageBus().syncPublisher(BulkFileListener.class);
               listener.before(events);
               listener.after(events);
@@ -268,15 +274,15 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     @Override
     public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
       LOG.debug("propertyChanged: file = " +
-                event.getFile() +
-                ", propertyName = " +
-                event.getPropertyName() +
-                ", oldValue = " +
-                event.getOldValue() +
-                ", newValue = " +
-                event.getNewValue() +
-                ", requestor = " +
-                event.getRequestor());
+                  event.getFile() +
+                  ", propertyName = " +
+                  event.getPropertyName() +
+                  ", oldValue = " +
+                  event.getOldValue() +
+                  ", newValue = " +
+                  event.getNewValue() +
+                  ", requestor = " +
+                  event.getRequestor());
     }
 
     @Override
@@ -296,7 +302,8 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
     @Override
     public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
-      LOG.debug("fileMoved: file = " + event.getFile() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent() + ", requestor = " + event.getRequestor());
+      LOG.debug("fileMoved: file = " + event.getFile() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent() + ", requestor = " + event
+        .getRequestor());
     }
 
     @Override
@@ -312,15 +319,15 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
     @Override
     public void beforePropertyChange(@Nonnull VirtualFilePropertyEvent event) {
       LOG.debug("beforePropertyChange: file = " +
-                event.getFile() +
-                ", propertyName = " +
-                event.getPropertyName() +
-                ", oldValue = " +
-                event.getOldValue() +
-                ", newValue = " +
-                event.getNewValue() +
-                ", requestor = " +
-                event.getRequestor());
+                  event.getFile() +
+                  ", propertyName = " +
+                  event.getPropertyName() +
+                  ", oldValue = " +
+                  event.getOldValue() +
+                  ", newValue = " +
+                  event.getNewValue() +
+                  ", requestor = " +
+                  event.getRequestor());
     }
 
     @Override
@@ -331,7 +338,8 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
     @Override
     public void beforeFileMovement(@Nonnull VirtualFileMoveEvent event) {
-      LOG.debug("beforeFileMovement: file = " + event.getFile() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent() + ", requestor = " + event.getRequestor());
+      LOG.debug("beforeFileMovement: file = " + event.getFile() + ", oldParent = " + event.getOldParent() + ", newParent = " + event.getNewParent() + ", requestor = " + event
+        .getRequestor());
     }
   }
 

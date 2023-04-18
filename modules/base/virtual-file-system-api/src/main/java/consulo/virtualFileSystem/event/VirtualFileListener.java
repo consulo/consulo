@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
@@ -27,6 +29,7 @@ import java.util.EventListener;
  * @see VirtualFileManager#addVirtualFileListener(VirtualFileListener)
  * @see VirtualFileListener
  */
+@TopicAPI(ComponentScope.APPLICATION)
 public interface VirtualFileListener extends EventListener {
   /**
    * Fired when a virtual file is renamed from within IDEA, or its writable status is changed.

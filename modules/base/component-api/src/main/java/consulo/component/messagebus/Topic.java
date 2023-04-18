@@ -65,11 +65,11 @@ public class Topic<L> {
    * Allows to retrieve class that defines contract for working with the current topic. Either publishers or subscribers use it:
    * <ul>
    *   <li>
-   *     publisher {@link MessageBus#syncPublisher(Topic) receives} object that IS-A target interface from the messaging infrastructure.
+   *     publisher {@link MessageBus#syncPublisher(Class) receives} object that IS-A target interface from the messaging infrastructure.
    *     It calls target method with the target arguments on it then (method of the interface returned by the current method);
    *   </li>
    *   <li>
-   *     the same method is called on handlers of all {@link MessageBusConnection#subscribe(Topic, Object) subscribers} that
+   *     the same method is called on handlers of all {@link MessageBusConnection#subscribe(Class, Object) subscribers} that
    *     should receive the message;
    *   </li>
    * </ul>

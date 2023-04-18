@@ -154,8 +154,12 @@ public abstract class VirtualFileManager implements ModificationTracker {
    * @param listener the listener
    * @see VirtualFileListener
    */
+  @Deprecated
+  @DeprecationInfo("Use MessageBus API")
   public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener);
 
+  @Deprecated
+  @DeprecationInfo("Use MessageBus API")
   public abstract void addVirtualFileListener(@Nonnull VirtualFileListener listener, @Nonnull Disposable parentDisposable);
 
   /**
@@ -163,6 +167,8 @@ public abstract class VirtualFileManager implements ModificationTracker {
    *
    * @param listener the listener
    */
+  @Deprecated
+  @DeprecationInfo("Use MessageBus API")
   public abstract void removeVirtualFileListener(@Nonnull VirtualFileListener listener);
 
   /**

@@ -33,7 +33,6 @@ public interface MessageBusConnection {
     subscribe(topic.getListenerClass(), handler);
   }
 
-
   /**
    * Subscribes given handler to the target endpoint within the current connection.
    *

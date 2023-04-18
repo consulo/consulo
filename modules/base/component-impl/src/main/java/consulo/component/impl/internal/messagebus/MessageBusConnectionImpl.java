@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.component.impl.internal.messagebus;
 
+import consulo.annotation.component.TopicAPI;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
@@ -18,7 +19,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   private static final Logger LOG = Logger.getInstance(MessageBusConnectionImpl.class);
 
   private final MessageBusImpl myBus;
-  @SuppressWarnings("SSBasedInspection")
+
   private final ThreadLocal<Queue<Message>> myPendingMessages = MessageBusImpl.createThreadLocalQueue();
 
   private volatile SmartFMap<Class<?>, Object> mySubscriptions = SmartFMap.emptyMap();
@@ -29,6 +30,10 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
 
   @Override
   public <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) {
+    if (!topicClass.isAnnotationPresent(TopicAPI.class)) {
+      LOG.error("Registering listener for topic which is not annotated by @TopicAPI " + topicClass);
+    }
+
     boolean notifyBusAboutTopic = false;
     synchronized (myPendingMessages) {
       Object currentHandler = mySubscriptions.get(topicClass);

@@ -332,7 +332,7 @@ public abstract class VcsVFSListener implements Disposable {
 
   protected abstract boolean isDirectoryVersioningSupported();
 
-  // TODO [VISTALL] rewrite it to bulk file listener
+  // TODO [VISTALL] rewrite it to async file listener
   private class MyVirtualFileListener implements VirtualFileListener {
     @Override
     public void fileCreated(@Nonnull final VirtualFileEvent event) {
