@@ -20,46 +20,43 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.scope.AnalysisScope;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.ide.impl.idea.codeInspection.InspectionApplication;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.Tools;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineInspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.offlineViewer.OfflineViewParseUtil;
-import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import consulo.fileChooser.IdeaFileChooser;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.language.psi.PsiElement;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -72,7 +69,8 @@ import java.util.Set;
 
 public class ViewOfflineResultsAction extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
-  @NonNls private static final String XML_EXTENSION = "xml";
+  @NonNls
+  private static final String XML_EXTENSION = "xml";
 
   @Override
   public void update(AnActionEvent event) {
@@ -88,7 +86,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
 
     LOG.assertTrue(project != null);
 
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false){
+    final FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
       @Override
       public Image getIcon(VirtualFile file) {
         if (file.isDirectory()) {
@@ -105,8 +103,8 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     if (virtualFile == null || !virtualFile.isDirectory()) return;
 
     final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap =
-            new HashMap<String, Map<String, Set<OfflineProblemDescriptor>>>();
-    final String [] profileName = new String[1];
+      new HashMap<String, Map<String, Set<OfflineProblemDescriptor>>>();
+    final String[] profileName = new String[1];
     final Runnable process = new Runnable() {
       @Override
       public void run() {
@@ -118,23 +116,23 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
             final String extension = inspectionFile.getExtension();
             if (shortName.equals(InspectionApplication.DESCRIPTIONS)) {
               profileName[0] = ApplicationManager.getApplication().runReadAction(
-                      new Computable<String>() {
-                        @Override
-                        @Nullable
-                        public String compute() {
-                          return OfflineViewParseUtil.parseProfileName(inspectionFile);
-                        }
-                      }
+                new Computable<String>() {
+                  @Override
+                  @Nullable
+                  public String compute() {
+                    return OfflineViewParseUtil.parseProfileName(inspectionFile);
+                  }
+                }
               );
             }
             else if (XML_EXTENSION.equals(extension)) {
               resMap.put(shortName, ApplicationManager.getApplication().runReadAction(
-                      new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
-                        @Override
-                        public Map<String, Set<OfflineProblemDescriptor>> compute() {
-                          return OfflineViewParseUtil.parse(inspectionFile);
-                        }
-                      }
+                new Computable<Map<String, Set<OfflineProblemDescriptor>>>() {
+                  @Override
+                  public Map<String, Set<OfflineProblemDescriptor>> compute() {
+                    return OfflineViewParseUtil.parse(inspectionFile);
+                  }
+                }
               ));
             }
           }
@@ -150,26 +148,32 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         }
       }
     };
-    ProgressManager.getInstance().runProcessWithProgressAsynchronously(project, InspectionsBundle.message("parsing.inspections.dump.progress.title"), process, new Runnable() {
-      @Override
-      public void run() {
-        SwingUtilities.invokeLater(new Runnable(){
-          @Override
-          public void run() {
-            final String name = profileName[0];
-            showOfflineView(project, name, resMap,
-                            InspectionsBundle.message("offline.view.title") +
-                            " (" + (name != null ? name : InspectionsBundle.message("offline.view.editor.settings.title")) +")");
-          }
-        });
-      }
-    }, null, new PerformAnalysisInBackgroundOption(project));
+    ProgressManager.getInstance()
+                   .runProcessWithProgressAsynchronously(project,
+                                                         InspectionsBundle.message("parsing.inspections.dump.progress.title"),
+                                                         process,
+                                                         new Runnable() {
+                                                           @Override
+                                                           public void run() {
+                                                             SwingUtilities.invokeLater(new Runnable() {
+                                                               @Override
+                                                               public void run() {
+                                                                 final String name = profileName[0];
+                                                                 showOfflineView(project, name, resMap,
+                                                                                 InspectionsBundle.message("offline.view.title") +
+                                                                                   " (" + (name != null ? name : InspectionsBundle.message(
+                                                                                   "offline.view.editor.settings.title")) + ")");
+                                                               }
+                                                             });
+                                                           }
+                                                         },
+                                                         null,
+                                                         new PerformAnalysisInBackgroundOption(project));
   }
 
   @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"}) //used in TeamCity
   public static InspectionResultsView showOfflineView(@Nonnull Project project,
-                                                      @Nullable
-                                                      final String profileName,
+                                                      @Nullable final String profileName,
                                                       @Nonnull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
                                                       @Nonnull String title) {
     Profile profile;
@@ -187,7 +191,9 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
       inspectionProfile = (InspectionProfile)profile;
     }
     else {
-      inspectionProfile = new InspectionProfileImpl(profileName != null ? profileName : "Server Side") {
+      inspectionProfile = new InspectionProfileImpl(profileName != null ? profileName : "Server Side",
+                                                    InspectionToolRegistrar.getInstance(),
+                                                    InspectionProfileManager.getInstance()) {
         @Override
         public boolean isToolEnabled(final HighlightDisplayKey key, PsiElement element) {
           return resMap.containsKey(key.toString());

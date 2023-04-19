@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InspectionToolRegistrar {
+  @Deprecated
   public static InspectionToolRegistrar getInstance() {
     return Application.get().getInstance(InspectionToolRegistrar.class);
   }

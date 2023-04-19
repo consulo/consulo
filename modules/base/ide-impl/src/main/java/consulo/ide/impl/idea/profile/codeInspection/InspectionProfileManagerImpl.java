@@ -60,7 +60,7 @@ import java.util.Collection;
 
 @Singleton
 @State(name = "InspectionProfileManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
-        @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)}, additionalExportFile = InspectionProfileManager.FILE_SPEC)
+  @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)}, additionalExportFile = InspectionProfileManager.FILE_SPEC)
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
@@ -74,74 +74,79 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   @Inject
-  public InspectionProfileManagerImpl(@Nonnull Application application, @Nonnull InspectionToolRegistrar registrar, @Nonnull SchemeManagerFactory schemeManagerFactory) {
+  public InspectionProfileManagerImpl(@Nonnull Application application,
+                                      @Nonnull InspectionToolRegistrar registrar,
+                                      @Nonnull SchemeManagerFactory schemeManagerFactory) {
     myRegistrar = registrar;
     registerProvidedSeverities();
 
-    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<InspectionProfile, InspectionProfileImpl>() {
-      @Nonnull
-      @Override
-      public InspectionProfileImpl readScheme(@Nonnull Element element) {
-        final InspectionProfileImpl profile = new InspectionProfileImpl(InspectionProfileLoadUtil.getProfileName(element), myRegistrar, InspectionProfileManagerImpl.this);
-        try {
-          profile.readExternal(element);
+    mySchemeManager =
+      schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<InspectionProfile, InspectionProfileImpl>() {
+        @Nonnull
+        @Override
+        public InspectionProfileImpl readScheme(@Nonnull Element element) {
+          final InspectionProfileImpl profile =
+            new InspectionProfileImpl(InspectionProfileLoadUtil.getProfileName(element), myRegistrar, InspectionProfileManagerImpl.this);
+          try {
+            profile.readExternal(element);
+          }
+          catch (Exception e) {
+            LOG.error(e);
+            ApplicationManager.getApplication().invokeLater(new Runnable() {
+              @Override
+              public void run() {
+                Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
+                                         InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+              }
+            }, IdeaModalityState.NON_MODAL);
+          }
+          return profile;
         }
-        catch (Exception e) {
-          LOG.error(e);
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
-            }
-          }, IdeaModalityState.NON_MODAL);
+
+        @Nonnull
+        @Override
+        public State getState(@Nonnull InspectionProfileImpl scheme) {
+          return scheme.isProjectLevel() ? State.NON_PERSISTENT : (scheme.wasInitialized() ? State.POSSIBLY_CHANGED : State.UNCHANGED);
         }
-        return profile;
-      }
 
-      @Nonnull
-      @Override
-      public State getState(@Nonnull InspectionProfileImpl scheme) {
-        return scheme.isProjectLevel() ? State.NON_PERSISTENT : (scheme.wasInitialized() ? State.POSSIBLY_CHANGED : State.UNCHANGED);
-      }
-
-      @Override
-      public Element writeScheme(@Nonnull InspectionProfileImpl scheme) {
-        Element root = new Element("inspections");
-        root.setAttribute("profile_name", scheme.getName());
-        scheme.serializeInto(root, false);
-        return root;
-      }
-
-      @Override
-      public void onSchemeAdded(@Nonnull final InspectionProfileImpl scheme) {
-        updateProfileImpl(scheme);
-        fireProfileChanged(scheme);
-      }
-
-      @Override
-      public void onSchemeDeleted(@Nonnull final InspectionProfileImpl scheme) {
-      }
-
-      @Override
-      public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
-        Profile current = mySchemeManager.getCurrentScheme();
-        if (current != null) {
-          fireProfileChanged(oldCurrentScheme, current, null);
+        @Override
+        public Element writeScheme(@Nonnull InspectionProfileImpl scheme) {
+          Element root = new Element("inspections");
+          root.setAttribute("profile_name", scheme.getName());
+          scheme.serializeInto(root, false);
+          return root;
         }
-      }
 
-      @Nonnull
-      @Override
-      public String getName(@Nonnull InspectionProfile immutableElement) {
-        return immutableElement.getName();
-      }
-    }, RoamingType.DEFAULT);
+        @Override
+        public void onSchemeAdded(@Nonnull final InspectionProfileImpl scheme) {
+          updateProfileImpl(scheme);
+          fireProfileChanged(scheme);
+        }
+
+        @Override
+        public void onSchemeDeleted(@Nonnull final InspectionProfileImpl scheme) {
+        }
+
+        @Override
+        public void onCurrentSchemeChanged(final InspectionProfileImpl oldCurrentScheme) {
+          Profile current = mySchemeManager.getCurrentScheme();
+          if (current != null) {
+            fireProfileChanged(oldCurrentScheme, current, null);
+          }
+        }
+
+        @Nonnull
+        @Override
+        public String getName(@Nonnull InspectionProfile immutableElement) {
+          return immutableElement.getName();
+        }
+      }, RoamingType.DEFAULT);
     mySeverityRegistrar = new SeverityRegistrarImpl(application.getMessageBus());
   }
 
   @Nonnull
-  private static InspectionProfileImpl createSampleProfile() {
-    return new InspectionProfileImpl("Default");
+  private InspectionProfileImpl createSampleProfile() {
+    return new InspectionProfileImpl("Default", myRegistrar, this, false);
   }
 
   public static void registerProvidedSeverities() {
@@ -178,10 +183,9 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
 
   private void createDefaultProfile() {
     final InspectionProfileImpl defaultProfile = (InspectionProfileImpl)createProfile();
-    defaultProfile.setBaseProfile(InspectionProfileImpl.getDefaultProfile());
+    defaultProfile.setBaseProfile(InspectionProfileImpl.getDefaultProfile(myRegistrar, this));
     addProfile(defaultProfile);
   }
-
 
   @Override
   public Profile loadProfile(@Nonnull String path) throws IOException, JDOMException {
@@ -197,7 +201,8 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
+                                     InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
           }
         }, IdeaModalityState.NON_MODAL);
       }

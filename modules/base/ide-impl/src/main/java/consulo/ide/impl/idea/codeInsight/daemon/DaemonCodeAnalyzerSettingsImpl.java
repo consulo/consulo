@@ -20,11 +20,12 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProfileManagerImpl;
 import consulo.language.editor.DaemonCodeAnalyzerSettings;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionToolRegistrar;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.logging.Logger;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
@@ -100,7 +101,6 @@ public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings i
 
   private void readExternal(Element element) throws InvalidDataException {
     DefaultJDOMExternalizer.readExternal(this, element);
-    myManager.getConverter().storeEditorHighlightingProfile(element, new InspectionProfileImpl(InspectionProfileConvertor.OLD_HIGHTLIGHTING_SETTINGS_PROFILE));
     myManager.setRootProfile(element.getAttributeValue(PROFILE_ATT));
   }
 

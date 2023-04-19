@@ -46,6 +46,7 @@ public abstract class InspectionProfileManager extends ApplicationProfileManager
 
   protected static final Logger LOG = Logger.getInstance(InspectionProfileManager.class);
 
+  @Deprecated
   public static InspectionProfileManager getInstance() {
     return Application.get().getInstance(InspectionProfileManager.class);
   }

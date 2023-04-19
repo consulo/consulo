@@ -97,21 +97,6 @@ public class InspectionProfileConvertor {
     return false;
   }
 
-  public void storeEditorHighlightingProfile(@Nonnull Element element, @Nonnull InspectionProfile editorProfile) {
-    if (retrieveOldSettings(element)) {
-
-      final ModifiableModel editorProfileModel = editorProfile.getModifiableModel();
-
-      fillErrorLevels(editorProfileModel);
-      try {
-        editorProfileModel.commit();
-      }
-      catch (IOException e) {
-        LOG.error(e);
-      }
-    }
-  }
-
   public static Element convertToNewFormat(Element profileFile, InspectionProfile profile) {
     Element rootElement = new Element(INSPECTIONS_TAG);
     rootElement.setAttribute(NAME_ATT, profile.getName());

@@ -2,6 +2,8 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="ConstantConditions" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
+      <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
       <option name="REPORT_CONSTANT_REFERENCE_VALUES" value="false" />
     </inspection_tool>
     <inspection_tool class="Deprecation" enabled="true" level="WARNING" enabled_by_default="true">
@@ -9,10 +11,15 @@
     </inspection_tool>
     <inspection_tool class="DevKitIconNotResolved" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JavadocReference" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
-    <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreObjectMethods" value="true" />
+      <option name="ignoreAnonymousClassMethods" value="false" />
+    </inspection_tool>
     <inspection_tool class="NonJREEmulationClassesInClientCode" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PlatformError" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="SystemOutErr" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="UnnecessaryFullyQualifiedName" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnnecessaryFullyQualifiedName" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_ignoreJavadoc" value="false" />
+    </inspection_tool>
   </profile>
 </component>
