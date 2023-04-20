@@ -33,13 +33,13 @@ import java.util.List;
  */
 @ServiceImpl
 public class PathMacroProtocolProviderImpl implements PathMacroProtocolProvider {
-  private static final ExtensionPointCacheKey<VirtualFileSystem, List<String>> PROTOCOLS = ExtensionPointCacheKey.create("vfsMacroProtocols", virtualFileSystems -> {
+  private static final ExtensionPointCacheKey<VirtualFileSystem, List<String>> PROTOCOLS = ExtensionPointCacheKey.create("vfsMacroProtocols", walker -> {
     List<String> protocols = new ArrayList<>();
-    for (VirtualFileSystem fileSystem : virtualFileSystems) {
+    walker.walk(fileSystem -> {
       if (fileSystem instanceof VirtualFileSystemWithMacroSupport) {
         protocols.add(fileSystem.getProtocol());
       }
-    }
+    });
     return protocols;
   });
 

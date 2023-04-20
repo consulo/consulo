@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -39,13 +38,8 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
-  ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY = ExtensionPointCacheKey.create("OrderEntryTypeEditor", orderEntryTypeEditors -> {
-    Map<String, OrderEntryTypeEditor> map = new HashMap<>();
-    for (OrderEntryTypeEditor editor : orderEntryTypeEditors) {
-      map.put(editor.getOrderTypeId(), editor);
-    }
-    return map;
-  });
+  ExtensionPointCacheKey<OrderEntryTypeEditor, Map<String, OrderEntryTypeEditor>> CACHE_KEY =
+    ExtensionPointCacheKey.groupBy("OrderEntryTypeEditor", OrderEntryTypeEditor::getOrderTypeId);
 
   @Nonnull
   static OrderEntryTypeEditor getEditor(String id) {
@@ -79,6 +73,7 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   @RequiredUIAccess
   default void navigate(@Nonnull final T orderEntry) {
     Project project = orderEntry.getOwnerModule().getProject();
-    ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
+    ShowSettingsUtil.getInstance()
+                    .showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
   }
 }

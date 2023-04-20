@@ -30,11 +30,9 @@ import java.util.Map;
  * @since 31-Jul-22
  */
 public class FileTemplateRegistratorImpl implements FileTemplateRegistrator {
-  private static final ExtensionPointCacheKey<FileTemplateContributor, FileTemplateRegistratorImpl> REG_KEY = ExtensionPointCacheKey.create("FileTemplateRegistratorImpl", fileTemplateContributors -> {
+  private static final ExtensionPointCacheKey<FileTemplateContributor, FileTemplateRegistratorImpl> REG_KEY = ExtensionPointCacheKey.create("FileTemplateRegistratorImpl", walker -> {
     FileTemplateRegistratorImpl impl = new FileTemplateRegistratorImpl();
-    for (FileTemplateContributor contributor : fileTemplateContributors) {
-      contributor.register(impl);
-    }
+    walker.walk(contributor -> contributor.register(impl));
     return impl;
   });
 

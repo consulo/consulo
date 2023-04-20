@@ -36,26 +36,24 @@ public class InspectionToolWrappers {
   private static final Logger LOG = Logger.getInstance(InspectionToolWrappers.class);
 
   public static final ExtensionPointCacheKey<GlobalInspectionTool, List<GlobalInspectionToolWrapper>> GLOBAL_WRAPPERS =
-    ExtensionPointCacheKey.create("GLOBAL_WRAPPERS", globalInspectionTools -> {
-      List<GlobalInspectionToolWrapper> wrappers = new ArrayList<>(globalInspectionTools.size());
-      for (GlobalInspectionTool tool : globalInspectionTools) {
-        wrappers.add(new GlobalInspectionToolWrapper(tool));
-      }
+    ExtensionPointCacheKey.create("GLOBAL_WRAPPERS", walker -> {
+      List<GlobalInspectionToolWrapper> wrappers = new ArrayList<>();
+      walker.walk(tool -> wrappers.add(new GlobalInspectionToolWrapper(tool)));
       return wrappers;
     });
 
   public static final ExtensionPointCacheKey<LocalInspectionTool, List<LocalInspectionToolWrapper>> LOCAL_WRAPPERS =
-    ExtensionPointCacheKey.create("LOCAL_WRAPPERS", localInspectionTools -> {
-      List<LocalInspectionToolWrapper> wrappers = new ArrayList<>(localInspectionTools.size());
-      for (LocalInspectionTool tool : localInspectionTools) {
+    ExtensionPointCacheKey.create("LOCAL_WRAPPERS", walker -> {
+      List<LocalInspectionToolWrapper> wrappers = new ArrayList<>();
+      walker.walk(tool -> {
         LocalInspectionToolWrapper wrapper = new LocalInspectionToolWrapper(tool);
         String errorMessage = checkTool(wrapper);
         if (errorMessage != null) {
-          continue;
+          return;
         }
 
         wrappers.add(wrapper);
-      }
+      });
       return wrappers;
     });
 

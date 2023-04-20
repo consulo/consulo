@@ -33,13 +33,11 @@ import java.util.function.Consumer;
  */
 public class NotificationGroupRegistrator implements Consumer<NotificationGroup> {
   private static final ExtensionPointCacheKey<NotificationGroupContributor, NotificationGroupRegistrator> KEY =
-          ExtensionPointCacheKey.create("NotificationGroupRegistrator", notificationGroupContributors -> {
-            NotificationGroupRegistrator registrator = new NotificationGroupRegistrator();
-            for (NotificationGroupContributor contributor : notificationGroupContributors) {
-              contributor.contribute(registrator);
-            }
-            return registrator;
-          });
+    ExtensionPointCacheKey.create("NotificationGroupRegistrator", walker -> {
+      NotificationGroupRegistrator registrator = new NotificationGroupRegistrator();
+      walker.walk(contributor -> contributor.contribute(registrator));
+      return registrator;
+    });
 
   @Nonnull
   public static NotificationGroupRegistrator last() {

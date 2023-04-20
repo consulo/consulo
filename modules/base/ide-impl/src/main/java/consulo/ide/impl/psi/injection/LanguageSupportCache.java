@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,14 +37,7 @@ public class LanguageSupportCache {
   }
 
   private static final ExtensionPointCacheKey<LanguageInjectionSupport, Map<String, LanguageInjectionSupport>> CACHE_KEY =
-          ExtensionPointCacheKey.create("LanguageInjectionSupportCache", extensions -> {
-            Map<String, LanguageInjectionSupport> injectors = new HashMap<>();
-
-            for (LanguageInjectionSupport support : extensions) {
-              injectors.put(support.getId(), support);
-            }
-            return injectors;
-          });
+    ExtensionPointCacheKey.groupBy("LanguageInjectionSupportCache", LanguageInjectionSupport::getId);
 
 
   @Nonnull

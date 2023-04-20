@@ -46,15 +46,15 @@ public class ProjectDataManager {
   private static final Logger LOG = Logger.getInstance(ProjectDataManager.class);
 
   private static final ExtensionPointCacheKey<ProjectDataService, Map<Key<?>, List<ProjectDataService<?, ?>>>> CACHE_KEY =
-    ExtensionPointCacheKey.create("ProjectDataService", projectDataServices -> {
+    ExtensionPointCacheKey.create("ProjectDataService", walker -> {
       Map<Key<?>, List<ProjectDataService<?, ?>>> result = new HashMap<>();
-      for (ProjectDataService service : projectDataServices) {
+      walker.walk(service -> {
         List<ProjectDataService<?, ?>> services = result.get(service.getTargetDataKey());
         if (services == null) {
           result.put(service.getTargetDataKey(), services = new ArrayList<>());
         }
         services.add(service);
-      }
+      });
 
       for (List<ProjectDataService<?, ?>> services : result.values()) {
         ExternalSystemApiUtil.orderAwareSort(services);

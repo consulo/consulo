@@ -15,6 +15,7 @@
  */
 package consulo.language.extension;
 
+import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
 import consulo.util.collection.ContainerUtil;
 
@@ -29,18 +30,16 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 27-Jun-22
  */
-public final class LanguageOneToMany<E extends LanguageExtension> implements Function<List<E>, ByLanguageValue<List<E>>> {
+public final class LanguageOneToMany<E extends LanguageExtension> implements Function<ExtensionWalker<E>, ByLanguageValue<List<E>>> {
   private static class ByLanguageValueImpl<T extends LanguageExtension> implements ByLanguageValue<List<T>> {
     private final Map<Language, List<T>> myExtensions = new ConcurrentHashMap<>();
 
     private final boolean myWithAnyLanguage;
 
-    public ByLanguageValueImpl(List<T> extensions, boolean withAnyLanguage) {
+    public ByLanguageValueImpl(ExtensionWalker<T> walker, boolean withAnyLanguage) {
       myWithAnyLanguage = withAnyLanguage;
 
-      for (T extension : extensions) {
-        myExtensions.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension);
-      }
+      walker.walk(extension -> myExtensions.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
     }
 
     @Nonnull
@@ -74,7 +73,7 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
   }
 
   @Nonnull
-  public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<List<E1>>> build(boolean withAnyLanguage) {
+  public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<List<E1>>> build(boolean withAnyLanguage) {
     return new LanguageOneToMany<>(withAnyLanguage);
   }
 
@@ -85,7 +84,7 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
   }
 
   @Override
-  public ByLanguageValue<List<E>> apply(List<E> es) {
+  public ByLanguageValue<List<E>> apply(ExtensionWalker<E> es) {
     return new ByLanguageValueImpl<>(es, myWithAnyLanguage);
   }
 }

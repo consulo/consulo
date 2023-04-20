@@ -19,6 +19,7 @@ import consulo.compiler.Compiler;
 import consulo.compiler.TranslatingCompiler;
 import consulo.compiler.util.ModuleCompilerUtil;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.extension.ExtensionWalker;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.GraphGenerator;
 import consulo.component.util.graph.InboundSemiGraph;
@@ -51,9 +52,9 @@ public class CompilerExtensionCache {
   private final Map<TranslatingCompiler, Collection<FileType>> myTranslatingCompilerOutputFileTypes = new HashMap<>();
   private final Set<FileType> myCompilableFileTypes = new HashSet<>();
 
-  public CompilerExtensionCache(List<Compiler> compilers) {
+  public CompilerExtensionCache(ExtensionWalker<Compiler> walker) {
     List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
-    for (Compiler compiler : compilers) {
+    walker.walk(compiler -> {
       compiler.registerCompilableFileTypes(myCompilableFileTypes::add);
 
       if (compiler instanceof TranslatingCompiler) {
@@ -67,7 +68,7 @@ public class CompilerExtensionCache {
       else {
         myCompilers.add(compiler);
       }
-    }
+    });
 
     final List<Chunk<TranslatingCompiler>> chunks = ModuleCompilerUtil.getSortedChunks(createCompilerGraph(translatingCompilers));
 

@@ -27,14 +27,12 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 28-Jun-22
  */
-public final class ByClassGrouper<E> implements Function<List<E>, Function<Class, E>> {
+public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Function<Class, E>> {
   private static class GetterImpl<S> implements Function<Class, S> {
     private final Map<Class, S> myExtensionsByClass = new ConcurrentHashMap<>();
 
-    public GetterImpl(List<S> extensions, Function<S, Class> getClassFunc) {
-      for (S extension : extensions) {
-        myExtensionsByClass.put(getClassFunc.apply(extension), extension);
-      }
+    public GetterImpl(ExtensionWalker<S> walker, Function<S, Class> getClassFunc) {
+      walker.walk(extension -> myExtensionsByClass.put(getClassFunc.apply(extension), extension));
     }
 
     @Override
@@ -83,7 +81,7 @@ public final class ByClassGrouper<E> implements Function<List<E>, Function<Class
   }
 
   @Nonnull
-  public static <K> Function<List<K>, Function<Class, K>> build(Function<K, Class> getClassFunc) {
+  public static <K> Function<ExtensionWalker<K>, Function<Class, K>> build(Function<K, Class> getClassFunc) {
     return new ByClassGrouper<>(getClassFunc);
   }
 
@@ -94,7 +92,7 @@ public final class ByClassGrouper<E> implements Function<List<E>, Function<Class
   }
 
   @Override
-  public Function<Class, E> apply(List<E> extensions) {
-    return new GetterImpl<>(extensions, myGetClassFunc);
+  public Function<Class, E> apply(ExtensionWalker<E> walker) {
+    return new GetterImpl<>(walker, myGetClassFunc);
   }
 }

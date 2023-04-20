@@ -17,7 +17,6 @@ package consulo.component.extension;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -27,25 +26,23 @@ import java.util.function.Function;
  */
 public final class ExtensionPointCacheKey<E, R> {
   @Nonnull
-  public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(@Nonnull String keyName, @Nonnull Function<List<E1>, R1> factory) {
+  public static <E1, R1> ExtensionPointCacheKey<E1, R1> create(@Nonnull String keyName, @Nonnull Function<ExtensionWalker<E1>, R1> factory) {
     return new ExtensionPointCacheKey<>(keyName, factory);
   }
 
   @Nonnull
   public static <E1, K1> ExtensionPointCacheKey<E1, Map<K1, E1>> groupBy(@Nonnull String keyName, @Nonnull Function<E1, K1> keyMapper) {
-    return create(keyName, extensions -> {
+    return create(keyName, walker -> {
       Map<K1, E1> map = new HashMap<>();
-      for (E1 extension : extensions) {
-        map.put(keyMapper.apply(extension), extension);
-      }
+      walker.walk(extension -> map.put(keyMapper.apply(extension), extension));
       return map;
     });
   }
 
   private final String myKeyName;
-  private final Function<List<E>, R> myFactory;
+  private final Function<ExtensionWalker<E>, R> myFactory;
 
-  private ExtensionPointCacheKey(String keyName, Function<List<E>, R> factory) {
+  private ExtensionPointCacheKey(String keyName, Function<ExtensionWalker<E>, R> factory) {
     myKeyName = keyName;
     myFactory = factory;
   }
@@ -56,7 +53,7 @@ public final class ExtensionPointCacheKey<E, R> {
   }
 
   @Nonnull
-  public Function<List<E>, R> getFactory() {
+  public Function<ExtensionWalker<E>, R> getFactory() {
     return myFactory;
   }
 

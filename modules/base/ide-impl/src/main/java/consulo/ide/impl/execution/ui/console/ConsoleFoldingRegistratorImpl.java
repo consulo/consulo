@@ -29,11 +29,9 @@ import java.util.Set;
  * @since 01-Aug-22
  */
 public class ConsoleFoldingRegistratorImpl implements ConsoleFoldingRegistrator {
-  private static final ExtensionPointCacheKey<ConsoleFoldingContributor, ConsoleFoldingRegistratorImpl> REG_KEY = ExtensionPointCacheKey.create("ConsoleFoldingRegistratorImpl", contributors -> {
+  private static final ExtensionPointCacheKey<ConsoleFoldingContributor, ConsoleFoldingRegistratorImpl> REG_KEY = ExtensionPointCacheKey.create("ConsoleFoldingRegistratorImpl", walker -> {
     ConsoleFoldingRegistratorImpl impl = new ConsoleFoldingRegistratorImpl();
-    for (ConsoleFoldingContributor contributor : contributors) {
-      contributor.register(impl);
-    }
+    walker.walk(contributor -> contributor.register(impl));
     return impl;
   });
 

@@ -95,15 +95,13 @@ public class DataValidators {
   };
 
   private static final ExtensionPointCacheKey<DataValidator, Map<Key, DataValidator>> CACHE_KEY =
-    ExtensionPointCacheKey.create("DataValidator", dataValidators -> {
+    ExtensionPointCacheKey.create("DataValidator", walker -> {
       Map<Key, DataValidator> map = new IdentityHashMap<>();
       map.put(VirtualFile.KEY, DataValidators.VIRTUAL_FILE_VALIDATOR);
       map.put(VirtualFile.KEY_OF_ARRAY, new DataValidators.ArrayValidator<>(DataValidators.VIRTUAL_FILE_VALIDATOR));
       map.put(Project.KEY, DataValidators.PROJECT_VALIDATOR);
 
-      for (DataValidator validator : dataValidators) {
-        map.put(validator.getKey(), validator);
-      }
+      walker.walk(validator -> map.put(validator.getKey(), validator));
       return map;
     });
 

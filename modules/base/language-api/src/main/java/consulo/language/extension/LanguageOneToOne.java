@@ -15,11 +15,11 @@
  */
 package consulo.language.extension;
 
+import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -28,17 +28,15 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 24-Jun-22
  */
-public final class LanguageOneToOne<E extends LanguageExtension> implements Function<List<E>, ByLanguageValue<E>> {
+public final class LanguageOneToOne<E extends LanguageExtension> implements Function<ExtensionWalker<E>, ByLanguageValue<E>> {
   private static class ByLanguageValueImpl<T extends LanguageExtension> implements ByLanguageValue<T> {
     private final Map<Language, T> myExtensions = new ConcurrentHashMap<>();
 
     private final T myDefaultImplementation;
 
-    public ByLanguageValueImpl(List<T> extensions, T defaultImplementation) {
+    public ByLanguageValueImpl(ExtensionWalker<T> walker, T defaultImplementation) {
       myDefaultImplementation = defaultImplementation;
-      for (T extension : extensions) {
-        myExtensions.put(extension.getLanguage(), extension);
-      }
+      walker.walk(extension -> myExtensions.put(extension.getLanguage(), extension));
     }
 
     @Nullable
@@ -62,12 +60,12 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
   }
 
   @Nonnull
-  public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<E1>> build() {
+  public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build() {
     return build(null);
   }
 
   @Nonnull
-  public static <E1 extends LanguageExtension> Function<List<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
+  public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
     return new LanguageOneToOne<>(defaultImpl);
   }
 
@@ -78,7 +76,7 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
   }
 
   @Override
-  public ByLanguageValue<E> apply(List<E> es) {
-    return new ByLanguageValueImpl<>(es, myDefaultImplementation);
+  public ByLanguageValue<E> apply(ExtensionWalker<E> walker) {
+    return new ByLanguageValueImpl<>(walker, myDefaultImplementation);
   }
 }

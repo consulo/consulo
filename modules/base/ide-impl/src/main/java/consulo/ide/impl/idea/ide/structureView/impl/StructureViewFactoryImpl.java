@@ -69,14 +69,13 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   private State myState = new State();
   private Runnable myRunWhenInitialized = null;
 
-  private static final ExtensionPointCacheKey<StructureViewExtension, MultiMap<Class<? extends PsiElement>, StructureViewExtension>> CACHE_KEY =
-          ExtensionPointCacheKey.create("StructureViewExtension", structureViewExtensions -> {
-            MultiMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiMap<>();
-            for (StructureViewExtension extension : structureViewExtensions) {
-              map.putValue(extension.getType(), extension);
-            }
-            return map;
-          });
+  private static final ExtensionPointCacheKey<StructureViewExtension, MultiMap<Class<? extends PsiElement>, StructureViewExtension>>
+    CACHE_KEY =
+    ExtensionPointCacheKey.create("StructureViewExtension", walker -> {
+      MultiMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiMap<>();
+      walker.walk(extension -> map.putValue(extension.getType(), extension));
+      return map;
+    });
 
 
   private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<>();
@@ -114,7 +113,8 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   public Collection<StructureViewExtension> getAllExtensions(Class<? extends PsiElement> type) {
     Collection<StructureViewExtension> result = myImplExtensions.get(type);
     if (result == null) {
-      MultiMap<Class<? extends PsiElement>, StructureViewExtension> map = myProject.getApplication().getExtensionPoint(StructureViewExtension.class).getOrBuildCache(CACHE_KEY);
+      MultiMap<Class<? extends PsiElement>, StructureViewExtension> map =
+        myProject.getApplication().getExtensionPoint(StructureViewExtension.class).getOrBuildCache(CACHE_KEY);
       for (Class<? extends PsiElement> registeredType : map.keySet()) {
         if (ReflectionUtil.isAssignable(registeredType, type)) {
           final Collection<StructureViewExtension> extensions = map.get(registeredType);
@@ -173,7 +173,10 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  public StructureView createStructureView(final FileEditor fileEditor, final StructureViewModel treeModel, final Project project, final boolean showRootNode) {
+  public StructureView createStructureView(final FileEditor fileEditor,
+                                           final StructureViewModel treeModel,
+                                           final Project project,
+                                           final boolean showRootNode) {
     return new StructureViewComponent(fileEditor, treeModel, project, showRootNode);
   }
 }

@@ -79,11 +79,11 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
   }
 
   /**
-   * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed_
+   * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
    */
   @Nonnull
   default <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key) {
-    return key.getFactory().apply(getExtensionList());
+    return key.getFactory().apply(this::forEachExtensionSafe);
   }
 
   @Nonnull

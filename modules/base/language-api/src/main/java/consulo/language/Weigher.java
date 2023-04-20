@@ -43,11 +43,9 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Weigher<T, Location> {
-  private static final ExtensionPointCacheKey<Weigher, Map<Key, List<Weigher>>> KEY = ExtensionPointCacheKey.create("Weigher", weighers -> {
+  private static final ExtensionPointCacheKey<Weigher, Map<Key, List<Weigher>>> KEY = ExtensionPointCacheKey.create("Weigher", walker -> {
     Map<Key, List<Weigher>> map = new HashMap<>();
-    for (Weigher weigher : weighers) {
-      map.computeIfAbsent(weigher.getKey(), key -> new ArrayList<>()).add(weigher);
-    }
+    walker.walk(weigher -> map.computeIfAbsent(weigher.getKey(), key -> new ArrayList<>()).add(weigher));
     return map;
   });
 

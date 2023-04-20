@@ -38,13 +38,12 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface XLineBreakpointTypeResolver {
-  ExtensionPointCacheKey<XLineBreakpointTypeResolver, Map<FileType, List<XLineBreakpointTypeResolver>>> KEY = ExtensionPointCacheKey.create("XLineBreakpointTypeResolver", extensions -> {
-    Map<FileType, List<XLineBreakpointTypeResolver>> map = new HashMap<>();
-    for (XLineBreakpointTypeResolver extension : extensions) {
-      map.computeIfAbsent(extension.getFileType(), fileType -> new ArrayList<>()).add(extension);
-    }
-    return map;
-  });
+  ExtensionPointCacheKey<XLineBreakpointTypeResolver, Map<FileType, List<XLineBreakpointTypeResolver>>> KEY =
+    ExtensionPointCacheKey.create("XLineBreakpointTypeResolver", walker -> {
+      Map<FileType, List<XLineBreakpointTypeResolver>> map = new HashMap<>();
+      walker.walk(extension -> map.computeIfAbsent(extension.getFileType(), fileType -> new ArrayList<>()).add(extension));
+      return map;
+    });
 
   @Nonnull
   static List<XLineBreakpointTypeResolver> forFileType(FileType fileType) {

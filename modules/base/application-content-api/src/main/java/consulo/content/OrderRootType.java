@@ -34,9 +34,10 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class OrderRootType {
-  private static final ExtensionPointCacheKey<OrderRootType, List<OrderRootType>> SORTED_KEY = ExtensionPointCacheKey.create("SortedOrderRootType", orderRootTypes -> {
-    List<OrderRootType> extensions = new ArrayList<>(orderRootTypes);
-    Collections.sort(extensions, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+  private static final ExtensionPointCacheKey<OrderRootType, List<OrderRootType>> SORTED_KEY = ExtensionPointCacheKey.create("SortedOrderRootType", walker -> {
+    List<OrderRootType> extensions = new ArrayList<>();
+    walker.walk(extensions::add);
+    Collections.sort(extensions, (o1, o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
     return List.copyOf(extensions);
   });
 

@@ -209,7 +209,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
     }
 
-    return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(getExtensionList()));
+    return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(this::forEachExtensionSafe));
   }
 
   @SuppressWarnings("unchecked")

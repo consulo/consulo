@@ -27,15 +27,14 @@ import consulo.util.collection.MultiMap;
  */
 public class SpellcheckerInspections {
   public static final ExtensionPointCacheKey<LocalInspectionTool, MultiMap<String, String>> MAPPING =
-    ExtensionPointCacheKey.create("TOOLS_MAPPING", localInspectionTools -> {
+    ExtensionPointCacheKey.create("TOOLS_MAPPING", walker -> {
       MultiMap<String, String> multiMap = new MultiMap<>();
 
-      for (LocalInspectionTool tool : localInspectionTools) {
+      walker.walk(tool -> {
         if (tool instanceof SpellcheckerInspection spellcheckerInspection) {
           multiMap.putValue(spellcheckerInspection.getSpellcheckerEngineId(), spellcheckerInspection.getShortName());
         }
-      }
-
+      });
       return multiMap;
     });
 

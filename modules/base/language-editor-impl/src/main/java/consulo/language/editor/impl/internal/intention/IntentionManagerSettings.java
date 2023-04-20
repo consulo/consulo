@@ -44,7 +44,6 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -55,14 +54,10 @@ import java.util.regex.Pattern;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
-  private static final ExtensionPointCacheKey<IntentionAction, List<IntentionActionMetaData>> CACHE_KEY = ExtensionPointCacheKey.create("IntentionActionMetaData", intentionActions -> {
-    List<IntentionActionMetaData> actionMetaDatas = new ArrayList<>(intentionActions.size());
-
-    for (IntentionAction action : intentionActions) {
-      register(action, actionMetaDatas);
-    }
-
-    return Collections.unmodifiableList(actionMetaDatas);
+  private static final ExtensionPointCacheKey<IntentionAction, List<IntentionActionMetaData>> CACHE_KEY = ExtensionPointCacheKey.create("IntentionActionMetaData", walker -> {
+    List<IntentionActionMetaData> metadata = new ArrayList<>();
+    walker.walk(action -> register(action, metadata));
+    return metadata;
   });
 
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);

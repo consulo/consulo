@@ -31,11 +31,9 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class Statistician<T, Loc, Stat extends Statistician<T, Loc, Stat>> {
-  private static final ExtensionPointCacheKey<Statistician, MultiMap<Key, Statistician>> CACHE_KEY = ExtensionPointCacheKey.create("Statistician", statisticians -> {
+  private static final ExtensionPointCacheKey<Statistician, MultiMap<Key, Statistician>> CACHE_KEY = ExtensionPointCacheKey.create("Statistician", walker -> {
     MultiMap<Key, Statistician> map = MultiMap.create();
-    for (Statistician statistician : statisticians) {
-      map.putValue(statistician.getKey(), statistician);
-    }
+    walker.walk(statistician -> map.putValue(statistician.getKey(), statistician));
     return map;
   });
 
