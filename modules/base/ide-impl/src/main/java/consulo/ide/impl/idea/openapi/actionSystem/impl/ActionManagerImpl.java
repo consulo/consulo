@@ -187,13 +187,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     });
 
     StatCollector xmlAnalyze = new StatCollector();
-    for (PluginDescriptor plugin : PluginManager.getEnabledPlugins()) {
+    PluginManager.forEachEnabledPlugin(plugin -> {
       xmlAnalyze.markWith(plugin.getPluginId().toString(), () -> {
         LocalizeHelper localizeHelper = LocalizeHelper.build(plugin);
 
         registerPluginActions(plugin, localizeHelper);
       });
-    }
+    });
 
     xmlAnalyze.dump("ActionManager:xml.analyze", LOG::info);
 

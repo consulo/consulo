@@ -134,15 +134,10 @@ public abstract class ApplicationStarter {
   }
 
   protected void analyzeLibraries(Map<String, List<String>> filesWithMarkers) {
-    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
-    for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
-      if (PluginManager.shouldSkipPlugin(pluginDescriptor)) {
-        continue;
-      }
-
+    PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
       searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_DIRECTORY);
       searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
-    }
+    });
   }
 
   private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor, Map<String, List<String>> filesWithMarkers, String marker) {

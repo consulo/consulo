@@ -17,15 +17,12 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
-import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacro;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -34,9 +31,11 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapExtension;
 import consulo.ui.image.Image;
 import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
@@ -71,28 +70,22 @@ public class ActionsTreeUtil {
     KeymapGroupImpl pluginsGroup = new KeymapGroupImpl(KeyMapBundle.message("plugins.group.title"), null, null);
     final KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     ActionManagerEx managerEx = ActionManagerEx.getInstanceEx();
-    final List<PluginDescriptor> plugins = new ArrayList<>(PluginManager.getPlugins());
-    Collections.sort(plugins, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
     List<PluginId> collected = new ArrayList<PluginId>();
-    for (PluginDescriptor plugin : plugins) {
+    PluginManager.forEachEnabledPlugin(plugin -> {
       collected.add(plugin.getPluginId());
       KeymapGroupImpl pluginGroup;
       if (plugin.getPluginId().equals(PluginManagerCore.CORE_PLUGIN)) {
-        continue;
+        return;
       }
       else {
         pluginGroup = new KeymapGroupImpl(plugin.getName(), null, null);
       }
       final String[] pluginActions = managerEx.getPluginActions(plugin.getPluginId());
       if (pluginActions == null || pluginActions.length == 0) {
-        continue;
+        return;
       }
-      Arrays.sort(pluginActions, new Comparator<String>() {
-        public int compare(String o1, String o2) {
-          return getTextToCompare(o1).compareTo(getTextToCompare(o2));
-        }
-      });
+      Arrays.sort(pluginActions, (o1, o2) -> getTextToCompare(o1).compareTo(getTextToCompare(o2)));
       for (String pluginAction : pluginActions) {
         if (keymapManager.getBoundActions().contains(pluginAction)) continue;
         final AnAction anAction = managerEx.getActionOrStub(pluginAction);
@@ -103,7 +96,7 @@ public class ActionsTreeUtil {
       if (pluginGroup.getSize() > 0) {
         pluginsGroup.addGroup(pluginGroup);
       }
-    }
+    });
 
     for (PluginId pluginId : PluginId.getRegisteredIds().values()) {
       if (collected.contains(pluginId)) continue;

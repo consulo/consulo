@@ -17,23 +17,22 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -159,7 +158,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       LOG.error(e);
     }
 
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+    PluginManager.forEachEnabledPlugin(plugin -> {
       final Set<String> words = getProcessedWordsWithoutStemming(plugin.getName());
       final String description = plugin.getDescription();
       if (description != null) {
@@ -168,7 +167,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
       for (String word : words) {
         addOption(word, null, plugin.getName(), PluginsConfigurable.ID, IdeBundle.message("title.plugins"));
       }
-    }
+    });
 
     for (SearchableOptionContributor contributor : SearchableOptionContributor.EP_NAME.getExtensionList()) {
       contributor.processOptions(new SearchableOptionProcessor() {

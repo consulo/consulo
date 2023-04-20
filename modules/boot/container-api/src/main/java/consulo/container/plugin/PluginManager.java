@@ -19,6 +19,7 @@ import consulo.container.internal.PluginManagerInternal;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -38,27 +39,17 @@ public final class PluginManager {
     }
   }
 
-  public enum PluginSkipReason {
-    NO,
-    DISABLED,
-    INCOMPATIBLE,
-    DEPENDENCY_IS_NOT_RESOLVED
-  }
-
   public static List<PluginDescriptor> getPlugins() {
     return ourInternal.getPlugins();
   }
 
-  public static List<PluginDescriptor> getEnabledPlugins() {
-    List<PluginDescriptor> plugins = getPlugins();
-    List<PluginDescriptor> result = new ArrayList<PluginDescriptor>(plugins.size());
-    for (PluginDescriptor plugin : plugins) {
+  public static void forEachEnabledPlugin(Consumer<PluginDescriptor> consumer) {
+    for (PluginDescriptor plugin : getPlugins()) {
       if (shouldSkipPlugin(plugin)) {
         continue;
       }
-      result.add(plugin);
+      consumer.accept(plugin);
     }
-    return result;
   }
 
   public static int getPluginsCount() {

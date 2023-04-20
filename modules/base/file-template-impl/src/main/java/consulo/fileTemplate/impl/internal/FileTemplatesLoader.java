@@ -16,7 +16,6 @@
 package consulo.fileTemplate.impl.internal;
 
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.language.file.FileTypeManager;
@@ -125,27 +124,25 @@ public class FileTemplatesLoader {
 
   private void loadDefaultTemplates() {
     final Set<URL> processedUrls = new HashSet<>();
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      if (plugin.isEnabled()) {
-        final ClassLoader loader = plugin.getPluginClassLoader();
-        try {
-          final Enumeration<URL> systemResources = loader.getResources(DEFAULT_TEMPLATES_ROOT);
-          if (systemResources.hasMoreElements()) {
-            while (systemResources.hasMoreElements()) {
-              final URL url = systemResources.nextElement();
-              if (processedUrls.contains(url)) {
-                continue;
-              }
-              processedUrls.add(url);
-              loadDefaultsFromRoot(url);
+    PluginManager.forEachEnabledPlugin(plugin -> {
+      final ClassLoader loader = plugin.getPluginClassLoader();
+      try {
+        final Enumeration<URL> systemResources = loader.getResources(DEFAULT_TEMPLATES_ROOT);
+        if (systemResources.hasMoreElements()) {
+          while (systemResources.hasMoreElements()) {
+            final URL url = systemResources.nextElement();
+            if (processedUrls.contains(url)) {
+              continue;
             }
+            processedUrls.add(url);
+            loadDefaultsFromRoot(url);
           }
         }
-        catch (IOException e) {
-          LOG.error(e);
-        }
       }
-    }
+      catch (IOException e) {
+        LOG.error(e);
+      }
+    });
   }
 
   private void loadDefaultsFromRoot(final URL root) throws IOException {

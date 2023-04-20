@@ -192,8 +192,4 @@ public class PluginManagerCore {
   public static void dumpPluginClassStatistics(Logger logger) {
     PluginLoadStatistics.get().dumpPluginClassStatistics(logger::info);
   }
-
-  public static boolean shouldSkipPlugin(final PluginDescriptor descriptor) {
-    return consulo.container.plugin.PluginManager.shouldSkipPlugin(descriptor);
-  }
 }

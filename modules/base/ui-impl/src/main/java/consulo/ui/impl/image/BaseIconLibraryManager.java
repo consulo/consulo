@@ -191,11 +191,11 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
       list.putIfAbsent(value.getLibraryId(), value);
     }
 
-    for (PluginDescriptor descriptor : PluginManager.getEnabledPlugins()) {
+    PluginManager.forEachEnabledPlugin(descriptor -> {
       for (IconLibraryDescriptor libraryDescriptor : IconLibraryDescriptorLoader.getAll(descriptor.getPluginClassLoader())) {
         list.putIfAbsent(libraryDescriptor.getLibraryId(), libraryDescriptor);
       }
-    }
+    });
 
     return list;
   }

@@ -32,12 +32,7 @@ public abstract class BindingLoader<B> {
   public void analyzeBindings() {
     Set<Class> processed = new HashSet<>();
 
-    List<PluginDescriptor> pluginDescriptors = PluginManager.getPlugins();
-    for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
-      if (PluginManager.shouldSkipPlugin(pluginDescriptor)) {
-        continue;
-      }
-
+    PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
       ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
       // this is optimization, since in legacy mode it's read META-INF and module-info services
       // and when load META-INF service loader will skip class, if it from named module (and we have all named)
@@ -48,7 +43,7 @@ public abstract class BindingLoader<B> {
       else {
         loadInLegacyMode(pluginDescriptor, processed);
       }
-    }
+    });
 
     myLocked.set(true);
   }
