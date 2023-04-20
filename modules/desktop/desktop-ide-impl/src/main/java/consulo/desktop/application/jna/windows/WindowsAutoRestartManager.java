@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.application.util;
+package consulo.desktop.application.jna.windows;
 
 import consulo.util.jna.JnaLoader;
 import com.sun.jna.platform.win32.Kernel32;

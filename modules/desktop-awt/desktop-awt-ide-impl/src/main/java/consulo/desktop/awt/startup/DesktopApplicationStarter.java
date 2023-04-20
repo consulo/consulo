@@ -28,7 +28,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
-import consulo.desktop.application.util.WindowsAutoRestartManager;
+import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
 import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
