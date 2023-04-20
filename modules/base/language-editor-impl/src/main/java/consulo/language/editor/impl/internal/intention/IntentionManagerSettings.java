@@ -151,7 +151,9 @@ public class IntentionManagerSettings implements PersistentStateComponent<Elemen
     if (annotation != null) {
       return annotation.ignoreId();
     }
-    throw new IllegalArgumentException("Missed @IntentionMetaData on " + action.getClass());
+
+    LOG.error("Missed @IntentionMetaData on " + action.getClass());
+    return action.getClass().getName();
   }
 
   private static boolean isSyntheticIntention(@Nonnull IntentionAction action) {
