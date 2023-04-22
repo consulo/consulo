@@ -18,7 +18,7 @@ package consulo.codeEditor.impl.setting;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ui.setting.AdditionalEditorAppearanceSettingProvider;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
@@ -49,11 +49,11 @@ import java.util.List;
 @ExtensionImpl
 public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   private final Application myApplication;
-  private final Provider<EditorSettingsExternalizable> myEditorSettingsExternalizable;
+  private final Provider<PersistentEditorSettings> myEditorSettingsExternalizable;
   private final Provider<CodeEditorInternalHelper> myEditorInternalHelper;
 
   @Inject
-  public EditorAppearanceConfigurable(Application application, Provider<EditorSettingsExternalizable> editorSettingsExternalizable, Provider<CodeEditorInternalHelper> editorInternalHelper) {
+  public EditorAppearanceConfigurable(Application application, Provider<PersistentEditorSettings> editorSettingsExternalizable, Provider<CodeEditorInternalHelper> editorInternalHelper) {
     myApplication = application;
     myEditorSettingsExternalizable = editorSettingsExternalizable;
     myEditorInternalHelper = editorInternalHelper;
@@ -63,7 +63,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
   @Nonnull
   @Override
   protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
-    EditorSettingsExternalizable editorSettings = myEditorSettingsExternalizable.get();
+    PersistentEditorSettings editorSettings = myEditorSettingsExternalizable.get();
     CodeEditorInternalHelper codeEditorInternalHelper = myEditorInternalHelper.get();
 
     VerticalLayout root = VerticalLayout.create();
