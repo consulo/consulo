@@ -22,6 +22,7 @@ import consulo.language.editor.AutoImportHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -33,9 +34,16 @@ import javax.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class AutoImportHelperImpl implements AutoImportHelper {
+  private final DaemonListeners myDaemonListeners;
+
+  @Inject
+  public AutoImportHelperImpl(DaemonListeners daemonListeners) {
+    myDaemonListeners = daemonListeners;
+  }
+
   @Override
   public boolean canChangeFileSilently(@Nonnull PsiFile file) {
-    return DaemonListeners.canChangeFileSilently(file);
+    return myDaemonListeners.canChangeFileSilently(file);
   }
 
   @Override
