@@ -30,8 +30,6 @@ import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationActio
 import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.TargetElementUtil;
@@ -64,6 +62,8 @@ import consulo.usage.UsageViewShortNameLocation;
 import consulo.usage.UsageViewTypeLocation;
 import consulo.usage.UsageViewUtil;
 import consulo.util.concurrent.CancellablePromise;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
