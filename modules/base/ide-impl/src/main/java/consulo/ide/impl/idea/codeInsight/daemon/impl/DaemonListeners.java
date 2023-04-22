@@ -5,17 +5,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.ui.UIAccess;
-import consulo.ui.event.ModalityStateListener;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.event.*;
+import consulo.codeEditor.event.CaretEvent;
+import consulo.codeEditor.event.CaretListener;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.messagebus.MessageBus;
@@ -60,18 +59,17 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
+import consulo.ui.UIAccess;
+import consulo.ui.event.ModalityStateListener;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.event.AnActionListener;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
-import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -107,21 +105,17 @@ public final class DaemonListeners implements Disposable {
   private final DaemonListener myDaemonEventPublisher;
   private List<Editor> myActiveEditors = Collections.emptyList();
 
-  private static final Key<Boolean> DAEMON_INITIALIZED = Key.create("DAEMON_INITIALIZED");
-
   public static DaemonListeners getInstance(Project project) {
     return project.getComponent(DaemonListeners.class);
   }
 
   @Inject
-  public DaemonListeners(@Nonnull Project project) {
+  public DaemonListeners(@Nonnull Application application,
+                         @Nonnull DaemonCodeAnalyzer daemonCodeAnalyzer,
+                         @Nonnull EditorFactory editorFactory,
+                         @Nonnull Project project) {
     myProject = project;
-    myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
-
-    boolean replaced = ((UserDataHolderEx)myProject).replace(DAEMON_INITIALIZED, null, Boolean.TRUE);
-    if (!replaced) {
-      LOG.error("Daemon listeners already initialized for the project " + myProject);
-    }
+    myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)daemonCodeAnalyzer;
 
     MessageBus messageBus = myProject.getMessageBus();
     myDaemonEventPublisher = messageBus.syncPublisher(DaemonListener.class);
@@ -137,7 +131,6 @@ public final class DaemonListeners implements Disposable {
       }
     });
 
-    EditorFactory editorFactory = EditorFactory.getInstance();
     EditorEventMulticasterEx eventMulticaster = (EditorEventMulticasterEx)editorFactory.getEventMulticaster();
     eventMulticaster.addDocumentListener(new DocumentListener() {
       // clearing highlighters before changing document because change can damage editor highlighters drastically, so we'll clear more than necessary
@@ -147,7 +140,7 @@ public final class DaemonListeners implements Disposable {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
         Project project = virtualFile == null ? null : ProjectUtil.guessProjectForFile(virtualFile);
         //no need to stop daemon if something happened in the console or in non-physical document
-        if (worthBothering(document, project) && ApplicationManager.getApplication().isDispatchThread()) {
+        if (worthBothering(document, project) && application.isDispatchThread()) {
           stopDaemon(true, "Document change");
           UpdateHighlightersUtilImpl.updateHighlightersByTyping(myProject, e);
         }
@@ -158,16 +151,13 @@ public final class DaemonListeners implements Disposable {
       @Override
       public void caretPositionChanged(@Nonnull CaretEvent e) {
         final Editor editor = e.getEditor();
-        Application app = ApplicationManager.getApplication();
-        if ((editor.isShowing() || app.isHeadlessEnvironment()) && worthBothering(editor.getDocument(), editor.getProject())) {
+        if ((editor.isShowing() || application.isHeadlessEnvironment()) && worthBothering(editor.getDocument(), editor.getProject())) {
 
-          if (!app.isUnitTestMode()) {
-            ApplicationManager.getApplication().invokeLater(() -> {
-              if ((editor.isShowing() || app.isHeadlessEnvironment()) && !myProject.isDisposed()) {
-                IntentionsUI.getInstance(myProject).invalidate();
-              }
-            }, IdeaModalityState.current());
-          }
+          application.invokeLater(() -> {
+            if ((editor.isShowing() || application.isHeadlessEnvironment()) && !myProject.isDisposed()) {
+              IntentionsUI.getInstance(myProject).invalidate();
+            }
+          }, application.getCurrentModalityState());
         }
       }
     }, this);
@@ -197,10 +187,6 @@ public final class DaemonListeners implements Disposable {
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
       public void editorCreated(@Nonnull EditorFactoryEvent event) {
-        if (!Application.get().isSwingApplication()) {
-          return;
-        }
-
         Editor editor = event.getEditor();
         Document document = editor.getDocument();
         Project editorProject = editor.getProject();
@@ -219,7 +205,7 @@ public final class DaemonListeners implements Disposable {
       @Override
       public void editorReleased(@Nonnull EditorFactoryEvent event) {
         // mem leak after closing last editor otherwise
-        UIUtil.invokeLaterIfNeeded(() -> {
+        application.invokeLater(() -> {
           IntentionsUI intentionUI = IntentionsUI.getInstance(project);
           if (intentionUI != null) {
             intentionUI.invalidate();
@@ -286,7 +272,8 @@ public final class DaemonListeners implements Disposable {
       private void fileRenamed(@Nonnull VFilePropertyChangeEvent event) {
         stopDaemonAndRestartAllFiles("Virtual file name changed");
         VirtualFile virtualFile = event.getFile();
-        PsiFile psiFile = !virtualFile.isValid() ? null : PsiManagerEx.getInstanceEx(myProject).getFileManager().getCachedPsiFile(virtualFile);
+        PsiFile psiFile =
+          !virtualFile.isValid() ? null : PsiManagerEx.getInstanceEx(myProject).getFileManager().getCachedPsiFile(virtualFile);
         if (psiFile == null || myDaemonCodeAnalyzer.isHighlightingAvailable(psiFile)) {
           return;
         }
@@ -302,7 +289,13 @@ public final class DaemonListeners implements Disposable {
         // Here color scheme required for TextEditorFields, as far as I understand this
         // code related to standard file editors, which always use Global color scheme,
         // thus we can pass null here.
-        UpdateHighlightersUtil.setHighlightersToEditor(myProject, document, 0, document.getTextLength(), Collections.emptyList(), null, Pass.UPDATE_ALL);
+        UpdateHighlightersUtil.setHighlightersToEditor(myProject,
+                                                       document,
+                                                       0,
+                                                       document.getTextLength(),
+                                                       Collections.emptyList(),
+                                                       null,
+                                                       Pass.UPDATE_ALL);
       }
     });
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
@@ -358,8 +351,6 @@ public final class DaemonListeners implements Disposable {
   @Override
   public void dispose() {
     stopDaemonAndRestartAllFiles("Project closed");
-    boolean replaced = ((UserDataHolderEx)myProject).replace(DAEMON_INITIALIZED, Boolean.TRUE, Boolean.FALSE);
-    LOG.assertTrue(replaced, "Daemon listeners already disposed for the project " + myProject);
   }
 
   public static boolean canChangeFileSilently(@Nonnull PsiFileSystemItem file) {

@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
 import javax.annotation.Nonnull;
@@ -36,5 +37,11 @@ public interface EditorMouseHoverPopupManager {
 
   void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfo info, int offset, boolean requestFocus, boolean showImmediately);
 
+  void handleMouseMoved(@Nonnull EditorMouseEvent e);
+
+  void skipNextMovement();
+
   void cancelProcessingAndCloseHint();
+
+  void cancelCurrentProcessing();
 }
