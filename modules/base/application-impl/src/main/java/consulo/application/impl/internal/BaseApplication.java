@@ -227,7 +227,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public void executeNonCancelableSection(@Nonnull Runnable runnable) {
-    myProgressManager.executeNonCancelableSection(runnable);
+    if (myProgressManager != null) {
+      myProgressManager.executeNonCancelableSection(runnable);
+    } else {
+      runnable.run();
+    }
   }
 
   @Nullable
