@@ -206,7 +206,10 @@ public abstract class UIInternal {
 
   public abstract boolean _UIAccess_isUIThread();
 
-  public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner);
+  public abstract TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
+                                                                              String dialogTitle,
+                                                                              Function<String, List<String>> parser,
+                                                                              Function<List<String>, String> joiner);
 
   public abstract TextBoxWithExtensions _Components_textBoxWithExtensions(String text);
 
@@ -268,6 +271,11 @@ public abstract class UIInternal {
   }
 
   public void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
     throw new UnsupportedOperationException();
   }
 }

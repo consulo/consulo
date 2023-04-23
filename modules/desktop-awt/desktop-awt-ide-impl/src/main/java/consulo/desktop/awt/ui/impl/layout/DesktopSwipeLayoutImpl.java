@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.layout;
 
-import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBCardLayout;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
 
@@ -118,7 +118,7 @@ public class DesktopSwipeLayoutImpl extends DesktopLayoutBase<JPanel> implements
   @Override
   public void removeAll() {
     myLayoutInfos.clear();
-    toAWTComponent().removeAll();
+    super.removeAll();
   }
 
   @Override

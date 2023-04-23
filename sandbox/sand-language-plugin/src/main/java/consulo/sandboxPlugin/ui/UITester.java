@@ -16,12 +16,12 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
@@ -29,6 +29,7 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.TimeoutUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +53,7 @@ public class UITester {
     public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
       TabbedLayout tabbedLayout = TabbedLayout.create();
 
-      tabbedLayout.addTab("Layouts", layouts()).setCloseHandler((tab, component) -> {
+      tabbedLayout.addTab("Layouts", layouts(uiDisposable)).setCloseHandler((tab, component) -> {
       });
       tabbedLayout.addTab("Components", components());
       tabbedLayout.addTab("Components > Table", table());
@@ -63,7 +64,7 @@ public class UITester {
     }
 
     @RequiredUIAccess
-    private Component layouts() {
+    private Component layouts(Disposable uiDisposable) {
       TabbedLayout tabbedLayout = TabbedLayout.create();
 
       VerticalLayout fold = VerticalLayout.create();
@@ -100,6 +101,7 @@ public class UITester {
       borderLayout.add(centerBtn);
 
       tabbedLayout.addTab("DockLayout", borderLayout);
+      tabbedLayout.addTab("LoadingLayout", loadingLayout(uiDisposable));
 
       return tabbedLayout;
     }
@@ -172,6 +174,40 @@ public class UITester {
     }
 
     @RequiredUIAccess
+    private Component loadingLayout(Disposable uiDisposable) {
+      DockLayout layout = DockLayout.create();
+
+      DockLayout innerLayout = DockLayout.create();
+
+      LoadingLayout<DockLayout> loadingLayout = LoadingLayout.create(innerLayout, uiDisposable);
+
+      Button start = Button.create(LocalizeValue.of("Start"), event -> {
+        loadingLayout.startLoading();
+      });
+
+      Button stop = Button.create(LocalizeValue.of("Stop"), event -> {
+        loadingLayout.stopLoading(dockLayout -> {
+          dockLayout.removeAll();
+
+          dockLayout.center(Label.create(LocalizeValue.of(LocalDateTime.now().toString())));
+        });
+      });
+
+      Button startPooled = Button.create(LocalizeValue.of("Start Pooled"), event -> {
+        loadingLayout.startLoading(() -> {
+          TimeoutUtil.sleep(10000);
+          return "Some Value after 10 seconds";
+        }, (dockLayout, someValue) -> {
+          dockLayout.center(Label.create(LocalizeValue.of(someValue)));
+        });
+      });
+
+      layout.top(HorizontalLayout.create().add(start).add(stop).add(startPooled));
+      layout.center(loadingLayout);
+      return layout;
+    }
+
+    @RequiredUIAccess
     private Component tree() {
       Tree<String> tree = Tree.create(new TreeModel<String>() {
         @Override
@@ -181,7 +217,11 @@ public class UITester {
               TreeNode<String> node = nodeFactory.apply("First Child = " + i);
 
               List<Image> icons =
-                      List.of(PlatformIconGroup.nodesClass(), PlatformIconGroup.nodesEnum(), PlatformIconGroup.nodesStruct(), PlatformIconGroup.nodesInterface(), PlatformIconGroup.nodesAttribute());
+                List.of(PlatformIconGroup.nodesClass(),
+                        PlatformIconGroup.nodesEnum(),
+                        PlatformIconGroup.nodesStruct(),
+                        PlatformIconGroup.nodesInterface(),
+                        PlatformIconGroup.nodesAttribute());
               int r = new Random().nextInt(icons.size());
 
               node.setRender((s, textItemPresentation) -> {

@@ -509,4 +509,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   public HtmlView _Components_htmlView() {
     return new DesktopHtmlViewImpl();
   }
+
+  @Nonnull
+  @Override
+  public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
+    return new DesktopAWTLoadingLayout<>(innerLayout, parent);
+  }
 }

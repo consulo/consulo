@@ -73,4 +73,10 @@ abstract class DesktopLayoutBase<T extends JPanel> extends SwingComponentDelegat
     panel.validate();
     panel.repaint();
   }
+
+  @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    toAWTComponent().removeAll();
+  }
 }
