@@ -48,7 +48,6 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,8 +68,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   private static final String VALID_VERSION = "1.0";
   private static final String VERSION_TAG = "version";
   private static final String USED_LEVELS = "used_levels";
-  @TestOnly
-  public static boolean INIT_INSPECTIONS = false;
   private final InspectionToolRegistrar myRegistrar;
   @Nonnull
   private final Map<String, Element> myUninstalledInspectionsSettings;
@@ -101,7 +98,9 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     copyFrom(inspectionProfile);
   }
 
-  public InspectionProfileImpl(@Nonnull final String profileName, @Nonnull InspectionToolRegistrar registrar, @Nonnull final ProfileManager profileManager) {
+  public InspectionProfileImpl(@Nonnull final String profileName,
+                               @Nonnull InspectionToolRegistrar registrar,
+                               @Nonnull final ProfileManager profileManager) {
     this(profileName, registrar, profileManager, true);
   }
 
@@ -117,7 +116,9 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   @Nonnull
-  public static InspectionProfileImpl createSimple(@Nonnull String name, @Nonnull Project project, @Nonnull final InspectionToolWrapper... toolWrappers) {
+  public static InspectionProfileImpl createSimple(@Nonnull String name,
+                                                   @Nonnull Project project,
+                                                   @Nonnull final InspectionToolWrapper... toolWrappers) {
     InspectionToolRegistrar registrar = new InspectionToolRegistrar(project.getApplication()) {
       @Nonnull
       @Override
@@ -126,21 +127,16 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       }
     };
     InspectionProfileImpl profile = new InspectionProfileImpl(name, registrar, InspectionProfileManager.getInstance());
-    boolean init = INIT_INSPECTIONS;
-    try {
-      INIT_INSPECTIONS = true;
-      profile.initialize(project);
-    }
-    finally {
-      INIT_INSPECTIONS = init;
-    }
+    profile.initialize(project);
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       profile.enableTool(toolWrapper.getShortName(), project);
     }
     return profile;
   }
 
-  private static boolean toolSettingsAreEqual(@Nonnull String toolName, @Nonnull InspectionProfileImpl profile1, @Nonnull InspectionProfileImpl profile2) {
+  private static boolean toolSettingsAreEqual(@Nonnull String toolName,
+                                              @Nonnull InspectionProfileImpl profile1,
+                                              @Nonnull InspectionProfileImpl profile2) {
     final Tools toolList1 = profile1.myTools.get(toolName);
     final Tools toolList2 = profile2.myTools.get(toolName);
 
@@ -325,7 +321,9 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     }
   }
 
-  public void collectDependentInspections(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Set<InspectionToolWrapper> dependentEntries, Project project) {
+  public void collectDependentInspections(@Nonnull InspectionToolWrapper toolWrapper,
+                                          @Nonnull Set<InspectionToolWrapper> dependentEntries,
+                                          Project project) {
     String mainToolId = toolWrapper.getMainToolId();
 
     if (mainToolId != null) {
@@ -378,8 +376,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   @Override
   public <T extends InspectionTool, S> void modifyToolSettings(@Nonnull final String shortName,
-                                                                    @Nonnull final PsiElement psiElement,
-                                                                    @Nonnull final BiConsumer<T, S> toolConsumer) {
+                                                               @Nonnull final PsiElement psiElement,
+                                                               @Nonnull final BiConsumer<T, S> toolConsumer) {
     modifyProfile(model -> {
       InspectionToolWrapper wrapper = model.getInspectionTool(shortName, psiElement);
       //noinspection unchecked
@@ -523,7 +521,10 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       if (key == null) {
         Supplier<String> computable = () -> toolWrapper.getDisplayName();
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
-          key = HighlightDisplayKey.register(shortName, computable, ((LocalInspectionToolWrapper)toolWrapper).getID(), ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
+          key = HighlightDisplayKey.register(shortName,
+                                             computable,
+                                             ((LocalInspectionToolWrapper)toolWrapper).getID(),
+                                             ((LocalInspectionToolWrapper)toolWrapper).getAlternativeID());
         }
         else {
           key = HighlightDisplayKey.register(shortName, computable);
@@ -596,7 +597,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
   private HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey key, Project project) {
     final ToolsImpl tools = getTools(key.toString(), project);
-    LOG.assertTrue(tools != null, "profile name: " + myName + " base profile: " + (myBaseProfile != null ? myBaseProfile.getName() : "-") + " key: " + key);
+    LOG.assertTrue(tools != null,
+                   "profile name: " + myName + " base profile: " + (myBaseProfile != null ? myBaseProfile.getName() : "-") + " key: " + key);
     return tools.getLevel();
   }
 
@@ -775,7 +777,10 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
               try {
                 InspectionToolWrapper toolWrapperCopy = copyToolSettings(toolWrapper);
                 HighlightDisplayLevel errorLevel = inspectionProfile.getErrorLevel(key, null, project);
-                getTools(toolWrapper.getShortName(), project).addTool(scope, toolWrapperCopy, inspectionProfile.isToolEnabled(key), errorLevel);
+                getTools(toolWrapper.getShortName(), project).addTool(scope,
+                                                                      toolWrapperCopy,
+                                                                      inspectionProfile.isToolEnabled(key),
+                                                                      errorLevel);
               }
               catch (Exception e) {
                 LOG.error(e);
@@ -892,7 +897,11 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return tools != null ? tools.getLevel(scope, project) : HighlightDisplayLevel.WARNING;
   }
 
-  public ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper, NamedScope scope, @Nonnull HighlightDisplayLevel level, boolean enabled, Project project) {
+  public ScopeToolState addScope(@Nonnull InspectionToolWrapper toolWrapper,
+                                 NamedScope scope,
+                                 @Nonnull HighlightDisplayLevel level,
+                                 boolean enabled,
+                                 Project project) {
     return getTools(toolWrapper.getShortName(), project).prependTool(scope, toolWrapper, enabled, level);
   }
 
@@ -900,7 +909,10 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     getTools(key.toString(), project).setLevel(level, scopeName, project);
   }
 
-  public void setErrorLevel(@Nonnull List<HighlightDisplayKey> keys, @Nonnull HighlightDisplayLevel level, String scopeName, Project project) {
+  public void setErrorLevel(@Nonnull List<HighlightDisplayKey> keys,
+                            @Nonnull HighlightDisplayLevel level,
+                            String scopeName,
+                            Project project) {
     for (HighlightDisplayKey key : keys) {
       setErrorLevel(key, level, scopeName, project);
     }
