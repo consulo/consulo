@@ -494,7 +494,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   }
 
   public void initInspectionTools(@Nullable Project project) {
-    if (ApplicationManager.getApplication().isUnitTestMode() && !INIT_INSPECTIONS) return;
     if (myInitialized) return;
     synchronized (myExternalInfo) {
       if (myInitialized) return;
