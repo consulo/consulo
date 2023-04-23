@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
+import consulo.language.Language;
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
 import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
-import consulo.language.Language;
 import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.navigation.GotoRelatedProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.util.collection.ContainerUtil;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -37,10 +38,11 @@ import java.util.*;
 public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
   @Nonnull
   @Override
+  @RequiredReadAction
   public List<? extends GotoRelatedItem> getItems(@Nonnull PsiElement context) {
-    List<PsiElement> parents = new ArrayList<PsiElement>();
+    List<PsiElement> parents = new ArrayList<>();
     PsiElement current = context;
-    Set<Language> languages = new HashSet<Language>();
+    Set<Language> languages = new HashSet<>();
     while (current != null) {
       parents.add(current);
       languages.add(current.getLanguage());
@@ -48,17 +50,18 @@ public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
       current = current.getParent();
     }
 
-    List<LineMarkerProvider> providers = new ArrayList<LineMarkerProvider>();
+    List<LineMarkerProvider> providers = new ArrayList<>();
     for (Language language : languages) {
-      providers.addAll(LineMarkersPass.getMarkerProviders(language, context.getProject()));
+      providers.addAll(LineMarkersPass.getMarkerProviders(context.getContainingFile(), language, context.getProject()));
     }
-    List<GotoRelatedItem> items = new ArrayList<GotoRelatedItem>();
+
+    List<GotoRelatedItem> items = new ArrayList<>();
     for (LineMarkerProvider provider : providers) {
       if (provider instanceof RelatedItemLineMarkerProvider) {
-        List<RelatedItemLineMarkerInfo> markers = new ArrayList<RelatedItemLineMarkerInfo>();
+        List<RelatedItemLineMarkerInfo> markers = new ArrayList<>();
         RelatedItemLineMarkerProvider relatedItemLineMarkerProvider = (RelatedItemLineMarkerProvider)provider;
         for (PsiElement parent : parents) {
-          ContainerUtil.addIfNotNull(relatedItemLineMarkerProvider.getLineMarkerInfo(parent), markers);
+          ContainerUtil.addIfNotNull(markers, relatedItemLineMarkerProvider.getLineMarkerInfo(parent));
         }
         relatedItemLineMarkerProvider.collectNavigationMarkers(parents, markers, true);
 
@@ -71,7 +74,7 @@ public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
 
   private static void addItemsForMarkers(List<RelatedItemLineMarkerInfo> markers,
                                          List<GotoRelatedItem> result) {
-    Set<PsiFile> addedFiles = new HashSet<PsiFile>();
+    Set<PsiFile> addedFiles = new HashSet<>();
     for (RelatedItemLineMarkerInfo<?> marker : markers) {
       Collection<? extends GotoRelatedItem> items = marker.createGotoRelatedItems();
       for (GotoRelatedItem item : items) {
@@ -83,7 +86,7 @@ public class RelatedItemLineMarkerGotoAdapter extends GotoRelatedProvider {
           }
         }
         if (element != null) {
-          ContainerUtil.addIfNotNull(element.getContainingFile(), addedFiles);
+          ContainerUtil.addIfNotNull(addedFiles, element.getContainingFile());
         }
         result.add(item);
       }

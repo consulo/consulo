@@ -20,42 +20,35 @@
  */
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
-import consulo.document.Document;
-import consulo.codeEditor.markup.SeparatorPlacement;
-import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.markup.SeparatorPlacement;
+import consulo.document.Document;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.psi.PsiFile;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class FileSeparatorUtil {
   @Nonnull
   @RequiredReadAction
   public static List<LineMarkerInfo> getFileSeparators(final PsiFile file, final Document document) {
-    final List<LineMarkerInfo> result = new ArrayList<LineMarkerInfo>();
+    final List<LineMarkerInfo> result = new ArrayList<>();
     for (LineMarkerInfo lineMarkerInfo : LineMarkersPass.queryLineMarkers(file, document)) {
       if (lineMarkerInfo.separatorColor != null) {
         result.add(lineMarkerInfo);
       }
     }
 
-    Collections.sort(result, new Comparator<LineMarkerInfo>() {
-      @Override
-      public int compare(final LineMarkerInfo i1, final LineMarkerInfo i2) {
-        return getDisplayLine(i1, document) - getDisplayLine(i2, document);
-      }
-    });
+    result.sort((i1, i2) -> getDisplayLine(i1, document) - getDisplayLine(i2, document));
     return result;
   }
 
   public static int getDisplayLine(@Nonnull LineMarkerInfo lineMarkerInfo, @Nonnull Document document) {
     int offset = lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? lineMarkerInfo.startOffset : lineMarkerInfo.endOffset;
     return document.getLineNumber(Math.min(document.getTextLength(), Math.max(0, offset))) +
-           (lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? 0 : 1);
+      (lineMarkerInfo.separatorPlacement == SeparatorPlacement.TOP ? 0 : 1);
   }
 }

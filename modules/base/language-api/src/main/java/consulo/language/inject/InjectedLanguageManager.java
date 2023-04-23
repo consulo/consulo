@@ -16,6 +16,7 @@
 
 package consulo.language.inject;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ComponentUtil;
@@ -37,7 +38,8 @@ import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class InjectedLanguageManager {
-  private static final Function<Project, InjectedLanguageManager> LAZY_INJECT = ComponentUtil.createLazyInject(InjectedLanguageManager.class);
+  private static final Function<Project, InjectedLanguageManager> LAZY_INJECT =
+    ComponentUtil.createLazyInject(InjectedLanguageManager.class);
 
   @Nonnull
   public static InjectedLanguageManager getInstance(Project project) {
@@ -93,7 +95,11 @@ public abstract class InjectedLanguageManager {
 
   public abstract void enumerate(@Nonnull PsiElement host, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
-  public abstract void enumerateEx(@Nonnull PsiElement host, @Nonnull PsiFile containingFile, boolean probeUp, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+  @RequiredReadAction
+  public abstract void enumerateEx(@Nonnull PsiElement host,
+                                   @Nonnull PsiFile containingFile,
+                                   boolean probeUp,
+                                   @RequiredReadAction @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
   /**
    * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.

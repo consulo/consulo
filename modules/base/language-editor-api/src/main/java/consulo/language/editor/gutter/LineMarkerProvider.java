@@ -27,6 +27,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,11 +40,21 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LineMarkerProvider extends LanguageExtension {
-  ExtensionPointCacheKey<LineMarkerProvider, ByLanguageValue<List<LineMarkerProvider>>> KEY = ExtensionPointCacheKey.create("LineMarkerProvider", LanguageOneToMany.build(true));
+  ExtensionPointCacheKey<LineMarkerProvider, ByLanguageValue<List<LineMarkerProvider>>> KEY =
+    ExtensionPointCacheKey.create("LineMarkerProvider", LanguageOneToMany.build(true));
 
   @Nonnull
   static List<LineMarkerProvider> forLanguage(@Nonnull Language language) {
     return Application.get().getExtensionPoint(LineMarkerProvider.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
+  /**
+   * Allow check current file for enabling this provider.
+   *
+   * For example some linemarkers require module extensions, and without it no sence generate linemarkers
+   */
+  default boolean isAvailable(@Nonnull PsiFile file) {
+    return true;
   }
 
   /**

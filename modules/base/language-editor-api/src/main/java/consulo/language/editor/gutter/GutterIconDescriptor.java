@@ -60,7 +60,6 @@ public abstract class GutterIconDescriptor {
     return getName();
   }
 
-
   public static class Option extends GutterIconDescriptor {
     private final String myId;
     private final String myName;
