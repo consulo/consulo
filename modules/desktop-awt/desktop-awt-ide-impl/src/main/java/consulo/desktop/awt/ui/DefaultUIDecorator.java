@@ -38,7 +38,7 @@ import java.awt.*;
 @ExtensionImpl(id = "default", order = "last")
 public class DefaultUIDecorator implements SwingUIDecorator {
   @Override
-  public boolean isAvaliable() {
+  public boolean isAvailable() {
     // default decorator
     return true;
   }

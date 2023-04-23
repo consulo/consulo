@@ -31,7 +31,7 @@ import java.util.function.Function;
 public interface UIDecorator {
   static <ARG, U extends UIDecorator> void apply(BiPredicate<U, ARG> predicate, ARG arg, Class<U> clazz) {
     for (UIDecorator decorator : UIDecorators.getDecorators()) {
-      if (!decorator.isAvaliable()) {
+      if (!decorator.isAvailable()) {
         continue;
       }
 
@@ -49,7 +49,7 @@ public interface UIDecorator {
   @Nonnull
   static <R, U extends UIDecorator> R get(Function<U, R> supplier, Class<U> clazz) {
     for (UIDecorator decorator : UIDecorators.getDecorators()) {
-      if (!decorator.isAvaliable()) {
+      if (!decorator.isAvailable()) {
         continue;
       }
 
@@ -69,7 +69,7 @@ public interface UIDecorator {
   @Nonnull
   static <R, U extends UIDecorator> R get(Function<U, R> supplier, Class<U> clazz, @Nonnull R defaultValue) {
     for (UIDecorator decorator : UIDecorators.getDecorators()) {
-      if (!decorator.isAvaliable()) {
+      if (!decorator.isAvailable()) {
         continue;
       }
 
@@ -86,7 +86,7 @@ public interface UIDecorator {
     return defaultValue;
   }
 
-  boolean isAvaliable();
+  boolean isAvailable();
 
   default boolean isDark() {
     return false;
