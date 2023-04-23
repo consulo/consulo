@@ -22,6 +22,7 @@ import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
@@ -42,6 +43,8 @@ public class FormBuilder {
 
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
+
+  private Component myBottomComponent;
   private List<Component> myBottomComponents = new ArrayList<>();
 
   private FormBuilder() {
@@ -100,22 +103,41 @@ public class FormBuilder {
     return this;
   }
 
+  public void setBottom(@Nonnull Component bottomComponent) {
+    if (!myBottomComponents.isEmpty()) {
+      throw new IllegalArgumentException("Bottom components already set");
+    }
+
+    myBottomComponent = bottomComponent;
+  }
+
   public void addBottom(@Nonnull Component component) {
+    if (myBottomComponent != null) {
+      throw new IllegalArgumentException("Bottom component already set");
+    }
+
     myBottomComponents.add(component);
   }
 
   @Nonnull
   @RequiredUIAccess
   public Component build() {
-    if(myBottomComponents.isEmpty()) {
+    if(myBottomComponents.isEmpty() && myBottomComponent == null) {
       return myLayout;
     }
 
-    VerticalLayout composite = VerticalLayout.create();
-    composite.add(myLayout);
-    for (Component bottomComponent : myBottomComponents) {
-      composite.add(bottomComponent);
+    if (myBottomComponent != null) {
+      DockLayout layout = DockLayout.create();
+      layout.top(myLayout);
+      layout.center(myBottomComponent);
+      return layout;
+    } else {
+      VerticalLayout layout = VerticalLayout.create();
+      layout.add(myLayout);
+      for (Component bottomComponent : myBottomComponents) {
+        layout.add(bottomComponent);
+      }
+      return layout;
     }
-    return composite;
   }
 }
