@@ -71,7 +71,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   private static final String USED_LEVELS = "used_levels";
   @TestOnly
   public static boolean INIT_INSPECTIONS = false;
-  private static Map<String, InspectionElementsMerger> ourMergers = null;
   private final InspectionToolRegistrar myRegistrar;
   @Nonnull
   private final Map<String, Element> myUninstalledInspectionsSettings;
@@ -115,14 +114,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     myBaseProfile = withDefault ? getDefaultProfile(registrar, profileManager) : null;
     setProfileManager(profileManager);
     myUninstalledInspectionsSettings = new TreeMap<>();
-  }
-
-  private static synchronized Map<String, InspectionElementsMerger> getMergers() {
-    if (ourMergers == null) {
-      ourMergers = new LinkedHashMap<>();
-      InspectionElementsMerger.EP_NAME.forEachExtensionSafe(it -> ourMergers.put(it.getMergedToolName(), it));
-    }
-    return ourMergers;
   }
 
   @Nonnull
@@ -306,7 +297,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
 
       for (String toolName : diffMap.keySet()) {
         if (!myLockedProfile && diffMap.get(toolName).booleanValue()) {
-          markSettingsMerged(toolName, element);
           continue;
         }
 
@@ -324,7 +314,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
             continue;
           }
 
-          if (!areSettingsMerged(toolName, inspectionElement)) {
+          if (!false) {
             element.addContent(inspectionElement);
           }
         }
@@ -333,23 +323,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
         }
       }
     }
-  }
-
-  private void markSettingsMerged(String toolName, Element element) {
-    //add marker if already merged but result is now default (-> empty node)
-    final String mergedName = InspectionElementsMerger.getMergedMarkerName(toolName);
-    if (!myUninstalledInspectionsSettings.containsKey(mergedName)) {
-      final InspectionElementsMerger merger = getMergers().get(toolName);
-      if (merger != null && merger.markSettingsMerged(myUninstalledInspectionsSettings)) {
-        element.addContent(new Element(INSPECTION_TOOL_TAG).setAttribute(CLASS_TAG, mergedName));
-      }
-    }
-  }
-
-  private boolean areSettingsMerged(String toolName, Element inspectionElement) {
-    //skip merged settings as they could be restored from already provided data
-    final InspectionElementsMerger merger = getMergers().get(toolName);
-    return merger != null && merger.areSettingsMerged(myUninstalledInspectionsSettings, inspectionElement);
   }
 
   public void collectDependentInspections(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull Set<InspectionToolWrapper> dependentEntries, Project project) {
@@ -565,15 +538,6 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       try {
         if (element != null) {
           toolsList.readExternal(element, this, dependencies);
-        }
-        else if (!myUninstalledInspectionsSettings.containsKey(InspectionElementsMerger.getMergedMarkerName(shortName))) {
-          final InspectionElementsMerger merger = getMergers().get(shortName);
-          if (merger != null) {
-            final Element merged = merger.merge(myUninstalledInspectionsSettings);
-            if (merged != null) {
-              toolsList.readExternal(merged, this, dependencies);
-            }
-          }
         }
       }
       catch (InvalidDataException e) {
