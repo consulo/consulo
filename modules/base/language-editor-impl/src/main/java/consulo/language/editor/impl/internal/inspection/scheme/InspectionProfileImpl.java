@@ -17,12 +17,12 @@
 package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
+import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.GraphGenerator;
+import consulo.component.util.graph.InboundSemiGraph;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -127,7 +126,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       }
     };
     InspectionProfileImpl profile = new InspectionProfileImpl(name, registrar, InspectionProfileManager.getInstance());
-    profile.initialize(project);
+    profile.initInspectionTools(project);
     for (InspectionToolWrapper toolWrapper : toolWrappers) {
       profile.enableTool(toolWrapper.getShortName(), project);
     }
@@ -310,9 +309,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
             continue;
           }
 
-          if (!false) {
-            element.addContent(inspectionElement);
-          }
+          element.addContent(inspectionElement);
         }
         else {
           element.addContent(toolElement.clone());
@@ -506,13 +503,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       myBaseProfile.initInspectionTools(project);
     }
 
-    final List<InspectionToolWrapper> tools;
-    try {
-      tools = createTools(project);
-    }
-    catch (ProcessCanceledException ignored) {
-      return false;
-    }
+    final List<InspectionToolWrapper> tools = createTools(project);
+
     final Map<String, List<String>> dependencies = new HashMap<>();
     for (InspectionToolWrapper toolWrapper : tools) {
       final String shortName = toolWrapper.getShortName();
@@ -545,7 +537,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       }
       myTools.put(toolWrapper.getShortName(), toolsList);
     }
-    final GraphGenerator<String> graphGenerator = GraphGenerator.create(CachingSemiGraph.create(new GraphGenerator.SemiGraph<String>() {
+    
+    final Graph<String> graphGenerator = GraphGenerator.generate(new InboundSemiGraph<>() {
       @Override
       public Collection<String> getNodes() {
         return dependencies.keySet();
@@ -555,7 +548,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
       public Iterator<String> getIn(String n) {
         return dependencies.get(n).iterator();
       }
-    }));
+    });
 
     DFSTBuilder<String> builder = new DFSTBuilder<>(graphGenerator);
     if (builder.isAcyclic()) {
@@ -569,7 +562,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     return true;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Transient
   public String[] getScopesOrder() {
     return myScopesOrder;
@@ -582,15 +575,8 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
   @Nonnull
   private List<InspectionToolWrapper> createTools(Project project) {
     if (mySource != null) {
-      return ContainerUtil.map(mySource.getDefaultStates(project), new Function<ScopeToolState, InspectionToolWrapper>() {
-        @Nonnull
-        @Override
-        public InspectionToolWrapper apply(@Nonnull ScopeToolState state) {
-          return state.getTool();
-        }
-      });
+      return ContainerUtil.map(mySource.getDefaultStates(project), ScopeToolState::getTool);
     }
-    //noinspection TestOnlyProblems
     return myRegistrar.createTools();
   }
 

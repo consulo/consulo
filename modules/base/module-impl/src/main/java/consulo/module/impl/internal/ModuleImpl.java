@@ -17,6 +17,7 @@
 package consulo.module.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
@@ -46,6 +47,12 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     super(project, "Module " + name, ComponentScope.MODULE);
     myName = name;
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
+  }
+
+  @Override
+  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    PlatformComponentManagerImpl application = (BaseApplication)getApplication();
+    application.executeNonCancelableSection(runnable);
   }
 
   @Nullable

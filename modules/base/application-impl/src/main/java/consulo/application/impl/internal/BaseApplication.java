@@ -225,6 +225,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return myProgressManager;
   }
 
+  @Override
+  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    myProgressManager.executeNonCancelableSection(runnable);
+  }
+
   @Nullable
   @Override
   public ProgressIndicatorProvider getProgressIndicatorProvider() {

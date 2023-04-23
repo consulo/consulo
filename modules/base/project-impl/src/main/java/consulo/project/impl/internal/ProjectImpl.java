@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
@@ -104,6 +105,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     myManager = (ProjectManagerEx)manager;
 
     myName = projectName;
+  }
+
+  @Override
+  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    PlatformComponentManagerImpl application = (BaseApplication)getApplication();
+    application.executeNonCancelableSection(runnable);
   }
 
   @Override

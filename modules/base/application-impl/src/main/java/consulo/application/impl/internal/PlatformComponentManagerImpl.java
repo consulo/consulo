@@ -59,10 +59,13 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
         StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
         if (info != null) {
           if (Application.get().isWriteAccessAllowed()) {
-            LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component.getClass().getName()));
+            LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component
+              .getClass()
+              .getName()));
           }
 
-          info.getComponent().afterLoadState();
+          executeNonCancelableSection(() -> info.getComponent().afterLoadState());
+
           result = true;
         }
       }
@@ -73,6 +76,10 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
     }
 
     return result;
+  }
+
+  public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    runnable.run();
   }
 
   private float getPercentageOfComponentsLoaded() {
