@@ -18,14 +18,14 @@ package consulo.ide.impl.ui.app;
 import consulo.disposer.Disposer;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderPosition;
+import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
-import consulo.ui.Size;
-import consulo.ui.border.BorderPosition;
-import consulo.ui.border.BorderStyle;
 import consulo.ui.style.ComponentColors;
+import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +44,8 @@ public abstract class WindowWrapper {
 
   private Button myOkButton;
 
+  private AsyncResult<Void> myResult;
+
   public WindowWrapper(@Nonnull String title) {
     myTitle = title;
   }
@@ -61,10 +63,12 @@ public abstract class WindowWrapper {
    * Not block UI
    */
   @RequiredUIAccess
-  public void showAsync() {
+  public AsyncResult<Void> showAsync() {
     if (myWindow != null) {
       throw new IllegalArgumentException();
     }
+
+    myResult = AsyncResult.undefined();
 
     myWindow = Window.create(myTitle, WindowOptions.builder().owner(Window.getActiveWindow()).build());
     Size defaultSize = getDefaultSize();
@@ -76,6 +80,8 @@ public abstract class WindowWrapper {
     myWindow.setContent(rootLayout);
 
     myWindow.show();
+
+    return myResult;
   }
 
   @Nonnull
@@ -95,7 +101,7 @@ public abstract class WindowWrapper {
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
     myOkButton = Button.create("OK", e -> doOKAction());
-    if(myPreOkEnabled != null) {
+    if (myPreOkEnabled != null) {
       myOkButton.setEnabled(myPreOkEnabled);
     }
     bottomLayout.add(myOkButton);
@@ -109,12 +115,12 @@ public abstract class WindowWrapper {
 
   @RequiredUIAccess
   public void doOKAction() {
-    close();
+    close(true);
   }
 
   @RequiredUIAccess
   public void setOKEnabled(boolean value) {
-    if(myOkButton == null) {
+    if (myOkButton == null) {
       myPreOkEnabled = value;
     }
     else {
@@ -124,17 +130,24 @@ public abstract class WindowWrapper {
 
   @RequiredUIAccess
   public void doCancelAction() {
-    close();
+    close(false);
   }
 
   @RequiredUIAccess
-  public void close() {
+  public void close(boolean isOk) {
     if (myWindow == null) {
       return;
+    }
+    if (isOk) {
+      myResult.setDone();
+    }
+    else {
+      myResult.setRejected();
     }
     myWindow.close();
     Disposer.dispose(myWindow);
     myWindow = null;
     myOkButton = null;
+    myResult = null;
   }
 }

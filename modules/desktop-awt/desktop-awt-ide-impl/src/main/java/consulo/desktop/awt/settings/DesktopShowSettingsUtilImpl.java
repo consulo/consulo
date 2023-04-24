@@ -17,30 +17,29 @@ package consulo.desktop.awt.settings;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ide.setting.Settings;
-import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.project.internal.DefaultProjectFactory;
-import consulo.project.Project;
 import consulo.content.bundle.SdkTable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import consulo.ui.ex.awt.DialogWrapper;
-import java.util.function.Function;
-import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.logging.Logger;
+import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.impl.options.impl.BaseProjectStructureShowSettingsUtil;
 import consulo.ide.setting.ProjectStructureSelector;
+import consulo.ide.setting.Settings;
+import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -51,6 +50,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author max
@@ -80,11 +80,13 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   }
 
   @SuppressWarnings("deprecation")
-  private void showSettingsImpl(@Nullable Project tempProject,
+  private AsyncResult<Void> showSettingsImpl(@Nullable Project tempProject,
                                 @Nonnull Function<Project, Configurable[]> buildConfigurables,
                                 @Nullable Configurable toSelect,
                                 @Nonnull Consumer<DesktopSettingsDialog> onShow) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
+
+    AsyncResult<Void> result = AsyncResult.undefined();
 
     new Task.Backgroundable(actualProject, "Opening " + CommonBundle.settingsTitle() + "...") {
       private Configurable[] myConfigurables;
@@ -122,46 +124,51 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
           long time = System.currentTimeMillis() - myStartTime;
           LOG.info("Settings dialog initialization took " + time + " ms.");
-          dialog.showAsync().doWhenProcessed(() -> myShown.set(false));
+          dialog.showAsync().doWhenProcessed(() -> myShown.set(false)).notify(result);
         });
       }
     }.queue();
+
+    return result;
   }
 
+  @Nonnull
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> configurableClass, @Nonnull Consumer<T> afterSelect) {
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> configurableClass, @Nonnull Consumer<T> afterSelect) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
     Configurable[] configurables = buildConfigurables(project);
 
-    showSettingsImpl(project, project1 -> configurables, null, dialog -> {
+    return showSettingsImpl(project, project1 -> configurables, null, dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       assert editor != null;
       editor.select(configurableClass).doWhenDone(afterSelect);
     });
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
+  public AsyncResult<Void> showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
     Configurable[] configurables = buildConfigurables(project);
 
     Configurable toSelect = DesktopSettingsDialog.getPreselectedByDisplayName(configurables, nameToSelect, project);
 
-    showSettingsImpl(project, it -> configurables, toSelect, dialog -> {
+    return showSettingsImpl(project, it -> configurables, toSelect, dialog -> {
     });
   }
 
+  @Nonnull
   @Override
   @RequiredUIAccess
-  public void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
     Configurable[] configurables = buildConfigurables(project);
 
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
-    showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
+    return showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       assert editor != null;
       editor.select(configurable2Select, filter);
@@ -191,10 +198,11 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     return null;
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
-    showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, toSelect, dialog -> {
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
+    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, toSelect, dialog -> {
     });
   }
 
@@ -203,14 +211,11 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
     Configurable[] configurables = buildConfigurables(project);
 
-    AsyncResult<Void> result = AsyncResult.undefined();
-    showSettingsImpl(project, it -> configurables, SKIP_SELECTION_CONFIGURATION, dialog -> {
+    return showSettingsImpl(project, it -> configurables, SKIP_SELECTION_CONFIGURATION, dialog -> {
       final ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
       assert editor != null;
       consumer.accept(editor);
-      result.setDone();
     });
-    return result;
   }
 
   @RequiredUIAccess

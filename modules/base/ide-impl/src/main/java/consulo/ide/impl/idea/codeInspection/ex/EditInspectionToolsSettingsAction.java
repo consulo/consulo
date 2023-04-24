@@ -16,25 +16,24 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.intention.SyntheticIntentionAction;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.intention.HighPriorityAction;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
-import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
+import consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurable;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.intention.HighPriorityAction;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
@@ -77,39 +76,26 @@ public class EditInspectionToolsSettingsAction implements IntentionAction, Icona
   }
 
   public AsyncResult<Void> editToolSettings(final Project project,
-                                  final InspectionProfileImpl inspectionProfile,
-                                  final boolean canChooseDifferentProfiles) {
+                                            final InspectionProfileImpl inspectionProfile,
+                                            final boolean canChooseDifferentProfiles) {
     return editToolSettings(project,
                             inspectionProfile,
                             canChooseDifferentProfiles,
                             myShortName);
   }
 
+  @RequiredUIAccess
   public static AsyncResult<Void> editToolSettings(final Project project,
                                                    final InspectionProfile inspectionProfile,
                                                    final boolean canChooseDifferentProfile,
                                                    final String selectedToolShortName) {
     final ShowSettingsUtil settingsUtil = ShowSettingsUtil.getInstance();
-    final ErrorsConfigurable errorsConfigurable;
-    if (!canChooseDifferentProfile) {
-      errorsConfigurable = new IDEInspectionToolsConfigurable(InspectionProjectProfileManager.getInstance(project), InspectionProfileManager.getInstance());
-    }
-    else {
-      errorsConfigurable = ErrorsConfigurable.SERVICE.createConfigurable(project);
-    }
-    return settingsUtil.editConfigurable(project, errorsConfigurable, new Runnable() {
-      @Override
-      public void run() {
-        errorsConfigurable.selectProfile(inspectionProfile);
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            errorsConfigurable.selectInspectionTool(selectedToolShortName);
-          }
-        });
-      }
-    });
 
+    return settingsUtil.showAndSelect(project, ProjectInspectionToolsConfigurable.class, errorsConfigurable -> {
+      errorsConfigurable.selectProfile(inspectionProfile);
+
+      SwingUtilities.invokeLater(() -> errorsConfigurable.selectInspectionTool(selectedToolShortName));
+    });
   }
 
   @Override

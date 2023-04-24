@@ -40,33 +40,40 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
   }
 
   @RequiredUIAccess
-  public void showSettingsDialog(@Nullable Project project) {
-    showSettingsDialog(project, (Configurable)null);
+  @Nonnull
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
+    return showSettingsDialog(project, (Configurable)null);
   }
 
   @RequiredUIAccess
-  public void showSettingsDialog(@Nullable Project project, Class toSelect) {
-    showAndSelect(project, toSelect, o -> {
+  @Nonnull
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, Class toSelect) {
+    return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
-  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
-    showAndSelect(project, toSelect, o -> {
+  @Nonnull
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect) {
+    return showAndSelect(project, toSelect, o -> {
     });
   }
 
   @RequiredUIAccess
-  public abstract <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect);
+  @Nonnull
+  public abstract <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect);
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
+  @Nonnull
+  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect);
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
+  @Nonnull
+  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, final String id2Select, final String filter);
 
   @RequiredUIAccess
-  public abstract void showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
+  @Nonnull
+  public abstract AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect);
 
   @RequiredUIAccess
   public void showProjectStructureDialog(@Nonnull Project project) {

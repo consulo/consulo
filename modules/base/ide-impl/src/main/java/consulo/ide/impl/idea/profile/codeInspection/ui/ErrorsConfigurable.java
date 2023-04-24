@@ -39,16 +39,4 @@ public interface ErrorsConfigurable extends Configurable {
 
   @Nullable
   Object getSelectedObject();
-
-  @Deprecated
-  class SERVICE {
-    private SERVICE() {
-    }
-
-    @Nullable
-    @Deprecated
-    public static ErrorsConfigurable createConfigurable(@Nonnull Project project) {
-      throw new UnsupportedOperationException("ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class) use");
-    }
-  }
 }

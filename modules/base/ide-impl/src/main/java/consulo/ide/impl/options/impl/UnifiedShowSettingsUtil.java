@@ -49,37 +49,42 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
     myDefaultProjectFactory = defaultProjectFactory;
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable Project project) {
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
     Project actualProject = project == null ? myDefaultProjectFactory.getDefaultProject() : project;
 
     UnifiedSettingsDialog settingsDialog = new UnifiedSettingsDialog(buildConfigurables(actualProject));
-    settingsDialog.showAsync();
+    return settingsDialog.showAsync();
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> void showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect) {
-    showSettingsDialog(project);
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect) {
+    return showSettingsDialog(project);
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect) {
-    showSettingsDialog(project);
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect) {
+    return showSettingsDialog(project);
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
-    showSettingsDialog(project);
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
+    return showSettingsDialog(project);
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
-  public void showSettingsDialog(@Nonnull Project project, Configurable toSelect) {
-    showSettingsDialog(project);
+  public AsyncResult<Void> showSettingsDialog(@Nonnull Project project, Configurable toSelect) {
+    return showSettingsDialog(project);
   }
 
   @RequiredUIAccess
