@@ -43,6 +43,13 @@
       <outputDirectory>/Consulo/platform/buildSNAPSHOT/</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>${project.basedir}/../../distribution/platform/consulo/shared/</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <outputDirectory>Consulo/platform/buildSNAPSHOT/</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>${project.basedir}/../../distribution/platform/linux</directory>
       <includes>
         <include>*/*</include>
