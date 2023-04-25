@@ -21,21 +21,18 @@ import com.sun.jna.platform.win32.WinDef;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.application.util.SystemInfo;
+import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
-import consulo.process.local.ExecUtil;
-import consulo.application.util.AtomicNotNullLazyValue;
-import consulo.application.util.AtomicNullableLazyValue;
-import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.NullableLazyValue;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformFileSystem;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
+import consulo.process.local.ExecUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -182,7 +179,7 @@ public class ShowFilePathAction extends AnAction {
       eachParent = eachParent.getParent();
     }
 
-    Platform.FileSystem fs = Platform.current().fs();
+    PlatformFileSystem fs = Platform.current().fs();
     Application.get().executeOnPooledThread(() -> {
       List<Image> icons = new ArrayList<>();
       for (String url : fileUrls) {

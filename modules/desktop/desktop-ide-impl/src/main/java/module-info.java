@@ -3,6 +3,7 @@
  * @since 16/01/2022
  */
 module consulo.desktop.ide.impl {
+  requires consulo.platform.impl;
   requires consulo.ide.impl;
 
   requires com.sun.jna;

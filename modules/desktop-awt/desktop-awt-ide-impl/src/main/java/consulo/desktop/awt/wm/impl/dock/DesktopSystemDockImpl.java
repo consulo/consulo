@@ -49,7 +49,7 @@ public class DesktopSystemDockImpl extends SystemDock implements Disposable {
     if (Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.MENU)) {
       myDelegate = new Java9DockDelegateImpl();
     }
-    else if (Platform.current().os().isWindows7OrNewer()) {
+    else if (Platform.current().os().isWindows()) {
       myDelegate = new WinDockDelegate(application);
     }
     else {

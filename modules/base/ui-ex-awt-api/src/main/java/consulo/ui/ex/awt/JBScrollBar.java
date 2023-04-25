@@ -4,6 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.application.Application;
 import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.IdeGlassPane.TopComponent;
 import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.internal.laf.DefaultScrollBarUI;
@@ -105,11 +106,11 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
     if (!Application.get().isSwingApplication()) {
       return new BasicScrollBarUI();
     }
-    Platform.OperatingSystem os = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
     if (os.isMac()) {
       return new MacScrollBarUI();
     }
-    if (os.isWindows10OrNewer()) {
+    if (os.isWindows() && os.asWindows().isWindows10OrNewer()) {
       return new WindowsScrollBarUI();
     }
     return new DefaultScrollBarUI();

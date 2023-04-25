@@ -24,6 +24,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.keymap.BundledKeymapProvider;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -96,7 +97,7 @@ public class DefaultKeymap {
 
   @Nonnull
   public String getDefaultKeymapName() {
-    Platform.OperatingSystem os = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
 
     if (os.isMac()) {
       return KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP;

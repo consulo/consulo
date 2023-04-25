@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.execution.process.*;
 import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandlerImpl;
 import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
@@ -116,7 +117,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           throw new IllegalArgumentException("Reader options not support for console");
         }
 
-        Platform.OperatingSystem os = Platform.current().os();
+        PlatformOperatingSystem os = Platform.current().os();
         if (!os.isWindows()) {
           throw new ExecutionException("Can't create process with EXTERNAL console at OS " + os.name());
         }

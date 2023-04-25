@@ -186,7 +186,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     if (myPlatform.os().isMac()) {
       MacTopMenuInitializer.installAutoUpdateMenu();
     }
-    else if (myPlatform.os().isWindowsVistaOrNewer()) {
+    else if (myPlatform.os().isWindows()) {
       WindowsAutoRestartManager.register();
     }
 

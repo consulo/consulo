@@ -15,6 +15,7 @@
  */
 package consulo.platform;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
@@ -31,6 +32,8 @@ import java.util.Map;
  * @since 16-May-17
  */
 public interface Platform {
+  @Deprecated
+  @DeprecationInfo("Use PlatformFileSystem")
   interface FileSystem {
     boolean isCaseSensitive();
 
@@ -45,10 +48,10 @@ public interface Platform {
     }
   }
 
+  @Deprecated
+  @DeprecationInfo("Use PlatformOperatingSystem")
   interface OperatingSystem {
     boolean isWindows();
-
-    boolean isWindowsVistaOrNewer();
 
     boolean isWindows7OrNewer();
 
@@ -117,6 +120,8 @@ public interface Platform {
     String getWindowsFileVersion(@Nonnull Path path, int parts);
   }
 
+  @Deprecated
+  @DeprecationInfo("Use PlatformJvm")
   interface Jvm {
     @Nonnull
     String version();
@@ -158,6 +163,8 @@ public interface Platform {
     CpuArchitecture arch();
   }
 
+  @Deprecated
+  @DeprecationInfo("Use PlatformUser")
   interface User {
     boolean superUser();
 
@@ -178,16 +185,16 @@ public interface Platform {
   }
 
   @Nonnull
-  FileSystem fs();
+  PlatformFileSystem fs();
 
   @Nonnull
-  OperatingSystem os();
+  PlatformOperatingSystem os();
 
   @Nonnull
-  Jvm jvm();
+  PlatformJvm jvm();
 
   @Nonnull
-  User user();
+  PlatformUser user();
 
   default void openInBrowser(String url) {
     try {

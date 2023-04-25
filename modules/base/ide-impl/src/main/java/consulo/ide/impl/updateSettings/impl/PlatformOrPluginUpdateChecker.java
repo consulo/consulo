@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.application.internal.ApplicationInfo;
 import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
@@ -134,7 +135,7 @@ public class PlatformOrPluginUpdateChecker {
     boolean isJreBuild = isJreBuild();
 
     Platform platform = Platform.current();
-    Platform.OperatingSystem os = platform.os();
+    PlatformOperatingSystem os = platform.os();
     CpuArchitecture arch = platform.jvm().arch();
 
     if (os.isWindows()) {

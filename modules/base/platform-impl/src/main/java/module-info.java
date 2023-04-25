@@ -12,5 +12,8 @@ module consulo.platform.impl {
 
   opens consulo.platform.impl to com.sun.jna;
 
-  exports consulo.platform.impl to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
+  exports consulo.platform.impl to
+    consulo.desktop.ide.impl,
+    consulo.desktop.awt.ide.impl,
+    consulo.desktop.swt.ide.impl;
 }

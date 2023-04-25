@@ -4,9 +4,10 @@ package consulo.process.local;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.process.io.BaseOutputReader;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.process.internal.UnixProcessManager;
 import consulo.process.internal.WinProcessManager;
+import consulo.process.io.BaseOutputReader;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
@@ -156,7 +157,7 @@ public final class EnvironmentUtil {
 
   @Nonnull
   private static Map<String, String> getSystemEnv() {
-    Platform.OperatingSystem os = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
     if (os.isWindows()) {
       return Collections.unmodifiableMap(Maps.newHashMap(System.getenv(), HashingStrategy.caseInsensitive()));
     }
@@ -449,7 +450,7 @@ public final class EnvironmentUtil {
     }
     LOG.warn("shell env loader is timed out");
 
-    Platform.OperatingSystem os = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
 
     // First, try to interrupt 'softly' (we know how to do it only on *nix)
     if (!os.isWindows()) {

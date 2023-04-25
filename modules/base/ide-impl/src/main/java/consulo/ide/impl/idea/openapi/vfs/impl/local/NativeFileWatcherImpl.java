@@ -6,6 +6,7 @@ import consulo.application.ApplicationBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.local.FileWatcherNotificationSink;
 import consulo.ide.impl.idea.openapi.vfs.local.PluggableFileWatcher;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.virtualFileSystem.ManagingFS;
 import com.sun.jna.Platform;
 import consulo.application.Application;
@@ -133,8 +134,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     if (execPath != null) return new File(execPath);
 
     consulo.platform.Platform platform = consulo.platform.Platform.current();
-    consulo.platform.Platform.OperatingSystem os = platform.os();
-    consulo.platform.Platform.Jvm jvm = platform.jvm();
+    PlatformOperatingSystem os = platform.os();
 
     String fileName = null;
     if (os.isWindows()) {

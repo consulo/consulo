@@ -28,6 +28,7 @@ import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExtensionsEx
 import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -188,16 +189,17 @@ public class DarculaLaf extends BaseLookAndFeel {
     final Properties properties = new Properties();
     final String osSuffix;
 
-    Platform.OperatingSystem os = Platform.current().os();
+    PlatformOperatingSystem os = Platform.current().os();
     if (os.isMac()) {
       osSuffix = "mac";
     }
     else {
-      if (os.isWindows11OrNewer()) {
-        osSuffix = "windows11";
-      }
-      else if (os.isWindows()) {
-        osSuffix = "windows";
+      if (os.isWindows()) {
+        if (os.asWindows().isWindows11OrNewer()) {
+          osSuffix = "windows11";
+        } else {
+          osSuffix = "windows";
+        }
       }
       else {
         osSuffix = "linux";

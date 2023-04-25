@@ -15,12 +15,13 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.platform.Platform;
-import consulo.ui.TaskBar;
-import consulo.ui.Window;
 import consulo.desktop.awt.ui.impl.taskBar.DefaultJava9TaskBarImpl;
 import consulo.desktop.awt.ui.impl.taskBar.MacTaskBarImpl;
 import consulo.desktop.awt.ui.impl.taskBar.Windows7TaskBarImpl;
+import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
+import consulo.ui.TaskBar;
+import consulo.ui.Window;
 import consulo.ui.impl.DummyTaskBarImpl;
 
 import javax.annotation.Nonnull;
@@ -36,10 +37,10 @@ public class DesktopTaskBarImpl implements TaskBar {
   private final TaskBar myDelegate;
 
   private DesktopTaskBarImpl() {
-    Platform.OperatingSystem operatingSystem = Platform.current().os();
+    PlatformOperatingSystem operatingSystem = Platform.current().os();
 
     if(Taskbar.isTaskbarSupported()) {
-      if (operatingSystem.isWindows7OrNewer()) {
+      if (operatingSystem.isWindows() && operatingSystem.asWindows().isWindows7OrNewer()) {
         myDelegate = new Windows7TaskBarImpl();
       }
       else if (operatingSystem.isMac()) {

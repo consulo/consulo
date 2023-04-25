@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.execution.process.KillableColoredProcessHandlerImpl
 import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.ide.impl.idea.execution.process.RunnerMediator;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessConsoleType;
 import consulo.process.ProcessHandler;
@@ -47,7 +48,7 @@ public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
         handler.setHasPty(true);
         return handler;
       case EXTERNAL:
-        Platform.OperatingSystem os = Platform.current().os();
+        PlatformOperatingSystem os = Platform.current().os();
         if (!os.isWindows()) {
           throw new ExecutionException("Can't create process with EXTERNAL console at OS " + os.name());
         }
