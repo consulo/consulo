@@ -15,31 +15,14 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.internal.ApplicationManagerEx;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.internal.*;
-import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
-import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
-import consulo.ui.ex.popup.StackingPopupDispatcher;
-import consulo.application.ui.WindowStateService;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ui.ex.AppIcon;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import consulo.ui.ex.awt.JBLayeredPane;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ide.impl.idea.util.ui.OwnerOptional;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationManagerEx;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
@@ -47,30 +30,43 @@ import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
+import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.ui.OwnerOptional;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
-import consulo.application.ui.ApplicationWindowStateService;
-import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -96,7 +92,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   private final List<Runnable> myDisposeActions = new ArrayList<>();
   private Project myProject;
 
-  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
+  protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper,
+                                  @Nullable Project project,
+                                  boolean canBeParent,
+                                  @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
@@ -198,7 +197,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     });
   }
 
-  public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper, final Window owner, final boolean canBeParent, final DialogWrapper.IdeModalityType ideModalityType) {
+  public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper,
+                               final Window owner,
+                               final boolean canBeParent,
+                               final DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
@@ -208,10 +210,15 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     createDialog(owner, canBeParent);
 
     if (!isHeadless()) {
-      Dialog.ModalityType modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
-      if (ModalityPerProjectEAPDescriptor.is()) {
-        modalityType = ideModalityType.toAwtModality();
+      Dialog.ModalityType modalityType = ideModalityType.toAwtModality();
+      if (ideModalityType != DialogWrapper.IdeModalityType.MODELESS) {
+        modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
+        if (ModalityPerProjectEAPDescriptor.is()) {
+          modalityType = ideModalityType.toAwtModality();
+        }
+        myDialog.setModalityType(modalityType);
       }
+
       myDialog.setModalityType(modalityType);
     }
   }
@@ -225,8 +232,14 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   }
 
   @Deprecated
-  public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, final Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
-    this(wrapper, owner, canBeParent, applicationModalIfPossible ? DialogWrapper.IdeModalityType.IDE : DialogWrapper.IdeModalityType.PROJECT);
+  public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper,
+                               final Window owner,
+                               final boolean canBeParent,
+                               final boolean applicationModalIfPossible) {
+    this(wrapper,
+         owner,
+         canBeParent,
+         applicationModalIfPossible ? DialogWrapper.IdeModalityType.IDE : DialogWrapper.IdeModalityType.PROJECT);
   }
 
   @Override
@@ -442,7 +455,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
     }
 
-    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final CommandProcessorEx commandProcessor =
+      ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
     final boolean appStarted = commandProcessor != null;
 
     boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog(); // ProgressWindow starts a modality state itself
@@ -497,7 +511,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       myWindowManager.doNotSuggestAsParent(TargetAWT.from(myDialog.getWindow()));
     }
 
-    final CommandProcessorEx commandProcessor = ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
+    final CommandProcessorEx commandProcessor =
+      ApplicationManager.getApplication() != null ? (CommandProcessorEx)CommandProcessor.getInstance() : null;
     final boolean appStarted = commandProcessor != null;
 
     boolean changeModalityState = appStarted && myDialog.isModal() && !isProgressDialog(); // ProgressWindow starts a modality state itself

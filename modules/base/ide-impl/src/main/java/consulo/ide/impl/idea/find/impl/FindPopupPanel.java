@@ -343,7 +343,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       else {
         w.setLocationRelativeTo(parent);
       }
-      myDialog.show();
 
       w.addWindowListener(new WindowAdapter() {
         @Override
@@ -379,6 +378,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       }
       ApplicationManager.getApplication().invokeLater(this::scheduleResultsUpdate, IdeaModalityState.any());
     }
+
+    myDialog.showAsync();
   }
 
   protected boolean canBeClosed() {
@@ -632,6 +633,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       myScopeDetailsPanel.add(scopeType.name, scopeComponent.second);
     }
     myScopeSelectionToolbar = createToolbar(scopeActions.toArray(AnAction.EMPTY_ARRAY));
+    myScopeSelectionToolbar.setTargetComponent(mySearchComponent);
     myScopeSelectionToolbar.setMinimumButtonSize(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
     mySelectedScope = scopeComponents[0].first;
 
