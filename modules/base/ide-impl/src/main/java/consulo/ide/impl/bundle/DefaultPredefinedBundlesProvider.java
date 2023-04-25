@@ -16,15 +16,16 @@
 package consulo.ide.impl.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModificator;
-import consulo.content.bundle.SdkType;
+import consulo.content.bundle.*;
+import consulo.platform.Platform;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.content.bundle.PredefinedBundlesProvider;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
@@ -34,31 +35,73 @@ import java.util.Collection;
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
   @Override
   public void createBundles(@Nonnull Context context) {
+    Platform platform = Platform.current();
+
     SdkType.EP_NAME.forEachExtensionSafe(sdkType -> {
-      if (sdkType.canCreatePredefinedSdks()) {
-        Collection<String> paths = sdkType.suggestHomePaths();
-
-        for (String path : paths) {
-          path = sdkType.adjustSelectedSdkHome(path);
-
-          if (sdkType.isValidSdkHome(path)) {
-            VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
-            if (dirPath == null) {
-              continue;
-            }
-
-            String sdkPath = sdkType.sdkPath(dirPath);
-
-            Sdk sdk = context.createSdk(sdkType, sdkPath);
-            SdkModificator sdkModificator = sdk.getSdkModificator();
-            sdkModificator.setHomePath(sdkPath);
-            sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
-            sdkModificator.commitChanges();
-
-            sdkType.setupSdkPaths(sdk);
-          }
-        }
+      if (sdkType instanceof BundleType bundleType) {
+        createBundles(context, bundleType, platform);
+      }
+      else {
+        createLegacySdks(context, sdkType);
       }
     });
+  }
+
+  private void createBundles(@Nonnull Context context, BundleType sdkType, Platform platform) {
+    if (!sdkType.canCreatePredefinedSdks(platform)) {
+      return;
+    }
+
+    List<Path> paths = new ArrayList<>();
+    sdkType.collectHomePaths(platform, paths::add);
+
+    for (Path path : paths) {
+      path = sdkType.adjustSelectedSdkHome(platform, path);
+
+      if (sdkType.isValidSdkHome(platform, path)) {
+        VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
+        if (dirPath == null) {
+          continue;
+        }
+
+        String versionString = sdkType.getVersionString(platform, path);
+
+        Sdk sdk = context.createSdk(platform, sdkType, path);
+        SdkModificator sdkModificator = sdk.getSdkModificator();
+        sdkModificator.setVersionString(versionString);
+        sdkModificator.commitChanges();
+
+        sdkType.setupSdkPaths(sdk);
+      }
+    }
+  }
+
+  private void createLegacySdks(@Nonnull Context context, SdkType sdkType) {
+    if (!sdkType.canCreatePredefinedSdks()) {
+      return;
+    }
+
+    Collection<String> paths = sdkType.suggestHomePaths();
+
+    for (String path : paths) {
+      path = sdkType.adjustSelectedSdkHome(path);
+
+      if (sdkType.isValidSdkHome(path)) {
+        VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
+        if (dirPath == null) {
+          continue;
+        }
+
+        String sdkPath = sdkType.sdkPath(dirPath);
+
+        Sdk sdk = context.createSdk(sdkType, sdkPath);
+        SdkModificator sdkModificator = sdk.getSdkModificator();
+        sdkModificator.setHomePath(sdkPath);
+        sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));
+        sdkModificator.commitChanges();
+
+        sdkType.setupSdkPaths(sdk);
+      }
+    }
   }
 }

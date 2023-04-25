@@ -45,6 +45,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -238,8 +239,15 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
   @Nonnull
   @Override
+  @SuppressWarnings("deprecation")
   public Sdk createSdk(final String name, final SdkTypeId sdkType) {
     return new SdkImpl(this, name, sdkType);
+  }
+
+  @Nonnull
+  @Override
+  public Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType) {
+    return new SdkImpl(this, sdkType, homePath, name);
   }
 
   @Override

@@ -32,6 +32,8 @@ import java.util.Map;
  * @since 16-May-17
  */
 public interface Platform {
+  static String LOCAL = "local";
+
   @Deprecated
   @DeprecationInfo("Use PlatformFileSystem")
   interface FileSystem {
@@ -183,6 +185,12 @@ public interface Platform {
   static Platform current() {
     return PlatformInternal.current();
   }
+
+  @Nonnull
+  String getId();
+
+  @Nonnull
+  String getName();
 
   @Nonnull
   PlatformFileSystem fs();

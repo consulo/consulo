@@ -8,6 +8,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 /**
@@ -25,6 +26,11 @@ public interface SdkModificator {
   String getHomePath();
 
   void setHomePath(String path);
+
+  @Nonnull
+  Path getHomeNioPath();
+
+  void setHomeNioPath(@Nonnull Path path);
 
   @Nullable
   String getVersionString();

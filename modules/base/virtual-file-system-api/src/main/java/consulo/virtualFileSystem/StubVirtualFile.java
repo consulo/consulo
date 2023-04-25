@@ -57,7 +57,6 @@ public class StubVirtualFile extends VirtualFile {
 
   @Override
   @Nonnull
-  @NonNls
   public String getName() {
     throw new UnsupportedOperationException("getName is not implemented");
   }

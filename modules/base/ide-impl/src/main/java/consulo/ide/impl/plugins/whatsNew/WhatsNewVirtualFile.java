@@ -16,17 +16,17 @@
 package consulo.ide.impl.plugins.whatsNew;
 
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import consulo.virtualFileSystem.VirtualFileWithoutContent;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.localize.LocalizeValue;
+import consulo.virtualFileSystem.VirtualFileWithoutContent;
+import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
 /**
  * @author VISTALL
  * @since 15/11/2021
  */
-public class WhatsNewVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, IdeDocumentHistoryImpl.SkipFromDocumentHistory {
+public class WhatsNewVirtualFile extends TextLightVirtualFileBase implements VirtualFileWithoutContent, IdeDocumentHistoryImpl.SkipFromDocumentHistory {
   public WhatsNewVirtualFile(LocalizeValue fileNameText) {
-    super(fileNameText.get().replace("_", ""), WhatsNewVirtualFileType.INSTANCE, "");
+    super(fileNameText.get().replace("_", ""), WhatsNewVirtualFileType.INSTANCE, System.currentTimeMillis());
   }
 
   @Override

@@ -23,13 +23,11 @@ import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.setting.bundle.SettingsSdksModel;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.ProjectBundle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -39,6 +37,9 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
@@ -73,7 +74,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   }
 
   public void initializeIfNeed() {
-    if(!myInitialized) {
+    if (!myInitialized) {
       reset();
     }
   }
@@ -202,7 +203,9 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     myModified = false;
   }
 
-  private boolean canApply(String[] errorString, @Nullable MasterDetailsComponent rootConfigurable, boolean addedOnly) throws ConfigurationException {
+  private boolean canApply(String[] errorString,
+                           @Nullable MasterDetailsComponent rootConfigurable,
+                           boolean addedOnly) throws ConfigurationException {
 
     LinkedHashMap<Sdk, Sdk> sdks = new LinkedHashMap<>(mySdks);
     if (addedOnly) {
@@ -233,7 +236,8 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         catch (ConfigurationException e) {
           if (rootConfigurable != null) {
             final Object projectJdk = rootConfigurable.getSelectedObject();
-            if (!(projectJdk instanceof Sdk) || !Comparing.strEqual(((Sdk)projectJdk).getName(), currName)) { //do not leave current item with current name
+            if (!(projectJdk instanceof Sdk) || !Comparing.strEqual(((Sdk)projectJdk).getName(),
+                                                                    currName)) { //do not leave current item with current name
               rootConfigurable.selectNodeInTree(currName);
             }
           }
@@ -266,7 +270,10 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
   }
 
   @Override
-  public void createAddActions(DefaultActionGroup group, final JComponent parent, final Consumer<Sdk> updateTree, @Nullable Predicate<SdkTypeId> filter) {
+  public void createAddActions(DefaultActionGroup group,
+                               final JComponent parent,
+                               final Consumer<Sdk> updateTree,
+                               @Nullable Predicate<SdkTypeId> filter) {
     final List<SdkType> types = SdkType.EP_NAME.getExtensionList();
     List<SdkType> list = new ArrayList<>(types.size());
     for (SdkType sdkType : types) {
@@ -296,6 +303,14 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     if (type instanceof SdkTypeWithCustomCreateUI customCreateUI) {
       customCreateUI.showCustomCreateUI(this, parent, sdk -> setupSdk(sdk, callback));
     }
+    else if (type instanceof BundleType bundleType) {
+      Platform platform = Platform.current();
+      SdkUtil.selectSdkHome(platform, bundleType, homePath -> {
+        String newSdkName = SdkUtil.createUniqueSdkName(platform, bundleType, homePath, getSdks());
+        final SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
+        setupSdk(newSdk, callback);
+      });
+    }
     else {
       SdkUtil.selectSdkHome(type, home -> {
         String newSdkName = SdkUtil.createUniqueSdkName(type, home, getSdks());
@@ -319,7 +334,9 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         uiAccess.give(() -> {
           if (newSdk.getVersionString() == null) {
             String home = newSdk.getHomePath();
-            Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", home), ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
+            Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", home),
+                                       ProjectBundle.message("sdk.java.corrupt.title"),
+                                       Messages.getErrorIcon());
           }
 
           doAdd(newSdk, callback);

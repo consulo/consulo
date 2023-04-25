@@ -17,9 +17,10 @@ package consulo.content.bundle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -32,8 +33,16 @@ public abstract class PredefinedBundlesProvider {
     Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName);
 
     @Nonnull
+    Sdk createSdkWithName(@Nonnull BundleType bundleType, @Nonnull Path homePath, @Nonnull String suggestName);
+
+    @Nonnull
     default Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
       return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
+    }
+
+    @Nonnull
+    default Sdk createSdk(@Nonnull Platform platform, @Nonnull BundleType sdkType, @Nonnull Path homePath) {
+      return createSdkWithName(sdkType, homePath, sdkType.suggestSdkName(platform, null, homePath));
     }
   }
 

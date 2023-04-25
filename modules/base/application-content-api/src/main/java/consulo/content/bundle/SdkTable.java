@@ -23,6 +23,7 @@ import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -96,5 +97,13 @@ public abstract class SdkTable implements BundleHolder {
    * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
    */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Prefer createSdk(Platform,String,SdkTypeId)")
   public abstract Sdk createSdk(final String name, final SdkTypeId sdkType);
+
+  /**
+   * Create sdk with target type, but not add to table. use {@link #addSdk(Sdk)} for adding
+   */
+  @Nonnull
+  public abstract Sdk createSdk(@Nonnull Path homePath, @Nonnull String name, @Nonnull SdkTypeId sdkType);
 }

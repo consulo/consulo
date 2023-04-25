@@ -67,10 +67,13 @@ public abstract class SdkType implements SdkTypeId {
 
   public abstract boolean isValidSdkHome(String path);
 
-
   @Override
   @Nullable
   public final String getVersionString(Sdk sdk) {
+    SdkTypeId sdkType = sdk.getSdkType();
+    if (sdkType instanceof BundleType bundleType) {
+      return bundleType.getVersionString(sdk.getPlatform(), sdk.getHomeNioPath());
+    }
     return getVersionString(sdk.getHomePath());
   }
 

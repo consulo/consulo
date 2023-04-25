@@ -27,7 +27,7 @@ import java.net.URL;
  */
 public class DesktopSwtPlatformImpl extends PlatformBase {
   public DesktopSwtPlatformImpl() {
-    super(getSystemJvmProperties());
+    super(LOCAL, LOCAL, getSystemJvmProperties());
   }
 
   @Override

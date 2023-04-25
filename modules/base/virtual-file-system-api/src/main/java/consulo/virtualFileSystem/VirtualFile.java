@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  * Represents a file in <code>{@link VirtualFileSystem}</code>. A particular file is represented by equal
@@ -800,5 +801,15 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
       }
     }
     return false;
+  }
+
+  @Nonnull
+  public Path toNioPath() {
+    VirtualFileSystem fileSystem = getFileSystem();
+    if (StandardFileSystems.FILE_PROTOCOL.equals(fileSystem.getProtocol())) {
+      return Path.of(getPath());
+    }
+
+    throw new UnsupportedOperationException("Impossible convert " + this + " to " + Path.class);
   }
 }

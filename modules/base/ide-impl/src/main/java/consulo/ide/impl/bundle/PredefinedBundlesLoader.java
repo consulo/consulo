@@ -31,6 +31,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +51,23 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
       mySdkTable = sdkTable;
     }
 
+    @Nonnull
+    @Override
+    public Sdk createSdkWithName(@Nonnull BundleType sdkType,
+                                 @Nonnull Path homePath,
+                                 @Nonnull String suggestName) {
+      // TODO [VISTALL] path can be remote - handle it
+
+      Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
+      String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+      Sdk sdk = mySdkTable.createSdk(homePath, uniqueSdkName, sdkType);
+      myBundles.add(sdk);
+      return sdk;
+    }
+
     @Override
     @Nonnull
+    @SuppressWarnings("deprecation")
     public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
       Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
       String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);

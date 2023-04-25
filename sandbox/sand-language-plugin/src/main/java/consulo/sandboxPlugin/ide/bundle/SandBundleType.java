@@ -20,11 +20,15 @@ import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.BundleType;
 import consulo.content.bundle.SdkType;
+import consulo.platform.Platform;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -32,7 +36,7 @@ import java.util.function.Supplier;
  * @since 12.05.14
  */
 @ExtensionImpl
-public class SandBundleType extends SdkType {
+public class SandBundleType extends BundleType {
   public static final Supplier<SandBundleType> INSTANCE = ExtensionInstance.from(SdkType.class);
 
   public SandBundleType() {
@@ -40,24 +44,19 @@ public class SandBundleType extends SdkType {
   }
 
   @Override
-  public boolean isValidSdkHome(String path) {
-    return true;
+  public void collectHomePaths(@Nonnull Platform platform, @Nonnull Consumer<Path> pathConsumer) {
+
   }
 
   @Nullable
   @Override
-  public String getVersionString(String sdkHome) {
+  public String getVersionString(@Nonnull Platform platform, @Nonnull Path path) {
     return "1";
   }
 
   @Override
   public boolean isRootTypeApplicable(OrderRootType type) {
     return type == BinariesOrderRootType.getInstance();
-  }
-
-  @Override
-  public String suggestSdkName(String currentSdkName, String sdkHome) {
-    return sdkHome;
   }
 
   @Nonnull

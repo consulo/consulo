@@ -33,7 +33,7 @@ import java.util.Map;
  */
 class DesktopAWTPlatformImpl extends PlatformBase {
   public DesktopAWTPlatformImpl() {
-    super(getSystemJvmProperties());
+    super(LOCAL, LOCAL, getSystemJvmProperties());
   }
 
   @Override

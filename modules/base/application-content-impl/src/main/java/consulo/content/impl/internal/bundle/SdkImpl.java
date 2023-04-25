@@ -1,18 +1,21 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.content.impl.internal.bundle;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
+import consulo.content.RootProviderBase;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
-import consulo.content.RootProviderBase;
 import consulo.content.impl.internal.RootsAsVirtualFilePointers;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
@@ -22,6 +25,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 
 public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, Disposable {
   private static final Logger LOG = Logger.getInstance(SdkImpl.class);
@@ -46,6 +50,8 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
   private boolean myPredefined;
 
+  @Deprecated
+  @DeprecationInfo("Prefe with Path parameter")
   public SdkImpl(SdkTable sdkTable, String name, SdkTypeId sdkType) {
     mySdkTable = sdkTable;
     mySdkType = sdkType;
@@ -53,6 +59,18 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
     VirtualFilePointerListener listener = Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
 
+    myRoots = new RootsAsVirtualFilePointers(true, listener, this);
+
+    // register on VirtualFilePointerManager because we want our virtual pointers to be disposed before VFPM to avoid "pointer leaked" diagnostics fired
+    Disposer.register((Disposable)VirtualFilePointerManager.getInstance(), this);
+  }
+
+  public SdkImpl(SdkTable sdkTable, SdkTypeId sdkType, Path homePath, String name) {
+    mySdkTable = sdkTable;
+    mySdkType = sdkType;
+    myName = name;
+    myHomePath = homePath.toAbsolutePath().toString();
+    VirtualFilePointerListener listener = Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
     myRoots = new RootsAsVirtualFilePointers(true, listener, this);
 
     // register on VirtualFilePointerManager because we want our virtual pointers to be disposed before VFPM to avoid "pointer leaked" diagnostics fired
@@ -97,12 +115,30 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
   @Override
   public final void setVersionString(@Nullable String versionString) {
-    myVersionString = versionString == null || versionString.isEmpty() ? null : versionString;
+    myVersionString = StringUtil.nullize(versionString);
     myVersionDefined = true;
   }
 
   @Override
   public String getVersionString() {
+    if (mySdkType instanceof BundleType bundleType) {
+      return getBundleVersion(bundleType);
+    }
+    else {
+      return getLegacyVersion();
+    }
+  }
+
+  @Nullable
+  private String getBundleVersion(BundleType bundleType) {
+    if (myVersionString == null && !myVersionDefined) {
+      setVersionString(bundleType.getVersionString(getPlatform(), getHomeNioPath()));
+    }
+    return myVersionString;
+  }
+
+  @Nullable
+  private String getLegacyVersion() {
     if (myVersionString == null && !myVersionDefined) {
       String homePath = getHomePath();
       if (homePath != null && !homePath.isEmpty()) {
@@ -115,6 +151,23 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   public final void resetVersionString() {
     myVersionDefined = false;
     myVersionString = null;
+  }
+
+  @Nonnull
+  @Override
+  public Path getHomeNioPath() {
+    // TODO [VISTALL] better handle remote paths
+    if (myHomePath != null) {
+      return Path.of(myHomePath);
+    }
+    return Path.of("");
+  }
+
+  @Nonnull
+  @Override
+  public Platform getPlatform() {
+    // TODO [VISTALL] better handle remote platform
+    return Platform.current();
   }
 
   @Override
@@ -219,7 +272,12 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     }
   }
 
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  @Override
+  public void setHomeNioPath(@Nonnull Path path) {
+    // TODO [VISTALL] better handle
+    setHomePath(path.toAbsolutePath().toString());
+  }
+
   @Override
   @Nonnull
   public SdkImpl clone() {

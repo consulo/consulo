@@ -44,6 +44,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -132,20 +133,67 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     myHomeComponent = TextBoxWithExtensions.create();
     myHomeComponent.withEditable(false);
 
-    boolean changePathSupported = !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
+    boolean changePathSupported =
+      !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
     if (changePathSupported) {
-      myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopened(), null, e -> doSelectHomePath()));
+      myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false,
+                                                                        PlatformIconGroup.nodesFolderopened(),
+                                                                        null,
+                                                                        e -> doSelectHomePath()));
     }
 
     myHomeFieldLabel = new JLabel(ProjectBundle.message("sdk.configure.type.home.path"));
-    myMainPanel.add(myHomeFieldLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, JBUI.insets(2, 10, 2, 2), 0, 0));
+    myMainPanel.add(myHomeFieldLabel,
+                    new GridBagConstraints(0,
+                                           GridBagConstraints.RELATIVE,
+                                           1,
+                                           1,
+                                           0.0,
+                                           0.0,
+                                           GridBagConstraints.WEST,
+                                           GridBagConstraints.NONE,
+                                           JBUI.insets(2, 10, 2, 2),
+                                           0,
+                                           0));
     myMainPanel.add(TargetAWT.to(myHomeComponent),
-                    new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, JBUI.insets(2, 2, 2, 10), 0, 0));
+                    new GridBagConstraints(1,
+                                           GridBagConstraints.RELATIVE,
+                                           1,
+                                           1,
+                                           1.0,
+                                           0.0,
+                                           GridBagConstraints.CENTER,
+                                           GridBagConstraints.HORIZONTAL,
+                                           JBUI.insets(2, 2, 2, 10),
+                                           0,
+                                           0));
 
     myAdditionalDataPanel = new JPanel(new BorderLayout());
-    myMainPanel.add(myAdditionalDataPanel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insetsTop(2), 0, 0));
+    myMainPanel.add(myAdditionalDataPanel,
+                    new GridBagConstraints(0,
+                                           GridBagConstraints.RELATIVE,
+                                           2,
+                                           1,
+                                           1.0,
+                                           0.0,
+                                           GridBagConstraints.CENTER,
+                                           GridBagConstraints.BOTH,
+                                           JBUI.insetsTop(2),
+                                           0,
+                                           0));
 
-    myMainPanel.add(centerComponent, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, JBUI.insetsTop(2), 0, 0));
+    myMainPanel.add(centerComponent,
+                    new GridBagConstraints(0,
+                                           GridBagConstraints.RELATIVE,
+                                           2,
+                                           1,
+                                           1.0,
+                                           1.0,
+                                           GridBagConstraints.CENTER,
+                                           GridBagConstraints.BOTH,
+                                           JBUI.insetsTop(2),
+                                           0,
+                                           0));
   }
 
   @Nonnull
@@ -163,11 +211,12 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   @RequiredUIAccess
   @Override
   public boolean isModified() {
-    if(myMainPanel == null) {
+    if (myMainPanel == null) {
       return false;
     }
     boolean isModified = !Comparing.equal(mySdk.getName(), myInitialName);
-    isModified = isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
+    isModified =
+      isModified || !Comparing.equal(FileUtil.toSystemIndependentName(getHomeValue()), FileUtil.toSystemIndependentName(myInitialPath));
     for (PathEditor pathEditor : myPathEditors.values()) {
       isModified = isModified || pathEditor.isModified();
     }
@@ -245,7 +294,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   }
 
   private void setHomePathValue(String absolutePath) {
-    if(myHomeComponent == null) {
+    if (myHomeComponent == null) {
       return;
     }
 
@@ -253,7 +302,16 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     final ColorValue fg;
     if (absolutePath != null && !absolutePath.isEmpty()) {
       final File homeDir = new File(absolutePath);
-      boolean homeMustBeDirectory = ((SdkType)mySdk.getSdkType()).getHomeChooserDescriptor().isChooseFolders();
+      boolean homeMustBeDirectory;
+
+      SdkType sdkType = (SdkType)mySdk.getSdkType();
+      if (sdkType instanceof BundleType bundleType) {
+        homeMustBeDirectory = bundleType.getHomeChooserDescriptor(mySdk.getPlatform()).isChooseFolders();
+      }
+      else {
+        homeMustBeDirectory = sdkType.getHomeChooserDescriptor().isChooseFolders();
+      }
+
       fg = homeDir.exists() && homeDir.isDirectory() == homeMustBeDirectory ? null : StandardColors.RED;
     }
     else {
@@ -265,7 +323,12 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
   @RequiredUIAccess
   private void doSelectHomePath() {
     final SdkType sdkType = (SdkType)mySdk.getSdkType();
-    SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
+    if (sdkType instanceof BundleType bundleType) {
+      SdkUtil.selectSdkHome(mySdk.getPlatform(), bundleType, path -> doSetHomePath(path.toString(), sdkType));
+    }
+    else {
+      SdkUtil.selectSdkHome(sdkType, path -> doSetHomePath(path, sdkType));
+    }
   }
 
   private void doSetHomePath(final String homePath, final SdkType sdkType) {
@@ -289,7 +352,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
       clearAllPaths();
       myVersionString = dummySdk.getVersionString();
       if (myVersionString == null) {
-        Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", homePath), ProjectBundle.message("sdk.java.corrupt.title"), Messages.getErrorIcon());
+        Messages.showMessageDialog(ProjectBundle.message("sdk.java.corrupt.error", homePath),
+                                   ProjectBundle.message("sdk.java.corrupt.title"),
+                                   Messages.getErrorIcon());
       }
       sdkModificator = dummySdk.getSdkModificator();
       for (OrderRootType type : myPathEditors.keySet()) {
@@ -369,6 +434,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     @Override
     public void setHomePath(String path) {
       doSetHomePath(path, (SdkType)mySdk.getSdkType());
+    }
+
+    @Nonnull
+    @Override
+    public Path getHomeNioPath() {
+      return Path.of(getHomeValue());
+    }
+
+    @Override
+    public void setHomeNioPath(@Nonnull Path path) {
+      setHomePath(path.toAbsolutePath().toString());
     }
 
     @Override

@@ -32,8 +32,12 @@ public abstract class PlatformBase implements Platform {
   private final PlatformOperatingSystem myOperatingSystem;
   private final PlatformJvm myJvm;
   private final PlatformUser myUser;
+  private final String myId;
+  private final String myName;
 
-  protected PlatformBase(@Nonnull Map<String, String> jvmProperties) {
+  protected PlatformBase(@Nonnull String id, @Nonnull String name, @Nonnull Map<String, String> jvmProperties) {
+    myId = id;
+    myName = name;
     myOperatingSystem = createOS(jvmProperties);
     myFileSystem = createFS(jvmProperties);
     myJvm = createJVM(jvmProperties);
@@ -78,6 +82,18 @@ public abstract class PlatformBase implements Platform {
   @Nonnull
   protected PlatformUser createUser(Map<String, String> jvmProperties) {
     return new PlatformUserImpl(jvmProperties);
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return myId;
+  }
+
+  @Nonnull
+  @Override
+  public String getName() {
+    return myName;
   }
 
   @Nonnull

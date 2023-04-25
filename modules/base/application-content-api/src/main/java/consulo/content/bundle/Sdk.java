@@ -17,12 +17,14 @@ package consulo.content.bundle;
 
 import consulo.component.util.pointer.Named;
 import consulo.content.RootProvider;
+import consulo.platform.Platform;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 
 /**
  * @author Eugene Zhuravlev
@@ -47,6 +49,12 @@ public interface Sdk extends UserDataHolder, Named {
 
   @Nullable
   String getHomePath();
+
+  @Nonnull
+  Path getHomeNioPath();
+
+  @Nonnull
+  Platform getPlatform();
 
   @Nullable
   VirtualFile getHomeDirectory();
