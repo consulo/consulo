@@ -19,6 +19,8 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformOperatingSystem;
 
+import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -36,6 +38,18 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
       "true".equalsIgnoreCase(jvmProperties.get("consulo.case.sensitive.fs"));
 
     areSymLinksSupported = os.isUnix() || os.isWindows() && os.asWindows().isWindows7OrNewer();
+  }
+
+  @Nonnull
+  @Override
+  public Path getPath(@Nonnull String path) {
+    return Path.of(path);
+  }
+
+  @Nonnull
+  @Override
+  public Path getPath(@Nonnull String path, @Nonnull String... more) {
+    return Path.of(path, path);
   }
 
   @Override

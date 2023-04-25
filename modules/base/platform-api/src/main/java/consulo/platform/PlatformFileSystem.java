@@ -20,21 +20,31 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
  * @since 25/04/2023
  */
 public interface PlatformFileSystem extends Platform.FileSystem {
+  @Override
   boolean isCaseSensitive();
 
+  @Override
   boolean areSymLinksSupported();
 
   /**
    * @return image filemanager image for file. If return null it will use default icon from IDE
    */
+  @Override
   @Nullable
   default Image getImage(@Nonnull File file) {
     return null;
   }
+
+  @Nonnull
+  Path getPath(@Nonnull String path);
+
+  @Nonnull
+  Path getPath(@Nonnull String path, @Nonnull String... more);
 }

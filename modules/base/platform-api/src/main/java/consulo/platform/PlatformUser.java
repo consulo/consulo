@@ -23,14 +23,18 @@ import java.nio.file.Path;
  * @since 25/04/2023
  */
 public interface PlatformUser extends Platform.User {
+  @Override
   boolean superUser();
 
+  @Override
   @Nonnull
   String name();
 
+  @Override
   @Nonnull
   Path homePath();
 
+  @Override
   default boolean darkTheme() {
     return false;
   }
