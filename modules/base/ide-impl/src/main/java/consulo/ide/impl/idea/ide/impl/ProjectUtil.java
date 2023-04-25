@@ -35,6 +35,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.util.concurrent.AsyncResult;
@@ -90,7 +91,7 @@ public class ProjectUtil {
   }
 
   @Nonnull
-  private static AsyncResult<Integer> confirmOpenNewProjectAsync(UIAccess uiAccess, boolean isNewProject) {
+  private static AsyncResult<Integer> confirmOpenNewProjectAsync(Project projectToClose, UIAccess uiAccess, boolean isNewProject) {
     final GeneralSettings settings = GeneralSettings.getInstance();
     int confirmOpenNewProject = settings.getConfirmOpenNewProject();
     if (confirmOpenNewProject == GeneralSettings.OPEN_PROJECT_ASK) {
@@ -109,7 +110,13 @@ public class ProjectUtil {
       alert.asExitButton();
 
       AsyncResult<Integer> result = AsyncResult.undefined();
-      uiAccess.give(() -> alert.showAsync().notify(result));
+      uiAccess.give(() -> {
+        Window window = null;
+        if (projectToClose != null) {
+          window = WindowManager.getInstance().getWindow(projectToClose);
+        }
+        return alert.showAsync(window).notify(result);
+      });
       return result;
     }
 
@@ -169,7 +176,7 @@ public class ProjectUtil {
           }
 
           final Project finalProjectToClose = projectToClose;
-          confirmOpenNewProjectAsync(uiAccess, false).doWhenDone(exitCode -> {
+          confirmOpenNewProjectAsync(finalProjectToClose, uiAccess, false).doWhenDone(exitCode -> {
             if (exitCode == GeneralSettings.OPEN_PROJECT_SAME_WINDOW) {
               AsyncResult<Void> closeResult = ProjectManagerEx.getInstanceEx().closeAndDisposeAsync(finalProjectToClose, uiAccess);
               closeResult.doWhenDone((Runnable)reopenAsync::setDone);
