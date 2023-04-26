@@ -659,9 +659,6 @@
         <groupId>consulo.maven</groupId>
         <artifactId>ui-designer-maven-plugin</artifactId>
         <version>2.3-SNAPSHOT</version>
-        <configuration>
-          <useJBScaling>true</useJBScaling>
-        </configuration>
         <executions>
           <execution>
             <id>compile</id>
