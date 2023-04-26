@@ -50,4 +50,5 @@ module consulo.application.impl {
   exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl;
 
   provides consulo.index.io.internal.LowMemoryWatcherInternal with consulo.application.impl.internal.util.RealLowMemoryWatcherInternal;
+  provides consulo.disposer.internal.DiposerRegisterChecker with consulo.application.impl.internal.DisposerPluginChecker;
 }

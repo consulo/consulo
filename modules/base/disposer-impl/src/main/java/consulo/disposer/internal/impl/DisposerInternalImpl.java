@@ -17,6 +17,7 @@ package consulo.disposer.internal.impl;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
+import consulo.disposer.internal.DisposerChecker;
 import consulo.disposer.internal.DisposerInternal;
 import consulo.disposer.internal.impl.objectTree.ObjectTree;
 import consulo.disposer.internal.impl.util.DisposableWrapperList;
@@ -70,6 +71,8 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   @Override
   public void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable final String key) {
+    DisposerChecker.checkRegister(parent, child);
+
     myTree.register(parent, child);
 
     if (key != null) {
@@ -166,6 +169,8 @@ public class DisposerInternalImpl extends DisposerInternal {
 
   @Override
   public boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child) {
+    DisposerChecker.checkRegister(parent, child);
+
     return myTree.tryRegister(parent, child);
   }
 }
