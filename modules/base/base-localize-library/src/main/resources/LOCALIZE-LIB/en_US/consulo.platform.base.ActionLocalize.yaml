@@ -1149,11 +1149,11 @@ action.CompileProject.text:
 action.CompileProject.description:
   text: Recompile all files in the project
 action.CompileDirty.text:
-  text: Make _Project
+  text: Build _Project
 action.CompileDirty.description:
   text: Compile all modified and dependent files in the project
 action.MakeModule.text:
-  text: Make _Module
+  text: Build _Module
 action.MakeModule.description:
   text: Compile all modified and dependent files in the module
 action.Compile.text:

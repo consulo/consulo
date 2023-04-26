@@ -8752,10 +8752,10 @@
     <option name="grails" path="ActionManager" hit="Make Grails Web Archive" />
     <option name="make" path="ActionManager" hit="Make Grails Web Archive" />
     <option name="web" path="ActionManager" hit="Make Grails Web Archive" />
-    <option name="make" path="ActionManager" hit="Make Module" />
-    <option name="module" path="ActionManager" hit="Make Module" />
-    <option name="make" path="ActionManager" hit="Make Project" />
-    <option name="project" path="ActionManager" hit="Make Project" />
+    <option name="make" path="ActionManager" hit="Build Module" />
+    <option name="module" path="ActionManager" hit="Build Module" />
+    <option name="make" path="ActionManager" hit="Build Project" />
+    <option name="project" path="ActionManager" hit="Build Project" />
     <option name="make" path="ActionManager" hit="Make Static..." />
     <option name="static" path="ActionManager" hit="Make Static..." />
     <option name="and" path="ActionManager" hit="Makes the method return or variable contain the opposite value and corrects the references" />
@@ -14713,9 +14713,9 @@
     <option name="output" hit="Clear output directory on rebuild" />
     <option name="rebuild" hit="Clear output directory on rebuild" />
     <option name="compiler" hit="Compiler" />
-    <option name="automatically" hit="Make project automatically" />
-    <option name="make" hit="Make project automatically" />
-    <option name="project" hit="Make project automatically" />
+    <option name="automatically" hit="Build project automatically" />
+    <option name="make" hit="Build project automatically" />
+    <option name="project" hit="Build project automatically" />
     <option name="patterns" hit="Resource patterns:" />
     <option name="resource" hit="Resource patterns:" />
     <option name="and" hit="Use external build     (Javac and Eclipse compilers are supported for java compilation and annotation processing)" />
@@ -17402,11 +17402,11 @@
     <option name="warning" hit="Enable 'JVM will hang' warning" />
     <option name="will" hit="Enable 'JVM will hang' warning" />
     <option name="hotswap" hit="HotSwap" />
-    <option name="before" hit="Make project before reloading classes" />
-    <option name="classes" hit="Make project before reloading classes" />
-    <option name="make" hit="Make project before reloading classes" />
-    <option name="project" hit="Make project before reloading classes" />
-    <option name="reloading" hit="Make project before reloading classes" />
+    <option name="before" hit="Build project before reloading classes" />
+    <option name="classes" hit="Build project before reloading classes" />
+    <option name="make" hit="Build project before reloading classes" />
+    <option name="project" hit="Build project before reloading classes" />
+    <option name="reloading" hit="Build project before reloading classes" />
     <option name="after" hit="Reload classes after compilation:" />
     <option name="classes" hit="Reload classes after compilation:" />
     <option name="compilation" hit="Reload classes after compilation:" />

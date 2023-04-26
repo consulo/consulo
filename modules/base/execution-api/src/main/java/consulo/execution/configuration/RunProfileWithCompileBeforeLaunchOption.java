@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
   /**
-   * @return modules to compile before run. Empty list to make project
+   * @return modules to compile before run. Empty list to build project
    */
   @Nonnull
   Module[] getModules();
