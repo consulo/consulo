@@ -64,7 +64,7 @@ public class BinaryOSProcessHandler extends OSProcessHandler {
     @Nonnull
     @Override
     protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
-      return BinaryOSProcessHandler.this.executeOnPooledThread(runnable);
+      return BinaryOSProcessHandler.this.executeTask(runnable);
     }
   }
 }

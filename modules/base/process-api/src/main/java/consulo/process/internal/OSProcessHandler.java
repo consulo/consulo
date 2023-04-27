@@ -15,7 +15,6 @@
  */
 package consulo.process.internal;
 
-import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.process.DefaultCharsetProvider;
 import consulo.process.ExecutionException;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 public class OSProcessHandler extends BaseOSProcessHandler {
   private static final Logger LOG = Logger.getInstance(OSProcessHandler.class);
@@ -100,12 +98,6 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     return false;
   }
 
-  @Nonnull
-  @Override
-  protected Future<?> executeOnPooledThread(@Nonnull Runnable task) {
-    return super.executeOnPooledThread(task);  // to maintain binary compatibility?
-  }
-
   @Override
   protected void onOSProcessTerminated(int exitCode) {
     super.onOSProcessTerminated(exitCode);
@@ -151,12 +143,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    * @param process Process
    */
   protected void killProcessTree(@Nonnull final Process process) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      killProcessTreeSync(process);
-    }
-    else {
-      executeOnPooledThread(() -> killProcessTreeSync(process));
-    }
+    executeTask(() -> killProcessTreeSync(process));
   }
 
   private void killProcessTreeSync(@Nonnull Process process) {

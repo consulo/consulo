@@ -5,8 +5,8 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.ProcessHandlerFeature;
 import consulo.process.ProcessOutputTypes;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseInputStreamReader;
 import consulo.process.io.BaseOutputReader;
@@ -54,23 +54,10 @@ public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
     }
   }
 
-  /**
-   * Override this method in order to execute the task with a custom pool
-   *
-   * @param task a task to run
-   * @deprecated override {@link #executeTask(Runnable)} instead of this method
-   */
-  @Deprecated
-  @SuppressWarnings("DeprecatedIsStillUsed")
-  @Nonnull
-  protected Future<?> executeOnPooledThread(@Nonnull final Runnable task) {
-    return ProcessIOExecutorService.INSTANCE.submit(task);
-  }
-
   @Override
   @Nonnull
   public Future<?> executeTask(@Nonnull Runnable task) {
-    return executeOnPooledThread(task);
+    return ProcessIOExecutorService.INSTANCE.submit(task);
   }
 
   /**
@@ -96,13 +83,12 @@ public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
       notifyTextAvailable(myCommandLine + '\n', ProcessOutputTypes.SYSTEM);
     }
 
-    addProcessListener(new ProcessAdapter() {
+    addProcessListener(new ProcessListener() {
       @Override
       public void startNotified(@Nonnull final ProcessEvent event) {
         try {
-          BaseOutputReader.Options options = readerOptions();
-          BaseDataReader stdOutReader = createOutputDataReader(options.policy());
-          BaseDataReader stdErrReader = processHasSeparateErrorStream() ? createErrorDataReader(options.policy()) : null;
+          BaseDataReader stdOutReader = createOutputDataReader();
+          BaseDataReader stdErrReader = processHasSeparateErrorStream() ? createErrorDataReader() : null;
 
           myWaitFor.setTerminationCallback(exitCode -> {
             try {
@@ -129,26 +115,6 @@ public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
     });
 
     super.startNotify();
-  }
-
-  /**
-   * @deprecated override {@link #createOutputDataReader()}
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  @SuppressWarnings({"DeprecatedIsStillUsed", "unused"})
-  protected BaseDataReader createErrorDataReader(BaseDataReader.SleepingPolicy policy) {
-    return createErrorDataReader();
-  }
-
-  /**
-   * @deprecated override {@link #createOutputDataReader()}
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.1")
-  @SuppressWarnings({"DeprecatedIsStillUsed", "unused"})
-  protected BaseDataReader createOutputDataReader(BaseDataReader.SleepingPolicy policy) {
-    return createOutputDataReader();
   }
 
   @Nonnull
