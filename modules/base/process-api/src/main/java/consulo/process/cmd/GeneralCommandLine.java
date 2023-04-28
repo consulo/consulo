@@ -335,6 +335,8 @@ public class GeneralCommandLine implements UserDataHolder {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use consulo.process.ProcessHandlerBuilderFactory since it can be run on remote host")
   public Process createProcess() throws ExecutionException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Executing [" + getCommandLineString() + "]");
