@@ -217,12 +217,15 @@ public final class IntentionActionMetaData {
     return null;
   }
 
+  @Nullable
   private URL getDirURL() {
     if (myDirURL == null) {
       myDirURL = getIntentionDescriptionDirURL(myAction.getClass().getClassLoader(), myDescriptionDirectoryName);
     }
 
-    LOG.assertTrue(myDirURL != null, "Intention Description Dir URL is null: " + myAction.getClass().getSimpleName() + "; " + myDescriptionDirectoryName);
+    if (myDirURL == null) {
+      LOG.warn("Intention Description Dir URL is null: " + myAction.getClass().getSimpleName() + "; " + myDescriptionDirectoryName);
+    }
     return myDirURL;
   }
 

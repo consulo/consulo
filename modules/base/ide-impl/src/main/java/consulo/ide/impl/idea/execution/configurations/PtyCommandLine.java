@@ -15,18 +15,18 @@
  */
 package consulo.ide.impl.idea.execution.configurations;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
+import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.util.collection.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +77,7 @@ public class PtyCommandLine extends GeneralCommandLine {
       if (logFile != null && logFile.exists()) {
         String logContent;
         try {
-          logContent = FileUtil.loadFile(logFile);
+          logContent = Files.readString(logFile.toPath());
         }
         catch (Exception e) {
           logContent = "Unable to retrieve log: " + e.getMessage();

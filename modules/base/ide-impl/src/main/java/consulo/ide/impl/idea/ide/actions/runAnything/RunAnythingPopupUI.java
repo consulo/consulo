@@ -191,7 +191,10 @@ public class RunAnythingPopupUI extends BigPopupUI {
   }
 
   private static void adjustMainListEmptyText(@Nonnull TextBoxWithExtensions editor) {
-    adjustEmptyText(editor, field -> field.getText().isEmpty(), IdeBundle.message("run.anything.main.list.empty.primary.text"), IdeBundle.message("run.anything.main.list.empty.secondary.text"));
+    adjustEmptyText(editor,
+                    field -> field.getText().isEmpty(),
+                    IdeBundle.message("run.anything.main.list.empty.primary.text"),
+                    IdeBundle.message("run.anything.main.list.empty.secondary.text"));
   }
 
   private static boolean isHelpMode(@Nonnull String pattern) {
@@ -462,7 +465,10 @@ public class RunAnythingPopupUI extends BigPopupUI {
     mySearchField.setVisibleLength(SEARCH_FIELD_COLUMNS);
   }
 
-  public static void adjustEmptyText(@Nonnull TextBoxWithExtensions textEditor, @Nonnull BooleanFunction<JBTextField> function, @Nonnull String leftText, @Nonnull String rightText) {
+  public static void adjustEmptyText(@Nonnull TextBoxWithExtensions textEditor,
+                                     @Nonnull BooleanFunction<JBTextField> function,
+                                     @Nonnull String leftText,
+                                     @Nonnull String rightText) {
     textEditor.setPlaceholder(leftText);
 
     //textEditor.putClientProperty("StatusVisibleFunction", function);
@@ -620,7 +626,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
       myPattern = pattern;
       RunAnythingSearchListModel model = getSearchingModel(myResultsList);
 
-      myListModel = reuseModel && model != null ? model : isHelpMode(pattern) ? new RunAnythingSearchListModel.RunAnythingHelpListModel() : new RunAnythingSearchListModel.RunAnythingMainListModel();
+      myListModel =
+        reuseModel && model != null ? model : isHelpMode(pattern) ? new RunAnythingSearchListModel.RunAnythingHelpListModel() : new RunAnythingSearchListModel.RunAnythingMainListModel();
     }
 
     @Override
@@ -673,7 +680,8 @@ public class RunAnythingPopupUI extends BigPopupUI {
       }
       finally {
         if (!isCanceled()) {
-          Application.get().invokeLater(() -> myResultsList.getEmptyText().setText(IdeBundle.message("run.anything.command.empty.list.title")));
+          Application.get()
+                     .invokeLater(() -> myResultsList.getEmptyText().setText(IdeBundle.message("run.anything.command.empty.list.title")));
         }
         if (!myDone.isProcessed()) {
           myDone.setDone();
@@ -695,11 +703,20 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     protected void check() {
       myProgressIndicator.checkCanceled();
-      if (myDone.isRejected()) throw new ProcessCanceledException();
+      if (myDone.isRejected()) {
+        throw new ProcessCanceledException();
+      }
+      if (myCalcThread == null) {
+        return;
+      }
+
       assert myCalcThread == this : "There are two CalcThreads running before one of them was cancelled";
     }
 
-    private void buildAllGroups(@Nonnull DataContext dataContext, @Nonnull String pattern, @Nonnull Runnable checkCancellation, boolean isRecent) {
+    private void buildAllGroups(@Nonnull DataContext dataContext,
+                                @Nonnull String pattern,
+                                @Nonnull Runnable checkCancellation,
+                                boolean isRecent) {
       if (isRecent) {
         RunAnythingRecentGroup.INSTANCE.collectItems(dataContext, myListModel, pattern, checkCancellation);
       }
@@ -717,8 +734,11 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
       List<RunAnythingGroup> list = new ArrayList<>();
       list.add(RunAnythingRecentGroup.INSTANCE);
-      list.addAll(myListModel.getGroups().stream().filter(group -> group instanceof RunAnythingCompletionGroup || group instanceof RunAnythingGeneralGroup)
-                          .filter(group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle())).collect(Collectors.toList()));
+      list.addAll(myListModel.getGroups()
+                             .stream()
+                             .filter(group -> group instanceof RunAnythingCompletionGroup || group instanceof RunAnythingGeneralGroup)
+                             .filter(group -> RunAnythingCache.getInstance(myProject).isGroupVisible(group.getTitle()))
+                             .collect(Collectors.toList()));
 
       for (RunAnythingGroup group : list) {
         Application.get().runReadAction(() -> group.collectItems(dataContext, myListModel, pattern, checkCancellation));
@@ -861,9 +881,10 @@ public class RunAnythingPopupUI extends BigPopupUI {
       }
     });
 
-    DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(true, myResultsList)).registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent)TargetAWT.to(mySearchField), this);
+    DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(true, myResultsList))
+                   .registerCustomShortcutSet(CustomShortcutSet.fromString("TAB"), (JComponent)TargetAWT.to(mySearchField), this);
     DumbAwareAction.create(e -> RunAnythingUtil.jumpNextGroup(false, myResultsList))
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent)TargetAWT.to(mySearchField), this);
+                   .registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), (JComponent)TargetAWT.to(mySearchField), this);
 
     AnAction escape = ActionManager.getInstance().getAction("EditorEscape");
     DumbAwareAction.create(__ -> {
@@ -871,8 +892,13 @@ public class RunAnythingPopupUI extends BigPopupUI {
       searchFinishedHandler.run();
     }).registerCustomShortcutSet(escape == null ? CommonShortcuts.ESCAPE : escape.getShortcutSet(), this);
 
-    DumbAwareAction.create(e -> executeCommand())
-            .registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER", "shift ENTER", "alt ENTER", "alt shift ENTER", "meta ENTER"), (JComponent)TargetAWT.to(mySearchField), this);
+    DumbAwareAction.create(e -> {
+      Application.get().invokeLater(() -> executeCommand());
+    }).registerCustomShortcutSet(CustomShortcutSet.fromString("ENTER",
+                                                              "shift ENTER",
+                                                              "alt ENTER",
+                                                              "alt shift ENTER",
+                                                              "meta ENTER"), (JComponent)TargetAWT.to(mySearchField), this);
 
     DumbAwareAction.create(e -> {
       RunAnythingSearchListModel model = getSearchingModel(myResultsList);
@@ -956,7 +982,9 @@ public class RunAnythingPopupUI extends BigPopupUI {
   @Nonnull
   @Override
   protected String getInitialHint() {
-    return IdeBundle.message("run.anything.hint.initial.text", KeymapUtil.getKeystrokeText(UP_KEYSTROKE), KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE));
+    return IdeBundle.message("run.anything.hint.initial.text",
+                             KeymapUtil.getKeystrokeText(UP_KEYSTROKE),
+                             KeymapUtil.getKeystrokeText(DOWN_KEYSTROKE));
   }
 
   //@Nonnull
@@ -995,12 +1023,13 @@ public class RunAnythingPopupUI extends BigPopupUI {
 
     @Override
     protected ElementsChooser<?> createChooser() {
-      ElementsChooser<RunAnythingGroup> res = new ElementsChooser<RunAnythingGroup>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
-        @Override
-        protected String getItemText(@Nonnull RunAnythingGroup value) {
-          return value.getTitle();
-        }
-      };
+      ElementsChooser<RunAnythingGroup> res =
+        new ElementsChooser<RunAnythingGroup>(new ArrayList<>(RunAnythingCompletionGroup.MAIN_GROUPS), false) {
+          @Override
+          protected String getItemText(@Nonnull RunAnythingGroup value) {
+            return value.getTitle();
+          }
+        };
 
       res.markElements(getVisibleGroups());
       ElementsChooser.ElementsMarkListener<RunAnythingGroup> listener = (element, isMarked) -> {

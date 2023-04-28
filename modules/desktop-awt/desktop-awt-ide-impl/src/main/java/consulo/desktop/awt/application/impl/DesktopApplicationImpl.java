@@ -194,22 +194,20 @@ public class DesktopApplicationImpl extends BaseApplication {
   @RequiredUIAccess
   private boolean disposeSelf(final boolean checkCanCloseProject) {
     final ProjectManagerImpl manager = (ProjectManagerImpl)ProjectManagerEx.getInstanceEx();
-    if (manager != null) {
-      final boolean[] canClose = {true};
-      for (final Project project : manager.getOpenProjects()) {
-        try {
-          CommandProcessor.getInstance().executeCommand(project, () -> {
-            if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
-              canClose[0] = false;
-            }
-          }, ApplicationBundle.message("command.exit"), null);
-        }
-        catch (Throwable e) {
-          LOG.error(e);
-        }
-        if (!canClose[0]) {
-          return false;
-        }
+    final boolean[] canClose = {true};
+    for (final Project project : manager.getOpenProjects()) {
+      try {
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+          if (!manager.closeProject(project, true, true, checkCanCloseProject)) {
+            canClose[0] = false;
+          }
+        }, ApplicationBundle.message("command.exit"), null);
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+      }
+      if (!canClose[0]) {
+        return false;
       }
     }
     runWriteAction(() -> Disposer.dispose(DesktopApplicationImpl.this));

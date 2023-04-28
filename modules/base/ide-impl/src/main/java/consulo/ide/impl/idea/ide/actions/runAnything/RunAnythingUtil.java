@@ -1,30 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
+import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.language.editor.LangDataKeys;
-import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ide.impl.idea.ui.SeparatorComponent;
+import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.awt.JBList;
-import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -91,24 +90,25 @@ public class RunAnythingUtil {
     return ObjectUtil.assertNotNull(dataContext.getData(CommonDataKeys.PROJECT));
   }
 
-  public static void executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+  public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {
     List<String> commands = RunAnythingCache.getInstance(fetchProject(dataContext)).getState().getCommands();
 
-    Module module = dataContext.getData(LangDataKeys.MODULE);
+    Module module = dataContext.getData(Module.KEY);
     if (module == null) {
       LOG.info("RunAnything: module hasn't been found, command will be executed in context of 'null' module.");
     }
 
-    for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensions()) {
+    for (RunAnythingProvider provider : RunAnythingProvider.EP_NAME.getExtensionList()) {
       Object value = provider.findMatchingValue(dataContext, pattern);
       if (value != null) {
         //noinspection unchecked
         provider.execute(dataContext, value);
         commands.remove(pattern);
         commands.add(pattern);
-        break;
+        return true;
       }
     }
+    return false;
   }
 
   @Nullable

@@ -1,28 +1,26 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
-import consulo.process.ExecutionException;
-import consulo.execution.executor.Executor;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
-import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.application.AllIcons;
+import consulo.dataContext.DataContext;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import consulo.ide.impl.idea.ide.actions.runAnything.execution.RunAnythingRunProfile;
 import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.process.cmd.ParametersListUtil;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;
@@ -39,7 +37,7 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
   }
 
   public static void runCommand(@Nonnull VirtualFile workDirectory, @Nonnull String commandString, @Nonnull Executor executor, @Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     LOG.assertTrue(project != null);
 
     Collection<String> commands = RunAnythingCache.getInstance(project).getState().getCommands();
@@ -48,11 +46,13 @@ public abstract class RunAnythingCommandProvider extends RunAnythingProviderBase
 
     dataContext = RunAnythingCommandCustomizer.customizeContext(dataContext);
 
-    GeneralCommandLine initialCommandLine = new GeneralCommandLine(ParametersListUtil.parse(commandString, false, true)).withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE).withWorkDirectory(workDirectory.getPath());
+    GeneralCommandLine initialCommandLine = new GeneralCommandLine(ParametersListUtil.parse(commandString, false, true))
+      .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
+      .withWorkingDirectory(workDirectory.toNioPath());
 
     GeneralCommandLine commandLine = RunAnythingCommandCustomizer.customizeCommandLine(dataContext, workDirectory, initialCommandLine);
     try {
-      RunAnythingRunProfile runAnythingRunProfile = new RunAnythingRunProfile(Registry.is("run.anything.use.pty", false) ? new PtyCommandLine(commandLine) : commandLine, commandString);
+      RunAnythingRunProfile runAnythingRunProfile = new RunAnythingRunProfile(commandLine, commandString);
       ExecutionEnvironmentBuilder.create(project, executor, runAnythingRunProfile).dataContext(dataContext).buildAndExecute();
     }
     catch (ExecutionException e) {
