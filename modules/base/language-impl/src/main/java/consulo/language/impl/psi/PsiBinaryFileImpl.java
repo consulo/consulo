@@ -19,9 +19,11 @@ import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.util.IncorrectOperationException;
+import consulo.module.content.util.ModuleContentUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.module.Module;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -39,6 +41,12 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   public PsiBinaryFileImpl(@Nonnull PsiManager manager, @Nonnull FileViewProvider viewProvider) {
     myViewProvider = (AbstractFileViewProvider)viewProvider;
     myManager = (PsiManagerImpl)manager;
+  }
+
+  @Override
+  @Nullable
+  public Module getModule() {
+    return ModuleContentUtil.findModuleForFile(myViewProvider.getVirtualFile(), getProject());
   }
 
   @Override
