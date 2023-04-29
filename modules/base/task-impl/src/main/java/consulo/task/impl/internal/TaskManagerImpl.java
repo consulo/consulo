@@ -59,13 +59,12 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.VcsType;
 import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ChangeListAdapter;
+import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -125,25 +124,23 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
 
   private volatile boolean myUpdating;
   private final Config myConfig = new Config();
-  private final ChangeListAdapter myChangeListListener;
+  private final ChangeListListener myChangeListListener;
   private final ChangeListManager myChangeListManager;
-  private final StartupManager myStartupManager;
 
   private final List<TaskRepository> myRepositories = new ArrayList<>();
   private final EventDispatcher<TaskListener> myDispatcher = EventDispatcher.create(TaskListener.class);
   private Set<TaskRepository> myBadRepositories = ContainerUtil.newConcurrentSet();
 
   @Inject
-  public TaskManagerImpl(Project project,
+  public TaskManagerImpl(Application application,
+                         Project project,
                          WorkingContextManager contextManager,
-                         ChangeListManager changeListManager,
-                         StartupManager startupManager) {
+                         ChangeListManager changeListManager) {
     myProject = project;
     myContextManager = contextManager;
     myChangeListManager = changeListManager;
-    myStartupManager = startupManager;
 
-    myChangeListListener = new ChangeListAdapter() {
+    myChangeListListener = new ChangeListListener() {
       @Override
       public void changeListRemoved(ChangeList list) {
         LocalTask task = getAssociatedTask((LocalChangeList)list);
@@ -160,14 +157,10 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
       public void defaultListChanged(ChangeList oldDefaultList, ChangeList newDefaultList) {
         final LocalTask associatedTask = getAssociatedTask((LocalChangeList)newDefaultList);
         if (associatedTask != null && !getActiveTask().equals(associatedTask)) {
-          ApplicationManager.getApplication().invokeLater(() -> activateTask(associatedTask, true), myProject.getDisposed());
+          application.invokeLater(() -> activateTask(associatedTask, true), myProject.getDisposed());
         }
       }
     };
-
-    if (!myProject.isDefault()) {
-      myStartupManager.registerPostStartupActivity(ui -> projectOpened());
-    }
   }
 
   @Override
@@ -944,11 +937,6 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
   @Nonnull
   public String constructDefaultBranchName(@Nonnull Task task) {
     return task.isIssue() ? TaskUtil.formatTask(task, myConfig.branchNameFormat) : task.getSummary();
-  }
-
-  @TestOnly
-  public ChangeListAdapter getChangeListListener() {
-    return myChangeListListener;
   }
 
   /**

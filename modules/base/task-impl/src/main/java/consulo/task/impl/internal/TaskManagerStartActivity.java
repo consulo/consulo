@@ -38,6 +38,7 @@ public class TaskManagerStartActivity implements PostStartupActivity, DumbAware 
     
     TaskManagerImpl manager = (TaskManagerImpl)TaskManager.getManager(project);
 
+    manager.projectOpened();
     manager.startUpdate();
   }
 }
