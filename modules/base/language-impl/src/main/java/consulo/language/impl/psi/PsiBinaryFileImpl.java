@@ -21,6 +21,7 @@ import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.lazy.ClearableLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
@@ -37,16 +38,24 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
   private byte[] myContents; // for myFile == null only
   private final AbstractFileViewProvider myViewProvider;
   private volatile boolean myPossiblyInvalidated;
+  private final ClearableLazyValue<Module> myModuleRef;
 
   public PsiBinaryFileImpl(@Nonnull PsiManager manager, @Nonnull FileViewProvider viewProvider) {
     myViewProvider = (AbstractFileViewProvider)viewProvider;
     myManager = (PsiManagerImpl)manager;
+    myModuleRef = ClearableLazyValue.nullable(() -> ModuleContentUtil.findModuleForFile(viewProvider.getVirtualFile(), getProject()));
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public Module getModule() {
-    return ModuleContentUtil.findModuleForFile(myViewProvider.getVirtualFile(), getProject());
+    return myModuleRef.get();
+  }
+
+  @Override
+  public void clearCaches() {
+    myModuleRef.clear();
   }
 
   @Override
@@ -119,6 +128,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return Language.ANY;
   }
 
+  @Nonnull
   @Override
   public PsiManager getManager() {
     return myManager;
@@ -141,10 +151,11 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     return this;
   }
 
+  @Nonnull
   @RequiredReadAction
   @Override
   public TextRange getTextRange() {
-    return null;
+    return TextRange.EMPTY_RANGE;
   }
 
   @RequiredReadAction
