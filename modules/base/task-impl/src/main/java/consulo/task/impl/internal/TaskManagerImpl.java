@@ -168,6 +168,14 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     return myRepositories.toArray(new TaskRepository[myRepositories.size()]);
   }
 
+  @Override
+  public void addRepository(@Nonnull TaskRepository repository) {
+    List<TaskRepository> newRepositories = new ArrayList<>(myRepositories.size() + 1);
+    newRepositories.addAll(myRepositories);
+    newRepositories.add(repository);
+    setRepositories(newRepositories);
+  }
+
   public <T extends TaskRepository> void setRepositories(List<T> repositories) {
 
     Set<TaskRepository> set = new HashSet<>(myRepositories);
