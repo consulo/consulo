@@ -131,6 +131,8 @@ public abstract class TaskManager {
 
   public abstract TaskRepository[] getAllRepositories();
 
+  public abstract void addRepository(@Nonnull TaskRepository repository);
+
   public abstract boolean testConnection(TaskRepository repository);
 
   public abstract void setTrackContextForNewChangelist(boolean value);
