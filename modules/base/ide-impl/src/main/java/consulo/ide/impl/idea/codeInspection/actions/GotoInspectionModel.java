@@ -21,6 +21,7 @@ import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.gotoByName.SimpleChooseByNameModel;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -35,37 +36,43 @@ import java.util.Set;
  * @author Konstantin Bulenkov
  */
 public class GotoInspectionModel extends SimpleChooseByNameModel {
-  private final Map<String, InspectionToolWrapper> myToolNames = new HashMap<String, InspectionToolWrapper>();
-  private final Map<String, Set<InspectionToolWrapper>> myGroupNames = new HashMap<String, Set<InspectionToolWrapper>>();
-  private final Map<String, InspectionToolWrapper> myToolShortNames = new HashMap<String, InspectionToolWrapper>();
+  private static final Logger LOG = Logger.getInstance(GotoInspectionModel.class);
+
+  private final Map<String, InspectionToolWrapper> myToolNames = new HashMap<>();
+  private final Map<String, Set<InspectionToolWrapper>> myGroupNames = new HashMap<>();
+  private final Map<String, InspectionToolWrapper> myToolShortNames = new HashMap<>();
   private final String[] myNames;
   private final ListCellRenderer myListCellRenderer = new InspectionListCellRenderer();
-
 
   public GotoInspectionModel(Project project) {
     super(project, IdeBundle.message("prompt.goto.inspection.enter.name"), "goto.inspection.help.id");
     final InspectionProfileImpl rootProfile = (InspectionProfileImpl)InspectionProfileManager.getInstance().getRootProfile();
     for (ScopeToolState state : rootProfile.getAllTools(project)) {
-      InspectionToolWrapper tool = state.getTool();
-      InspectionToolWrapper workingTool = tool;
-      if (tool instanceof LocalInspectionToolWrapper) {
-        workingTool = LocalInspectionToolWrapper.findTool2RunInBatch(project, null, tool.getShortName());
-        if (workingTool == null) {
-          continue;
+      try {
+        InspectionToolWrapper tool = state.getTool();
+        InspectionToolWrapper workingTool = tool;
+        if (tool instanceof LocalInspectionToolWrapper) {
+          workingTool = LocalInspectionToolWrapper.findTool2RunInBatch(project, null, tool.getShortName());
+          if (workingTool == null) {
+            continue;
+          }
         }
+        myToolNames.put(tool.getDisplayName(), workingTool);
+        final String groupName = tool.getGroupDisplayName();
+        Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName);
+        if (toolsInGroup == null) {
+          toolsInGroup = new HashSet<>();
+          myGroupNames.put(groupName, toolsInGroup);
+        }
+        toolsInGroup.add(workingTool);
+        myToolShortNames.put(tool.getShortName(), workingTool);
       }
-      myToolNames.put(tool.getDisplayName(), workingTool);
-      final String groupName = tool.getGroupDisplayName();
-      Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName);
-      if (toolsInGroup == null) {
-        toolsInGroup = new HashSet<InspectionToolWrapper>();
-        myGroupNames.put(groupName, toolsInGroup);
+      catch (Throwable e) {
+        LOG.error(e);
       }
-      toolsInGroup.add(workingTool);
-      myToolShortNames.put(tool.getShortName(), workingTool);
     }
 
-    final Set<String> nameIds = new HashSet<String>();
+    final Set<String> nameIds = new HashSet<>();
     nameIds.addAll(myToolNames.keySet());
     nameIds.addAll(myGroupNames.keySet());
     myNames = ArrayUtil.toStringArray(nameIds);
@@ -83,7 +90,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
 
   @Override
   public Object[] getElementsByName(final String id, final String pattern) {
-    final Set<InspectionToolWrapper> result = new HashSet<InspectionToolWrapper>();
+    final Set<InspectionToolWrapper> result = new HashSet<>();
     InspectionToolWrapper e = myToolNames.get(id);
     if (e != null) {
       result.add(e);
