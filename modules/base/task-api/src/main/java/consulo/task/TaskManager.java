@@ -21,6 +21,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.task.event.TaskListener;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
@@ -136,7 +138,18 @@ public abstract class TaskManager {
   public abstract boolean isTrackContextForNewChangelist();
 
   @Nonnull
-  public abstract String suggestBranchName(@Nonnull Task task);
+  public String suggestBranchName(@Nonnull Task task) {
+    String name = constructDefaultBranchName(task);
+    if (task.isIssue()) {
+      return name.replace(' ', '-');
+    }
+    List<String> words = StringUtil.getWordsIn(name);
+    String[] strings = ArrayUtil.toStringArray(words);
+    return StringUtil.join(strings, 0, Math.min(2, strings.length), "-");
+  }
+
+  @Nonnull
+  public abstract String constructDefaultBranchName(@Nonnull Task task);
 
   public abstract void addBranches(LocalTask task, VcsTaskHandler.TaskInfo[] info, boolean original);
 }

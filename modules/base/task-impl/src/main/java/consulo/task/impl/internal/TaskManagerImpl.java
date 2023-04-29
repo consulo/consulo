@@ -44,7 +44,6 @@ import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.task.util.RequestFailedException;
 import consulo.task.util.TaskUtil;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Comparing;
@@ -941,17 +940,7 @@ public class TaskManagerImpl extends TaskManager implements PersistentStateCompo
     return StringUtil.shortenTextWithEllipsis(name, 100, 0);
   }
 
-  @Nonnull
-  public String suggestBranchName(@Nonnull Task task) {
-    String name = constructDefaultBranchName(task);
-    if (task.isIssue()) {
-      return name.replace(' ', '-');
-    }
-    List<String> words = StringUtil.getWordsIn(name);
-    String[] strings = ArrayUtil.toStringArray(words);
-    return StringUtil.join(strings, 0, Math.min(2, strings.length), "-");
-  }
-
+  @Override
   @Nonnull
   public String constructDefaultBranchName(@Nonnull Task task) {
     return task.isIssue() ? TaskUtil.formatTask(task, myConfig.branchNameFormat) : task.getSummary();
