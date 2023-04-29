@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.task.impl.internal;
+package consulo.extensionPreviewRecorder.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
+import consulo.compiler.artifact.ArtifactType;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
-import consulo.task.TaskRepositoryType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -27,21 +27,21 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 02/02/2023
+ * @since 22/01/2023
  */
 @ExtensionImpl
-public class TaskRepositoryTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder<TaskRepositoryType> {
+public class ArtifactTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder<ArtifactType> {
   private final Application myApplication;
 
   @Inject
-  public TaskRepositoryTypeExtensionPreviewRecorder(Application application) {
+  public ArtifactTypeExtensionPreviewRecorder(Application application) {
     myApplication = application;
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<TaskRepositoryType>> recorder) {
-    myApplication.getExtensionPoint(TaskRepositoryType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<TaskRepositoryType> preview = new ExtensionPreview<>(TaskRepositoryType.class, it.getId(), it);
+  public void analyze(@Nonnull Consumer<ExtensionPreview<ArtifactType>> recorder) {
+    myApplication.getExtensionPoint(ArtifactType.class).forEachExtensionSafe(it -> {
+      ExtensionPreview<ArtifactType> preview = new ExtensionPreview<>(ArtifactType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }

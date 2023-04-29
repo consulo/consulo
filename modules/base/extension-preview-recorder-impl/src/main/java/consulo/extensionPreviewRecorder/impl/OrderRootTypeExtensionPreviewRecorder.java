@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.impl.internal.bundle;
+package consulo.extensionPreviewRecorder.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
-import consulo.content.bundle.SdkType;
+import consulo.content.OrderRootType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -30,20 +30,19 @@ import java.util.function.Consumer;
  * @since 22/01/2023
  */
 @ExtensionImpl
-public class SdkTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder<SdkType> {
+public class OrderRootTypeExtensionPreviewRecorder implements ExtensionPreviewRecorder<OrderRootType> {
   private final Application myApplication;
 
   @Inject
-  public SdkTypeExtensionPreviewRecorder(Application application) {
+  public OrderRootTypeExtensionPreviewRecorder(Application application) {
     myApplication = application;
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview<SdkType>> recorder) {
-    myApplication.getExtensionPoint(SdkType.class).forEachExtensionSafe(it -> {
-      ExtensionPreview<SdkType> preview = new ExtensionPreview<>(SdkType.class, it.getId(), it);
+  public void analyze(@Nonnull Consumer<ExtensionPreview<OrderRootType>> recorder) {
+    myApplication.getExtensionPoint(OrderRootType.class).forEachExtensionSafe(it -> {
+      ExtensionPreview<OrderRootType> preview = new ExtensionPreview<>(OrderRootType.class, it.getId(), it);
       recorder.accept(preview);
     });
   }
 }
-
