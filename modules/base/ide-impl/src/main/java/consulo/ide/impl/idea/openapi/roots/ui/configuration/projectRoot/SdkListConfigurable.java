@@ -298,7 +298,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
     if (myListenerDisposable != null) {
-      myListenerDisposable.dispose();
+      myListenerDisposable.disposeWithTree();
     }
 
     sdksModel.dispose();
