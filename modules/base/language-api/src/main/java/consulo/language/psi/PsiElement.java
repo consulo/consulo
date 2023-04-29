@@ -16,15 +16,18 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.content.scope.SearchScope;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.internal.LanguageModuleUtilInternal;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
@@ -49,14 +52,34 @@ public interface PsiElement extends UserDataHolder {
   ArrayFactory<PsiElement> ARRAY_FACTORY = ArrayFactory.of(PsiElement[]::new);
 
   /**
+   * Return the application where project was opened
+   *
+   * @throws PsiInvalidElementAccessException if this element is invalid
+   */
+  @Nonnull
+  default Application getApplication() throws PsiInvalidElementAccessException {
+    return getProject().getApplication();
+  }
+
+  /**
    * Returns the project to which the PSI element belongs.
    *
    * @return the project instance.
-   * @throws PsiInvalidElementAccessException
-   *          if this element is invalid
+   * @throws PsiInvalidElementAccessException if this element is invalid
    */
   @Nonnull
   Project getProject() throws PsiInvalidElementAccessException;
+
+  /**
+   * Return the module of file in which content folder it was registered
+   *
+   * @throws PsiInvalidElementAccessException if this element is invalid
+   */
+  @Nullable
+  @RequiredReadAction
+  default Module getModule() throws PsiInvalidElementAccessException {
+    return LanguageModuleUtilInternal.findModuleForPsiElement(this);
+  }
 
   /**
    * Returns the language of the PSI element.
@@ -69,6 +92,7 @@ public interface PsiElement extends UserDataHolder {
 
   /**
    * Return the language version of the PSI element.
+   *
    * @return language version
    */
   @Nonnull
@@ -139,9 +163,8 @@ public interface PsiElement extends UserDataHolder {
    * Returns the file containing the PSI element.
    *
    * @return the file instance, or null if the PSI element is not contained in a file (for example,
-   *         the element represents a package or directory).
-   * @throws PsiInvalidElementAccessException
-   *          if this element is invalid
+   * the element represents a package or directory).
+   * @throws PsiInvalidElementAccessException if this element is invalid
    */
   PsiFile getContainingFile() throws PsiInvalidElementAccessException;
 
@@ -421,7 +444,7 @@ public interface PsiElement extends UserDataHolder {
    * associated reference.
    *
    * @return the reference instance, or null if the PSI element does not have any
-   *         associated references.
+   * associated references.
    */
   @Nullable
   PsiReference getReference();
@@ -438,7 +461,7 @@ public interface PsiElement extends UserDataHolder {
    * as it allows adding references by plugins when the element implements {@link com.intellij.psi.ContributedReferenceHost}.
    *
    * @return the array of references, or an empty array if the element has no associated
-   *         references.
+   * references.
    * @see com.intellij.psi.PsiReferenceService#getReferences
    */
   @Nonnull

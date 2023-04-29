@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.content.scope.SearchScope;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -34,12 +35,14 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class CompositePsiElement extends CompositeElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(CompositePsiElement.class);
@@ -290,6 +293,14 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
   @Override
   public boolean canNavigateToSource() {
     return canNavigate();
+  }
+
+  @RequiredReadAction
+  @Nullable
+  @Override
+  public Module getModule() throws PsiInvalidElementAccessException {
+    PsiFile file = getContainingFile();
+    return file == null ? null : file.getModule();
   }
 
   @Override

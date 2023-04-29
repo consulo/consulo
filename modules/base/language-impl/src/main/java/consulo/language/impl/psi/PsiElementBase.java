@@ -27,6 +27,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -102,7 +103,9 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor) throws IncorrectOperationException {
+  public PsiElement addRangeBefore(@Nonnull PsiElement first,
+                                   @Nonnull PsiElement last,
+                                   PsiElement anchor) throws IncorrectOperationException {
     throw new IncorrectOperationException("Operation not supported in: " + getClass());
   }
 
@@ -163,7 +166,10 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   }
 
   @Override
-  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor, @Nonnull ResolveState state, PsiElement lastParent, @Nonnull PsiElement place) {
+  public boolean processDeclarations(@Nonnull PsiScopeProcessor processor,
+                                     @Nonnull ResolveState state,
+                                     PsiElement lastParent,
+                                     @Nonnull PsiElement place) {
     return true;
   }
 
@@ -211,6 +217,14 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
   @Override
   public boolean canNavigateToSource() {
     return canNavigate();
+  }
+
+  @RequiredReadAction
+  @Nullable
+  @Override
+  public Module getModule() throws PsiInvalidElementAccessException {
+    PsiFile file = getContainingFile();
+    return file == null ? null : file.getModule();
   }
 
   @Override
@@ -322,7 +336,7 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
       return PsiManager.getInstance(getProject());
     }
     catch (StackOverflowError e) {
-      throw new IllegalArgumentException("Implementation conflict getProject() + getManager(): Class: " + getClass().getName() , e);
+      throw new IllegalArgumentException("Implementation conflict getProject() + getManager(): Class: " + getClass().getName(), e);
     }
   }
 }

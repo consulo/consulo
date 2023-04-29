@@ -36,6 +36,8 @@ import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.util.ModuleContentUtil;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.ItemPresentationProvider;
 import consulo.project.DumbService;
@@ -48,6 +50,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -79,12 +82,14 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return myFile.isValid() && !getProject().isDisposed();
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
     return Language.ANY;
   }
 
+  @Nonnull
   @Override
   public PsiManager getManager() {
     return myManager;
@@ -95,6 +100,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
   @Nonnull
   public String getName() {
     return myFile.getName();
+  }
+
+  @RequiredReadAction
+  @Nullable
+  @Override
+  public Module getModule() throws PsiInvalidElementAccessException {
+    return ModuleContentUtil.findModuleForFile(myFile, myManager.getProject());
   }
 
   @RequiredWriteAction
@@ -233,6 +245,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return true;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
@@ -267,21 +280,26 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return null;
   }
 
+  @RequiredReadAction
+  @Nonnull
   @Override
   public TextRange getTextRange() {
-    return null;
+    return TextRange.EMPTY_RANGE;
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public int getTextLength() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return null;
@@ -292,11 +310,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public String getText() {
     return ""; // TODO throw new InsupportedOperationException()
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public char[] textToCharArray() {

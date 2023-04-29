@@ -23,7 +23,6 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
@@ -45,7 +44,10 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class ModuleUtilCore {
   public static final Key<Module> KEY_MODULE = Key.create("Module");
@@ -83,8 +85,10 @@ public class ModuleUtilCore {
   }
 
   @Nullable
+  @RequiredReadAction
+  @Deprecated
   public static Module findModuleForFile(@Nonnull PsiFile file) {
-    return findModuleForPsiElement(file);
+    return file.getModule();
   }
 
   @Nullable
@@ -94,65 +98,9 @@ public class ModuleUtilCore {
 
   @Nullable
   @RequiredReadAction
+  @Deprecated
   public static Module findModuleForPsiElement(@Nonnull PsiElement element) {
-    if (!element.isValid()) return null;
-
-    Project project = element.getProject();
-    if (project.isDefault()) return null;
-    final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
-
-    if (element instanceof PsiFileSystemItem && (!(element instanceof PsiFile) || element.getContext() == null)) {
-      VirtualFile vFile = ((PsiFileSystemItem)element).getVirtualFile();
-      if (vFile == null) {
-        PsiFile containingFile = element.getContainingFile();
-        vFile = containingFile == null ? null : containingFile.getOriginalFile().getVirtualFile();
-        if (vFile == null) {
-          return element.getUserData(KEY_MODULE);
-        }
-      }
-      if (fileIndex.isInLibrarySource(vFile) || fileIndex.isInLibraryClasses(vFile)) {
-        final List<OrderEntry> orderEntries = fileIndex.getOrderEntriesForFile(vFile);
-        if (orderEntries.isEmpty()) {
-          return null;
-        }
-        if (orderEntries.size() == 1) {
-          return orderEntries.get(0).getOwnerModule();
-        }
-        Set<Module> modules = new HashSet<Module>();
-        for (OrderEntry orderEntry : orderEntries) {
-          modules.add(orderEntry.getOwnerModule());
-        }
-        final Module[] candidates = modules.toArray(new Module[modules.size()]);
-        Arrays.sort(candidates, ModuleManager.getInstance(project).moduleDependencyComparator());
-        return candidates[0];
-      }
-      return fileIndex.getModuleForFile(vFile);
-    }
-    PsiFile containingFile = element.getContainingFile();
-    if (containingFile != null) {
-      PsiElement context;
-      while ((context = containingFile.getContext()) != null) {
-        final PsiFile file = context.getContainingFile();
-        if (file == null) break;
-        containingFile = file;
-      }
-
-      if (containingFile.getUserData(KEY_MODULE) != null) {
-        return containingFile.getUserData(KEY_MODULE);
-      }
-
-      final PsiFile originalFile = containingFile.getOriginalFile();
-      if (originalFile.getUserData(KEY_MODULE) != null) {
-        return originalFile.getUserData(KEY_MODULE);
-      }
-
-      final VirtualFile virtualFile = originalFile.getVirtualFile();
-      if (virtualFile != null) {
-        return fileIndex.getModuleForFile(virtualFile);
-      }
-    }
-
-    return element.getUserData(KEY_MODULE);
+    return element.getModule();
   }
 
   //ignores export flag
@@ -232,11 +180,15 @@ public class ModuleUtilCore {
   @Nullable
   @RequiredReadAction
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull PsiElement element, @Nonnull Class<E> extensionClass) {
-    Module moduleForPsiElement = findModuleForPsiElement(element);
-    if (moduleForPsiElement == null) {
+    if (!element.isValid())  {
       return null;
     }
-    return getExtension(moduleForPsiElement, extensionClass);
+
+    Module module = element.getModule();
+    if (module == null) {
+      return null;
+    }
+    return module.getExtension(extensionClass);
   }
 
   @Nullable

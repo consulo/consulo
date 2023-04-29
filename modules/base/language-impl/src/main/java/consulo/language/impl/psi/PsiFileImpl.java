@@ -26,6 +26,7 @@ import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
+import consulo.language.internal.LanguageModuleUtilInternal;
 import consulo.language.psi.stub.StubTreeLoader;
 import consulo.language.psi.PsiFileEx;
 import consulo.language.parser.ParserDefinition;
@@ -41,6 +42,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
 import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -51,6 +53,7 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.ClearableLazyValue;
 import consulo.util.lang.ref.PatchedWeakReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
@@ -78,6 +81,8 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     }
   }
 
+  private final ClearableLazyValue<Module> myModuleRef;
+
   private IElementType myElementType;
   protected IElementType myContentElementType;
   private long myModificationStamp;
@@ -100,6 +105,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     myManager = (PsiManagerEx)provider.getManager();
     myViewProvider = (AbstractFileViewProvider)provider;
     myPsiLock = myViewProvider.getFilePsiLock();
+    myModuleRef = ClearableLazyValue.nullable(() -> LanguageModuleUtilInternal.findModuleForPsiElement(this));
   }
 
   public void setContentElementType(final IElementType contentElementType) {
@@ -293,6 +299,7 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   @Override
   public void clearCaches() {
     myModificationStamp++;
+    myModuleRef.clear();
   }
 
   @RequiredReadAction
@@ -957,6 +964,16 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
   @Nonnull
   public final Project getProject() {
     return getManager().getProject();
+  }
+
+  @RequiredReadAction
+  @Nullable
+  @Override
+  public Module getModule() throws PsiInvalidElementAccessException {
+    if (!isValid()) {
+      throw new PsiInvalidElementAccessException(this);
+    }
+    return myModuleRef.get();
   }
 
   @Nonnull
