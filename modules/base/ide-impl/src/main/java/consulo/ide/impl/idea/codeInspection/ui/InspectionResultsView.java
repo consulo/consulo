@@ -471,7 +471,7 @@ public class InspectionResultsView extends JPanel implements Disposable, Occuren
 
   @Nonnull
   public InspectionNode addTool(@Nonnull final InspectionToolWrapper toolWrapper, HighlightDisplayLevel errorLevel, boolean groupedBySeverity) {
-    String groupName = toolWrapper.getGroupDisplayName().isEmpty() ? InspectionsBundle.message("inspection.general.tools.group.name") : toolWrapper.getGroupDisplayName();
+    String groupName = toolWrapper.getJoinedGroupPath();
     InspectionTreeNode parentNode = getToolParentNode(groupName, errorLevel, groupedBySeverity);
     InspectionNode toolNode = new InspectionNode(toolWrapper);
     boolean showStructure = myGlobalInspectionContext.getUIOptions().SHOW_STRUCTURE;

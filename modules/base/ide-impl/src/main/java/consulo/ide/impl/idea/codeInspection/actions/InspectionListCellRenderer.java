@@ -72,7 +72,7 @@ public class InspectionListCellRenderer extends DefaultListCellRenderer implemen
       panel.add(c, BorderLayout.WEST);
 
       final SimpleColoredComponent group = new SimpleColoredComponent();
-      SpeedSearchUtil.appendColoredFragmentForMatcher(toolWrapper.getGroupDisplayName() + "  ", group, attr, myMatcher, bg, sel);
+      SpeedSearchUtil.appendColoredFragmentForMatcher(toolWrapper.getJoinedGroupPath() + "  ", group, attr, myMatcher, bg, sel);
       final JPanel right = new JPanel(new BorderLayout());
       right.setBackground(bg);
       right.setForeground(fg);

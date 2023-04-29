@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.internal;
 
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.InspectionProfile;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.logging.Logger;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.util.io.ResourceUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -121,8 +120,7 @@ public class DumpInspectionDescriptionsAction extends AnAction implements DumbAw
   }
 
   private static String getGroupName(final InspectionToolWrapper toolWrapper) {
-    final String name = toolWrapper.getGroupDisplayName();
-    return StringUtil.isEmptyOrSpaces(name) ? "General" : name;
+    return toolWrapper.getJoinedGroupPath();
   }
 
   private static URL getDescriptionUrl(final InspectionToolWrapper toolWrapper) {

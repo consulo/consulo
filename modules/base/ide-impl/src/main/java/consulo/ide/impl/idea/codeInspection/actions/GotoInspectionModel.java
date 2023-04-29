@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.gotoByName.SimpleChooseByNameModel;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
+import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
           }
         }
         myToolNames.put(tool.getDisplayName(), workingTool);
-        final String groupName = tool.getGroupDisplayName();
+        final String groupName = tool.getJoinedGroupPath();
         Set<InspectionToolWrapper> toolsInGroup = myGroupNames.get(groupName);
         if (toolsInGroup == null) {
           toolsInGroup = new HashSet<>();
@@ -110,7 +110,7 @@ public class GotoInspectionModel extends SimpleChooseByNameModel {
   public String getElementName(final Object element) {
     if (element instanceof InspectionToolWrapper) {
       InspectionToolWrapper entry = (InspectionToolWrapper)element;
-      return entry.getDisplayName() + " " + entry.getGroupDisplayName();
+      return entry.getDisplayName() + " " + entry.getJoinedGroupPath();
     }
     return null;
   }

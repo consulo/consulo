@@ -15,12 +15,10 @@
  */
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.language.Language;
-import consulo.language.editor.inspection.CleanupLocalInspectionTool;
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.InspectionTool;
-import consulo.language.editor.inspection.InspectionToolState;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.logging.Logger;
@@ -145,6 +143,8 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use #getJoinedGroupPath()")
   public String getGroupDisplayName() {
     return getTool().getGroupDisplayName();
   }
@@ -161,6 +161,15 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
   @Nonnull
   public String[] getGroupPath() {
     return getTool().getGroupPath();
+  }
+
+  @Nonnull
+  public String getJoinedGroupPath() {
+    String[] groupPath = getGroupPath();
+    if (groupPath.length == 0) {
+      return InspectionsBundle.message("inspection.general.tools.group.name");
+    }
+    return String.join("/", groupPath);
   }
 
   public String getStaticDescription() {
