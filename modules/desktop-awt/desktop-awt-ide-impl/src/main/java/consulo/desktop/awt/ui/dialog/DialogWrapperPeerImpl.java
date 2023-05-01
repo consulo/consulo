@@ -86,8 +86,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   private static final Logger LOG = Logger.getInstance(DialogWrapperPeerImpl.class);
 
   private final DialogWrapper myWrapper;
-  private AbstractDialog myDialog;
-  private boolean myCanBeParent = true;
+  private final AbstractDialog myDialog;
+  private final boolean myCanBeParent;
   private DesktopWindowManagerImpl myWindowManager;
   private final List<Runnable> myDisposeActions = new ArrayList<>();
   private Project myProject;
@@ -98,6 +98,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                                   @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myWindowManager = null;
+    myCanBeParent = canBeParent;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
       myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
@@ -144,7 +145,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       }
     }
 
-    createDialog(owner, canBeParent, ideModalityType);
+    myDialog = createDialog(owner, ideModalityType);
   }
 
   /**
@@ -185,6 +186,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
    */
   protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, final boolean canBeParent) {
     myWrapper = wrapper;
+    myCanBeParent = canBeParent;
 
     myWindowManager = null;
     Application application = ApplicationManager.getApplication();
@@ -192,9 +194,8 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     }
 
-    OwnerOptional.fromComponent(parent).ifWindow(window -> {
-      createDialog(window, canBeParent);
-    });
+    OwnerOptional ownerOptional = OwnerOptional.fromComponent(parent);
+    myDialog = createDialog(ownerOptional.get(), DialogWrapper.IdeModalityType.IDE);
   }
 
   public DialogWrapperPeerImpl(@Nonnull final DialogWrapper wrapper,
@@ -203,24 +204,13 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                                final DialogWrapper.IdeModalityType ideModalityType) {
     myWrapper = wrapper;
     myWindowManager = null;
+    myCanBeParent = canBeParent;
     Application application = ApplicationManager.getApplication();
     if (application != null) {
       myWindowManager = (DesktopWindowManagerImpl)WindowManager.getInstance();
     }
-    createDialog(owner, canBeParent);
 
-    if (!isHeadless()) {
-      Dialog.ModalityType modalityType = ideModalityType.toAwtModality();
-      if (ideModalityType != DialogWrapper.IdeModalityType.MODELESS) {
-        modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
-        if (ModalityPerProjectEAPDescriptor.is()) {
-          modalityType = ideModalityType.toAwtModality();
-        }
-        myDialog.setModalityType(modalityType);
-      }
-
-      myDialog.setModalityType(modalityType);
-    }
+    myDialog = createDialog(owner, ideModalityType);
   }
 
   /**
@@ -262,23 +252,36 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     myDialog.addKeyListener(listener);
   }
 
-  private void createDialog(@Nullable Window owner, boolean canBeParent, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
+  @Nonnull
+  private AbstractDialog createDialog(@Nullable Window owner, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
     if (isHeadless()) {
-      myDialog = new HeadlessDialog(myWrapper);
+      return new HeadlessDialog(myWrapper);
     }
     else {
       ActionCallback focused = new ActionCallback("DialogFocusedCallback");
 
-      myDialog = new MyDialog(owner, myWrapper, myProject, focused);
+      MyDialog dialog = new MyDialog(owner, myWrapper, myProject, focused);
 
-      myDialog.setModalityType(ideModalityType.toAwtModality());
+      Dialog.ModalityType modalityType = ideModalityType.toAwtModality();
+      if (!isHeadless()) {
+        if (ideModalityType != DialogWrapper.IdeModalityType.MODELESS) {
+          modalityType = DialogWrapper.IdeModalityType.IDE.toAwtModality();
+          if (ModalityPerProjectEAPDescriptor.is()) {
+            modalityType = ideModalityType.toAwtModality();
+          }
+        }
+      }
 
-      myCanBeParent = canBeParent;
+      dialog.setModalityType(modalityType);
+
+      return dialog;
     }
   }
 
-  private void createDialog(@Nullable Window owner, boolean canBeParent) {
-    createDialog(owner, canBeParent, DialogWrapper.IdeModalityType.IDE);
+  @Nonnull
+  @Deprecated
+  private AbstractDialog createDialog(@Nullable Window owner) {
+    return createDialog(owner, DialogWrapper.IdeModalityType.IDE);
   }
 
   @Override
