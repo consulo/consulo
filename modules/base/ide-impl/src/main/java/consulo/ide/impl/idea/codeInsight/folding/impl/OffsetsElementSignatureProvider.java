@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.editor.folding.AbstractElementSignatureProvider;
 import consulo.language.file.FileViewProvider;
@@ -108,19 +109,20 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
   }
 
   @Nullable
+  @RequiredReadAction
   private PsiElement findElement(int start, int end, int index, @Nonnull PsiElement element, @Nullable StringBuilder processingInfoStorage) {
     TextRange range = element.getTextRange();
     if (processingInfoStorage != null) {
       processingInfoStorage.append(String.format("Starting processing from element '%s'. It's range is %s%n", element, range));
     }
-    while (range != null && range.getStartOffset() == start && range.getEndOffset() < end) {
+    while (range != TextRange.EMPTY_RANGE && range.getStartOffset() == start && range.getEndOffset() < end) {
       element = element.getParent();
-      range = element.getTextRange();
+      range = element == null ? TextRange.EMPTY_RANGE : element.getTextRange();
       if (processingInfoStorage != null) {
         processingInfoStorage.append(String.format("Expanding element to '%s' and range to '%s'%n", element, range));
       }
     }
-    if (range == null || range.getStartOffset() != start || range.getEndOffset() != end) {
+    if (range == TextRange.EMPTY_RANGE || range.getStartOffset() != start || range.getEndOffset() != end) {
       if (processingInfoStorage != null) {
         processingInfoStorage.append(String.format(
           "Stopping %s because target element's range differs from the target one. Element: '%s', it's range: %s%n",
