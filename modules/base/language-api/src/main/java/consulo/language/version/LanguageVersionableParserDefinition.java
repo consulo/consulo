@@ -30,45 +30,51 @@ public abstract class LanguageVersionableParserDefinition implements ParserDefin
   @Nonnull
   @Override
   public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
-    if(languageVersion instanceof LanguageVersionWithParsing) {
+    if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createLexer();
     }
-    throw new IllegalArgumentException("'createLexer' need override for language version '" + languageVersion + "'");
+    throw throwError("createLexer", languageVersion);
   }
 
   @Nonnull
   @Override
   public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
-    if(languageVersion instanceof LanguageVersionWithParsing) {
+    if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).createParser();
     }
-    throw new IllegalArgumentException("'createParser' need override for language version '" + languageVersion + "'");
+    throw throwError("createParser", languageVersion);
   }
 
   @Nonnull
   @Override
   public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
-    if(languageVersion instanceof LanguageVersionWithParsing) {
+    if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getWhitespaceTokens();
     }
-    throw new IllegalArgumentException("'getWhitespaceTokens' need override for language version '" + languageVersion + "'");
+    throw throwError("getWhitespaceTokens", languageVersion);
   }
 
   @Nonnull
   @Override
   public TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion) {
-    if(languageVersion instanceof LanguageVersionWithParsing) {
+    if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getCommentTokens();
     }
-    throw new IllegalArgumentException("'getCommentTokens' need override for language version '" + languageVersion + "'");
+    throw throwError("getCommentTokens", languageVersion);
   }
 
   @Nonnull
   @Override
   public TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion) {
-    if(languageVersion instanceof LanguageVersionWithParsing) {
+    if (languageVersion instanceof LanguageVersionWithParsing) {
       return ((LanguageVersionWithParsing)languageVersion).getStringLiteralElements();
     }
-    throw new IllegalArgumentException("'getStringLiteralElements' need override for language version '" + languageVersion + "'");
+    throw throwError("getStringLiteralElements", languageVersion);
+  }
+
+  private IllegalArgumentException throwError(String method, LanguageVersion languageVersion) {
+    return new IllegalArgumentException("%s.%s need override for language version '%s'".formatted(getClass().getName(),
+                                                                                                  method,
+                                                                                                  languageVersion.toString()));
   }
 }
