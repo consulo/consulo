@@ -101,7 +101,7 @@ public interface Application extends ComponentManager {
    *
    * @param action the action to run.
    */
-  void runReadAction(@Nonnull Runnable action);
+  void runReadAction(@RequiredReadAction @Nonnull Runnable action);
 
   /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -111,14 +111,14 @@ public interface Application extends ComponentManager {
    * @param computation the computation to perform.
    * @return the result returned by the computation.
    */
-  <T> T runReadAction(@Nonnull Supplier<T> computation);
+  <T> T runReadAction(@RequiredReadAction @Nonnull Supplier<T> computation);
 
   /**
    * Grab the lock and run the action, in a non-blocking fashion
    *
    * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
    */
-  boolean tryRunReadAction(@Nonnull Runnable action);
+  boolean tryRunReadAction(@RequiredReadAction @Nonnull Runnable action);
 
   /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -129,7 +129,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E;
+  <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
   /**
    * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -138,7 +138,7 @@ public interface Application extends ComponentManager {
    * @param action the action to run
    */
   @RequiredUIAccess
-  void runWriteAction(@Nonnull Runnable action);
+  void runWriteAction(@RequiredWriteAction @Nonnull Runnable action);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -149,7 +149,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    */
   @RequiredUIAccess
-  <T> T runWriteAction(@Nonnull Supplier<T> computation);
+  <T> T runWriteAction(@RequiredWriteAction @Nonnull Supplier<T> computation);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -161,7 +161,7 @@ public interface Application extends ComponentManager {
    * @throws E re-frown from ThrowableComputable
    */
   @RequiredUIAccess
-  <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E;
+  <T, E extends Throwable> T runWriteAction(@RequiredWriteAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
   /**
    * Returns {@code true} if there is currently executing write action of the specified class.
