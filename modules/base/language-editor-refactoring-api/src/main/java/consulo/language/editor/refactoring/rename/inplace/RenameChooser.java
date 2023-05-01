@@ -69,7 +69,7 @@ abstract class RenameChooser {
               dropHighlighters();
               final MarkupModel markupModel = myEditor.getMarkupModel();
 
-              if (selectedValue.equals(ALL_OCCURRENCES)) {
+              if (ALL_OCCURRENCES.equals(selectedValue)) {
                 for (Pair<PsiElement, TextRange> pair : stringUsages) {
                   final TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
                   final RangeHighlighter rangeHighlighter =
