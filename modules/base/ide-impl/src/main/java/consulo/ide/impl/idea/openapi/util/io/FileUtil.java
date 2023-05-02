@@ -222,12 +222,6 @@ public class FileUtil extends FileUtilRt {
   }
 
   @Nonnull
-  @Deprecated
-  public static byte[] loadFileBytes(@Nonnull File file) throws IOException {
-    throw new UnsupportedOperationException("Use RawFileLoader.getInstance().loadFileBytes(File)");
-  }
-
-  @Nonnull
   public static byte[] loadFirst(@Nonnull InputStream stream, int maxLength) throws IOException {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     copy(stream, maxLength, buffer);
