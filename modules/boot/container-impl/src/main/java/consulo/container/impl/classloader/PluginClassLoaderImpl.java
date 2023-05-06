@@ -23,7 +23,7 @@ import java.util.function.Function;
 /**
  * @author Eugene Zhuravlev
  */
-class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader, ProxyHolderClassLoader {
+public class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader, ProxyHolderClassLoader {
   static {
     if (registerAsParallelCapable()) markParallelCapable(PluginClassLoaderImpl.class);
   }
