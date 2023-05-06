@@ -188,43 +188,48 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     int profiles = getProfiles();
 
     for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
-      InjectingBinding injectingBinding = InjectingBindingHolder.findValid(listOfBindings, profiles);
-      if (injectingBinding == null) {
-        LOG.error("There no valid binding " + listOfBindings);
-        continue;
+      try {
+        InjectingBinding injectingBinding = InjectingBindingHolder.findValid(listOfBindings, profiles);
+        if (injectingBinding == null) {
+          LOG.error("There no valid binding " + listOfBindings);
+          continue;
+        }
+
+        InjectingKey<Object> key = InjectingKey.of(injectingBinding.getApiClass());
+        InjectingKey<Object> implKey = InjectingKey.of(injectingBinding.getImplClass());
+
+        InjectingPoint<Object> point = builder.bind(key);
+        // bind to impl class
+        point.to(implKey);
+        // require singleton
+        point.forceSingleton();
+        // remap object initialization
+        point.factory(objectProvider -> runServiceInitialize(injectingBinding, objectProvider::get));
+
+        point.constructorParameterTypes(injectingBinding.getParameterTypes());
+        point.constructorFactory(injectingBinding::create);
+
+        point.injectListener((time, instance) -> {
+
+          if (myChecker.containsKey(key.getTargetClass())) {
+            throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
+          }
+          myChecker.put(key.getTargetClass(), instance);
+
+          if (instance instanceof Disposable) {
+            Disposer.register(this, (Disposable)instance);
+          }
+
+          initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
+        });
+
+        if (!injectingBinding.isLazy()) {
+          // if service is not lazy - add it for init at start
+          notLazyServices.add(key.getTargetClass());
+        }
       }
-
-      InjectingKey<Object> key = InjectingKey.of(injectingBinding.getApiClass());
-      InjectingKey<Object> implKey = InjectingKey.of(injectingBinding.getImplClass());
-
-      InjectingPoint<Object> point = builder.bind(key);
-      // bind to impl class
-      point.to(implKey);
-      // require singleton
-      point.forceSingleton();
-      // remap object initialization
-      point.factory(objectProvider -> runServiceInitialize(injectingBinding, objectProvider::get));
-
-      point.constructorParameterTypes(injectingBinding.getParameterTypes());
-      point.constructorFactory(injectingBinding::create);
-
-      point.injectListener((time, instance) -> {
-
-        if (myChecker.containsKey(key.getTargetClass())) {
-          throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
-        }
-        myChecker.put(key.getTargetClass(), instance);
-
-        if (instance instanceof Disposable) {
-          Disposer.register(this, (Disposable)instance);
-        }
-
-        initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
-      });
-
-      if (!injectingBinding.isLazy()) {
-        // if service is not lazy - add it for init at start
-        notLazyServices.add(key.getTargetClass());
+      catch (Throwable e) {
+        LOG.error(e);
       }
     }
   }
