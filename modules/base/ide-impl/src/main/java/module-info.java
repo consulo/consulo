@@ -655,7 +655,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.checkout;
   exports consulo.ide.impl.idea.openapi.vcs.configurable;
   exports consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
-  exports consulo.ide.impl.idea.openapi.vcs.diff;
   exports consulo.ide.impl.idea.openapi.vcs.ex;
   exports consulo.ide.impl.idea.openapi.vcs.history;
   exports consulo.ide.impl.idea.openapi.vcs.history.impl;

@@ -18,8 +18,10 @@ package consulo.versionControlSystem.diff;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nullable;
 
 public interface DiffProvider extends VcsProviderMarker {
@@ -38,4 +40,9 @@ public interface DiffProvider extends VcsProviderMarker {
 
   @Nullable
   VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
+
+  @Nullable
+  default VcsRevisionDescription getCurrentRevisionDescription(final VirtualFile file) {
+    return null;
+  }
 }

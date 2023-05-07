@@ -16,22 +16,23 @@
 package consulo.ide.impl.idea.openapi.vcs.contentAnnotation;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.ide.ServiceManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.diff.DiffMixin;
+import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.ThreeState;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 
 /**
@@ -58,18 +59,21 @@ public class VcsContentAnnotationImpl implements VcsContentAnnotation {
     myContentAnnotationCache = contentAnnotationCache;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public VcsRevisionNumber fileRecentlyChanged(VirtualFile vf) {
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     final AbstractVcs vcs = vcsManager.getVcsFor(vf);
     if (vcs == null) return null;
-    if (vcs.getDiffProvider() instanceof DiffMixin) {
-      final VcsRevisionDescription description = ((DiffMixin)vcs.getDiffProvider()).getCurrentRevisionDescription(vf);
-      final Date date = description.getRevisionDate();
-      return isRecent(date) ? description.getRevisionNumber() : null;
+
+    DiffProvider diffProvider = vcs.getDiffProvider();
+    if (diffProvider == null) {
+      return null;
     }
-    return null;
+
+    final VcsRevisionDescription description = diffProvider.getCurrentRevisionDescription(vf);
+    final Date date = description.getRevisionDate();
+    return isRecent(date) ? description.getRevisionNumber() : null;
   }
 
   private boolean isRecent(Date date) {

@@ -15,27 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.project.Project;
-import consulo.ui.ex.action.Presentation;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.DateFormatUtil;
+import consulo.codeEditor.EditorColors;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import consulo.ide.impl.idea.openapi.vcs.diff.DiffMixin;
-import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.diff.DiffProvider;
+import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -75,7 +74,12 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
 
     @Override
     public void run(@Nonnull ProgressIndicator indicator) {
-      myDescription = ObjectUtil.assertNotNull((DiffMixin)vcs.getDiffProvider()).getCurrentRevisionDescription(selectedFile);
+      DiffProvider diffProvider = vcs.getDiffProvider();
+      if (diffProvider == null) {
+        return;
+      }
+
+      myDescription = diffProvider.getCurrentRevisionDescription(selectedFile);
     }
 
     @RequiredUIAccess

@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.diff.DiffProviderEx;
+import consulo.versionControlSystem.diff.DiffProviderEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

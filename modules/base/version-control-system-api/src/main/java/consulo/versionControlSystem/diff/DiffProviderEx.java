@@ -1,10 +1,9 @@
-package consulo.ide.impl.idea.openapi.vcs.diff;
+package consulo.versionControlSystem.diff;
 
-import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +15,7 @@ public abstract class DiffProviderEx implements DiffProvider {
   }
 
   public static Map<VirtualFile, VcsRevisionNumber> getCurrentRevisions(Iterable<VirtualFile> file, DiffProvider provider) {
-    Map<VirtualFile, VcsRevisionNumber> result = ContainerUtil.newHashMap();
+    Map<VirtualFile, VcsRevisionNumber> result = new HashMap<>();
     for (VirtualFile virtualFile : file) {
       result.put(virtualFile, provider.getCurrentRevision(virtualFile));
     }
