@@ -182,7 +182,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   @SuppressWarnings("unchecked")
-  private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
+  protected void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ServiceAPI.class, getComponentScope());
 
     int profiles = getProfiles();
