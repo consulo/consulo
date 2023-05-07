@@ -37,6 +37,7 @@ import consulo.compiler.scope.FileIndexCompileScope;
 import consulo.compiler.scope.FileSetCompileScope;
 import consulo.compiler.util.CompilerUtil;
 import consulo.component.ProcessCanceledException;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
@@ -53,6 +54,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.internal.ProjectRootManagerEx;
@@ -75,6 +77,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -105,9 +108,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
 
   private final Map<ContentFolderTypeProvider, Map<Module, String>> myOutputs = new HashMap<>(4);
 
-  @NonNls
   private static final String VERSION_FILE_NAME = "version.dat";
-  @NonNls
   private static final String LOCK_FILE_NAME = "in_progress.dat";
 
   private static final boolean GENERATE_CLASSPATH_INDEX = "true".equals(System.getProperty("generate.classpath.index"));
@@ -143,14 +144,12 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
         myGenerationCompilerModuleToOutputDirMap.put(pair, outputs);
       }
 
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-        final String[] outputDirectories = provider.getOutputDirectories(project, module);
-        if (outputDirectories.length > 0) {
-          for (String path : outputDirectories) {
-            lookupVFile(lfs, path);
-          }
+      var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+      point.forEachExtensionSafe(provider -> {
+        for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
+          lookupVFile(lfs, directory.path());
         }
-      }
+      });
     }
   }
 
@@ -344,15 +343,17 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
   private CompileScope addAdditionalRoots(CompileScope originalScope, final Predicate<Compiler> filter) {
     CompileScope scope = attachIntermediateOutputDirectories(originalScope, filter);
 
-    final List<AdditionalCompileScopeProvider> scopeProviders = AdditionalCompileScopeProvider.EXTENSION_POINT_NAME.getExtensionList();
-    CompileScope baseScope = scope;
-    for (AdditionalCompileScopeProvider scopeProvider : scopeProviders) {
+    final CompileScope baseScope = scope;
+
+    SimpleReference<CompileScope> scopeRef = SimpleReference.create(scope);
+
+    myProject.getApplication().getExtensionPoint(AdditionalCompileScopeProvider.class).forEachExtensionSafe(scopeProvider -> {
       final CompileScope additionalScope = scopeProvider.getAdditionalScope(baseScope, filter, myProject);
       if (additionalScope != null) {
-        scope = new CompositeScope(scope, additionalScope);
+        scopeRef.set(new CompositeScope(scopeRef.get(), additionalScope));
       }
-    }
-    return scope;
+    });
+    return scopeRef.get();
   }
 
   @Override
@@ -384,20 +385,25 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     final LocalFileSystem lfs = LocalFileSystem.getInstance();
     final Set<Module> affected = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
     for (Module module : affected) {
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-        for (String path : provider.getOutputDirectories(myProject, module)) {
-          final VirtualFile vFile = lfs.findFileByPath(path);
+      ModuleFileIndex fileIndex = ModuleRootManager.getInstance(module).getFileIndex();
+
+      var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+
+      point.forEachExtensionSafe(provider -> {
+        for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
+          final VirtualFile vFile = lfs.findFileByPath(directory.path());
           if (vFile == null) {
             continue;
           }
-          if (ModuleRootManager.getInstance(module).getFileIndex().isInSourceContent(vFile)) {
+          if (fileIndex.isInSourceContent(vFile)) {
             // no need to add, is already marked as source
             continue;
           }
-          context.addScope(new FileSetCompileScope(Collections.singletonList(vFile), new Module[]{module}));
+
+          context.addScope(new FileSetCompileScope(Collections.singletonList(vFile), new Module[]{module}, directory.testScope()));
           context.assignModule(vFile, module, false, null);
         }
-      }
+      });
     }
   }
 
@@ -562,12 +568,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
       }
 
       final Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
-      for (AdditionalOutputDirectoriesProvider additionalOutputDirectoriesProvider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-        for (Module module : affectedModules) {
-          for (String path : additionalOutputDirectoriesProvider.getOutputDirectories(myProject, module)) {
-            genSourceRoots.add(new File(path));
+      for (Module affectedModule : affectedModules) {
+        ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
+          affectedModule.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+
+        point.forEachExtensionSafe(provider -> {
+          for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
+            genSourceRoots.add(new File(directory.path()));
           }
-        }
+        });
       }
 
       if (!genSourceRoots.isEmpty()) {
@@ -990,13 +999,17 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
       outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
     }
 
-    for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-      for (Module module : modules) {
-        for (String path : provider.getOutputDirectories(myProject, module)) {
-          outputDirs.add(new File(path));
+    for (Module module : modules) {
+      ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
+        module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+
+      point.forEachExtensionSafe(provider -> {
+        for (ModuleAdditionalOutputDirectory outputDirectory : provider.getOutputDirectories()) {
+          outputDirs.add(new File(outputDirectory.path()));
         }
-      }
+      });
     }
+
     for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
       final String path = ((ArtifactImpl)artifact).getOutputDirectoryPathToCleanOnRebuild();
       if (path != null) {
@@ -1168,25 +1181,15 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
           }
         }
 
-        for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-          for (String path : provider.getOutputDirectories(myProject, module)) {
-            if (path == null) {
-              final CompilerConfiguration extension = CompilerConfiguration.getInstance(module.getProject());
-              if (extension.getCompilerOutputUrl() == null) {
-                isProjectCompilePathSpecified = false;
-              }
-              else {
-                modulesWithoutOutputPathSpecified.add(module.getName());
-              }
-            }
-            else {
-              final File file = new File(path);
-              if (!file.exists()) {
-                nonExistingOutputPaths.add(file);
-              }
+        var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
+        point.forEachExtensionSafe(provider -> {
+          for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
+            final File file = new File(directory.path());
+            if (!file.exists()) {
+              nonExistingOutputPaths.add(file);
             }
           }
-        }
+        });
       }
 
       if (!isProjectCompilePathSpecified) {

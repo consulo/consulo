@@ -15,7 +15,7 @@
  */
 package consulo.compiler.scope;
 
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.compiler.util.ExportableUserDataHolderBase;
 import consulo.module.Module;
 import consulo.util.io.FileUtil;
@@ -36,18 +36,26 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
   private final Set<String> myDirectoryUrls = new HashSet<>();
   private Set<String> myUrls = null; // urls caching
   private final Module[] myAffectedModules;
+  private final boolean myIncludeTestScope;
 
   public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules) {
+    this(files, modules, true);
+  }
+
+  public FileSetCompileScope(final Collection<VirtualFile> files, Module[] modules, boolean includeTestScope) {
     myAffectedModules = modules;
-    ApplicationManager.getApplication().runReadAction(new Runnable() {
-      @Override
-      public void run() {
-        for (VirtualFile file : files) {
-          assert file != null;
-          addFile(file);
-        }
+    myIncludeTestScope = includeTestScope;
+    ReadAction.run(() -> {
+      for (VirtualFile file : files) {
+        assert file != null;
+        addFile(file);
       }
     });
+  }
+
+  @Override
+  public boolean includeTestScope() {
+    return myIncludeTestScope;
   }
 
   @Override

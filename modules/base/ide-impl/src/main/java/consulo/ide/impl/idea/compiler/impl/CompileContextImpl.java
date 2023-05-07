@@ -64,8 +64,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
   private final Project myProject;
   private final CompilerTask myTask;
-  private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages =
-    new EnumMap<CompilerMessageCategory, Collection<CompilerMessage>>(CompilerMessageCategory.class);
+  private final Map<CompilerMessageCategory, Collection<CompilerMessage>> myMessages = new EnumMap<>(CompilerMessageCategory.class);
   private CompileScope myCompileScope;
   private final CompositeDependencyCache myDependencyCache;
   private final boolean myMake;
@@ -73,11 +72,10 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
   private boolean myRebuildRequested = false;
   private String myRebuildReason;
-  private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<VirtualFile, Module>();
-  private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<Module, Set<VirtualFile>>();
-  private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap =
-    new HashMap<VirtualFile, Pair<SourceGeneratingCompiler, Module>>();
-  private final Set<VirtualFile> myGeneratedTestRoots = new java.util.HashSet<VirtualFile>();
+  private final Map<VirtualFile, Module> myRootToModuleMap = new HashMap<>();
+  private final Map<Module, Set<VirtualFile>> myModuleToRootsMap = new HashMap<>();
+  private final Map<VirtualFile, Pair<SourceGeneratingCompiler, Module>> myOutputRootToSourceGeneratorMap = new HashMap<>();
+  private final Set<VirtualFile> myGeneratedTestRoots = new HashSet<>();
   private VirtualFile[] myOutputDirectories;
   private Set<VirtualFile> myTestOutputDirectories;
   private final IntSet myGeneratedSources = IntSets.newHashSet();
@@ -107,9 +105,9 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   public void recalculateOutputDirs() {
     final Module[] allModules = ModuleManager.getInstance(myProject).getModules();
 
-    final Set<VirtualFile> allDirs = new OrderedSet<VirtualFile>();
-    final Set<VirtualFile> testOutputDirs = new java.util.HashSet<VirtualFile>();
-    final Set<VirtualFile> productionOutputDirs = new java.util.HashSet<VirtualFile>();
+    final Set<VirtualFile> allDirs = new OrderedSet<>();
+    final Set<VirtualFile> testOutputDirs = new HashSet<>();
+    final Set<VirtualFile> productionOutputDirs = new HashSet<>();
 
     for (Module module : allModules) {
       ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
@@ -153,17 +151,18 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     if (isUnderRoots(myRootToModuleMap.keySet(), file)) {
       return true;
     }
+
     final Module module = getModuleByFile(file);
-    if (module != null) {
-      for (AdditionalOutputDirectoriesProvider provider : AdditionalOutputDirectoriesProvider.EP_NAME.getExtensionList()) {
-        for (String path : provider.getOutputDirectories(getProject(), module)) {
-          if (path != null && VfsUtilCore.isAncestor(new File(path), new File(file.getPath()), true)) {
-            return true;
-          }
+    return module != null && module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class).computeSafeIfAny(provider -> {
+      List<ModuleAdditionalOutputDirectory> outputDirectories = provider.getOutputDirectories();
+      for (ModuleAdditionalOutputDirectory outputDirectory : outputDirectories) {
+        String path = outputDirectory.path();
+        if (path != null && VfsUtilCore.isAncestor(new File(path), new File(file.getPath()), true)) {
+          return provider;
         }
       }
-    }
-    return false;
+      return null;
+    }) != null;
   }
 
   /*
@@ -375,7 +374,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
       myRootToModuleMap.put(root, module);
       Set<VirtualFile> set = myModuleToRootsMap.get(module);
       if (set == null) {
-        set = new HashSet<VirtualFile>();
+        set = new HashSet<>();
         myModuleToRootsMap.put(module, set);
       }
       set.add(root);
@@ -383,7 +382,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         myGeneratedTestRoots.add(root);
       }
       if (compiler instanceof SourceGeneratingCompiler) {
-        myOutputRootToSourceGeneratorMap.put(root, new Pair<SourceGeneratingCompiler, Module>((SourceGeneratingCompiler)compiler, module));
+        myOutputRootToSourceGeneratorMap.put(root, new Pair<>((SourceGeneratingCompiler)compiler, module));
       }
     }
     finally {
@@ -417,7 +416,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
   }
 
 
-  private final Map<Module, VirtualFile[]> myModuleToRootsCache = new HashMap<Module, VirtualFile[]>();
+  private final Map<Module, VirtualFile[]> myModuleToRootsCache = new HashMap<>();
 
   @Override
   public VirtualFile[] getSourceRoots(Module module) {

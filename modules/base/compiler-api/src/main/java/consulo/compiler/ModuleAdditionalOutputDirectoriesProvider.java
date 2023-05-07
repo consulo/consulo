@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.idea.compiler.impl;
+package consulo.compiler;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.compiler.Compiler;
-import consulo.compiler.scope.CompileScope;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.Predicate;
+import java.util.List;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 07/05/2023
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class AdditionalCompileScopeProvider {
-  @Nullable
-  public abstract CompileScope getAdditionalScope(@Nonnull CompileScope baseScope, @Nonnull Predicate<Compiler> filter, @Nonnull Project project);
+@ExtensionAPI(ComponentScope.MODULE)
+public interface ModuleAdditionalOutputDirectoriesProvider {
+  @Nonnull
+  List<ModuleAdditionalOutputDirectory> getOutputDirectories();
 }

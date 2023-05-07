@@ -15,27 +15,26 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
+import consulo.application.AccessRule;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerMessageCategory;
-import consulo.project.Project;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.element.FileOrDirectoryCopyPackagingElement;
+import consulo.compiler.artifact.element.PackagingElement;
+import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.Maps;
+import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactManager;
-import consulo.compiler.artifact.element.PackagingElement;
-import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import consulo.compiler.artifact.ArtifactUtil;
-import consulo.compiler.artifact.element.FileOrDirectoryCopyPackagingElement;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.application.AccessRule;
-import consulo.logging.Logger;
-import consulo.util.collection.Maps;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedInputStream;
@@ -43,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -94,17 +94,14 @@ public class ArtifactCompilerUtil {
     final Set<VirtualFile> roots = new HashSet<VirtualFile>();
     final PackagingElementResolvingContext context = ArtifactManager.getInstance(project).getResolvingContext();
     for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
-      Processor<PackagingElement<?>> processor = new Processor<PackagingElement<?>>() {
-        @Override
-        public boolean process(@Nonnull PackagingElement<?> element) {
-          if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
-            final VirtualFile file = ((FileOrDirectoryCopyPackagingElement)element).findFile();
-            if (file != null) {
-              roots.add(file);
-            }
+      Predicate<PackagingElement<?>> processor = element -> {
+        if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
+          final VirtualFile file = ((FileOrDirectoryCopyPackagingElement)element).findFile();
+          if (file != null) {
+            roots.add(file);
           }
-          return true;
         }
+        return true;
       };
       ArtifactUtil.processRecursivelySkippingIncludedArtifacts(artifact, processor, context);
     }
