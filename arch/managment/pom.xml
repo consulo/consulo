@@ -56,8 +56,10 @@
     <maven.surefire.plugin>3.0.0-M6</maven.surefire.plugin>
     <maven.source.plugin>3.2.0</maven.source.plugin>
 
-
     <java.level>17</java.level>
+
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
   </properties>
 
   <dependencyManagement>
@@ -629,25 +631,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.9.1</version>
-        <executions>
-          <execution>
-            <id>timestamp-property</id>
-            <goals>
-              <goal>timestamp-property</goal>
-            </goals>
-            <configuration>
-              <name>build.date</name>
-              <pattern>yyyyMMddHHmm</pattern>
-              <locale>en_US</locale>
-              <timeZone>UTC</timeZone>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven.surefire.plugin}</version>
@@ -699,7 +682,7 @@
             <index>true</index>
             <manifestEntries>
               <Consulo-Build-Number>${build.number}</Consulo-Build-Number>
-              <Consulo-Build-Date>${build.date}</Consulo-Build-Date>
+              <Consulo-Build-Date>${timestamp}</Consulo-Build-Date>
             </manifestEntries>
           </archive>
         </configuration>
