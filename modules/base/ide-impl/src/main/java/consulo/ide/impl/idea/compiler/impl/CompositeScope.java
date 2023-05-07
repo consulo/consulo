@@ -23,18 +23,18 @@ package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.util.ExportableUserDataHolderBase;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.module.Module;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
 public class CompositeScope extends ExportableUserDataHolderBase implements CompileScope{
-  private final List<CompileScope> myScopes = new ArrayList<CompileScope>();
+  private final List<CompileScope> myScopes = new ArrayList<>();
 
   public CompositeScope(CompileScope scope1, CompileScope scope2) {
     addScope(scope1);
@@ -70,11 +70,12 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     }
   }
 
+  @Override
   @Nonnull
-  public VirtualFile[] getFiles(FileType fileType, boolean inSourceOnly) {
-    Set<VirtualFile> allFiles = new HashSet<VirtualFile>();
+  public VirtualFile[] getFiles(FileType fileType) {
+    Set<VirtualFile> allFiles = new HashSet<>();
     for (CompileScope scope : myScopes) {
-      final VirtualFile[] files = scope.getFiles(fileType, inSourceOnly);
+      final VirtualFile[] files = scope.getFiles(fileType);
       if (files.length > 0) {
         ContainerUtil.addAll(allFiles, files);
       }
@@ -82,6 +83,7 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     return VfsUtil.toVirtualFileArray(allFiles);
   }
 
+  @Override
   public boolean belongs(String url) {
     for (CompileScope scope : myScopes) {
       if (scope.belongs(url)) {
@@ -91,15 +93,17 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
     return false;
   }
 
+  @Override
   @Nonnull
   public Module[] getAffectedModules() {
-    Set<Module> modules = new HashSet<Module>();
+    Set<Module> modules = new HashSet<>();
     for (final CompileScope compileScope : myScopes) {
       ContainerUtil.addAll(modules, compileScope.getAffectedModules());
     }
     return modules.toArray(new Module[modules.size()]);
   }
 
+  @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
     for (CompileScope compileScope : myScopes) {
       T userData = compileScope.getUserData(key);
@@ -108,6 +112,16 @@ public class CompositeScope extends ExportableUserDataHolderBase implements Comp
       }
     }
     return super.getUserData(key);
+  }
+
+  @Override
+  public boolean includeTestScope() {
+    for (CompileScope scope : myScopes) {
+      if (scope.includeTestScope()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Collection<CompileScope> getScopes() {

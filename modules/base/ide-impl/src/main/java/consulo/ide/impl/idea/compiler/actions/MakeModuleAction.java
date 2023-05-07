@@ -33,12 +33,13 @@ import javax.annotation.Nonnull;
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);
 
+  @Override
   @RequiredUIAccess
   protected void doAction(DataContext dataContext, Project project) {
     Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     Module module;
     if (modules == null) {
-      module = dataContext.getData(LangDataKeys.MODULE);
+      module = dataContext.getData(Module.KEY);
       if (module == null) {
         return;
       }
@@ -52,6 +53,7 @@ public class MakeModuleAction extends CompileActionBase {
     }
   }
 
+  @Override
   @RequiredUIAccess
   public void update(@Nonnull AnActionEvent event){
     super.update(event);
@@ -60,7 +62,7 @@ public class MakeModuleAction extends CompileActionBase {
       return;
     }
     final DataContext dataContext = event.getDataContext();
-    final Module module = dataContext.getData(LangDataKeys.MODULE);
+    final Module module = dataContext.getData(Module.KEY);
     Module[] modules = dataContext.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
     final boolean isEnabled = module != null || modules != null;
     presentation.setEnabled(isEnabled);

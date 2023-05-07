@@ -29,4 +29,18 @@ public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
    */
   @Nonnull
   Module[] getModules();
+
+  /**
+   * Build project if {@link #getModules()} return empty array
+   */
+  default boolean isBuildProjectOnEmptyModuleList() {
+    return true;
+  }
+
+  /**
+   * Compile test files on run - by default true
+   */
+  default boolean includeTestScope() {
+    return true;
+  }
 }

@@ -17,8 +17,8 @@ package consulo.compiler.scope;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -28,8 +28,6 @@ import javax.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
-  ExtensionPointName<CompileModuleScopeFactory> EP_NAME = ExtensionPointName.create(CompileModuleScopeFactory.class);
-
   @Nullable
-  FileIndexCompileScope createScope(@Nonnull final Module module, final boolean includeDependentModules);
+  FileIndexCompileScope createScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope);
 }

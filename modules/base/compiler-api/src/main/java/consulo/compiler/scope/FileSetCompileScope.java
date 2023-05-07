@@ -62,7 +62,7 @@ public class FileSetCompileScope extends ExportableUserDataHolderBase implements
 
   @Override
   @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType, boolean inSourceOnly) {
+  public VirtualFile[] getFiles(final FileType fileType) {
     final List<VirtualFile> files = new ArrayList<>();
     for (Iterator<VirtualFile> it = myRootFiles.iterator(); it.hasNext(); ) {
       VirtualFile file = it.next();

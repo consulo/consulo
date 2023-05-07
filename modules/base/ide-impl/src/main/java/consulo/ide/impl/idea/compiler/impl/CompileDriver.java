@@ -44,13 +44,10 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.compiler.*;
 import consulo.ide.impl.idea.compiler.progress.CompilerTask;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactImpl;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompilerUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
@@ -68,12 +65,14 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.OrderedSet;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.*;
@@ -116,7 +115,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
   private static final Key<Boolean> REFRESH_DONE_KEY = Key.create("_compiler.initial.refresh.done_");
   private static final Key<Boolean> COMPILATION_STARTED_AUTOMATICALLY = Key.create("compilation_started_automatically");
 
-  private Condition<Compiler> myCompilerFilter = Conditions.alwaysTrue();
+  private Predicate<Compiler> myCompilerFilter = Conditions.alwaysTrue();
   private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
   private static final Predicate<Compiler> ALL_EXCEPT_SOURCE_PROCESSING = compiler -> !SOURCE_PROCESSING_ONLY.test(compiler);
 
@@ -155,7 +154,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     }
   }
 
-  public void setCompilerFilter(Condition<Compiler> compilerFilter) {
+  public void setCompilerFilter(Predicate<Compiler> compilerFilter) {
     myCompilerFilter = compilerFilter == null ? Conditions.<Compiler>alwaysTrue() : compilerFilter;
   }
 
@@ -1141,10 +1140,6 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
       final Set<File> nonExistingOutputPaths = new HashSet<>();
       final CompilerManager compilerManager = CompilerManager.getInstance(myProject);
       for (final Module module : scopeModules) {
-        if (!compilerManager.isValidationEnabled(module)) {
-          continue;
-        }
-
         boolean isEmpty = true;
         for (ContentFolderTypeProvider contentFolderType : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
           if (hasContent(module, contentFolderType)) {
@@ -1312,7 +1307,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
     List<VirtualFile> allOutputs = new ArrayList<>();
     ContainerUtil.addAll(allOutputs, CompilerPaths.getOutputDirectories(allModules));
     for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
-      ContainerUtil.addIfNotNull(artifact.getOutputFile(), allOutputs);
+      ContainerUtil.addIfNotNull(allOutputs, artifact.getOutputFile());
     }
     final Set<VirtualFile> affectedOutputPaths = new HashSet<>();
     CompilerUtil.computeIntersectingPaths(myProject, allOutputs, affectedOutputPaths);
@@ -1331,7 +1326,7 @@ public class CompileDriver implements consulo.compiler.CompileDriver {
   }
 
   @Override
-  public Condition<Compiler> getCompilerFilter() {
+  public Predicate<Compiler> getCompilerFilter() {
     return myCompilerFilter;
   }
 

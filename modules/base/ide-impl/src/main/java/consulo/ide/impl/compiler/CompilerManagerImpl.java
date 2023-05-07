@@ -29,7 +29,6 @@ import consulo.compiler.setting.ExcludedEntriesConfiguration;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.compiler.impl.CompileDriver;
 import consulo.ide.impl.idea.compiler.impl.CompositeScope;
@@ -38,7 +37,6 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -191,7 +189,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   }
 
   @Override
-  public void make(@Nonnull CompileScope scope, Condition<Compiler> filter, @Nullable CompileStatusNotification callback) {
+  public void make(@Nonnull CompileScope scope, Predicate<Compiler> filter, @Nullable CompileStatusNotification callback) {
     final CompileDriver compileDriver = new CompileDriver(myProject);
     compileDriver.setCompilerFilter(filter);
     compileDriver.make(scope, new ListenerNotificator(callback));
@@ -212,20 +210,6 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   public void executeTask(@Nonnull CompileTask task, @Nonnull CompileScope scope, String contentName, Runnable onTaskFinished) {
     final CompileDriver compileDriver = new CompileDriver(myProject);
     compileDriver.executeCompileTask(task, scope, contentName, onTaskFinished);
-  }
-
-  @Override
-  public void addCompilationStatusListener(@Nonnull final CompilationStatusListener listener) {
-    myProject.getMessageBus().connect().subscribe(CompilationStatusListener.class, listener);
-  }
-
-  @Override
-  public void addCompilationStatusListener(@Nonnull CompilationStatusListener listener, @Nonnull Disposable parentDisposable) {
-    myProject.getMessageBus().connect(parentDisposable).subscribe(CompilationStatusListener.class, listener);
-  }
-
-  @Override
-  public void removeCompilationStatusListener(@Nonnull final CompilationStatusListener listener) {
   }
 
   @Override
@@ -251,48 +235,51 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
   @Nonnull
   @Override
   @RequiredReadAction
-  public CompileScope createProjectCompileScope() {
+  public CompileScope createProjectCompileScope(boolean includeTestScope) {
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
-    return createModulesCompileScope(modules, false);
+    return createModulesCompileScope(modules, false, includeTestScope);
   }
 
   @Override
   @Nonnull
-  public CompileScope createModuleCompileScope(@Nonnull final Module module, final boolean includeDependentModules) {
-    for (CompileModuleScopeFactory compileModuleScopeFactory : CompileModuleScopeFactory.EP_NAME.getExtensionList()) {
-      FileIndexCompileScope scope = compileModuleScopeFactory.createScope(module, includeDependentModules);
-      if (scope != null) {
-        return scope;
-      }
+  @RequiredReadAction
+  public CompileScope createModuleCompileScope(@Nonnull final Module module, boolean includeDependentModules, boolean includeTestScope) {
+    FileIndexCompileScope scope = myProject.getApplication()
+                                           .getExtensionPoint(CompileModuleScopeFactory.class)
+                                           .computeSafeIfAny(compileModuleScopeFactory -> compileModuleScopeFactory.createScope(module,
+                                                                                                                                includeDependentModules,
+                                                                                                                                includeTestScope));
+    if (scope != null) {
+      return scope;
     }
-    return new ModuleCompileScope(module, includeDependentModules);
+    return new ModuleCompileScope(module, includeDependentModules, includeTestScope);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
-  public CompileScope createModulesCompileScope(@Nonnull final Module[] modules, final boolean includeDependentModules) {
+  public CompileScope createModulesCompileScope(@Nonnull final Module[] modules,
+                                                boolean includeDependentModules,
+                                                boolean includeTestScope) {
     List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
-      list.add(createModuleCompileScope(module, includeDependentModules));
+      list.add(createModuleCompileScope(module, includeDependentModules, includeTestScope));
     }
     return new CompositeScope(list);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public CompileScope createModuleGroupCompileScope(@Nonnull final Project project,
                                                     @Nonnull final Module[] modules,
-                                                    final boolean includeDependentModules) {
+                                                    boolean includeDependentModules,
+                                                    boolean includeTestScope) {
     List<CompileScope> list = new ArrayList<>(modules.length);
     for (Module module : modules) {
-      list.add(createModuleCompileScope(module, includeDependentModules));
+      list.add(createModuleCompileScope(module, includeDependentModules, includeTestScope));
     }
     return new CompositeScope(list);
-  }
-
-  @Override
-  public boolean isValidationEnabled(Module moduleType) {
-    return true;
   }
 
   @Nullable

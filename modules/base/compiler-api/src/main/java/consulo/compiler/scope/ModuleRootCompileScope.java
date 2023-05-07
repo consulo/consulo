@@ -16,7 +16,6 @@
 package consulo.compiler.scope;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -105,7 +105,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
 
   @Override
   @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType, final boolean inSourceOnly) {
+  public VirtualFile[] getFiles(final FileType fileType) {
     final List<VirtualFile> files = new ArrayList<>();
     final FileIndex[] fileIndices = getFileIndices();
     for (final FileIndex fileIndex : fileIndices) {
@@ -138,9 +138,9 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
           else {
             // the same content root exists in several modules
             if (!candidateModule.equals(module)) {
-              candidateModule = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
+              candidateModule = ApplicationManager.getApplication().runReadAction(new Supplier<Module>() {
                 @Override
-                public Module compute() {
+                public Module get() {
                   final VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
                   if (contentRootFile != null) {
                     return projectFileIndex.getModuleForFile(contentRootFile);

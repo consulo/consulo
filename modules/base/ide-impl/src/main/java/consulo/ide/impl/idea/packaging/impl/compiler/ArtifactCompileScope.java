@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.compiler.scope.ModuleCompileScope;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.CompilerManager;
@@ -49,9 +50,10 @@ public class ArtifactCompileScope {
   private ArtifactCompileScope() {
   }
 
+  @RequiredReadAction
   public static ModuleCompileScope createScopeForModulesInArtifacts(@Nonnull Project project, @Nonnull Collection<? extends Artifact> artifacts) {
     final Set<Module> modules = ArtifactUtil.getModulesIncludedInArtifacts(artifacts, project);
-    return new ModuleCompileScope(project, modules.toArray(new Module[modules.size()]), true);
+    return new ModuleCompileScope(project, modules.toArray(new Module[modules.size()]), true, true);
   }
 
   public static CompileScope createArtifactsScope(@Nonnull Project project,

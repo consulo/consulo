@@ -102,7 +102,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
   public void cleanUp(CompileDriver compileDriver, CompileContextEx context) {
     CompilerManager compilerManager = CompilerManager.getInstance(myProject);
 
-    final VirtualFile[] allSources = compilerManager.createProjectCompileScope().getFiles(null, true);
+    final VirtualFile[] allSources = compilerManager.createProjectCompileScope().getFiles(null);
 
     for (final Compiler compiler : compilerManager.getCompilers(Compiler.class)) {
       try {
@@ -307,7 +307,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                   ? Arrays.asList(snapshot)
                   : Collections.<VirtualFile>emptySet();
                 snapshot = ApplicationManager.getApplication().runReadAction((Supplier<VirtualFile[]>)() -> {
-                  return context.getCompileScope().getFiles(null, true);
+                  return context.getCompileScope().getFiles(null);
                 });
                 recalculateChunkToFilesMap(context, sortedChunks, snapshot, chunkMap);
                 if (round == 0) {

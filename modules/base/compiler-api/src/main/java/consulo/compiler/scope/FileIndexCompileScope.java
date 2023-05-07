@@ -35,11 +35,11 @@ public abstract class FileIndexCompileScope extends ExportableUserDataHolderBase
 
   @Override
   @Nonnull
-  public VirtualFile[] getFiles(final FileType fileType, final boolean inSourceOnly) {
+  public VirtualFile[] getFiles(final FileType fileType) {
     final List<VirtualFile> files = new ArrayList<>();
     final FileIndex[] fileIndices = getFileIndices();
     for (final FileIndex fileIndex : fileIndices) {
-      fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, inSourceOnly, files));
+      fileIndex.iterateContent(new CompilerContentIterator(fileType, fileIndex, !includeTestScope(), files));
     }
     return VirtualFileUtil.toVirtualFileArray(files);
   }

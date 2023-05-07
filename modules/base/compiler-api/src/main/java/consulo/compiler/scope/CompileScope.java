@@ -37,12 +37,10 @@ public interface CompileScope extends ExportableUserDataHolder {
    * Returns the list of files within the scope.
    *
    * @param fileType     the type of the files. Null should be passed if all available files are needed.
-   * @param inSourceOnly if true, files are searched only in directories within the scope that are marked as "sources" or "test sources" in module settings.
-   *                     Otherwise files are searched in all directories that belong to the scope.
    * @return a list of files of given type that belong to this scope.
    */
   @Nonnull
-  VirtualFile[] getFiles(@Nullable FileType fileType, boolean inSourceOnly);
+  VirtualFile[] getFiles(@Nullable FileType fileType);
 
   /**
    * Checks if the file with the specified URL belongs to the scope.
@@ -60,4 +58,11 @@ public interface CompileScope extends ExportableUserDataHolder {
    */
   @Nonnull
   Module[] getAffectedModules();
+
+  /**
+   * This scope include test sources or not
+   */
+  default boolean includeTestScope() {
+    return true;
+  }
 }

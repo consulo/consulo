@@ -21,8 +21,8 @@
  */
 package consulo.compiler.scope;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.FileIndex;
 import consulo.module.Module;
@@ -40,15 +40,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class ModuleCompileScope extends FileIndexCompileScope {
   private final Project myProject;
   private final Set<Module> myScopeModules;
   private final Module[] myModules;
+  private final boolean myIncludeTestScope;
 
-  public ModuleCompileScope(final Module module, boolean includeDependentModules) {
+  @RequiredReadAction
+  public ModuleCompileScope(final Module module, boolean includeDependentModules, boolean includeTestScope) {
     myProject = module.getProject();
-    myScopeModules = new HashSet<Module>();
+    myIncludeTestScope = includeTestScope;
+    myScopeModules = new HashSet<>();
     if (includeDependentModules) {
       buildScopeModulesSet(module);
     }
@@ -58,12 +62,14 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     myModules = ModuleManager.getInstance(myProject).getModules();
   }
 
-  public ModuleCompileScope(Project project, final Module[] modules, boolean includeDependentModules) {
+  @RequiredReadAction
+  public ModuleCompileScope(Project project, final Module[] modules, boolean includeDependentModules, boolean includeTestScope) {
     myProject = project;
-    myScopeModules = new HashSet<Module>();
+    myScopeModules = new HashSet<>();
+    myIncludeTestScope = includeTestScope;
     for (Module module : modules) {
       if (module == null) {
-        continue; // prevent NPE
+        continue;
       }
       if (includeDependentModules) {
         buildScopeModulesSet(module);
@@ -85,11 +91,13 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     }
   }
 
+  @Override
   @Nonnull
   public Module[] getAffectedModules() {
     return myScopeModules.toArray(new Module[myScopeModules.size()]);
   }
 
+  @Override
   protected FileIndex[] getFileIndices() {
     final FileIndex[] indices = new FileIndex[myScopeModules.size()];
     int idx = 0;
@@ -99,6 +107,12 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     return indices;
   }
 
+  @Override
+  public boolean includeTestScope() {
+    return myIncludeTestScope;
+  }
+
+  @Override
   public boolean belongs(final String url) {
     if (myScopeModules.isEmpty()) {
       return false; // optimization
@@ -122,8 +136,9 @@ public class ModuleCompileScope extends FileIndexCompileScope {
           else {
             // the same content root exists in several modules
             if (!candidateModule.equals(module)) {
-              candidateModule = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
-                public Module compute() {
+              candidateModule = ApplicationManager.getApplication().runReadAction(new Supplier<Module>() {
+                @Override
+                public Module get() {
                   final VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
                   if (contentRootFile != null) {
                     return projectFileIndex.getModuleForFile(contentRootFile);
@@ -164,7 +179,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
     return (url.length() > root.length()) && url.charAt(root.length()) == '/' && FileUtil.startsWith(url, root);
   }
 
-  private final Map<Module, String[]> myContentUrlsCache = new HashMap<Module, String[]>();
+  private final Map<Module, String[]> myContentUrlsCache = new HashMap<>();
 
   private String[] getModuleContentUrls(final Module module) {
     String[] contentRootUrls = myContentUrlsCache.get(module);

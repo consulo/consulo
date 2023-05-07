@@ -24,6 +24,7 @@ import consulo.disposer.Disposable;
 import consulo.project.event.DumbModeListener;
 import consulo.ui.ModalityState;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -388,6 +389,21 @@ public abstract class DumbService {
     setAlternativeResolveEnabled(true);
     try {
       runnable.run();
+    }
+    finally {
+      setAlternativeResolveEnabled(false);
+    }
+  }
+
+  /**
+   * Invokes the given supplier with alternative resolve set to true, and return value
+   *
+   * @see #setAlternativeResolveEnabled(boolean)
+   */
+  public <V, E extends Throwable> V runWithAlternativeResolveEnabled(@Nonnull ThrowableSupplier<V, E> runnable) throws E {
+    setAlternativeResolveEnabled(true);
+    try {
+      return runnable.get();
     }
     finally {
       setAlternativeResolveEnabled(false);
