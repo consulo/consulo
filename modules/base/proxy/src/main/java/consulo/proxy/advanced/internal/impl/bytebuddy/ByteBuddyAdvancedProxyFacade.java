@@ -52,7 +52,11 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
   @Nonnull
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T create(Class<T> superClass, Class[] interfaces, InvocationHandler invocationHandler, boolean interceptObjectMethods, Object[] superConstructorArguments) {
+  public <T> T create(Class<T> superClass,
+                      Class[] interfaces,
+                      InvocationHandler invocationHandler,
+                      boolean interceptObjectMethods,
+                      Object[] superConstructorArguments) {
     try {
       ClassLoader classLoader = ProxyHelper.preferClassLoader(superClass, interfaces);
 
@@ -72,7 +76,10 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
       ByteBuddyProxyFactory proxyFactory;
       if (AdvancedProxyTesting.isProxyClassLoaderRequired()) {
         proxyFactory =
-                (ByteBuddyProxyFactory)((ProxyHolderClassLoader)classLoader).registerOrGetProxy(key, it -> buildProxyClass(it.getSuperClass(), it.getInterfaces(), it.isInterceptObjectMethods()));
+          (ByteBuddyProxyFactory)((ProxyHolderClassLoader)classLoader).registerOrGetProxy(key,
+                                                                                          it -> buildProxyClass(it.getSuperClass(),
+                                                                                                                it.getInterfaces(),
+                                                                                                                it.isInterceptObjectMethods()));
       }
       else {
         proxyFactory = buildProxyClass(key.getSuperClass(), key.getInterfaces(), key.isInterceptObjectMethods());
@@ -105,12 +112,14 @@ public class ByteBuddyAdvancedProxyFacade implements AdvancedProxyFacade {
 
     ElementMatcher.Junction<MethodDescription> junction = ElementMatchers.not(ElementMatchers.isDefaultMethod());
     if (superClass != null) {
-      junction = junction.and(ElementMatchers.not(ElementMatchers.isDeclaredBy(superClass)));
+      //junction = junction.and(ElementMatchers.not(ElementMatchers.isDeclaredBy(superClass)));
     }
 
     if (interceptObjectMethods) {
       junction = junction.and(ElementMatchers.not(ElementMatchers.isDeclaredBy(Object.class)));
     }
+
+    junction = junction.and(ElementMatchers.isAbstract());
 
     DynamicType.Builder.MethodDefinition.ImplementationDefinition<? extends T> definition = builder.method(junction);
 
