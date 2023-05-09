@@ -215,13 +215,7 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   }
 
   protected void collectChildren(Object element, final List<Object> result) {
-    if (element instanceof Application) {
-      Collections.addAll(result, ProjectManager.getInstance().getOpenProjects());
-      final LibraryTablesRegistrar instance = LibraryTablesRegistrar.getInstance();
-      result.add(instance.getLibraryTable()); //1
-      result.addAll(instance.getCustomLibraryTables()); //2
-    }
-    else if (element instanceof Project) {
+    if (element instanceof Project) {
       Collections.addAll(result, ModuleManager.getInstance((Project)element).getModules());
       result.add(LibraryTablesRegistrar.getInstance().getLibraryTable((Project)element));
     }

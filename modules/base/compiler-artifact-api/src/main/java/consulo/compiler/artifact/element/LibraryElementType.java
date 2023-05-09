@@ -21,9 +21,9 @@ import consulo.compiler.CompilerBundle;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.content.library.Library;
-import consulo.content.library.LibraryTablesRegistrar;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
+import consulo.project.content.library.ProjectLibraryTable;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 
@@ -69,8 +69,7 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
 
   private static List<Library> getAllLibraries(ArtifactEditorContext context) {
     List<Library> libraries = new ArrayList<Library>();
-    ContainerUtil.addAll(libraries, LibraryTablesRegistrar.getInstance().getLibraryTable().getLibraries());
-    ContainerUtil.addAll(libraries, LibraryTablesRegistrar.getInstance().getLibraryTable(context.getProject()).getLibraries());
+    ContainerUtil.addAll(libraries, ProjectLibraryTable.getInstance(context.getProject()).getLibraries());
     return libraries;
   }
 

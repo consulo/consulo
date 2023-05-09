@@ -52,9 +52,4 @@ public abstract class LibraryTablesRegistrar {
 
   @Nullable
   public abstract LibraryTable getLibraryTableByLevel(String level, @Nonnull Project project);
-
-  @Nonnull
-  public List<LibraryTable> getCustomLibraryTables() {
-    return List.of();
-  }
 }

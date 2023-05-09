@@ -76,7 +76,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   @Override
   protected void collectChildren(Object element, List<Object> result) {
     if (element instanceof Application) {
-      for (LibraryTable table : getLibraryTables(myProject, myShowCustomLibraryTables)) {
+      for (LibraryTable table : getLibraryTables(myProject)) {
         if (hasLibraries(table)) {
           result.add(table);
         }
@@ -87,17 +87,11 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
     }
   }
 
-  public static List<LibraryTable> getLibraryTables(final Project project, final boolean showCustomLibraryTables) {
+  public static List<LibraryTable> getLibraryTables(final Project project) {
     final List<LibraryTable> tables = new ArrayList<LibraryTable>();
     final LibraryTablesRegistrar registrar = LibraryTablesRegistrar.getInstance();
     if (project != null) {
       tables.add(registrar.getLibraryTable(project));
-    }
-    tables.add(registrar.getLibraryTable());
-    if (showCustomLibraryTables) {
-      for (LibraryTable table : registrar.getCustomLibraryTables()) {
-        tables.add(table);
-      }
     }
     return tables;
   }
@@ -116,12 +110,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
   protected int getLibraryTableWeight(@Nonnull LibraryTable libraryTable) {
     if (libraryTable.getTableLevel().equals(LibraryTableImplUtil.MODULE_LEVEL)) return 0;
     if (isProjectLibraryTable(libraryTable)) return 1;
-    if (isApplicationLibraryTable(libraryTable)) return 2;
     return 3;
-  }
-
-  private static boolean isApplicationLibraryTable(LibraryTable libraryTable) {
-    return libraryTable.equals(LibraryTablesRegistrar.getInstance().getLibraryTable());
   }
 
   private boolean isProjectLibraryTable(LibraryTable libraryTable) {
@@ -131,7 +120,7 @@ public class ChooseLibrariesFromTablesDialog extends ChooseLibrariesDialogBase {
 
   @Override
   protected boolean isAutoExpandLibraryTable(@Nonnull LibraryTable libraryTable) {
-    return isApplicationLibraryTable(libraryTable) || isProjectLibraryTable(libraryTable);
+    return isProjectLibraryTable(libraryTable);
   }
 
   @Nonnull

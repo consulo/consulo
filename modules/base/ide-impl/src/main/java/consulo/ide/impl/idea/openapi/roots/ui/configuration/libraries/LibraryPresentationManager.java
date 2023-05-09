@@ -17,14 +17,13 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryKind;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.ServiceManager;
 import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,8 +55,4 @@ public abstract class LibraryPresentationManager {
   public abstract List<String> getDescriptions(@Nonnull VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
 
   public abstract List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable LibrariesConfigurator context);
-
-  public abstract boolean isLibraryOfKind(@Nonnull List<VirtualFile> files, @Nonnull LibraryKind kind);
-
-  public abstract boolean isLibraryOfKind(@Nonnull Library library, @Nonnull LibrariesContainer librariesContainer, @Nonnull Set<? extends LibraryKind> acceptedKinds);
 }

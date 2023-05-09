@@ -17,17 +17,16 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.content.library.*;
-import consulo.project.Project;
-import consulo.content.internal.LibraryEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesContainer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.internal.LibraryEx;
+import consulo.content.library.*;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -93,32 +92,6 @@ public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
       }
     });
     return icons;
-  }
-
-  @Override
-  public boolean isLibraryOfKind(@Nonnull List<VirtualFile> files, @Nonnull final LibraryKind kind) {
-    return !LibraryDetectionManager.getInstance().processProperties(files, new LibraryDetectionManager.LibraryPropertiesProcessor() {
-      @Override
-      public <P extends LibraryProperties> boolean processProperties(@Nonnull LibraryKind processedKind, @Nonnull P properties) {
-        return !kind.equals(processedKind);
-      }
-    });
-  }
-
-  @Override
-  public boolean isLibraryOfKind(@Nonnull Library library,
-                                 @Nonnull LibrariesContainer librariesContainer,
-                                 @Nonnull final Set<? extends LibraryKind> acceptedKinds) {
-    final LibraryKind type = ((LibraryEx)library).getKind();
-    if (type != null && acceptedKinds.contains(type)) return true;
-
-    final VirtualFile[] files = librariesContainer.getLibraryFiles(library, BinariesOrderRootType.getInstance());
-    return !LibraryDetectionManager.getInstance().processProperties(Arrays.asList(files), new LibraryDetectionManager.LibraryPropertiesProcessor() {
-      @Override
-      public <P extends LibraryProperties> boolean processProperties(@Nonnull LibraryKind processedKind, @Nonnull P properties) {
-        return !acceptedKinds.contains(processedKind);
-      }
-    });
   }
 
   public static List<LibraryKind> getLibraryKinds(@Nonnull Library library, @Nullable LibrariesConfigurator context) {

@@ -70,8 +70,7 @@ public class LibraryUtil {
         return library;
       }
     }
-    final LibraryTable table = LibraryTablesRegistrar.getInstance().getLibraryTable();
-    return findInTable(table, fqn);
+    return null;
   }
 
 
