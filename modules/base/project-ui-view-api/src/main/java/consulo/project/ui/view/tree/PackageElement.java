@@ -24,10 +24,7 @@ import consulo.language.psi.PsiPackage;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Eugene Zhuravlev
@@ -60,6 +57,10 @@ public final class PackageElement implements Queryable, RootsProvider {
   @Nonnull
   @Override
   public Collection<VirtualFile> getRoots() {
+    if (myModule == null) {
+      return List.of();
+    }
+
     Set<VirtualFile> roots = new HashSet<>();
     final PsiDirectory[] dirs = PackageNodeUtil.getDirectories(getPackage(), myModule.getProject(), myModule, isLibraryElement());
     for (PsiDirectory each : dirs) {
