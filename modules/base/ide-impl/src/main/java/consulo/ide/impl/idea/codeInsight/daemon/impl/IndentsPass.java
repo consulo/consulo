@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -41,6 +42,7 @@ import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
+import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
 import consulo.util.collection.primitive.ints.IntStack;
@@ -77,7 +79,8 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
     ArrayList<TextRange> ranges = new ArrayList<>();
     for (IndentGuideDescriptor descriptor : myDescriptors) {
       ProgressManager.checkCanceled();
-      int endOffset = descriptor.endLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(descriptor.endLine) : myDocument.getTextLength();
+      int endOffset =
+        descriptor.endLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(descriptor.endLine) : myDocument.getTextLength();
       ranges.add(new TextRange(myDocument.getLineStartOffset(descriptor.startLine), endOffset));
     }
 
@@ -203,7 +206,8 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
 
   @Nonnull
   protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
-    final RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
+    final RangeHighlighter highlighter =
+      mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     //highlighter.setCustomRenderer(RENDERER);
     return highlighter;
   }
@@ -298,24 +302,20 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
       }
     }
 
+    @RequiredReadAction
     private boolean isComment(int offset) {
       final HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
       IElementType tokenType = (IElementType)it.getTokenType();
       Language language = tokenType.getLanguage();
-      TokenSet comments = myComments.get(language);
-      if (comments == null) {
-        ParserDefinition definition = ParserDefinition.forLanguage(language);
+      return myComments.computeIfAbsent(language, l -> {
+        LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(l, myFile);
+        ParserDefinition definition = ParserDefinition.forLanguage(languageVersion.getLanguage());
+        TokenSet comments = TokenSet.EMPTY;
         if (definition != null) {
-          comments = definition.getCommentTokens(LanguageVersionUtil.findLanguageVersion(language, myFile));
+          comments = definition.getCommentTokens(languageVersion);
         }
-        if (comments == null) {
-          return false;
-        }
-        else {
-          myComments.put(language, comments);
-        }
-      }
-      return comments.contains(tokenType);
+        return comments;
+      }).contains(tokenType);
     }
   }
 }
