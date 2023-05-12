@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
@@ -28,17 +27,17 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Couple;
+import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsBundle;
@@ -60,14 +59,18 @@ import java.util.Map;
 
 /**
  * @author Konstantin Bulenkov
- * @author: lesya
+ * @author lesya
  */
 public class AnnotateToggleAction extends ToggleAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     AnnotateToggleActionProvider provider = getProvider(e);
-    e.getPresentation().setEnabled(provider != null && !provider.isSuspended(e));
+    Presentation presentation = e.getPresentation();
+    presentation.setEnabled(provider != null && !provider.isSuspended(e));
+    if (provider != null) {
+      presentation.setTextValue(provider.getActionName(e));
+    }
   }
 
   @Override
@@ -78,7 +81,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
 
   @Override
   public void setSelected(AnActionEvent e, boolean selected) {
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor != null) {
       MyEditorNotificationPanel notificationPanel = ObjectUtil.tryCast(editor.getHeaderComponent(), MyEditorNotificationPanel.class);
       if (notificationPanel != null) {

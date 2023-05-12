@@ -940,12 +940,6 @@
       <reference id="About"/>
     </group>
 
-    <group id="EditorGutterPopupMenu">
-      <reference ref="EditorToggleShowLineNumbers"/>
-      <reference ref="EditorToggleShowIndentLines"/>
-      <reference ref="EditorToggleUseSoftWraps"/>
-    </group>
-
     <group id="FileChooserToolbar">
       <action id="FileChooser.GotoHome" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoHomeAction"
               icon="consulo.platform.base.PlatformIconGroup@nodes.homefolder"/>
@@ -1205,11 +1199,6 @@
             icon="consulo.platform.base.PlatformIconGroup@actions.nextfile" use-shortcut-of="NextTab"/>
     <action id="Diff.SelectedChange" class="consulo.ui.ex.action.EmptyAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.showastree" use-shortcut-of="GotoChangedFile"/>
-
-    <group id="EditorGutterVcsPopupMenu">
-      <reference ref="Annotate"/>
-      <add-to-group group-id="EditorGutterPopupMenu" anchor="last"/>
-    </group>
 
     <group id="Vcs.CheckinProjectPopup">
       <separator/>
@@ -3041,6 +3030,14 @@
     <group id="XDebugger.AttachGroup">
       <action id="XDebugger.AttachToProcess" class="consulo.ide.impl.idea.xdebugger.impl.actions.AttachToProcessAction"/>
       <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
+    </group>
+
+    <group id="EditorGutterPopupMenu">
+      <reference ref="Annotate"/>
+      <separator/>
+      <reference ref="EditorToggleShowLineNumbers"/>
+      <reference ref="EditorToggleShowIndentLines"/>
+      <reference ref="EditorToggleUseSoftWraps"/>
     </group>
   </actions>
 </consulo-plugin>

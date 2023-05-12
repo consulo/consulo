@@ -15,6 +15,8 @@
  */
 package consulo.versionControlSystem.annotate;
 
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.history.VcsFileRevision;
@@ -38,4 +40,9 @@ public interface AnnotationProvider extends VcsProviderMarker {
   default boolean isAnnotationValid(@Nonnull VcsFileRevision rev) { return true; }
 
   default boolean isCaching() { return false; }
+
+  @Nonnull
+  default LocalizeValue getActionName() {
+    return ActionLocalize.actionAnnotateText();
+  }
 }
