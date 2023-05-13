@@ -1268,12 +1268,6 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     return Math.max(centerRelative, baselineRelative);
   }
 
-  private Color getOutlineColor(boolean isActive) {
-    EditorColorKey key = isActive ? EditorColors.SELECTED_TEARLINE_COLOR : EditorColors.TEARLINE_COLOR;
-    ColorValue color = myEditor.getColorsScheme().getColor(key);
-    return color != null ? TargetAWT.to(color) : JBColor.black;
-  }
-
   @Override
   public void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider) {
     myTextAnnotationGutters.add(provider);
@@ -1384,9 +1378,6 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
                                boolean active,
                                int visualLine) {
     double sw = getStrokeWidth();
-    Rectangle2D rect = RectanglePainter2D.align(g,
-                                                EnumSet.of(LinePainter2D.Align.CENTER_X, LinePainter2D.Align.CENTER_Y),
-                                                centerX, centerY, width, width, StrokeType.CENTERED, sw);
 
     if (height <= 0 && !EditorSettingsExternalizable.getInstance().isFoldingEndingsShown()) {
       //do not paint folding endings in new UI by default

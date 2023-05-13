@@ -36,6 +36,7 @@ public interface EditorColors {
   EditorColorKey SELECTED_INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("SELECTED_INDENT_GUIDE");
   EditorColorKey SELECTION_BACKGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_BACKGROUND");
   EditorColorKey SELECTION_FOREGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_FOREGROUND");
+  EditorColorKey MATCHED_BRACES_INDENT_GUIDE_COLOR = EditorColorKey.createColorKey("MATCHED_BRACES_INDENT_GUIDE_COLOR");
 
   TextAttributesKey
     REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE",
@@ -70,10 +71,6 @@ public interface EditorColors {
 
   EditorColorKey TEARLINE_COLOR = EditorColorKey.createColorKey("TEARLINE_COLOR");
   EditorColorKey SELECTED_TEARLINE_COLOR = EditorColorKey.createColorKey("SELECTED_TEARLINE_COLOR");
-  @Deprecated
-  EditorColorKey FOLDING_TREE_COLOR = TEARLINE_COLOR;
-  @Deprecated
-  EditorColorKey SELECTED_FOLDING_TREE_COLOR = SELECTED_TEARLINE_COLOR;
 
   EditorColorKey ADDED_LINES_COLOR = EditorColorKey.createColorKey("ADDED_LINES_COLOR");
   EditorColorKey MODIFIED_LINES_COLOR = EditorColorKey.createColorKey("MODIFIED_LINES_COLOR");

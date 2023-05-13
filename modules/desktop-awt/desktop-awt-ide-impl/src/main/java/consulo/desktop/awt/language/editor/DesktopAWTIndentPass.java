@@ -24,14 +24,19 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.view.EditorPainter;
 import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
+import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IndentsPass;
+import consulo.ide.impl.idea.codeInsight.highlighting.DefaultLineMarkerRenderer;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -43,6 +48,10 @@ import java.util.List;
  */
 public class DesktopAWTIndentPass extends IndentsPass {
   private static final CustomHighlighterRenderer RENDERER = (editor, highlighter, g) -> {
+    if (!(editor instanceof RealEditor)) {
+      return;
+    }
+
     int startOffset = highlighter.getStartOffset();
     final Document doc = highlighter.getDocument();
     if (startOffset >= doc.getTextLength()) return;
@@ -105,8 +114,7 @@ public class DesktopAWTIndentPass extends IndentsPass {
     if (start.y >= maxY) return;
 
     int targetX = Math.max(0, start.x + EditorPainter.getIndentGuideShift(editor));
-    final EditorColorsScheme scheme = editor.getColorsScheme();
-    g.setColor(TargetAWT.to(scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR)));
+    g.setColor(TargetAWT.to(getIndentColor((RealEditor)editor, startOffset, selected)));
 
     // There is a possible case that indent line intersects soft wrap-introduced text. Example:
     //     this is a long line <soft-wrap>
@@ -158,6 +166,26 @@ public class DesktopAWTIndentPass extends IndentsPass {
 
   public DesktopAWTIndentPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
     super(project, editor, file);
+  }
+
+  private static ColorValue getIndentColor(RealEditor editor, int startOffset, boolean selected) {
+    EditorColorsScheme scheme = editor.getColorsScheme();
+    if (ExperimentalUI.isNewUI()) {
+      List<RangeHighlighter> highlighters = ContainerUtil.filter(editor.getMarkupModel().getAllHighlighters(),
+                                                                 x -> x.getLineMarkerRenderer() instanceof DefaultLineMarkerRenderer);
+      if (!highlighters.isEmpty()) {
+        DefaultLineMarkerRenderer renderer = (DefaultLineMarkerRenderer)highlighters.get(0).getLineMarkerRenderer();
+        assert renderer != null;
+        if (editor.offsetToVisualLine(startOffset, false) == editor.offsetToVisualLine(highlighters.get(0).getStartOffset(), false)) {
+          ColorValue color = renderer.getColor();
+          if (color != null) {
+            ColorValue matched = scheme.getColor(EditorColors.MATCHED_BRACES_INDENT_GUIDE_COLOR);
+            return ObjectUtil.notNull(matched, color);
+          }
+        }
+      }
+    }
+    return scheme.getColor(selected ? EditorColors.SELECTED_INDENT_GUIDE_COLOR : EditorColors.INDENT_GUIDE_COLOR);
   }
 
   @Override

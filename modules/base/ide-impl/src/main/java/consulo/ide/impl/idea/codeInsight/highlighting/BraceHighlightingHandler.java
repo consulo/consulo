@@ -62,7 +62,6 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Conditions;
@@ -581,7 +580,7 @@ public class BraceHighlightingHandler {
     int endOffset = myDocument.getLineStartOffset(endLine);
 
     RangeHighlighter highlighter = myEditor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, 0, null, HighlighterTargetArea.LINES_IN_RANGE);
-    highlighter.setLineMarkerRenderer(new MyLineMarkerRenderer(color));
+    highlighter.setLineMarkerRenderer(new DefaultLineMarkerRenderer(color));
     myEditor.putUserData(LINE_MARKER_IN_EDITOR_KEY, highlighter);
   }
 
@@ -594,22 +593,4 @@ public class BraceHighlightingHandler {
     myEditor.putUserData(LINE_MARKER_IN_EDITOR_KEY, null);
   }
 
-  private static class MyLineMarkerRenderer implements LineMarkerRenderer {
-    private static final int DEEPNESS = 0;
-    private static final int THICKNESS = 1;
-    private final ColorValue myColor;
-
-    private MyLineMarkerRenderer(@Nonnull ColorValue color) {
-      myColor = color;
-    }
-
-    @Override
-    public void paint(Editor editor, Graphics g, Rectangle r) {
-      int height = r.height + editor.getLineHeight();
-      g.setColor(TargetAWT.to(myColor));
-      g.fillRect(r.x, r.y, THICKNESS, height);
-      g.fillRect(r.x + THICKNESS, r.y, DEEPNESS, THICKNESS);
-      g.fillRect(r.x + THICKNESS, r.y + height - THICKNESS, DEEPNESS, THICKNESS);
-    }
-  }
 }
