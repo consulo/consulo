@@ -15,42 +15,45 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction;
-import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.toolWindow.WindowInfo;
-import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.project.ui.internal.WindowInfoImpl;
-import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction;
+import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ui.wm.*;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.event.HoverStateListener;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
-import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -66,12 +69,22 @@ import java.util.Map;
  * @author Vladimir Kondratyev
  */
 public final class DesktopInternalDecorator extends JPanel implements Queryable, DataProvider, ToolWindowInternalDecorator {
+  private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
+    @Override
+    protected void hoverChanged(Component component, boolean hovered) {
+      if (component instanceof DesktopInternalDecorator internalDecorator) {
+        internalDecorator.isWindowHovered = hovered;
+        internalDecorator.updateActiveAndHoverState();
+      }
+    }
+  };
 
   private Project myProject;
   private WindowInfoImpl myInfo;
   private final DesktopToolWindowImpl myToolWindow;
   private final MyDivider myDivider;
   private final EventDispatcher<InternalDecoratorListener> myDispatcher = EventDispatcher.create(InternalDecoratorListener.class);
+  private boolean isWindowHovered;
   /*
    * Actions
    */
@@ -87,6 +100,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   private DesktopToolWindowHeader myHeader;
   private ActionGroup myToggleToolbarGroup;
+  private Disposable myDisposable;
 
   DesktopInternalDecorator(final Project project, @Nonnull WindowInfoImpl info, final DesktopToolWindowImpl toolWindow, boolean dumbAware) {
     super(new BorderLayout());
@@ -195,7 +209,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     // Push "apply" request forward
 
     if (myInfo.isFloating() && myInfo.isVisible()) {
-      final DesktopFloatingDecorator floatingDecorator = (DesktopFloatingDecorator)SwingUtilities.getAncestorOfClass(DesktopFloatingDecorator.class, this);
+      final DesktopFloatingDecorator floatingDecorator =
+        (DesktopFloatingDecorator)SwingUtilities.getAncestorOfClass(DesktopFloatingDecorator.class, this);
       if (floatingDecorator != null) {
         floatingDecorator.apply(myInfo);
       }
@@ -336,16 +351,16 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Override
     public Insets getBorderInsets(final Component c) {
       if (myProject == null) return JBUI.emptyInsets();
-      ToolWindowManager toolWindowManager =  ToolWindowManager.getInstance(myProject);
+      ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
       if (!(toolWindowManager instanceof ToolWindowManagerBase)
-          || !((ToolWindowManagerBase)toolWindowManager).isToolWindowRegistered(myInfo.getId())
-          || myWindow.getType() == ToolWindowType.FLOATING) {
+        || !((ToolWindowManagerBase)toolWindowManager).isToolWindowRegistered(myInfo.getId())
+        || myWindow.getType() == ToolWindowType.FLOATING) {
         return JBUI.emptyInsets();
       }
       ToolWindowAnchor anchor = myWindow.getAnchor();
       Component component = myWindow.getComponent();
       Container parent = component.getParent();
-      while(parent != null) {
+      while (parent != null) {
         if (parent instanceof Splitter) {
           Splitter splitter = (Splitter)parent;
           boolean isFirst = splitter.getFirstComponent() == component;
@@ -358,7 +373,10 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
         component = parent;
         parent = component.getParent();
       }
-      return new Insets(0, anchor == ToolWindowAnchor.RIGHT ? 1 : 0, anchor == ToolWindowAnchor.TOP ? 1 : 0, anchor == ToolWindowAnchor.LEFT ? 1 : 0);
+      return new Insets(0,
+                        anchor == ToolWindowAnchor.RIGHT ? 1 : 0,
+                        anchor == ToolWindowAnchor.TOP ? 1 : 0,
+                        anchor == ToolWindowAnchor.LEFT ? 1 : 0);
     }
 
     @Override
@@ -390,12 +408,12 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     }
     if (anchor != ToolWindowAnchor.BOTTOM) {
       final AnAction bottomAction =
-              new ChangeAnchorAction(UIBundle.message("tool.window.move.to.bottom.action.name"), ToolWindowAnchor.BOTTOM);
+        new ChangeAnchorAction(UIBundle.message("tool.window.move.to.bottom.action.name"), ToolWindowAnchor.BOTTOM);
       moveGroup.add(bottomAction);
     }
     if (anchor != ToolWindowAnchor.RIGHT) {
       final AnAction rightAction =
-              new ChangeAnchorAction(UIBundle.message("tool.window.move.to.right.action.name"), ToolWindowAnchor.RIGHT);
+        new ChangeAnchorAction(UIBundle.message("tool.window.move.to.right.action.name"), ToolWindowAnchor.RIGHT);
       moveGroup.add(rightAction);
     }
     group.add(moveGroup);
@@ -462,7 +480,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     for (AnAction action : children) {
       if (group.isPrimary(action)) {
         main.add(action);
-      } else {
+      }
+      else {
         hadSecondary = true;
       }
     }
@@ -664,7 +683,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
   }
 
   private final class HideAction extends AnAction implements DumbAware {
-    @NonNls public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopInternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
+    @NonNls
+    public static final String HIDE_ACTIVE_WINDOW_ACTION_ID = DesktopInternalDecorator.HIDE_ACTIVE_WINDOW_ACTION_ID;
 
     public HideAction() {
       copyFrom(ActionManager.getInstance().getAction(HIDE_ACTIVE_WINDOW_ACTION_ID));
@@ -706,6 +726,24 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Override
     public void setSelected(AnActionEvent e, boolean state) {
       fireContentUiTypeChanges(state ? ToolWindowContentUiType.COMBO : ToolWindowContentUiType.TABBED);
+    }
+  }
+
+  @Override
+  public void addNotify() {
+    super.addNotify();
+
+    myDisposable = Disposable.newDisposable();
+    HOVER_STATE_LISTENER.addTo(this, myDisposable);
+    updateActiveAndHoverState();
+  }
+
+  @Override
+  public void removeNotify() {
+    super.removeNotify();
+
+    if (myDisposable != null && !Disposer.isDisposed(myDisposable)) {
+      Disposer.dispose(myDisposable);
     }
   }
 
@@ -803,7 +841,8 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Nonnull
     @Override
     public Cursor getCursor() {
-      final boolean isVerticalCursor = myInfo.isDocked() ? ToolWindowAnchorUtil.isSplitVertically(myInfo.getAnchor()) : myInfo.getAnchor().isHorizontal();
+      final boolean isVerticalCursor =
+        myInfo.isDocked() ? ToolWindowAnchorUtil.isSplitVertically(myInfo.getAnchor()) : myInfo.getAnchor().isHorizontal();
       return isVerticalCursor ? Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR) : Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
     }
   }
@@ -840,5 +879,30 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   private static void installDefaultFocusTraversalKeys(@Nonnull Container container, int id) {
     container.setFocusTraversalKeys(id, KeyboardFocusManager.getCurrentKeyboardFocusManager().getDefaultFocusTraversalKeys(id));
+  }
+
+  @RequiredUIAccess
+  public void updateActiveAndHoverState() {
+    boolean isHoverAlphaAnimationEnabled = true;
+    boolean narrow = false;
+
+    if (myToolWindow.getDecorator() != null) {
+      DesktopInternalDecorator decorator = (DesktopInternalDecorator)myToolWindow.getDecorator();
+
+      int width = decorator.getWidth();
+      narrow = width < JBUIScale.scale(120);
+    }
+
+    boolean isVisible = narrow || !isHoverAlphaAnimationEnabled || isWindowHovered || myHeader.isPopupShowing() || myToolWindow.isActive();
+
+    ActionToolbar toolbar = myHeader.getToolbar();
+    if (toolbar instanceof AlphaAnimated) {
+      ((AlphaAnimated)toolbar).getAlphaContext().setVisible(isVisible);
+    }
+
+    ActionToolbar toolbarWest = myHeader.getToolbarWest();
+    if (toolbarWest != null && toolbarWest instanceof AlphaAnimated) {
+      ((AlphaAnimated)toolbarWest).getAlphaContext().setVisible(isVisible);
+    }
   }
 }

@@ -72,6 +72,14 @@ public class AlphaAnimationContext {
     });
   }
 
+  public void paint(Graphics g, Runnable paint) {
+    if (g instanceof Graphics2D graphics2D) {
+      paintWithComposite(graphics2D, paint);
+    } else if (composite != null) {
+      paint.run();
+    }
+  }
+
   public void paintWithComposite(Graphics2D g, Runnable paint) {
     if (composite == null) {
       return;
@@ -86,5 +94,9 @@ public class AlphaAnimationContext {
     finally {
       g.setComposite(old);
     }
+  }
+
+  public ShowHideAnimator getAnimator() {
+    return animator;
   }
 }

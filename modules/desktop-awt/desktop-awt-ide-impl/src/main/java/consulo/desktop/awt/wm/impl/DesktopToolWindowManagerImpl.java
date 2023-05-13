@@ -300,6 +300,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
               DesktopInternalDecorator decorator = (DesktopInternalDecorator)((DesktopToolWindowImpl)tw).getDecorator();
               if (decorator != null) {
                 decorator.repaint();
+                decorator.updateActiveAndHoverState();
               }
             }
           }

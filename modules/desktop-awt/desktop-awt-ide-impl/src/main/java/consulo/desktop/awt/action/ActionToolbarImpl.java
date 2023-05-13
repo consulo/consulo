@@ -9,6 +9,8 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.ui.animation.AlphaAnimated;
+import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
@@ -57,7 +59,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickActionProvider {
+public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickActionProvider, AlphaAnimated {
   private static final Logger LOG = Logger.getInstance(ActionToolbarImpl.class);
 
   private static final String RIGHT_ALIGN_KEY = "RIGHT_ALIGN";
@@ -124,6 +126,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
   private boolean myReservePlaceAutoPopupIcon = true;
   private boolean myShowSeparatorTitles;
   private boolean myNoGapMode;//if true secondary actions button would be layout side-by-side with other buttons
+  private final AlphaAnimationContext myAlphaContext = new AlphaAnimationContext(this);
 
   public ActionToolbarImpl(@Nonnull String place, @Nonnull final ActionGroup actionGroup, boolean horizontal) {
     this(place, actionGroup, horizontal, false, false);
@@ -139,6 +142,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
                            final boolean decorateButtons,
                            boolean updateActionsNow) {
     super(null);
+    myAlphaContext.getAnimator().setVisibleImmediately(true);
     myActionManager = ActionManagerEx.getInstanceEx();
     myPlace = place;
     myActionGroup = actionGroup;
@@ -250,6 +254,16 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
   @Nonnull
   public ActionGroup getActionGroup() {
     return myActionGroup;
+  }
+
+  @Override
+  public AlphaAnimationContext getAlphaContext() {
+    return myAlphaContext;
+  }
+
+  @Override
+  public void paint(Graphics g) {
+    myAlphaContext.paint(g, () -> super.paint(g));
   }
 
   @Override

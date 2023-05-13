@@ -16,29 +16,22 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.application.AllIcons;
+import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.HorizontalLayout;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.MorphColor;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.ui.image.Image;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -55,7 +48,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private NotNullProducer<ActionGroup> myGearProducer;
 
     public GearAction(NotNullProducer<ActionGroup> gearProducer) {
-      super("Show options", null, AllIcons.General.GearPlain);
+      super("Show options", null, PlatformIconGroup.actionsMorevertical());
       myGearProducer = gearProducer;
     }
 
@@ -64,7 +57,9 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     public void actionPerformed(@Nonnull AnActionEvent e) {
       final InputEvent inputEvent = e.getInputEvent();
       final ActionPopupMenu popupMenu =
-              ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE, myGearProducer.produce(), new MenuItemPresentationFactory(true));
+        ((ActionManagerImpl)ActionManager.getInstance()).createActionPopupMenu(DesktopToolWindowContentUi.POPUP_PLACE,
+                                                                               myGearProducer.produce(),
+                                                                               new MenuItemPresentationFactory(true));
 
       int x = 0;
       int y = 0;
@@ -93,7 +88,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       presentation.setText(UIBundle.message("tool.window.hide.action.name"));
       boolean visible = myToolWindow.isVisible();
       presentation.setEnabled(visible);
-      if(visible) {
+      if (visible) {
         presentation.setIcon(getHideIcon(myToolWindow));
       }
     }
@@ -125,7 +120,12 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
     DesktopToolWindowContentUi.initMouseListeners(myWestPanel, toolWindow.getContentUI(), true);
 
-    myToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroup, new GearAction(gearProducer), new HideAction()), true);
+    myToolbar = ActionManager.getInstance()
+                             .createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE,
+                                                  ActionGroup.newImmutableBuilder()
+                                                             .addAll(myActionGroup, new GearAction(gearProducer), new HideAction())
+                                                             .build(),
+                                                  true);
     myToolbar.setTargetComponent(this);
     myToolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
     myToolbar.setReservePlaceAutoPopupIcon(false);
@@ -139,7 +139,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     myWestPanel.addMouseListener(new PopupHandler() {
       @Override
       public void invokePopup(final Component comp, final int x, final int y) {
-        toolWindow.getContentUI().showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
+        toolWindow.getContentUI()
+                  .showContextMenu(comp, x, y, toolWindow.getPopupGroup(), toolWindow.getContentManager().getSelectedContent());
       }
     });
 
@@ -169,7 +170,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
       }
     });
 
-    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil.getPanelBackground()));
+    setBackground(MorphColor.ofWithoutCache(() -> myToolWindow.isActive() ? SwingUIDecorator.get(SwingUIDecorator::getSidebarColor) : UIUtil
+      .getPanelBackground()));
 
     setBorder(JBUI.Borders.customLine(UIUtil.getBorderColor(), TabsUtil.TABS_BORDER, 0, TabsUtil.TABS_BORDER, 0));
 
@@ -197,7 +199,8 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
   }
 
   private void initWestToolBar(JPanel westPanel) {
-    myToolbarWest = ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroupWest), true);
+    myToolbarWest =
+      ActionManager.getInstance().createActionToolbar(ActionPlaces.TOOLWINDOW_TITLE, new DefaultActionGroup(myActionGroupWest), true);
 
     myToolbarWest.setTargetComponent(this);
     myToolbarWest.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
@@ -227,9 +230,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
   public void setAdditionalTitleActions(@Nonnull AnAction[] actions) {
     myActionGroup.removeAll();
     myActionGroup.addAll(actions);
-    if (actions.length > 0) {
-      myActionGroup.addSeparator();
-    }
+
     if (myToolbar != null) {
       myToolbar.updateActionsImmediately();
     }
@@ -237,6 +238,19 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
 
   protected boolean isActive() {
     return myToolWindow.isActive();
+  }
+
+  public ActionToolbar getToolbar() {
+    return myToolbar;
+  }
+
+  public ActionToolbar getToolbarWest() {
+    return myToolbarWest;
+  }
+
+  public boolean isPopupShowing() {
+    // TODO ?
+    return false;
   }
 
   protected abstract void hideToolWindow();
