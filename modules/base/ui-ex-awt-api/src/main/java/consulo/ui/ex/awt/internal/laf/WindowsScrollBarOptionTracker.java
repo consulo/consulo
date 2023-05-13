@@ -78,6 +78,6 @@ class WindowsScrollBarOptionTracker implements AWTEventListener {
     if (Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, KEY, VALUE)) {
       return Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, KEY, VALUE) == 1;
     }
-    return false;
+    return true;
   }
 }
