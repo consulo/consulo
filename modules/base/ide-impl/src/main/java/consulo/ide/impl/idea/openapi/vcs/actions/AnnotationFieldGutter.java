@@ -116,4 +116,9 @@ public abstract class AnnotationFieldGutter implements ActiveAnnotationGutter {
   public String getID() {
     return null;
   }
+
+  @Override
+  public int getLeftMargin() {
+    return 0;
+  }
 }

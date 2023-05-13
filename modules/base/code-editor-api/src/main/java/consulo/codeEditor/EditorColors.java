@@ -16,8 +16,8 @@
 package consulo.codeEditor;
 
 import consulo.colorScheme.EditorColorKey;
-import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.ui.style.StandardColors;
 
@@ -38,20 +38,32 @@ public interface EditorColors {
   EditorColorKey SELECTION_FOREGROUND_COLOR = EditorColorKey.createColorKey("SELECTION_FOREGROUND");
 
   TextAttributesKey
-          REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE", new TextAttributes(StandardColors.BLUE, null, StandardColors.BLUE, EffectType.LINE_UNDERSCORE, 0));
+    REFERENCE_HYPERLINK_COLOR = TextAttributesKey.createTextAttributesKey("CTRL_CLICKABLE",
+                                                                          new TextAttributes(StandardColors.BLUE,
+                                                                                             null,
+                                                                                             StandardColors.BLUE,
+                                                                                             EffectType.LINE_UNDERSCORE,
+                                                                                             0));
 
   TextAttributesKey SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("SEARCH_RESULT_ATTRIBUTES");
   TextAttributesKey LIVE_TEMPLATE_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("LIVE_TEMPLATE_ATTRIBUTES");
   TextAttributesKey WRITE_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRITE_SEARCH_RESULT_ATTRIBUTES");
   TextAttributesKey IDENTIFIER_UNDER_CARET_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("IDENTIFIER_UNDER_CARET_ATTRIBUTES");
-  TextAttributesKey WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES");
+  TextAttributesKey WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES =
+    TextAttributesKey.createTextAttributesKey("WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES");
   TextAttributesKey TEXT_SEARCH_RESULT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("TEXT_SEARCH_RESULT_ATTRIBUTES");
 
   TextAttributesKey FOLDED_TEXT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("FOLDED_TEXT_ATTRIBUTES");
   EditorColorKey FOLDED_TEXT_BORDER_COLOR = EditorColorKey.createColorKey("FOLDED_TEXT_BORDER_COLOR");
   TextAttributesKey DELETED_TEXT_ATTRIBUTES = TextAttributesKey.createTextAttributesKey("DELETED_TEXT_ATTRIBUTES");
 
+  /**
+   * This key is used in New UI only (instead of GUTTER_BACKGROUND) and it is null by default.
+   */
+  EditorColorKey EDITOR_GUTTER_BACKGROUND = EditorColorKey.createColorKey("EDITOR_GUTTER_BACKGROUND");
+
   EditorColorKey GUTTER_BACKGROUND = EditorColorKey.createColorKey("GUTTER_BACKGROUND");
+
   @Deprecated
   EditorColorKey LEFT_GUTTER_BACKGROUND = GUTTER_BACKGROUND;
   EditorColorKey NOTIFICATION_BACKGROUND = EditorColorKey.createColorKey("NOTIFICATION_BACKGROUND");

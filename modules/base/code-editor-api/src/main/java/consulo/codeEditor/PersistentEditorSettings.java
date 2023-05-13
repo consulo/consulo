@@ -272,4 +272,6 @@ public interface PersistentEditorSettings {
   boolean isShowInspectionWidget();
 
   void setShowInspectionWidget(boolean show);
+
+  boolean isFoldingEndingsShown();
 }

@@ -127,6 +127,11 @@ public abstract class GutterIconRenderer implements GutterMark, PossiblyDumbAwar
   }
 
   public enum Alignment {
+    /**
+     * A special alignment option to replace the line number with the icon.
+     * Used for breakpoints in the New UI.
+     */
+    LINE_NUMBERS(0),
     LEFT(1),
     RIGHT(3),
     CENTER(2);

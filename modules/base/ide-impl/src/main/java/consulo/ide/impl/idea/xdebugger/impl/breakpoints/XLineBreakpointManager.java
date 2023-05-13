@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -38,10 +39,10 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.ide.impl.idea.openapi.editor.event.EditorMouseMotionAdapter;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
@@ -268,7 +269,7 @@ public class XLineBreakpointManager {
           mouseEvent.isControlDown() ||
           mouseEvent.getButton() != MouseEvent.BUTTON1 ||
           editor.getEditorKind() == EditorKind.DIFF ||
-          !isInsideGutter(e, editor) ||
+          !isInsideClickableGutterArea(e, editor) ||
           ConsoleViewUtil.isConsoleViewEditor(editor) ||
           !isFromMyProject(editor) ||
           (editor.getSelectionModel().hasSelection() && myDragDetected)) {
@@ -300,11 +301,12 @@ public class XLineBreakpointManager {
       }
     }
 
-    private boolean isInsideGutter(EditorMouseEvent e, Editor editor) {
-      if (e.getArea() != EditorMouseEventArea.LINE_MARKERS_AREA && e.getArea() != EditorMouseEventArea.FOLDING_OUTLINE_AREA) {
-        return false;
+    private boolean isInsideClickableGutterArea(EditorMouseEvent e, Editor editor) {
+      if (e.getArea() == EditorMouseEventArea.LINE_NUMBERS_AREA) {
+        return UISettings.getInstance().getShowBreakpointsOverLineNumbers();
       }
-      return e.getMouseEvent().getX() <= ((EditorEx)editor).getGutterComponentEx().getWhitespaceSeparatorOffset();
+
+      return false;
     }
   }
 

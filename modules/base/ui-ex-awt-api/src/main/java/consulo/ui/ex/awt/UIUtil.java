@@ -18,7 +18,6 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;
@@ -49,6 +48,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
@@ -56,6 +56,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -203,7 +204,8 @@ public class UIUtil {
    */
   public static final Key<Boolean> TEXT_COPY_ROOT = Key.create("TEXT_COPY_ROOT");
 
-  private static final String[] STANDARD_FONT_SIZES = {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
+  private static final String[] STANDARD_FONT_SIZES =
+    {"8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72"};
 
   public static final String BORDER_LINE = "<hr size=1 noshade>";
   public static final String BR = "<br/>";
@@ -226,7 +228,8 @@ public class UIUtil {
     if (isUnderAquaBasedLookAndFeel()) {
       c.putClientProperty("JComponent.sizeVariant", StringUtil.toLowerCase(componentStyle.name()));
     }
-    FontSize fontSize = componentStyle == ComponentStyle.MINI ? FontSize.MINI : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.NORMAL;
+    FontSize fontSize =
+      componentStyle == ComponentStyle.MINI ? FontSize.MINI : componentStyle == ComponentStyle.SMALL ? FontSize.SMALL : FontSize.NORMAL;
     c.setFont(getFont(fontSize, c.getFont()));
     Container p = c.getParent();
     if (p != null) {
@@ -836,7 +839,9 @@ public class UIUtil {
   public static Color getLabelFontColor(FontColor fontColor) {
     Color defColor = getLabelForeground();
     if (fontColor == FontColor.BRIGHTER) {
-      return new JBColor(new Color(Math.min(defColor.getRed() + 50, 255), Math.min(defColor.getGreen() + 50, 255), Math.min(defColor.getBlue() + 50, 255)), defColor.darker());
+      return new JBColor(new Color(Math.min(defColor.getRed() + 50, 255),
+                                   Math.min(defColor.getGreen() + 50, 255),
+                                   Math.min(defColor.getBlue() + 50, 255)), defColor.darker());
     }
     return defColor;
   }
@@ -1415,7 +1420,8 @@ public class UIUtil {
     return expanded ? getTreeExpandedIcon() : getTreeCollapsedIcon();
   }
 
-  private static final ImageKey selectedCollapsedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
+  private static final ImageKey selectedCollapsedIcon =
+    ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeCollapsedSelected", 9, 11);
 
   public static Icon getTreeSelectedCollapsedIcon() {
     Icon icon = UIManager.getIcon("Tree.collapsedSelectedIcon");
@@ -1425,7 +1431,8 @@ public class UIUtil {
     return isUnderAquaBasedLookAndFeel() || isUnderGTKLookAndFeel() || isUnderBuildInLaF() ? (Icon)selectedCollapsedIcon : getTreeCollapsedIcon();
   }
 
-  private static final ImageKey selectedExpandedIcon = ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
+  private static final ImageKey selectedExpandedIcon =
+    ImageKey.fromString("consulo.platform.desktop.laf.LookAndFeelIconGroup@components.treeExpandedSelected", 11, 9);
 
   public static Icon getTreeSelectedExpandedIcon() {
     Icon icon = UIManager.getIcon("Tree.expandedSelectedIcon");
@@ -1550,19 +1557,23 @@ public class UIUtil {
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isMurrineBasedTheme() {
     final String gtkTheme = getGtkThemeName();
-    return "Ambiance".equalsIgnoreCase(gtkTheme) || "Radiance".equalsIgnoreCase(gtkTheme) || "Dust".equalsIgnoreCase(gtkTheme) || "Dust Sand".equalsIgnoreCase(gtkTheme);
+    return "Ambiance".equalsIgnoreCase(gtkTheme) || "Radiance".equalsIgnoreCase(gtkTheme) || "Dust".equalsIgnoreCase(gtkTheme) || "Dust Sand"
+      .equalsIgnoreCase(gtkTheme);
   }
 
   public static Color shade(final Color c, final double factor, final double alphaFactor) {
     assert factor >= 0 : factor;
-    return new Color(Math.min((int)Math.round(c.getRed() * factor), 255), Math.min((int)Math.round(c.getGreen() * factor), 255), Math.min((int)Math.round(c.getBlue() * factor), 255),
+    return new Color(Math.min((int)Math.round(c.getRed() * factor), 255),
+                     Math.min((int)Math.round(c.getGreen() * factor), 255),
+                     Math.min((int)Math.round(c.getBlue() * factor), 255),
                      Math.min((int)Math.round(c.getAlpha() * alphaFactor), 255));
   }
 
   public static Color mix(final Color c1, final Color c2, final double factor) {
     assert 0 <= factor && factor <= 1.0 : factor;
     final double backFactor = 1.0 - factor;
-    return new Color(Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255), Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
+    return new Color(Math.min((int)Math.round(c1.getRed() * backFactor + c2.getRed() * factor), 255),
+                     Math.min((int)Math.round(c1.getGreen() * backFactor + c2.getGreen() * factor), 255),
                      Math.min((int)Math.round(c1.getBlue() * backFactor + c2.getBlue() * factor), 255));
   }
 
@@ -1628,7 +1639,8 @@ public class UIUtil {
 
   public static boolean isValidFont(@Nonnull Font font) {
     try {
-      return font.canDisplay('a') && font.canDisplay('z') && font.canDisplay('A') && font.canDisplay('Z') && font.canDisplay('0') && font.canDisplay('1');
+      return font.canDisplay('a') && font.canDisplay('z') && font.canDisplay('A') && font.canDisplay('Z') && font.canDisplay('0') && font.canDisplay(
+        '1');
     }
     catch (Exception e) {
       // JRE has problems working with the font. Just skip.
@@ -1716,7 +1728,13 @@ public class UIUtil {
    * @param fgColor Foreground color (optional)
    * @param opaque  If opaque the image will be dr
    */
-  public static void drawBoldDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
+  public static void drawBoldDottedLine(final Graphics2D g,
+                                        final int startX,
+                                        final int endX,
+                                        final int lineY,
+                                        final Color bgColor,
+                                        final Color fgColor,
+                                        final boolean opaque) {
     if ((SystemInfo.isMac && !isRetina()) || SystemInfo.isLinux) {
       drawAppleDottedLine(g, startX, endX, lineY, bgColor, fgColor, opaque);
     }
@@ -1768,7 +1786,13 @@ public class UIUtil {
     g.drawLine(x, y + 1, x, y + h - 1);
   }
 
-  private static void drawBoringDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
+  private static void drawBoringDottedLine(final Graphics2D g,
+                                           final int startX,
+                                           final int endX,
+                                           final int lineY,
+                                           final Color bgColor,
+                                           final Color fgColor,
+                                           final boolean opaque) {
     final Color oldColor = g.getColor();
 
     // Fill 2 lines with background color
@@ -1810,7 +1834,14 @@ public class UIUtil {
     drawHeader(g, x, width, height, active, false, drawTopLine, true);
   }
 
-  public static void drawHeader(Graphics g, int x, int width, int height, boolean active, boolean toolWindow, boolean drawTopLine, boolean drawBottomLine) {
+  public static void drawHeader(Graphics g,
+                                int x,
+                                int width,
+                                int height,
+                                boolean active,
+                                boolean toolWindow,
+                                boolean drawTopLine,
+                                boolean drawBottomLine) {
     g.setColor(getPanelBackground());
     g.fillRect(x, 0, width, height);
 
@@ -1825,12 +1856,18 @@ public class UIUtil {
     g.drawLine(x, drawTopLine ? JBUI.scale(1) : 0, width, drawTopLine ? JBUI.scale(1) : 0);
 
     if (active) {
-      g.setColor(ColorUtil.toAlpha(UIManager.getColor("Hyperlink.linkColor"), toolWindow ? 100 : 30));//new Color(100, 150, 230, toolWindow ? 50 : 30));
+      g.setColor(ColorUtil.toAlpha(UIManager.getColor("Hyperlink.linkColor"),
+                                   toolWindow ? 100 : 30));//new Color(100, 150, 230, toolWindow ? 50 : 30));
       g.fillRect(x, 0, width, height);
     }
   }
 
-  public static void drawDoubleSpaceDottedLine(final Graphics2D g, final int start, final int end, final int xOrY, final Color fgColor, boolean horizontal) {
+  public static void drawDoubleSpaceDottedLine(final Graphics2D g,
+                                               final int start,
+                                               final int end,
+                                               final int xOrY,
+                                               final Color fgColor,
+                                               boolean horizontal) {
 
     g.setColor(fgColor);
     for (int dot = start; dot < end; dot += 3) {
@@ -1843,7 +1880,13 @@ public class UIUtil {
     }
   }
 
-  private static void drawAppleDottedLine(final Graphics2D g, final int startX, final int endX, final int lineY, final Color bgColor, final Color fgColor, final boolean opaque) {
+  private static void drawAppleDottedLine(final Graphics2D g,
+                                          final int startX,
+                                          final int endX,
+                                          final int lineY,
+                                          final Color bgColor,
+                                          final Color fgColor,
+                                          final boolean opaque) {
     final Color oldColor = g.getColor();
 
     // Fill 3 lines with background color
@@ -1986,11 +2029,24 @@ public class UIUtil {
    * use {@link #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)}.
    */
   @Deprecated
-  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, int x, int y, int width, int height, @Nullable ImageObserver observer) {
+  public static void drawImage(@Nonnull Graphics g,
+                               @Nonnull Image image,
+                               int x,
+                               int y,
+                               int width,
+                               int height,
+                               @Nullable ImageObserver observer) {
     drawImage(g, image, x, y, width, height, null, observer);
   }
 
-  private static void drawImage(Graphics g, Image image, int x, int y, int width, int height, @Nullable BufferedImageOp op, ImageObserver observer) {
+  private static void drawImage(Graphics g,
+                                Image image,
+                                int x,
+                                int y,
+                                int width,
+                                int height,
+                                @Nullable BufferedImageOp op,
+                                ImageObserver observer) {
     Rectangle srcBounds = width >= 0 && height >= 0 ? new Rectangle(x, y, width, height) : null;
     drawImage(g, image, new Rectangle(x, y, width, height), srcBounds, op, observer);
   }
@@ -2007,7 +2063,11 @@ public class UIUtil {
   /**
    * @see #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)
    */
-  public static void drawImage(@Nonnull Graphics g, @Nonnull Image image, @Nullable Rectangle dstBounds, @Nullable Rectangle srcBounds, @Nullable ImageObserver observer) {
+  public static void drawImage(@Nonnull Graphics g,
+                               @Nonnull Image image,
+                               @Nullable Rectangle dstBounds,
+                               @Nullable Rectangle srcBounds,
+                               @Nullable ImageObserver observer) {
     drawImage(g, image, dstBounds, srcBounds, null, observer);
   }
 
@@ -2119,7 +2179,10 @@ public class UIUtil {
   /**
    * Direct painting into component's graphics with XORMode is broken on retina-mode so we need to paint into an intermediate buffer first.
    */
-  public static void paintWithXorOnRetina(@Nonnull Dimension size, @Nonnull Graphics g, boolean useRetinaCondition, Consumer<Graphics2D> paintRoutine) {
+  public static void paintWithXorOnRetina(@Nonnull Dimension size,
+                                          @Nonnull Graphics g,
+                                          boolean useRetinaCondition,
+                                          Consumer<Graphics2D> paintRoutine) {
     if (!useRetinaCondition || !isRetina() || Registry.is("ide.mac.retina.disableDrawingFix", false)) {
       paintRoutine.accept((Graphics2D)g);
     }
@@ -2362,7 +2425,8 @@ public class UIUtil {
     URL resource = liImg != null ? SystemInfo.class.getResource(liImg) : null;
 
     @NonNls String fontFamilyAndSize = "font-family:" + font.getFamily() + "; font-size:" + font.getSize() + ";";
-    @NonNls @Language("HTML") String body = "body, div, td, p {" + fontFamilyAndSize + " " + (fgColor != null ? "color:" + ColorUtil.toHex(fgColor) : "") + "}";
+    @NonNls @Language("HTML") String body =
+      "body, div, td, p {" + fontFamilyAndSize + " " + (fgColor != null ? "color:" + ColorUtil.toHex(fgColor) : "") + "}";
     if (resource != null) {
       body += "ul {list-style-image: " + resource.toExternalForm() + "}";
     }
@@ -2502,6 +2566,16 @@ public class UIUtil {
   }
 
   @Nonnull
+  public static Font getFontWithFallbackIfNeeded(@NotNull Font font, @NotNull String text) {
+    if (!SystemInfo.isMac /* 'getFontWithFallback' does nothing on macOS */ && font.canDisplayUpTo(text) != -1) {
+      return getFontWithFallback(font);
+    }
+    else {
+      return font;
+    }
+  }
+
+  @Nonnull
   public static FontUIResource getFontWithFallback(@Nonnull Font font) {
     return getFontWithFallback(font.getFamily(), font.getStyle(), font.getSize());
   }
@@ -2513,7 +2587,9 @@ public class UIUtil {
 
   public static void removeScrollBorder(final Component c) {
     for (JScrollPane scrollPane : uiTraverser(c).filter(JScrollPane.class)) {
-      if (!uiParents(scrollPane, true).takeWhile(Conditions.notEqualTo(c)).filter(Conditions.not(Conditions.instanceOf(JPanel.class, JLayeredPane.class))).isEmpty()) continue;
+      if (!uiParents(scrollPane, true).takeWhile(Conditions.notEqualTo(c))
+                                      .filter(Conditions.not(Conditions.instanceOf(JPanel.class, JLayeredPane.class)))
+                                      .isEmpty()) continue;
 
       Integer keepBorderSides = getClientProperty(scrollPane, KEEP_BORDER_SIDES);
       if (keepBorderSides != null) {
@@ -2570,7 +2646,9 @@ public class UIUtil {
     Font font = getLabelFont();
     @NonNls String family = font != null ? font.getFamily() : "Tahoma";
     int size = font != null ? font.getSize() : 11;
-    return "<html><style>body { font-family: " + family + "; font-size: " + size + ";} ul li {list-style-type:circle;}</style>" + addPadding(html, hPadding) + "</html>";
+    return "<html><style>body { font-family: " + family + "; font-size: " + size + ";} ul li {list-style-type:circle;}</style>" + addPadding(
+      html,
+      hPadding) + "</html>";
   }
 
   public static String addPadding(final String html, int hPadding) {
@@ -2998,7 +3076,8 @@ public class UIUtil {
           final int bulletWidth = info.withBullet ? fm.stringWidth(" " + info.bulletChar) : 0;
           maxBulletWidth[0] = Math.max(maxBulletWidth[0], bulletWidth);
 
-          maxWidth[0] = Math.max(fm.stringWidth(pair.getFirst().replace("<shortcut>", "").replace("</shortcut>", "") + bulletWidth), maxWidth[0]);
+          maxWidth[0] =
+            Math.max(fm.stringWidth(pair.getFirst().replace("<shortcut>", "").replace("</shortcut>", "") + bulletWidth), maxWidth[0]);
           height[0] += (fm.getHeight() + fm.getLeading()) * myLineSpacing;
 
           if (old != null) {
@@ -3082,7 +3161,10 @@ public class UIUtil {
             if (myDrawShadow) {
               c = g.getColor();
               g.setColor(myShadowColor);
-              g.drawLine(x - maxBulletWidth[0] - 10, yOffset[0] + fm.getDescent() + 1, x + maxWidth[0] + 10, yOffset[0] + fm.getDescent() + 1);
+              g.drawLine(x - maxBulletWidth[0] - 10,
+                         yOffset[0] + fm.getDescent() + 1,
+                         x + maxWidth[0] + 10,
+                         yOffset[0] + fm.getDescent() + 1);
               g.setColor(c);
             }
           }
@@ -3115,7 +3197,8 @@ public class UIUtil {
     Component eachParent = c;
     while (eachParent != null) {
       if (eachParent instanceof JComponent) {
-        @SuppressWarnings({"unchecked"}) WeakReference<JRootPane> pane = (WeakReference<JRootPane>)((JComponent)eachParent).getClientProperty(ROOT_PANE);
+        @SuppressWarnings({"unchecked"}) WeakReference<JRootPane> pane =
+          (WeakReference<JRootPane>)((JComponent)eachParent).getClientProperty(ROOT_PANE);
         if (pane != null) return pane.get();
       }
       eachParent = eachParent.getParent();
@@ -3497,16 +3580,24 @@ public class UIUtil {
     UndoManager undoManager = new UndoManager();
     textComponent.putClientProperty(UNDO_MANAGER, undoManager);
     textComponent.getDocument().addUndoableEditListener(undoManager);
-    textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), "undoKeystroke");
+    textComponent.getInputMap()
+                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
+                      "undoKeystroke");
     textComponent.getActionMap().put("undoKeystroke", UNDO_ACTION);
-    textComponent.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK), "redoKeystroke");
+    textComponent.getInputMap()
+                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                                             (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK),
+                      "redoKeystroke");
     textComponent.getActionMap().put("redoKeystroke", REDO_ACTION);
   }
 
   /**
    * KeyEvents for specified keystrokes would be redispatched to target component
    */
-  public static void redirectKeystrokes(@Nonnull Disposable disposable, @Nonnull final JComponent source, @Nonnull final JComponent target, @Nonnull final KeyStroke... keyStrokes) {
+  public static void redirectKeystrokes(@Nonnull Disposable disposable,
+                                        @Nonnull final JComponent source,
+                                        @Nonnull final JComponent target,
+                                        @Nonnull final KeyStroke... keyStrokes) {
     final KeyAdapter keyAdapter = new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {

@@ -9,6 +9,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.TriConsumer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -269,8 +270,4 @@ public class NewLibraryEditor extends LibraryEditorBase {
     });
   }
 
-  @FunctionalInterface
-  private interface TriConsumer<T, U, P> {
-    void accept(T t, U u, P p);
-  }
 }

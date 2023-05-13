@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataProvider;
@@ -160,7 +161,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
   @Nonnull
   private Editor createEditor() {
-    Editor editor = EditorFactory.getInstance().createEditor(myDocument, myProject);
+    Editor editor = EditorFactory.getInstance().createEditor(myDocument, myProject, EditorKind.MAIN_EDITOR);
     ((EditorMarkupModel)editor.getMarkupModel()).setErrorStripeVisible(true);
     ((EditorEx)editor).getGutterComponentEx().setForceShowRightFreePaintersArea(true);
 

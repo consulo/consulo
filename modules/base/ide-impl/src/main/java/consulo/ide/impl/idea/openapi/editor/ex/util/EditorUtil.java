@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.ex.util;
 
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
+import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
@@ -24,7 +25,6 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
@@ -147,7 +147,11 @@ public final class EditorUtil {
     return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
   }
 
-  public static int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
+  public static int calcColumnNumber(@Nullable Editor editor,
+                                     @Nonnull CharSequence text,
+                                     final int start,
+                                     final int offset,
+                                     final int tabSize) {
     return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
   }
 
@@ -265,7 +269,12 @@ public final class EditorUtil {
    *                 from <code>[1; tab size]</code> (check {@link #nextTabStop(int, Editor)} for more details)
    * @return width in pixels required for target text representation
    */
-  public static int textWidth(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, @JdkConstants.FontStyle int fontType, int x) {
+  public static int textWidth(@Nonnull Editor editor,
+                              @Nonnull CharSequence text,
+                              int start,
+                              int end,
+                              @JdkConstants.FontStyle int fontType,
+                              int x) {
     int result = 0;
     for (int i = start; i < end; i++) {
       char c = text.charAt(i);
@@ -320,7 +329,9 @@ public final class EditorUtil {
    * @see #getNotFoldedLineEndOffset(Editor, int)
    */
   @SuppressWarnings("AssignmentToForLoopParameter")
-  public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor, @Nonnull VisualPosition start, @Nonnull VisualPosition end) {
+  public static consulo.util.lang.Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
+                                                                                              @Nonnull VisualPosition start,
+                                                                                              @Nonnull VisualPosition end) {
     return consulo.codeEditor.util.EditorUtil.calcSurroundingRange(editor, start, end);
   }
 
@@ -373,7 +384,8 @@ public final class EditorUtil {
 
   public static boolean isChangeFontSize(@Nonnull MouseWheelEvent e) {
     if (e.getWheelRotation() == 0) return false;
-    return SystemInfo.isMac ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e.isAltDown() && !e.isShiftDown();
+    return SystemInfo.isMac ? !e.isControlDown() && e.isMetaDown() && !e.isAltDown() && !e.isShiftDown() : e.isControlDown() && !e.isMetaDown() && !e
+      .isAltDown() && !e.isShiftDown();
   }
 
   public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
@@ -629,6 +641,12 @@ public final class EditorUtil {
         return context.getData(dataId);
       }
     };
+  }
+
+  public static boolean isBreakPointsOnLineNumbers() {
+    return UISettings.getInstance().getShowBreakpointsOverLineNumbers()
+      && !UISettings.getInstance().getPresentationMode()
+      && !Registry.is("editor.distraction.free.mode");
   }
 
   public static EditorHighlighter createEmptyHighlighter(@Nullable Project project, @Nonnull Document document) {

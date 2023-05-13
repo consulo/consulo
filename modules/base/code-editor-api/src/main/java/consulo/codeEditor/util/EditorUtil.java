@@ -147,7 +147,9 @@ public class EditorUtil {
    * @see #getNotFoldedLineEndOffset(Editor, int)
    */
   @SuppressWarnings("AssignmentToForLoopParameter")
-  public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor, @Nonnull VisualPosition start, @Nonnull VisualPosition end) {
+  public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
+                                                                            @Nonnull VisualPosition start,
+                                                                            @Nonnull VisualPosition end) {
     final Document document = editor.getDocument();
     final FoldingModel foldingModel = editor.getFoldingModel();
 
@@ -168,7 +170,8 @@ public class EditorUtil {
 
 
     LogicalPosition second = editor.visualToLogicalPosition(new VisualPosition(end.line, 0));
-    for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength(); offset = document.getLineEndOffset(line)) {
+    for (int line = second.line, offset = document.getLineEndOffset(line); offset <= document.getTextLength();
+         offset = document.getLineEndOffset(line)) {
       final FoldRegion foldRegion = foldingModel.getCollapsedRegionAtOffset(offset);
       if (foldRegion == null) {
         second = new LogicalPosition(line + 1, 0);
@@ -225,5 +228,25 @@ public class EditorUtil {
       offset = foldRegion.getStartOffset();
     }
     return offset;
+  }
+
+  /**
+   * Maps {@code y} to a logical line in editor (in the same way as {@link #yPositionToLogicalLine(Editor, int)} does), except that for
+   * coordinates, corresponding to block inlay or custom fold region locations, {@code -1} is returned.
+   */
+  public static int yToLogicalLineNoCustomRenderers(@Nonnull Editor editor, int y) {
+    int visualLine = editor.yToVisualLine(y);
+    int visualLineStartY = editor.visualLineToY(visualLine);
+    if (y < visualLineStartY || y >= visualLineStartY + editor.getLineHeight()) return -1;
+    int line = editor.visualToLogicalPosition(new VisualPosition(visualLine, 0)).line;
+    Document document = editor.getDocument();
+    if (line < document.getLineCount()) {
+      int lineStartOffset = document.getLineStartOffset(line);
+      FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(lineStartOffset);
+      if (foldRegion instanceof CustomFoldRegion) {
+        return -1;
+      }
+    }
+    return line;
   }
 }

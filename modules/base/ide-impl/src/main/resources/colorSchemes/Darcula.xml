@@ -8,7 +8,7 @@
     <option name="ADDED_LINES_COLOR" value="384C38" />
     <option name="ANNOTATIONS_COLOR" value="8b999f" />
     <option name="CARET_COLOR" value="bbbbbb" />
-    <option name="CARET_ROW_COLOR" value="323232" />
+    <option name="CARET_ROW_COLOR" value="26282e" />
     <option name="CONSOLE_BACKGROUND_KEY" value="2B2B2B" />
     <option name="DELETED_LINES_COLOR" value="656e76"/>
     <option name="FILESTATUS_ADDED" value="629755" />
@@ -28,8 +28,9 @@
     <option name="FILESTATUS_changelistConflict" value="d5756c" />
     <option name="FILESTATUS_modifiedOutside" value="6897bb" />
     <option name="GUTTER_BACKGROUND" value="313335" />
-    <option name="INDENT_GUIDE" value="373737" />
-    <option name="LINE_NUMBERS_COLOR" value="888888" />
+    <option name="INDENT_GUIDE" value="313438" />
+    <option name="LINE_NUMBERS_COLOR" value="4b5059"/>
+    <option name="LINE_NUMBER_ON_CARET_ROW_COLOR" value="a1a3ab"/>
     <option name="METHOD_SEPARATORS_COLOR" value="4d4d4d" />
     <option name="MODIFIED_LINES_COLOR" value="415f69" />
     <option name="NOTIFICATION_BACKGROUND" value="5c5c42" />

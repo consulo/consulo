@@ -63,6 +63,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     public boolean SHOW_BREADCRUMBS = true;
     public boolean SHOW_BREADCRUMBS_ABOVE = false;
     public boolean SHOW_INSPECTION_WIDGET = true;
+    public boolean IS_FOLDING_ENDINGS_SHOWN = false;
 
     public boolean SMART_HOME = true;
 
@@ -659,5 +660,9 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
 
   public void setShowInspectionWidget(boolean show) {
     myOptions.SHOW_INSPECTION_WIDGET = show;
+  }
+
+  public boolean isFoldingEndingsShown() {
+    return myOptions.IS_FOLDING_ENDINGS_SHOWN;
   }
 }

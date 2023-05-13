@@ -20,12 +20,15 @@ import consulo.application.util.logging.LoggerUtil;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.codeEditor.impl.FontInfo;
-import consulo.codeEditor.RealEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
+import consulo.document.impl.Interval;
+import consulo.document.impl.TextRangeInterval;
 import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +44,61 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
  */
 public class EditorImplUtil {
   private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
+
+  /**
+   * First value returned is the range of {@code y} coordinates in editor coordinate space (relative to
+   * {@code editor.getContentComponent()}), corresponding to a given logical line in a document. Most often, a logical line corresponds to a
+   * single visual line, in that case the returned range has a height of {@code editor.getLineHeight()} (or a height of fold region
+   * placeholder, if the line is collapsed in a {@link CustomFoldRegion}). This will be not the case, if the
+   * line is soft-wrapped. Then the vertical range will be larger, as it will include several visual lines. Block inlays displayed on
+   * either side of the calculated range, are not included in the result.
+   * <p>
+   * The second value is a sub-range no other logical line maps to (or {@code null} if there's no such sub-range).
+   *
+   * @return EXCLUSIVE intervals [startY, endY)
+   * @see #yToLogicalLineRange(Editor, int)
+   */
+  @NotNull
+  public static Pair<Interval, Interval> logicalLineToYRange(@NotNull Editor editor, int logicalLine) {
+    if (logicalLine < 0) throw new IllegalArgumentException("Logical line is negative: " + logicalLine);
+    Document document = editor.getDocument();
+    int startVisualLine;
+    int endVisualLine;
+    boolean topOverlapped;
+    boolean bottomOverlapped;
+    if (logicalLine >= document.getLineCount()) {
+      startVisualLine = endVisualLine = logicalToVisualLine(editor, logicalLine);
+      topOverlapped = bottomOverlapped = false;
+    }
+    else {
+      int lineStartOffset = document.getLineStartOffset(logicalLine);
+      int lineEndOffset = document.getLineEndOffset(logicalLine);
+      FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(lineStartOffset);
+      if (foldRegion instanceof CustomFoldRegion) {
+        int startY = editor.visualLineToY(((RealEditor)editor).offsetToVisualLine(foldRegion.getStartOffset(), false));
+        Interval interval = new TextRangeInterval(startY, startY + ((CustomFoldRegion)foldRegion).getHeightInPixels());
+        return Pair.create(interval, foldRegion.getStartOffset() == document.getLineStartOffset(logicalLine) &&
+          foldRegion.getEndOffset() == document.getLineEndOffset(logicalLine) ? interval : null);
+      }
+      startVisualLine = ((RealEditor)editor).offsetToVisualLine(lineStartOffset, false);
+      endVisualLine = startVisualLine + editor.getSoftWrapModel().getSoftWrapsForRange(lineStartOffset + 1, lineEndOffset - 1).size();
+      topOverlapped = editor.getFoldingModel().isOffsetCollapsed(lineStartOffset - 1);
+      bottomOverlapped = logicalLine + 1 < document.getLineCount() &&
+        editor.getFoldingModel().isOffsetCollapsed(document.getLineStartOffset(logicalLine + 1) - 1);
+    }
+    int lineHeight = editor.getLineHeight();
+    int startY = editor.visualLineToY(startVisualLine);
+    int endY = (endVisualLine == startVisualLine ? startY : editor.visualLineToY(endVisualLine)) + lineHeight;
+    int startYEx = topOverlapped ? startY + lineHeight : startY;
+    int endYEx = bottomOverlapped ? endY - lineHeight : endY;
+    return Pair.create(new TextRangeInterval(startY, endY), startYEx < endYEx ? new TextRangeInterval(startYEx, endYEx) : null);
+  }
+
+  public static int logicalToVisualLine(@NotNull Editor editor, int logicalLine) {
+    LogicalPosition logicalPosition = new LogicalPosition(logicalLine, 0);
+    VisualPosition visualPosition = editor.logicalToVisualPosition(logicalPosition);
+    return visualPosition.line;
+  }
 
   public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
     if (editor instanceof RealEditor) {

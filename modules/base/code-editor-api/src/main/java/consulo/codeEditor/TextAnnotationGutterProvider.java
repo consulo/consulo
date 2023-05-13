@@ -79,4 +79,8 @@ public interface TextAnnotationGutterProvider {
   default boolean useMargin() {
     return true;
   }
+
+  default int getLeftMargin() {
+    return -1;
+  }
 }

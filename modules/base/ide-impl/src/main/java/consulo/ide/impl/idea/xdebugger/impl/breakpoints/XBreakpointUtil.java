@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -32,10 +33,12 @@ import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import consulo.project.Project;
+import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -125,6 +128,69 @@ public class XBreakpointUtil {
       items.clear();
     }
     return null;
+  }
+
+  @RequiredReadAction
+  public static List<XLineBreakpointType> getAvailableLineBreakpointTypes(@NotNull Project project,
+                                                                          @NotNull XSourcePosition position,
+                                                                          @Nullable Editor editor) {
+    return getAvailableLineBreakpointInfo(project, position, editor).first;
+  }
+
+  @RequiredReadAction
+  private static Pair<List<XLineBreakpointType>, Integer> getAvailableLineBreakpointInfo(@NotNull Project project,
+                                                                                         @NotNull XSourcePosition position,
+                                                                                         @Nullable Editor editor) {
+    int lineStart = position.getLine();
+    VirtualFile file = position.getFile();
+    // for folded text check each line and find out type with the biggest priority
+    int linesEnd = lineStart;
+    if (editor != null) {
+      FoldRegion region = FoldingUtil.findFoldRegionStartingAtLine(editor, lineStart);
+      if (region != null && !region.isExpanded()) {
+        linesEnd = region.getDocument().getLineNumber(region.getEndOffset());
+      }
+    }
+
+    final XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
+    XLineBreakpointType<?>[] lineTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
+    List<XLineBreakpointType> typeWinner = new SmartList<>();
+    int lineWinner = -1;
+    if (linesEnd != lineStart) { // folding mode
+      for (int line = lineStart; line <= linesEnd; line++) {
+        int maxPriority = 0;
+        for (XLineBreakpointType<?> type : lineTypes) {
+          maxPriority = Math.max(maxPriority, type.getPriority());
+          XLineBreakpoint<? extends XBreakpointProperties> breakpoint = breakpointManager.findBreakpointAtLine(type, file, line);
+          if ((canPutAt(type, file, line, project) || breakpoint != null) &&
+            (typeWinner.isEmpty() || type.getPriority() > typeWinner.get(0).getPriority())) {
+            typeWinner.clear();
+            typeWinner.add(type);
+            lineWinner = line;
+          }
+        }
+        // already found max priority type - stop
+        if (!typeWinner.isEmpty() && typeWinner.get(0).getPriority() == maxPriority) {
+          break;
+        }
+      }
+    }
+    else {
+      for (XLineBreakpointType<?> type : lineTypes) {
+        XLineBreakpoint<? extends XBreakpointProperties> breakpoint = breakpointManager.findBreakpointAtLine(type, file, lineStart);
+        if ((canPutAt(type, file, lineStart, project) || breakpoint != null)) {
+          typeWinner.add(type);
+          lineWinner = lineStart;
+        }
+      }
+    }
+    return Pair.create(typeWinner, lineWinner);
+  }
+
+  @RequiredReadAction
+  private static boolean canPutAt(XLineBreakpointType lineBreakpoint, VirtualFile file, int line, Project project) {
+    XLineBreakpointType<?> type = XLineBreakpointTypeResolver.forFile(project, file, line);
+    return type == lineBreakpoint;
   }
 
   /**

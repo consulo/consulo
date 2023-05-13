@@ -26,6 +26,7 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
@@ -540,7 +541,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     @Nonnull
     @Override
     public Alignment getAlignment() {
-      return Alignment.RIGHT;
+      return EditorUtil.isBreakPointsOnLineNumbers() ? Alignment.LINE_NUMBERS : Alignment.RIGHT;
     }
 
     @Override

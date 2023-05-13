@@ -17,6 +17,7 @@ package consulo.document.util;
 
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -136,5 +137,11 @@ public final class DocumentUtil {
       if (!Character.isWhitespace(chars.charAt(i))) return false;
     }
     return true;
+  }
+
+  public static boolean isValidLine(int line, @Nonnull Document document) {
+    if (line < 0) return false;
+    int lineCount = document.getLineCount();
+    return lineCount == 0 ? line == 0 : line < lineCount;
   }
 }

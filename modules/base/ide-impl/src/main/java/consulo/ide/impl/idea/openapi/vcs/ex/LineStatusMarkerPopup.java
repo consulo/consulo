@@ -128,6 +128,7 @@ public abstract class LineStatusMarkerPopup {
     JComponent editorComponent = createEditorComponent(fileType, wordDiff);
 
     ActionToolbar toolbar = buildToolbar(mousePosition, disposable);
+    toolbar.setTargetComponent(myEditor.getComponent());
     toolbar.updateActionsImmediately(); // we need valid ActionToolbar.getPreferredSize() to calc size of popup
     toolbar.setReservePlaceAutoPopupIcon(false);
 

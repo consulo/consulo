@@ -15,20 +15,16 @@
  */
 package consulo.desktop.swt.editor.impl;
 
+import consulo.codeEditor.*;
+import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
-import consulo.codeEditor.EditorGutterAction;
-import consulo.codeEditor.FoldRegion;
-import consulo.codeEditor.TextAnnotationGutterProvider;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.markup.GutterIconRenderer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
 
 /**
  * @author VISTALL
@@ -94,12 +90,7 @@ public class DesktopSwtEditorGutterComponentImpl implements EditorGutterComponen
   }
 
   @Override
-  public void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
-
-  }
-
-  @Override
-  public void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
+  public void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter) {
 
   }
 

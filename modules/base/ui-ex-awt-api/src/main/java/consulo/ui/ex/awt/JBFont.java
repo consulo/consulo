@@ -29,6 +29,10 @@ public class JBFont extends Font {
     return create(UIManager.getFont("Label.font"), false);
   }
 
+  public static JBFont regular() {
+    return label();
+  }
+
   private JBFont(Font font) {
     super(font);
   }

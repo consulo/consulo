@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
 
@@ -53,9 +54,53 @@ public interface EditorGutterComponentEx extends EditorGutter {
   @Nullable
   public abstract Point getCenterPoint(GutterIconRenderer renderer);
 
-  public abstract void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor);
+  @Deprecated
+  default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor) {
+    setLineNumberConvertor(lineNumberConvertor, null);
+  }
 
-  public abstract void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2);
+  @Deprecated
+  default void setLineNumberConvertor(@Nullable IntUnaryOperator lineNumberConvertor1, @Nullable IntUnaryOperator lineNumberConvertor2) {
+    setLineNumberConverter(convertFromOperator(lineNumberConvertor1),
+                           lineNumberConvertor2 == null ? null : convertFromOperator(lineNumberConvertor2));
+  }
+
+  private static LineNumberConverter convertFromOperator(IntUnaryOperator operator) {
+    if (operator == null) {
+      return LineNumberConverter.DEFAULT;
+    }
+
+    return new LineNumberConverter() {
+      @Nullable
+      @Override
+      public Integer convert(@Nonnull Editor editor, int lineNumber) {
+        return operator.applyAsInt(lineNumber);
+      }
+
+      @Nullable
+      @Override
+      public Integer getMaxLineNumber(@Nonnull Editor editor) {
+        return editor.getDocument().getLineCount();
+      }
+    };
+  }
+
+  /**
+   * Changes how line numbers are displayed in the gutter. Disables showing additional line numbers.
+   *
+   * @see #setLineNumberConverter(LineNumberConverter, LineNumberConverter)
+   */
+  default void setLineNumberConverter(@Nonnull LineNumberConverter converter) {
+    setLineNumberConverter(converter, null);
+  }
+
+  /**
+   * Changes how line numbers are displayed in the gutter.
+   *
+   * @param primaryConverter    converter for primary line number shown in gutter
+   * @param additionalConverter if not {@code null}, defines an additional column of numbers to be displayed in the gutter
+   */
+  void setLineNumberConverter(@Nonnull LineNumberConverter primaryConverter, @Nullable LineNumberConverter additionalConverter);
 
   public abstract void setShowDefaultGutterPopup(boolean show);
 
@@ -73,6 +118,14 @@ public interface EditorGutterComponentEx extends EditorGutter {
   public abstract void setForceShowRightFreePaintersArea(boolean value);
 
   public abstract void setInitialIconAreaWidth(int width);
+
+  default boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
+    throw new AbstractMethodError("unsupported platform");
+  }
+
+  default int getHoveredFreeMarkersLine() {
+    return -1;
+  }
 
   @Nullable
   default GutterMark getGutterRenderer(final Point p) {

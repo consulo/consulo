@@ -169,6 +169,8 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public boolean FULL_PATHS_IN_WINDOW_HEADER;
 
+  public boolean SHOW_BREAKPOINTS_OVER_LINE_NUMBERS = true;
+
   @Deprecated
   @DeprecationInfo("Use UISettingsListener.class")
   public void addUISettingsListener(UISettingsListener listener) {
@@ -492,5 +494,13 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
     if (SystemInfo.isWindows) return 1684366536;
     if (SystemInfo.isMac) return 845374563;
     return 729434056;
+  }
+
+  public boolean getShowBreakpointsOverLineNumbers() {
+    return SHOW_BREAKPOINTS_OVER_LINE_NUMBERS;
+  }
+
+  public void setShowBreakpointsOverLineNumbers(boolean value) {
+    SHOW_BREAKPOINTS_OVER_LINE_NUMBERS = value;
   }
 }

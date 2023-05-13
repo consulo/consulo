@@ -15,10 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
@@ -27,7 +24,8 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.diff.DiffColors;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.PairConsumer;
 import consulo.versionControlSystem.VcsBundle;
@@ -94,10 +92,10 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
         Rectangle area = getMarkerArea(editor, r, line1, line2);
         ColorValue borderColor = getGutterBorderColor(editor);
         if (area.height != 0) {
-          paintRect(g, color, borderColor, area.x, area.y, area.x + area.width, area.y + area.height);
+          paintRect((Graphics2D)g, color, borderColor, area.x, area.y, area.x + area.width, area.y + area.height);
         }
         else {
-          paintTriangle(g, color, borderColor, area.x, area.x + area.width, area.y);
+          paintTriangle((Graphics2D)g, editor, color, borderColor, area.x, area.x + area.width, area.y);
         }
       }
 
@@ -162,17 +160,26 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     final int y = area.y;
     final int endY = area.y + area.height;
 
+    Graphics2D graphics2D = (Graphics2D)g;
+
     if (myRange.getInnerRanges() == null) { // Mode.DEFAULT
       if (y != endY) {
-        paintRect(g, gutterColor, borderColor, x, y, endX, endY);
+        EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
+        int line = gutter.getHoveredFreeMarkersLine();
+
+        if (line != -1) {
+          paintRect(graphics2D, gutterColor, borderColor, x - 1, y, endX + 2, endY);
+        } else {
+          paintRect(graphics2D, gutterColor, borderColor, x, y, endX, endY);
+        }
       }
       else {
-        paintTriangle(g, gutterColor, borderColor, x, endX, y);
+        paintTriangle(graphics2D, editor, gutterColor, borderColor, x, endX, y);
       }
     }
     else { // Mode.SMART
       if (y == endY) {
-        paintTriangle(g, gutterColor, borderColor, x, endX, y);
+        paintTriangle(graphics2D, editor, gutterColor, borderColor, x, endX, y);
       }
       else {
         List<Range.InnerRange> innerRanges = myRange.getInnerRanges();
@@ -182,32 +189,38 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
           int start = lineToY(editor, innerRange.getLine1());
           int end = lineToY(editor, innerRange.getLine2());
 
-          paintRect(g, getGutterColor(innerRange, editor), null, x, start, endX, end);
+          paintRect(graphics2D, getGutterColor(innerRange, editor), null, x, start, endX, end);
         }
 
-        paintRect(g, null, borderColor, x, y, endX, endY);
+        paintRect(graphics2D, null, borderColor, x, y, endX, endY);
 
         for (Range.InnerRange innerRange : innerRanges) {
           if (innerRange.getType() != Range.DELETED) continue;
 
           int start = lineToY(editor, innerRange.getLine1());
 
-          paintTriangle(g, getGutterColor(innerRange, editor), borderColor, x, endX, start);
+          paintTriangle(graphics2D, editor, getGutterColor(innerRange, editor), borderColor, x, endX, start);
         }
       }
     }
   }
 
-  private static void paintRect(@Nonnull Graphics g, @Nullable ColorValue color, @Nullable ColorValue borderColor, int x1, int y1, int x2, int y2) {
+  private static void paintRect(@Nonnull Graphics2D g,
+                                @Nullable ColorValue color,
+                                @Nullable ColorValue borderColor,
+                                int x1,
+                                int y1,
+                                int x2,
+                                int y2) {
     if (color != null) {
       g.setColor(TargetAWT.to(color));
-      g.fillRect(x1, y1, x2 - x1, y2 - y1);
+      double width = x2 - x1;
+      RectanglePainter2D.FILL.paint(g, x1, y1 + 1, width, y2 - y1 - 2, width);
     }
-    if (borderColor != null) {
+    else if (borderColor != null) {
       g.setColor(TargetAWT.to(borderColor));
-      UIUtil.drawLine(g, x1, y1, x2 - JBUI.scale(1), y1);
-      UIUtil.drawLine(g, x1, y1, x1, y2 - JBUI.scale(1));
-      UIUtil.drawLine(g, x1, y2 - JBUI.scale(1), x2 - JBUI.scale(1), y2 - JBUI.scale(1));
+      double width = x2 - x1;
+      RectanglePainter2D.DRAW.paint(g, x1, y1 + 1, width, y2 - y1 - 2, width);
     }
   }
 
@@ -218,28 +231,44 @@ public abstract class LineStatusMarkerRenderer implements ActiveGutterRenderer {
     int endX = gutter.getWhitespaceSeparatorOffset();
     int y = lineToY(editor, line1);
     int endY = lineToY(editor, line2);
+    // new ui
+    if (Boolean.TRUE) {
+      x = gutter.getLineMarkerFreePaintersAreaOffset() + 1; // leave 1px for brace highlighters
+      x += 2; //IDEA-286352
+      return new Rectangle(x, y, x - (int)(JBUIScale.scale(JBUI.getInt("Gutter.VcsChanges.width", 4) * getEditorScale(editor))), endY - y);
+    }
     return new Rectangle(x, y, endX - x, endY - y);
   }
 
   public static boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
     final EditorGutterComponentEx gutter = (EditorGutterComponentEx)e.getComponent();
-    return e.getX() > gutter.getLineMarkerFreePaintersAreaOffset();
+    return gutter.isInsideMarkerArea(e);
   }
 
-  private static void paintTriangle(@Nonnull Graphics g, @Nullable ColorValue color, @Nullable ColorValue borderColor, int x1, int x2, int y) {
-    int size = JBUI.scale(4);
-
-    final int[] xPoints = new int[]{x1, x1, x2};
-    final int[] yPoints = new int[]{y - size, y + size, y};
+  private static void paintTriangle(@Nonnull Graphics2D g,
+                                    Editor editor,
+                                    @Nullable ColorValue color,
+                                    @Nullable ColorValue borderColor,
+                                    int x1,
+                                    int x2,
+                                    int y) {
+    int size = (int)JBUIScale.scale(4 * getEditorScale(editor));
+    if (y < size) y = size;
 
     if (color != null) {
       g.setColor(TargetAWT.to(color));
-      g.fillPolygon(xPoints, yPoints, xPoints.length);
+      double width = x2 - x1;
+      RectanglePainter2D.FILL.paint(g, x1, y - size + 1, width, 2 * size - 2, width);
     }
-    if (borderColor != null) {
+    else if (borderColor != null) {
       g.setColor(TargetAWT.to(borderColor));
-      g.drawPolygon(xPoints, yPoints, xPoints.length);
+      double width = x2 - x1;
+      RectanglePainter2D.DRAW.paint(g, x1, y - size + 1, width, 2 * size - 2, width);
     }
+  }
+
+  private static float getEditorScale(@Nonnull Editor editor) {
+    return editor instanceof RealEditor ? ((RealEditor)editor).getScale() : 1.0f;
   }
 
   @Nullable
