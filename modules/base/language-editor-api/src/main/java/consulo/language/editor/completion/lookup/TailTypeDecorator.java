@@ -17,7 +17,7 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.language.psi.PsiDocumentManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Consider using {@link InsertHandler} instead

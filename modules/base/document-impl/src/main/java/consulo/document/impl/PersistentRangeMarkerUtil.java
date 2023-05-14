@@ -16,7 +16,7 @@
 package consulo.document.impl;
 
 import consulo.document.event.DocumentEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

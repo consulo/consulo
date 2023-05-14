@@ -22,7 +22,7 @@ import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.AlignmentImpl;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;

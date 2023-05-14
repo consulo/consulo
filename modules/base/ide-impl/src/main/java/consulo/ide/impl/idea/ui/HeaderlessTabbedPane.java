@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.designer.model;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyEditor;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyRenderer;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik

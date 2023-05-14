@@ -7,7 +7,7 @@ package consulo.project.content.scope;
 
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ProjectScopes {
   private ProjectScopes() {

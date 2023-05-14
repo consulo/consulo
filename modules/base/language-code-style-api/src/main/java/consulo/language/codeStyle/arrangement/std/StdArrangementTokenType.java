@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Type of {@link StdArrangementSettingsToken}. Defines UI role used to display the token. Used to differentiate between semantically

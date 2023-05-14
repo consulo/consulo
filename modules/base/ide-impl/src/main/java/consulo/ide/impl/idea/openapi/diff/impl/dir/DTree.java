@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.ide.diff.DiffType;
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 

@@ -35,7 +35,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;

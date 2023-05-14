@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Sergey.Malenkov

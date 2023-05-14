@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RunnableBackgroundableWrapper extends Task.Backgroundable {
   private final Runnable myNonCancellable;

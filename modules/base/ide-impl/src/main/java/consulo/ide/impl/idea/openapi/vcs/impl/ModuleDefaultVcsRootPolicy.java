@@ -41,7 +41,7 @@ import consulo.application.AccessRule;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -114,13 +114,13 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Object getMatchContext(final VirtualFile file) {
     return ModuleUtilCore.findModuleForFile(file, myProject);
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VirtualFile getVcsRootFor(@Nonnull VirtualFile file) {
     FileIndexFacade indexFacade = ServiceManager.getService(myProject, FileIndexFacade.class);
     if (myBaseDir != null && indexFacade.isValidAncestor(myBaseDir, file)) {

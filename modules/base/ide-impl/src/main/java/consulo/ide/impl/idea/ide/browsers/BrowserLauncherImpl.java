@@ -31,8 +31,8 @@ import consulo.webBrowser.DefaultBrowserPolicy;
 import consulo.webBrowser.WebBrowser;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

@@ -64,8 +64,8 @@ import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

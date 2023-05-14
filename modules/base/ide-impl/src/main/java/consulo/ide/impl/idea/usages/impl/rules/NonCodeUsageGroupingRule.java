@@ -28,7 +28,7 @@ import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

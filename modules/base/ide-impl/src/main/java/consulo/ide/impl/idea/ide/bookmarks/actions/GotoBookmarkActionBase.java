@@ -27,8 +27,8 @@ import consulo.bookmark.BookmarkManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 abstract class GotoBookmarkActionBase extends EditorAction {
   protected GotoBookmarkActionBase(final boolean next) {

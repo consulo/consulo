@@ -39,7 +39,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesFromTablesDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

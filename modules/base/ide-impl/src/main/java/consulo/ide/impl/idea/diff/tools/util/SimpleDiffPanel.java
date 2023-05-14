@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.tools.util.base.DiffPanelBase;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

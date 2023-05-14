@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.find.FindModel;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

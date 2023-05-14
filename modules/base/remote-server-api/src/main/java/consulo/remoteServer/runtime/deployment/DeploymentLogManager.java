@@ -17,7 +17,7 @@ package consulo.remoteServer.runtime.deployment;
 
 import consulo.remoteServer.runtime.log.LoggingHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

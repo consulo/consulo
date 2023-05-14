@@ -76,8 +76,8 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -134,7 +134,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     return myViewer.getComponent();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myViewer.getPreferredFocusedComponent();
@@ -154,7 +154,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     return components;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Action getResolveAction(@Nonnull MergeResult result) {
     return myViewer.getResolveAction(result);
@@ -264,7 +264,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       return group;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected List<AnAction> createPopupActions() {
       List<AnAction> group = new ArrayList<>();
@@ -275,7 +275,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       return group;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public Action getResolveAction(@Nonnull final MergeResult result) {
       String caption = MergeUtil.getResolveActionTitle(result, myMergeRequest, myMergeContext);
       return new AbstractAction(caption) {
@@ -476,7 +476,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
       @Nonnull
       private final Alarm myAlarm = new Alarm(MyThreesideViewer.this);
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       private ProgressIndicator myProgress;
 
       private boolean myEnabled = false;
@@ -676,9 +676,9 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     /*
      * affected changes should be sorted
      */
-    public void executeMergeCommand(@javax.annotation.Nullable String commandName,
+    public void executeMergeCommand(@jakarta.annotation.Nullable String commandName,
                                     boolean underBulkUpdate,
-                                    @javax.annotation.Nullable List<TextMergeChange> affected,
+                                    @jakarta.annotation.Nullable List<TextMergeChange> affected,
                                     @Nonnull Runnable task) {
       myContentModified = true;
 
@@ -693,8 +693,8 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       myModel.executeMergeCommand(commandName, null, UndoConfirmationPolicy.DEFAULT, underBulkUpdate, affectedIndexes, task);
     }
 
-    public void executeMergeCommand(@javax.annotation.Nullable String commandName,
-                                    @javax.annotation.Nullable List<TextMergeChange> affected,
+    public void executeMergeCommand(@jakarta.annotation.Nullable String commandName,
+                                    @jakarta.annotation.Nullable List<TextMergeChange> affected,
                                     @Nonnull Runnable task) {
       executeMergeCommand(commandName, false, affected, task);
     }
@@ -767,7 +767,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       }
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public CharSequence resolveConflictUsingInnerDifferences(@Nonnull TextMergeChange change) {
       if (!change.isConflict()) return null;
       if (change.isResolved(Side.LEFT) || change.isResolved(Side.RIGHT)) return null;
@@ -837,7 +837,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
         if (wasResolved != change.isResolved()) onChangeResolved(change);
       }
 
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       protected TextMergeChange.State processDocumentChange(int index, int oldLine1, int oldLine2, int shift) {
         TextMergeChange.State state = super.processDocumentChange(index, oldLine1, oldLine2, shift);
@@ -856,7 +856,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
     // Actions
     //
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private TextMergeChange getFirstUnresolvedChange(boolean acceptConflicts, @Nonnull ThreeSide side) {
       for (TextMergeChange change : getAllChanges()) {
         if (change.isResolved()) continue;
@@ -1212,7 +1212,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
       });
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @RequiredWriteAction
     private static CharSequence getChunkContent(@Nonnull TextMergeChange change,
                                                 @Nonnull List<Document> documents,

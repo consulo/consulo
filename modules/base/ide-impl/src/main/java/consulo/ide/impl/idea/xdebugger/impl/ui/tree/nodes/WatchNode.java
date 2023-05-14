@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.breakpoint.XExpression;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;
 

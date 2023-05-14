@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 
 @ExtensionAPI(ComponentScope.PROJECT)

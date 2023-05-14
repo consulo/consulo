@@ -18,7 +18,7 @@ package consulo.language.codeStyle.arrangement.group;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates information about grouping rules to use during arrangement.

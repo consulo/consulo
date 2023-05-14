@@ -36,8 +36,8 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
   @Nullable
@@ -76,7 +76,7 @@ public class CompareClipboardWithSelectionAction extends BaseShowDiffAction {
     return editor != null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);

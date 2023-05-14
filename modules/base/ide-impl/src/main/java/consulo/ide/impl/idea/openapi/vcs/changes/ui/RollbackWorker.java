@@ -33,7 +33,7 @@ import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.project.util.WaitForProgressToShow;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,8 +59,8 @@ public class RollbackWorker {
 
   public void doRollback(final Collection<Change> changes,
                          final boolean deleteLocallyAddedFiles,
-                         @javax.annotation.Nullable final Runnable afterVcsRefreshInAwt,
-                         @javax.annotation.Nullable final String localHistoryActionName) {
+                         @jakarta.annotation.Nullable final Runnable afterVcsRefreshInAwt,
+                         @jakarta.annotation.Nullable final String localHistoryActionName) {
     final ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     final Runnable notifier = changeListManager.prepareForChangeDeletion(changes);
     final Runnable afterRefresh = new Runnable() {
@@ -210,7 +210,7 @@ public class RollbackWorker {
       WaitForProgressToShow.runOrInvokeLaterAboveProgress(forAwtThread, null, project);
     }
 
-    private void markDirty(@Nonnull VcsDirtyScopeManager manager, @Nonnull VcsGuess vcsGuess, @javax.annotation.Nullable ContentRevision revision) {
+    private void markDirty(@Nonnull VcsDirtyScopeManager manager, @Nonnull VcsGuess vcsGuess, @jakarta.annotation.Nullable ContentRevision revision) {
       if (revision != null) {
         FilePath parent = revision.getFile().getParentPath();
         if (parent != null && couldBeMarkedDirty(vcsGuess, parent)) {

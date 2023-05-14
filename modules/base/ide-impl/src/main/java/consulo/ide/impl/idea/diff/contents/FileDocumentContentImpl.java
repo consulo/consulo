@@ -26,8 +26,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class FileDocumentContentImpl extends DocumentContentImpl implements FileContent {
   @Nonnull

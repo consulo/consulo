@@ -6,7 +6,7 @@ import consulo.ui.ex.awt.SwingActionDelegate;
 import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 import static consulo.ui.ex.awt.speedSearch.SpeedSearchSupply.getSupply;

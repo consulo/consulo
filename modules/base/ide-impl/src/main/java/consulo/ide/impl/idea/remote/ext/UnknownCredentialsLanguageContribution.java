@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Irina.Chernushina on 8/30/2016.

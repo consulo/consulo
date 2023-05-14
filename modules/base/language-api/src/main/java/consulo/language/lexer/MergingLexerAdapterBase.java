@@ -17,7 +17,7 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class MergingLexerAdapterBase extends DelegateLexer {
   private IElementType myTokenType;

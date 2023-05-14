@@ -27,7 +27,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

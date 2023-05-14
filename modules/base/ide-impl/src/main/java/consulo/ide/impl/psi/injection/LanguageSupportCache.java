@@ -19,8 +19,8 @@ package consulo.ide.impl.psi.injection;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

@@ -20,8 +20,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPopupComponent;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base class for components which allow to set up filter for the VCS Log, by displaying a popup with available choices.

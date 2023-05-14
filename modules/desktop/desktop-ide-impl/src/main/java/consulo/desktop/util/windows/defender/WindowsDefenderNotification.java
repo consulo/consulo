@@ -20,7 +20,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ide.impl.idea.notification.impl.NotificationFullContent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Collection;
 

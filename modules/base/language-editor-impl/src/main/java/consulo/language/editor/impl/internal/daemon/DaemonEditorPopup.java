@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class DaemonEditorPopup extends PopupHandler {

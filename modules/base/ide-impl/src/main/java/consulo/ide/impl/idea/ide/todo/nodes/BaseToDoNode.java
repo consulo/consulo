@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ide.todo.TodoTreeStructure;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class BaseToDoNode<Value> extends AbstractTreeNode<Value> {
   protected final ToDoSettings myToDoSettings;

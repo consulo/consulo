@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.todo.nodes.TodoTreeHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.tree.AbstractTreeNodeVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 

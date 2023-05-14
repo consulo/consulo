@@ -14,8 +14,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.util.Arrays;

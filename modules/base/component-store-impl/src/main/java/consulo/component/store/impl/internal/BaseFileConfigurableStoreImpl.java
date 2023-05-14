@@ -19,7 +19,7 @@ import consulo.component.macro.PathMacroManager;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 public abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {

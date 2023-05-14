@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -128,7 +128,7 @@ public abstract class ApplyFilePatchBase<T extends FilePatch> implements ApplyFi
     return findFileToPatchByComponents(context, pathNameComponents, lastComponentToFind);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static VirtualFile findFileToPatchByComponents(ApplyPatchContext context,
                                                          final String[] pathNameComponents,
                                                          final int lastComponentToFind) {

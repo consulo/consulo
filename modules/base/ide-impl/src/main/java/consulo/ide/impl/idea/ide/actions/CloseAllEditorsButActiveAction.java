@@ -28,7 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
   @RequiredUIAccess

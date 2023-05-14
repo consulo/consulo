@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTool {
   /**

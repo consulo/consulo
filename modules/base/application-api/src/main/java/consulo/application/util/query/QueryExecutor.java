@@ -3,7 +3,7 @@ package consulo.application.util.query;
 
 import consulo.application.util.function.Processor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A generic extension to enable plugging into various searches.<p/>

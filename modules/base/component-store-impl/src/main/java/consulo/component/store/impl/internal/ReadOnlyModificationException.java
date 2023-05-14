@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 public final class ReadOnlyModificationException extends RuntimeException {

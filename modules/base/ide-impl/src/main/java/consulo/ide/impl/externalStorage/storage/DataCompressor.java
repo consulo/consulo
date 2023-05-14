@@ -23,7 +23,7 @@ import consulo.util.lang.Pair;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;

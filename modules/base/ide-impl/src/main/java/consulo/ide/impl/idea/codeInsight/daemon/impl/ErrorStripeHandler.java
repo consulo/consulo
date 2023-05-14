@@ -21,7 +21,7 @@ import consulo.language.editor.impl.internal.markup.ErrorStripeEvent;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ErrorStripeHandler extends ErrorStripeAdapter {
   private final Project myProject;

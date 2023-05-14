@@ -20,8 +20,8 @@ import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RemoteStatusChangeNodeDecorator implements ChangeNodeDecorator {
   private final RemoteRevisionsCache myRemoteRevisionsCache;

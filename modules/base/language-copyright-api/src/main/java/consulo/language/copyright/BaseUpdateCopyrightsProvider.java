@@ -20,7 +20,7 @@ import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

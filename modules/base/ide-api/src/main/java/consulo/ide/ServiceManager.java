@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.NotNullLazyKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use ComponentManager#getInstance() method")

@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.style.StyleManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

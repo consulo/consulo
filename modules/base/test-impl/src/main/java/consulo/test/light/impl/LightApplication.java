@@ -34,7 +34,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;

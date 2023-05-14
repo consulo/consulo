@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class SimpleTreeStructure extends AbstractTreeStructure {
 

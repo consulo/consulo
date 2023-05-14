@@ -11,7 +11,7 @@ import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.util.Invoker;

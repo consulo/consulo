@@ -25,7 +25,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

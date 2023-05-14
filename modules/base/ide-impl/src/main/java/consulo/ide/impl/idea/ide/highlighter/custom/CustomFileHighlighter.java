@@ -26,7 +26,7 @@ import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.IElementType;
 import consulo.language.internal.custom.SyntaxTable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

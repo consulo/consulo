@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiFileSystemItem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;

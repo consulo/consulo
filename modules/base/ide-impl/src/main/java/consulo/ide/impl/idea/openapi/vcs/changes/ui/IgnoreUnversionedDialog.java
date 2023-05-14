@@ -31,7 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -122,7 +122,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent createCenterPanel() {
     return myPanel;
   }
@@ -245,7 +245,7 @@ public class IgnoreUnversionedDialog extends DialogWrapper {
     return "IgnoreUnversionedDialog";
   }
 
-  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @javax.annotation.Nullable Runnable callback) {
+  public static void ignoreSelectedFiles(@Nonnull Project project, @Nonnull List<VirtualFile> files, @jakarta.annotation.Nullable Runnable callback) {
     IgnoreUnversionedDialog dlg = new IgnoreUnversionedDialog(project);
     dlg.setFilesToIgnore(files);
 

@@ -31,8 +31,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
@@ -198,7 +198,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VirtualFile getVirtualFile() {
     if (myVirtualFile != null && !myVirtualFile.isValid()) {
       myVirtualFile = null;

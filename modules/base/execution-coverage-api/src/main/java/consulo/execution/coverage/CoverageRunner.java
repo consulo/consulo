@@ -10,8 +10,8 @@ import consulo.component.extension.ExtensionPointName;
 import com.intellij.rt.coverage.data.ProjectData;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

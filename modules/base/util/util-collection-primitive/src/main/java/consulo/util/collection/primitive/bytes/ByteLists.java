@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.bytes;
 
 import consulo.util.collection.primitive.bytes.impl.list.ByteArrayList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

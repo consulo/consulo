@@ -27,8 +27,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

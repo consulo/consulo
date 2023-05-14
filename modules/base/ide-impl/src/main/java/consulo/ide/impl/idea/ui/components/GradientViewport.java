@@ -19,7 +19,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBViewport;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

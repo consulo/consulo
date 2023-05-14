@@ -17,7 +17,7 @@ package consulo.virtualFileSystem;
 
 import consulo.util.lang.function.ThrowableConsumer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 

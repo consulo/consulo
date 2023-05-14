@@ -7,7 +7,7 @@ import consulo.content.scope.NamedScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

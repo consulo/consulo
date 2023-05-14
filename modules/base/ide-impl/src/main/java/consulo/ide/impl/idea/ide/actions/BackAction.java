@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackAction extends AnAction implements DumbAware {

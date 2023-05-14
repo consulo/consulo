@@ -15,7 +15,7 @@
  */
 package consulo.configurable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Register implementation of this class as {@code projectConfigurable} or {@code applicationConfigurable} extension to provide items for

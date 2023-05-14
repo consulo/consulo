@@ -17,8 +17,8 @@ package consulo.configurable;
 
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Named component which provides a configuration user interface.

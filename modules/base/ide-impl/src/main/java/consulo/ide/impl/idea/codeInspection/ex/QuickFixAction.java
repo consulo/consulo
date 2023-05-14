@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.util.SequentialModalProgressTask;
 import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 

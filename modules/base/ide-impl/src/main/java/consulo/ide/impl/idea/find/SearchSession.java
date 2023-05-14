@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find;
 import consulo.find.FindModel;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface SearchSession {
   Key<SearchSession> KEY = Key.create("search.replace.session");

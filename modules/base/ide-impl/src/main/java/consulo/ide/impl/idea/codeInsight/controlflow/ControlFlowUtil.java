@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.primitive.ints.IntStack;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.function.Function;

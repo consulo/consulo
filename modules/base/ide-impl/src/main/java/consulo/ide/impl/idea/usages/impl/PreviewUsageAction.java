@@ -20,7 +20,7 @@ import consulo.usage.RuleAction;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author cdr

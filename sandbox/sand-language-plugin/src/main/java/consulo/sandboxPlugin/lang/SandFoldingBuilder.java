@@ -28,7 +28,7 @@ import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

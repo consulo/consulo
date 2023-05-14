@@ -21,7 +21,7 @@ import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,12 +37,12 @@ public class PathMerger {
     return getFile(new VirtualFilePathMerger(base), path);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static VirtualFile getFile(final VirtualFile base, final String path, final List<String> tail) {
     return getFile(new VirtualFilePathMerger(base), path, tail);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static File getFile(final File base, final String path) {
     return getFile(new IoFilePathMerger(base), path);
   }
@@ -105,7 +105,7 @@ public class PathMerger {
     return merger.getResult();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static VirtualFile getBase(final VirtualFile base, final String path) {
     return getBase(new VirtualFilePathMerger(base), path);
   }
@@ -201,7 +201,7 @@ public class PathMerger {
       return new File(myBase, sb.toString());
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public String getCurrentName() {
       if (! myChildPathElements.isEmpty()) {
         return myChildPathElements.get(myChildPathElements.size() - 1);

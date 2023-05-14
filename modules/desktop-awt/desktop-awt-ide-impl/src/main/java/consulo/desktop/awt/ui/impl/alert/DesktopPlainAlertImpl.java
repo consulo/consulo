@@ -34,8 +34,8 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.html.HTMLEditorKit;

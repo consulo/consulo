@@ -15,7 +15,7 @@
  */
 package consulo.project.ui.wm.dock;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 
 public interface DragSession {

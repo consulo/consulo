@@ -26,7 +26,7 @@ import consulo.language.psi.stub.todo.TodoIndexEntry;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;

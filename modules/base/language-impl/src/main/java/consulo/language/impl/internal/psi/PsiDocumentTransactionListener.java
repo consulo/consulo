@@ -25,7 +25,7 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiDocumentTransactionListener {

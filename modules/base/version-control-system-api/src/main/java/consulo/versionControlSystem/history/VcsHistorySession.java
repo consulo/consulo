@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.history;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface VcsHistorySession {

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ui.ColorChooserService;
 import consulo.ide.impl.idea.ui.ColorPickerListener;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.function.Consumer;
 

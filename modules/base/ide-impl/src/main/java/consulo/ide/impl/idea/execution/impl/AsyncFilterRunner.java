@@ -15,8 +15,8 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.util.concurrent.Promise;
 
 import java.util.ArrayList;

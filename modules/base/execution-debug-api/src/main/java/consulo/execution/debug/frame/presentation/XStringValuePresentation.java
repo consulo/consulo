@@ -17,7 +17,7 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Renders a value as a string

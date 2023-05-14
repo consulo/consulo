@@ -16,7 +16,7 @@
 package consulo.project.ui.wm.dock;
 
 import consulo.ui.ex.action.Presentation;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

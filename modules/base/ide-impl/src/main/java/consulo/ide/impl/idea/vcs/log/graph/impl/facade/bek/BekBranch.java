@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ class BekBranch {
     myPrepareForInsertPart = myNodeIndexes.subList(prevIndex, myNoInsertSize);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<Integer> getPrepareForInsertPart() {
     return myPrepareForInsertPart;
   }

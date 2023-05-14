@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.util.lang.SystemProperties;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;

@@ -30,8 +30,8 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -150,7 +150,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     return lastSelection != null ? lastSelection : file;
   }
 
-  private static void updateDefaultSelection(@javax.annotation.Nullable Project project, @Nonnull String key, @Nonnull VirtualFile file) {
+  private static void updateDefaultSelection(@jakarta.annotation.Nullable Project project, @Nonnull String key, @Nonnull VirtualFile file) {
     if (project == null) return;
     PropertiesComponent.getInstance(project).setValue(key, file.getPath());
   }

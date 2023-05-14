@@ -21,7 +21,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TestsOutputConsolePrinter implements Printer, Disposable {
   private final ConsoleView myConsole;

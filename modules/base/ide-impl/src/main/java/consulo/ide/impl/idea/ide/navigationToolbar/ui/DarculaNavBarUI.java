@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.navigationToolbar.ui;
 
 import consulo.ui.ex.Gray;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

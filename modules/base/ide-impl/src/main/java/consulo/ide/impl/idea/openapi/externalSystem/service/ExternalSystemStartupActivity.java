@@ -30,7 +30,7 @@ import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

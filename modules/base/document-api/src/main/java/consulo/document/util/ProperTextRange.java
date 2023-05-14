@@ -15,7 +15,7 @@
  */
 package consulo.document.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Text range which asserts its non-negative startOffset and length

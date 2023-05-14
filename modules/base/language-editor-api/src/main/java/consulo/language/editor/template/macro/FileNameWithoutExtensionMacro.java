@@ -20,7 +20,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.TextResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev

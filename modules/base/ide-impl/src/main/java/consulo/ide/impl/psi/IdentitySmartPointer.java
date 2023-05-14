@@ -26,7 +26,7 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.document.util.Segment;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.annotation.access.RequiredReadAction;
 
@@ -83,7 +83,7 @@ public class IdentitySmartPointer<T extends PsiElement> implements SmartPsiEleme
     return getPsiRange();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Segment getPsiRange() {
     return myElement.getTextRange();

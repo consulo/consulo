@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

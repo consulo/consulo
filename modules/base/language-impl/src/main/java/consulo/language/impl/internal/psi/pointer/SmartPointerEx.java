@@ -17,7 +17,7 @@ package consulo.language.impl.internal.psi.pointer;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPsiElementPointer;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 interface SmartPointerEx<E extends PsiElement> extends SmartPsiElementPointer<E> {
 

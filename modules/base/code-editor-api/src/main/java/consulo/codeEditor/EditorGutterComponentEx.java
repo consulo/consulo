@@ -6,8 +6,8 @@ import consulo.codeEditor.markup.GutterMark;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

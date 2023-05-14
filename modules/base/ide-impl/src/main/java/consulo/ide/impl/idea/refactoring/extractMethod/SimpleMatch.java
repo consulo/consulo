@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

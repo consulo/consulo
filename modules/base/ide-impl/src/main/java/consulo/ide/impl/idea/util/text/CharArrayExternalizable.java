@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.text;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A char sequence that supports fast copying of its full or partial contents to a char array. May be useful for performance optimizations

@@ -17,7 +17,7 @@ package consulo.credentialStorage.impl.internal.ui;
 
 import consulo.ui.ex.awt.DialogWrapper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

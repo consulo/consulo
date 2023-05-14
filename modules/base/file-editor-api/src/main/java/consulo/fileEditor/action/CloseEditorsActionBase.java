@@ -25,7 +25,7 @@ import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

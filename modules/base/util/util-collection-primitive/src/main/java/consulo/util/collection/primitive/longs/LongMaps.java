@@ -18,7 +18,7 @@ package consulo.util.collection.primitive.longs;
 import consulo.util.collection.primitive.longs.impl.map.ConcurrentLongObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

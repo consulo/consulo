@@ -26,7 +26,7 @@ import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

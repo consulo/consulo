@@ -25,8 +25,8 @@ import consulo.ide.impl.idea.openapi.vcs.versionBrowser.DateFilterComponent;
 import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDateFilterImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Calendar;
 import java.util.Date;

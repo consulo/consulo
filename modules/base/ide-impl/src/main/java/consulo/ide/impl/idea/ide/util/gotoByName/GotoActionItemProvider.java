@@ -30,7 +30,7 @@ import consulo.application.util.matcher.Matcher;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FindInPathAction extends AnAction implements DumbAware {
   public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Find in Path", ToolWindowId.FIND, false);

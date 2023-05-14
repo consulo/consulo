@@ -21,7 +21,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.remote.CredentialsType;
 import consulo.ide.impl.idea.remote.RemoteSdkAdditionalData;
 import org.jdom.Element;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.util;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class SlowOperations {
   public static <T, E extends Throwable> T allowSlowOperations(@Nonnull ThrowableComputable<T, E> computable) throws E {

@@ -38,8 +38,8 @@ import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.DocumentEvent;
 import java.io.IOException;
 import java.net.URL;

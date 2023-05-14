@@ -19,8 +19,8 @@ import consulo.disposer.TraceableDisposable;
 import consulo.disposer.internal.impl.objectTree.ThrowableInterner;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;

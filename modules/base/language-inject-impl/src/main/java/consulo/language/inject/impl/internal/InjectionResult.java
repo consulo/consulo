@@ -5,8 +5,8 @@ import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 

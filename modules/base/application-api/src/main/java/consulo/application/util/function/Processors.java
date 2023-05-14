@@ -17,7 +17,7 @@ package consulo.application.util.function;
 
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 public class Processors {

@@ -17,7 +17,7 @@ package consulo.execution.ui.console.language;
 
 import consulo.execution.internal.action.ConsoleExecuteAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class BaseConsoleExecuteActionHandler extends ConsoleExecuteActionHandler {
   public BaseConsoleExecuteActionHandler(boolean preserveMarkup) {

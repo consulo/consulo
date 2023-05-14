@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.settings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.setting.ExternalSystemSettingsListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;

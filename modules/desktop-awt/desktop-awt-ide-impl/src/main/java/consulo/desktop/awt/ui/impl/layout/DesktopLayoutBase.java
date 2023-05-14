@@ -22,7 +22,7 @@ import consulo.ui.Component;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.layout.Layout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;

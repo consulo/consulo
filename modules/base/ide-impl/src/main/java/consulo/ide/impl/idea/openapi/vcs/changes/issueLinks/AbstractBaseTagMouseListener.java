@@ -40,7 +40,7 @@ public abstract class AbstractBaseTagMouseListener extends ClickListener impleme
     return false;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract Object getTagAt(final MouseEvent e);
   public void mouseDragged(MouseEvent e) {
   }

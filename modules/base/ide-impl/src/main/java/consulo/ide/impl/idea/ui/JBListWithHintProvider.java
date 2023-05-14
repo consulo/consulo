@@ -20,7 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.util.lang.ObjectUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;

@@ -26,8 +26,8 @@ import consulo.logging.Logger;
 import consulo.util.collection.BooleanStack;
 import consulo.util.collection.Stack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

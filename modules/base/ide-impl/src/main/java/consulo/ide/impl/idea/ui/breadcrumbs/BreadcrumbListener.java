@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 
 public interface BreadcrumbListener {

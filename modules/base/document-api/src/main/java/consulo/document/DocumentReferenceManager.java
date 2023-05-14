@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class DocumentReferenceManager {

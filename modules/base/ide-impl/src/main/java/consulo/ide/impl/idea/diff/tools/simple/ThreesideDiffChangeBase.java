@@ -21,8 +21,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.ArrayList;

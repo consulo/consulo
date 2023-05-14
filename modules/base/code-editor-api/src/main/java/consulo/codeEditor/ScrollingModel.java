@@ -17,7 +17,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.VisibleAreaListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

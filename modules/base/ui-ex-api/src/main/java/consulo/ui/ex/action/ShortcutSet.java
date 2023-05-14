@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Represents a set of keyboard and/or mouse shortcuts.

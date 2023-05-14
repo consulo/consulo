@@ -8,7 +8,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class RangesAssert {

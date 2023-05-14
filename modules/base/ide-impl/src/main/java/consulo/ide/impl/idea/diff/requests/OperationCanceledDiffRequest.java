@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.requests;
 import consulo.diff.request.MessageDiffRequest;
 
 public class OperationCanceledDiffRequest extends MessageDiffRequest {
-  public OperationCanceledDiffRequest(@javax.annotation.Nullable String title) {
+  public OperationCanceledDiffRequest(@jakarta.annotation.Nullable String title) {
     super(title, "Operation canceled");
   }
 

@@ -21,8 +21,8 @@ import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import org.jetbrains.annotations.TestOnly;
 

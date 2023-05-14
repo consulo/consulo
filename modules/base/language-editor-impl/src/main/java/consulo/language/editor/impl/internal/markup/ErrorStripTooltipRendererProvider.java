@@ -24,8 +24,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 public interface ErrorStripTooltipRendererProvider {

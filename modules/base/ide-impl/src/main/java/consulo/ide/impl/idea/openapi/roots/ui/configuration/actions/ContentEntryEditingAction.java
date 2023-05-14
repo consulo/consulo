@@ -24,8 +24,8 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

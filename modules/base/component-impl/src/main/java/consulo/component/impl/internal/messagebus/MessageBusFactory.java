@@ -22,8 +22,8 @@ package consulo.component.impl.internal.messagebus;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.internal.inject.InjectingContainerOwner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class MessageBusFactory {
   private MessageBusFactory() {}

@@ -5,7 +5,7 @@ import consulo.externalSystem.service.project.AbstractNamedData;
 import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

@@ -17,7 +17,7 @@ package consulo.desktop.swt.platform;
 
 import consulo.platform.impl.PlatformBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
 

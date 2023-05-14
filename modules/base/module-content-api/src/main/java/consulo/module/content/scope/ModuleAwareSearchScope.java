@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 

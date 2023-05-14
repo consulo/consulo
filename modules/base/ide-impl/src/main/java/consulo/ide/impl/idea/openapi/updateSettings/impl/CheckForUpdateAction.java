@@ -32,7 +32,7 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CheckForUpdate")
 public class CheckForUpdateAction extends DumbAwareAction {

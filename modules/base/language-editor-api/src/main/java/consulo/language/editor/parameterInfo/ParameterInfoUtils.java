@@ -25,8 +25,8 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.function.Conditions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 
 /**

@@ -23,8 +23,8 @@ import consulo.language.editor.intention.QuickFixActionRegistrar;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util.io;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A sequence of bytes.

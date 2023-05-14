@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

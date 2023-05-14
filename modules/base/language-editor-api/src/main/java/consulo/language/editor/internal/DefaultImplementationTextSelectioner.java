@@ -26,7 +26,7 @@ import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DefaultImplementationTextSelectioner implements ImplementationTextSelectioner {
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);

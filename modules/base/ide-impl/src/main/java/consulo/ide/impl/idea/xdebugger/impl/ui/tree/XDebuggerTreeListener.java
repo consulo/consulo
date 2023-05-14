@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

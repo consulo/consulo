@@ -23,8 +23,8 @@ import consulo.util.lang.SystemProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;

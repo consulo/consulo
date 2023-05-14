@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class SelectAllAction extends OccurrenceAction {

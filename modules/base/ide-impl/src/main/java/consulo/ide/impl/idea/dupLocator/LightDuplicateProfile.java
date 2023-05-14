@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.dupLocator;
 import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface LightDuplicateProfile {
   void process(@Nonnull LighterAST ast, @Nonnull Callback callback);

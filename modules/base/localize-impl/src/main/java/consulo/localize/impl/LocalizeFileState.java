@@ -20,8 +20,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;

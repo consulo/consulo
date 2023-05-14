@@ -22,7 +22,7 @@ import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionPageUpHandler extends LookupActionHandler {

@@ -18,7 +18,7 @@ package consulo.language.editor.internal;
 import consulo.language.Language;
 import consulo.language.editor.action.ParagraphFillHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

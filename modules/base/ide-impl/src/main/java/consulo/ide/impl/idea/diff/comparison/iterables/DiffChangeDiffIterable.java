@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.diff.comparison.iterables;
 
 import consulo.application.util.diff.Diff;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @SuppressWarnings("ConstantConditions")
 class DiffChangeDiffIterable extends ChangeDiffIterableBase {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Diff.Change myChange;
 
   public DiffChangeDiffIterable(@Nullable Diff.Change change, int length1, int length2) {

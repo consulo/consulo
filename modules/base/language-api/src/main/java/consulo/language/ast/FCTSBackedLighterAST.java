@@ -19,7 +19,7 @@ import consulo.language.util.CharTable;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.List;
 

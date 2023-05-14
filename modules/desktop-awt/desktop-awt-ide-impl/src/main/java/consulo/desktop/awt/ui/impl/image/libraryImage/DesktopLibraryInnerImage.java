@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.impl.image.libraryImage;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

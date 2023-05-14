@@ -40,8 +40,8 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -76,7 +76,7 @@ public class PushController implements Disposable {
   private final PushSettings myPushSettings;
   @Nonnull
   private final Set<String> myExcludedRepositoryRoots;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Repository myCurrentlyOpenedRepository;
   private final boolean mySingleRepoProject;
   private static final int DEFAULT_CHILDREN_PRESENTATION_NUMBER = 20;
@@ -84,7 +84,7 @@ public class PushController implements Disposable {
 
   private final Map<RepositoryNode, MyRepoModel<?, ?, ?>> myView2Model = new TreeMap<RepositoryNode, MyRepoModel<?, ?, ?>>();
 
-  public PushController(@Nonnull Project project, @Nonnull VcsPushDialog dialog, @Nonnull List<? extends Repository> preselectedRepositories, @javax.annotation.Nullable Repository currentRepo) {
+  public PushController(@Nonnull Project project, @Nonnull VcsPushDialog dialog, @Nonnull List<? extends Repository> preselectedRepositories, @jakarta.annotation.Nullable Repository currentRepo) {
     myProject = project;
     myPushSettings = ServiceManager.getService(project, PushSettings.class);
     myGlobalRepositoryManager = VcsRepositoryManager.getInstance(project);
@@ -139,7 +139,7 @@ public class PushController implements Disposable {
     return ContainerUtil.exists(myView2Model.values(), model -> model.getSupport().isForcePushEnabled());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public PushTarget getProhibitedTarget() {
     MyRepoModel model = ContainerUtil.find(myView2Model.values(), new Condition<MyRepoModel>() {
       @Override
@@ -207,7 +207,7 @@ public class PushController implements Disposable {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private <R extends Repository, S extends PushSource, T extends PushTarget> PushSupport<R, S, T> getPushSupportByRepository(@Nonnull final R repository) {
     //noinspection unchecked
     return (PushSupport<R, S, T>)ContainerUtil.find(myPushSupports, new Condition<PushSupport<? extends Repository, ? extends PushSource, ? extends PushTarget>>() {
@@ -576,9 +576,9 @@ public class PushController implements Disposable {
     private final PushSupport<Repo, S, T> mySupport;
     @Nonnull
     private final S mySource;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private T myTarget;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     VcsError myTargetError;
 
     int myNumberOfShownCommits;
@@ -611,12 +611,12 @@ public class PushController implements Disposable {
       return mySource;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public T getTarget() {
       return myTarget;
     }
 
-    public void setTarget(@javax.annotation.Nullable T target) {
+    public void setTarget(@jakarta.annotation.Nullable T target) {
       myTarget = target;
     }
 

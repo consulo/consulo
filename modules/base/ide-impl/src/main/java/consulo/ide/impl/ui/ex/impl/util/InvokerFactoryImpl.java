@@ -22,7 +22,7 @@ import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

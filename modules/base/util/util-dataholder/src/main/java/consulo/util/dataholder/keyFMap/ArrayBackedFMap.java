@@ -19,7 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.internal.KeyRegistry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ArrayBackedFMap implements KeyFMap {
   private static final KeyRegistry ourRegistry = KeyRegistry.ourInstance;

@@ -19,8 +19,8 @@ import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestIgnored;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class TestIgnoredEvent extends TreeNodeEvent {
   private final String myIgnoreComment;
@@ -32,7 +32,7 @@ public class TestIgnoredEvent extends TreeNodeEvent {
     myStacktrace = stacktrace;
   }
 
-  public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @javax.annotation.Nullable String stacktrace) {
+  public TestIgnoredEvent(@Nonnull TestIgnored testIgnored, @jakarta.annotation.Nullable String stacktrace) {
     super(testIgnored.getTestName(), TreeNodeEvent.getNodeId(testIgnored));
     myIgnoreComment = testIgnored.getIgnoreComment();
     myStacktrace = stacktrace;

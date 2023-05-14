@@ -25,8 +25,8 @@ import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.ActionCallback;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public interface RunnerLayoutUi  {

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr

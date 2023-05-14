@@ -36,8 +36,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

@@ -27,8 +27,8 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.ValueMarkerPresentationDialo
 import consulo.execution.debug.ui.ValueMarkup;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

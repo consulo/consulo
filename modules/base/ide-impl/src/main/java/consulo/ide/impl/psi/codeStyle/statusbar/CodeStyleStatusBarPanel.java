@@ -8,9 +8,9 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

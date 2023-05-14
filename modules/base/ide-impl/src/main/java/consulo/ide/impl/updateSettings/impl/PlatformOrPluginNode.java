@@ -3,8 +3,8 @@ package consulo.ide.impl.updateSettings.impl;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginDescriptor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

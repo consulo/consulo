@@ -5,8 +5,8 @@ import consulo.index.io.data.IOUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Predicate;

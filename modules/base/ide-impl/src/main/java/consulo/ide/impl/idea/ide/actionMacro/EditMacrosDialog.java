@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.actionMacro;
 
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by IntelliJ IDEA.

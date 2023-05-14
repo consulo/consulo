@@ -17,8 +17,8 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

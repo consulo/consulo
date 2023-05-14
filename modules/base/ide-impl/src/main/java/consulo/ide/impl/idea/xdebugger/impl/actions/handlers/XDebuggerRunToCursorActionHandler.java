@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.dataContext.DataContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

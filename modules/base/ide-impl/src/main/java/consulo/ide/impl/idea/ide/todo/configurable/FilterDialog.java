@@ -26,7 +26,7 @@ import consulo.language.psi.search.TodoPattern;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ide.impl.idea.util.ui.Table;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -20,7 +20,7 @@ import consulo.ui.ex.util.LafProperty;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;

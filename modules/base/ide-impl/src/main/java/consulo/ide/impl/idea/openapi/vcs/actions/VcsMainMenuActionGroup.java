@@ -24,7 +24,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class VcsMainMenuActionGroup extends DefaultActionGroup implements DumbAware {

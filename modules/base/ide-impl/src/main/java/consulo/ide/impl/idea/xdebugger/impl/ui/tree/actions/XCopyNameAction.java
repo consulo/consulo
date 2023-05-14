@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 

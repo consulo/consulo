@@ -12,9 +12,9 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

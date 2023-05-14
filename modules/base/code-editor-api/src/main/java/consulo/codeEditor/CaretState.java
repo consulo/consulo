@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class CaretState {
   private final LogicalPosition caretPosition;

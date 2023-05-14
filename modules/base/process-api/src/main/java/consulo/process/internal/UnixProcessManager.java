@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

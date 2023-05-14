@@ -15,7 +15,7 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;

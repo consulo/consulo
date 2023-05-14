@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.update.AbstractCommonUpdateAction;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.ide.impl.idea.openapi.vcs.update.ScopeInfo;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

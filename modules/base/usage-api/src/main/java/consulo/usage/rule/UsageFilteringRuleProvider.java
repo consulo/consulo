@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {

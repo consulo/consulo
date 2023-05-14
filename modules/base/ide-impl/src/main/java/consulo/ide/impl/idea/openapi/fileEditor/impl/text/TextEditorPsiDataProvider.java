@@ -35,8 +35,8 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.TargetElementUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedHashSet;
 
 import static consulo.ui.ex.action.AnActionEvent.injectedId;

@@ -19,7 +19,7 @@ package consulo.component.persist;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Every component which would like to persist its state across IDEA restarts

@@ -19,8 +19,8 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.ide.impl.idea.ui.BalloonLayoutData;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

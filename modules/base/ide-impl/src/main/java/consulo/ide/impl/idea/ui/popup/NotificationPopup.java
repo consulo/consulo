@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;

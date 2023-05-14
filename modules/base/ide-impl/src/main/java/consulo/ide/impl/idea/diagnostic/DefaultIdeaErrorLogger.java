@@ -24,7 +24,7 @@ import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.application.util.SystemInfo;
 import consulo.index.io.MappingFailedException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 

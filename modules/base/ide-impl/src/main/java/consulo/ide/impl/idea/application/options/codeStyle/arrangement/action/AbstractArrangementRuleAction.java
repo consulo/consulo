@@ -19,8 +19,8 @@ import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRul
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementSectionRulesControl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya

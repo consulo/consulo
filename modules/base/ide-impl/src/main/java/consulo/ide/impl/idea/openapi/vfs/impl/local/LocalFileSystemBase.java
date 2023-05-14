@@ -27,8 +27,8 @@ import consulo.util.io.FileTooBigException;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;

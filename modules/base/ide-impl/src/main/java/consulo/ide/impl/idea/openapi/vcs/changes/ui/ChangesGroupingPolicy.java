@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 public interface ChangesGroupingPolicy {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   ChangesBrowserNode getParentNodeFor(final StaticFilePath node, final ChangesBrowserNode rootNode);
 
   void clear();

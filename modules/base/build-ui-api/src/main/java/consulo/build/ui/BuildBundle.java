@@ -5,7 +5,7 @@ package consulo.build.ui;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class BuildBundle extends AbstractBundle {
   private static final String BUNDLE = "consulo.build.ui.BuildBundle";

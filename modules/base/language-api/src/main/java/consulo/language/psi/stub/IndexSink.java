@@ -20,7 +20,7 @@
 package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface IndexSink {
   <Psi extends PsiElement, K> void occurrence(@Nonnull StubIndexKey<K, Psi> indexKey, @Nonnull K value);

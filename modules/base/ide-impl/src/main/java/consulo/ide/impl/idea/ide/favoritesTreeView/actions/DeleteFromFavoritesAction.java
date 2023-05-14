@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.util.IconUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

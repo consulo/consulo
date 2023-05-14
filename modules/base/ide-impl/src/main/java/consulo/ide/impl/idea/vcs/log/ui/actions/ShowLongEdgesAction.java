@@ -21,7 +21,7 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
   public ShowLongEdgesAction() {

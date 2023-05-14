@@ -31,7 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 

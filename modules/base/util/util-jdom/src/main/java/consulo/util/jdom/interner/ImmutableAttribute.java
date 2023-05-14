@@ -15,7 +15,7 @@ package consulo.util.jdom.interner;
 
 import org.jdom.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class ImmutableAttribute extends Attribute {
   ImmutableAttribute(@Nonnull String name, @Nonnull String value, AttributeType type, @Nonnull Namespace namespace) {

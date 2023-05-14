@@ -7,7 +7,7 @@ public class CallerClassLoaderProvider {
 
   private ClassLoader myCallerClassLoader;
 
-  public CallerClassLoaderProvider(@javax.annotation.Nullable ClassLoader callerClassLoader) {
+  public CallerClassLoaderProvider(@jakarta.annotation.Nullable ClassLoader callerClassLoader) {
     myCallerClassLoader = callerClassLoader;
   }
 

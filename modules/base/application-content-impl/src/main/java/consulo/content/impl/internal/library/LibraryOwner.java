@@ -20,8 +20,8 @@ import consulo.component.ComponentManager;
 import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

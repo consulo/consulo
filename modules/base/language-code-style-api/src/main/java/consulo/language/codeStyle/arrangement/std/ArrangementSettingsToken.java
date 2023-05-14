@@ -15,8 +15,8 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Stands for an atomic settings element. The general idea is to allow third-party plugin developers to use platform

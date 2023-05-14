@@ -27,7 +27,7 @@ import consulo.index.io.StorageException;
 import consulo.index.io.ValueContainer;
 import consulo.language.psi.stub.IdFilter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;

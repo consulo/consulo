@@ -7,9 +7,9 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.*;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 public final class StatusBarWidgetProviderToFactoryAdapter implements StatusBarWidgetFactory {

@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

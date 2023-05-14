@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.util.io.Url;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.net.URLConnection;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)

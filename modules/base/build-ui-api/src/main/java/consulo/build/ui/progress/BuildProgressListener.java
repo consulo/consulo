@@ -3,7 +3,7 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.event.BuildEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka

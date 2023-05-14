@@ -10,7 +10,7 @@ import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;

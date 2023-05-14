@@ -27,8 +27,8 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -53,7 +53,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
 
   public VcsVirtualFile(@Nonnull String path,
                         @Nonnull byte[] content,
-                        @javax.annotation.Nullable String revision,
+                        @jakarta.annotation.Nullable String revision,
                         @Nonnull VirtualFileSystem fileSystem) {
     this(path, null, fileSystem);
     myContent = content;

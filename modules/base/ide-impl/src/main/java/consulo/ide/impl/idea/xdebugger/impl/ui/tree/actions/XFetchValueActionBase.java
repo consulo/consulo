@@ -30,7 +30,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class XFetchValueActionBase extends AnAction {

@@ -8,7 +8,7 @@ import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

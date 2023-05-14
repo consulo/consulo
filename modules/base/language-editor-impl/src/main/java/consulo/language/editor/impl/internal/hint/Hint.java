@@ -17,7 +17,7 @@ package consulo.language.editor.impl.internal.hint;
 
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.RelativePoint;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

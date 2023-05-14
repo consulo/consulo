@@ -6,7 +6,7 @@ import consulo.language.editor.annotation.AnnotationSession;
 import consulo.language.editor.annotation.Annotator;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class AnnotatorStatisticsCollector {
   // annotator-related internal statistics

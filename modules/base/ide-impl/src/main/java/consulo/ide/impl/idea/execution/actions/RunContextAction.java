@@ -28,8 +28,8 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RunContextAction extends BaseRunConfigurationAction {
   private final Executor myExecutor;

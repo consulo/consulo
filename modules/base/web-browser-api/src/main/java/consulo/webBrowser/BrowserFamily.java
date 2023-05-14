@@ -7,8 +7,8 @@ import consulo.ui.image.Image;
 import consulo.webBrowser.chrome.ChromeSettings;
 import consulo.webBrowser.firefox.FirefoxSettings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public enum BrowserFamily implements Iconable {
   CHROME(WebBrowserBundle.message("browsers.chrome"), "chrome", "google-chrome", "Google Chrome", AllIcons.Xml.Browsers.Chrome16) {

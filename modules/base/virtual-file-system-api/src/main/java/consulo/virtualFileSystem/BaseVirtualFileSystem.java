@@ -24,8 +24,8 @@ import consulo.application.ApplicationManager;
 import consulo.proxy.EventDispatcher;
 import consulo.virtualFileSystem.event.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 public abstract class BaseVirtualFileSystem implements VirtualFileSystem {

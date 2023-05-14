@@ -25,7 +25,7 @@ import consulo.versionControlSystem.log.VcsUser;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.versionControlSystem.change.Change;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

@@ -8,7 +8,7 @@ import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     return connection;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public <C extends ServerConfiguration> ServerConnection getConnection(@Nonnull RemoteServer<C> server) {
     return myConnections.get(server);

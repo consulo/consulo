@@ -18,8 +18,8 @@ package consulo.util.io;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @version 11.1

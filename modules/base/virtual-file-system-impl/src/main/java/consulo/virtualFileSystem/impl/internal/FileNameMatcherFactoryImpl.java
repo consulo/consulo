@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcher;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

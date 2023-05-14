@@ -20,7 +20,7 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class SimpleTreePatcher implements TreePatcher {
   @Override

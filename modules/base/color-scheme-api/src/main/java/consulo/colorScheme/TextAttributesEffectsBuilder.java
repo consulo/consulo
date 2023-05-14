@@ -5,8 +5,8 @@ import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;

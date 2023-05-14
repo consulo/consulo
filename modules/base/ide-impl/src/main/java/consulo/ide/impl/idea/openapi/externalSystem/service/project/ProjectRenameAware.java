@@ -22,7 +22,7 @@ import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * We need to avoid memory leaks on ide project rename. This class is responsible for that.

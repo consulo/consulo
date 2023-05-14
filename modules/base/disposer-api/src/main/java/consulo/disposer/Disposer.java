@@ -17,8 +17,8 @@ package consulo.disposer;
 
 import consulo.disposer.internal.DisposerInternal;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class Disposer {
   private static final DisposerInternal ourInternal = DisposerInternal.ourInstance;

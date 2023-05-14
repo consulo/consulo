@@ -23,7 +23,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class LightElement extends PsiElementBase implements LightweightPsiElement {
   protected final PsiManager myManager;

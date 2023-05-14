@@ -23,7 +23,7 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.VcsMappingListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL

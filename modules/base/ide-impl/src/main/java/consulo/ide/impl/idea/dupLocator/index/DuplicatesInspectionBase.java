@@ -51,8 +51,8 @@ import consulo.util.collection.primitive.ints.IntList;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntLongHashMap;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;

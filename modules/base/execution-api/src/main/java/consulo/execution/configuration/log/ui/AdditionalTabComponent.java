@@ -19,8 +19,8 @@ package consulo.execution.configuration.log.ui;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.ComponentWithActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

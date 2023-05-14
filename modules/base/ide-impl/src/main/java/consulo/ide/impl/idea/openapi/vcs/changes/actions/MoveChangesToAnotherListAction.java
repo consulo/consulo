@@ -44,7 +44,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -186,7 +186,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return false;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
     ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
     List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
@@ -199,7 +199,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return chooser.getSelectedList();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static ChangeList guessPreferredList(@Nonnull List<LocalChangeList> lists) {
     LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
     if (activeChangeList != null) return activeChangeList;

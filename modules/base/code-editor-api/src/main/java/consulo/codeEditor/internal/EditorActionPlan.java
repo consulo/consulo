@@ -18,7 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.util.lang.ImmutableCharSequence;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;

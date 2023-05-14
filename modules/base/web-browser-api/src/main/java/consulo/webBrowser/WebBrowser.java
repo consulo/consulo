@@ -1,9 +1,9 @@
 package consulo.webBrowser;
 
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 

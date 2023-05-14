@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.document.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

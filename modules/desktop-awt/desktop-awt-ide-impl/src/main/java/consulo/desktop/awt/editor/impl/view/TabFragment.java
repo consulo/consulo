@@ -6,7 +6,7 @@ package consulo.desktop.awt.editor.impl.view;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.function.Consumer;
 

@@ -60,8 +60,8 @@ import consulo.versionControlSystem.history.*;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -641,7 +641,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     @Nonnull
     private final List<Block> myBlocks;
     @Nullable private final VcsException myException;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final VcsFileRevision myCurrentLoadingRevision;
 
     public BlockData(boolean isLoading,

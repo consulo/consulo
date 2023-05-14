@@ -31,7 +31,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpFileSystem;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 

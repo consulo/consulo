@@ -21,7 +21,7 @@ package consulo.language.editor.completion;
 
 import consulo.language.Language;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class DefaultWordCompletionFilter implements WordCompletionElementFilter {
   @Nonnull

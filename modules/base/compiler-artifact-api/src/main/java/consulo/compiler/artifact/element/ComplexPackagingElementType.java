@@ -19,8 +19,8 @@ package consulo.compiler.artifact.element;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

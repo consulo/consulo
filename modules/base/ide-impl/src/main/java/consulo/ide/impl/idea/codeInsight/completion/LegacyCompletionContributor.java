@@ -33,7 +33,7 @@ import consulo.language.psi.ReferenceRange;
 import consulo.language.psi.PsiMultiReference;
 import consulo.util.lang.function.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;

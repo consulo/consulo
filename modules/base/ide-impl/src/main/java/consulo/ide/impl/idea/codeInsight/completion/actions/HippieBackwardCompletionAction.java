@@ -22,7 +22,7 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class HippieBackwardCompletionAction extends BaseCodeInsightAction implements DumbAware {

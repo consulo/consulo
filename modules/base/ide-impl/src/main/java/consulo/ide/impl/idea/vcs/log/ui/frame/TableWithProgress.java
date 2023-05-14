@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.image.Image;
 import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;

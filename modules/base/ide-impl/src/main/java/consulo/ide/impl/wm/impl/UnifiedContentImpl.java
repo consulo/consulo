@@ -31,7 +31,7 @@ import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {

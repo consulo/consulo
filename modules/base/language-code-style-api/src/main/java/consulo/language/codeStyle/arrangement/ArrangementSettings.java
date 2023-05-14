@@ -19,7 +19,7 @@ import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

@@ -20,7 +20,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CleanUnshelvedAction extends DumbAwareAction {
 

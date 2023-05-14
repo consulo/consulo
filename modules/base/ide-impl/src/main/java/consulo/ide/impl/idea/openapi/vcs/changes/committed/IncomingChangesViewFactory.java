@@ -26,7 +26,7 @@ import consulo.versionControlSystem.CommittedChangesProvider;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

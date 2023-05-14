@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
 import javax.management.NotificationListener;

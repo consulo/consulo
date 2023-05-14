@@ -21,7 +21,7 @@ import consulo.usage.UsageView;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh

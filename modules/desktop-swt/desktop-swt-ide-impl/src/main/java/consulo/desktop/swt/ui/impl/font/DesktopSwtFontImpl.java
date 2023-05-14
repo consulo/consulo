@@ -17,7 +17,7 @@ package consulo.desktop.swt.ui.impl.font;
 
 import consulo.ui.font.Font;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

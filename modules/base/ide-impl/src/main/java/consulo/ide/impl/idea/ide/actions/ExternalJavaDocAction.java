@@ -48,7 +48,7 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;

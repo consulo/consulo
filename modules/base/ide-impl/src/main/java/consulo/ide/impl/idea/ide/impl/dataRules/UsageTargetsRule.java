@@ -23,8 +23,8 @@ import consulo.util.dataholder.Key;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
 import consulo.usage.UsageView;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

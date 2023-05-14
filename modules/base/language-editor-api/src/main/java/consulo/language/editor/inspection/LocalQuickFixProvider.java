@@ -18,7 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * This can be implemented by a {@link PsiReference} to provide quick fixes for unresolved references.

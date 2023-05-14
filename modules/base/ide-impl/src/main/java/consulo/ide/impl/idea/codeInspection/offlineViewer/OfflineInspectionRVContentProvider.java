@@ -37,8 +37,8 @@ import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;

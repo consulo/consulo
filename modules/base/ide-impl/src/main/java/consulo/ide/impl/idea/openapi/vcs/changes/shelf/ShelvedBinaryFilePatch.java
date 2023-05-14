@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.util.PathUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ShelvedBinaryFilePatch extends FilePatch {
   private final ShelvedBinaryFile myShelvedBinaryFile;

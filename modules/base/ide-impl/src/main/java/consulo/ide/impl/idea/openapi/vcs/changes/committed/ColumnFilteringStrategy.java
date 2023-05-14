@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -91,7 +91,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
     return myColumn.getTitle();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public JComponent getFilterUI() {
     return myScrollPane;
   }

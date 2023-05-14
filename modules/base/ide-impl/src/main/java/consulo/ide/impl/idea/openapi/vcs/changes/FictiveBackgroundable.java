@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.versionControlSystem.VcsBundle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 import static consulo.project.util.WaitForProgressToShow.runOrInvokeLaterAboveProgress;

@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log.graph.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author erokhins

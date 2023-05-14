@@ -27,8 +27,8 @@ import consulo.ui.ex.TextComponentAccessor;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.util.FormBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 /**

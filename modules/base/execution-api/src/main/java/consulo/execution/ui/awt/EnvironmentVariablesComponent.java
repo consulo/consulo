@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.util.Map;

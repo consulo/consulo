@@ -17,7 +17,7 @@ package consulo.component.internal.inject;
 
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 

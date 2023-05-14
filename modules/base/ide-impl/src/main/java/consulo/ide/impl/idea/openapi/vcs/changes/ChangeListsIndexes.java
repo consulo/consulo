@@ -30,8 +30,8 @@ import consulo.ide.impl.idea.util.BeforeAfter;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -97,7 +97,7 @@ public class ChangeListsIndexes {
   }
 
   @Nullable
-  private VcsKey getVcsForRevision(@javax.annotation.Nullable ContentRevision revision) {
+  private VcsKey getVcsForRevision(@jakarta.annotation.Nullable ContentRevision revision) {
     if (revision != null) {
       Pair<VcsKey, VcsRevisionNumber> pair = myFileToVcs.get(revision.getFile());
       return pair == null ? null : pair.getFirst();

@@ -29,8 +29,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;

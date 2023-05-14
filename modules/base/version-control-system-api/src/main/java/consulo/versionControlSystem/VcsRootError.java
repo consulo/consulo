@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Incorrect VCS root definition: either an unregistered, or an incorrectly registered VCS root.

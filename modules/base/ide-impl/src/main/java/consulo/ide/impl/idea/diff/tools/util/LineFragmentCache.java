@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.diff.tools.util;
 
 import consulo.diff.comparison.ComparisonPolicy;
 import consulo.diff.fragment.LineFragment;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;

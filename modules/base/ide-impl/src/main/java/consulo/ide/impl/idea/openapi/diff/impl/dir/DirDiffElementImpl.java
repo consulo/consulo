@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.ide.diff.*;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.ide.impl.idea.ide.diff.DirDiffOperation.*;
 
@@ -39,7 +39,7 @@ public class DirDiffElementImpl implements DirDiffElement {
   private DirDiffOperation myDefaultOperation;
   private DTree myNode;
 
-  private DirDiffElementImpl(DTree parent, @Nullable DiffElement source, @javax.annotation.Nullable DiffElement target, DiffType type, String name,
+  private DirDiffElementImpl(DTree parent, @Nullable DiffElement source, @jakarta.annotation.Nullable DiffElement target, DiffType type, String name,
                              @Nullable DirDiffOperation defaultOperation) {
     myParent = parent.getParent();
     myNode = parent;
@@ -94,7 +94,7 @@ public class DirDiffElementImpl implements DirDiffElement {
   public static DirDiffElementImpl createChange(DTree parent,
                                                 @Nonnull DiffElement source,
                                                 @Nonnull DiffElement target,
-                                                @javax.annotation.Nullable DirDiffSettings.CustomSourceChooser customSourceChooser) {
+                                                @jakarta.annotation.Nullable DirDiffSettings.CustomSourceChooser customSourceChooser) {
     DirDiffOperation defaultOperation = null;
     if (customSourceChooser != null) {
       DiffElement chosenSource = customSourceChooser.chooseSource(source, target);
@@ -108,7 +108,7 @@ public class DirDiffElementImpl implements DirDiffElement {
     return new DirDiffElementImpl(parent, source, target, DiffType.CHANGED, source.getName(), defaultOperation);
   }
 
-  public static DirDiffElementImpl createError(DTree parent, @javax.annotation.Nullable DiffElement source, @Nullable DiffElement target) {
+  public static DirDiffElementImpl createError(DTree parent, @jakarta.annotation.Nullable DiffElement source, @Nullable DiffElement target) {
     return new DirDiffElementImpl(parent, source, target, DiffType.ERROR, source == null ? target.getName() : source.getName(), null);
   }
 
@@ -144,13 +144,13 @@ public class DirDiffElementImpl implements DirDiffElement {
     return myName;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getSourceName() {
     return myType == DiffType.CHANGED || myType == DiffType.SOURCE || myType == DiffType.EQUAL
            ? mySource.getName() : mySource == null ? null : mySource.getName();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getSourceSize() {
     return mySourceLength < 0 ? null : String.valueOf(mySourceLength);
   }
@@ -164,13 +164,13 @@ public class DirDiffElementImpl implements DirDiffElement {
     //return NONE;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getTargetName() {
     return myType == DiffType.CHANGED || myType == DiffType.TARGET || myType == DiffType.EQUAL
            ? myTarget.getName() : myTarget == null ? null : myTarget.getName();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getTargetSize() {
     return myTargetLength < 0 ? null : String.valueOf(myTargetLength);
   }

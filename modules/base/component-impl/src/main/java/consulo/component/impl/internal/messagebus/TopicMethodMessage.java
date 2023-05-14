@@ -17,7 +17,7 @@ package consulo.component.impl.internal.messagebus;
 
 import consulo.component.bind.TopicMethod;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

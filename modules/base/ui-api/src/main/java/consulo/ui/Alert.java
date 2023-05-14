@@ -22,8 +22,8 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

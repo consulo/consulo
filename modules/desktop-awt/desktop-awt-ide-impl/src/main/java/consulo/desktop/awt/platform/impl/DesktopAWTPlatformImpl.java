@@ -22,7 +22,7 @@ import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformUser;
 import consulo.platform.impl.PlatformBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.net.URL;
 import java.util.Map;

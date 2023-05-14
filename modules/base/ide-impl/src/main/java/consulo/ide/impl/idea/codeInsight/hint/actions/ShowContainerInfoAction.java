@@ -25,8 +25,8 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ShowContainerInfoAction extends BaseCodeInsightAction{
   @Nonnull

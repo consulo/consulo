@@ -39,8 +39,8 @@ import consulo.content.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier {
 

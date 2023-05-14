@@ -7,8 +7,8 @@ import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.List;

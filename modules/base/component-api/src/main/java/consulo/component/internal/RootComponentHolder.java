@@ -17,7 +17,7 @@ package consulo.component.internal;
 
 import consulo.component.ComponentManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

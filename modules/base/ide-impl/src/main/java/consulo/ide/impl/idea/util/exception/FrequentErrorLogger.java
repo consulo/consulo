@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.util.exception;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;

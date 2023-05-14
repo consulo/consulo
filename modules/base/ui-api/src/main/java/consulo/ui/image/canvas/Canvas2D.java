@@ -4,8 +4,8 @@ import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Based on jgraphx, BSD license

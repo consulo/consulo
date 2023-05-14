@@ -6,8 +6,8 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.execution.ExecutionDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
   @Override

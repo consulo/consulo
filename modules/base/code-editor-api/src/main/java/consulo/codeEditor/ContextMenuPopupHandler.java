@@ -6,8 +6,8 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 

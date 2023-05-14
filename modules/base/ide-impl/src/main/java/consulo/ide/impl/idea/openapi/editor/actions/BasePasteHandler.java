@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
 

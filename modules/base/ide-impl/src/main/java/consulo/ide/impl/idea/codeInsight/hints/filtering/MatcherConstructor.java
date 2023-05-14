@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.codeInsight.hints.filtering;
 import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;

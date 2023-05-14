@@ -17,8 +17,8 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class LinkedHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {

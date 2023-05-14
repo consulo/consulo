@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.frame.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

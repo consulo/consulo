@@ -29,7 +29,7 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author dyoma

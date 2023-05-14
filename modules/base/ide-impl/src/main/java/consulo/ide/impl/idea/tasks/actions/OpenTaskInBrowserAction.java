@@ -24,7 +24,7 @@ import consulo.task.impl.internal.action.BaseTaskAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

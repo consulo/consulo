@@ -17,7 +17,7 @@ package consulo.ide.setting.module.event;
 
 import consulo.content.library.Library;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.dupLocator.iterators.ArrayBackedNodeIterator;
 import consulo.ide.impl.idea.dupLocator.iterators.FilteringNodeIterator;
 import consulo.ide.impl.idea.dupLocator.iterators.NodeIterator;
 import consulo.ide.impl.idea.dupLocator.iterators.SiblingNodeIterator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

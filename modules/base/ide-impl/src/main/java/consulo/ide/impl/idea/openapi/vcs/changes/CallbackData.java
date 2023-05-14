@@ -24,8 +24,8 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.EmptyRunnable;
 import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 class CallbackData {

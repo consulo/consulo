@@ -31,8 +31,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,7 +167,7 @@ public class UnifiedDiffChange {
       if (myHighlighter.isValid()) myHighlighter.setGutterIconRenderer(createRenderer());
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public GutterIconRenderer createRenderer() {
       if (myViewer.isStateIsOutOfDate()) return null;
       if (!myViewer.isEditable(mySide.other(), true)) return null;

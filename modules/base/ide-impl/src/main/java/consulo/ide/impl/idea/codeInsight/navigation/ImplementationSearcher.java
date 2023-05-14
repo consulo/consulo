@@ -34,8 +34,8 @@ import consulo.application.util.query.Query;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 

@@ -35,7 +35,7 @@ import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Library entry for module ("in-place") libraries

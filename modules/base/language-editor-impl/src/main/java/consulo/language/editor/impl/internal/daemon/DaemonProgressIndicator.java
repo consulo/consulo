@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr

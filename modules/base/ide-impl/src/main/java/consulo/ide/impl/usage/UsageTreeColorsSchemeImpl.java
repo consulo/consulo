@@ -23,7 +23,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageTreeColorsScheme;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

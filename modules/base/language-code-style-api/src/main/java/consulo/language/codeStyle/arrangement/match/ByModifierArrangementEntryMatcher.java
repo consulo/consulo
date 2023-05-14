@@ -20,7 +20,7 @@ import consulo.language.codeStyle.arrangement.ModifierAwareArrangementEntry;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

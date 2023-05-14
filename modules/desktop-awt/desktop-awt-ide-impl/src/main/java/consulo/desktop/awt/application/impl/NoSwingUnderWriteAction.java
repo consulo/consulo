@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.application.event.ApplicationListener;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

@@ -10,8 +10,8 @@ import consulo.ui.image.Image;
 import consulo.util.lang.MathUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -541,7 +541,7 @@ public class Splitter extends JPanel implements Splittable {
     replaceSecondComponent(component);
   }
 
-  public JComponent replaceSecondComponent(@javax.annotation.Nullable JComponent component) {
+  public JComponent replaceSecondComponent(@jakarta.annotation.Nullable JComponent component) {
     JComponent old = mySecondComponent;
 
     if (old != component) {

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.ide.impl.idea.util.containers.IntObjectLRUMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

@@ -34,7 +34,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -145,7 +145,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
-                                               @javax.annotation.Nullable final VcsRevisionNumber firstRevision) throws VcsException {
+                                               @jakarta.annotation.Nullable final VcsRevisionNumber firstRevision) throws VcsException {
     final boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
     if (historyCacheSupported) {
       final VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;

@@ -17,7 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

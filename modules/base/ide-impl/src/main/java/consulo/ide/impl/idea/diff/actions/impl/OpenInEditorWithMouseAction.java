@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,7 +121,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
     openInEditorAction.openEditor(project, navigatable);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Editor getEditor(@Nonnull Component component) {
     for (Editor editor : myEditors) {
       if (editor != null && editor.getGutter() == component) {

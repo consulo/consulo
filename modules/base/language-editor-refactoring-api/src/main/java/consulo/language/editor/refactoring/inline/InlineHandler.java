@@ -30,8 +30,8 @@ import consulo.language.psi.PsiReference;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

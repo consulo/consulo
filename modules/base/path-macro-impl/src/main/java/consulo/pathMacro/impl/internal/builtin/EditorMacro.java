@@ -21,7 +21,7 @@ import consulo.pathMacro.Macro;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Max Medvedev

@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * For virtual files containing meta information in the path. Like,

@@ -22,7 +22,7 @@ import consulo.language.codeStyle.internal.IndentData;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * {@link BlockAlignmentProcessor} implementation for {@link Alignment} that

@@ -7,8 +7,8 @@ import consulo.ide.impl.idea.util.indexing.impl.MapInputDataDiffBuilder;
 import consulo.ide.impl.idea.util.indexing.impl.forward.AbstractMapForwardIndexAccessor;
 import consulo.ide.impl.idea.util.indexing.impl.forward.IntForwardIndexAccessor;
 import consulo.index.io.EnumeratorIntegerDescriptor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Map;

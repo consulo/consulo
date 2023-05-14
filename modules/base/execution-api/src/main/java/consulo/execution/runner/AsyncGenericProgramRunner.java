@@ -23,7 +23,7 @@ import consulo.process.ExecutionException;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use AsyncProgramRunner
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 @Deprecated
 public abstract class AsyncGenericProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
   @Override
-  protected final void execute(@Nonnull ExecutionEnvironment environment, @javax.annotation.Nullable Callback callback, @Nonnull RunProfileState state)
+  protected final void execute(@Nonnull ExecutionEnvironment environment, @jakarta.annotation.Nullable Callback callback, @Nonnull RunProfileState state)
           throws ExecutionException {
     prepare(environment, state).doWhenDone(result -> UIUtil.invokeLaterIfNeeded(() -> {
       if (!environment.getProject().isDisposed()) {

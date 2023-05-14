@@ -30,8 +30,8 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "templateEscape", order = "before hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

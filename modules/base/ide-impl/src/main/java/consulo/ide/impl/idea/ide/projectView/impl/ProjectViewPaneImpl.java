@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;

@@ -19,8 +19,8 @@ import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

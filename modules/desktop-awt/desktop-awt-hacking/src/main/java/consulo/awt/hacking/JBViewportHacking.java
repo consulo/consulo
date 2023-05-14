@@ -17,7 +17,7 @@ package consulo.awt.hacking;
 
 import consulo.awt.hacking.util.MethodInvocator;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

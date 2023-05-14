@@ -20,7 +20,7 @@ import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

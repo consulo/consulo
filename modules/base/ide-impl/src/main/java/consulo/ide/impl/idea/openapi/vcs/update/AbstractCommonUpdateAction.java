@@ -53,7 +53,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -449,7 +449,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
       return group.getFiles().size() + group.getChildren().stream().mapToInt(g -> getFilesCount(g)).sum();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private String prepareScopeUpdatedText(@Nonnull UpdateInfoTree tree) {
       String scopeText = null;
       NamedScope scopeFilter = tree.getFilterScope();

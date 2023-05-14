@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.NodePrintElement;
 import consulo.versionControlSystem.log.graph.PrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.TerminalEdgePrintElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

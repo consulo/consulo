@@ -13,8 +13,8 @@ import consulo.ui.ex.awt.tree.TreeNode;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusOwner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileStatusOwner {

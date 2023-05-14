@@ -33,8 +33,8 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;

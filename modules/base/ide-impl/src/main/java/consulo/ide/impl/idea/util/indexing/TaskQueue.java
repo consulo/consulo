@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

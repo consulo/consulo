@@ -19,8 +19,8 @@ package consulo.language.editor.impl.highlight;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Should be implemented to include corresponding pass in code smells check

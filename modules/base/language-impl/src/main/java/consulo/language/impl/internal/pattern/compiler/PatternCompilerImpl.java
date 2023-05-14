@@ -30,7 +30,7 @@ import consulo.util.lang.StringHash;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;

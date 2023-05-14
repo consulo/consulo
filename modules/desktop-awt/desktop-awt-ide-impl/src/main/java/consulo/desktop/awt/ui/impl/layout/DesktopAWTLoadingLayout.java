@@ -25,7 +25,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LoadingLayout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;

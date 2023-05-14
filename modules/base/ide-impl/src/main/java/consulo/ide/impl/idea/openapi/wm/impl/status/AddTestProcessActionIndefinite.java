@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessActionIndefinite extends AnAction implements DumbAware {

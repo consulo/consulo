@@ -20,8 +20,8 @@ import consulo.component.ComponentManager;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

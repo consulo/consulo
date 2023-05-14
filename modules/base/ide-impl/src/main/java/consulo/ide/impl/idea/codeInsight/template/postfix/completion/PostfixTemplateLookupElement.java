@@ -22,7 +22,7 @@ import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PostfixTemplateLookupElement extends CustomLiveTemplateLookupElement {
   @Nonnull

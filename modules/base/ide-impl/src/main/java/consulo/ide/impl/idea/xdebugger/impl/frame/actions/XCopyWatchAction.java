@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

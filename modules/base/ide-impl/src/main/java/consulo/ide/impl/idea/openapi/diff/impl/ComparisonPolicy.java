@@ -27,8 +27,8 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.document.util.TextRange;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public abstract class ComparisonPolicy {

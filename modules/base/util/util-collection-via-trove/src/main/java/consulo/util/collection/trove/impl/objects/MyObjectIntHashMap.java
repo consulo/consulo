@@ -22,7 +22,7 @@ import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import gnu.trove.TObjectIntIterator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.PrimitiveIterator;

@@ -19,7 +19,7 @@ package consulo.versionControlSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;

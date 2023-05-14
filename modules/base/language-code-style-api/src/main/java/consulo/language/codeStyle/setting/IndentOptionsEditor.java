@@ -22,8 +22,8 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.ui.ex.awt.IntegerField;
 import consulo.ui.ex.awt.OptionGroup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 import static consulo.language.codeStyle.CodeStyleConstraints.*;

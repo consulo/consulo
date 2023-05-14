@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.codeFragment;
 
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author oleg

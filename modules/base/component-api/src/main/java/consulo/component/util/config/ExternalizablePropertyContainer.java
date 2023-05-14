@@ -23,7 +23,7 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Supplier;
 

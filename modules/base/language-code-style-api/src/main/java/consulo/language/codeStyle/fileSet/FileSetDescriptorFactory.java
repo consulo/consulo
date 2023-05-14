@@ -3,8 +3,8 @@ package consulo.language.codeStyle.fileSet;
 
 import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class FileSetDescriptorFactory {
 

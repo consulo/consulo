@@ -22,7 +22,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AppIcon {

@@ -22,7 +22,7 @@ import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.move.MoveHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MoveAction extends BaseRefactoringAction {
 

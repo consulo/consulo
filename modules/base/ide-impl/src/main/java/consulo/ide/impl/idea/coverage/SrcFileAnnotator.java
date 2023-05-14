@@ -58,8 +58,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntIntHashMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -188,7 +188,7 @@ public class SrcFileAnnotator implements Disposable {
     return myOldToNewLines.get();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private TIntIntHashMap getNewToOldLineMapping(final long date) {
     if (myNewToOldLines == null) {
       myNewToOldLines = doGetLineMapping(date, false);
@@ -197,7 +197,7 @@ public class SrcFileAnnotator implements Disposable {
     return myNewToOldLines.get();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private SoftReference<TIntIntHashMap> doGetLineMapping(final long date, boolean oldToNew) {
     final VirtualFile f = getVirtualFile();
     final byte[] oldContent;

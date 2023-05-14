@@ -25,8 +25,8 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Map;
 

@@ -17,7 +17,7 @@ package consulo.util.collection;
 
 import consulo.util.lang.function.Functions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 public class JBTreeTraverser<T> extends FilteredTraverserBase<T, JBTreeTraverser<T>> {

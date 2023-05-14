@@ -41,7 +41,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -66,7 +66,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     return myModel;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public AbstractTestProxy getSelectedTest() {
     TreePath[] paths = getSelectionPaths();
     if (paths != null && paths.length > 1) return null;

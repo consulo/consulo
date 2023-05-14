@@ -14,7 +14,7 @@ import consulo.desktop.awt.ui.plaf.darcula.DarculaComboBoxUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaJBPopupComboPopup;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaUIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;

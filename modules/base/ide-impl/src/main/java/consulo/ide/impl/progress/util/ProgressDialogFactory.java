@@ -21,7 +21,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

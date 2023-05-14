@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffElementImpl;
 import consulo.ide.impl.idea.ide.diff.DirDiffOperation;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffPanel;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -67,12 +67,12 @@ public abstract class SetOperationToBase extends AnAction {
 
   protected abstract boolean isEnabledFor(DirDiffElement element);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   static JTable getTable(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_TABLE);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static DirDiffTableModel getModel(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_MODEL);
   }

@@ -27,8 +27,8 @@ import consulo.ide.impl.idea.diff.tools.binary.ThreesideBinaryDiffViewer;
 import consulo.ide.impl.idea.diff.tools.holders.BinaryEditorHolder;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;

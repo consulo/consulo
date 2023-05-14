@@ -5,8 +5,8 @@ import consulo.disposer.Disposable;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;

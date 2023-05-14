@@ -25,8 +25,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FilteringIterator;
 import consulo.util.collection.primitive.ints.IntStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;

@@ -23,8 +23,8 @@ import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -26,8 +26,8 @@ import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 

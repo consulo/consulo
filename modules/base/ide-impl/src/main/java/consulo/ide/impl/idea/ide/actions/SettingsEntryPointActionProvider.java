@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

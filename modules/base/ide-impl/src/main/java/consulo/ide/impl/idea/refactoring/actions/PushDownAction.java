@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.refactoring.actions;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PushDownAction extends BasePlatformRefactoringAction {
   public PushDownAction() {

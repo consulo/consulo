@@ -24,8 +24,8 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.SmartPsiFileRange;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 class ShredImpl implements PsiLanguageInjectionHost.Shred {
   private final SmartPsiFileRange relevantRangeInHost;

@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.C
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemDescription;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import consulo.compiler.artifact.element.PackagingElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

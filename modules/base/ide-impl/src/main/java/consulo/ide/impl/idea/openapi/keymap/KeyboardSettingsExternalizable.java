@@ -27,8 +27,8 @@ import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.im.InputContext;
 import java.util.Locale;

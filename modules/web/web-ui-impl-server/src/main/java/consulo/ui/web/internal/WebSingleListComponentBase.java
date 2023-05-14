@@ -21,8 +21,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

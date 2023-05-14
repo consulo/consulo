@@ -25,8 +25,8 @@ import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

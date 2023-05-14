@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

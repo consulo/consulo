@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.update;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface SequentialUpdatesContext {
   @Nonnull

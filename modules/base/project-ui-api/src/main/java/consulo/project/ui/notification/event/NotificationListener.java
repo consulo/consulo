@@ -19,7 +19,7 @@ import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.net.URL;
 

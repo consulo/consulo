@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.vcs.log.data.index.IndexedDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Defines the indent and alignment settings which are applied to a new child block
@@ -37,7 +37,7 @@ public class ChildAttributes {
    * @param childIndent the indent for the child block.
    * @param alignment   the alignment for the child block.
    */
-  public ChildAttributes(@javax.annotation.Nullable final Indent childIndent, @Nullable final Alignment alignment) {
+  public ChildAttributes(@jakarta.annotation.Nullable final Indent childIndent, @Nullable final Alignment alignment) {
     myChildIndent = childIndent;
     myAlignment = alignment;
   }
@@ -47,7 +47,7 @@ public class ChildAttributes {
    *
    * @return the indent setting.
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Indent getChildIndent() {
     return myChildIndent;
   }

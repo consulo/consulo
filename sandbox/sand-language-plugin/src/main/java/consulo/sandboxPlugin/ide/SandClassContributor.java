@@ -27,8 +27,8 @@ import consulo.navigation.NavigationItem;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.stub.SandIndexKeys;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -16,7 +16,7 @@
 package consulo.language.pom.event;
 
 import consulo.language.ast.ASTNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author ik

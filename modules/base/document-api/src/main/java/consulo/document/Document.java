@@ -11,8 +11,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents the contents of a text file loaded into memory, and possibly opened in an IDE

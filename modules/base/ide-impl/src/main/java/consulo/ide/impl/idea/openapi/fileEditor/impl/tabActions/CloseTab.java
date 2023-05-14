@@ -30,7 +30,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 

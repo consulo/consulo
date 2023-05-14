@@ -17,7 +17,7 @@ package consulo.versionControlSystem.log.base;
 
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.versionControlSystem.log.Hash;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

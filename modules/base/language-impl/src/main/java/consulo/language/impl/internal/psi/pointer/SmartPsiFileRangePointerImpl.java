@@ -21,7 +21,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class SmartPsiFileRangePointerImpl extends SmartPsiElementPointerImpl<PsiFile> implements SmartPsiFileRange {
   SmartPsiFileRangePointerImpl(@Nonnull SmartPointerManagerImpl manager, @Nonnull PsiFile containingFile, @Nonnull ProperTextRange range, boolean forInjected) {

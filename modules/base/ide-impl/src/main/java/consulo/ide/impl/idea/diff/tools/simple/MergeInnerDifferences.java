@@ -17,16 +17,16 @@ package consulo.ide.impl.idea.diff.tools.simple;
 
 import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
 public class MergeInnerDifferences {
   @Nullable private final List<TextRange> myLeft;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final List<TextRange> myBase;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final List<TextRange> myRight;
 
   public MergeInnerDifferences(@Nullable List<TextRange> left, @Nullable List<TextRange> base, @Nullable List<TextRange> right) {
@@ -35,22 +35,22 @@ public class MergeInnerDifferences {
     myRight = right;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<TextRange> getLeft() {
     return myLeft;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<TextRange> getBase() {
     return myBase;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<TextRange> getRight() {
     return myRight;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<TextRange> get(@Nonnull ThreeSide side) {
     return side.select(myLeft, myBase, myRight);
   }

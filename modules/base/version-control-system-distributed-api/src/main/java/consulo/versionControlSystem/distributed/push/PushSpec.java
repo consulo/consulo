@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * For a single repository, specifies what is pushed and where.

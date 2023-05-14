@@ -26,8 +26,8 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RefDirectoryImpl extends RefElementImpl implements RefDirectory {
   private volatile RefModule myRefModule; // it's guaranteed that getModule() used after initialize()

@@ -45,7 +45,7 @@ import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseMotionAdapter;

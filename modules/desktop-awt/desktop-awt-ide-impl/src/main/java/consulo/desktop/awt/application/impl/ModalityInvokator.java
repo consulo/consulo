@@ -22,7 +22,7 @@ package consulo.desktop.awt.application.impl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 public interface ModalityInvokator {

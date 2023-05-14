@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class VFSForAnnotationListener extends VirtualFileAdapter {
   private final VirtualFile myFile;

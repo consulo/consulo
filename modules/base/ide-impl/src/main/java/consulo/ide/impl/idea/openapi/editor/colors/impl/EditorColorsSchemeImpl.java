@@ -25,8 +25,8 @@ import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

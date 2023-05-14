@@ -18,8 +18,8 @@ package consulo.util.dataholder;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.internal.KeyRegistry;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

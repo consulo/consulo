@@ -6,8 +6,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

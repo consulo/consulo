@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.annotate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface AnnotationSourceSwitcher {
   @Nonnull

@@ -20,7 +20,7 @@ import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ToggleRegex extends EditorHeaderToggleAction implements Embeddable {
   public ToggleRegex() {

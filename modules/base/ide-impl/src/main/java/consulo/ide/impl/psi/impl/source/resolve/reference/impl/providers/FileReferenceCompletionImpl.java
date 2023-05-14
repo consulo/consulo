@@ -35,7 +35,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

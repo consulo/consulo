@@ -30,8 +30,8 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.accessibility.Accessible;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;

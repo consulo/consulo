@@ -26,8 +26,8 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -50,7 +50,7 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
   @Override
   public Document createDocument(@Nonnull Project project,
                                  @Nonnull XExpression expression,
-                                 @javax.annotation.Nullable XSourcePosition sourcePosition,
+                                 @jakarta.annotation.Nullable XSourcePosition sourcePosition,
                                  @Nonnull EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {

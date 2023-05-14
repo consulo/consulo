@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.remote;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import java.util.function.Consumer;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author traff

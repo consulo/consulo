@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;

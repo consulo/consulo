@@ -21,7 +21,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Old diff impl, must be removed")

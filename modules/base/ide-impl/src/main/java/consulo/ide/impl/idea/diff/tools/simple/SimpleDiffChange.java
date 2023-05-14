@@ -32,8 +32,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class SimpleDiffChange {
     installHighlighter(previousFragment);
   }
 
-  public void installHighlighter(@javax.annotation.Nullable LineFragment previousFragment) {
+  public void installHighlighter(@jakarta.annotation.Nullable LineFragment previousFragment) {
     assert myHighlighters.isEmpty();
 
     if (myInnerFragments != null) {
@@ -108,7 +108,7 @@ public class SimpleDiffChange {
     }
   }
 
-  private void doInstallNonSquashedChangesSeparator(@javax.annotation.Nullable LineFragment previousFragment) {
+  private void doInstallNonSquashedChangesSeparator(@jakarta.annotation.Nullable LineFragment previousFragment) {
     createNonSquashedChangesSeparator(previousFragment, Side.LEFT);
     createNonSquashedChangesSeparator(previousFragment, Side.RIGHT);
   }
@@ -265,7 +265,7 @@ public class SimpleDiffChange {
       return myCtrlPressed != myViewer.getModifierProvider().isCtrlPressed();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public GutterIconRenderer createRenderer() {
       myCtrlPressed = myViewer.getModifierProvider().isCtrlPressed();
 
@@ -285,14 +285,14 @@ public class SimpleDiffChange {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private GutterIconRenderer createApplyRenderer(@Nonnull final Side side) {
     return createIconRenderer(side, "Accept", DiffUtil.getArrowIcon(side), () -> {
       myViewer.replaceChange(this, side);
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private GutterIconRenderer createAppendRenderer(@Nonnull final Side side) {
     return createIconRenderer(side, "Append", DiffUtil.getArrowDownIcon(side), () -> {
       UsageTrigger.trigger("diff.SimpleDiffChange.Append");

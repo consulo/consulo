@@ -19,8 +19,8 @@ import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public final class InjectedLanguage {

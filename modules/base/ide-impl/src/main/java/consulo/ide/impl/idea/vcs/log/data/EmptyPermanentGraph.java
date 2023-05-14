@@ -20,8 +20,8 @@ import consulo.util.lang.function.Conditions;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;

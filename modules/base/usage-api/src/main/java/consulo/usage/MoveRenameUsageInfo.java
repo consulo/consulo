@@ -21,7 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.*;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class MoveRenameUsageInfo extends UsageInfo {
   private SmartPsiElementPointer myReferencedElementPointer = null;
@@ -70,7 +70,7 @@ public class MoveRenameUsageInfo extends UsageInfo {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public PsiElement getUpToDateReferencedElement() {
     return myReferencedElementPointer == null ? null : myReferencedElementPointer.getElement();
   }

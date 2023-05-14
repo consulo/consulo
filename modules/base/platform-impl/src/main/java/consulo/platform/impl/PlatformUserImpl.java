@@ -17,7 +17,7 @@ package consulo.platform.impl;
 
 import consulo.platform.PlatformUser;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
 

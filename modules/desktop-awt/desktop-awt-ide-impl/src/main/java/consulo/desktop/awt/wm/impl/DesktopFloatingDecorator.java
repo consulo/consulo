@@ -35,7 +35,7 @@ import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.ui.Rectangle2D;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

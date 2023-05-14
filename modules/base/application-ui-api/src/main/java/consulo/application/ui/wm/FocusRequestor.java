@@ -18,7 +18,7 @@ package consulo.application.ui.wm;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Basic interface for requesting sending focus commands to <code>IdeFocusManager</code>

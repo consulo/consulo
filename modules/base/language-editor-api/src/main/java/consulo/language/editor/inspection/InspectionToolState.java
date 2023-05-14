@@ -18,7 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.UnnamedConfigurable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

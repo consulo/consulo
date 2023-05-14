@@ -22,8 +22,8 @@ package consulo.language.psi.stub;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A base interface for PSI files that may contain not only text-based syntactic trees as their content,

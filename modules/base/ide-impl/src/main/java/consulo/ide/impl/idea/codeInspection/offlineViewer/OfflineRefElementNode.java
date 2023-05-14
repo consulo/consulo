@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.codeInspection.ui.RefElementNode;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class OfflineRefElementNode extends RefElementNode {
   public OfflineRefElementNode(@Nonnull OfflineProblemDescriptor descriptor, @Nonnull InspectionToolPresentation presentation) {

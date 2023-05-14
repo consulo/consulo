@@ -16,7 +16,7 @@
 
 package consulo.language.editor.refactoring.changeSignature;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a parameter of a method affected by the "Change Signature" refactoring.

@@ -8,7 +8,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

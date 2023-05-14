@@ -30,7 +30,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
   public CommentByLineCommentAction() {

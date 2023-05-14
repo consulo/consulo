@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.string;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 

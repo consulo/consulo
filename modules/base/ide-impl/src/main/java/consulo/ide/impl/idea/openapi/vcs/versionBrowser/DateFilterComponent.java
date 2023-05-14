@@ -22,7 +22,7 @@ import consulo.application.util.DateFormatUtil;
 import com.michaelbaranov.microba.calendar.DatePicker;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

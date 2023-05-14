@@ -22,8 +22,8 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

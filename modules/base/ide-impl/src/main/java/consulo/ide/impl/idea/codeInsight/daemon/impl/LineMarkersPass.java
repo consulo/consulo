@@ -34,7 +34,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.NotNullList;
 import gnu.trove.TIntObjectHashMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.BiConsumer;
 

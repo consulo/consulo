@@ -15,7 +15,7 @@
  */
 package consulo.module.content.layer.orderEntry;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -33,7 +33,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;

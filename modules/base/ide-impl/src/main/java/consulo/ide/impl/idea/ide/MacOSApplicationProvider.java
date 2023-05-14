@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;

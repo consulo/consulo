@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ActionToolbarFactory;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -18,7 +18,7 @@ package consulo.versionControlSystem.history;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * User: Irina.Chernushina

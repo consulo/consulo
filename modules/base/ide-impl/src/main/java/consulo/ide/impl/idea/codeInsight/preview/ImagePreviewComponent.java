@@ -24,11 +24,11 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;

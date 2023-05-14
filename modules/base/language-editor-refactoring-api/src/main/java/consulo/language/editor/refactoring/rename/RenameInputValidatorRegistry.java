@@ -23,7 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.Function;
 
 public class RenameInputValidatorRegistry {

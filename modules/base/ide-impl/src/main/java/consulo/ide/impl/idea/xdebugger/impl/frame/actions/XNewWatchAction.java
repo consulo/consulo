@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchesRootNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

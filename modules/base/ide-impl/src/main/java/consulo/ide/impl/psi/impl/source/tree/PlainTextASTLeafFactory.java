@@ -25,8 +25,8 @@ import consulo.language.impl.ast.ASTLeafFactory;
 import consulo.language.version.LanguageVersion;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class PlainTextASTLeafFactory implements ASTLeafFactory {

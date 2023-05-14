@@ -20,7 +20,7 @@ import consulo.configurable.NamedConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

@@ -16,8 +16,8 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Thread-safe.

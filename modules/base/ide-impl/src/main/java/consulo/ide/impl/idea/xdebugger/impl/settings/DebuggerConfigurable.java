@@ -27,8 +27,8 @@ import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;

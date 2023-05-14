@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.ide.impl.idea.util.ui.JBImageIcon;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;

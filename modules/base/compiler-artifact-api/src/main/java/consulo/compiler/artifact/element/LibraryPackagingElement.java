@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,7 +142,7 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
     return "lib:" + myLibraryName + "(" + (myModuleName != null ? "module " + myModuleName: myLevel ) + ")";
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Library findLibrary(@Nonnull PackagingElementResolvingContext context) {
     if (myModuleName == null) {
       return context.findLibrary(myLevel, myLibraryName);

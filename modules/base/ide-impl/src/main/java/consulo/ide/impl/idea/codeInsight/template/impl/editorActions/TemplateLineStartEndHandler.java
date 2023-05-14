@@ -27,8 +27,8 @@ import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class TemplateLineStartEndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalHandler;

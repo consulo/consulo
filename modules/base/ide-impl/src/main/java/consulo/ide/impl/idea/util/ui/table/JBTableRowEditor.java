@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.List;

@@ -40,8 +40,8 @@ import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCellRenderer;
 import consulo.ide.impl.idea.vcs.log.ui.render.SimpleColoredComponentLinkMouseListener;
 import consulo.ide.impl.idea.vcs.log.ui.tables.GraphTableModel;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;

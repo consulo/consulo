@@ -25,8 +25,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekChecker;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekIntMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.map;
@@ -51,7 +51,7 @@ public class BekBaseController extends CascadeController {
     throw new IllegalStateException();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return null;
@@ -62,7 +62,7 @@ public class BekBaseController extends CascadeController {
     return myBekIntMap;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     if (graphElement instanceof GraphEdge) {
@@ -129,7 +129,7 @@ public class BekBaseController extends CascadeController {
       return myBekIntMap.getUsualIndex(nodeIndex);
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public Integer getNodeIndex(int nodeId) {
       if (!inRanges(nodeId)) return null;

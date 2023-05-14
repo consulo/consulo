@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.file.light.LightVirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko on 11/18/2015.

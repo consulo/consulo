@@ -32,7 +32,7 @@ import consulo.usage.rule.UsageInLibrary;
 import consulo.usage.rule.UsageInModule;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

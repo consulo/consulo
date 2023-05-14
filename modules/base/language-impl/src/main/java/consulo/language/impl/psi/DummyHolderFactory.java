@@ -26,7 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DummyHolderFactory  {
   private static HolderFactory INSTANCE = new DefaultFactory();

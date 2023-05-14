@@ -2,7 +2,7 @@
 package consulo.language.codeStyle.event;
 
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class CodeStyleSettingsChangeEvent {
   private

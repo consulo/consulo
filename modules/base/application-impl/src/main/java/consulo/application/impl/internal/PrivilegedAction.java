@@ -17,8 +17,8 @@ package consulo.application.impl.internal;
 
 import consulo.container.impl.securityManager.impl.ConsuloSecurityManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

@@ -23,8 +23,8 @@ import consulo.language.Language;
 import consulo.language.util.CharTable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class CustomParsingType extends IElementType implements ICustomParsingType {
   public CustomParsingType(@Nonnull @NonNls String debugName, @Nullable Language language) {

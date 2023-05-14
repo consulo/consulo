@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -53,7 +53,7 @@ class LinearBekGraphBuilder {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public MergeFragment collapseFragment(int mergeCommit) {
     MergeFragment fragment = getFragment(mergeCommit);
     if (fragment != null) {
@@ -63,7 +63,7 @@ class LinearBekGraphBuilder {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public MergeFragment getFragment(int mergeCommit) {
     List<Integer> downNodes = ContainerUtil.sorted(LinearGraphUtils.getDownNodes(myLinearBekGraph, mergeCommit));
     if (downNodes.size() != 2) return null;
@@ -71,7 +71,7 @@ class LinearBekGraphBuilder {
     return getFragment(downNodes.get(1), downNodes.get(0), mergeCommit);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private MergeFragment getFragment(int leftChild, int rightChild, int parent) {
     MergeFragment fragment = new MergeFragment(parent, leftChild, rightChild);
 

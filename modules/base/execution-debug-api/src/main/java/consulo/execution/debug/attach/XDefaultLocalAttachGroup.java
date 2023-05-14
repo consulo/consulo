@@ -21,8 +21,8 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @deprecated use {@link XAttachPresentationGroup} instead

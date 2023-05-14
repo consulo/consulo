@@ -24,7 +24,7 @@ import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

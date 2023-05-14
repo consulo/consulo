@@ -20,7 +20,7 @@ import consulo.project.ProjectManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.component.util.pointer.Named;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**

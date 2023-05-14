@@ -16,7 +16,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
 

@@ -18,7 +18,7 @@ package consulo.content;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

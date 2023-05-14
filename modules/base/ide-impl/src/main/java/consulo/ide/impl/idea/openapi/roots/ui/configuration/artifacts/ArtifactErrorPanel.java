@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 

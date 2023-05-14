@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

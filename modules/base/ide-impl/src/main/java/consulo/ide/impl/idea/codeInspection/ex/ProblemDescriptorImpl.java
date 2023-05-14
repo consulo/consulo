@@ -23,8 +23,8 @@ import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

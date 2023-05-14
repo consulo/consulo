@@ -29,7 +29,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.RealEditor;
 import consulo.dataContext.DataContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class TextEndWithSelectionAction extends TextComponentEditorAction {

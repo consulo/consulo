@@ -6,8 +6,8 @@ import consulo.application.util.function.Processor;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;

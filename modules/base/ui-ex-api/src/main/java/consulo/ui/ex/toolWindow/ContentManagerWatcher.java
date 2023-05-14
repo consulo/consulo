@@ -21,7 +21,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ContentManagerWatcher {
   @RequiredUIAccess

@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.folding.AbstractElementSignatureProvider;
 import consulo.language.psi.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;

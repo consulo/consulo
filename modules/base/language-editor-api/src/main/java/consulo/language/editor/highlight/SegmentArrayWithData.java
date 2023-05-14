@@ -18,7 +18,7 @@ package consulo.language.editor.highlight;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Expands {@link SegmentArray} contract in providing ability to attach additional data to target segment,

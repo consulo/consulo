@@ -22,7 +22,7 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.*;
 
 public class TranslationOutputFileInfo {

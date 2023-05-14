@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.internal.*;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;

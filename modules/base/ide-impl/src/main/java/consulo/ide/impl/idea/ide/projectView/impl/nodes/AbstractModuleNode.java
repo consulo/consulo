@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.pom.NavigatableWithText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;

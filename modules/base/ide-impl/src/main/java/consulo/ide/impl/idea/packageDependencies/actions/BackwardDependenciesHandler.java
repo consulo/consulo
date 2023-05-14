@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.packageDependencies.BackwardDependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;

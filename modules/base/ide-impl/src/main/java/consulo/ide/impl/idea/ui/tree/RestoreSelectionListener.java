@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.tree;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;

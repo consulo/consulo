@@ -3,8 +3,8 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.SearchSession;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 interface WordRequestInfo {
 

@@ -20,7 +20,7 @@
 package consulo.language.editor.impl.internal.hint;
 
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TooltipGroup implements Comparable<TooltipGroup> {
   private final String myName;

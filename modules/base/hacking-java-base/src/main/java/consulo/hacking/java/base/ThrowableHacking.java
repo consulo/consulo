@@ -17,7 +17,7 @@ package consulo.hacking.java.base;
 
 import consulo.logging.Logger;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.function.Function;
 

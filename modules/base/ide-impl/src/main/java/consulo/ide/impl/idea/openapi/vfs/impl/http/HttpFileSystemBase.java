@@ -24,7 +24,7 @@ import consulo.virtualFileSystem.http.RemoteFileManager;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

@@ -17,8 +17,8 @@ package consulo.language.codeStyle.arrangement;
 
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Identifies a strategy that can tweak default {@link ArrangementSettings arrangement settings} (de)serialization mechanism.

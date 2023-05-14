@@ -21,7 +21,7 @@ import consulo.versionControlSystem.VcsStartupActivity;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class VcsDetectRootsStartupActivity implements VcsStartupActivity {

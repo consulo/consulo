@@ -24,8 +24,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to compare files
@@ -33,19 +33,19 @@ import javax.annotation.Nullable;
 public class FileContentImpl extends DiffContentBase implements FileContent {
   @Nonnull
   private final VirtualFile myFile;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Project myProject;
   @Nonnull
   private final FileType myType;
   @Nullable private final VirtualFile myHighlightFile;
 
-  public FileContentImpl(@javax.annotation.Nullable Project project, @Nonnull VirtualFile file) {
+  public FileContentImpl(@jakarta.annotation.Nullable Project project, @Nonnull VirtualFile file) {
     this(project, file, getHighlightFile(file));
   }
 
-  public FileContentImpl(@javax.annotation.Nullable Project project,
+  public FileContentImpl(@jakarta.annotation.Nullable Project project,
                          @Nonnull VirtualFile file,
-                         @javax.annotation.Nullable VirtualFile highlightFile) {
+                         @jakarta.annotation.Nullable VirtualFile highlightFile) {
     assert file.isValid() && !file.isDirectory();
     myFile = file;
     myProject = project;
@@ -61,7 +61,7 @@ public class FileContentImpl extends DiffContentBase implements FileContent {
     return new OpenFileDescriptorImpl(myProject, myHighlightFile);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static VirtualFile getHighlightFile(@Nonnull VirtualFile file) {
     if (file.isInLocalFileSystem()) return file;
     return null;

@@ -24,8 +24,8 @@ import consulo.content.bundle.Sdk;
 import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 

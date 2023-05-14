@@ -24,7 +24,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use WelcomeFrameManager")

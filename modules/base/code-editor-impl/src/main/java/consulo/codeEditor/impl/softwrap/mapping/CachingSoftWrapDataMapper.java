@@ -24,8 +24,8 @@ import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

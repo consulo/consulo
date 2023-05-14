@@ -17,7 +17,7 @@ package consulo.logging.attachment;
 
 import consulo.logging.internal.AttachmentFactoryInternal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

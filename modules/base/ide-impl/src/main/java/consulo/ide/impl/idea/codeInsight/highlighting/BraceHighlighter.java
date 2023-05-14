@@ -20,7 +20,7 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BraceHighlighter implements PostStartupActivity {

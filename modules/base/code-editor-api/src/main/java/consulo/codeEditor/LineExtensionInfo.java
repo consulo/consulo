@@ -6,8 +6,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

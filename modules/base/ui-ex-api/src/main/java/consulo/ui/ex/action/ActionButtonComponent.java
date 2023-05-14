@@ -19,7 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public interface ActionButtonComponent {

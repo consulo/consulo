@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ChannelHandler.Sharable
 public final class ChannelExceptionHandler extends ChannelHandlerAdapter {

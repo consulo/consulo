@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ExecutorService;

@@ -32,9 +32,9 @@ import consulo.disposer.Disposer;
 import consulo.content.scope.SearchScope;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.regex.PatternSyntaxException;

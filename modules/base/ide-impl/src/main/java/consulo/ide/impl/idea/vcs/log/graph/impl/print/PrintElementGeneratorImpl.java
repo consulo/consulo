@@ -31,7 +31,7 @@ import consulo.util.collection.SLRUMap;
 import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.*;
@@ -234,7 +234,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private RowElementType getArrowType(@Nonnull GraphEdge edge, int rowIndex) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge != null) {
@@ -261,7 +261,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private RowElementType getArrowType(@Nonnull NormalEdge normalEdge, int rowIndex) {
     int edgeSize = normalEdge.down - normalEdge.up;
     int upOffset = rowIndex - normalEdge.up;

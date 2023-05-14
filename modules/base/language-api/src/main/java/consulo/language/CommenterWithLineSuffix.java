@@ -15,7 +15,7 @@
  */
 package consulo.language;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines the support for line comments with suffix.

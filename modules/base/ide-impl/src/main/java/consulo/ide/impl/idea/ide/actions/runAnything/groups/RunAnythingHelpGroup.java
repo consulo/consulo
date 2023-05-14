@@ -9,7 +9,7 @@ import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;

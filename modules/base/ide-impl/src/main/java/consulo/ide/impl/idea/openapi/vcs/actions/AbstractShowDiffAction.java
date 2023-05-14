@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class AbstractShowDiffAction extends AbstractVcsAction{
 

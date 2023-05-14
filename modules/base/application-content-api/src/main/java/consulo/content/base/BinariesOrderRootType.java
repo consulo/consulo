@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

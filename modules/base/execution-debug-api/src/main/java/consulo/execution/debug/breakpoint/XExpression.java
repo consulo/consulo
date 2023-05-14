@@ -19,8 +19,8 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author egor

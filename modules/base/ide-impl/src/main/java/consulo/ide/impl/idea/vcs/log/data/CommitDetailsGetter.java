@@ -8,8 +8,8 @@ import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;

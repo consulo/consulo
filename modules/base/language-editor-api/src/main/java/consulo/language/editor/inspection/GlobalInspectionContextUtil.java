@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class GlobalInspectionContextUtil {
   public static RefElement retrieveRefElement(@Nonnull PsiElement element, @Nonnull GlobalInspectionContext globalContext) {

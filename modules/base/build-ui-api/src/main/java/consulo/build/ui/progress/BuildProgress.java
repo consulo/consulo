@@ -7,8 +7,8 @@ import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.issue.BuildIssue;
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface BuildProgress<T extends BuildProgressDescriptor> {
   @Nonnull

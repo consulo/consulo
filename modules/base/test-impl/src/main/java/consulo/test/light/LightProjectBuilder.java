@@ -29,7 +29,7 @@ import consulo.test.light.impl.LightExtensionRegistrator;
 import consulo.test.light.impl.LightFileIndexFacade;
 import consulo.test.light.impl.LightProject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to apply IDE-specific customizations to the terms used in platform UI features.

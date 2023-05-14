@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.util.PairConvertor;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;

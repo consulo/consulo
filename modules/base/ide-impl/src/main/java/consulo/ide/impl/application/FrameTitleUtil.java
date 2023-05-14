@@ -23,7 +23,7 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

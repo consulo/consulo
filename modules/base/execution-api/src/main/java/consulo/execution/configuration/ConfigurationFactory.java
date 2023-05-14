@@ -21,8 +21,8 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Factory for run configuration instances.

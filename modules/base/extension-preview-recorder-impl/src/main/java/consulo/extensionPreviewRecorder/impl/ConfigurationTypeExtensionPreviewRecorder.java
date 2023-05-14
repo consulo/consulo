@@ -22,7 +22,7 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.execution.configuration.ConfigurationType;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

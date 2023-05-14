@@ -44,8 +44,8 @@ import consulo.project.util.WaitForProgressToShow;
 import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -124,7 +124,7 @@ public class VcsHistoryUtil {
     }, null, project);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static Pair<FilePath, VcsRevisionNumber> getRevisionInfo(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return Pair.create(((VcsFileRevisionEx)revision).getPath(), revision.getRevisionNumber());
@@ -132,7 +132,7 @@ public class VcsHistoryUtil {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static FilePath getRevisionPath(@Nonnull VcsFileRevision revision) {
     if (revision instanceof VcsFileRevisionEx) {
       return ((VcsFileRevisionEx)revision).getPath();
@@ -152,7 +152,7 @@ public class VcsHistoryUtil {
   }
 
   public static String loadRevisionContentGuessEncoding(@Nonnull final VcsFileRevision revision, @Nullable final VirtualFile file,
-                                                        @javax.annotation.Nullable final Project project) throws VcsException, IOException {
+                                                        @jakarta.annotation.Nullable final Project project) throws VcsException, IOException {
     final byte[] bytes = loadRevisionContent(revision);
     if (file != null) {
       return new String(bytes, file.getCharset());

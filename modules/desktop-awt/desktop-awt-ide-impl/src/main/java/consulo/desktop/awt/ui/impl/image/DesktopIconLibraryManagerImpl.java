@@ -19,7 +19,7 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

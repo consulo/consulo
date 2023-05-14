@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedW
 import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "positionWidget", order = "first")
 public class PositionPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {

@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchWriter;
 import consulo.util.lang.ObjectUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

@@ -35,8 +35,8 @@ import consulo.ui.ex.awt.Interpolable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

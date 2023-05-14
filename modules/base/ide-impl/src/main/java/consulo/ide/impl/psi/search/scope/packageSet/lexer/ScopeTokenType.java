@@ -22,7 +22,7 @@ package consulo.ide.impl.psi.search.scope.packageSet.lexer;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ScopeTokenType extends IElementType {
   public ScopeTokenType(@Nonnull @NonNls final String debugName) {

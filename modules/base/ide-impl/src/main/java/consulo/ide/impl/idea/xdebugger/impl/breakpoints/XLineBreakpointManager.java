@@ -67,7 +67,7 @@ import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;

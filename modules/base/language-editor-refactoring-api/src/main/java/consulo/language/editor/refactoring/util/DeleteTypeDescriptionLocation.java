@@ -21,7 +21,7 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.psi.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

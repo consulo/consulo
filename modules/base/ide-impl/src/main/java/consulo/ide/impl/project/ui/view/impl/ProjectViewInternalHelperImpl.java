@@ -21,7 +21,7 @@ import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

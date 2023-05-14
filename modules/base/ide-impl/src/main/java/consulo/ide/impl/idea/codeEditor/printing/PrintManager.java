@@ -41,7 +41,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.print.*;

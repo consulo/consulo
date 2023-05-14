@@ -46,7 +46,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
   }
 
   private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final Project myProject;
     @Nonnull
     private final Label myBefore;
@@ -103,11 +103,11 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
     private int myIndex;
 
-    public MyDiffRequestChain(@javax.annotation.Nullable Project project,
+    public MyDiffRequestChain(@jakarta.annotation.Nullable Project project,
                               @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
                               @Nonnull Label before,
                               @Nonnull Label after,
-                              @javax.annotation.Nullable FilePath filePath) {
+                              @jakarta.annotation.Nullable FilePath filePath) {
       myProject = project;
       myBefore = before;
       myAfter = after;

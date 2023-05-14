@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
 
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;

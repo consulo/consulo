@@ -18,8 +18,8 @@ package consulo.language.editor.internal;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

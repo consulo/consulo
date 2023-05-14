@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 

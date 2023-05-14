@@ -15,7 +15,7 @@
  */
 package consulo.colorScheme;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 

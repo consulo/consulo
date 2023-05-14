@@ -30,8 +30,8 @@ import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 

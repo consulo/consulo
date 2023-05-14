@@ -31,8 +31,8 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

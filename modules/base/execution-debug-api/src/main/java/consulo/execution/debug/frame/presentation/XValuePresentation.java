@@ -17,8 +17,8 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 import consulo.colorScheme.TextAttributesKey;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Determines how a value is shown in debugger trees. Use one of the standard implementations (for {@link consulo.ide.impl.idea.xdebugger.frame.presentation.XStringValuePresentation strings},

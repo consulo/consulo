@@ -32,7 +32,7 @@ import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.usage.rule.UsageFilteringRuleProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

@@ -18,8 +18,8 @@ package consulo.language.editor.highlight;
 
 import consulo.colorScheme.TextAttributesKey;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

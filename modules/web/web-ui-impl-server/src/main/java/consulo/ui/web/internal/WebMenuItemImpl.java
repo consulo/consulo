@@ -26,8 +26,8 @@ import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

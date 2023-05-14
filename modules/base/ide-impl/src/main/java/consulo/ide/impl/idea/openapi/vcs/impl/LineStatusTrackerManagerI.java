@@ -17,7 +17,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig

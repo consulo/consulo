@@ -18,8 +18,8 @@ package consulo.ide.newModule;
 import consulo.ide.IdeBundle;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

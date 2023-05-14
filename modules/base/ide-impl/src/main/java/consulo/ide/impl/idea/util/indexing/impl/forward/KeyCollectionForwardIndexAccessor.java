@@ -9,8 +9,8 @@ import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.ide.impl.idea.util.indexing.impl.InputIndexDataExternalizer;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;

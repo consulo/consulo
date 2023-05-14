@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * User: anna

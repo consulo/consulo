@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.TextAccessor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.ActionListener;
 import java.util.List;

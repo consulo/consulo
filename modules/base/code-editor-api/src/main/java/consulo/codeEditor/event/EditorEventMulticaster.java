@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.document.event.DocumentListener;
 import consulo.codeEditor.EditorFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to attach listeners which receive notifications about changes in any currently open

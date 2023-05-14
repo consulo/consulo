@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

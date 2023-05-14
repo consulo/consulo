@@ -22,7 +22,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

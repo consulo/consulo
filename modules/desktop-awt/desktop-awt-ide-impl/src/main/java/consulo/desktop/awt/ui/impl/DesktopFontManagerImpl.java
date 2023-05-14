@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Set;
 import java.util.TreeSet;

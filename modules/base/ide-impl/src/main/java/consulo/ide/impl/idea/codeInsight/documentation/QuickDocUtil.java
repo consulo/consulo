@@ -13,8 +13,8 @@ import consulo.language.psi.PsiQualifiedNamedElement;
 import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 import static consulo.application.impl.internal.progress.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;

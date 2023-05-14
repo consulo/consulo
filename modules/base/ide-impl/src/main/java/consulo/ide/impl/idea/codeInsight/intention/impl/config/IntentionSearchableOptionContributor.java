@@ -28,7 +28,7 @@ import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Set;
 

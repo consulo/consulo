@@ -25,8 +25,8 @@ import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.ui.ExternalSystemNodeDescriptor;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -209,7 +209,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   }
 
   @SuppressWarnings("unchecked")
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ExternalSystemNode<ExternalProjectPojo> findProjectNode(@Nonnull String configPath) {
     for (int i = getRoot().getChildCount() - 1; i >= 0; i--) {
       ExternalSystemNode<?> child = getRoot().getChildAt(i);

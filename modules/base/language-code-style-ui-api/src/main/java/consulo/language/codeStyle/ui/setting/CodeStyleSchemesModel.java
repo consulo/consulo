@@ -18,8 +18,8 @@ package consulo.language.codeStyle.ui.setting;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

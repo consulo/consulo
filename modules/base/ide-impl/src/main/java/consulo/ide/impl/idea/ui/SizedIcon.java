@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

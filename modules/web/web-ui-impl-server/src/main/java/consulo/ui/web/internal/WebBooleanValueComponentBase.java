@@ -20,7 +20,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

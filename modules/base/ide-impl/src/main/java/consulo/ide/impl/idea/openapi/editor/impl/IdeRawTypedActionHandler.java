@@ -24,7 +24,7 @@ import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.internal.RawTypedActionHandler;
 import consulo.dataContext.DataContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedActionHandler {

@@ -12,8 +12,8 @@ import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.EventListener;
 

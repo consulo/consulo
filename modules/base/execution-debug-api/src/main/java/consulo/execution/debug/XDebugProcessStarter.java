@@ -17,7 +17,7 @@ package consulo.execution.debug;
 
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Factory class for {@link XDebugProcess} implementation. Used by {@link XDebuggerManager} to start a new debugging session

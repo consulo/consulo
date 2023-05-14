@@ -19,7 +19,7 @@ import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.impl.psi.LeafPsiElement;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

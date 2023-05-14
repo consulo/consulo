@@ -20,8 +20,8 @@ import consulo.util.dataholder.Key;
 import consulo.diff.DiffDialogHints;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +32,9 @@ public class ShowDiffContext {
   private final DiffDialogHints myDialogHints;
 
   @Nullable private List<AnAction> myActions;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Map<Key, Object> myChainContext;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Map<Change, Map<Key, Object>> myRequestContext;
 
   public ShowDiffContext() {

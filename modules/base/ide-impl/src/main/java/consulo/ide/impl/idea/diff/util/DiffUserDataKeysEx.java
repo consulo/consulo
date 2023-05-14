@@ -32,7 +32,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import java.util.function.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -50,7 +50,7 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   enum ScrollToPolicy {
     FIRST_CHANGE, LAST_CHANGE;
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public <T> T select(@Nonnull List<T> changes) {
       if (this == FIRST_CHANGE) return ContainerUtil.getFirstItem(changes);
       if (this == LAST_CHANGE) return ContainerUtil.getLastItem(changes);

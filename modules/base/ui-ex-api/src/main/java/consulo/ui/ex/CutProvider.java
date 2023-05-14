@@ -18,7 +18,7 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface CutProvider {
   Key<CutProvider> KEY = Key.create(CutProvider.class);

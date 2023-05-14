@@ -19,7 +19,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: cdr
@@ -94,7 +94,7 @@ public class PackageEntry {
     return this == BLANK_LINE_ENTRY || this == ALL_OTHER_IMPORTS_ENTRY || this == ALL_OTHER_STATIC_IMPORTS_ENTRY;
   }
 
-  public boolean isBetterMatchForPackageThan(@javax.annotation.Nullable PackageEntry entry, @Nonnull String packageName, boolean isStatic) {
+  public boolean isBetterMatchForPackageThan(@jakarta.annotation.Nullable PackageEntry entry, @Nonnull String packageName, boolean isStatic) {
     if (isStatic() != isStatic || !matchesPackageName(packageName)) return false;
     if (entry == null) {
       return true;

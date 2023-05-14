@@ -4,7 +4,7 @@ package consulo.language.psi.stub;
 import consulo.language.ast.LighterAST;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface PsiDependentFileContent extends FileContent {
   @Override

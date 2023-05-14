@@ -19,7 +19,7 @@ package consulo.ui.ex.awt;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;

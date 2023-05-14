@@ -17,8 +17,8 @@ package consulo.component.internal.inject;
 
 import consulo.component.bind.InjectingBinding;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

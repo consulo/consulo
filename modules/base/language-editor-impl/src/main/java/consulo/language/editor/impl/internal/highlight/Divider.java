@@ -29,7 +29,7 @@ import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;

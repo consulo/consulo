@@ -18,7 +18,7 @@ package consulo.codeEditor.impl.softwrap;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.impl.TextChangeImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * {@link SoftWrap} implementation that is built around {@link TextChangeImpl}.

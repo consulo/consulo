@@ -17,7 +17,7 @@ package consulo.virtualFileSystem.http.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

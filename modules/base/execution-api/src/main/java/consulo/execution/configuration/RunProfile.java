@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base interface for things that can be executed (run configurations explicitly managed by user, or custom run profile implementations

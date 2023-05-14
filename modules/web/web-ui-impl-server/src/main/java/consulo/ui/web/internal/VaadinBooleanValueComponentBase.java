@@ -19,7 +19,7 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

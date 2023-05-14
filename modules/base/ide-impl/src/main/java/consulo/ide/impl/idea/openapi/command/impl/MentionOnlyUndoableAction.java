@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.document.DocumentReference;
 import consulo.undoRedo.UndoableAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Used to make Undo/Redo action available for some Document, even if it was not modified.

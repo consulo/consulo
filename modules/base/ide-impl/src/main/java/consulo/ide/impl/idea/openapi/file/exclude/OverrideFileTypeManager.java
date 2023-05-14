@@ -18,7 +18,7 @@ import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Storage for file types user selected in "Override File Type" action

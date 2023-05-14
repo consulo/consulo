@@ -18,8 +18,8 @@ package consulo.language.psi.path;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedList;
 
 /**

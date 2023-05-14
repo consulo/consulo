@@ -21,8 +21,8 @@ import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;

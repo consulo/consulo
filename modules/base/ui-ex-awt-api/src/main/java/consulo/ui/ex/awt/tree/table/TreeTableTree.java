@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.Tree;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;

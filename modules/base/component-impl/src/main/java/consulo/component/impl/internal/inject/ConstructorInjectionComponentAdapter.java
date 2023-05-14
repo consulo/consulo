@@ -24,7 +24,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashSet;

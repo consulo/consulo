@@ -18,7 +18,7 @@ package consulo.ui.ex.errorTreeView;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.UIBundle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

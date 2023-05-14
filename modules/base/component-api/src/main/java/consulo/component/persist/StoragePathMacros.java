@@ -17,7 +17,7 @@ package consulo.component.persist;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * We have a framework for persisting component states (see {@link State} {@link Storage}). It allows to specify which file

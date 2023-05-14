@@ -26,7 +26,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by Maxim.Mossienko on 7/31/2014.

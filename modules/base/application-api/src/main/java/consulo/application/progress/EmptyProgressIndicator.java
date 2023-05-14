@@ -22,8 +22,8 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class EmptyProgressIndicator implements StandardProgressIndicator {
   private static final Logger LOG = Logger.getInstance(EmptyProgressIndicator.class);

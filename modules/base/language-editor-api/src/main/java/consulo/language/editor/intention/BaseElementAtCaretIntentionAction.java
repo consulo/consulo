@@ -22,7 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Danila Ponomarenko
@@ -85,12 +85,12 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    */
   public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected static PsiElement getElementToTheRight(Editor editor, @Nonnull PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected static PsiElement getElementToTheLeft(Editor editor, @Nonnull PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset() - 1);
   }

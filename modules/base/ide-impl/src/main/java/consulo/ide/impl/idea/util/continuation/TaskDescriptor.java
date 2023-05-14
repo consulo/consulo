@@ -19,7 +19,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public abstract class TaskDescriptor {
   public final void addCure(final Object disaster, final Object cure) {
     mySurviveKit.put(disaster, cure);
   }
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public final Object hasCure(final Object disaster) {
     return mySurviveKit.get(disaster);
   }

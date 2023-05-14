@@ -19,7 +19,7 @@ import consulo.fileEditor.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

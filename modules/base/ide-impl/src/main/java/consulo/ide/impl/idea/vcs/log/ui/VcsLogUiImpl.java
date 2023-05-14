@@ -27,7 +27,7 @@ import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.event.VcsLogListener;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -7,7 +7,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiUtilCore;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CompletionStyleUtil {
   @Nonnull

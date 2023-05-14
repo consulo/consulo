@@ -16,7 +16,7 @@
 
 package consulo.util.dataholder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.util.Functions;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.Maps;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Map;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 public interface Getter<A> extends Supplier<A> {

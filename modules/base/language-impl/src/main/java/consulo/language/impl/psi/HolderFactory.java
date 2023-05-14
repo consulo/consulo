@@ -25,7 +25,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface HolderFactory {
   DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context);

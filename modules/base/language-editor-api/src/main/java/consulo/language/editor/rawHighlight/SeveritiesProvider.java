@@ -28,7 +28,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

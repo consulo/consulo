@@ -22,7 +22,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.function.ThrowableRunnable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

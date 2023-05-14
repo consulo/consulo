@@ -20,7 +20,7 @@ import consulo.application.ApplicationBundle;
 import consulo.ide.impl.idea.application.options.colors.*;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DiffColorAndFontPanelFactory implements ColorAndFontPanelFactory {

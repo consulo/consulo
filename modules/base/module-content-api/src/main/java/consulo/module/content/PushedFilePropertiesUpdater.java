@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

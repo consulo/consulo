@@ -21,7 +21,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.GeneralPath;

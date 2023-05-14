@@ -56,7 +56,7 @@ public class Stack<T> extends ArrayList<T> {
     return remove(size - 1);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public T tryPop() {
     return isEmpty() ? null : pop();
   }

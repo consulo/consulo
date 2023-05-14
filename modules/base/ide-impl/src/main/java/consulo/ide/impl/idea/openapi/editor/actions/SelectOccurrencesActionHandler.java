@@ -30,7 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.ui.LightweightHint;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 abstract public class SelectOccurrencesActionHandler extends EditorActionHandler {
 

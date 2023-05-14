@@ -18,7 +18,7 @@ package consulo.language.psi.resolve;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use PsiScopeProcessor directly")

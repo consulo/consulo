@@ -14,8 +14,8 @@ import consulo.util.collection.*;
 import consulo.util.lang.CompoundRuntimeException;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Proxy;
 import java.util.Queue;
 import java.util.*;

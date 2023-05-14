@@ -6,7 +6,7 @@ import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandAction
 import consulo.desktop.awt.uiOld.Expandable;
 import consulo.process.cmd.ParametersListUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.text.JTextComponent;
 import java.util.List;
 import java.util.function.Function;

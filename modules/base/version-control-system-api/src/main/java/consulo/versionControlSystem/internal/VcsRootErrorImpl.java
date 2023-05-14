@@ -4,7 +4,7 @@ package consulo.versionControlSystem.internal;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.VcsRootError;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**

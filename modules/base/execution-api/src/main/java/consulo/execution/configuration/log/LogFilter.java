@@ -23,7 +23,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * User: anna

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.LiteLinearGraph.NodeFilter;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType.*;
 

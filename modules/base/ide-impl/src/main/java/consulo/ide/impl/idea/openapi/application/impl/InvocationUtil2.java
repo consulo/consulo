@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.openapi.application.impl;
 import consulo.application.impl.internal.FlushQueue;
 import consulo.awt.hacking.InvocationUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class InvocationUtil2 extends InvocationUtil {
   @Nonnull

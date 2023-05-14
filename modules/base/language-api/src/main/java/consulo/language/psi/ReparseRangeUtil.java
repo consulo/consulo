@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @see consulo.language.impl.internal.psi.diff.BlockSupport

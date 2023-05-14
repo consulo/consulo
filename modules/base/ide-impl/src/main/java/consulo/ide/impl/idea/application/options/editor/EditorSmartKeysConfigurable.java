@@ -38,8 +38,8 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Supplier;
 

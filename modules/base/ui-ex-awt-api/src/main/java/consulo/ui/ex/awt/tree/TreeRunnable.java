@@ -3,7 +3,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.component.util.NamedRunnable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

@@ -19,7 +19,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIterator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**

@@ -26,8 +26,8 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 //TODO [VISTALL] not good name for util
 public class ProjectUtilCore {

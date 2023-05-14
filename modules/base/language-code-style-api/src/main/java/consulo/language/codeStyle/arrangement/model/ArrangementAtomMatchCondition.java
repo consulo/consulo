@@ -16,7 +16,7 @@
 package consulo.language.codeStyle.arrangement.model;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates a single atom match condition, e.g. 'entry type is field' or 'entry has 'static' modifier' etc.

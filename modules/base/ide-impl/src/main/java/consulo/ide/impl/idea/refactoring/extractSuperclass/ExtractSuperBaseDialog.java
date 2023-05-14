@@ -31,7 +31,7 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.ui.ex.RecentsManager;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;

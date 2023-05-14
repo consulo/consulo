@@ -19,7 +19,7 @@ package consulo.language.psi.stub;
 import consulo.index.io.StringRef;
 import consulo.language.psi.PsiNamedElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

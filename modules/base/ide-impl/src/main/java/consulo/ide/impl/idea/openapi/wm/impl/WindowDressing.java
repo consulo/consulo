@@ -26,7 +26,7 @@ import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Bas Leijdekkers

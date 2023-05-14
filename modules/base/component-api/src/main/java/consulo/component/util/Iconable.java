@@ -22,8 +22,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface Iconable {
   int ICON_FLAG_VISIBILITY = 0x0001;

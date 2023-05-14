@@ -9,7 +9,7 @@ import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {

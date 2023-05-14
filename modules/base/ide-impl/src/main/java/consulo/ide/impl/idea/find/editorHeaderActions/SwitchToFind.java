@@ -9,7 +9,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

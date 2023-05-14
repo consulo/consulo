@@ -17,7 +17,7 @@ package consulo.ui.style;
 
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

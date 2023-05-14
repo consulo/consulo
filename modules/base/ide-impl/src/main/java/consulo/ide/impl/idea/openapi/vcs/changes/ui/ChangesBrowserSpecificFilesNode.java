@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ChangesBrowserSpecificFilesNode extends ChangesBrowserNode {
   protected final boolean myIsMany;

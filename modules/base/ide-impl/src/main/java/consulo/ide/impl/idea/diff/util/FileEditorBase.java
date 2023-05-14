@@ -20,7 +20,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public abstract class FileEditorBase extends UserDataHolderBase implements FileEditor {

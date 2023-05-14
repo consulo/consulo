@@ -10,7 +10,7 @@ import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

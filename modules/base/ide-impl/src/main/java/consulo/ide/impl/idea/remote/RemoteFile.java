@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remote;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author traff

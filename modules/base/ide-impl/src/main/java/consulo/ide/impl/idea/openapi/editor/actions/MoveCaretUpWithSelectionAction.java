@@ -32,7 +32,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class MoveCaretUpWithSelectionAction extends EditorAction {
   public MoveCaretUpWithSelectionAction() {

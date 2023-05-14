@@ -16,7 +16,7 @@
 package consulo.language.pom.event;
 
 import consulo.language.pom.PomModelAspect;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface PomChangeSet {
   @Nonnull

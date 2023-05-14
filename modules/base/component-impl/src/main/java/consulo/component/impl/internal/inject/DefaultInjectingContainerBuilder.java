@@ -20,7 +20,7 @@ import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.InjectingPoint;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 

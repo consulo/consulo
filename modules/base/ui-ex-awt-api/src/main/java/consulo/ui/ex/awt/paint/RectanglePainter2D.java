@@ -7,8 +7,8 @@ import consulo.ui.ex.awt.paint.LinePainter2D.Align;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;

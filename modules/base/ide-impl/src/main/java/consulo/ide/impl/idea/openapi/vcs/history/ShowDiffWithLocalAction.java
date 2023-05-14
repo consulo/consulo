@@ -29,7 +29,7 @@ import consulo.versionControlSystem.history.VcsHistorySession;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowDiffWithLocalAction extends DumbAwareAction {
 

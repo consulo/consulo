@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.rmi.RemoteObject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Map;

@@ -21,7 +21,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class NavigatableArrayRule implements GetDataRule<Navigatable[]> {
   @Nonnull

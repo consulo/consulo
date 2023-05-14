@@ -17,7 +17,7 @@ package consulo.application.util;
 
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 public interface CachedValueProvider<T> {

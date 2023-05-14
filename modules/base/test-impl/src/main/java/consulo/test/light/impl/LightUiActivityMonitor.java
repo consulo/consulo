@@ -21,7 +21,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

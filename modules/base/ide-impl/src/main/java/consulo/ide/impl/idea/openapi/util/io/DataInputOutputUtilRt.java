@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.util.io;
 
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableConsumer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

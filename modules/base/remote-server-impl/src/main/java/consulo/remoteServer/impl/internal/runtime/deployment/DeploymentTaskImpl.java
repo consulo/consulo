@@ -6,7 +6,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -47,7 +47,7 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     return myDebugConnector != null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public DebugConnector<?, ?> getDebugConnector() {
     return myDebugConnector;
   }

@@ -16,7 +16,7 @@
 package consulo.component.persist.scheme;
 
 import consulo.component.util.pointer.Named;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ExternalizableScheme extends Named {
   @Nonnull

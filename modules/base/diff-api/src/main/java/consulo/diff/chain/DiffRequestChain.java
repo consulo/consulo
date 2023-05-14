@@ -16,7 +16,7 @@
 package consulo.diff.chain;
 
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

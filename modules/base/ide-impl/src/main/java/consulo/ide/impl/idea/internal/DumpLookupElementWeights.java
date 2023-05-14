@@ -32,7 +32,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Map;

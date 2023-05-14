@@ -27,18 +27,18 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 
 public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myFileName;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myTitle;
 
-  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @javax.annotation.Nullable String title) {
+  public UnknownFileTypeDiffRequest(@Nonnull VirtualFile file, @jakarta.annotation.Nullable String title) {
     this(file.getName(), title);
   }
 
@@ -68,12 +68,12 @@ public class UnknownFileTypeDiffRequest extends ComponentDiffRequest {
     return JBUI.Panels.simplePanel(label).withBorder(JBUI.Borders.empty(5));
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getFileName() {
     return myFileName;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public String getTitle() {
     return myTitle;

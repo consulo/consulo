@@ -20,7 +20,7 @@ import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiWritableMetaData;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

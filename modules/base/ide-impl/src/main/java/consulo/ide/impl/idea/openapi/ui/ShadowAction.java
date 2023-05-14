@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public final class ShadowAction implements Disposable {

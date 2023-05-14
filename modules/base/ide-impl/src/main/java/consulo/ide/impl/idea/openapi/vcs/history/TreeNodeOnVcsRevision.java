@@ -22,8 +22,8 @@ import consulo.util.lang.TreeItem;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.IOException;
@@ -42,7 +42,7 @@ class TreeNodeOnVcsRevision extends DefaultMutableTreeNode implements VcsFileRev
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public RepositoryLocation getChangedRepositoryPath() {
     return myRevision.getChangedRepositoryPath();

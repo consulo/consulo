@@ -17,7 +17,7 @@ package consulo.compiler.artifact.ui;
 
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ public interface ArtifactProblemsHolder {
 
   void registerError(@Nonnull String message, @Nonnull String problemTypeId);
 
-  void registerError(@Nonnull String message, @Nonnull String problemTypeId, @javax.annotation.Nullable List<PackagingElement<?>> pathToPlace,
+  void registerError(@Nonnull String message, @Nonnull String problemTypeId, @jakarta.annotation.Nullable List<PackagingElement<?>> pathToPlace,
                      @Nonnull ArtifactProblemQuickFix... quickFixes);
 
-  void registerWarning(@Nonnull String message, @Nonnull String problemTypeId, @javax.annotation.Nullable List<PackagingElement<?>> pathToPlace,
+  void registerWarning(@Nonnull String message, @Nonnull String problemTypeId, @jakarta.annotation.Nullable List<PackagingElement<?>> pathToPlace,
                        @Nonnull ArtifactProblemQuickFix... quickFixes);
 }

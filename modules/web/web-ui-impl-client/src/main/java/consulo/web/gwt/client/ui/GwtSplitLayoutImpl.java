@@ -23,7 +23,7 @@ import consulo.web.gwt.client.ComponentColors;
 import consulo.web.gwt.client.util.GwtStyleUtil;
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -68,7 +68,7 @@ public abstract class GwtSplitLayoutImpl extends SplitLayoutPanel {
     setWidgetToggleDisplayAllowed(myFirstWidget, widget != null);
   }
 
-  public void setSecondWidget(@javax.annotation.Nullable Widget widget) {
+  public void setSecondWidget(@jakarta.annotation.Nullable Widget widget) {
     if (widget != null) {
       widget.setSize("100%", "100%");
     }

@@ -21,7 +21,7 @@ import consulo.util.jna.JnaLoader;
 import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

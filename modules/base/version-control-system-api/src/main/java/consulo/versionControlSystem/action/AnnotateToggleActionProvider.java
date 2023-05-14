@@ -25,7 +25,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

@@ -15,7 +15,7 @@
  */
 package consulo.language.psi.event;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Default empty implementation of {@link PsiTreeChangeListener}.

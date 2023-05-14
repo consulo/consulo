@@ -25,7 +25,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowRecentlyEditedFilesAction extends DumbAwareAction {
   @RequiredUIAccess

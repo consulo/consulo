@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diagnostic;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Simple bean representing error submission status.

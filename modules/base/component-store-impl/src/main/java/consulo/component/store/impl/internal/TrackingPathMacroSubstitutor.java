@@ -17,7 +17,7 @@ package consulo.component.store.impl.internal;
 
 import consulo.component.macro.PathMacroSubstitutor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 

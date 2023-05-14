@@ -37,8 +37,8 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**

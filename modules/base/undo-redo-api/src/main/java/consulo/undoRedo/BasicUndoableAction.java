@@ -21,8 +21,8 @@ import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class BasicUndoableAction implements UndoableAction {
   private final DocumentReference[] myRefs;

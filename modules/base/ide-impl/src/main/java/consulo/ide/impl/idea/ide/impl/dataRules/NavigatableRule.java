@@ -27,7 +27,7 @@ import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class NavigatableRule implements GetDataRule<Navigatable> {

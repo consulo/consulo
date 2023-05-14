@@ -17,7 +17,7 @@ package consulo.document;
 
 import consulo.component.ComponentManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author cdr

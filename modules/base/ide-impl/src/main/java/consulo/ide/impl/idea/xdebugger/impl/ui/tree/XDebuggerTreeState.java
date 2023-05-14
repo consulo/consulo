@@ -22,8 +22,8 @@ import consulo.util.collection.MultiMap;
 import consulo.execution.debug.ui.XNamedTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;

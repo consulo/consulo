@@ -12,8 +12,8 @@ import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to replace the mechanism of gathering breadcrumbs for a file.

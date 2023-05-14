@@ -24,7 +24,7 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 

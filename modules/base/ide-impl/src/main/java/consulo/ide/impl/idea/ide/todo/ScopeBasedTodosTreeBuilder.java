@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

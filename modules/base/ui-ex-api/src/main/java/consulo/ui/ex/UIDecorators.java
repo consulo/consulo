@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

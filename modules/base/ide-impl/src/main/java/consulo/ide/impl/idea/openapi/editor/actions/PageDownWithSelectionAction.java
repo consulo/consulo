@@ -31,7 +31,7 @@ import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class PageDownWithSelectionAction extends EditorAction {
   public static class Handler extends EditorActionHandler {

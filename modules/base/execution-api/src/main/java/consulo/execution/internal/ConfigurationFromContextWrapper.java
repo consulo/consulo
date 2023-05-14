@@ -21,7 +21,7 @@ import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RuntimeConfigurationProducer;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Wraps a {@link RuntimeConfigurationProducer} in a {@link ConfigurationFromContext}.

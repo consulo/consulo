@@ -28,7 +28,7 @@ import consulo.ide.impl.desktop.awt.graphics.GraphicsUtilities;
 import consulo.ide.impl.desktop.awt.graphics.ShadowRenderer;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

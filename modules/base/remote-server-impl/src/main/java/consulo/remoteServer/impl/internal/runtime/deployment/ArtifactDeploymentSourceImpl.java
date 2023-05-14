@@ -9,7 +9,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**

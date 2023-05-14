@@ -31,7 +31,7 @@ import consulo.util.lang.function.PairFunction;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.util.TableUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;

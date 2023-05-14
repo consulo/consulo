@@ -25,7 +25,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

@@ -35,7 +35,7 @@ import consulo.externalSystem.service.module.extension.ExternalSystemMutableModu
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -243,7 +243,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   @RequiredUIAccess
   private static void setModuleOptions(@Nonnull final Module module,
-                                       @javax.annotation.Nullable final ModifiableRootModel originalModel,
+                                       @jakarta.annotation.Nullable final ModifiableRootModel originalModel,
                                        @Nonnull final DataNode<ModuleData> moduleDataNode) {
 
     ModuleData moduleData = moduleDataNode.getData();

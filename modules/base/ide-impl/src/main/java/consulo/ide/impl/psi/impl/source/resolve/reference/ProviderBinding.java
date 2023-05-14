@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

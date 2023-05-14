@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.*;

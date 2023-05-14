@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl

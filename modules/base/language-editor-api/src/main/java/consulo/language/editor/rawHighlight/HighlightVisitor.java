@@ -19,7 +19,7 @@ package consulo.language.editor.rawHighlight;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @see HighlightVisitorFactory

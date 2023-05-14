@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.tools.util.base;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum HighlightPolicy {
   DO_NOT_HIGHLIGHT("Do not highlight"),

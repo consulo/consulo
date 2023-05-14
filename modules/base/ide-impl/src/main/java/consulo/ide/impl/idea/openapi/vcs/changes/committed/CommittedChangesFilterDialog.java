@@ -58,7 +58,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
     myValidateAlarm.addRequest(myValidateRunnable, 500, IdeaModalityState.stateForComponent(myPanel.getComponent()));
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(myPanel.getComponent(), BorderLayout.CENTER);

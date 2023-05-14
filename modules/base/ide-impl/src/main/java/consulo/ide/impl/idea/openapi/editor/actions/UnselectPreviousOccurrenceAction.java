@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.impl.action.EditorAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class UnselectPreviousOccurrenceAction extends EditorAction {
   public UnselectPreviousOccurrenceAction() {

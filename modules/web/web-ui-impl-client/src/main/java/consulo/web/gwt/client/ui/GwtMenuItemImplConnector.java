@@ -24,7 +24,7 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

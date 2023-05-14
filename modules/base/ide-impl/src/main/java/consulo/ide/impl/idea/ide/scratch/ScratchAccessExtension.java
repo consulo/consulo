@@ -20,7 +20,7 @@ import consulo.fileEditor.NonProjectFileWritingAccessExtension;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ScratchAccessExtension implements NonProjectFileWritingAccessExtension {

@@ -51,8 +51,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.BitUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;

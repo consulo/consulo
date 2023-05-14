@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

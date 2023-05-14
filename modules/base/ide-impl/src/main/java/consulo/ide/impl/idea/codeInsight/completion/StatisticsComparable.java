@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

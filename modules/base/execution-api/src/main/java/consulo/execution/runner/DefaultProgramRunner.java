@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunProfileState;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

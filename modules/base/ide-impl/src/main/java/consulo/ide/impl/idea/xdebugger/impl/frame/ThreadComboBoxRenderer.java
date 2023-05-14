@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.frame;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.execution.debug.frame.XExecutionStack;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

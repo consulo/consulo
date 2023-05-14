@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 public interface ColorPickerListener {

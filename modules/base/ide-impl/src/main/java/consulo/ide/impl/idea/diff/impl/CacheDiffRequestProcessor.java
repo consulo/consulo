@@ -34,8 +34,8 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.Collections;
@@ -57,7 +57,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
     super(project, place);
   }
 
-  public CacheDiffRequestProcessor(@javax.annotation.Nullable Project project, @Nonnull UserDataHolder context) {
+  public CacheDiffRequestProcessor(@jakarta.annotation.Nullable Project project, @Nonnull UserDataHolder context) {
     super(project, context);
   }
 
@@ -65,7 +65,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
   // Abstract
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract String getRequestName(@Nonnull T provider);
 
   protected abstract T getCurrentRequestProvider();
@@ -117,7 +117,7 @@ public abstract class CacheDiffRequestProcessor<T> extends DiffRequestProcessor 
     }, ProgressWindow.DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected DiffRequest loadRequestFast(@Nonnull T provider) {
     return myRequestCache.get(provider);
   }

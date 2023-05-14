@@ -27,8 +27,8 @@ import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -277,7 +277,7 @@ abstract class ProjectViewDropTarget implements DnDNativeTarget {
       }
 
       DataContext context = new DataContext() {
-        @javax.annotation.Nullable
+        @jakarta.annotation.Nullable
         @Override
         public <T> T getData(@Nonnull Key<T> dataId) {
           if (LangDataKeys.TARGET_MODULE == dataId) {

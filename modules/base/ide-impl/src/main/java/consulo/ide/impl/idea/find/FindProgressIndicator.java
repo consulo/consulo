@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.find;
 import consulo.find.FindBundle;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author ven

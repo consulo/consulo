@@ -23,7 +23,7 @@ import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.language.codeStyle.internal.WrapImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EnumSet;
 import java.util.Set;

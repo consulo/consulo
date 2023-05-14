@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.impl.ListIntToIntMap;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.concurrent.atomic.AtomicReference;

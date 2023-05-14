@@ -20,8 +20,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

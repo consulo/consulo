@@ -18,7 +18,7 @@ package consulo.util.collection.primitive.longs.impl.list;
 import consulo.util.collection.primitive.longs.LongList;
 import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 public class LongArrayList implements Cloneable, LongList {

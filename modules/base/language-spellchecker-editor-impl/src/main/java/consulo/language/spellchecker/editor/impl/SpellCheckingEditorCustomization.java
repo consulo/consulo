@@ -27,7 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;

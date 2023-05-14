@@ -24,7 +24,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;

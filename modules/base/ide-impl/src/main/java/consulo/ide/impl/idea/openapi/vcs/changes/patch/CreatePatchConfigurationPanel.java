@@ -40,8 +40,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,7 +122,7 @@ public class CreatePatchConfigurationPanel {
             .getPanel();
   }
 
-  public void setCommonParentPath(@javax.annotation.Nullable File commonParentPath) {
+  public void setCommonParentPath(@jakarta.annotation.Nullable File commonParentPath) {
     myCommonParentDir = commonParentPath == null || commonParentPath.isDirectory() ? commonParentPath : commonParentPath.getParentFile();
   }
 
@@ -159,7 +159,7 @@ public class CreatePatchConfigurationPanel {
     return validateFields() == null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ValidationInfo verifyBaseDirPath() {
     String baseDirName = getBaseDirName();
     if (StringUtil.isEmptyOrSpaces(baseDirName)) return new ValidationInfo("Base path can't be empty!", myBasePathField);

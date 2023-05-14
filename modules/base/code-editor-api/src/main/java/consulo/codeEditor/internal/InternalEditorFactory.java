@@ -18,7 +18,7 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

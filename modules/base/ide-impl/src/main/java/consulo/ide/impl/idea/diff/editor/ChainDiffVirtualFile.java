@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.impl.CacheDiffRequestChainProcessor;
 import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public class ChainDiffVirtualFile extends DiffVirtualFile {

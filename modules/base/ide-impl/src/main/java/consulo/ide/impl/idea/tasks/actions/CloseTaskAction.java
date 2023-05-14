@@ -29,7 +29,7 @@ import consulo.task.TaskRepository;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

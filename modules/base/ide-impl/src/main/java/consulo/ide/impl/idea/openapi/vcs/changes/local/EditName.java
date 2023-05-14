@@ -19,7 +19,7 @@ import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditName implements ChangeListCommand {
   @Nonnull

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import consulo.ide.impl.idea.vcs.log.graph.utils.DfsUtil;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dennis.Ushakov

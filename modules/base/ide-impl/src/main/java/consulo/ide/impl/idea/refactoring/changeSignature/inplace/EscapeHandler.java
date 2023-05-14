@@ -22,8 +22,8 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "changeSignatureEscape", order = "before hide-search")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

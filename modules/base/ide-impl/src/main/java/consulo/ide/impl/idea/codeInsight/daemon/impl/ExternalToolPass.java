@@ -39,7 +39,7 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

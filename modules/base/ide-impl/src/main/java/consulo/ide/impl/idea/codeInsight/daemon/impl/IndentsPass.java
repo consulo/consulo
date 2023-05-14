@@ -49,7 +49,7 @@ import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class IndentsPass extends TextEditorHighlightingPass implements DumbAware {

@@ -18,8 +18,8 @@ package consulo.awt.hacking;
 import consulo.logging.Logger;
 import sun.font.FontDesignMetrics;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.lang.reflect.Method;

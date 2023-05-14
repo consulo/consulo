@@ -18,7 +18,7 @@ package consulo.language.editor.generation;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Generate action could provide an action to edit corresponding file template. It would appear then in the subMenu of the Generate... popup

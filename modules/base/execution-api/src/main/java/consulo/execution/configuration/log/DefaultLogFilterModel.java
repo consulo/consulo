@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

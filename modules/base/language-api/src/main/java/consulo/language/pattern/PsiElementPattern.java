@@ -30,7 +30,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.BiPredicate;
 
 /**

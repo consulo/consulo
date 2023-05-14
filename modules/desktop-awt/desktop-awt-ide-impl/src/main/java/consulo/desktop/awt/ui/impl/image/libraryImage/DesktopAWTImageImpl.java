@@ -8,8 +8,8 @@ import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.internal.statistic.persistence;
 import consulo.externalService.impl.internal.statistic.PatchedUsage;
 import consulo.externalService.statistic.UsageDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 

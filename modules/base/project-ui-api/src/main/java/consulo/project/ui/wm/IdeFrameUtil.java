@@ -17,7 +17,7 @@ package consulo.project.ui.wm;
 
 import consulo.ui.Window;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

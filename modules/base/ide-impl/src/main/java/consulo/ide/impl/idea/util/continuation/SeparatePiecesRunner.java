@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -110,7 +110,7 @@ public class SeparatePiecesRunner extends GeneralRunner {
     private final TaskDescriptor myTaskDescriptor;
     private volatile boolean mySuspended;
 
-    TaskWrapper(@javax.annotation.Nullable Project project,
+    TaskWrapper(@jakarta.annotation.Nullable Project project,
                 @Nonnull String title,
                 boolean canBeCancelled,
                 TaskDescriptor taskDescriptor) {

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 // from kotlin
 public class CopyFileNameProvider extends DumbAwareCopyPathProvider {

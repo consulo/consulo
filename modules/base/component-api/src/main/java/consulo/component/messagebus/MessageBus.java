@@ -3,8 +3,8 @@ package consulo.component.messagebus;
 
 import consulo.annotation.component.TopicAPI;
 import consulo.disposer.Disposable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Core of IntelliJ IDEA messaging infrastructure. Basic functions:

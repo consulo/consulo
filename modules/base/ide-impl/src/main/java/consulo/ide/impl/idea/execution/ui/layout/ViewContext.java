@@ -27,8 +27,8 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface ViewContext extends Disposable {
   @Deprecated

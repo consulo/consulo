@@ -21,7 +21,7 @@ import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

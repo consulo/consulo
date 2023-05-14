@@ -1,7 +1,7 @@
 package consulo.execution.test.sm.ui;
 
 import consulo.process.ProcessHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Sergey Simonchik

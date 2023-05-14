@@ -20,8 +20,8 @@ import consulo.document.util.DocumentUtil;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class XSourcePositionImpl implements XSourcePosition {
   private final VirtualFile myFile;

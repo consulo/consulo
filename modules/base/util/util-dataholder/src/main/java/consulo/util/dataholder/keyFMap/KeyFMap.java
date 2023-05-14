@@ -17,8 +17,8 @@ package consulo.util.dataholder.keyFMap;
 
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An immutable map optimized for storing few {@link Key} entries with relatively rare updates

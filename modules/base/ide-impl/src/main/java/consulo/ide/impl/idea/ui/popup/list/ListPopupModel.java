@@ -20,7 +20,7 @@ import consulo.ui.ex.popup.ListSeparator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;

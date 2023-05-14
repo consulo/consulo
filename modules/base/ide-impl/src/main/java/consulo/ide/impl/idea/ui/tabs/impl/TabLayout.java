@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.application.util.registry.Registry;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

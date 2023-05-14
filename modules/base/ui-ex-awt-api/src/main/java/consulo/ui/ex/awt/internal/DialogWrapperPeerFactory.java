@@ -22,8 +22,8 @@ import consulo.component.ComponentManager;
 import consulo.ui.Window;
 import consulo.ui.ex.awt.DialogWrapper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 @ServiceAPI(ComponentScope.APPLICATION)

@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 // from kotlin
 public class CopyContentRootPathProvider extends DumbAwareCopyPathProvider {

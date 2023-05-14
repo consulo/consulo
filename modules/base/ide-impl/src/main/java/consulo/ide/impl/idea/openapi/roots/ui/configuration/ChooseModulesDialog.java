@@ -28,7 +28,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 

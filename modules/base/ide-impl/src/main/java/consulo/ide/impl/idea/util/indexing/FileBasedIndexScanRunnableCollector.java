@@ -22,7 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

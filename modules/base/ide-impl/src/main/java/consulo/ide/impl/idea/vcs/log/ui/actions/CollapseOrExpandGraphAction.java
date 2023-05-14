@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ui.image.Image;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
   private static final String LINEAR_BRANCHES = "Linear Branches";

@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.util;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ui.ex.awt.JBUI;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;

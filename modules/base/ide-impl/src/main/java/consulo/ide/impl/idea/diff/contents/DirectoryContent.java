@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.contents;
 
 import consulo.diff.content.DiffContent;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DirectoryContent extends DiffContent {
   /**

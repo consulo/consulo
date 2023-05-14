@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

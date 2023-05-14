@@ -23,7 +23,7 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PersistentEnumerator;
 import consulo.index.io.PersistentHashMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

@@ -23,7 +23,7 @@ import consulo.process.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.internal.laf;
 import consulo.ui.ex.JBColor;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

@@ -18,8 +18,8 @@ package consulo.language.editor;
 import consulo.document.util.TextRange;
 import consulo.util.lang.Couple;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 

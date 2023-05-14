@@ -3,7 +3,7 @@ package consulo.build.ui.event;
 
 import consulo.build.ui.event.EventResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * result status of task is derived by its children.

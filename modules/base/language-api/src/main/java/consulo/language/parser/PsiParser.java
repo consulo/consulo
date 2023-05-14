@@ -19,7 +19,7 @@ package consulo.language.parser;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.version.LanguageVersion;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The plugin side of a custom language parser. Receives tokens returned from

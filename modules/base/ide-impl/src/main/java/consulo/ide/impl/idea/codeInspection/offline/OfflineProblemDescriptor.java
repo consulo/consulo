@@ -26,7 +26,7 @@ import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;

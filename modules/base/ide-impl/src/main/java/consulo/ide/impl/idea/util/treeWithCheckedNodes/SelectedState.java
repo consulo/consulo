@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.treeWithCheckedNodes;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SLRUMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -42,7 +42,7 @@ public class SelectedState<T> {
     myCache = new SLRUMap<>(queueSize, queueSize);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public TreeNodeState get(final T node) {
     if (mySelected.contains(node)) return TreeNodeState.SELECTED;
     return myCache.get(node);

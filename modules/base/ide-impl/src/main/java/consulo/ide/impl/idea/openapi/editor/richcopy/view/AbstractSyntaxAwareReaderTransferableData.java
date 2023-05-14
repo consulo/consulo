@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
 import java.io.Reader;

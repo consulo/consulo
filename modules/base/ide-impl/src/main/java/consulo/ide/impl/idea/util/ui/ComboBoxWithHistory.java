@@ -4,7 +4,7 @@ import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import java.util.HashMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

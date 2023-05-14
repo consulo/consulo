@@ -22,8 +22,8 @@ import consulo.module.content.layer.Synthetic;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents an entry in the classpath of a module (as shown in the "Order/Export" page

@@ -18,7 +18,7 @@ package consulo.content.library.ui;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

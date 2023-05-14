@@ -18,7 +18,7 @@ package consulo.virtualFileSystem.util;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

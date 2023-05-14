@@ -19,7 +19,7 @@ package consulo.language.psi;
 import consulo.logging.Logger;
 import consulo.util.collection.util.WalkingState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr

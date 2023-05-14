@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.util;
 
 import consulo.codeEditor.EditorEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

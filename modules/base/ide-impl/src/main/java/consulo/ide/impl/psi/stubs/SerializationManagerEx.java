@@ -19,7 +19,7 @@ import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.SerializerNotFoundException;
 import consulo.language.psi.stub.Stub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;

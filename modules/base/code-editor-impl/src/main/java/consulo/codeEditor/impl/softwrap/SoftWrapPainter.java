@@ -17,7 +17,7 @@ package consulo.codeEditor.impl.softwrap;
 
 import consulo.codeEditor.SoftWrapDrawingType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

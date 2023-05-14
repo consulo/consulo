@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.core.StreamUtil;
 import consulo.ide.impl.idea.history.core.revisions.Difference;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

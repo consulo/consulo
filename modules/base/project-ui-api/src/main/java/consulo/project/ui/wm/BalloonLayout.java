@@ -20,8 +20,8 @@
 package consulo.project.ui.wm;
 
 import consulo.ui.ex.popup.Balloon;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface BalloonLayout {
   void add(@Nonnull Balloon balloon);

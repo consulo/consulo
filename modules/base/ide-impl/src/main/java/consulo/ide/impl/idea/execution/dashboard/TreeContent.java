@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev

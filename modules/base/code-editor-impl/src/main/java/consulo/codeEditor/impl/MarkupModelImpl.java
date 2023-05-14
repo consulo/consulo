@@ -38,8 +38,8 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

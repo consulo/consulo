@@ -23,7 +23,7 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

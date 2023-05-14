@@ -29,8 +29,8 @@ import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -46,10 +46,10 @@ public class VcsContextWrapper implements VcsContext {
   protected final int myModifiers;
   @Nonnull
   private final String myPlace;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myActionName;
 
-  public VcsContextWrapper(@Nonnull DataContext context, int modifiers, @Nonnull String place, @javax.annotation.Nullable String actionName) {
+  public VcsContextWrapper(@Nonnull DataContext context, int modifiers, @Nonnull String place, @jakarta.annotation.Nullable String actionName) {
     myContext = context;
     myModifiers = modifiers;
     myPlace = place;
@@ -84,7 +84,7 @@ public class VcsContextWrapper implements VcsContext {
     return myContext.getData(CommonDataKeys.PROJECT);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public VirtualFile getSelectedFile() {
     return getSelectedFilesStream().findFirst().orElse(null);
@@ -120,7 +120,7 @@ public class VcsContextWrapper implements VcsContext {
     return Arrays.asList(getSelectedFiles());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public File getSelectedIOFile() {
     File file = myContext.getData(VcsDataKeys.IO_FILE);
@@ -128,7 +128,7 @@ public class VcsContextWrapper implements VcsContext {
     return file != null ? file : ArrayUtil.getFirstElement(myContext.getData(VcsDataKeys.IO_FILE_ARRAY));
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public File[] getSelectedIOFiles() {
     File[] files = myContext.getData(VcsDataKeys.IO_FILE_ARRAY);
@@ -167,19 +167,19 @@ public class VcsContextWrapper implements VcsContext {
     );
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public FilePath getSelectedFilePath() {
     return ArrayUtil.getFirstElement(getSelectedFilePaths());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public ChangeList[] getSelectedChangeLists() {
     return myContext.getData(VcsDataKeys.CHANGE_LISTS);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Change[] getSelectedChanges() {
     return myContext.getData(VcsDataKeys.CHANGES);

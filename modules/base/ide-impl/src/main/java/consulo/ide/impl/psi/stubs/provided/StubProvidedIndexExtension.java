@@ -16,9 +16,9 @@ import consulo.index.io.VoidDataExternalizer;
 import consulo.disposer.Disposer;
 import consulo.language.psi.stub.StubIndexExtension;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 public class StubProvidedIndexExtension implements ProvidedIndexExtension<Integer, SerializedStubTree> {

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.build;
 
 import consulo.build.ui.progress.BuildProgressListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.Closeable;
 import java.util.function.Consumer;
 

@@ -24,7 +24,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Control;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**

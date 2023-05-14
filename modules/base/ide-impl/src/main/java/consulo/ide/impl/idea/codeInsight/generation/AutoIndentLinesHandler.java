@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class AutoIndentLinesHandler implements CodeInsightActionHandler {
   private static final Logger LOG = Logger.getInstance(AutoIndentLinesHandler.class);

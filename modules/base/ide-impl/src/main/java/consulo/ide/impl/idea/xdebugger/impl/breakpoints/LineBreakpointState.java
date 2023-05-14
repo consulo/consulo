@@ -20,7 +20,7 @@ import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.breakpoint.XBreakpointProperties;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

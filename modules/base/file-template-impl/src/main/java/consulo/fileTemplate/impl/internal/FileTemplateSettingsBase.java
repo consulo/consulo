@@ -20,8 +20,8 @@ import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Locale;
 
 /**

@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ProgramRunner;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class RunnerRegistry {

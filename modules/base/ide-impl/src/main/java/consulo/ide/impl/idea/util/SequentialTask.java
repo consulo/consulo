@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.application.progress.ProgressIndicator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines general contract for processing that may be executed by parts, i.e. it remembers the state after every iteration

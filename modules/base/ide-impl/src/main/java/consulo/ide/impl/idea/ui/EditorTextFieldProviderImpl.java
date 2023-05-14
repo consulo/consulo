@@ -30,7 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Comparator;
 import java.util.function.Consumer;

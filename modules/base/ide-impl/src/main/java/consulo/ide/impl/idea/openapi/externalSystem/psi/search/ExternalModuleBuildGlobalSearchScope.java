@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.psi.search;
 import consulo.project.Project;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -31,7 +31,7 @@ public class ExternalModuleBuildGlobalSearchScope extends DelegatingGlobalSearch
 
   public ExternalModuleBuildGlobalSearchScope(@Nonnull final Project project, @Nonnull GlobalSearchScope baseScope, @Nonnull String externalModulePath) {
     super(new DelegatingGlobalSearchScope(baseScope) {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public Project getProject() {
         return project;

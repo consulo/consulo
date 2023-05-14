@@ -25,7 +25,7 @@ import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.runtime.local.LocalRunner;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -50,7 +50,7 @@ public class LocalServerState<S extends ServerConfiguration, D extends Deploymen
     myEnvironment = environment;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
     return myLocalRunner.execute(mySource, myConfiguration, myEnvironment, executor, runner);

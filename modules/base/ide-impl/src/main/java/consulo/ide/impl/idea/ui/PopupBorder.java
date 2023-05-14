@@ -20,7 +20,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.JBUI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

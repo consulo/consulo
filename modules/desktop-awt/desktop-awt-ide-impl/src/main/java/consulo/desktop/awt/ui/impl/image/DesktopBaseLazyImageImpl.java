@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

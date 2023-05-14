@@ -25,7 +25,7 @@ import consulo.logging.Logger;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.virtualFileSystem.RawFileLoader;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;

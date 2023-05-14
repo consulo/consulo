@@ -15,8 +15,8 @@
  */
 package consulo.util.rmi;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.rmi.Remote;
@@ -41,8 +41,8 @@ public class RemoteObject implements Remote, Unreferenced {
     return myWeakRef;
   }
 
-  @javax.annotation.Nullable
-  public synchronized <T extends Remote> T export(@javax.annotation.Nullable T child) throws RemoteException {
+  @jakarta.annotation.Nullable
+  public synchronized <T extends Remote> T export(@jakarta.annotation.Nullable T child) throws RemoteException {
     if (child == null) return null;
     @SuppressWarnings("unchecked") final T result = (T)UnicastRemoteObject.exportObject(child, 0);
     myChildren.put((RemoteObject)child, result);

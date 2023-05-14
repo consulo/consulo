@@ -17,7 +17,7 @@ package consulo.component.util;
 
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class ActiveRunnable extends ComparableObject.Impl {
 

@@ -17,7 +17,7 @@ package consulo.ui.ex;
 
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface OccurenceNavigator {
   OccurenceNavigator EMPTY = new OccurenceNavigator() {

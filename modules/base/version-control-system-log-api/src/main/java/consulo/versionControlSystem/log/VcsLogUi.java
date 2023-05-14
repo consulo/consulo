@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.log.event.VcsLogListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface VcsLogUi {
   Key<VcsLogUi> KEY = Key.create(VcsLogUi.class);

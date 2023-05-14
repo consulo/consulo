@@ -17,7 +17,7 @@ package consulo.language.editor.impl.internal.markup;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 /**

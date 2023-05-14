@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitSession;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +75,7 @@ public class SessionDialog extends DialogWrapper {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent createCenterPanel() {
     myCenterPanel.add(myConfigurationComponent, BorderLayout.CENTER);
     return myCenterPanel;
@@ -86,7 +86,7 @@ public class SessionDialog extends DialogWrapper {
     return IdeFocusTraversalPolicy.getPreferredFocusedComponent(myConfigurationComponent);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected ValidationInfo doValidate() {
     updateButtons();

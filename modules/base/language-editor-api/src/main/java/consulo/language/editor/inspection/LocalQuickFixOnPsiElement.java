@@ -21,7 +21,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class LocalQuickFixOnPsiElement implements LocalQuickFix {
   protected static final Logger LOG = Logger.getInstance(LocalQuickFixOnPsiElement.class);

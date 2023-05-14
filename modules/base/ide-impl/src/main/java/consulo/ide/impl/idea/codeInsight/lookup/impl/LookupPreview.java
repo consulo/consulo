@@ -29,8 +29,8 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
 import consulo.util.collection.FList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

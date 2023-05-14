@@ -17,8 +17,8 @@ package consulo.externalSystem.model.execution;
 
 import consulo.externalSystem.model.task.TaskData;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents {@link TaskData} at the ide side. Is required purely for IJ serialization because {@link TaskData} has only final

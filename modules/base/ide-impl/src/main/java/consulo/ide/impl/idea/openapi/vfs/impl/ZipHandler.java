@@ -25,8 +25,8 @@ import consulo.util.io.FileAccessorCache;
 import consulo.util.lang.ByteArrayCharSequence;
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;

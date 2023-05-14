@@ -21,8 +21,8 @@ import consulo.process.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * {@link XAttachDebugger} allows to attach to process with specified {@link ProcessInfo}

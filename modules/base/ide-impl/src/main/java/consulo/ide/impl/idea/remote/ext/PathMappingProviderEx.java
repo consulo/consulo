@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.remote.ext;
 
 import consulo.ide.impl.idea.remote.PathMappingProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class PathMappingProviderEx extends PathMappingProvider {
   @Nonnull

@@ -6,7 +6,7 @@ import consulo.application.AllIcons;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "coverage", order = "after debug")
 public class CoverageExecutor extends Executor {

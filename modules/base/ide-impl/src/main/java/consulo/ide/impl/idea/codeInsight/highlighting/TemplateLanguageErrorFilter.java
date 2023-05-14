@@ -25,7 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.language.ast.TokenSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

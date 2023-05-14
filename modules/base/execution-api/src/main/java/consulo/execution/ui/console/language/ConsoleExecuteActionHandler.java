@@ -20,7 +20,7 @@ import consulo.execution.internal.LanguageConsoleViewEx;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.undoRedo.ProjectUndoManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class ConsoleExecuteActionHandler {
 

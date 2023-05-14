@@ -21,7 +21,7 @@ package consulo.language.editor.annotation;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class AnnotationSession extends UserDataHolderBase {
   private final PsiFile myFile;

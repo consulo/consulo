@@ -8,7 +8,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Intention action that is used as a title of [IntentionActionWithChoice].

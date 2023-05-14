@@ -26,8 +26,8 @@ import consulo.process.io.BaseOutputReader;
 import consulo.process.local.ProcessWaitFor;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

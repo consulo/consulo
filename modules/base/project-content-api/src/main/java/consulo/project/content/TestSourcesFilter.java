@@ -8,7 +8,7 @@ import consulo.content.FileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implementations of this extension point can tell IDE whether some particular file is a test file.

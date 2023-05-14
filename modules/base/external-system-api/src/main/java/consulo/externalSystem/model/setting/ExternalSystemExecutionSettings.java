@@ -3,7 +3,7 @@ package consulo.externalSystem.model.setting;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;

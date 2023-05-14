@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.LinkMouseListenerBas
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -61,13 +61,13 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected Object getTagAt(@Nonnull final MouseEvent e) {
     return PushLogTreeUtil.getTagAtForRenderer(myRenderer, e);
   }
 
-  protected void handleTagClick(@javax.annotation.Nullable final Object tag, @Nonnull MouseEvent event) {
+  protected void handleTagClick(@jakarta.annotation.Nullable final Object tag, @Nonnull MouseEvent event) {
     if (tag instanceof VcsLinkedTextComponent) {
       VcsLinkedTextComponent textWithLink = (VcsLinkedTextComponent)tag;
       final TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());

@@ -20,8 +20,8 @@ import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public abstract class AbstractSchemeManager<T, E extends ExternalizableScheme> extends SchemeManager<T, E> {

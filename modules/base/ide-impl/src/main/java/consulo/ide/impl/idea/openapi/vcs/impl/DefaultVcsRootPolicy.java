@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.PathUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -45,7 +45,7 @@ public abstract class DefaultVcsRootPolicy {
   @Nullable
   public abstract Object getMatchContext(final VirtualFile file);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract VirtualFile getVcsRootFor(@Nonnull VirtualFile file);
 
   @Nonnull

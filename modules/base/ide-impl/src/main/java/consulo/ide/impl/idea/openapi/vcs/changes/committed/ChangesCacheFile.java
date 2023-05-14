@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
@@ -931,7 +931,7 @@ public class ChangesCacheFile {
 
     private ProcessingResult processIncomingChange(final Change change,
                                                    final IncomingChangeListData changeListData,
-                                                   @javax.annotation.Nullable final Collection<FilePath> incomingFiles) {
+                                                   @jakarta.annotation.Nullable final Collection<FilePath> incomingFiles) {
       final CommittedChangeList changeList = changeListData.changeList;
       final ContentRevision afterRevision = change.getAfterRevision();
       if (afterRevision != null) {

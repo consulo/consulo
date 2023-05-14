@@ -29,8 +29,8 @@ import consulo.ui.ex.awt.MultiRowFlowPanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

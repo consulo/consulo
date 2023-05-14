@@ -34,8 +34,8 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class DummyHolder extends PsiFileImpl {
   protected final PsiElement myContext;

@@ -21,7 +21,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.psi.search.TodoAttributes;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TodoAttributesUtil {
   @Nonnull

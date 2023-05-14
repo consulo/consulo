@@ -29,8 +29,8 @@ import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;

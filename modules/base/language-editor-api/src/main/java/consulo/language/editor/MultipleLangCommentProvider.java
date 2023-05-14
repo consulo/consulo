@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik

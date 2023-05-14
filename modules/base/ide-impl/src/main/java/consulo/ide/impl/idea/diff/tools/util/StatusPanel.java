@@ -57,7 +57,7 @@ public class StatusPanel extends JPanel {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected String getMessage() {
     int count = getChangesCount();
     if (count == -1) return null;

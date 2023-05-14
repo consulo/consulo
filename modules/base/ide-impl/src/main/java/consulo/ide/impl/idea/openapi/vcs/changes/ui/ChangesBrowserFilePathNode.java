@@ -25,7 +25,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
@@ -85,7 +85,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
     return FileUtil.toSystemDependentName(getUserObject().getPath());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static FilePath safeCastToFilePath(Object o) {
     if (o instanceof FilePath) return (FilePath)o;
     if (o instanceof Change) {
@@ -95,7 +95,7 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
   }
 
   @Nonnull
-  public static String getRelativePath(@javax.annotation.Nullable FilePath parent, @Nonnull FilePath child) {
+  public static String getRelativePath(@jakarta.annotation.Nullable FilePath parent, @Nonnull FilePath child) {
     boolean isLocal = !child.isNonLocal();
     boolean caseSensitive = isLocal && SystemInfoRt.isFileSystemCaseSensitive;
     String result = parent != null ? FileUtil.getRelativePath(parent.getPath(), child.getPath(), '/', caseSensitive) : null;

@@ -19,7 +19,7 @@ package consulo.content;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  *  @author dsl

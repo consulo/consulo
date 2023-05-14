@@ -30,8 +30,8 @@ import consulo.externalService.update.UpdateChannel;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

@@ -1,7 +1,7 @@
 package consulo.remoteServer.runtime.log;
 
 import consulo.process.ProcessHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

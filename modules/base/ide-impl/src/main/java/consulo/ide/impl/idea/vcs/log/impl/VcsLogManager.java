@@ -37,8 +37,8 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.List;

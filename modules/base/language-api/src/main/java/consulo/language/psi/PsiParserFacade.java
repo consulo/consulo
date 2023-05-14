@@ -23,7 +23,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

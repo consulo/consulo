@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.history.core.tree.RootEntry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import org.jetbrains.annotations.TestOnly;
 
@@ -196,7 +196,7 @@ public class LocalHistoryFacade {
     return result[0];
   }
 
-  public void addListener(@Nonnull final Listener l, @javax.annotation.Nullable Disposable parent) {
+  public void addListener(@Nonnull final Listener l, @jakarta.annotation.Nullable Disposable parent) {
     myListeners.add(l);
 
     if (parent != null) {

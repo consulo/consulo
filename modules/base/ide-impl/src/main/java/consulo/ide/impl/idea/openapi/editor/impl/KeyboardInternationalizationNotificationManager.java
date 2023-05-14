@@ -26,8 +26,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 

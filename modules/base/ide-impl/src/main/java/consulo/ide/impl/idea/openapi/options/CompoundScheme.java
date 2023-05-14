@@ -20,7 +20,7 @@ import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.component.persist.scheme.SchemeElement;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Constructor;
 import java.util.*;

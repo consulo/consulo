@@ -24,7 +24,7 @@ import consulo.language.pattern.compiler.PatternCompilerFactory;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

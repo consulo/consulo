@@ -24,8 +24,8 @@ import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;

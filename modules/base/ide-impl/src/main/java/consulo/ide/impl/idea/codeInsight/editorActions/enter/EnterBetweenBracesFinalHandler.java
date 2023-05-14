@@ -17,8 +17,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Please, don't extend the class.

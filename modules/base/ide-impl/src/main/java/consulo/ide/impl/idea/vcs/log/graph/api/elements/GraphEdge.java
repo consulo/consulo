@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.api.elements;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class GraphEdge implements GraphElement {
   public static GraphEdge createNormalEdge(int nodeIndex1, int nodeIndex2, @Nonnull GraphEdgeType type) {
@@ -24,7 +24,7 @@ public final class GraphEdge implements GraphElement {
     return new GraphEdge(Math.min(nodeIndex1, nodeIndex2), Math.max(nodeIndex1, nodeIndex2), null, type);
   }
 
-  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @javax.annotation.Nullable Integer targetId, @Nonnull GraphEdgeType type) {
+  public static GraphEdge createEdgeWithTargetId(int nodeIndex, @jakarta.annotation.Nullable Integer targetId, @Nonnull GraphEdgeType type) {
     switch (type) {
       case DOTTED_ARROW_UP:
         return new GraphEdge(null, nodeIndex, targetId, type);
@@ -37,18 +37,18 @@ public final class GraphEdge implements GraphElement {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Integer myUpNodeIndex;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Integer myDownNodeIndex;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Integer myTargetId;
   @Nonnull
   private final GraphEdgeType myType;
 
-  public GraphEdge(@javax.annotation.Nullable Integer upNodeIndex,
-                   @javax.annotation.Nullable Integer downNodeIndex,
-                   @javax.annotation.Nullable Integer targetId,
+  public GraphEdge(@jakarta.annotation.Nullable Integer upNodeIndex,
+                   @jakarta.annotation.Nullable Integer downNodeIndex,
+                   @jakarta.annotation.Nullable Integer targetId,
                    @Nonnull GraphEdgeType type) {
     myUpNodeIndex = upNodeIndex;
     myDownNodeIndex = downNodeIndex;
@@ -56,17 +56,17 @@ public final class GraphEdge implements GraphElement {
     myType = type;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Integer getUpNodeIndex() {
     return myUpNodeIndex;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Integer getDownNodeIndex() {
     return myDownNodeIndex;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Integer getTargetId() {
     return myTargetId;
   }

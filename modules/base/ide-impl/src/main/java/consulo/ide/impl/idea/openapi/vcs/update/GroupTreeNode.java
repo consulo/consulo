@@ -26,7 +26,7 @@ import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.*;
@@ -122,7 +122,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     myFilePaths.add(filePath);
   }
 
-  public void rebuild(boolean groupByPackages, @javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  public void rebuild(boolean groupByPackages, @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     myFilterAttributes = null;
     if (containsGroups()) {
       rebuildGroups(groupByPackages, filter, showOnlyFilteredItems);
@@ -133,7 +133,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   }
 
   private void rebuildGroups(boolean groupByPackages,
-                             @javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
+                             @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
                              boolean showOnlyFilteredItems) {
     boolean apply = false;
     for (int i = 0; i < getChildCount(); i++) {
@@ -145,7 +145,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
   }
 
   private void rebuildFiles(boolean groupByPackages,
-                            @javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
+                            @jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter,
                             boolean showOnlyFilteredItems) {
     for (int i = getChildCount() - 1; i >= 0; i--) {
       final TreeNode node = getChildAt(i);
@@ -209,7 +209,7 @@ public class GroupTreeNode extends AbstractTreeNode implements Disposable {
     }
   }
 
-  private void buildFiles(@javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  private void buildFiles(@jakarta.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     Collections.sort(myFilePaths, new Comparator<String>() {
       @Override
       public int compare(String path1, String path2) {

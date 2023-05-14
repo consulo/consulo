@@ -17,7 +17,7 @@ package consulo.builtinWebServer.impl.http;
 
 import consulo.application.impl.internal.start.ImportantFolderLocker;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

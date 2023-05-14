@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.project.util.query.SearchParameters;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public final class ParametersRequest<B, R> {

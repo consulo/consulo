@@ -31,8 +31,8 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;

@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class CheckSanityAction extends AnAction {

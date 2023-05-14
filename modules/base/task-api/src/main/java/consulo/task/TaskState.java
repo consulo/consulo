@@ -15,7 +15,7 @@
  */
 package consulo.task;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Predefined common task states were used before {@link CustomTaskState} was introduced.

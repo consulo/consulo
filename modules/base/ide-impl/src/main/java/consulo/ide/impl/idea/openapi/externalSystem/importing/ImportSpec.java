@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.importing;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka

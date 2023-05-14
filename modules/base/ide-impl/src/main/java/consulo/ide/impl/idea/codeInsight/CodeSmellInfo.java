@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The information about a single problem found during pre-checkin code analysis.

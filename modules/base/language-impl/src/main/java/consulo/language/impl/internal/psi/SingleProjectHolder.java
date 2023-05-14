@@ -17,7 +17,7 @@ package consulo.language.impl.internal.psi;
 
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

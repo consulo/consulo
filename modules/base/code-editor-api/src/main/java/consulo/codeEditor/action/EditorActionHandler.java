@@ -24,8 +24,8 @@ import consulo.document.DocCommandGroupId;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Interface for actions activated by keystrokes in the editor.

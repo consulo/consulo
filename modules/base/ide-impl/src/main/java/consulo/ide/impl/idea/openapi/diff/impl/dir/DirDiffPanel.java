@@ -59,8 +59,8 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -556,11 +556,11 @@ public class DirDiffPanel implements Disposable, DataProvider {
   }
 
   private class MyDiffRequestProcessor extends CacheDiffRequestProcessor<ElementWrapper> {
-    public MyDiffRequestProcessor(@javax.annotation.Nullable Project project) {
+    public MyDiffRequestProcessor(@jakarta.annotation.Nullable Project project) {
       super(project, DiffPlaces.DIR_DIFF);
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected String getRequestName(@Nonnull ElementWrapper element) {
       return null;

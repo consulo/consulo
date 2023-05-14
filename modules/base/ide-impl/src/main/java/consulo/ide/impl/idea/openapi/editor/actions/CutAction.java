@@ -34,7 +34,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.application.util.registry.Registry;
 import consulo.annotation.access.RequiredWriteAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class CutAction extends EditorAction {
   public CutAction() {

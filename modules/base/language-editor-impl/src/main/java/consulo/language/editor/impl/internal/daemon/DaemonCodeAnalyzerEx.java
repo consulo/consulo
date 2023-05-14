@@ -24,7 +24,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {

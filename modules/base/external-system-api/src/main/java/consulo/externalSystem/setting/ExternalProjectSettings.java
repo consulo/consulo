@@ -18,8 +18,8 @@ package consulo.externalSystem.setting;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

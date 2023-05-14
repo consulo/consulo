@@ -16,8 +16,8 @@
  */
 package consulo.disposer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class marks classes, which require some work done for cleaning up.

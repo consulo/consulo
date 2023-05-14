@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.UnversionedViewDialog;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ChangesBrowserUnversionedFilesNode extends ChangesBrowserSpecificFilesNode {
 

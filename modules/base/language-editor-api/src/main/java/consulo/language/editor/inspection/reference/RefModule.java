@@ -17,7 +17,7 @@ package consulo.language.editor.inspection.reference;
 
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A node in the reference graph corresponding to a module.

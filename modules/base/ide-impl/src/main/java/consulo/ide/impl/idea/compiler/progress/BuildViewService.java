@@ -5,7 +5,7 @@ import consulo.compiler.ExitStatus;
 import consulo.compiler.CompilerMessage;
 import consulo.application.progress.ProgressIndicator;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * {@link BuildViewService} implementations are expected to visualize somehow compiler progress/messages for {@link CompilerTask}.

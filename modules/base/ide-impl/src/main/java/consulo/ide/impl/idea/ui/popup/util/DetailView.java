@@ -38,7 +38,7 @@ public interface DetailView extends UserDataHolder {
 
   JPanel getPropertiesPanel();
 
-  void setPropertiesPanel(@javax.annotation.Nullable JPanel panel);
+  void setPropertiesPanel(@jakarta.annotation.Nullable JPanel panel);
 
   void clearEditor();
 
@@ -48,7 +48,7 @@ public interface DetailView extends UserDataHolder {
 
   boolean hasEditorOnly();
 
-  void setCurrentItem(@javax.annotation.Nullable ItemWrapper item);
+  void setCurrentItem(@jakarta.annotation.Nullable ItemWrapper item);
 
   class PreviewEditorState {
 

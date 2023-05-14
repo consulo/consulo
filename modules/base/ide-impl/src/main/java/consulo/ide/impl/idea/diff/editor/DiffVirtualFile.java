@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.language.file.light.LightVirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public abstract class DiffVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, DiffContentVirtualFile, IdeDocumentHistoryImpl.SkipFromDocumentHistory {

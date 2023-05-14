@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.singleRow.ScrollableSingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

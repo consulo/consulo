@@ -18,8 +18,8 @@ package consulo.component.store.impl.internal.storage;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.StateStorageException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 
 public interface StateStorage {

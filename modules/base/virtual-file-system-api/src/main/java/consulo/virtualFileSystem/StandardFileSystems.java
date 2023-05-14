@@ -20,7 +20,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

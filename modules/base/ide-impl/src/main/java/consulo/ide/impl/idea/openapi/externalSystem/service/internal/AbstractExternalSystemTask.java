@@ -12,7 +12,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 

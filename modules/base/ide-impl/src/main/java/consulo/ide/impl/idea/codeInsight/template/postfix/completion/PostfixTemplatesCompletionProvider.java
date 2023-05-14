@@ -14,7 +14,7 @@ import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
 import consulo.language.editor.completion.CompletionProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor.getPostfixLiveTemplate;
 

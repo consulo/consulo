@@ -39,7 +39,7 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -93,7 +93,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     presentation.setEnabled(project != null && file != null && isEnabled(getRepositoryManager(project).getRepositoryForFile(file)));
   }
 
-  private boolean isEnabled(@javax.annotation.Nullable T repository) {
+  private boolean isEnabled(@jakarta.annotation.Nullable T repository) {
     return repository != null && !repository.isFresh() && !noBranchesToCompare(repository);
   }
 

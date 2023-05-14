@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionActionFilter;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
 * @author VISTALL

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.textCompletion;
 
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 

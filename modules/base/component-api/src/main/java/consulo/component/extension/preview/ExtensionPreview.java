@@ -18,7 +18,7 @@ package consulo.component.extension.preview;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

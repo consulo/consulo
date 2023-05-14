@@ -19,7 +19,7 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformOperatingSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
 

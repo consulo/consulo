@@ -16,7 +16,7 @@
 
 package consulo.execution.debug.breakpoint;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

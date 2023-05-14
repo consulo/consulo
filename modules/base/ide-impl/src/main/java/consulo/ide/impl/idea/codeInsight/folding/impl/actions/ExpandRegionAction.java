@@ -24,8 +24,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ExpandRegionAction extends EditorAction {
   public ExpandRegionAction() {

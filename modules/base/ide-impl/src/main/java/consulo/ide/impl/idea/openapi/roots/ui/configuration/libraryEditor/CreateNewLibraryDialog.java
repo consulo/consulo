@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.ide.setting.module.LibrariesConfigurator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 

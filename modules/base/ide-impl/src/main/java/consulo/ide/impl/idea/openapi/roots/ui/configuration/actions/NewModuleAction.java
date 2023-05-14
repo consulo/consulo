@@ -32,7 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

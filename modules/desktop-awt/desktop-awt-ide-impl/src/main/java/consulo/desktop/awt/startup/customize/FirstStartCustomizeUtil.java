@@ -38,7 +38,7 @@ import consulo.util.collection.MultiMap;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;

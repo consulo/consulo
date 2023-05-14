@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.impl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsRef;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.Map;

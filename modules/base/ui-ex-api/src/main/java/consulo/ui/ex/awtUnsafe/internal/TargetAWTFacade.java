@@ -27,8 +27,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

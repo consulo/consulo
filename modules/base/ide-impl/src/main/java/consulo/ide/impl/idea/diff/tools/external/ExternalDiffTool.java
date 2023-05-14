@@ -39,7 +39,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class ExternalDiffTool {
     return ExternalDiffSettings.getInstance().isDiffEnabled();
   }
 
-  public static void show(@javax.annotation.Nullable final Project project, @Nonnull final DiffRequestChain chain, @Nonnull final DiffDialogHints hints) {
+  public static void show(@jakarta.annotation.Nullable final Project project, @Nonnull final DiffRequestChain chain, @Nonnull final DiffDialogHints hints) {
     try {
       //noinspection unchecked
       final Ref<List<DiffRequest>> requestsRef = new Ref<List<DiffRequest>>();
@@ -98,7 +98,7 @@ public class ExternalDiffTool {
   }
 
   @Nonnull
-  private static List<DiffRequest> collectRequests(@javax.annotation.Nullable Project project, @Nonnull final DiffRequestChain chain, @Nonnull ProgressIndicator indicator) {
+  private static List<DiffRequest> collectRequests(@jakarta.annotation.Nullable Project project, @Nonnull final DiffRequestChain chain, @Nonnull ProgressIndicator indicator) {
     List<DiffRequest> requests = new ArrayList<DiffRequest>();
 
     UserDataHolderBase context = new UserDataHolderBase();
@@ -124,7 +124,7 @@ public class ExternalDiffTool {
     return requests;
   }
 
-  public static void showRequest(@javax.annotation.Nullable Project project, @Nonnull DiffRequest request) throws ExecutionException, IOException {
+  public static void showRequest(@jakarta.annotation.Nullable Project project, @Nonnull DiffRequest request) throws ExecutionException, IOException {
     request.onAssigned(true);
 
     ExternalDiffSettings settings = ExternalDiffSettings.getInstance();

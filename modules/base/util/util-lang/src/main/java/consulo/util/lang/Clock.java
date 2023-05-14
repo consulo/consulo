@@ -16,7 +16,7 @@
 
 package consulo.util.lang;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Date;

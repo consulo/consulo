@@ -31,8 +31,8 @@ import consulo.ui.model.TableModel;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.TimeoutUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;

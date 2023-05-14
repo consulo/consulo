@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

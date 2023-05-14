@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.ui.models.FileHistoryDialogModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SelectionHistoryDialog extends FileHistoryDialog {
   private final int myFrom;

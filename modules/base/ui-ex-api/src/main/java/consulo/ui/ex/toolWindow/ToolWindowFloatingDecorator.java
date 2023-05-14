@@ -17,7 +17,7 @@ package consulo.ui.ex.toolWindow;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Rectangle2D;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

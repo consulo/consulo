@@ -35,8 +35,8 @@ import consulo.module.impl.internal.layer.ModuleRootsProcessor;
 import consulo.content.base.BinariesOrderRootType;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**

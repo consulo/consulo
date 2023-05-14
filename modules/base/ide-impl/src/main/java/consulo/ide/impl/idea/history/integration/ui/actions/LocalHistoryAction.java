@@ -27,8 +27,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 import static consulo.ide.impl.idea.util.containers.UtilKt.getIfSingle;
@@ -68,7 +68,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     actionPerformed(p, gw, notNull(getFile(e)), e);
   }
 
-  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @javax.annotation.Nullable VirtualFile f, @Nonnull AnActionEvent e) {
+  protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @jakarta.annotation.Nullable VirtualFile f, @Nonnull AnActionEvent e) {
     return true;
   }
 

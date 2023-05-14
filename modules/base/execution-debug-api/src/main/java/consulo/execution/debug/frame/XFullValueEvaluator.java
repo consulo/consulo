@@ -18,8 +18,8 @@ package consulo.execution.debug.frame;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.XDebuggerBundle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

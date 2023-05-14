@@ -32,7 +32,7 @@ import consulo.logging.Logger;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;

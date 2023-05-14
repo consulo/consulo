@@ -28,7 +28,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MakeModuleAction extends CompileActionBase {
   private static final Logger LOG = Logger.getInstance(MakeModuleAction.class);

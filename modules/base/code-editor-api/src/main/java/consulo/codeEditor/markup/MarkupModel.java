@@ -21,8 +21,8 @@ import consulo.document.RangeMarker;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides services for highlighting ranges of text in a document, painting markers on the

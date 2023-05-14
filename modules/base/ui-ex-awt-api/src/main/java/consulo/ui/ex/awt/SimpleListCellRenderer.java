@@ -4,7 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.awt.hacking.DefaultLookupHacking;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.*;

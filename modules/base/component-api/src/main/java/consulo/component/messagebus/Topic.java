@@ -25,7 +25,7 @@ package consulo.component.messagebus;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.TopicBroadcastDirection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines messaging endpoint within particular {@link MessageBus bus}.

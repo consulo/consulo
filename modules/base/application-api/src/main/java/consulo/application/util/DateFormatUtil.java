@@ -28,7 +28,7 @@ import consulo.util.lang.Clock;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SyncDateFormat;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

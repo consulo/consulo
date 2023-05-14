@@ -20,7 +20,7 @@ import consulo.execution.terminal.TerminalSession;
 import consulo.execution.terminal.TerminalSessionFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

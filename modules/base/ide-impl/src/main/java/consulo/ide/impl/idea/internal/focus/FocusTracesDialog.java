@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.FocusRequestInfo;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

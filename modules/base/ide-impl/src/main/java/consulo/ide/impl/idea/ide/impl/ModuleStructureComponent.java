@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ModuleStructureComponent extends SimpleToolWindowPanel implements Disposable, DataProvider {
   private final ModuleStructurePane myStructurePane;

@@ -2,7 +2,7 @@ package consulo.module.content.layer;
 
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

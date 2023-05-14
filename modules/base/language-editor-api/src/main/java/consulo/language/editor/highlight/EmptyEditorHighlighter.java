@@ -27,7 +27,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EmptyEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {
   private static final Logger LOG = Logger.getInstance(EmptyEditorHighlighter.class);

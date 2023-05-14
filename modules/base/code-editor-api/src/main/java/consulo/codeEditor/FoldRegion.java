@@ -3,8 +3,8 @@ package consulo.codeEditor;
 
 import consulo.document.RangeMarker;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a region of text in the editor which can be folded.

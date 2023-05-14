@@ -18,8 +18,8 @@ package consulo.util.xml.serializer;
 import consulo.util.xml.serializer.MutableAccessor;
 import consulo.util.xml.serializer.XmlSerializationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

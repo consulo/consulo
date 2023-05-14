@@ -17,8 +17,8 @@ package consulo.ui.web.internal;
 
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;

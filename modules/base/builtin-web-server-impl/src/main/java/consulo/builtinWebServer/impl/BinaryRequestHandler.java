@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

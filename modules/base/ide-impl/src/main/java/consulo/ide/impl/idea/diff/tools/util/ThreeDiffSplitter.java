@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.diff.tools.util.DiffSplitter.Painter;
 import consulo.diff.util.Side;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class ThreeDiffSplitter extends JPanel {
   }
 
   @RequiredUIAccess
-  public void setPainter(@javax.annotation.Nullable Painter painter, @Nonnull Side side) {
+  public void setPainter(@jakarta.annotation.Nullable Painter painter, @Nonnull Side side) {
     getDivider(side).setPainter(painter);
   }
 
@@ -103,7 +103,7 @@ public class ThreeDiffSplitter extends JPanel {
     }
 
     @RequiredUIAccess
-    public void setPainter(@javax.annotation.Nullable Painter painter) {
+    public void setPainter(@jakarta.annotation.Nullable Painter painter) {
       myPainter = painter;
     }
   }

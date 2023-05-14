@@ -20,8 +20,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.ProgressStreamUtil;
 import consulo.util.io.NetUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

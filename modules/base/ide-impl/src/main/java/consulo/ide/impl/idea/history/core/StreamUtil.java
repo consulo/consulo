@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.history.core.changes.*;
 import consulo.ide.impl.idea.history.core.tree.DirectoryEntry;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.core.tree.FileEntry;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;

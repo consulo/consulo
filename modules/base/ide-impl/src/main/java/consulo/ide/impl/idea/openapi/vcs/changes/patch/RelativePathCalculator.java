@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.application.util.SystemInfo;
 import consulo.versionControlSystem.VcsBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -110,7 +110,7 @@ public class RelativePathCalculator {
     return myResult;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static String getMovedString(final String beforeName, final String afterName) {
     if ((beforeName != null) && (afterName != null) && (! stringEqual(beforeName, afterName))) {
       final RelativePathCalculator calculator = new RelativePathCalculator(beforeName, afterName);

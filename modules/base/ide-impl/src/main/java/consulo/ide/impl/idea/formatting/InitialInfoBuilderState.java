@@ -9,8 +9,8 @@ import consulo.language.codeStyle.internal.CompositeBlockWrapper;
 import consulo.language.codeStyle.internal.IndentImpl;
 import consulo.language.codeStyle.internal.WrapImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

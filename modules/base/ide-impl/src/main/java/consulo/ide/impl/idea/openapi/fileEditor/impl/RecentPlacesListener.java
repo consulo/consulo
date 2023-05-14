@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.

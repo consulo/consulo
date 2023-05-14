@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ToggleSelectionOnlyAction extends EditorHeaderToggleAction {
   public ToggleSelectionOnlyAction() {

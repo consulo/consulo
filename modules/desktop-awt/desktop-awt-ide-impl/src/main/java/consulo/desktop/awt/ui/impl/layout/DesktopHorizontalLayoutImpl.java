@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

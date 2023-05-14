@@ -6,7 +6,7 @@ import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FsRoot extends VirtualDirectoryImpl {
   private final String myPathWithOneSlash;

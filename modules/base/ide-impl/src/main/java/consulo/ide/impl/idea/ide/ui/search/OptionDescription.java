@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Objects;
 

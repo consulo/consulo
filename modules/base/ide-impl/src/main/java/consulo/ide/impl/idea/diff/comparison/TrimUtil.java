@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.comparison;
 import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

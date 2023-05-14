@@ -3,8 +3,8 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.SingletonIteratorBase;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;

@@ -9,7 +9,7 @@ import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates information about incremental soft wraps cache update.

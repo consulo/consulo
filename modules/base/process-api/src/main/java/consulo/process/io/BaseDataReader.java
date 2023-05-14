@@ -6,7 +6,7 @@ import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;

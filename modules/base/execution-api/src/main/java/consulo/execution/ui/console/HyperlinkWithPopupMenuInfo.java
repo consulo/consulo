@@ -17,8 +17,8 @@ package consulo.execution.ui.console;
 
 import consulo.ui.ex.action.ActionGroup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 
 /**

@@ -31,7 +31,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 
 /**

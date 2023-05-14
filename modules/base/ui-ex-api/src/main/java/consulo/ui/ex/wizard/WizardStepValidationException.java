@@ -17,8 +17,8 @@ package consulo.ui.ex.wizard;
 
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -17,7 +17,7 @@ package consulo.component.util.localize;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Locale;

@@ -19,7 +19,7 @@ import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -4,7 +4,7 @@ package consulo.build.ui.event;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.MessageEvent;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka

@@ -18,7 +18,7 @@ package consulo.process.remote;
 import consulo.process.SelfKiller;
 import consulo.util.io.HostAndPort;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Alexander Koshevoy

@@ -25,7 +25,7 @@ import consulo.project.content.TestSourcesFilter;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

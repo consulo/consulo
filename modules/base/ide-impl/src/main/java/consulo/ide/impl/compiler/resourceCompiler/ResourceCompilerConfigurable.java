@@ -31,8 +31,8 @@ import consulo.ui.ex.awt.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.regex.PatternSyntaxException;
@@ -124,7 +124,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
         return true;
       }
 
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public String getErrorText(String inputString) {
         try {

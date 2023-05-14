@@ -32,7 +32,7 @@ import consulo.usage.ConfigurableUsageTarget;
 import consulo.usage.UsageView;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;

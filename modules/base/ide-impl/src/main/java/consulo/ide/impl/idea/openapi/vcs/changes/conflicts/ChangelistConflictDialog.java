@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.FileListRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.CollectionListModel;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

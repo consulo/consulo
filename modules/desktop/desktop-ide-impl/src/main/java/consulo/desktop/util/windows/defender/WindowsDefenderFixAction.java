@@ -30,7 +30,7 @@ import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Collection;
 

@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * {@linkplain RefactoringElementListenerProvider} receives a notification on undo.

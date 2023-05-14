@@ -20,7 +20,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.ExecutorService;

@@ -21,7 +21,7 @@ import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class DefaultChangeLocalityDetector implements ChangeLocalityDetector {

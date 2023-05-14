@@ -20,7 +20,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.util.MacUIUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;

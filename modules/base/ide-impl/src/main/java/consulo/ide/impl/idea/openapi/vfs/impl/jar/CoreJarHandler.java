@@ -20,8 +20,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.ide.impl.virtualFileSystem.archive.zip.ZipArchiveFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;

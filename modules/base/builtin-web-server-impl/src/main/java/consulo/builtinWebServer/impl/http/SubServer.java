@@ -32,7 +32,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.InetSocketAddress;
 import java.util.Map;
 

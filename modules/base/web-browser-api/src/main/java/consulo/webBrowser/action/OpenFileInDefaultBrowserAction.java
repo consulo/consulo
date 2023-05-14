@@ -23,7 +23,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class OpenFileInDefaultBrowserAction extends DumbAwareAction {
   @Override

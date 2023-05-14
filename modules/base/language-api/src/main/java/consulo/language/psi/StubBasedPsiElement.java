@@ -22,8 +22,8 @@ package consulo.language.psi;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface StubBasedPsiElement<Stub extends StubElement> extends PsiElement {
   @Nonnull

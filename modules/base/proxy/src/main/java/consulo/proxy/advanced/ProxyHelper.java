@@ -19,8 +19,8 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.PluginHolderModificator;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 

@@ -19,7 +19,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface AnnotationProviderEx extends AnnotationProvider {
   @Nonnull

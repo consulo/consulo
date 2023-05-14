@@ -20,7 +20,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awt.JBList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

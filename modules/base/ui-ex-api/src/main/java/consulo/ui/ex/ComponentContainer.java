@@ -18,7 +18,7 @@ package consulo.ui.ex;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

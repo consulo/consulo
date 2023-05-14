@@ -26,7 +26,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;

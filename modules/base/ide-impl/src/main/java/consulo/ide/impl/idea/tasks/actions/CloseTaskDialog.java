@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;

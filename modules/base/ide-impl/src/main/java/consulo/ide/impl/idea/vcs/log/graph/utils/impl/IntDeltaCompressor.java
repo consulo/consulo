@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntToIntMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /*package*/ class IntDeltaCompressor implements IntList {
 

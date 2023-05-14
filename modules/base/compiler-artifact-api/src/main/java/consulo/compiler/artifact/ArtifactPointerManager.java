@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

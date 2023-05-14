@@ -21,7 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

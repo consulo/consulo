@@ -44,7 +44,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

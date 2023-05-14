@@ -26,7 +26,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.util.continuation.*;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**

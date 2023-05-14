@@ -50,8 +50,8 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -81,7 +81,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
                                final CommittedChangesProvider provider,
                                final ChangeBrowserSettings settings,
                                @Nullable final RepositoryLocation location,
-                               @javax.annotation.Nullable ActionGroup extraActions) {
+                               @jakarta.annotation.Nullable ActionGroup extraActions) {
     super(new BorderLayout());
     mySettings = settings;
     myProject = project;

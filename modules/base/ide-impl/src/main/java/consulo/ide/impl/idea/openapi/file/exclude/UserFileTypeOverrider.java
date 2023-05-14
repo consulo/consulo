@@ -8,8 +8,8 @@ import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeOverrider;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Substitutes type for files which users explicitly marked with "Override File Type" action

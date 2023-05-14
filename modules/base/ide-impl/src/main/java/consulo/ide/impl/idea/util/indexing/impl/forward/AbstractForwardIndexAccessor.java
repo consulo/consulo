@@ -10,8 +10,8 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.IOException;
 

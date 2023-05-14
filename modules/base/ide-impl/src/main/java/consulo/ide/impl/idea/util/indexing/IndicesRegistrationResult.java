@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.ID;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.stream.Collectors;

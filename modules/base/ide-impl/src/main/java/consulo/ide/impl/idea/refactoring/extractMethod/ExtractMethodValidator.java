@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author oleg

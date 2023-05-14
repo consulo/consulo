@@ -19,7 +19,7 @@ import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.VisibleAreaListener;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;

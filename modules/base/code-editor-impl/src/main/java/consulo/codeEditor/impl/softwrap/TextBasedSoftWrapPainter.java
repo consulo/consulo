@@ -23,7 +23,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.EnumMap;

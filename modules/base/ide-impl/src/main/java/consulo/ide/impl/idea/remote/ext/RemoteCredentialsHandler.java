@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.remote.ext;
 
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 // TODO: (next) rename to wrapper?
 public interface RemoteCredentialsHandler {

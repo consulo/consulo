@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.util;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Unique key which encapsulates information about target ide and external projects.

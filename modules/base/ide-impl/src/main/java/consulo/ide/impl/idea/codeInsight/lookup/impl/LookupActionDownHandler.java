@@ -20,7 +20,7 @@ import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionDownHandler extends LookupActionHandler {

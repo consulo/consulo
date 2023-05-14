@@ -23,7 +23,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PsiErrorElementImpl extends CompositePsiElement implements PsiErrorElement {
   private final LocalizeValue myErrorDescription;

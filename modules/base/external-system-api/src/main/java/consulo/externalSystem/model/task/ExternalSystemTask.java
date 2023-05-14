@@ -2,8 +2,8 @@ package consulo.externalSystem.model.task;
 
 import consulo.application.progress.ProgressIndicator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov

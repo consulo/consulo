@@ -20,7 +20,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.execution.debug.attach.XAttachHost;
 import consulo.execution.debug.attach.XAttachPresentationGroup;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * from kotlin

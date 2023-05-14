@@ -3,7 +3,7 @@ package consulo.externalSystem.model.project;
 import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.service.project.Named;
 import consulo.module.content.layer.orderEntry.DependencyScope;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

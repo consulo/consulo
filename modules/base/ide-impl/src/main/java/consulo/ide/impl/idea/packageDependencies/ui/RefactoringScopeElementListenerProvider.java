@@ -29,7 +29,7 @@ import consulo.language.editor.refactoring.event.RefactoringElementAdapter;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerComposite;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna

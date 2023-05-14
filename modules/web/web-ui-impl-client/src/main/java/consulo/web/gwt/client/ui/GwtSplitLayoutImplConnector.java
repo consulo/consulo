@@ -25,7 +25,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import consulo.web.gwt.client.util.ArrayUtil2;
 import consulo.web.gwt.client.util.GwtUIUtil;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

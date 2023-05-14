@@ -27,7 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna

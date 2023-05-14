@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.frame;
 import consulo.util.dataholder.Key;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

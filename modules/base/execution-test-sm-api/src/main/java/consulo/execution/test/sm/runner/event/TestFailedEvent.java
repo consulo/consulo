@@ -18,8 +18,8 @@ package consulo.execution.test.sm.runner.event;
 import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.TestFailed;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

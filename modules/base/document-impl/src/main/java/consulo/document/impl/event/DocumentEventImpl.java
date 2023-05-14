@@ -20,7 +20,7 @@ import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DocumentEventImpl extends DocumentEvent {
   private final int myOffset;

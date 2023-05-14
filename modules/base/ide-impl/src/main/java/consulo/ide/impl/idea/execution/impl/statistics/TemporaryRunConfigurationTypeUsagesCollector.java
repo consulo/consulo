@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev

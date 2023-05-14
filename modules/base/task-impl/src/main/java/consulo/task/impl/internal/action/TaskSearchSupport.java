@@ -25,7 +25,7 @@ import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;

@@ -31,7 +31,7 @@ import consulo.ui.web.internal.util.Mappers;
 import consulo.web.gwt.shared.ui.state.ApplicationContainerState;
 import consulo.web.gwt.shared.ui.state.ApplicationState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

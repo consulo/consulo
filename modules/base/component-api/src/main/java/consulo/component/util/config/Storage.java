@@ -18,7 +18,7 @@ package consulo.component.util.config;
 import consulo.component.PropertiesComponent;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -15,7 +15,7 @@
  */
 package consulo.util.xml.serializer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class XmlSerializerUtil {

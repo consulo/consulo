@@ -2,7 +2,7 @@ package consulo.remoteServer.configuration.deployment;
 
 import consulo.component.persist.PersistentStateComponent;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

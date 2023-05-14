@@ -24,7 +24,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EverythingGlobalScope extends GlobalSearchScope {
   public EverythingGlobalScope(Project project) {

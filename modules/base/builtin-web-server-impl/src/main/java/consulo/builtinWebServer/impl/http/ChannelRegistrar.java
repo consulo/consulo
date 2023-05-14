@@ -20,7 +20,7 @@ import consulo.util.collection.ContainerUtil;
 import io.netty.channel.*;
 import io.netty.util.concurrent.GenericFutureListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;

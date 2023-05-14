@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.ui.search;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class PorterStemmerUtil {

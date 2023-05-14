@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.packaging.impl.compiler;
 
 import consulo.compiler.generic.BuildTarget;
 import consulo.compiler.artifact.Artifact;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

@@ -3,7 +3,7 @@ package consulo.ui.ex.awt.util;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.ActionListener;
 
 public final class TimerUtil {

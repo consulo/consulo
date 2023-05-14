@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

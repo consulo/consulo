@@ -25,8 +25,8 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

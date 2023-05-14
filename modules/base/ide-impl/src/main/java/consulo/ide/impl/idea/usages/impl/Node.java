@@ -19,7 +19,7 @@ import consulo.usage.UsageView;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Vector;
 import java.util.function.Consumer;

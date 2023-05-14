@@ -49,8 +49,8 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -75,20 +75,20 @@ public class PatchApplier<BinaryType extends FilePatch> {
   private boolean mySystemOperation;
 
   private final boolean myReverseConflict;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myLeftConflictPanelTitle;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myRightConflictPanelTitle;
 
   public PatchApplier(@Nonnull Project project,
                       final VirtualFile baseDirectory,
                       @Nonnull final List<FilePatch> patches,
-                      @javax.annotation.Nullable final Consumer<Collection<FilePath>> toTargetListsMover,
+                      @jakarta.annotation.Nullable final Consumer<Collection<FilePath>> toTargetListsMover,
                       final CustomBinaryPatchApplier<BinaryType> customForBinaries,
                       final CommitContext commitContext,
                       boolean reverseConflict,
-                      @javax.annotation.Nullable String leftConflictPanelTitle,
-                      @javax.annotation.Nullable String rightConflictPanelTitle) {
+                      @jakarta.annotation.Nullable String leftConflictPanelTitle,
+                      @jakarta.annotation.Nullable String rightConflictPanelTitle) {
     myProject = project;
     myBaseDirectory = baseDirectory;
     myPatches = patches;
@@ -121,8 +121,8 @@ public class PatchApplier<BinaryType extends FilePatch> {
                       final CustomBinaryPatchApplier<BinaryType> customForBinaries,
                       final CommitContext commitContext,
                       boolean reverseConflict,
-                      @javax.annotation.Nullable String leftConflictPanelTitle,
-                      @javax.annotation.Nullable String rightConflictPanelTitle) {
+                      @jakarta.annotation.Nullable String leftConflictPanelTitle,
+                      @jakarta.annotation.Nullable String rightConflictPanelTitle) {
     this(project, baseDirectory, patches, createMover(project, targetChangeList), customForBinaries, commitContext, reverseConflict, leftConflictPanelTitle, rightConflictPanelTitle);
   }
 
@@ -377,7 +377,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     return applyAll ? ApplyPatchStatus.SUCCESS : ((skipped.size() == myPatches.size()) ? ApplyPatchStatus.ALREADY_APPLIED : ApplyPatchStatus.PARTIAL);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected ApplyPatchStatus executeWritable() {
     final ReadonlyStatusHandler.OperationStatus readOnlyFilesStatus = getReadOnlyFilesStatus(myVerifier.getWritableFiles());
     if (readOnlyFilesStatus.hasReadonlyFiles()) {
@@ -465,7 +465,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     vcsDirtyScopeManager.filesDirty(indirectlyAffected, null);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ApplyPatchStatus actualApply(final List<Pair<VirtualFile, ApplyTextFilePatch>> textPatches,
                                        final List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> binaryPatches,
                                        final CommitContext commitContext) {

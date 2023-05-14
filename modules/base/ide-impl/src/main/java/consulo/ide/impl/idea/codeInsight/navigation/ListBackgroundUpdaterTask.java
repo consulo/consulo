@@ -24,9 +24,9 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.usage.UsageView;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 /**

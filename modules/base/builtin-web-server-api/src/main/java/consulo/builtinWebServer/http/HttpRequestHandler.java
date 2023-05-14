@@ -21,7 +21,7 @@ import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.http.HTTPMethod;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

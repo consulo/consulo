@@ -12,9 +12,9 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;

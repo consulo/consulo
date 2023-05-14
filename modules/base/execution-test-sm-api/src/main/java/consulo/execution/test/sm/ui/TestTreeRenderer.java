@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;

@@ -17,7 +17,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

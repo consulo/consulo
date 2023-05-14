@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.vcs.log.graph;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.paint.ColorGenerator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Map;

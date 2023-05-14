@@ -21,7 +21,7 @@ import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

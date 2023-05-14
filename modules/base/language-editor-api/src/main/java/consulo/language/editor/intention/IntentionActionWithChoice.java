@@ -3,7 +3,7 @@ package consulo.language.editor.intention;
 
 import consulo.language.editor.completion.lookup.Lookup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

@@ -17,7 +17,7 @@ import org.jdom.Element;
 import org.jdom.Parent;
 import org.jdom.Text;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class ImmutableText extends Text {
   ImmutableText(@Nonnull String str) {

@@ -16,8 +16,8 @@
 package consulo.http.impl.internal.ssl;
 
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

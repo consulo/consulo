@@ -29,7 +29,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {

@@ -17,8 +17,8 @@ package consulo.util.xml.serializer;
 
 import org.jdom.Text;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 class TextBinding extends Binding {
   private final Class<?> valueClass;

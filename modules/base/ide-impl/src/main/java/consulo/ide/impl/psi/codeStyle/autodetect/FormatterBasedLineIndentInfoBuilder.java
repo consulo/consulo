@@ -26,8 +26,8 @@ import consulo.language.codeStyle.AbstractBlock;
 import consulo.ide.impl.psi.formatter.common.NewLineBlocksIterator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

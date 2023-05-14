@@ -6,7 +6,7 @@ import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class EditorCoreUtil {
   public static boolean isTrueSmoothScrollingEnabled() {

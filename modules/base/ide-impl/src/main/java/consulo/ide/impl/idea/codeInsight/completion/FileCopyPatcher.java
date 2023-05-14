@@ -22,7 +22,7 @@ import consulo.language.editor.completion.OffsetMap;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

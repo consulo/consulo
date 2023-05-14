@@ -19,8 +19,8 @@ import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.diff.util.ThreeSide;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
   private final int myStartLine3;
   private final int myEndLine3;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final List<MergeWordFragment> myInnerFragments;
 
   public MergeLineFragmentImpl(int startLine1,
@@ -50,7 +50,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
                                int endLine2,
                                int startLine3,
                                int endLine3,
-                               @javax.annotation.Nullable List<MergeWordFragment> innerFragments) {
+                               @jakarta.annotation.Nullable List<MergeWordFragment> innerFragments) {
     myStartLine1 = startLine1;
     myEndLine1 = endLine1;
     myStartLine2 = startLine2;
@@ -64,7 +64,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
     this(range, null);
   }
 
-  public MergeLineFragmentImpl(@Nonnull MergeRange range, @javax.annotation.Nullable List<MergeWordFragment> innerFragments) {
+  public MergeLineFragmentImpl(@Nonnull MergeRange range, @jakarta.annotation.Nullable List<MergeWordFragment> innerFragments) {
     this(range.start1, range.end1, range.start2, range.end2, range.start3, range.end3, innerFragments);
   }
 
@@ -85,7 +85,7 @@ public class MergeLineFragmentImpl implements MergeLineFragment {
     return side.select(myEndLine1, myEndLine2, myEndLine3);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public List<MergeWordFragment> getInnerFragments() {
     return myInnerFragments;

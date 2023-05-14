@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.lang.parameterInfo;
 
 import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.EnumSet;

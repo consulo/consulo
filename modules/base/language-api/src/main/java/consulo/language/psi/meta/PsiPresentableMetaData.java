@@ -17,7 +17,7 @@ package consulo.language.psi.meta;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

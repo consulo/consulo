@@ -5,7 +5,7 @@ import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 import consulo.application.util.function.Processor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;

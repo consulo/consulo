@@ -36,9 +36,9 @@ import consulo.ide.impl.idea.vcs.log.ui.filter.VcsLogClassicFilterUi;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
 import net.miginfocom.swing.MigLayout;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;

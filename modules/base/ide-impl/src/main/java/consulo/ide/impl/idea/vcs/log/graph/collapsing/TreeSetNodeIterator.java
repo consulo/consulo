@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.List;

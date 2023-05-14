@@ -21,11 +21,11 @@ import consulo.versionControlSystem.history.VcsAppendableHistorySessionPartner;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface VcsHistoryProviderEx extends VcsHistoryProvider {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
 
   void reportAppendableHistory(@Nonnull FilePath path,

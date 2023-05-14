@@ -17,7 +17,7 @@ package consulo.web.gwt.client.util;
 
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.charset.Charset;
 

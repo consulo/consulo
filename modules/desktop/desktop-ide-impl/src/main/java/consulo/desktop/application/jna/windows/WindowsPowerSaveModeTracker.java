@@ -23,7 +23,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

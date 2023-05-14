@@ -1,7 +1,7 @@
 package consulo.util.socketConnection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ConnectionState {
   private final String message;

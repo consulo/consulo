@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SmartBackspaceDisabler implements BackspaceModeOverride {
   @Nonnull

@@ -19,8 +19,8 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
   @Nonnull

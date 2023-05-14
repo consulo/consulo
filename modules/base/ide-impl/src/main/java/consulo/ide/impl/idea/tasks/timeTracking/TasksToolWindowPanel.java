@@ -28,7 +28,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.ImageEffects;
 import consulo.task.TasksIcons;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;

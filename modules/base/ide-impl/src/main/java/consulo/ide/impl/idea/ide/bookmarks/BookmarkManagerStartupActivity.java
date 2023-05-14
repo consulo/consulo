@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BookmarkManagerStartupActivity implements PostStartupActivity, DumbAware {

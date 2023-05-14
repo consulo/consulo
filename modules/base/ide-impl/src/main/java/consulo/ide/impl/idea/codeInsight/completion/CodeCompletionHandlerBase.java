@@ -47,8 +47,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;

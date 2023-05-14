@@ -20,8 +20,8 @@ import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.debug.frame.XValueGroup;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

@@ -26,7 +26,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class SelectNextOccurrenceAction extends EditorAction {
   public SelectNextOccurrenceAction() {

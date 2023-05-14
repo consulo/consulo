@@ -8,7 +8,7 @@ import consulo.application.util.query.Queries;
 import consulo.application.util.query.Query;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;

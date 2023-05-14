@@ -8,8 +8,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

@@ -18,7 +18,7 @@ package consulo.remoteServer.runtime;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

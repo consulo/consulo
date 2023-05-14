@@ -20,8 +20,8 @@ import consulo.index.io.IndexStorage;
 import consulo.index.io.StorageException;
 import consulo.language.psi.stub.IdFilter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public interface VfsAwareIndexStorage<Key, Value> extends IndexStorage<Key, Value> {

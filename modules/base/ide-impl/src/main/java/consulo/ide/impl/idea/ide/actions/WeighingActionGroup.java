@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.Utils;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.List;

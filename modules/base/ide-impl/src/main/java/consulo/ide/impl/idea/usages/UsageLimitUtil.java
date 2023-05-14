@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: cdr

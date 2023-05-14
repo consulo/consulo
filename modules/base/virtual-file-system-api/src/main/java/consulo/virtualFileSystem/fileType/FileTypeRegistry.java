@@ -5,8 +5,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.internal.RootComponentHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A service for retrieving file types for files.

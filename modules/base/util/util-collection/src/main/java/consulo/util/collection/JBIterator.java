@@ -20,8 +20,8 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;

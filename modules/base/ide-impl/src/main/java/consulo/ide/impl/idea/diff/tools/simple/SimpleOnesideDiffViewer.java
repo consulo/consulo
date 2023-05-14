@@ -39,7 +39,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +218,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
   // Helpers
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.CURRENT_CHANGE_RANGE == dataId) {
@@ -264,7 +264,7 @@ public class SimpleOnesideDiffViewer extends OnesideTextDiffViewer {
       return true;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected LogicalPosition[] getCaretPositions() {
       int index = getSide().getIndex();

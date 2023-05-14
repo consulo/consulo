@@ -11,7 +11,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

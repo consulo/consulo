@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Batkovich

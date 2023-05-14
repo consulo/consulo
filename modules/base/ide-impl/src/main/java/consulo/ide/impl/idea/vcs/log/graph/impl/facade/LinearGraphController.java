@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Set;
@@ -32,50 +32,50 @@ public interface LinearGraphController {
   LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action);
 
   interface LinearGraphAction extends GraphAction {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     PrintElementWithGraphElement getAffectedElement();
   }
 
   // Integer = nodeId
   class LinearGraphAnswer {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final GraphChanges<Integer> myGraphChanges;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final Cursor myCursor;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final Set<Integer> mySelectedNodeIds;
 
-    public LinearGraphAnswer(@javax.annotation.Nullable GraphChanges<Integer> changes, @javax.annotation.Nullable Cursor cursor, @javax.annotation.Nullable Set<Integer> selectedNodeIds) {
+    public LinearGraphAnswer(@jakarta.annotation.Nullable GraphChanges<Integer> changes, @jakarta.annotation.Nullable Cursor cursor, @jakarta.annotation.Nullable Set<Integer> selectedNodeIds) {
       myGraphChanges = changes;
       myCursor = cursor;
       mySelectedNodeIds = selectedNodeIds;
     }
 
-    public LinearGraphAnswer(@javax.annotation.Nullable Cursor cursor, @javax.annotation.Nullable Set<Integer> selectedNodeIds) {
+    public LinearGraphAnswer(@jakarta.annotation.Nullable Cursor cursor, @jakarta.annotation.Nullable Set<Integer> selectedNodeIds) {
       this(null, cursor, selectedNodeIds);
     }
 
-    public LinearGraphAnswer(@javax.annotation.Nullable GraphChanges<Integer> changes) {
+    public LinearGraphAnswer(@jakarta.annotation.Nullable GraphChanges<Integer> changes) {
       this(changes, null, null);
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public GraphChanges<Integer> getGraphChanges() {
       return myGraphChanges;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public Runnable getGraphUpdater() {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public Cursor getCursorToSet() {
       return myCursor;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public Set<Integer> getSelectedNodeIds() {
       return mySelectedNodeIds;
     }

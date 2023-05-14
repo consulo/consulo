@@ -36,7 +36,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EmacsStyleIndentAction extends BaseCodeInsightAction implements DumbAware {
 

@@ -29,8 +29,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;

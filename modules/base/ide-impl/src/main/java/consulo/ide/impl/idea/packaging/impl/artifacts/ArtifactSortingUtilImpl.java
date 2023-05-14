@@ -31,7 +31,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.IntConsumer;
 

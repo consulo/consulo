@@ -23,8 +23,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
 import consulo.ui.ex.dialog.action.DialogOkAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

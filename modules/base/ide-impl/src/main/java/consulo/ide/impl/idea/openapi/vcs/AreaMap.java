@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.util.lang.function.PairProcessor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -112,7 +112,7 @@ public class AreaMap<Key, Val> {
     return Collections.unmodifiableCollection(myKeys);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Val getExact(final Key key) {
     return myMap.get(key);
   }

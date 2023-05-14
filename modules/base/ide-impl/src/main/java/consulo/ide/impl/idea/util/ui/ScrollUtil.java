@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

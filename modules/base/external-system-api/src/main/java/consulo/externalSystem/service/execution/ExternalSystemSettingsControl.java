@@ -20,7 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

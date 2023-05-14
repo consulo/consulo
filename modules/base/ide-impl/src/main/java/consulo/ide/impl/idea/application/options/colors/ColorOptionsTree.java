@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.*;
 import java.util.*;
 

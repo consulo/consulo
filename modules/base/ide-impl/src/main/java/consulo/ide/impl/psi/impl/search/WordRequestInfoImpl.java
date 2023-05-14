@@ -2,9 +2,9 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.SearchSession;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 public final class WordRequestInfoImpl implements WordRequestInfo {

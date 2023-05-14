@@ -21,7 +21,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

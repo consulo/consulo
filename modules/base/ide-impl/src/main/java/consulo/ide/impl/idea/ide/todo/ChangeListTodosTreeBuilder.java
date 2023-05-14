@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.todo;
 
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

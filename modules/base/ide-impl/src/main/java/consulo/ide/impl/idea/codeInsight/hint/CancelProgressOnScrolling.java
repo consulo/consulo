@@ -5,7 +5,7 @@ import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.util.concurrent.CancellablePromise;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 

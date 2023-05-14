@@ -31,7 +31,7 @@ import consulo.platform.base.localize.RepositoryTagLocalize;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 

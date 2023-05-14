@@ -28,7 +28,7 @@ import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutClientRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutServerRpc;
 import consulo.web.gwt.shared.ui.state.tab.TabbedLayoutState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;

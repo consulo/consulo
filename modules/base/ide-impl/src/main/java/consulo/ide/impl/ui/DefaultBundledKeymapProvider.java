@@ -18,7 +18,7 @@ package consulo.ide.impl.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.BundledKeymapProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

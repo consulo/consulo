@@ -23,7 +23,7 @@ import consulo.language.ast.TokenSet;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

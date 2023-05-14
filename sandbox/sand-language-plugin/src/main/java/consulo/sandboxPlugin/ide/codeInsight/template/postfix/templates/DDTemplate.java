@@ -19,7 +19,7 @@ import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL

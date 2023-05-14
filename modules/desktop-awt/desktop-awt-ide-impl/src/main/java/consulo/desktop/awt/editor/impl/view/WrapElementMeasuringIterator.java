@@ -7,7 +7,7 @@ import consulo.codeEditor.Inlay;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.softwrap.WrapElementIterator;
 import consulo.document.util.DocumentUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

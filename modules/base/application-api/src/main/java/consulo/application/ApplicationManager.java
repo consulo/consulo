@@ -19,8 +19,8 @@ import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides access to the <code>Application</code>.

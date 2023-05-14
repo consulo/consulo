@@ -18,7 +18,7 @@ package consulo.project.content.scope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFileFilter;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

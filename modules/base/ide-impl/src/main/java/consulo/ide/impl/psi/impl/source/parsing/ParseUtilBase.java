@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.util.CharTable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Maxim.Mossienko

@@ -19,7 +19,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

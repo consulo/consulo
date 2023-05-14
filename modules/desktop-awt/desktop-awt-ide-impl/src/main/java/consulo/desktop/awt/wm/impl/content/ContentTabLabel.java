@@ -26,7 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicGraphicsUtils;

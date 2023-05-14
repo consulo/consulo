@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.history.core.changes;
 
 import consulo.ide.impl.idea.history.core.Content;
 import consulo.ide.impl.idea.history.core.StreamUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

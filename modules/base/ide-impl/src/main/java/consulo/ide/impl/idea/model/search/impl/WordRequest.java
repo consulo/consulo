@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.ide.impl.psi.impl.search.LeafOccurrence;
 import consulo.ide.impl.psi.impl.search.WordRequestInfoImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public final class WordRequest<R> {

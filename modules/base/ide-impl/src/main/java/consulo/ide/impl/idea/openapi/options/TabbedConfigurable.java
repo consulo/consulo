@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

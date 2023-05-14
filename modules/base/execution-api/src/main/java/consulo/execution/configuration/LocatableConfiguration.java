@@ -15,7 +15,7 @@
  */
 package consulo.execution.configuration;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Base interface that should be used for configurations that can be created from context (a location in a file) by implementations of

@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,9 +61,9 @@ public abstract class AmendComponent {
   @Nonnull
   private final String myPreviousMessage;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Map<VirtualFile, String> myMessagesForRoots;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String myAmendedMessage;
 
   public AmendComponent(@Nonnull Project project,
@@ -108,7 +108,7 @@ public abstract class AmendComponent {
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String constructAmendedMessage() {
     Set<VirtualFile> selectedRoots = getVcsRoots(getSelectedFilePaths()); // get only selected files
     LinkedHashSet<String> messages = ContainerUtil.newLinkedHashSet();
@@ -156,7 +156,7 @@ public abstract class AmendComponent {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
     Map<VirtualFile, String> messagesForRoots = new HashMap<>();
     // load all vcs roots visible in the commit dialog (not only selected ones), to avoid another loading task if selection changes
@@ -184,7 +184,7 @@ public abstract class AmendComponent {
   @Nonnull
   protected abstract Set<VirtualFile> getVcsRoots(@Nonnull Collection<FilePath> files);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract String getLastCommitMessage(@Nonnull VirtualFile repo) throws VcsException;
 
   public boolean isAmend() {

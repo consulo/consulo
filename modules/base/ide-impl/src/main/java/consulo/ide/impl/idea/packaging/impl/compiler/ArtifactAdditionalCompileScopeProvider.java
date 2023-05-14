@@ -25,7 +25,7 @@ import consulo.compiler.scope.ModuleCompileScope;
 import consulo.ide.impl.idea.compiler.impl.AdditionalCompileScopeProvider;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.Predicate;
 

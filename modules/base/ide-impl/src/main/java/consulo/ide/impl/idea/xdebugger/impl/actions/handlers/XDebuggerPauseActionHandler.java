@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.execution.debug.XDebuggerManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.execution.debug.XDebugSession;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.dataContext.DataContext;

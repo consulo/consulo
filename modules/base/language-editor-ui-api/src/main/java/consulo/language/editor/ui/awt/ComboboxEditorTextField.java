@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

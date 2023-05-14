@@ -18,7 +18,7 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.ListModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 

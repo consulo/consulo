@@ -15,7 +15,7 @@
  */
 package consulo.fileTemplate.impl.internal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

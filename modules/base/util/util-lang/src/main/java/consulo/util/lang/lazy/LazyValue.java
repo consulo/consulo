@@ -20,7 +20,7 @@ import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
 import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 

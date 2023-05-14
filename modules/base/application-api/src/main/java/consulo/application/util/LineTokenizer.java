@@ -18,7 +18,7 @@ package consulo.application.util;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.CharArrayCharSequence;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

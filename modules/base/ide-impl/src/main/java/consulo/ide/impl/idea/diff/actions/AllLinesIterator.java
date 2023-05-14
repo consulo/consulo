@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.actions;
 import consulo.document.Document;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 
 import static consulo.ide.impl.idea.diff.util.DiffUtil.getLineCount;

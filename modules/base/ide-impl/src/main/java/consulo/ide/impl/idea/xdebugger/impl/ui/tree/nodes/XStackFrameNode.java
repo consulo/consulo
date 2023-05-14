@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

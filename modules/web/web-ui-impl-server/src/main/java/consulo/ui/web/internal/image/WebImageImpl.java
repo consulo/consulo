@@ -25,7 +25,7 @@ import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.image.ImageState;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 import java.net.MalformedURLException;

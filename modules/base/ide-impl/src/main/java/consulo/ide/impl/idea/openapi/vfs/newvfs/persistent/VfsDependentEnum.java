@@ -21,7 +21,7 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;

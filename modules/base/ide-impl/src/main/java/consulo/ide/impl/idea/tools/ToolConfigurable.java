@@ -19,8 +19,8 @@ package consulo.ide.impl.idea.tools;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;

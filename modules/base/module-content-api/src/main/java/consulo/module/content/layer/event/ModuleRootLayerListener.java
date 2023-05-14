@@ -20,7 +20,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.module.Module;
 import consulo.module.content.layer.ModuleRootLayer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

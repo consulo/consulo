@@ -21,7 +21,7 @@ import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DiffNavigatableArrayRule implements GetDataRule<Navigatable[]> {

@@ -21,7 +21,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ProjectRootTestSourcesFilter extends TestSourcesFilter {

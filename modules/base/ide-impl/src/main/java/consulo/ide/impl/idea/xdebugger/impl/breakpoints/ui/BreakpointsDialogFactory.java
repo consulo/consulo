@@ -25,7 +25,7 @@ import consulo.ui.ex.popup.Balloon;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)

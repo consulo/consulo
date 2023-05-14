@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.util;
 
 import consulo.diff.util.Side;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class BaseSyncScrollable implements SyncScrollSupport.SyncScrollable {

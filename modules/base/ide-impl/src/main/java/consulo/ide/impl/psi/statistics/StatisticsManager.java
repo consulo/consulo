@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.component.persist.SettingsSavingComponent;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StatisticsManager implements SettingsSavingComponent {

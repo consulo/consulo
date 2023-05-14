@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface FindPopupScopeUIProvider {

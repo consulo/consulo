@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.util.BekUtil;
 import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {
   @Nonnull

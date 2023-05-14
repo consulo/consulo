@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInspection.ui;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
 

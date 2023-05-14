@@ -22,7 +22,7 @@ import consulo.compiler.artifact.ArtifactPointer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;

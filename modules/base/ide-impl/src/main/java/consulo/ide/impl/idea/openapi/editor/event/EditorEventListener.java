@@ -6,7 +6,7 @@ import consulo.document.event.DocumentListener;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.event.SelectionListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface EditorEventListener extends DocumentListener, CaretListener, SelectionListener {
   default void readOnlyModificationAttempt(@Nonnull Document document) {

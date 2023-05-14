@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.remote.ext.CredentialsManager;
 import consulo.ide.impl.idea.remote.ext.RemoteCredentialsHandler;
 import consulo.ide.impl.idea.remote.ext.UnknownCredentialsHolder;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author traff

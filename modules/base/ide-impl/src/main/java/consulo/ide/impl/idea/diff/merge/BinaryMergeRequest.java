@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.merge;
 
 import consulo.diff.content.FileContent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

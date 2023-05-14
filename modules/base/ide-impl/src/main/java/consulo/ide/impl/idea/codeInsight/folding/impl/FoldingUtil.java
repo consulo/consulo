@@ -8,9 +8,9 @@ import consulo.document.RangeMarker;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class FoldingUtil {

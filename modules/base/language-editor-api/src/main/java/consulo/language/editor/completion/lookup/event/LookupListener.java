@@ -4,7 +4,7 @@ package consulo.language.editor.completion.lookup.event;
 
 import consulo.language.editor.completion.lookup.Lookup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 

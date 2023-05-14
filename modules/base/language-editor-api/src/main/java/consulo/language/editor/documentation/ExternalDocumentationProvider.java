@@ -23,7 +23,7 @@ package consulo.language.editor.documentation;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface ExternalDocumentationProvider {

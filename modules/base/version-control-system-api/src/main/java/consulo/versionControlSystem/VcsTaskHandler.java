@@ -20,8 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 @ExtensionAPI(ComponentScope.PROJECT)

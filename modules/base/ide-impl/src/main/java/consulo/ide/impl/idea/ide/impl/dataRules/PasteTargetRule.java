@@ -22,7 +22,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PasteTargetRule implements GetDataRule<PsiElement> {

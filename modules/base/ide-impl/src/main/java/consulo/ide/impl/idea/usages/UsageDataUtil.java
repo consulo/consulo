@@ -23,7 +23,7 @@ import consulo.usage.rule.UsageInFile;
 import consulo.usage.rule.UsageInFiles;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 

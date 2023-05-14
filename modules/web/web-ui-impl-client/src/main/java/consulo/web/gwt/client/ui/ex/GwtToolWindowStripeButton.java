@@ -23,7 +23,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import consulo.web.gwt.client.ui.image.ImageConverter;
 import consulo.web.gwt.shared.ui.state.image.MultiImageState;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;

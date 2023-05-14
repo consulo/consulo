@@ -27,7 +27,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 public class CloseProjectAction extends AnAction implements DumbAware {

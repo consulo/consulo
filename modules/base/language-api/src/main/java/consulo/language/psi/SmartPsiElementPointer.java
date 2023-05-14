@@ -21,8 +21,8 @@ import consulo.document.util.Segment;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A pointer to a PSI element which can survive PSI reparse.

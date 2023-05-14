@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

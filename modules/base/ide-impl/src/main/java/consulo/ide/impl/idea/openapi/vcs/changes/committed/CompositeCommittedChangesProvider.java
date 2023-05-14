@@ -34,8 +34,8 @@ import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.application.util.function.AsynchConsumer;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +88,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     return getLocationFor(root);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VcsCommittedListsZipper getZipper() {
     throw new UnsupportedOperationException();
   }
@@ -121,7 +121,7 @@ public class CompositeCommittedChangesProvider implements CommittedChangesProvid
     return columns.toArray(new ChangeListColumn[columns.size()]);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VcsCommittedViewAuxiliary createActions(final DecoratorManager manager, final RepositoryLocation location) {
     JTabbedPane tabbedPane = null;
     List<AnAction> actions = null;

@@ -32,8 +32,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.application.util.function.Processor;
 import consulo.util.lang.StringLenComparator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -135,7 +135,7 @@ public class VcsRootIterator {
   public static void iterateVcsRoot(final Project project,
                                        final VirtualFile root,
                                        final Processor<FilePath> processor,
-                                       @javax.annotation.Nullable VirtualFileFilter directoryFilter) {
+                                       @jakarta.annotation.Nullable VirtualFileFilter directoryFilter) {
     final MyRootIterator rootIterator = new MyRootIterator(project, root, processor, null, directoryFilter);
     rootIterator.iterate();
   }
@@ -144,7 +144,7 @@ public class VcsRootIterator {
     private final Project myProject;
     private final Processor<FilePath> myPathProcessor;
     private final Processor<VirtualFile> myFileProcessor;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final VirtualFileFilter myDirectoryFilter;
     private final VirtualFile myRoot;
     private final MyRootFilter myRootPresentFilter;
@@ -153,7 +153,7 @@ public class VcsRootIterator {
     private MyRootIterator(final Project project,
                            final VirtualFile root,
                            @Nullable final Processor<FilePath> pathProcessor,
-                           @javax.annotation.Nullable final Processor<VirtualFile> fileProcessor,
+                           @jakarta.annotation.Nullable final Processor<VirtualFile> fileProcessor,
                            @Nullable VirtualFileFilter directoryFilter) {
       myProject = project;
       myPathProcessor = pathProcessor;

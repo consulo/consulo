@@ -17,7 +17,7 @@ package consulo.language.editor.impl.internal.inspection;
 
 import consulo.annotation.component.ExtensionImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotatorBasedInspection extends DefaultHighlightVisitorBasedInspection {

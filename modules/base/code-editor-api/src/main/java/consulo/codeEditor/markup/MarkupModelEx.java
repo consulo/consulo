@@ -20,8 +20,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.document.MarkupIterator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**

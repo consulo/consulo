@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.net.URI;
 import java.util.ArrayList;

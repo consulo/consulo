@@ -7,7 +7,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.psi.search.TodoItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

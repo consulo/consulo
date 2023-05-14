@@ -29,10 +29,9 @@ import consulo.ui.font.Font;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -59,7 +58,7 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, @Nonnegative int width) {
+  default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
     for (BorderPosition position : BorderPosition.values()) {
       addBorder(position, borderStyle, colorKey, width);
     }
@@ -85,12 +84,12 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
-  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nonnegative int width) {
+  default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, int width) {
     addBorder(borderPosition, borderStyle, null, width);
   }
 
   @RequiredUIAccess
-  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, @Nonnegative int width);
+  void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
 
   @RequiredUIAccess
   default void removeBorders() {

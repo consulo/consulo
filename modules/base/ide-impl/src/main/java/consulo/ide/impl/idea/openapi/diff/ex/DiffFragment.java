@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.string.DiffStringBuilder;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class DiffFragment {
   public static DiffFragment[] EMPTY_ARRAY = new DiffFragment[0];

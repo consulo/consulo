@@ -28,7 +28,7 @@ import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 @ExtensionAPI(ComponentScope.APPLICATION)

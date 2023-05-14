@@ -21,8 +21,8 @@ import consulo.dataContext.DataValidator;
 import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class PsiElementDataValidator implements DataValidator<PsiElement> {

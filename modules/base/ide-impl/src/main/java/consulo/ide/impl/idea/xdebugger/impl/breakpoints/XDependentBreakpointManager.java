@@ -20,8 +20,8 @@ import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.event.XBreakpointAdapter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 

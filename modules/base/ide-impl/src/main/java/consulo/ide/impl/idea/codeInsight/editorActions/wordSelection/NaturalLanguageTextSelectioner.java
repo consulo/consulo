@@ -24,7 +24,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;

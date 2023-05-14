@@ -23,7 +23,7 @@ import consulo.desktop.awt.uiOld.Expandable;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
 import consulo.desktop.awt.uiOld.components.fields.IntelliJExpandableSupport;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;

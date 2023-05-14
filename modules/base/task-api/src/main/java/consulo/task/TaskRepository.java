@@ -26,8 +26,8 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.Callable;

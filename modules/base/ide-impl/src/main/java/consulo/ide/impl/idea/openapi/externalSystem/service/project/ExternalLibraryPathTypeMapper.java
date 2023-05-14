@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.externalSystem.model.project.LibraryPathType;
 import consulo.content.OrderRootType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Strategy for mapping {@link LibraryPathType external library path types} to {@link OrderRootType ide library path types}.

@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionImpl

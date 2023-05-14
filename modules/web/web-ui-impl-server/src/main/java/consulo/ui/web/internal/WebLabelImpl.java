@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.LabelOptions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -31,7 +31,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
 import consulo.util.concurrent.ActionCallback;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

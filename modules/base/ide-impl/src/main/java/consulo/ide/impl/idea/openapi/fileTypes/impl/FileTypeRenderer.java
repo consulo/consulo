@@ -20,7 +20,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;

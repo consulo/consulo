@@ -24,7 +24,7 @@ import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jvnet.winp.WinProcess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

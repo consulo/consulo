@@ -23,7 +23,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**

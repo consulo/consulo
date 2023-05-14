@@ -19,7 +19,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.content.OrderRootType;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

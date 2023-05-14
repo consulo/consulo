@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.event;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditorMouseEventArea {
   private final String myDebugName;

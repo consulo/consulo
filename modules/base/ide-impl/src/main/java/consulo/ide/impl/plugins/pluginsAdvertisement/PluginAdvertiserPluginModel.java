@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;

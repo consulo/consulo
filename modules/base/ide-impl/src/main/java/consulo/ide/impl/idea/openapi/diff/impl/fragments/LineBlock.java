@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.fragments;
 import consulo.ide.impl.idea.openapi.diff.impl.util.TextDiffTypeEnum;
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 
 @Deprecated(forRemoval = true)

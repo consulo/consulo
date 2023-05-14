@@ -20,7 +20,7 @@ import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

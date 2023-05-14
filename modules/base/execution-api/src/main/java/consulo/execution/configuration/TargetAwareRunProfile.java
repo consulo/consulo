@@ -18,7 +18,7 @@ package consulo.execution.configuration;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface TargetAwareRunProfile extends RunProfile {
   /**

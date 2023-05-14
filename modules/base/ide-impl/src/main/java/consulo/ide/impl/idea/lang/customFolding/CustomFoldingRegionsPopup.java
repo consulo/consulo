@@ -25,8 +25,8 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.*;

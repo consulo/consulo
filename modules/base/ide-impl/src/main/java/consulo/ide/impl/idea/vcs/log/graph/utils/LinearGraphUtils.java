@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.LinearGraphController;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,7 @@ public class LinearGraphUtils {
   public static final LinearGraphController.LinearGraphAnswer DEFAULT_GRAPH_ANSWER =
     new LinearGraphController.LinearGraphAnswer(Cursor.getDefaultCursor(), null);
 
-  public static boolean intEqual(@javax.annotation.Nullable Integer value, int number) {
+  public static boolean intEqual(@jakarta.annotation.Nullable Integer value, int number) {
     return value != null && value == number;
   }
 
@@ -46,7 +46,7 @@ public class LinearGraphUtils {
     return intEqual(edge.getUpNodeIndex(), nodeIndex);
   }
 
-  public static boolean isNormalEdge(@javax.annotation.Nullable GraphEdge edge) {
+  public static boolean isNormalEdge(@jakarta.annotation.Nullable GraphEdge edge) {
     if (edge != null && edge.getType().isNormalEdge()) {
       assert edge.getUpNodeIndex() != null && edge.getDownNodeIndex() != null;
       return true;
@@ -131,7 +131,7 @@ public class LinearGraphUtils {
     return new LinearGraphController.LinearGraphAnswer(getCursor(true), selectedIds);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static GraphEdge getEdge(@Nonnull LinearGraph graph, int up, int down) {
     List<GraphEdge> edges = graph.getAdjacentEdges(up, EdgeFilter.NORMAL_DOWN);
     for (GraphEdge edge : edges) {

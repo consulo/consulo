@@ -9,7 +9,7 @@ import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.TreeMap;

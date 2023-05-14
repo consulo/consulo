@@ -18,7 +18,7 @@ package consulo.language.psi;
 import consulo.language.file.FileViewProvider;
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

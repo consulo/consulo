@@ -8,8 +8,8 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.rmi.RemoteException;
 
@@ -37,7 +37,7 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
     myProgressManager = progressManager;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
                                                     @Nonnull String projectPath,

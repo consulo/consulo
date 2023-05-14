@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 
 /**

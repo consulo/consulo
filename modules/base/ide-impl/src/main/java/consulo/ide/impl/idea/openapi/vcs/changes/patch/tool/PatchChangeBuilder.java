@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -159,7 +159,7 @@ class PatchChangeBuilder {
     @Nonnull
     private final LineRange myPatchInsertionRange;
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final LineRange myAppliedToLines;
     @Nonnull
     private final HunkStatus myStatus;
@@ -167,7 +167,7 @@ class PatchChangeBuilder {
     public Hunk(@Nonnull List<String> insertedLines,
                 @Nonnull LineRange patchDeletionRange,
                 @Nonnull LineRange patchInsertionRange,
-                @javax.annotation.Nullable LineRange appliedToLines,
+                @jakarta.annotation.Nullable LineRange appliedToLines,
                 @Nonnull HunkStatus status) {
       myInsertedLines = insertedLines;
       myPatchDeletionRange = patchDeletionRange;

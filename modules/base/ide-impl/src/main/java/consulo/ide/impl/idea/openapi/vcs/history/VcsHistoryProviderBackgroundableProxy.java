@@ -36,8 +36,8 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class VcsHistoryProviderBackgroundableProxy {
   }
 
   public void executeAppendableSession(final VcsKey vcsKey, final FilePath filePath, final VcsAppendableHistorySessionPartner partner,
-                                       @javax.annotation.Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
+                                       @jakarta.annotation.Nullable VcsBackgroundableActions actionKey, boolean canUseCache, boolean canUseLastRevisionCheck) {
     doExecuteAppendableSession(vcsKey, filePath, null, partner, actionKey, canUseCache, canUseLastRevisionCheck);
   }
 
@@ -311,7 +311,7 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private VcsAbstractHistorySession getSessionFromCacheWithLastRevisionCheck(final FilePath filePath, final VcsKey vcsKey) {
     final ProgressIndicator pi = ProgressManager.getInstance().getProgressIndicator();
     if (pi != null) {

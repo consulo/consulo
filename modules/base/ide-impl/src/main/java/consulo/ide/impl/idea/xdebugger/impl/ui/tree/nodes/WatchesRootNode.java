@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.TreeNode;
 import java.util.Collection;
 import java.util.List;

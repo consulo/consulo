@@ -4,7 +4,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.usage.UsageGroup;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

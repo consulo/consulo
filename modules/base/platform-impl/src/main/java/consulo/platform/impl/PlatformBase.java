@@ -17,7 +17,7 @@ package consulo.platform.impl;
 
 import consulo.platform.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;

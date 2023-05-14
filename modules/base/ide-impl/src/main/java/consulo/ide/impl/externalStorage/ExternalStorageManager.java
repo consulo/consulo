@@ -53,7 +53,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

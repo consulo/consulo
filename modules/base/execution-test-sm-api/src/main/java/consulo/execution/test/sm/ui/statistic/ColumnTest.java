@@ -20,7 +20,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -39,7 +39,7 @@ public class ColumnTest extends BaseColumn implements Comparator<SMTestProxy>{
     return testProxy.getPresentableName();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Comparator<SMTestProxy> getComparator(){
     return this;
   }

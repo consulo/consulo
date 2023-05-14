@@ -25,7 +25,7 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.compiler.artifact.element.ZipArchivePackagingElement;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

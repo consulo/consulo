@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.regex.Pattern;

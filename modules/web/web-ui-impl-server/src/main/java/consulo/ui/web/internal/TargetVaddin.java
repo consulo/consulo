@@ -20,7 +20,7 @@ import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 import consulo.ui.web.internal.base.ToVaddinComponentWrapper;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

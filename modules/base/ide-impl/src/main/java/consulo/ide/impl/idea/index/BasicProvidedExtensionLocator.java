@@ -11,9 +11,9 @@ import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 @ExtensionImpl

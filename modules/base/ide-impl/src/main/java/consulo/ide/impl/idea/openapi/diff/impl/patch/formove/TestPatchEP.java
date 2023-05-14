@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchEP;
 import consulo.versionControlSystem.change.CommitContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig

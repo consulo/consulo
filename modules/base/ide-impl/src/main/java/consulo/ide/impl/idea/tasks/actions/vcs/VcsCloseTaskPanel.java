@@ -25,7 +25,7 @@ import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.task.ui.TaskDialogPanel;
 import consulo.ui.ex.awt.JBCheckBox;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;

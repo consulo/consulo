@@ -35,7 +35,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PlainTextParserDefinition implements ParserDefinition {

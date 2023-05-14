@@ -27,8 +27,8 @@ import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseEvent;
 import java.util.function.Predicate;

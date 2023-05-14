@@ -22,8 +22,8 @@ import consulo.webBrowser.WebBrowser;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(order = "last")
 public final class DefaultUrlOpener implements UrlOpener {

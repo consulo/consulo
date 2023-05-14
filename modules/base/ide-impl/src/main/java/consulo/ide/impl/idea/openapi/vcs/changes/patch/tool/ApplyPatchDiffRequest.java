@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequest {
   @Nonnull
@@ -29,7 +29,7 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   @Nonnull
   private final String myLocalContent;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final String myWindowTitle;
   @Nonnull
   private final String myLocalTitle;
@@ -41,7 +41,7 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   public ApplyPatchDiffRequest(@Nonnull DocumentContent resultContent,
                                @Nonnull AppliedTextPatch appliedPatch,
                                @Nonnull String localContent,
-                               @javax.annotation.Nullable String windowTitle,
+                               @jakarta.annotation.Nullable String windowTitle,
                                @Nonnull String localTitle,
                                @Nonnull String resultTitle,
                                @Nonnull String patchTitle) {
@@ -72,7 +72,7 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
     return myAppliedPatch;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public String getTitle() {
     return myWindowTitle;

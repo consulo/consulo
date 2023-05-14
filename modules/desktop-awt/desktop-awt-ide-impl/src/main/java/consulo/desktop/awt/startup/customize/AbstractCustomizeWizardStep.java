@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;

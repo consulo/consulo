@@ -34,8 +34,8 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

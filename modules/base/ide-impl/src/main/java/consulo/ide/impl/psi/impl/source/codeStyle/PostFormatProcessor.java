@@ -23,7 +23,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {

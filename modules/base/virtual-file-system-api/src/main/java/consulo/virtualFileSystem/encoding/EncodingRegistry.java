@@ -6,8 +6,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.internal.RootComponentHolder;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Objects;
 

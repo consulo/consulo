@@ -23,7 +23,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

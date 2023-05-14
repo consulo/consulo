@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

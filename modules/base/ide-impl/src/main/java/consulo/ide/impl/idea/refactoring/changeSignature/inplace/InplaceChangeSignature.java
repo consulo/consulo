@@ -61,9 +61,9 @@ import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.PositionTracker;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

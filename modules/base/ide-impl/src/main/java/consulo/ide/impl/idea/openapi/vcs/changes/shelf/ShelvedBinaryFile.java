@@ -30,7 +30,7 @@ import consulo.versionControlSystem.change.CurrentBinaryContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -40,13 +40,13 @@ import java.io.File;
 public class ShelvedBinaryFile implements JDOMExternalizable {
   public String BEFORE_PATH;
   public String AFTER_PATH;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String SHELVED_PATH;         // null if binary file was deleted
 
   public ShelvedBinaryFile() {
   }
 
-  public ShelvedBinaryFile(final String beforePath, final String afterPath, @javax.annotation.Nullable final String shelvedPath) {
+  public ShelvedBinaryFile(final String beforePath, final String afterPath, @jakarta.annotation.Nullable final String shelvedPath) {
     assert beforePath != null || afterPath != null;
     BEFORE_PATH = beforePath;
     AFTER_PATH = afterPath;

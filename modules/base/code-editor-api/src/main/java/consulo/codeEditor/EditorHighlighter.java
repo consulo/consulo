@@ -20,8 +20,8 @@ import consulo.codeEditor.HighlighterClient;
 import consulo.document.event.DocumentListener;
 import consulo.colorScheme.EditorColorsScheme;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface EditorHighlighter extends DocumentListener {
   @Nonnull

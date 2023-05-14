@@ -17,7 +17,7 @@ package consulo.application.ui.wm;
 
 import consulo.ui.Window;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

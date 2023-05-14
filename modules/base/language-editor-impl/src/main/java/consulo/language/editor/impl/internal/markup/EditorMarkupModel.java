@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface EditorMarkupModel extends MarkupModel {
   @Nonnull

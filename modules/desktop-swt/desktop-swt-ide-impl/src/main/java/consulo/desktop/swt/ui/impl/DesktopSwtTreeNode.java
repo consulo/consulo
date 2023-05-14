@@ -20,8 +20,8 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
 import org.eclipse.swt.widgets.TreeItem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**

@@ -28,7 +28,7 @@ import consulo.language.editor.impl.internal.hint.HintListener;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.component.util.ComparableObject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.EventObject;
 

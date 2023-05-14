@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.dnd;
 import consulo.logging.Logger;
 import consulo.util.io.StreamUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.HashMap;

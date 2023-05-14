@@ -19,8 +19,8 @@ import consulo.execution.debug.Obsolescent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a node with children in a debugger tree. This interface isn't supposed to be implemented by a plugin.

@@ -33,7 +33,7 @@ public class EmptyChangelistBuilder implements ChangelistBuilder {
   }
 
   @Override
-  public void processChangeInList(final Change change, @javax.annotation.Nullable final ChangeList changeList, VcsKey vcsKey) {
+  public void processChangeInList(final Change change, @jakarta.annotation.Nullable final ChangeList changeList, VcsKey vcsKey) {
   }
 
   @Override

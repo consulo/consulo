@@ -29,8 +29,8 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -51,7 +51,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   @Override
   public void apply(@Nonnull List<FilePatch> remaining,
                     @Nonnull MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
-                    @javax.annotation.Nullable LocalChangeList localList,
+                    @jakarta.annotation.Nullable LocalChangeList localList,
                     @Nullable String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     final CommitContext commitContext = new CommitContext();
@@ -60,7 +60,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     executeAndApplyAdditionalInfo(localList, additionalInfo, commitContext, appliers);
   }
 
-  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@javax.annotation.Nullable LocalChangeList localList,
+  protected ApplyPatchStatus executeAndApplyAdditionalInfo(@jakarta.annotation.Nullable LocalChangeList localList,
                                                            @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                                            @Nonnull CommitContext commitContext,
                                                            @Nonnull Collection<PatchApplier> appliers) {
@@ -96,7 +96,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
   }
 
   private static void applyAdditionalInfoImpl(final Project project,
-                                              @javax.annotation.Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+                                              @jakarta.annotation.Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
                                               CommitContext commitContext,
                                               final Consumer<InfoGroup> worker) {
     final PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);

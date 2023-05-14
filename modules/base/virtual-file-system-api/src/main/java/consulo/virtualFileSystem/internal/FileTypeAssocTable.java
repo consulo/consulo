@@ -11,8 +11,8 @@ import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
 import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**

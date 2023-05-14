@@ -31,7 +31,7 @@ import consulo.language.spellchecker.editor.SpellcheckerSeverities;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionImpl

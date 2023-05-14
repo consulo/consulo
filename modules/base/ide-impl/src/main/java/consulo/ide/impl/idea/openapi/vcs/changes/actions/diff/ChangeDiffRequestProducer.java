@@ -51,8 +51,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -415,7 +415,7 @@ public class ChangeDiffRequestProducer implements DiffRequestProducer {
     }
   }
 
-  public static void checkContentRevision(@javax.annotation.Nullable Project project,
+  public static void checkContentRevision(@jakarta.annotation.Nullable Project project,
                                           @Nonnull ContentRevision rev,
                                           @Nonnull UserDataHolder context,
                                           @Nonnull ProgressIndicator indicator) throws DiffRequestProducerException {

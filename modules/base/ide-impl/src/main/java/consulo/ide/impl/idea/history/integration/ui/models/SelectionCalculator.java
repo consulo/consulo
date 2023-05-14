@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;

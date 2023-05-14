@@ -18,7 +18,7 @@ package consulo.language.lexer;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

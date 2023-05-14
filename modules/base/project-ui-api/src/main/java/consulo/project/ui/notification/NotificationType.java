@@ -15,7 +15,7 @@
  */
 package consulo.project.ui.notification;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

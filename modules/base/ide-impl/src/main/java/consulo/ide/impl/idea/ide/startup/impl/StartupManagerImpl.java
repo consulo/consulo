@@ -50,7 +50,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;

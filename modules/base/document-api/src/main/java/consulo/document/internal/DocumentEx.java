@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

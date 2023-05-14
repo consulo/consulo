@@ -22,7 +22,7 @@ import consulo.codeEditor.impl.ArrowPainter;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

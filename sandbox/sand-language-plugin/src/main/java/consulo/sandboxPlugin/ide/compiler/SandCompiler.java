@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import consulo.sandboxPlugin.lang.SandFileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

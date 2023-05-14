@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
 

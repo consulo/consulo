@@ -22,14 +22,14 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class MergeContext implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract Project getProject();
 
   public abstract boolean isFocused();
@@ -52,7 +52,7 @@ public abstract class MergeContext implements UserDataHolder {
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 }

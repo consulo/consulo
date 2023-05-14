@@ -36,8 +36,8 @@ import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 /**

@@ -28,8 +28,8 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.Language;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.function.Consumer;
 

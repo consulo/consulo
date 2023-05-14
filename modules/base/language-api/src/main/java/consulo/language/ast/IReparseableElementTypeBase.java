@@ -4,8 +4,8 @@ package consulo.language.ast;
 import consulo.language.Language;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens, which allows for incremental reparse.

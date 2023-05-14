@@ -23,8 +23,8 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueCallback;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

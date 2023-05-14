@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.task.ui.TaskRepositoryEditor;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.ui;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class FontUtil {

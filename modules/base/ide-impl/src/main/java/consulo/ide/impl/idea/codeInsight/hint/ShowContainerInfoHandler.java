@@ -33,7 +33,7 @@ import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;

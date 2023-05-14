@@ -56,8 +56,8 @@ import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -219,7 +219,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     myToolWindow.getContentUI().setType(myInfo.getContentUiType());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (PlatformDataKeys.TOOL_WINDOW == dataId) {

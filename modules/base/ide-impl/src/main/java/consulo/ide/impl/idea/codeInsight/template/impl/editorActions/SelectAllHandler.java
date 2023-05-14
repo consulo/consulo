@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class SelectAllHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

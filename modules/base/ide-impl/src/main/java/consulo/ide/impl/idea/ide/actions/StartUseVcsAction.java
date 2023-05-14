@@ -27,7 +27,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class StartUseVcsAction extends AnAction implements DumbAware {
   public StartUseVcsAction() {

@@ -27,7 +27,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Interface for intention actions. Intention actions are invoked by pressing

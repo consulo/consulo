@@ -19,7 +19,7 @@ import consulo.externalSystem.model.project.*;
 import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ProjectData;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Holds common project entity {@link Key keys}.

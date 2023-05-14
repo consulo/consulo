@@ -10,7 +10,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "selectionModeWidget", order = "after moduleLayerWidget")
 public class ColumnSelectionModeWidgetFactory extends StatusBarEditorBasedWidgetFactory {

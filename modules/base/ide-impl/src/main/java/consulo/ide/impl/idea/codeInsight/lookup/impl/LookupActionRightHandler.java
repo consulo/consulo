@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionRightHandler extends LookupActionHandler {

@@ -18,8 +18,8 @@ package consulo.ui.ex.tree;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 

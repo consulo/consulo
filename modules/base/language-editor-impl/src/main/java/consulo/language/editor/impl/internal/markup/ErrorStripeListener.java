@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 public interface ErrorStripeListener extends EventListener {

@@ -4,8 +4,8 @@ import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

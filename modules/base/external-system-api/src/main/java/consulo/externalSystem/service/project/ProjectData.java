@@ -3,7 +3,7 @@ package consulo.externalSystem.service.project;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Not thread-safe.

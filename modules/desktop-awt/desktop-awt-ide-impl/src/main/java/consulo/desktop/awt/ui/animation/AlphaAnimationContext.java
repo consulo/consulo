@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.animation;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.function.Consumer;
 

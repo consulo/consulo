@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows specific languages to override backspace unindent mode set in global editor preferences.

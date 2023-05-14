@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.content.scope.NamedScope;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ScopeAttributesUtil {
   @Nonnull

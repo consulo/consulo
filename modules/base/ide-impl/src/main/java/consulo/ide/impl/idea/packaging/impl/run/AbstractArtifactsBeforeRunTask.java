@@ -24,7 +24,7 @@ import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.ArtifactPointerUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;

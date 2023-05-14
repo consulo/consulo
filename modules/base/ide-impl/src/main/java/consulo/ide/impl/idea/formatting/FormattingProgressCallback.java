@@ -20,8 +20,8 @@ import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 

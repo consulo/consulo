@@ -26,7 +26,7 @@ import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.DeleteProvider;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

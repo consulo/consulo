@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.remote.ext;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class PathMappingType {
   public static final PathMappingType REPLICATED_FOLDER = new PathMappingType(AllIcons.Ide.Readonly, "Shared folders from Vagrantfile:");

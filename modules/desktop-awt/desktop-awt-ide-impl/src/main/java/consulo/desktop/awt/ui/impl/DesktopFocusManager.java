@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 

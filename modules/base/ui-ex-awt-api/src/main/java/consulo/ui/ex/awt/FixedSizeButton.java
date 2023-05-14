@@ -18,7 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

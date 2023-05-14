@@ -28,7 +28,7 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {

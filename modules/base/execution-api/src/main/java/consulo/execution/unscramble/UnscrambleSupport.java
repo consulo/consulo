@@ -20,8 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UnscrambleSupport {

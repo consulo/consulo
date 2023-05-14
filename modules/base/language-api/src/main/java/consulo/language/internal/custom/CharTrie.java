@@ -4,7 +4,7 @@ package consulo.language.internal.custom;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class CharTrie {
   private int myAllNodesSize;

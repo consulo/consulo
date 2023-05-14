@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNode;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.NormalEdge;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +97,7 @@ public class LinearFragmentGenerator {
     return getFragment(upperVisibleNodeIndex, downNodesFun, upNodesFun, myPinnedNodes, true);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public GraphFragment getUpFragment(int lowerNodeIndex) {
     return getFragment(lowerNodeIndex, upNodesFun, downNodesFun, myPinnedNodes, false);
   }

@@ -25,7 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.EmptyRunnable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

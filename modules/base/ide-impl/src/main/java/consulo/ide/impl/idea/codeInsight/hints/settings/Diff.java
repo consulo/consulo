@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

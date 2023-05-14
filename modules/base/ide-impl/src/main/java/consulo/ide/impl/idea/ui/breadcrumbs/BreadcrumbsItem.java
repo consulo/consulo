@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author spleaner

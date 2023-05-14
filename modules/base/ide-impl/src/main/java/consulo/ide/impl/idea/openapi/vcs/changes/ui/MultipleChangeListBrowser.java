@@ -42,8 +42,8 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -65,7 +65,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nonnull
   private final EventDispatcher<SelectedListChangeListener> myDispatcher =
           EventDispatcher.create(SelectedListChangeListener.class);
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Runnable myRebuildListListener;
   @Nonnull
   private final VcsConfiguration myVcsConfiguration;
@@ -78,11 +78,11 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   public MultipleChangeListBrowser(@Nonnull Project project,
                                    @Nonnull List<? extends ChangeList> changeLists,
                                    @Nonnull List<Object> changes,
-                                   @javax.annotation.Nullable ChangeList initialListSelection,
+                                   @jakarta.annotation.Nullable ChangeList initialListSelection,
                                    boolean capableOfExcludingChanges,
                                    boolean highlightProblems,
                                    @Nullable Runnable rebuildListListener,
-                                   @javax.annotation.Nullable Runnable inclusionListener,
+                                   @jakarta.annotation.Nullable Runnable inclusionListener,
                                    boolean unversionedFilesEnabled) {
     super(project, changes, capableOfExcludingChanges, highlightProblems, inclusionListener, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null,
           Object.class);
@@ -127,7 +127,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Override
   protected void setInitialSelection(@Nonnull List<? extends ChangeList> changeLists,
                                      @Nonnull List<Object> changes,
-                                     @javax.annotation.Nullable ChangeList initialListSelection) {
+                                     @jakarta.annotation.Nullable ChangeList initialListSelection) {
     myAllChanges = ContainerUtil.newArrayList();
     mySelectedChangeList = initialListSelection;
 
@@ -154,7 +154,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     myDispatcher.addListener(listener);
   }
 
-  private void setSelectedList(@javax.annotation.Nullable ChangeList list) {
+  private void setSelectedList(@jakarta.annotation.Nullable ChangeList list) {
     mySelectedChangeList = list;
     rebuildList();
     myDispatcher.getMulticaster().selectedListChanged();
@@ -202,7 +202,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
   @Nonnull
   @Override
   protected DefaultTreeModel buildTreeModel(@Nonnull List<Object> objects,
-                                            @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator,
+                                            @jakarta.annotation.Nullable ChangeNodeDecorator changeNodeDecorator,
                                             boolean showFlatten) {
     ChangeListManagerImpl manager = ChangeListManagerImpl.getInstanceImpl(myProject);
     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
@@ -228,7 +228,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected Object getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
     Object result = null;
@@ -271,7 +271,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ChangesBrowserUnversionedFilesNode findUnversionedFilesNode() {
     //noinspection unchecked
     Enumeration<TreeNode> nodes = myViewer.getRoot().breadthFirstEnumeration();
@@ -374,7 +374,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static ChangeList findDefaultList(@Nonnull List<? extends ChangeList> lists) {
     return ContainerUtil.find(lists, new Condition<ChangeList>() {
       @Override

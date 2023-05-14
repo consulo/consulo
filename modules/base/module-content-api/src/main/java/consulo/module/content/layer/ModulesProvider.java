@@ -18,8 +18,8 @@ package consulo.module.content.layer;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface ModulesProvider extends RootModelProvider {
   ModulesProvider EMPTY_MODULES_PROVIDER = new ModulesProvider() {

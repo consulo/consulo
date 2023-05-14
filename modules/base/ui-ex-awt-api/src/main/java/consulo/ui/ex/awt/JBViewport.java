@@ -13,8 +13,8 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;

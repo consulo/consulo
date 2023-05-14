@@ -1,6 +1,6 @@
 package consulo.application.util.matcher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

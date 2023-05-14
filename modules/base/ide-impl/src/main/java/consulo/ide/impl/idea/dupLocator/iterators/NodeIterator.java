@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.dupLocator.iterators;
 
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class NodeIterator implements Cloneable {
   public abstract boolean hasNext();

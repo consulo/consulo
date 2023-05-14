@@ -17,7 +17,7 @@ package consulo.document.internal;
 
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface PrioritizedInternalDocumentListener extends PrioritizedDocumentListener {
   void moveTextHappened(@Nonnull Document document, int start, int end, int base);

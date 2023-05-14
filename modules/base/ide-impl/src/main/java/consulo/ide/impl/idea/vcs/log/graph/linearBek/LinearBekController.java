@@ -33,8 +33,8 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek.BekIntMap;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 
@@ -117,7 +117,7 @@ public class LinearBekController extends CascadeController {
   @Nonnull
   private LinearGraphAnswer expandAll() {
     return new LinearGraphAnswer(GraphChangesUtil.SOME_CHANGES) {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public Runnable getGraphUpdater() {
         return new Runnable() {
@@ -137,7 +137,7 @@ public class LinearBekController extends CascadeController {
     new LinearBekGraphBuilder(workingGraph, myBekGraphLayout).collapseAll();
     return new LinearGraphAnswer(
       GraphChangesUtil.edgesReplaced(workingGraph.getRemovedEdges(), workingGraph.getAddedEdges(), getDelegateGraph())) {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public Runnable getGraphUpdater() {
         return new Runnable() {

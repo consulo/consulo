@@ -22,7 +22,7 @@ import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

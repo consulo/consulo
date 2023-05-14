@@ -22,8 +22,8 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.util.lang.ObjectUtil.assertNotNull;
 
@@ -52,7 +52,7 @@ public abstract class VcsShowToolWindowTabAction extends DumbAwareAction {
   }
 
   @Nullable
-  private static ToolWindow getToolWindow(@javax.annotation.Nullable Project project) {
+  private static ToolWindow getToolWindow(@jakarta.annotation.Nullable Project project) {
     if (project == null) return null;
     return ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
   }

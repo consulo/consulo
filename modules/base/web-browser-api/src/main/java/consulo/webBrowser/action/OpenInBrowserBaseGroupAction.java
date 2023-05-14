@@ -21,7 +21,7 @@ import consulo.ui.ex.action.*;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class OpenInBrowserBaseGroupAction extends ComputableActionGroup {

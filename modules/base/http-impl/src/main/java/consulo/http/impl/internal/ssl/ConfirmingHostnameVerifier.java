@@ -2,7 +2,7 @@ package consulo.http.impl.internal.ssl;
 
 import consulo.ui.ex.awt.DialogWrapper;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;

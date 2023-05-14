@@ -26,7 +26,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseOutputReader;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -20,8 +20,8 @@ import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Modifier implements ChangeListsWriteOperations {
     myCommandQueue = new LinkedList<ChangeListCommand>();
   }
 
-  public LocalChangeList addChangeList(@Nonnull final String name, @javax.annotation.Nullable final String comment, @Nullable Object data) {
+  public LocalChangeList addChangeList(@Nonnull final String name, @jakarta.annotation.Nullable final String comment, @Nullable Object data) {
     final AddList command = new AddList(name, comment, data);
     impl(command);
     return command.getNewListCopy();

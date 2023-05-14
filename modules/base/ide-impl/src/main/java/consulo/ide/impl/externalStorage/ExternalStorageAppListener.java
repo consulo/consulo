@@ -24,7 +24,7 @@ import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

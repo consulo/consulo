@@ -51,9 +51,9 @@ import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;

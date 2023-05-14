@@ -22,8 +22,8 @@ import consulo.ui.image.Image;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

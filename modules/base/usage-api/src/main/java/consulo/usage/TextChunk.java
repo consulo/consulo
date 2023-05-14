@@ -20,8 +20,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class TextChunk {
   public static final TextChunk[] EMPTY_ARRAY = new TextChunk[0];

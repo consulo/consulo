@@ -22,7 +22,7 @@ import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.xml.XmlRpcServer;
 import consulo.http.HTTPMethod;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 @ExtensionImpl

@@ -3,7 +3,7 @@ package consulo.build.ui.progress;
 
 import consulo.build.ui.BuildDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface BuildProgressDescriptor {
   @Nonnull

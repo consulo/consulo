@@ -22,7 +22,7 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class TestsProgressAnimator implements Runnable, Disposable {
   private static final int FRAMES_COUNT = 8;

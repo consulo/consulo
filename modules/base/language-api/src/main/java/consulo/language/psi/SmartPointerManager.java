@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to create references to PSI elements that can survive a reparse and return the corresponding

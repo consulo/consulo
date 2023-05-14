@@ -19,8 +19,8 @@ import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListWorker;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class AddList implements ChangeListCommand {
   @Nonnull

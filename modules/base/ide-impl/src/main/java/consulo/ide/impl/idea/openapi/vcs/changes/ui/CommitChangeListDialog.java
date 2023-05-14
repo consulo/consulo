@@ -57,8 +57,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -137,7 +137,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
 
   private final String myOkActionText;
   private CommitAction myCommitAction;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private CommitResultHandler myResultHandler;
 
   private static class MyUpdateButtonsRunnable implements Runnable {

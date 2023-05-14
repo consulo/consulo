@@ -25,8 +25,8 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

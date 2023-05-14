@@ -21,8 +21,8 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * See {@link InspectionManager#createProblemDescriptor(PsiElement, String, LocalQuickFix, ProblemHighlightType, boolean) } for method descriptions.

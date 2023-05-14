@@ -41,7 +41,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -498,7 +498,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return file;*/
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private VirtualFile makeSureParentPathExists(final String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
@@ -610,7 +610,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   public interface BaseMapper {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     VirtualFile getFile(final FilePatch patch, final String path);
     FilePath getPath(final FilePatch patch, final String path);
   }

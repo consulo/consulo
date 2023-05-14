@@ -19,7 +19,7 @@ import consulo.diff.merge.MergeRequest;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TextMergeTool implements MergeTool {
   public static final TextMergeTool INSTANCE = new TextMergeTool();

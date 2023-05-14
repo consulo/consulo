@@ -19,8 +19,8 @@ import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 

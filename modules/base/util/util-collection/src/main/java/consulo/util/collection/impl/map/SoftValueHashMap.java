@@ -19,7 +19,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.RefValueHashMap;
 import consulo.util.lang.ref.SoftReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 
 public final class SoftValueHashMap<K, V> extends RefValueHashMap<K, V> {

@@ -17,7 +17,7 @@ package consulo.externalSystem.util;
 import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

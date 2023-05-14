@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.component.util.pointer.Named;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

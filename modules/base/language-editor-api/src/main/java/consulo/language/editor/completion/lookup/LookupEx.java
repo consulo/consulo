@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.completion.lookup;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.InputEvent;
 

@@ -19,8 +19,8 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.internal.*;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

@@ -23,7 +23,7 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**

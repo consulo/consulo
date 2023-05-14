@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.UnifiedDiffWriter;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.CommitContext;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

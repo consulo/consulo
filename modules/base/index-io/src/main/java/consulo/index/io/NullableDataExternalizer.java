@@ -17,7 +17,7 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataExternalizer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.DataInput;

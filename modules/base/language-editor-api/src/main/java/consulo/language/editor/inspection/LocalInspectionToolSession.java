@@ -22,7 +22,7 @@ package consulo.language.editor.inspection;
 
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LocalInspectionToolSession extends UserDataHolderBase {
   private final PsiFile myFile;

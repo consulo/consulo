@@ -18,7 +18,7 @@ package consulo.project;
 import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A task that should be executed in IDE dumb mode, via {@link DumbService#queueTask(DumbModeTask)}.

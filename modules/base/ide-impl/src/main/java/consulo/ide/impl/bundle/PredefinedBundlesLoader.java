@@ -30,7 +30,7 @@ import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

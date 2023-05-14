@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.versionControlSystem.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

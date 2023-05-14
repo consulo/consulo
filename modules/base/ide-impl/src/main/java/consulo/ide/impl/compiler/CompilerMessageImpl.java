@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public final class CompilerMessageImpl implements CompilerMessage {
 

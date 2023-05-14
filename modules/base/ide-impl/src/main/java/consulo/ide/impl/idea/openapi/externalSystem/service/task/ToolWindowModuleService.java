@@ -32,7 +32,7 @@ import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
   @Override
   protected void processData(@Nonnull final Collection<DataNode<ModuleData>> nodes,
                              @Nonnull Project project,
-                             @javax.annotation.Nullable final ExternalSystemTasksTreeModel model) {
+                             @jakarta.annotation.Nullable final ExternalSystemTasksTreeModel model) {
     if (nodes.isEmpty()) {
       return;
     }

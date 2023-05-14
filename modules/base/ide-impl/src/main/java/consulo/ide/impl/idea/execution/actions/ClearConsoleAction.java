@@ -8,7 +8,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {
   public ClearConsoleAction() {

@@ -19,7 +19,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeListImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 

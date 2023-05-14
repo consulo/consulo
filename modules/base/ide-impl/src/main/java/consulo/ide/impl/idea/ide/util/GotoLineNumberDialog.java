@@ -8,9 +8,9 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.PatternUtil;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;

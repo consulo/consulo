@@ -20,7 +20,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

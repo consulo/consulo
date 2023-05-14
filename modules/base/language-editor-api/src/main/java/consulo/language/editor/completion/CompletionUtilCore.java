@@ -40,8 +40,8 @@ import consulo.project.Project;
 import consulo.util.collection.UnmodifiableIterator;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;

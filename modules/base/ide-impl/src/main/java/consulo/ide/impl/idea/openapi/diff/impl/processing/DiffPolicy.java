@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DiffPolicy {
   @Nonnull

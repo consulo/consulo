@@ -18,7 +18,7 @@ package consulo.language.editor.refactoring.changeSignature;
 
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Represents the set of changes performed by a "Change Signature" refactoring.

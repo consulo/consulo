@@ -13,8 +13,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.ref.SoftReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

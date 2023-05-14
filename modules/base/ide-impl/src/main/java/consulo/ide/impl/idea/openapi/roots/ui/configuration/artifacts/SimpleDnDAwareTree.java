@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

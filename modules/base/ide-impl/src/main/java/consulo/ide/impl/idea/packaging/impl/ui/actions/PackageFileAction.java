@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder
 import consulo.util.lang.SyncDateFormat;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;

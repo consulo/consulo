@@ -22,8 +22,8 @@ import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

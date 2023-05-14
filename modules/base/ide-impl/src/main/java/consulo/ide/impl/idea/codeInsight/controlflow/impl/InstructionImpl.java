@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.codeInsight.controlflow.Instruction;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

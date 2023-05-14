@@ -23,7 +23,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ui.ex.awt.ItemRemovable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

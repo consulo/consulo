@@ -12,8 +12,8 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 /**

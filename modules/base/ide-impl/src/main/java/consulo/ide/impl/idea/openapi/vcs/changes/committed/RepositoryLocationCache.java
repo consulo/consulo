@@ -22,7 +22,7 @@ import consulo.util.lang.Pair;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.versionControlSystem.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashMap;

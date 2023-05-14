@@ -25,8 +25,8 @@ import consulo.disposer.util.DisposableList;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 public class DisposerInternalImpl extends DisposerInternal {

@@ -26,7 +26,7 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.update.ActionInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class RestoreUpdateTreeStartUpActivity implements PostStartupActivity, DumbAware {

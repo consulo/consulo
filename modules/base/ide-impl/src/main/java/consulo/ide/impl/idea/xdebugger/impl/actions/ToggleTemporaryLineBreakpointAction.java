@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

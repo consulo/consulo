@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,7 +42,7 @@ public class VcsLinkedTextComponent extends JLabel {
   private boolean myUnderlined;
   private boolean myTransparent;
 
-  public VcsLinkedTextComponent(@Nonnull String text, @javax.annotation.Nullable VcsLinkListener listener) {
+  public VcsLinkedTextComponent(@Nonnull String text, @jakarta.annotation.Nullable VcsLinkListener listener) {
     Matcher aMatcher = HREF_PATTERN.matcher(text);
     if (aMatcher.find()) {
       myTextBefore = text.substring(0, aMatcher.start());

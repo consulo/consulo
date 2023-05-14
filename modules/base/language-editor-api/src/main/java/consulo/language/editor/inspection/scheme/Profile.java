@@ -17,7 +17,7 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.component.util.pointer.Named;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna

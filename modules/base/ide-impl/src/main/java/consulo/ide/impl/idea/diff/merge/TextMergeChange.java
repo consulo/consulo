@@ -37,8 +37,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -305,7 +305,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private GutterIconRenderer createApplyRenderer(@Nonnull final Side side, final boolean modifier) {
     if (isResolved(side)) return null;
     Image icon = isOnesideAppliedConflict() ? DiffUtil.getArrowDownIcon(side) : DiffUtil.getArrowIcon(side);
@@ -326,7 +326,7 @@ public class TextMergeChange extends ThreesideDiffChangeBase {
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private GutterIconRenderer createResolveRenderer() {
     if (myViewer.resolveConflictUsingInnerDifferences(this) == null) return null;
 

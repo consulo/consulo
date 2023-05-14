@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.openapi.diff.impl;
 
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Source to push from. For example, local branch for git or branch/bookmark for mercurial.

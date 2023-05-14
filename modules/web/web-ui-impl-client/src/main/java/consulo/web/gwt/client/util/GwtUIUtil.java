@@ -25,8 +25,8 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.shared.Connector;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

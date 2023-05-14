@@ -26,8 +26,8 @@ import consulo.logging.Logger;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

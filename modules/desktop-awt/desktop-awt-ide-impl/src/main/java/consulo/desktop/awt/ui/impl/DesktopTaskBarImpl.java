@@ -24,7 +24,7 @@ import consulo.ui.TaskBar;
 import consulo.ui.Window;
 import consulo.ui.impl.DummyTaskBarImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

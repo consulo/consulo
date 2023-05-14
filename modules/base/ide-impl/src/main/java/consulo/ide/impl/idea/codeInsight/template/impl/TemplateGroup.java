@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl;
 import consulo.ide.impl.idea.openapi.options.CompoundScheme;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {
 

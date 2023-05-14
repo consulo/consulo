@@ -15,7 +15,7 @@
  */
 package consulo.util.lang;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.function.Function;
 

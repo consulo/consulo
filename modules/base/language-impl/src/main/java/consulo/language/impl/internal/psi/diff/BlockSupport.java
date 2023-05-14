@@ -33,7 +33,7 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class BlockSupport {

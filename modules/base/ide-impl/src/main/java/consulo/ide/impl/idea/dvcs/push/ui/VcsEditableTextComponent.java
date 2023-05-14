@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.dvcs.push.ui;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class VcsEditableTextComponent extends VcsLinkedTextComponent implements VcsEditableComponent {
 

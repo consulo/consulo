@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class CheckBoxSearchEverywhereToggleAction extends CheckboxAction implements DumbAware, SearchEverywhereToggleAction {
   public CheckBoxSearchEverywhereToggleAction(@Nonnull String text) {

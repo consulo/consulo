@@ -52,8 +52,8 @@ import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -230,7 +230,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
     return getRunProfile();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public TestFrameworkRunningModel getModel() {
     if (myModel != null) {
       return myModel;

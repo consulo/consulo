@@ -28,7 +28,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -87,7 +87,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
     return locations;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum) {
     return createLocationFor(project, virtualFile, lineNum, -1);
   }
@@ -101,7 +101,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
    *                    a non-positive column number doesn't change text caret position inside the file
    * @return Location instance, or null if not found
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum, int columnNum) {
     final PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
     if (psiFile == null) {

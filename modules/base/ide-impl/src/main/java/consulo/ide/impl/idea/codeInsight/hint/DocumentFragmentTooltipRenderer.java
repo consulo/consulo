@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

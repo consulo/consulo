@@ -23,8 +23,8 @@ package consulo.language.editor.inspection.scheme;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface Tools {

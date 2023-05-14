@@ -21,7 +21,7 @@ package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiNamedElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface NamedStub<T extends PsiNamedElement> extends StubElement<T> {
   @Nullable

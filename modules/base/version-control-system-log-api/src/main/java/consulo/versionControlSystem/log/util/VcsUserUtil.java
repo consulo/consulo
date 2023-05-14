@@ -17,8 +17,8 @@ package consulo.versionControlSystem.log.util;
 
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.log.VcsUser;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;

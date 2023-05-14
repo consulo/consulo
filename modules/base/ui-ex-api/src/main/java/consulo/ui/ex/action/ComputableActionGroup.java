@@ -19,8 +19,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.component.util.ModificationTracker;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 public abstract class ComputableActionGroup extends ActionGroup implements DumbAware {

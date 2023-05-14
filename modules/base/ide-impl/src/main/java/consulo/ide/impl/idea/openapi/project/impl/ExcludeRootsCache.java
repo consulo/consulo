@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;

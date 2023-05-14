@@ -18,7 +18,7 @@ package consulo.fileEditor.internal;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.ui.ex.ComponentContainer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

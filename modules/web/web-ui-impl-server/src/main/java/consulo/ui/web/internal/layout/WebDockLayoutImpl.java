@@ -25,7 +25,7 @@ import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

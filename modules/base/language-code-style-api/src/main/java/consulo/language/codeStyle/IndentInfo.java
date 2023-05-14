@@ -19,7 +19,7 @@ package consulo.language.codeStyle;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class IndentInfo {
 

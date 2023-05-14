@@ -52,7 +52,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
@@ -97,7 +97,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
   @Nonnull
   private final ExternalProjectRefreshCallback myRefreshCallback = new ExternalProjectRefreshCallback() {
     @Override
-    public void onSuccess(@javax.annotation.Nullable final DataNode<ProjectData> externalProject) {
+    public void onSuccess(@jakarta.annotation.Nullable final DataNode<ProjectData> externalProject) {
       if (externalProject != null) {
         ExternalSystemApiUtil.executeProjectChangeAction(new DisposeAwareProjectChange(myProject) {
           @RequiredUIAccess
@@ -115,7 +115,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     }
 
     @Override
-    public void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails) {
+    public void onFailure(@Nonnull String errorMessage, @jakarta.annotation.Nullable String errorDetails) {
       // Do nothing. 
     }
   };
@@ -164,7 +164,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
   @Nonnull
   private static ExternalSystemAutoImportAware combine(@Nonnull final ExternalSystemAutoImportAware aware1, @Nonnull final ExternalSystemAutoImportAware aware2) {
     return new ExternalSystemAutoImportAware() {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
         String projectPath = aware1.getAffectedExternalProjectPath(changedFileOrDirPath, project);
@@ -176,7 +176,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
   @Nonnull
   private static ExternalSystemAutoImportAware createDefault(@Nonnull final AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
     return new ExternalSystemAutoImportAware() {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
         return systemSettings.getLinkedProjectSettings(changedFileOrDirPath) == null ? null : changedFileOrDirPath;

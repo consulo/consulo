@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CloseAction extends AnAction implements DumbAware {
 

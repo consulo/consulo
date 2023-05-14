@@ -163,7 +163,7 @@ public class ShowCoveringTestsAction extends AnAction {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static File[] getTraceFiles(Project project) {
     final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
     if (currentSuite == null) return null;

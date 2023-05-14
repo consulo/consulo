@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

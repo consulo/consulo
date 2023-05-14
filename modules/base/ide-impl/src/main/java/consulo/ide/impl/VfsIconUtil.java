@@ -33,8 +33,8 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

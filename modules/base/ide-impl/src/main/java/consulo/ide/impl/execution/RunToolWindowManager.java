@@ -43,8 +43,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 

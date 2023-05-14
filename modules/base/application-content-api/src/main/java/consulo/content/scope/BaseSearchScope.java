@@ -18,8 +18,8 @@ package consulo.content.scope;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class BaseSearchScope implements SearchScope {
   private static int hashCodeCounter = 0;

@@ -12,7 +12,7 @@ import consulo.util.lang.ShutDownTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

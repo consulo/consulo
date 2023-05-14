@@ -18,7 +18,7 @@ package consulo.language;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

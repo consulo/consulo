@@ -17,7 +17,7 @@
 package consulo.versionControlSystem.change;
 
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

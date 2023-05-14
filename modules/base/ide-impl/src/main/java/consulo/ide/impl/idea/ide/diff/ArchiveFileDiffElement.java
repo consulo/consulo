@@ -20,7 +20,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

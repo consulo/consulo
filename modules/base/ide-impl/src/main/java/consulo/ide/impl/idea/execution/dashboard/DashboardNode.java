@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.dashboard;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author konstantin.aleev

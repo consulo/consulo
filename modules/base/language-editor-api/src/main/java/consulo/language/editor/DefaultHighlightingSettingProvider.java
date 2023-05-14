@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Implementation can provide default level of highlighting (one of "none", "syntax checks", "inspections") for a file.

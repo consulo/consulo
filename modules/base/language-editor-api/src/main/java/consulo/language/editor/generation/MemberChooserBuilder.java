@@ -23,7 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

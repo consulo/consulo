@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines a contract for strategy that determines if an {@link ArrangementMatchRule arrangement rule} matches particular

@@ -20,7 +20,7 @@ import consulo.execution.test.Printer;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class TestComparisonFailedStates extends TestFailedState {
 
   final List<TestComparisionFailedState> myStates = new ArrayList<TestComparisionFailedState>();
 
-  public TestComparisonFailedStates(@javax.annotation.Nullable String localizedMessage, @javax.annotation.Nullable String stackTrace) {
+  public TestComparisonFailedStates(@jakarta.annotation.Nullable String localizedMessage, @jakarta.annotation.Nullable String stackTrace) {
     super(localizedMessage, stackTrace);
   }
 

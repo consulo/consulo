@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.change.ChangesUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 

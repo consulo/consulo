@@ -33,7 +33,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.jetbrains.annotations.TestOnly;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ConnectException;

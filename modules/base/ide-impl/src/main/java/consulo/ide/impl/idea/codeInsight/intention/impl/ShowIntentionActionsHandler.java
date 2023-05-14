@@ -41,8 +41,8 @@ import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
 import consulo.util.lang.function.PairProcessor;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author mike

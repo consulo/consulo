@@ -13,7 +13,7 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))

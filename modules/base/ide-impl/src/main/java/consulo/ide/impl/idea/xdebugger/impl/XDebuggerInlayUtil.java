@@ -33,7 +33,7 @@ import consulo.execution.debug.ui.DebuggerColors;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;

@@ -30,8 +30,8 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

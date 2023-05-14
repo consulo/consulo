@@ -29,7 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "About")
 public class AboutAction extends AnAction implements DumbAware {

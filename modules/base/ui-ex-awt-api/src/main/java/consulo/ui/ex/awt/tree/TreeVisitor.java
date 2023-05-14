@@ -3,7 +3,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.concurrent.Promise;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 import java.util.function.Function;
 

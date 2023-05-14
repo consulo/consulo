@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyRenderer;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyTable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

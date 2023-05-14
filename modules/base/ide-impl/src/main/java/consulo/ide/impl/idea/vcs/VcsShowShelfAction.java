@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs;
 
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class VcsShowShelfAction extends VcsShowToolWindowTabAction {
   @Nonnull

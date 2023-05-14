@@ -24,8 +24,8 @@ import consulo.util.lang.ExceptionUtil;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 

@@ -22,8 +22,8 @@ import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 

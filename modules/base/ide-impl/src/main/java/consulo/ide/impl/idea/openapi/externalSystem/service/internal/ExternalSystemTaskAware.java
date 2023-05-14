@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.internal;
 
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;

@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An interface allowing access and modification of the data associated with the current compile session.
@@ -124,7 +124,7 @@ public interface CompileContext extends UserDataHolder {
    * @param module the module to check.
    * @return the output directory for the module specified, null if corresponding VirtualFile is not valid or directory not specified
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Deprecated
   VirtualFile getModuleOutputDirectory(Module module);
 

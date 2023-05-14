@@ -16,7 +16,7 @@
 package consulo.index.io;
 
 import consulo.util.collection.ShareableKey;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class FileChunkKey<OwnerType> implements Comparable<FileChunkKey<OwnerType>>, ShareableKey {
   private OwnerType owner;

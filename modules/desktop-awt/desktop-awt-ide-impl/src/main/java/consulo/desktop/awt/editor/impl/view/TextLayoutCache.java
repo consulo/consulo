@@ -25,7 +25,7 @@ import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.internal.EditorDocumentPriorities;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;

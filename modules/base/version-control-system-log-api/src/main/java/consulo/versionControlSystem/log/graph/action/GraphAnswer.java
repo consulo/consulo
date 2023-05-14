@@ -18,7 +18,7 @@ package consulo.versionControlSystem.log.graph.action;
 import consulo.versionControlSystem.log.graph.action.ActionController;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

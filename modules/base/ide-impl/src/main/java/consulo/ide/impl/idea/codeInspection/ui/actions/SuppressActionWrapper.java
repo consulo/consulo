@@ -34,8 +34,8 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.HashSet;

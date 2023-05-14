@@ -17,7 +17,7 @@ package consulo.fileEditor;
 
 import consulo.codeEditor.Editor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface TextEditor extends NavigatableFileEditor {
   @Nonnull

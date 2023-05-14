@@ -23,8 +23,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ide.impl.idea.ui.popup.util.*;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;

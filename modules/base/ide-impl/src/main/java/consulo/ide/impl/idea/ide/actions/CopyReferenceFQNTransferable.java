@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.util.collection.ArrayUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

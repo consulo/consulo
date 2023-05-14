@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.OptionGroup;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

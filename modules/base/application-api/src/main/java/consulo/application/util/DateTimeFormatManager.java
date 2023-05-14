@@ -14,8 +14,8 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 

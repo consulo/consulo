@@ -38,7 +38,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.ActionCallback;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
   protected HierarchyNodeDescriptor myBaseDescriptor;

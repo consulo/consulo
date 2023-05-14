@@ -21,7 +21,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 import consulo.language.version.LanguageVersion;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**

@@ -32,7 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Consumer;
 
@@ -128,7 +128,7 @@ public abstract class AbstractRefreshablePanel<T> implements RefreshablePanel<Ch
     private final Ticket myTicketCopy;
     private T myT;
 
-    private Loader(@javax.annotation.Nullable Project project, @Nonnull String title, final Ticket ticketCopy) {
+    private Loader(@jakarta.annotation.Nullable Project project, @Nonnull String title, final Ticket ticketCopy) {
       super(project, title, false, BackgroundFromStartOption.getInstance());
       myTicketCopy = ticketCopy;
     }

@@ -21,8 +21,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

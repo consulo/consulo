@@ -19,8 +19,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 final class BaseWebBrowserAction extends BaseOpenInBrowserAction {
   private final WebBrowser browser;

@@ -20,8 +20,8 @@ import consulo.document.Document;
 import consulo.language.ast.IElementType;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * {@link LineWrapPositionStrategy} implementation that uses

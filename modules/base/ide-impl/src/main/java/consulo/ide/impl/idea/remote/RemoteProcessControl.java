@@ -6,8 +6,8 @@ import consulo.ide.impl.idea.util.PathMappingSettings;
 import consulo.process.remote.RemoteSdkException;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

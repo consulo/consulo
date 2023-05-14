@@ -21,8 +21,8 @@ import consulo.util.xml.serializer.JDOMExternalizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.PathMappingSettings;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;

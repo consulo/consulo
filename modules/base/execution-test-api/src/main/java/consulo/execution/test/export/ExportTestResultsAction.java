@@ -50,8 +50,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.xml.sax.SAXException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.transform.OutputKeys;
@@ -252,7 +252,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String getOutputText(ExportTestResultsConfiguration config) throws IOException, TransformerException, SAXException {
     ExportTestResultsConfiguration.ExportFormat exportFormat = config.getExportFormat();
 

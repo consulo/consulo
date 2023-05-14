@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.HashSet;

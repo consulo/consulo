@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.tools.binary;
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class BinaryDiffTool implements FrameDiffTool {
   public static final BinaryDiffTool INSTANCE = new BinaryDiffTool();

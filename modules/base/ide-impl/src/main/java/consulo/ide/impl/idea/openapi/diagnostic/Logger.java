@@ -20,8 +20,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.attachment.Attachment;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use consulo.logging.Logger")

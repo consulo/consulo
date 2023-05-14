@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.dupLocator;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
 import consulo.usage.UsageInfo;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface DupInfo {
   int getPatterns();

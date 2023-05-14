@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.diff.util.Range;
 import consulo.diff.util.Side;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.registry.Registry;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

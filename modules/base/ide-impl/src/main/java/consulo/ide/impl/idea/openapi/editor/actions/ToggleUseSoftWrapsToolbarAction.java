@@ -19,7 +19,7 @@ import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * {@link ToggleUseSoftWrapsMenuAction} extension that doesn't suppress configured icon (if any).

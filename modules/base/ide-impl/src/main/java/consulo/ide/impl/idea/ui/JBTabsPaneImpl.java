@@ -25,8 +25,8 @@ import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.TabbedPane;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

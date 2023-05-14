@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.ui.tabs.JBTabsPosition;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.util.Axis;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

@@ -57,8 +57,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 import java.util.function.Function;
@@ -212,7 +212,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private LibraryOrderEntry getSelectedLibrary() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
@@ -266,7 +266,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
       }, title, null);
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private Module[] getSelectedModules() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       if (viewPane == null) return null;
@@ -321,7 +321,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
    * => MODULE_CONTEXT should be only available for the module node
    * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
     if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
       Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);

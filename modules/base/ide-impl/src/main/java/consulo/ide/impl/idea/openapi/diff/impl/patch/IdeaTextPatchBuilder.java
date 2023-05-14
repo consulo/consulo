@@ -31,7 +31,7 @@ import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -106,12 +106,12 @@ public class IdeaTextPatchBuilder {
     }, includeBaseText);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr) {
     return convertRevisionToAir(cr, null);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static AirContentRevision convertRevisionToAir(final ContentRevision cr, final Long ts) {
     if (cr == null) return null;
     final FilePath fp = cr.getFile();
@@ -178,8 +178,8 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @javax.annotation.Nullable
-  private static AirContentRevision convertRevision(@javax.annotation.Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
+  @jakarta.annotation.Nullable
+  private static AirContentRevision convertRevision(@jakarta.annotation.Nullable final ContentRevision cr, final VcsOutgoingChangesProvider provider) {
     if (cr == null) return null;
     final Date date = provider.getRevisionDate(cr.getRevisionNumber(), cr.getFile());
     final Long ts = date == null ? null : date.getTime();

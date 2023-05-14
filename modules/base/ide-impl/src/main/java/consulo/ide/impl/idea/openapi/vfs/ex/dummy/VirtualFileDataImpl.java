@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.LocalTimeCounter;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.*;
 

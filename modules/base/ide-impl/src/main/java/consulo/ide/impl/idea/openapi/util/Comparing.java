@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 

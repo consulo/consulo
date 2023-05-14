@@ -22,7 +22,7 @@ import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

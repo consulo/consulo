@@ -22,8 +22,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.function.Consumer;
 
@@ -38,20 +38,20 @@ public abstract class ModalityIgnorantBackgroundableTask extends Task.Background
   private Consumer<Backgroundable> myRunner;
   private int myCnt;
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
+  public ModalityIgnorantBackgroundableTask(@jakarta.annotation.Nullable Project project,
                                             @Nonnull String title,
                                             boolean canBeCancelled,
                                             @Nullable PerformInBackgroundOption backgroundOption) {
     super(project, title, canBeCancelled, backgroundOption);
   }
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project,
+  public ModalityIgnorantBackgroundableTask(@jakarta.annotation.Nullable Project project,
                                             @Nonnull String title,
                                             boolean canBeCancelled) {
     super(project, title, canBeCancelled);
   }
 
-  public ModalityIgnorantBackgroundableTask(@javax.annotation.Nullable Project project, @Nonnull String title) {
+  public ModalityIgnorantBackgroundableTask(@jakarta.annotation.Nullable Project project, @Nonnull String title) {
     super(project, title);
   }
 

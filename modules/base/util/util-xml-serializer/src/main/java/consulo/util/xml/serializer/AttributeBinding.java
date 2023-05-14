@@ -21,8 +21,8 @@ import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.XmlSerializerImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 class AttributeBinding extends BasePrimitiveBinding {
   private final Class<?> valueClass;

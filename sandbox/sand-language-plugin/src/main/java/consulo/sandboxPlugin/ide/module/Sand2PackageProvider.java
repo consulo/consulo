@@ -27,7 +27,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.sandboxPlugin.ide.module.extension.Sand2ModuleExtension;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.IntFunction;
 
 /**

@@ -17,7 +17,7 @@ package consulo.execution.debug.evaluation;
 
 import consulo.execution.debug.frame.XStackFrame;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Subclass to allow to recalculate instance value in a different context

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.application.ApplicationManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 import java.util.ArrayList;

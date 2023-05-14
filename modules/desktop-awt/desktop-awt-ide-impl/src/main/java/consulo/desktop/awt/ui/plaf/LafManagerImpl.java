@@ -76,8 +76,8 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.UIResource;

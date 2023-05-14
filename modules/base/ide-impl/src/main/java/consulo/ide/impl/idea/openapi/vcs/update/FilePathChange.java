@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 
 import consulo.versionControlSystem.FilePath;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

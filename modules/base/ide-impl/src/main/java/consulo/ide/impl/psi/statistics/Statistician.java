@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

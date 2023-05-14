@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.ConcurrentMap;
 
 //@ApiStatus.Internal

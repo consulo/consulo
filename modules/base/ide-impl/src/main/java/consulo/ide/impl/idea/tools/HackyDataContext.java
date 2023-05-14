@@ -21,7 +21,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -7,7 +7,7 @@ import consulo.application.Application;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface VcsStartupActivity {

@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)

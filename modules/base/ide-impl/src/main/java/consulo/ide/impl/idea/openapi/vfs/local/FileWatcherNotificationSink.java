@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.vfs.local;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

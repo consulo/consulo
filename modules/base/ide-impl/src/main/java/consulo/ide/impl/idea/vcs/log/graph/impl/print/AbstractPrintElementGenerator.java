@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.EdgePrintElementI
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.SimplePrintElementImpl;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.TerminalEdgePrintElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;

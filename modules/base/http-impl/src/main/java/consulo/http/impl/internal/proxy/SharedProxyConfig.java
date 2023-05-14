@@ -18,8 +18,8 @@ package consulo.http.impl.internal.proxy;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.io.FileUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Properties;
 

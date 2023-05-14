@@ -17,7 +17,7 @@ package consulo.util.io;
 
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.math.BigInteger;
 import java.security.*;
 import java.util.function.Supplier;

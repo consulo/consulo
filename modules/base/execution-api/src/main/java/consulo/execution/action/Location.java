@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Iterator;
 
 public abstract class Location<E extends PsiElement> {
@@ -70,7 +70,7 @@ public abstract class Location<E extends PsiElement> {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public <T extends PsiElement> Location<T> getAncestorOrSelf(final Class<T> ancestorClass) {
     final Iterator<Location<T>> ancestors = getAncestors(ancestorClass, false);
     if (!ancestors.hasNext()) return null;

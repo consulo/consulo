@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
 
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.graph.PrintElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

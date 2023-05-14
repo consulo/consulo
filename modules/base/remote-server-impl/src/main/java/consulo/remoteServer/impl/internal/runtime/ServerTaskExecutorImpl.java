@@ -6,7 +6,7 @@ import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ExecutorService;
 

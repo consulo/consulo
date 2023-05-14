@@ -8,7 +8,7 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.StandardPatterns;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 

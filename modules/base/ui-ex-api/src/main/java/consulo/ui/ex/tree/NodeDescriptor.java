@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 public abstract class NodeDescriptor<E> {

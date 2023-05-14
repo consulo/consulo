@@ -21,7 +21,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

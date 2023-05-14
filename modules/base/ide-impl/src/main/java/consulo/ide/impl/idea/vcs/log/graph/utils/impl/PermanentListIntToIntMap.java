@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntToIntMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PermanentListIntToIntMap extends AbstractIntToIntMap implements IntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;

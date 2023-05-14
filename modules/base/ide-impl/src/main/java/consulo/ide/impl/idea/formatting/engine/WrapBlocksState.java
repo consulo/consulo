@@ -26,7 +26,7 @@ import consulo.language.codeStyle.internal.BlockRangesMap;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;

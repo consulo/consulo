@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.application.impl.internal.IdeaModalityState;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

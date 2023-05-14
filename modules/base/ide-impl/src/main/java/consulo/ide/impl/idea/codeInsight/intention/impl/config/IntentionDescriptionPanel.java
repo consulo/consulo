@@ -40,7 +40,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

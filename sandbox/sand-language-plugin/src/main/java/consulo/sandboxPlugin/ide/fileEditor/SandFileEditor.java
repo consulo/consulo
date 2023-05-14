@@ -24,7 +24,7 @@ import consulo.ui.Component;
 import consulo.ui.Label;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -84,7 +84,7 @@ public class SandFileEditor extends UserDataHolderBase implements FileEditor {
 
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public FileEditorLocation getCurrentLocation() {
     return null;

@@ -18,7 +18,7 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.GridBag;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 

@@ -30,8 +30,8 @@ import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

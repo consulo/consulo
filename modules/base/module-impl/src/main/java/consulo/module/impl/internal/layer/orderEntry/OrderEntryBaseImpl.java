@@ -22,7 +22,7 @@ import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.BaseModuleRootLayerChild;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   private static final Logger LOG = Logger.getInstance(OrderEntryBaseImpl.class);

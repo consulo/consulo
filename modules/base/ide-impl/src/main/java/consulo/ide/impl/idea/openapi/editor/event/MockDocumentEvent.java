@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.event;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MockDocumentEvent extends DocumentEvent {
   private final int myOffset;

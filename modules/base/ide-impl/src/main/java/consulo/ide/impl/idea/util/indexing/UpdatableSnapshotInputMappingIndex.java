@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.util.dataholder.UserDataHolder;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.Map;

@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

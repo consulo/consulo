@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.packaging.impl.ui.ArtifactProblemsHolderBase;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactProblemQuickFix;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

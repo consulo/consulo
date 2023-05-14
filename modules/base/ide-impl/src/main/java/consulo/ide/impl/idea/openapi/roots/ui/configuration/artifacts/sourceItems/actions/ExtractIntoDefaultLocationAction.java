@@ -31,7 +31,7 @@ import consulo.compiler.artifact.PackagingElementProcessor;
 import consulo.compiler.artifact.element.FileCopyPackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;

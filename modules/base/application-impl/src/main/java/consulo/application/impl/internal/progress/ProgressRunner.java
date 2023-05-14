@@ -20,8 +20,8 @@ import consulo.ui.UIAccess;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Supplier;

@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedGraph;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.DottedFilterEdgesGenerator;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 
@@ -51,7 +51,7 @@ public class FilteredController extends CascadeController {
     return LinearGraphUtils.DEFAULT_GRAPH_ANSWER;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     // filter prohibits any actions on delegate graph for now

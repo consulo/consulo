@@ -7,7 +7,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awt.util.ColorUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;

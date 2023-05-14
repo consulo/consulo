@@ -21,8 +21,8 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**

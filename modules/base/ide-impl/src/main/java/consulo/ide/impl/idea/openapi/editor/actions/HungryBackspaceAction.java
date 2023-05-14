@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Works like a usual backspace except the situation when the caret is located after white space - all white space symbols

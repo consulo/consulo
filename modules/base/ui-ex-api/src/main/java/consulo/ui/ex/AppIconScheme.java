@@ -20,7 +20,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class AppIconScheme {
   private static ColorValue TESTS_OK_COLOR = new RGBColor(46, 191, 38);

@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.language.psi.PsiDocumentManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeStructureBase implements ViewSettings {
   private final AbstractTreeNode myRoot;

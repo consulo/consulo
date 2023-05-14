@@ -18,7 +18,7 @@ package consulo.compiler.artifact;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

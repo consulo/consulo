@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

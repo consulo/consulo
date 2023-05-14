@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.function.Supplier;

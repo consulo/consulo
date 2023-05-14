@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.remote;
 import consulo.process.remote.RemoteSdkException;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;

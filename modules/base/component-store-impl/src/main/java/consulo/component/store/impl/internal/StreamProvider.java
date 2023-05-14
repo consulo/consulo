@@ -1,8 +1,8 @@
 package consulo.component.store.impl.internal;
 
 import consulo.component.persist.RoamingType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;

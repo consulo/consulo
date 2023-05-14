@@ -43,7 +43,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inStringLiteral", order = "first")
 public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {

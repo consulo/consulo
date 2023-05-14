@@ -29,7 +29,7 @@ import consulo.ide.impl.ui.docking.impl.UnifiedDockableEditorTabbedContainer;
 import consulo.ui.layout.WrappedLayout;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

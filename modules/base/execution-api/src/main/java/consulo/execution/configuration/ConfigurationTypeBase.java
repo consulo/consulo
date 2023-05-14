@@ -19,7 +19,7 @@ package consulo.execution.configuration;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

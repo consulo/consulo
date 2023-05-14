@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 

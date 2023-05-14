@@ -18,7 +18,7 @@ package consulo.versionControlSystem.annotate;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.versionControlSystem.VcsBundle;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents one part of a line annotation which is shown in the editor when the "Annotate"

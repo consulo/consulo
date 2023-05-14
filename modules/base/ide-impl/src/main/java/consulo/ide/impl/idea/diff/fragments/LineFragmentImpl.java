@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.diff.fragments;
 import consulo.diff.fragment.DiffFragment;
 import consulo.diff.fragment.LineFragment;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -104,12 +104,12 @@ public class LineFragmentImpl implements LineFragment {
     return myEndOffset2;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<DiffFragment> getInnerFragments() {
     return myInnerFragments;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static List<DiffFragment> dropWholeChangedFragments(@Nullable List<DiffFragment> fragments, int length1, int length2) {
     if (fragments != null && fragments.size() == 1) {
       DiffFragment diffFragment = fragments.get(0);

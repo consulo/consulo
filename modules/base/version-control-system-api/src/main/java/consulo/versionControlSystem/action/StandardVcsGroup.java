@@ -24,7 +24,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class StandardVcsGroup extends DefaultActionGroup implements DumbAware {
   public abstract AbstractVcs getVcs(Project project);

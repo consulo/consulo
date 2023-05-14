@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.StubVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

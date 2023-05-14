@@ -23,8 +23,8 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.versionControlSystem.VcsKey;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Comparator;
 

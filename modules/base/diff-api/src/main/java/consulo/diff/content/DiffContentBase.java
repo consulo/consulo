@@ -19,7 +19,7 @@ import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class DiffContentBase extends UserDataHolderBase implements DiffContent {
   @Nullable

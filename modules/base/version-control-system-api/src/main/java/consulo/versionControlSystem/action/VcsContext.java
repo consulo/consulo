@@ -23,8 +23,8 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.PlaceProvider;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.Arrays;

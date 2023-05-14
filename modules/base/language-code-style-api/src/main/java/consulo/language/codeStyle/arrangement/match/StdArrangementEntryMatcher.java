@@ -26,8 +26,8 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementTokenType;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import consulo.util.collection.MultiValuesMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

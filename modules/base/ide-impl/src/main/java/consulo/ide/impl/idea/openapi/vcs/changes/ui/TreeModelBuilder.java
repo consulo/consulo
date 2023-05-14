@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import java.io.File;
@@ -99,7 +99,7 @@ public class TreeModelBuilder {
   public static DefaultTreeModel buildFromChanges(@Nonnull Project project,
                                                   boolean showFlatten,
                                                   @Nonnull Collection<? extends Change> changes,
-                                                  @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
+                                                  @jakarta.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     return new TreeModelBuilder(project, showFlatten).setChanges(changes, changeNodeDecorator).build();
   }
 
@@ -120,7 +120,7 @@ public class TreeModelBuilder {
 
 
   @Nonnull
-  public TreeModelBuilder setChanges(@Nonnull Collection<? extends Change> changes, @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
+  public TreeModelBuilder setChanges(@Nonnull Collection<? extends Change> changes, @jakarta.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     List<? extends Change> sortedChanges = ContainerUtil.sorted(changes, PATH_LENGTH_COMPARATOR);
     for (Change change : sortedChanges) {
       insertChangeNode(change, myRoot, createChangeNode(change, changeNodeDecorator));
@@ -129,7 +129,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setUnversioned(@javax.annotation.Nullable List<VirtualFile> unversionedFiles) {
+  public TreeModelBuilder setUnversioned(@jakarta.annotation.Nullable List<VirtualFile> unversionedFiles) {
     if (ContainerUtil.isEmpty(unversionedFiles)) return this;
     int dirsCount = ContainerUtil.count(unversionedFiles, it -> it.isDirectory());
     int filesCount = unversionedFiles.size() - dirsCount;
@@ -139,7 +139,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setIgnored(@javax.annotation.Nullable List<VirtualFile> ignoredFiles, boolean updatingMode) {
+  public TreeModelBuilder setIgnored(@jakarta.annotation.Nullable List<VirtualFile> ignoredFiles, boolean updatingMode) {
     if (ContainerUtil.isEmpty(ignoredFiles)) return this;
     int dirsCount = ContainerUtil.count(ignoredFiles, it -> it.isDirectory());
     int filesCount = ignoredFiles.size() - dirsCount;
@@ -180,7 +180,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setLockedFolders(@javax.annotation.Nullable List<VirtualFile> lockedFolders) {
+  public TreeModelBuilder setLockedFolders(@jakarta.annotation.Nullable List<VirtualFile> lockedFolders) {
     return setVirtualFiles(lockedFolders, ChangesBrowserNode.LOCKED_FOLDERS_TAG);
   }
 
@@ -190,14 +190,14 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  private TreeModelBuilder setVirtualFiles(@javax.annotation.Nullable Collection<VirtualFile> files, @javax.annotation.Nullable Object tag) {
+  private TreeModelBuilder setVirtualFiles(@jakarta.annotation.Nullable Collection<VirtualFile> files, @jakarta.annotation.Nullable Object tag) {
     if (ContainerUtil.isEmpty(files)) return this;
     insertFilesIntoNode(files, createTagNode(tag));
     return this;
   }
 
   @Nonnull
-  private ChangesBrowserNode createTagNode(@javax.annotation.Nullable Object tag) {
+  private ChangesBrowserNode createTagNode(@jakarta.annotation.Nullable Object tag) {
     if (tag == null) return myRoot;
 
     ChangesBrowserNode subtreeRoot = ChangesBrowserNode.create(myProject, tag);
@@ -213,7 +213,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setLocallyDeletedPaths(@javax.annotation.Nullable Collection<LocallyDeletedChange> locallyDeletedChanges) {
+  public TreeModelBuilder setLocallyDeletedPaths(@jakarta.annotation.Nullable Collection<LocallyDeletedChange> locallyDeletedChanges) {
     if (ContainerUtil.isEmpty(locallyDeletedChanges)) return this;
     ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOCALLY_DELETED_NODE_TAG);
 
@@ -258,7 +258,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setSwitchedRoots(@javax.annotation.Nullable Map<VirtualFile, String> switchedRoots) {
+  public TreeModelBuilder setSwitchedRoots(@jakarta.annotation.Nullable Map<VirtualFile, String> switchedRoots) {
     if (ContainerUtil.isEmpty(switchedRoots)) return this;
     final ChangesBrowserNode rootsHeadNode = createTagNode(ChangesBrowserNode.SWITCHED_ROOTS_TAG);
     rootsHeadNode.setAttributes(SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
@@ -302,7 +302,7 @@ public class TreeModelBuilder {
   }
 
   @Nonnull
-  public TreeModelBuilder setLogicallyLockedFiles(@javax.annotation.Nullable Map<VirtualFile, LogicalLock> logicallyLockedFiles) {
+  public TreeModelBuilder setLogicallyLockedFiles(@jakarta.annotation.Nullable Map<VirtualFile, LogicalLock> logicallyLockedFiles) {
     if (ContainerUtil.isEmpty(logicallyLockedFiles)) return this;
     final ChangesBrowserNode subtreeRoot = createTagNode(ChangesBrowserNode.LOGICALLY_LOCKED_TAG);
 
@@ -461,7 +461,7 @@ public class TreeModelBuilder {
     return subtreeRoot;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ChangesBrowserNode createPathNode(@Nonnull StaticFilePath path) {
     FilePath filePath = path.getVf() == null ? VcsUtil.getFilePath(path.getPath(), true) : VcsUtil.getFilePath(path.getVf());
     return ChangesBrowserNode.create(myProject, filePath);
@@ -478,7 +478,7 @@ public class TreeModelBuilder {
 
   @Nonnull
   @Deprecated
-  public DefaultTreeModel buildModel(@Nonnull List<Change> changes, @javax.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
+  public DefaultTreeModel buildModel(@Nonnull List<Change> changes, @jakarta.annotation.Nullable ChangeNodeDecorator changeNodeDecorator) {
     return setChanges(changes, changeNodeDecorator).build();
   }
 }

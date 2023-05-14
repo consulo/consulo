@@ -5,8 +5,8 @@ import consulo.execution.ui.awt.EnvironmentVariablesComponent;
 import consulo.process.cmd.GeneralCommandLine;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

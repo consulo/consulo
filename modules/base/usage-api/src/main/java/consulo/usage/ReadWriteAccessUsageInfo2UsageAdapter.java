@@ -18,7 +18,7 @@ package consulo.usage;
 import consulo.application.AllIcons;
 import consulo.usage.ReadWriteAccessUsage;
 import consulo.usage.UsageInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

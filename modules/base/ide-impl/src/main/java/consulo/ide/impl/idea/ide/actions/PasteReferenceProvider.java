@@ -21,8 +21,8 @@ import consulo.ui.ex.CustomPasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
 

@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.io.File;

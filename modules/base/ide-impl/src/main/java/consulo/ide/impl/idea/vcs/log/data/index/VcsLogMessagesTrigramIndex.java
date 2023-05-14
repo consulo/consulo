@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.disposer.Disposable;
 import consulo.util.collection.primitive.ints.IntSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

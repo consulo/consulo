@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -209,7 +209,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
   public abstract void onUncapturedOutput(@Nonnull String text, Key outputType);
 
-  public abstract void onError(@Nonnull String localizedMessage, @javax.annotation.Nullable String stackTrace, boolean isCritical);
+  public abstract void onError(@Nonnull String localizedMessage, @jakarta.annotation.Nullable String stackTrace, boolean isCritical);
 
   protected static void fireOnTestsReporterAttached(SMTestProxy.SMRootTestProxy rootNode) {
     rootNode.setTestsReporterAttached();
@@ -232,7 +232,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
    *                     If name is null statistics will be switched to normal mode
    * @param testCount    0 will be considered as unknown tests number
    */
-  public void onCustomProgressTestsCategory(@javax.annotation.Nullable final String categoryName, final int testCount) {
+  public void onCustomProgressTestsCategory(@jakarta.annotation.Nullable final String categoryName, final int testCount) {
     addToInvokeLater(() -> {
       myEventPublisher.onCustomProgressTestsCategory(categoryName, testCount);
       for (SMTRunnerEventsListener adapter : myListenerAdapters) {

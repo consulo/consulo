@@ -19,7 +19,7 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author dyoma

@@ -6,7 +6,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;

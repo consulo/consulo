@@ -24,7 +24,7 @@ import consulo.process.internal.OSProcessHandler;
 import consulo.process.internal.UnixProcessManager;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.charset.Charset;
 

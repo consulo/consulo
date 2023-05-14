@@ -27,8 +27,8 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ProblemDescriptorBase extends CommonProblemDescriptorBase implements ProblemDescriptor {
   private static final Logger LOG = Logger.getInstance(ProblemDescriptorBase.class);

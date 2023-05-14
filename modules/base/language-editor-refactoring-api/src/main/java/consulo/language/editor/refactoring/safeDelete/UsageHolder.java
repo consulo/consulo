@@ -28,7 +28,7 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.usage.UsageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl

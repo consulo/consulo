@@ -17,7 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A factory for standard formatting model implementations. Not to be used directly

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.util.base;
 
 import consulo.diff.comparison.ComparisonPolicy;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum IgnorePolicy {
   DEFAULT("Do not ignore"),

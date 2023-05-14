@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

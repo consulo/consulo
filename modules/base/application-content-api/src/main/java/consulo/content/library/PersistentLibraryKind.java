@@ -15,7 +15,7 @@
  */
 package consulo.content.library;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

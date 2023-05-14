@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class VcsKey {
   @Nonnull

@@ -21,7 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Shows a live template-like chooser UI over a PSI element and offers the user to replace certain sub-elements of the

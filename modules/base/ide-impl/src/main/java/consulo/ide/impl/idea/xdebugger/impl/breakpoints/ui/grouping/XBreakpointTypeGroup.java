@@ -21,7 +21,7 @@ import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class XBreakpointTypeGroup extends XBreakpointGroup {
 

@@ -21,7 +21,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringHash;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class UsedColors {

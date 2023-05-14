@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.progress.util;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

@@ -24,8 +24,8 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AutoScrollFromSourceHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

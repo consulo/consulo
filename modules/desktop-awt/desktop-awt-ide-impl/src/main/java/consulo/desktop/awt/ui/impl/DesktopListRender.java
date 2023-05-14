@@ -24,7 +24,7 @@ import consulo.ui.AntialiasingType;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TextItemRender;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;

@@ -27,7 +27,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.List;

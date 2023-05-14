@@ -34,8 +34,8 @@ import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.annotation.access.RequiredWriteAction;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
@@ -51,7 +51,7 @@ public abstract class LineStatusTrackerBase {
   // read access allowed from EDT or while holding LOCK
   private final Object LOCK = new Object();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected final Project myProject;
   @Nonnull
   protected final Document myDocument;
@@ -81,10 +81,10 @@ public abstract class LineStatusTrackerBase {
   @Nonnull
   private final Set<Range> myToBeInstalledRanges = ContainerUtil.newIdentityTroveSet();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private DirtyRange myDirtyRange;
 
-  public LineStatusTrackerBase(@javax.annotation.Nullable final Project project,
+  public LineStatusTrackerBase(@jakarta.annotation.Nullable final Project project,
                                @Nonnull final Document document) {
     myDocument = document;
     myProject = project;
@@ -256,7 +256,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Project getProject() {
     return myProject;
   }
@@ -274,7 +274,7 @@ public abstract class LineStatusTrackerBase {
   /**
    * Ranges can be modified without taking the write lock, so calling this method twice not from EDT can produce different results.
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public List<Range> getRanges() {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -539,7 +539,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  private static int getVcsLine1(@javax.annotation.Nullable Range range, int line) {
+  private static int getVcsLine1(@jakarta.annotation.Nullable Range range, int line) {
     return range == null ? line : line + range.getVcsLine2() - range.getLine2();
   }
 
@@ -645,7 +645,7 @@ public abstract class LineStatusTrackerBase {
     return StringUtil.isEmptyOrSpaces(interval);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Range getNextRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -655,7 +655,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Range getPrevRange(Range range) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -665,7 +665,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Range getNextRange(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -678,7 +678,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Range getPrevRange(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;
@@ -692,7 +692,7 @@ public abstract class LineStatusTrackerBase {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Range getRangeForLine(int line) {
     synchronized (LOCK) {
       if (!tryValidate()) return null;

@@ -39,7 +39,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
 public class GenerateCopyrightAction extends AnAction {

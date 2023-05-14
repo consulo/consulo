@@ -44,8 +44,8 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;

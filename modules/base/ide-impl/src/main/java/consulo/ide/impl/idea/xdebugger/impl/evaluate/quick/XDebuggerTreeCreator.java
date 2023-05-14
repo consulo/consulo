@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.DebuggerTreeCr
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class XDebuggerTreeCreator implements DebuggerTreeCreator<Pair<XValue,String>> {
   @Nonnull

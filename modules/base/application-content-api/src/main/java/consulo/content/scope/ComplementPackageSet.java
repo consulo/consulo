@@ -17,7 +17,7 @@ package consulo.content.scope;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ComplementPackageSet extends PackageSetBase {
   private final PackageSet myComplementarySet;

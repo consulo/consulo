@@ -22,8 +22,8 @@ import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
 import consulo.util.concurrent.ResultConsumer;
 import consulo.ui.ex.awt.tree.Tree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

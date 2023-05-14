@@ -16,7 +16,7 @@
 
 package consulo.language.psi.stub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**

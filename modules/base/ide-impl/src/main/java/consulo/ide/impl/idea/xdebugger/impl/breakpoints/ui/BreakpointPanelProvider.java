@@ -20,8 +20,8 @@ import consulo.document.Document;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 

@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

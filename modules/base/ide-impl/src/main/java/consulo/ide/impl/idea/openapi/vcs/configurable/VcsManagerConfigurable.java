@@ -31,7 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;

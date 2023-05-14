@@ -23,9 +23,9 @@ import consulo.usage.UsageInfo;
 import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

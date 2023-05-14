@@ -27,7 +27,7 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashMap;

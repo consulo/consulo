@@ -18,7 +18,7 @@ package consulo.util.io;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;

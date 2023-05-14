@@ -18,7 +18,7 @@ package consulo.versionControlSystem.annotate;
 import consulo.colorScheme.EditorColorKey;
 import consulo.codeEditor.EditorColors;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum AnnotationSource {
   LOCAL {

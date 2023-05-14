@@ -20,7 +20,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {
 

@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.util.function.Consumer;

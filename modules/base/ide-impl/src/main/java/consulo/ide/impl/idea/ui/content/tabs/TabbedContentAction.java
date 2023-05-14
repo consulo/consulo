@@ -23,7 +23,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class TabbedContentAction extends AnAction implements DumbAware {
 

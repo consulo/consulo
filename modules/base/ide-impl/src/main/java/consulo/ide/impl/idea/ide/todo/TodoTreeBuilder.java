@@ -50,8 +50,8 @@ import consulo.usage.UsageTreeColorsScheme;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 

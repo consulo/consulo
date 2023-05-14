@@ -19,7 +19,7 @@ package consulo.ui.ex.action;
 import consulo.ui.ex.action.Presentation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A marker interface for the action which could be toggled between "selected" and "not selected" states.

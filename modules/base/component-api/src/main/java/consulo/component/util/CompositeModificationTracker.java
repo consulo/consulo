@@ -15,7 +15,7 @@
  */
 package consulo.component.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CompositeModificationTracker extends SimpleModificationTracker {
   @Nonnull

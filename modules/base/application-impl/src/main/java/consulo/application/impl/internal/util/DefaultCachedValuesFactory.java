@@ -7,7 +7,7 @@ import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Default non-language impl of CachedValuesFactory, which can be used in non-language tests

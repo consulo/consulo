@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.undoRedo.ProjectUndoProvider;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

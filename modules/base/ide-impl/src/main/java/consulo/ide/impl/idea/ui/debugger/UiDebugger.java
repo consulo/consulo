@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

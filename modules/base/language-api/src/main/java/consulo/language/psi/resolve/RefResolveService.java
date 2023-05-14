@@ -21,8 +21,8 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 public abstract class RefResolveService {

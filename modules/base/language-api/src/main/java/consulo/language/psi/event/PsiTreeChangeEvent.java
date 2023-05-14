@@ -19,7 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.EventObject;
 
 /**

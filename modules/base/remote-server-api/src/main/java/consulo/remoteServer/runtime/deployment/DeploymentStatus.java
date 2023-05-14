@@ -1,6 +1,6 @@
 package consulo.remoteServer.runtime.deployment;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

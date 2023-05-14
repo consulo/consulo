@@ -28,7 +28,7 @@ public class CommittedChangesAdapter implements CommittedChangesListener {
   public void changesLoaded(RepositoryLocation location, List<CommittedChangeList> changes) {
   }
 
-  public void incomingChangesUpdated(@javax.annotation.Nullable final List<CommittedChangeList> receivedChanges) {
+  public void incomingChangesUpdated(@jakarta.annotation.Nullable final List<CommittedChangeList> receivedChanges) {
   }
 
   @Override
@@ -39,6 +39,6 @@ public class CommittedChangesAdapter implements CommittedChangesListener {
   public void presentationChanged() {
   }
 
-  public void refreshErrorStatusChanged(@javax.annotation.Nullable VcsException lastError) {
+  public void refreshErrorStatusChanged(@jakarta.annotation.Nullable VcsException lastError) {
   }
 }

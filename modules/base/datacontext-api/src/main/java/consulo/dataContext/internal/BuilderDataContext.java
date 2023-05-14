@@ -20,8 +20,8 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

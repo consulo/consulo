@@ -20,8 +20,8 @@ import consulo.application.TransactionGuard;
 import consulo.application.TransactionId;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

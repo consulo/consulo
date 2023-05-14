@@ -33,8 +33,8 @@ import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;

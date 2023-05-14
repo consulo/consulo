@@ -17,7 +17,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;

@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

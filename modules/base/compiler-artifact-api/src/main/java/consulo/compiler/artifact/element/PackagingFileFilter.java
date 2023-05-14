@@ -19,7 +19,7 @@ package consulo.compiler.artifact.element;
 import consulo.compiler.CompileContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

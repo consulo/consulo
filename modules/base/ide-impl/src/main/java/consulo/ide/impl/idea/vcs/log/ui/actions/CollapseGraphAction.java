@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ui.image.Image;
 import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CollapseGraphAction extends CollapseOrExpandGraphAction {
   @Nonnull

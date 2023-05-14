@@ -8,8 +8,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.language.ast.TokenSet;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;

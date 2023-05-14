@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.Query;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;

@@ -21,7 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class PsiNavigateUtil {
   private PsiNavigateUtil() {

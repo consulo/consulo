@@ -6,7 +6,7 @@ import consulo.language.editor.intention.IntentionManager;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

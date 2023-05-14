@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;

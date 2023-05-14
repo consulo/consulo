@@ -20,7 +20,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Interface for selecting a version number valid for a specified file placed under

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MatchResult {
   @Nonnull

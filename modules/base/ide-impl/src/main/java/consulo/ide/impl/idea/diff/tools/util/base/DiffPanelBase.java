@@ -21,8 +21,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.Wrapper;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,7 +77,7 @@ public abstract class DiffPanelBase extends JPanel implements DataProvider {
     add(mySouthPanel, BorderLayout.SOUTH);
   }
 
-  public void setTopPanel(@javax.annotation.Nullable JComponent component) {
+  public void setTopPanel(@jakarta.annotation.Nullable JComponent component) {
     myNorthPanel.setContent(component);
   }
 

@@ -22,8 +22,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

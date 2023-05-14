@@ -18,7 +18,7 @@ package consulo.ide.impl.desktop.awt.laf;
 import consulo.application.util.ClearableLazyValue;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.synth.ColorType;

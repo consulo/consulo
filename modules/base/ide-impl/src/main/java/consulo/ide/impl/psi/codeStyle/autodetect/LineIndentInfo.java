@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle.autodetect;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LineIndentInfo {
   public static final LineIndentInfo EMPTY_LINE = new LineIndentInfo(LineType.EMPTY_LINE, -1);

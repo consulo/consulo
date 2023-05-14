@@ -6,7 +6,7 @@ import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -37,7 +37,7 @@ public interface ServerConnection<D extends DeploymentConfiguration> {
   @Nonnull
   Collection<Deployment> getDeployments();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   DeploymentLogManager getLogManager(@Nonnull String deployment);
 
   DeploymentLogManager getLogManager(@Nonnull Deployment deployment);

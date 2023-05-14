@@ -25,7 +25,7 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TokenWrapper;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ForeignLeafPsiElement extends LeafPsiElement {
   private ForeignLeafType myForeignType;

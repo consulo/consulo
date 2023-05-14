@@ -17,7 +17,7 @@ package consulo.util.dataholder.keyFMap;
 
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PairElementsFMap implements KeyFMap {
   private final Key key1;

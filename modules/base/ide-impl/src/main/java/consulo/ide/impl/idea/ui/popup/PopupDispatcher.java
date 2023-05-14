@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.disposer.Disposer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

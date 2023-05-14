@@ -22,8 +22,8 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An interface for fast indentation calculation as an alternative to formatter-based logic. Used in editor actions like Enter handling.

@@ -30,8 +30,8 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.NewVirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;

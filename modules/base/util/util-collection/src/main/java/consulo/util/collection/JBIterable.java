@@ -23,8 +23,8 @@ import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.*;
 

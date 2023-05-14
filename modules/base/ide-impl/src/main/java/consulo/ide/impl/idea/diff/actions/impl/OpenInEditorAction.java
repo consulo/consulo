@@ -29,15 +29,15 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class OpenInEditorAction extends EditSourceAction implements DumbAware {
   public static final Key<OpenInEditorAction> KEY = Key.create("DiffOpenInEditorAction");
 
   @Nullable private final Runnable myAfterRunnable;
 
-  public OpenInEditorAction(@javax.annotation.Nullable Runnable afterRunnable) {
+  public OpenInEditorAction(@jakarta.annotation.Nullable Runnable afterRunnable) {
     ActionUtil.copyFrom(this, "EditSource");
     myAfterRunnable = afterRunnable;
   }

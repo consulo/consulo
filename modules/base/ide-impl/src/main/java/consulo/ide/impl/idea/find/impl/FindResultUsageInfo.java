@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiFileRange;
 import consulo.usage.UsageInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FindResultUsageInfo extends UsageInfo {
   private final FindManager myFindManager;

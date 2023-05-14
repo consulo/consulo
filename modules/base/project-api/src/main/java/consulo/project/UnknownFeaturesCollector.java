@@ -25,7 +25,7 @@ import consulo.component.persist.StoragePathMacros;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 

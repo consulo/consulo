@@ -21,8 +21,8 @@ import consulo.diff.content.DocumentContent;
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public abstract class DiffContentFactoryEx extends DiffContentFactory {
 
 
   @Nonnull
-  public abstract DocumentContent create(@javax.annotation.Nullable Project project, @Nonnull String text, @Nonnull FilePath filePath);
+  public abstract DocumentContent create(@jakarta.annotation.Nullable Project project, @Nonnull String text, @Nonnull FilePath filePath);
 
 
   @Nonnull
@@ -43,7 +43,7 @@ public abstract class DiffContentFactoryEx extends DiffContentFactory {
                                               @Nonnull FilePath filePath) throws IOException;
 
   @Nonnull
-  public abstract DiffContent createFromBytes(@javax.annotation.Nullable Project project,
+  public abstract DiffContent createFromBytes(@jakarta.annotation.Nullable Project project,
                                               @Nonnull byte[] content,
                                               @Nonnull VirtualFile highlightFile) throws IOException;
 

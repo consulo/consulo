@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Refreshes file history.
@@ -47,7 +47,7 @@ public class FileHistoryRefresher implements FileHistoryRefresherI {
 
   public FileHistoryRefresher(final VcsHistoryProviderEx vcsHistoryProvider,
                               final FilePath path,
-                              @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
+                              @jakarta.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
                               final AbstractVcs vcs) {
     this((VcsHistoryProvider)vcsHistoryProvider, path, startingRevisionNumber, vcs);
   }

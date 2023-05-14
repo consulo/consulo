@@ -18,16 +18,14 @@ package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.IndentInfo;
 import consulo.util.xml.serializer.InvalidDataException;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class IndentData {
   private final int myIndentSpaces;
   private final int mySpaces;
 
-  public IndentData(@Nonnegative int indentSpaces, @Nonnegative int spaces) {
+  public IndentData(int indentSpaces, int spaces) {
     assert indentSpaces >= 0 : "Indent spaces can't be negative";
     myIndentSpaces = indentSpaces;
     mySpaces = spaces;

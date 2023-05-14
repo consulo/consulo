@@ -3,8 +3,8 @@ package consulo.externalSystem.model.task;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;

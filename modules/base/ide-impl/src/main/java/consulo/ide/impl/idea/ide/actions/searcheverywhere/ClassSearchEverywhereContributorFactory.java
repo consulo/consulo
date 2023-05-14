@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ClassSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {

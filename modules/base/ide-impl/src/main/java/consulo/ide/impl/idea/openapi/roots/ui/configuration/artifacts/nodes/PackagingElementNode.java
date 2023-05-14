@@ -33,8 +33,8 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**

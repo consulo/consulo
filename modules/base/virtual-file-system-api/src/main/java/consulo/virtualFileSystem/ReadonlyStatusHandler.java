@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 @ServiceAPI(ComponentScope.PROJECT)

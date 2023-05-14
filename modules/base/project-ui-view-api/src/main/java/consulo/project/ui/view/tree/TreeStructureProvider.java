@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

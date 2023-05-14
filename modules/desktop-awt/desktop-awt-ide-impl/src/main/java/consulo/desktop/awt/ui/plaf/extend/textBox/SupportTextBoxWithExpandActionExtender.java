@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.plaf.extend.textBox;
 
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.text.JTextComponent;
 import java.util.function.Function;
 

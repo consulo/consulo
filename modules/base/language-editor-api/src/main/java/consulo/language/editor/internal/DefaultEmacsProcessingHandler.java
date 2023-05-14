@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.editor.action.EmacsProcessingHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

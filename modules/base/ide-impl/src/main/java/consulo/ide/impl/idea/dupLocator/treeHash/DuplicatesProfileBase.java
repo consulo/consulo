@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.TokenSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene.Kudelevsky

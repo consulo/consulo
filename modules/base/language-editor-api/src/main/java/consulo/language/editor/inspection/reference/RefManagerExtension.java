@@ -10,8 +10,8 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;

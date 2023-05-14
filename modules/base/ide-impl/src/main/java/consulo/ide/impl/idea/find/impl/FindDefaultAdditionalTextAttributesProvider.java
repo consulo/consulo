@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.AdditionalTextAttributesProvider;
 import consulo.colorScheme.EditorColorsScheme;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

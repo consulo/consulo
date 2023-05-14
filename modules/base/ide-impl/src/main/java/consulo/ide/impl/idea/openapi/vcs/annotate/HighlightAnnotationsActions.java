@@ -93,7 +93,7 @@ public class HighlightAnnotationsActions {
                              final VirtualFile virtualFile,
                              final FileAnnotation fileAnnotation,
                              final EditorGutterComponentEx gutter,
-                             @javax.annotation.Nullable final VcsFileRevision selectedRevision) {
+                             @jakarta.annotation.Nullable final VcsFileRevision selectedRevision) {
       myBefore = before;
       myProject = project;
       myVirtualFile = virtualFile;

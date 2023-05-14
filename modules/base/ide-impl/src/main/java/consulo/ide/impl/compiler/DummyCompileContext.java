@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DummyCompileContext implements CompileContext {
   protected DummyCompileContext() {
@@ -53,7 +53,7 @@ public class DummyCompileContext implements CompileContext {
   @Override
   public void addMessage(CompilerMessageCategory category,
                          String message,
-                         @javax.annotation.Nullable String url,
+                         @jakarta.annotation.Nullable String url,
                          int lineNum,
                          int columnNum,
                          Navigatable navigatable) {
@@ -119,7 +119,7 @@ public class DummyCompileContext implements CompileContext {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public VirtualFile getOutputForFile(Module module, ContentFolderTypeProvider contentFolderType) {
     return null;

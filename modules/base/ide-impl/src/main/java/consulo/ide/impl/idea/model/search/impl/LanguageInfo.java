@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.ide.impl.idea.lang.LanguageMatcher;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 // from kotlin
 public abstract class LanguageInfo {

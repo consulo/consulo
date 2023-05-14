@@ -24,7 +24,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -41,7 +41,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
   public abstract String getDestinationPath(CompileContext context, VirtualFile sourceFile);
 
   @Override
-  public final void processOutdatedItem(CompileContext context, File file, @javax.annotation.Nullable ValidityState state) {
+  public final void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state) {
     if (state != null) {
       final String destinationPath = ((DestinationFileInfo)state).getDestinationPath();
       new File(destinationPath).delete();

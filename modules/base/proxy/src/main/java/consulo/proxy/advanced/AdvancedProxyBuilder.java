@@ -19,8 +19,8 @@ import consulo.proxy.advanced.internal.AdvancedProxyFacade;
 import consulo.proxy.advanced.internal.impl.bytebuddy.ByteBuddyAdvancedProxyFacade;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.util.Collection;
 import java.util.Objects;

@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 
 import consulo.ui.ex.JBColor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

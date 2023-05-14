@@ -20,7 +20,7 @@ import consulo.credentialStorage.impl.internal.PasswordSafeProvider;
 import consulo.credentialStorage.impl.internal.provider.masterKey.EncryptionUtil;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Base Java-based provider for password safe that assumes a simple key-value storage.

@@ -20,8 +20,8 @@ import consulo.ide.impl.diagram.builder.GraphPositionStrategy;
 import consulo.ui.image.Image;
 import consulo.component.util.pointer.Named;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

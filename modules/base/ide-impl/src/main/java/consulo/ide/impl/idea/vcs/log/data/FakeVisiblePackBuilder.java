@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.vcs.log.graph.collapsing.CollapsedController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.BaseController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.VisibleGraphImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;

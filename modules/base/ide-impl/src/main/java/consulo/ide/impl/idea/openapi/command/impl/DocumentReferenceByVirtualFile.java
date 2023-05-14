@@ -19,8 +19,8 @@ import consulo.document.DocumentReference;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class DocumentReferenceByVirtualFile implements DocumentReference {
   private VirtualFile myFile;

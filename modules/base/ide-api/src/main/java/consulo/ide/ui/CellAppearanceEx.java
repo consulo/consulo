@@ -18,7 +18,7 @@ package consulo.ide.ui;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.ColoredTextContainer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use just Consumer<ColoredTextContainer>")

@@ -26,7 +26,7 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryKind;
 import consulo.application.util.function.Processor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 

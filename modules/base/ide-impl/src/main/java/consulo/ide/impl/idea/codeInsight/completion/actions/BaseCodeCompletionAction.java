@@ -13,7 +13,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.util.PsiUtilBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 

@@ -24,8 +24,8 @@ import consulo.language.impl.psi.CodeFragmentElement;
 import consulo.language.impl.psi.DummyHolderElement;
 import consulo.language.impl.psi.LazyParseablePsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

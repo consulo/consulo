@@ -20,8 +20,8 @@ import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.SuccessResult;
 import consulo.language.LangBundle;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka

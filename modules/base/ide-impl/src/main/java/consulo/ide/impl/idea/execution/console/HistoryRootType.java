@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scratch.RootType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh

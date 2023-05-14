@@ -17,7 +17,7 @@ package consulo.execution.debug.frame;
 
 import consulo.execution.debug.XSourcePosition;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

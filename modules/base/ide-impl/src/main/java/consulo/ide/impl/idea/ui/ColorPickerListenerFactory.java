@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

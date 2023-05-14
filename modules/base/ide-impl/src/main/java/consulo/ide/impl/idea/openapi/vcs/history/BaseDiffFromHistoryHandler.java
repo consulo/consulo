@@ -31,8 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.history.DiffFromHistoryHandler;
 import consulo.versionControlSystem.history.VcsFileRevision;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public abstract class BaseDiffFromHistoryHandler<T extends VcsFileRevision> implements DiffFromHistoryHandler {

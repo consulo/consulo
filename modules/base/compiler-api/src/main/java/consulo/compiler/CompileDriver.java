@@ -19,7 +19,7 @@ import consulo.compiler.scope.CompileScope;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.function.Predicate;
 

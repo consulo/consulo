@@ -11,7 +11,7 @@ import consulo.index.io.StorageException;
 import consulo.index.io.ValueContainer;
 import consulo.language.psi.stub.FileContent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.IntUnaryOperator;

@@ -33,7 +33,7 @@ import consulo.document.Document;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class FontEditorPreview implements PreviewPanel{

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.remote;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

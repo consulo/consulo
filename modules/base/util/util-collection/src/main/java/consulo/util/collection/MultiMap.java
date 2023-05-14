@@ -18,8 +18,8 @@ package consulo.util.collection;
 
 import consulo.util.collection.impl.EmptyIterator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
 

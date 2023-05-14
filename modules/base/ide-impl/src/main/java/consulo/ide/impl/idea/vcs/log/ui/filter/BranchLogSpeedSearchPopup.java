@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class BranchLogSpeedSearchPopup extends FlatSpeedSearchPopup {
   public BranchLogSpeedSearchPopup(@Nonnull ActionGroup actionGroup, @Nonnull DataContext dataContext) {

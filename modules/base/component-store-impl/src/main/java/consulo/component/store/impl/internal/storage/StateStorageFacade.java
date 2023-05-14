@@ -22,8 +22,8 @@ import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

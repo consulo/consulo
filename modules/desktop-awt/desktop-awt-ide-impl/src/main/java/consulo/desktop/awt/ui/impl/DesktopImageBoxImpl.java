@@ -22,7 +22,7 @@ import consulo.ui.ImageBox;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

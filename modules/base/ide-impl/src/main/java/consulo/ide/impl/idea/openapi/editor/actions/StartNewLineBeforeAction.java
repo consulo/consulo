@@ -24,7 +24,7 @@ import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorWriteActionHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 
 /**

@@ -17,7 +17,7 @@ package consulo.compiler.artifact.element;
 
 import consulo.compiler.artifact.ArtifactType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -46,7 +46,7 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType);
 
 }

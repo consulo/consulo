@@ -19,8 +19,8 @@
  */
 package consulo.util.collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class SLRUCache<K, V> extends SLRUMap<K,V> {
   protected SLRUCache(final int protectedQueueSize, final int probationalQueueSize) {

@@ -23,7 +23,7 @@ import consulo.ui.image.Image;
 
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

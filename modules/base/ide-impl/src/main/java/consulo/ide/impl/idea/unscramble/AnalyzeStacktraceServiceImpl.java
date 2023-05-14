@@ -21,7 +21,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

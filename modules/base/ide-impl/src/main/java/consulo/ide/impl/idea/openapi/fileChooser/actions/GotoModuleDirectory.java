@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public final class GotoModuleDirectory extends FileChooserAction {
   @Override

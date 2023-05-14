@@ -22,7 +22,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman Chernyatchik

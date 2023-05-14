@@ -17,7 +17,7 @@
 package consulo.language.impl.internal.ast;
 
 import consulo.language.util.CharTable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /*
  * User: max

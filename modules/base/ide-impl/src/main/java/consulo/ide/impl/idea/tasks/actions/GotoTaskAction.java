@@ -29,7 +29,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;

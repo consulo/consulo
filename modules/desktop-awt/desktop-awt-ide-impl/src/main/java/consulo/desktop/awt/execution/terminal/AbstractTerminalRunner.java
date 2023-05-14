@@ -6,7 +6,7 @@ import com.jediterm.terminal.ui.TerminalWidget;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.ExecutionException;
 
 /**

@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement;
 
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

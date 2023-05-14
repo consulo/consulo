@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.index.io.CompressionUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditorChangeAction extends BasicUndoableAction {
   private final int myOffset;

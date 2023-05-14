@@ -18,7 +18,7 @@ package consulo.desktop.awt.ui.plaf;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.SystemInfo;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

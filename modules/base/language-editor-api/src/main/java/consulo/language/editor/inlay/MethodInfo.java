@@ -16,7 +16,7 @@
  */
 package consulo.language.editor.inlay;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;

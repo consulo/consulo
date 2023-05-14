@@ -26,8 +26,8 @@ import consulo.ui.util.LabeledBuilder;
 import consulo.webBrowser.*;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;

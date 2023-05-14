@@ -27,8 +27,8 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.ui.ex.content.ContentsUtil;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class CloseLogTabAction extends CloseTabToolbarAction {
   @Override

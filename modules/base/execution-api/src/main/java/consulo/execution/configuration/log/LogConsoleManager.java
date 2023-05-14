@@ -18,7 +18,7 @@ package consulo.execution.configuration.log;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.log.ui.AdditionalTabComponentManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 public interface LogConsoleManager extends AdditionalTabComponentManager {

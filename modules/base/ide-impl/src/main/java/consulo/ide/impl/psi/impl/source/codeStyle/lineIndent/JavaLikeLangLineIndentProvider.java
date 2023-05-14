@@ -29,8 +29,8 @@ import consulo.ide.impl.psi.impl.source.codeStyle.SemanticEditorPosition.SyntaxE
 import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.IndentCalculator.BaseLineOffsetCalculator;
 import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.language.codeStyle.Indent.Type;
 import static consulo.language.codeStyle.Indent.Type.*;

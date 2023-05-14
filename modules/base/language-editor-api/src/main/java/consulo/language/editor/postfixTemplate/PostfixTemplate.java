@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.language.editor.internal.postfixTemplate.PostfixTemplateMetaData;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 public abstract class PostfixTemplate {

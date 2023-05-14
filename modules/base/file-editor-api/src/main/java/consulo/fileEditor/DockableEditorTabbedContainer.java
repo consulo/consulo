@@ -17,7 +17,7 @@ package consulo.fileEditor;
 
 import consulo.project.ui.wm.dock.DockContainer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

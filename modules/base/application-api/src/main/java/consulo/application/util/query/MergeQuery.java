@@ -8,7 +8,7 @@ package consulo.application.util.query;
 import consulo.application.util.function.Processor;
 import consulo.util.concurrent.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MergeQuery<T> extends AbstractQuery<T> {
   private final Query<? extends T> myQuery1;

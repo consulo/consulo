@@ -41,7 +41,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {

@@ -39,7 +39,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

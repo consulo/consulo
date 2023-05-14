@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -29,7 +29,7 @@ public class ByNamespaceArrangementEntryMatcher extends AbstractRegexpArrangemen
     super(pattern);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected String getTextToMatch(@Nonnull ArrangementEntry entry) {
     if (entry instanceof NamespaceAwareArrangementEntry) {

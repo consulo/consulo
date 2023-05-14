@@ -19,7 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.HtmlLabel;
 import consulo.ui.LabelOptions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

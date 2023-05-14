@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.internal.laf;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

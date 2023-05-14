@@ -22,7 +22,7 @@ import consulo.index.io.InlineKeyDescriptor;
 import consulo.index.io.KeyDescriptor;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

@@ -22,7 +22,7 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;

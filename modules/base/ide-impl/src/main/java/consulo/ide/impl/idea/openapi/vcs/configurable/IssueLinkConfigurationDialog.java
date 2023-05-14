@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.vcs.IssueNavigationLink;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

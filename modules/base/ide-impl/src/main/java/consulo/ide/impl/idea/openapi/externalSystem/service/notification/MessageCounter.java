@@ -21,8 +21,8 @@ import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import gnu.trove.TObjectIntHashMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

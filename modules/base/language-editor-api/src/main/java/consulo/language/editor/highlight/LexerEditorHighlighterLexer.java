@@ -20,7 +20,7 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.util.lang.CharSequenceSubSequence;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Sergey Evdokimov

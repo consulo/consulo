@@ -21,7 +21,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
   static final NonCancelableIndicator INSTANCE = new NonCancelableIndicator() {

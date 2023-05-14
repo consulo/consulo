@@ -23,7 +23,7 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.externalSystem.model.project.LibraryPathType;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 

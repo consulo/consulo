@@ -28,7 +28,7 @@ import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 

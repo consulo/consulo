@@ -9,7 +9,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartFMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;

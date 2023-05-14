@@ -26,7 +26,7 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface MemberInfoModel<T extends PsiElement, M extends MemberInfoBase<T>> extends MemberInfoChangeListener<T, M> {
   int OK = 0;

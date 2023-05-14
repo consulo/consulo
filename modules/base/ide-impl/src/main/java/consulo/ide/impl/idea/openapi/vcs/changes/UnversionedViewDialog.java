@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 

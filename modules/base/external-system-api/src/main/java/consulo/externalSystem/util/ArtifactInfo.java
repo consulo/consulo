@@ -15,7 +15,7 @@
  */
 package consulo.externalSystem.util;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov

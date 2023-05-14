@@ -20,7 +20,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,

@@ -38,7 +38,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.MultiMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;

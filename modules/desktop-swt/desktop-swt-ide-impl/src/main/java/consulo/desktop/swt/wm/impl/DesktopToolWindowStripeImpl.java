@@ -24,7 +24,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 /**

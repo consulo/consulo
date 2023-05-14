@@ -19,7 +19,7 @@ import consulo.configurable.Configurable;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class DataViewsConfigurable extends SubCompositeConfigurable implements Configurable.NoScroll {
   @Nonnull

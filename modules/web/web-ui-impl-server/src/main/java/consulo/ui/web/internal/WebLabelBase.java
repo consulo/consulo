@@ -23,8 +23,8 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

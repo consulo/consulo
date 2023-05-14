@@ -18,8 +18,8 @@ package consulo.language.editor.completion;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementDecorator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * What to do if there's only one element in completion lookup? Should IDEA show lookup or just insert this element? Call

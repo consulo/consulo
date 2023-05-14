@@ -12,9 +12,9 @@ import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.render.GraphCommitCell;
 import consulo.versionControlSystem.log.util.VcsUserUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.table.AbstractTableModel;
 import java.util.Collection;
 import java.util.Iterator;

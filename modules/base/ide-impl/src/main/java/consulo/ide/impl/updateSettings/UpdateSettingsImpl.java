@@ -28,7 +28,7 @@ import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**

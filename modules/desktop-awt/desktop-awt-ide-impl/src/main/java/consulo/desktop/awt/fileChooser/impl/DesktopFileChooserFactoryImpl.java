@@ -25,8 +25,8 @@ import consulo.ui.TextBox;
 import consulo.desktop.awt.ui.impl.textBox.TextBoxWithTextField;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 @Singleton

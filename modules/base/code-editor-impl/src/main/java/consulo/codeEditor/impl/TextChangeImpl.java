@@ -19,7 +19,7 @@ import consulo.codeEditor.TextChange;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Default {@link TextChange} implementation with mutable state.

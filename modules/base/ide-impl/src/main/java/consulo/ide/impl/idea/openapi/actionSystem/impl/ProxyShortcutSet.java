@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.keymap.KeymapManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Please do not use this class outside impl package!!!

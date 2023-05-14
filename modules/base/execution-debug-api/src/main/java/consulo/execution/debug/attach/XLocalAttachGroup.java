@@ -19,7 +19,7 @@ import consulo.process.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link XAttachProcessPresentationGroup} (will be removed in 2020.1)

@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Please, use the {@code EnterBetweenBracesDelegate} language-specific implementation instead.

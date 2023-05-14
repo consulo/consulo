@@ -20,8 +20,8 @@ import consulo.annotation.component.TopicAPI;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.RunnerAndConfigurationSettings;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.EventListener;
 

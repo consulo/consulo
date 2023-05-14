@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.history.core.revisions;
 
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.util.lang.Pair;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,12 +35,12 @@ public abstract class Revision {
 
   public abstract long getTimestamp();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Long getChangeSetId() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getChangeSetName() {
     return null;
   }

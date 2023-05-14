@@ -17,7 +17,7 @@ package consulo.versionControlSystem.log;
 
 import consulo.versionControlSystem.log.VcsLogProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class VcsLogProperties {
   public static class VcsLogProperty<T> {

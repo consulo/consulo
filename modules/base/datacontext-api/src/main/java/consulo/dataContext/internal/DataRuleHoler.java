@@ -18,7 +18,7 @@ package consulo.dataContext.internal;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

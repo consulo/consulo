@@ -19,7 +19,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.history.LongRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 

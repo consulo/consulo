@@ -2,7 +2,7 @@ package consulo.desktop.awt.ui.plaf;
 
 import consulo.ui.ex.awt.BuildInLookAndFeel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 

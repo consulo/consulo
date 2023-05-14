@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.vcs.log.data;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Date;
 

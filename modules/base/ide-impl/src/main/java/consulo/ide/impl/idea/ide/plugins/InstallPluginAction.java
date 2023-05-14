@@ -36,8 +36,8 @@ import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

@@ -19,7 +19,7 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

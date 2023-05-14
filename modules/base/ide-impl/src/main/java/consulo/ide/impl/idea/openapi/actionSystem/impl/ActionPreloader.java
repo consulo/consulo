@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

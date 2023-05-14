@@ -29,8 +29,8 @@ import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +52,14 @@ public class ProblemsHolder {
 
   public void registerProblem(@Nonnull PsiElement psiElement,
                               @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
-                              @javax.annotation.Nullable LocalQuickFix... fixes) {
+                              @jakarta.annotation.Nullable LocalQuickFix... fixes) {
     registerProblem(psiElement, descriptionTemplate, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, fixes);
   }
 
   public void registerProblem(@Nonnull PsiElement psiElement,
                               @Nonnull @Nls(capitalization = Nls.Capitalization.Sentence) String descriptionTemplate,
                               @Nonnull ProblemHighlightType highlightType,
-                              @javax.annotation.Nullable LocalQuickFix... fixes) {
+                              @jakarta.annotation.Nullable LocalQuickFix... fixes) {
     registerProblem(myManager.createProblemDescriptor(psiElement, descriptionTemplate, myOnTheFly, fixes, highlightType));
   }
 
@@ -155,7 +155,7 @@ public class ProblemsHolder {
                               @Nonnull final String message,
                               @Nonnull ProblemHighlightType highlightType,
                               @Nullable TextRange rangeInElement,
-                              @javax.annotation.Nullable LocalQuickFix... fixes) {
+                              @jakarta.annotation.Nullable LocalQuickFix... fixes) {
 
     final ProblemDescriptor descriptor = myManager.createProblemDescriptor(psiElement, rangeInElement, message, highlightType, myOnTheFly, fixes);
     registerProblem(descriptor);

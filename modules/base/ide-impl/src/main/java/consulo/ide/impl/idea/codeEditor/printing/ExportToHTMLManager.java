@@ -39,7 +39,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;

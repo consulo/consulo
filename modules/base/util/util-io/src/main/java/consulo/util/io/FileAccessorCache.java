@@ -18,7 +18,7 @@ package consulo.util.io;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.SLRUMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

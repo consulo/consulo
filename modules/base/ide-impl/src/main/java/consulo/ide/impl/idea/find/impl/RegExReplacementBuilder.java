@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

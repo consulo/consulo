@@ -20,7 +20,7 @@ import consulo.util.lang.function.ThrowableConsumer;
 import consulo.application.util.concurrent.QueueProcessor;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

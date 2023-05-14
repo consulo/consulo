@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRequest {
@@ -103,7 +103,7 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     return myAppliedPatch;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public String getTitle() {
     return myWindowTitle;

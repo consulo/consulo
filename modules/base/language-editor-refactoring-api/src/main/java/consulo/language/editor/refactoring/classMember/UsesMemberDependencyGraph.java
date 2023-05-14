@@ -30,7 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

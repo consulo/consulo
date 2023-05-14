@@ -24,8 +24,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
 import consulo.compiler.artifact.element.PackagingFileFilter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public abstract class IncrementalCompilerInstructionCreatorBase implements Incre
   }
 
   @Override
-  public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @javax.annotation.Nullable PackagingFileFilter filter) {
+  public void addDirectoryCopyInstructions(@Nonnull VirtualFile directory, @jakarta.annotation.Nullable PackagingFileFilter filter) {
     final ProjectFileIndex index = ProjectRootManager.getInstance(myContext.getCompileContext().getProject()).getFileIndex();
     final boolean copyExcluded = index.isExcluded(directory);
     collectInstructionsRecursively(directory, this, filter, index, copyExcluded);

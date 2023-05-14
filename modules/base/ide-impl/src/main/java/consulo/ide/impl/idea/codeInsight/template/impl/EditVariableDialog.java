@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.EditableModel;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

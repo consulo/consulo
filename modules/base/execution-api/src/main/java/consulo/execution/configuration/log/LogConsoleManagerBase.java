@@ -31,8 +31,8 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;

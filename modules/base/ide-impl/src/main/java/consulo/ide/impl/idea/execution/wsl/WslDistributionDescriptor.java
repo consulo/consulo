@@ -6,7 +6,7 @@ import consulo.process.local.ProcessOutput;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;

@@ -19,8 +19,8 @@ import consulo.application.Application;
 import consulo.project.ProjectManager;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

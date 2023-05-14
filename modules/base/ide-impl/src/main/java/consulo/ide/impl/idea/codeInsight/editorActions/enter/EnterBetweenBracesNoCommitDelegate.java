@@ -8,7 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBracesDelegate {
   @Override

@@ -21,8 +21,8 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface FileType {
   FileType[] EMPTY_ARRAY = new FileType[0];

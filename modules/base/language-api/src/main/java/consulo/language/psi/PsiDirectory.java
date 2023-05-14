@@ -21,8 +21,8 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a file system directory and allows to access its contents.

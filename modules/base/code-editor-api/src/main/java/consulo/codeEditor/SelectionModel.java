@@ -6,8 +6,8 @@ import consulo.disposer.Disposer;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.colorScheme.TextAttributes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides services for selecting text in the IDE's text editor and retrieving information about the selection.

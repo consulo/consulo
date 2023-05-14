@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 

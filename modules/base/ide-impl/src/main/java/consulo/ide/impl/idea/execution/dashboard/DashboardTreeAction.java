@@ -22,7 +22,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,7 +117,7 @@ public abstract class DashboardTreeAction<T, C extends TreeContent> extends AnAc
     return true;
   }
 
-  protected void updatePresentation(@Nonnull Presentation presentation, @javax.annotation.Nullable T node) {
+  protected void updatePresentation(@Nonnull Presentation presentation, @jakarta.annotation.Nullable T node) {
   }
 
   protected void doActionPerformed(@Nonnull C content, AnActionEvent e, List<T> nodes) {

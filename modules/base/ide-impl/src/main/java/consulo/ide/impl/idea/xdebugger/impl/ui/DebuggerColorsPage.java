@@ -27,8 +27,8 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.ui.DebuggerColors;
 import consulo.configurable.internal.ConfigurableWeight;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

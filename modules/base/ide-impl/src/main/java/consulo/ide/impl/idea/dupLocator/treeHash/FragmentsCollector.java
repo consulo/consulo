@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.dupLocator.treeHash;
 
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

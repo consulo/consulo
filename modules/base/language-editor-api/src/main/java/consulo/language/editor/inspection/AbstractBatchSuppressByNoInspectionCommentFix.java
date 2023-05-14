@@ -31,8 +31,8 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -159,7 +159,7 @@ public abstract class AbstractBatchSuppressByNoInspectionCommentFix implements C
     return false;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected List<? extends PsiElement> getCommentsFor(@Nonnull final PsiElement container) {
     final PsiElement prev = PsiTreeUtil.skipSiblingsBackward(container, PsiWhiteSpace.class);
     if (prev == null) {

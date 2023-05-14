@@ -39,7 +39,7 @@ import consulo.execution.test.export.ExportTestResultsAction;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

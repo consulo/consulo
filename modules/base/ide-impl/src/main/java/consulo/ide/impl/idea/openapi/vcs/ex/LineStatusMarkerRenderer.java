@@ -30,8 +30,8 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.function.PairConsumer;
 import consulo.versionControlSystem.VcsBundle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;

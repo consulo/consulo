@@ -4,7 +4,7 @@ package consulo.build.ui;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 //@ApiStatus.Experimental
 public interface BuildProgressObservable {

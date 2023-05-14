@@ -31,12 +31,12 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class ShowLineStatusRangeDiffAction extends BaseLineStatusRangeAction {
-  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @javax.annotation.Nullable Editor editor) {
+  public ShowLineStatusRangeDiffAction(@Nonnull LineStatusTracker lineStatusTracker, @Nonnull Range range, @jakarta.annotation.Nullable Editor editor) {
     super(lineStatusTracker, range);
     ActionUtil.copyFrom(this, "ChangesView.Diff");
   }

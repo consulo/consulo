@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 import java.util.*;

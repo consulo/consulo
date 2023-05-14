@@ -34,8 +34,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,7 +93,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     return null;
   }
 
-  public List<? extends AnAction> getAdditionalPopupMenuActions(@Nonnull XLineBreakpoint<P> breakpoint, @javax.annotation.Nullable XDebugSession currentSession) {
+  public List<? extends AnAction> getAdditionalPopupMenuActions(@Nonnull XLineBreakpoint<P> breakpoint, @jakarta.annotation.Nullable XDebugSession currentSession) {
     return Collections.emptyList();
   }
 

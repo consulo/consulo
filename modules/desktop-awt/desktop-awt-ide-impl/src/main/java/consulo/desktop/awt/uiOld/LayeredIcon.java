@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;

@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.BitUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.io.File;
 import java.util.List;

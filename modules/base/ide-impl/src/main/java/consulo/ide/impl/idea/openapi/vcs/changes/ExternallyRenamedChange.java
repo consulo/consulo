@@ -23,7 +23,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ExternallyRenamedChange extends Change {
   private String myRenamedTargetName;

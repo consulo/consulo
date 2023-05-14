@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.popup.async;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.SpeedSearchFilter;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.concurrent.Callable;
 

@@ -30,8 +30,8 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ref.Ref;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Modifier.MODIFIER_AS_TYPE;

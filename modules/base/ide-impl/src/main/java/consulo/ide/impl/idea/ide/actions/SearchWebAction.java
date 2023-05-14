@@ -15,7 +15,7 @@ import consulo.webBrowser.WebSearchEngine;
 import consulo.webBrowser.WebSearchOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

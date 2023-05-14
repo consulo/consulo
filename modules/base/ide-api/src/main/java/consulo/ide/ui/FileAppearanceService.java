@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 

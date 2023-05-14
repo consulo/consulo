@@ -5,9 +5,9 @@ import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
 import consulo.project.Project;
 import consulo.content.scope.NamedScope;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;

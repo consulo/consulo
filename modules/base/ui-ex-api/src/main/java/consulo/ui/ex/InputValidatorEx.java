@@ -17,8 +17,8 @@ package consulo.ui.ex;
 
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to display error text in an input dialog for input strings that do not match

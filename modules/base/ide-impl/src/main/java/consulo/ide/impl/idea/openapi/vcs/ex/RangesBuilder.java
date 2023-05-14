@@ -23,7 +23,7 @@ import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;

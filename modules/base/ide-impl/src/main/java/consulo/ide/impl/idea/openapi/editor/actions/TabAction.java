@@ -46,8 +46,8 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class TabAction extends EditorAction {
   public TabAction() {

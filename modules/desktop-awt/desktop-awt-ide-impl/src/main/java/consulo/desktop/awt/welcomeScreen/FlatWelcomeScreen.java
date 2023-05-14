@@ -35,7 +35,7 @@ import consulo.ide.impl.welcomeScreen.WelcomeScreenSlideAction;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

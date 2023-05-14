@@ -16,7 +16,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;

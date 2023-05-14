@@ -23,7 +23,7 @@ package consulo.execution.ui.console;
 import consulo.content.scope.SearchScope;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ConsoleFilterProviderEx extends ConsoleFilterProvider {
   Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope);

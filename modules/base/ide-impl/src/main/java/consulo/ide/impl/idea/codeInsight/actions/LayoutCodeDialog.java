@@ -26,9 +26,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class LayoutCodeDialog extends DialogWrapper {

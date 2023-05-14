@@ -18,7 +18,7 @@ package consulo.language.editor.impl.internal.inspection;
 import consulo.annotation.component.ExtensionImpl;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class SyntaxErrorInspection extends DefaultHighlightVisitorBasedInspection {

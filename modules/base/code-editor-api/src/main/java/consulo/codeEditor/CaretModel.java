@@ -7,8 +7,8 @@ import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.TextAttributes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

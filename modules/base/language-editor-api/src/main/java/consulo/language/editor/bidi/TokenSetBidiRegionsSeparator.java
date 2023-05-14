@@ -18,7 +18,7 @@ package consulo.language.editor.bidi;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implementation of {@link BidiRegionsSeparator} allowing to define a number of token sets, tokens within each set will be processed

@@ -25,8 +25,8 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.util.lang.SystemProperties;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;

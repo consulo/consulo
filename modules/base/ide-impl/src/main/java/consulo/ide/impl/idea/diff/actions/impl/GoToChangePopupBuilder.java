@@ -28,7 +28,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -102,7 +102,7 @@ public class GoToChangePopupBuilder {
     private class MyListPopupStep extends BaseListPopupStep<DiffRequestProducer> {
       private final Project myProject;
 
-      public MyListPopupStep(@javax.annotation.Nullable Project project) {
+      public MyListPopupStep(@jakarta.annotation.Nullable Project project) {
         super("Go To Change", myChain.getRequests());
         setDefaultOptionIndex(myChain.getIndex());
         myProject = project;

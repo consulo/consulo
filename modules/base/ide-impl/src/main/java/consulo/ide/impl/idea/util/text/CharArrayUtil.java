@@ -21,8 +21,8 @@ import consulo.util.io.CharSequenceReader;
 import consulo.util.io.UnsyncCharArrayReader;
 import consulo.util.lang.ImmutableCharSequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;

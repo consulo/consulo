@@ -34,8 +34,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ProgramRunnerUtil {
   private static final Logger LOG = Logger.getInstance(ProgramRunnerUtil.class);

@@ -3,7 +3,7 @@ package consulo.language.editor.inspection;
 
 import consulo.language.editor.intention.IntentionAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Interface for {@link IntentionAction intentions} and {@link LocalQuickFix quick fixes}.

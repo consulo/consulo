@@ -8,7 +8,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.ide.impl.psi.search.scope.packageSet.FilteredNamedScope;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class ChangeListScope extends FilteredNamedScope implements WeighedItem {
   static final

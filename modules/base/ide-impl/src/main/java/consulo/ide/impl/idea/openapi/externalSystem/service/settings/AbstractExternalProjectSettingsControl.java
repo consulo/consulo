@@ -23,7 +23,7 @@ import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Templates class for managing single external project settings (single ide project might contain multiple bindings to external

@@ -23,7 +23,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

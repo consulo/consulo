@@ -20,7 +20,7 @@
 package consulo.language.file.inject;
 
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface VirtualFileWindow {
   @Nonnull

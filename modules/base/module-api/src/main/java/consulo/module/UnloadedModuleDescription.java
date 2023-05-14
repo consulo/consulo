@@ -16,7 +16,7 @@
 package consulo.module;
 
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

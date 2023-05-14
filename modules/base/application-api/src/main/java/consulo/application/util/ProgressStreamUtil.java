@@ -18,8 +18,8 @@ package consulo.application.util;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

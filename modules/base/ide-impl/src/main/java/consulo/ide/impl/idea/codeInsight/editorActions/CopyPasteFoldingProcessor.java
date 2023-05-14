@@ -25,7 +25,7 @@ import consulo.document.RangeMarker;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;

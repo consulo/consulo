@@ -18,7 +18,7 @@ package consulo.desktop.swt.ui.impl.image;
 import consulo.ui.image.Image;
 import org.eclipse.swt.graphics.GC;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

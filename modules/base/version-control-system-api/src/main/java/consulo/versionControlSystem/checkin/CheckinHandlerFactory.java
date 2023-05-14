@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.CommitContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Factory which provides callbacks to run before and after checkin operations.

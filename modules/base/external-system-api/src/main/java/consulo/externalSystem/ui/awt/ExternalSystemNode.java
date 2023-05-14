@@ -17,7 +17,7 @@ package consulo.externalSystem.ui.awt;
 
 import consulo.externalSystem.ui.ExternalSystemNodeDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**

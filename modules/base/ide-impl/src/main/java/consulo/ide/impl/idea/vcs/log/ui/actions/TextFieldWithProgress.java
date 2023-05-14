@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.util.textCompletion.TextCompletionProvider;
 import consulo.ide.impl.idea.util.textCompletion.TextFieldWithCompletion;
 import consulo.ui.ex.awt.AsyncProcessIcon;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

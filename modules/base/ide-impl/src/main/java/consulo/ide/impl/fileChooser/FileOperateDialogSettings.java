@@ -27,8 +27,8 @@ import consulo.component.persist.Storage;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

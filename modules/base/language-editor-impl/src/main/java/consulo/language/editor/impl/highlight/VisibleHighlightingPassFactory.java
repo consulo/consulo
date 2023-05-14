@@ -22,7 +22,7 @@ package consulo.language.editor.impl.highlight;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.document.util.ProperTextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

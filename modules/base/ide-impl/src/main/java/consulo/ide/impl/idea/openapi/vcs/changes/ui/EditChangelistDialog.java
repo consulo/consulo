@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

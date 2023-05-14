@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.ui.ex.awt.HintHint;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

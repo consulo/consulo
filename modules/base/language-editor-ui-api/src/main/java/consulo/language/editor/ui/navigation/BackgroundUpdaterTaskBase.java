@@ -15,8 +15,8 @@ import consulo.usage.UsageView;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {

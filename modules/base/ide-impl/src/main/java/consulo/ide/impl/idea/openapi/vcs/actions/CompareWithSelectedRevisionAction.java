@@ -163,7 +163,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
   }
 
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static VcsFileRevision getRevisionAt(final TreeTableView treeTable, final int index) {
     final List items = treeTable.getItems();
     if (items.size() <= index) {

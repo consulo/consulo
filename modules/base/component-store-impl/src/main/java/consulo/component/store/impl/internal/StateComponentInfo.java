@@ -23,8 +23,8 @@ import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

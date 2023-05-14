@@ -20,8 +20,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class TreeElement extends UserDataHolderBase implements ASTNode, Cloneable {
   public static final TreeElement[] EMPTY_ARRAY = new TreeElement[0];

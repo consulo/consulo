@@ -16,7 +16,7 @@
 package consulo.webBrowser;
 
 import consulo.configurable.Configurable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

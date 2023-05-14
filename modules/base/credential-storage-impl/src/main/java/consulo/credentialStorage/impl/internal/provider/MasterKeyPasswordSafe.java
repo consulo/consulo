@@ -29,7 +29,7 @@ import consulo.credentialStorage.impl.internal.ui.ResetPasswordDialog;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;

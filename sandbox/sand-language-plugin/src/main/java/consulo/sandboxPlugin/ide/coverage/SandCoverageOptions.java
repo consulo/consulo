@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.coverage.CoverageOptions;
 import consulo.configurable.Configurable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -22,8 +22,8 @@ import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 

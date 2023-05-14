@@ -10,7 +10,7 @@ import consulo.process.local.BaseProcessHandler;
 import consulo.process.local.CapturingProcessAdapter;
 import consulo.process.local.ProcessOutput;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 public class CapturingProcessRunner {

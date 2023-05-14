@@ -25,7 +25,7 @@ import consulo.language.editor.template.macro.MacroParser;
 import consulo.language.editor.template.Variable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 

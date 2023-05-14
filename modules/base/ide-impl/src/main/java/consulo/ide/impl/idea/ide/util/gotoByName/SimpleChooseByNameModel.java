@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

@@ -45,8 +45,8 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import java.util.*;

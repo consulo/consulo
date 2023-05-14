@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.ide.actions.runAnything.items;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RunAnythingActionItem<T extends AnAction> extends RunAnythingItemBase {
   @Nonnull

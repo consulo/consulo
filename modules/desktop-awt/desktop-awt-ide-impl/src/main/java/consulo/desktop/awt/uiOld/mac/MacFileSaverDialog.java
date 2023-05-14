@@ -28,7 +28,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.io.File;
 

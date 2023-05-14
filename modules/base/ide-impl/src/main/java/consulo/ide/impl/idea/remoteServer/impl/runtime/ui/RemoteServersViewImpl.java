@@ -11,7 +11,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.build.events.impl;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FinishBuildEvent;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka

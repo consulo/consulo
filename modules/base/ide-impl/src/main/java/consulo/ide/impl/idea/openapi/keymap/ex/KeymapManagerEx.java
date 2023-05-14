@@ -20,7 +20,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.component.persist.scheme.SchemeManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 

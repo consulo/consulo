@@ -23,8 +23,8 @@ import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactEditor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

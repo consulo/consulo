@@ -12,7 +12,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     myActionPlace = ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION;
   }
 
-  protected void fillActions(@javax.annotation.Nullable final Project project,
+  protected void fillActions(@jakarta.annotation.Nullable final Project project,
                              @Nonnull final DefaultActionGroup group,
                              @Nonnull final DataContext dataContext) {
 
@@ -58,8 +58,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
   private void fillVcsPopup(@Nonnull final Project project,
                                     @Nonnull final DefaultActionGroup group,
-                                    @javax.annotation.Nullable final DataContext dataContext,
-                                    @javax.annotation.Nullable final AbstractVcs vcs) {
+                                    @jakarta.annotation.Nullable final DataContext dataContext,
+                                    @jakarta.annotation.Nullable final AbstractVcs vcs) {
 
     if (vcs != null) {
       // replace general vcs actions if necessary
@@ -84,8 +84,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
   private void fillGeneralVcsPopup(@Nonnull final Project project,
                                    @Nonnull final DefaultActionGroup group,
-                                   @javax.annotation.Nullable final DataContext dataContext,
-                                   @javax.annotation.Nullable final AbstractVcs vcs) {
+                                   @jakarta.annotation.Nullable final DataContext dataContext,
+                                   @jakarta.annotation.Nullable final AbstractVcs vcs) {
 
     // include all custom actions in general popup
     final List<AnAction> actions = new ArrayList<AnAction>();
@@ -123,7 +123,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
 
   private void fillNonInVcsActions(@Nonnull final Project project,
                                    @Nonnull final DefaultActionGroup group,
-                                   @javax.annotation.Nullable final DataContext dataContext) {
+                                   @jakarta.annotation.Nullable final DataContext dataContext) {
     // add custom vcs actions
     for (VcsQuickListContentProvider provider : VcsQuickListContentProvider.EP_NAME.getExtensionList()) {
       final List<AnAction> actions = provider.getNotInVcsActions(project, dataContext);
@@ -153,7 +153,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
   }
 
-  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @javax.annotation.Nullable final DataContext dataContext) {
+  private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull final Project project, @jakarta.annotation.Nullable final DataContext dataContext) {
     final AbstractVcs[] activeVcss = getActiveVCSs(project);
     if (activeVcss.length == 0) {
       // no vcs
@@ -193,7 +193,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     addSeparator(toGroup, null);
   }
 
-  private void addSeparator(final DefaultActionGroup toGroup, @javax.annotation.Nullable final String title) {
+  private void addSeparator(final DefaultActionGroup toGroup, @jakarta.annotation.Nullable final String title) {
     final AnSeparator separator = title == null ? new AnSeparator() : new AnSeparator(title);
     toGroup.add(separator);
   }

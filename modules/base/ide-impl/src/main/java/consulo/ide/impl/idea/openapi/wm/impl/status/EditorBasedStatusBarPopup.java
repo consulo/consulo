@@ -46,8 +46,8 @@ import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

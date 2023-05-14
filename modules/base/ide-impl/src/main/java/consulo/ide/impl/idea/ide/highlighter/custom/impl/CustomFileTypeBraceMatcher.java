@@ -24,8 +24,8 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.internal.PairedBraceMatcherAdapter;
 import consulo.language.plain.PlainTextLanguage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.language.internal.custom.CustomHighlighterTokenType.*;
 

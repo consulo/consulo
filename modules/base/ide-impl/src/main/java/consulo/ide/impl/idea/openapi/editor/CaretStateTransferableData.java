@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferableData;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;

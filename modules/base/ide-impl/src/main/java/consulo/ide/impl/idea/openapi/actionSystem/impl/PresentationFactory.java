@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.UIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 

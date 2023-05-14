@@ -21,7 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LocalQuickFixAsIntentionAdapter implements SyntheticIntentionAction {
   private final LocalQuickFix myFix;

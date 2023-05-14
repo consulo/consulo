@@ -22,7 +22,7 @@ package consulo.ui.ex.awt.speedSearch;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;

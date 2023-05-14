@@ -25,7 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

@@ -5,7 +5,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum ProblemHighlightType {
 

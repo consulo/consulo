@@ -15,8 +15,8 @@
  */
 package consulo.diff.request;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;

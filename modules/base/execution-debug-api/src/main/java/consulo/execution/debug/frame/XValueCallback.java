@@ -1,6 +1,6 @@
 package consulo.execution.debug.frame;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface XValueCallback {
   /**

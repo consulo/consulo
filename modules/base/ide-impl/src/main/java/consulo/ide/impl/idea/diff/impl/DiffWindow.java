@@ -19,8 +19,8 @@ import consulo.diff.DiffDialogHints;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class DiffWindow extends DiffWindowBase {
   @Nonnull

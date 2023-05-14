@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

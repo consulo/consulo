@@ -40,8 +40,8 @@ import consulo.util.rmi.RemoteDeadHand;
 import consulo.util.rmi.RemoteServer;
 import consulo.util.rmi.RemoteUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

@@ -17,7 +17,7 @@ package consulo.codeEditor;
 
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Represents a visual position in the editor. Visual positions take folding into account -

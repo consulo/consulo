@@ -18,7 +18,7 @@ package consulo.language.editor.highlight;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This class is a data structure specialized for working with the indexed segments, i.e. it holds numerous mappings like

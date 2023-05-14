@@ -20,15 +20,15 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ChangeListUtil {
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static LocalChangeList getPredefinedChangeList(@Nonnull String defaultName, @Nonnull ChangeListManager changeListManager) {
     final LocalChangeList sameNamedList = changeListManager.findChangeList(defaultName);
     if (sameNamedList != null) return sameNamedList;

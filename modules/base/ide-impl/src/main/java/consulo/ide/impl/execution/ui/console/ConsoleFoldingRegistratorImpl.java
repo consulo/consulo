@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.execution.ui.console.ConsoleFoldingContributor;
 import consulo.execution.ui.console.ConsoleFoldingRegistrator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

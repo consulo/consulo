@@ -47,8 +47,8 @@ import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;

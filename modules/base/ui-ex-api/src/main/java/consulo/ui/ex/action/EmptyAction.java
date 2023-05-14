@@ -20,8 +20,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

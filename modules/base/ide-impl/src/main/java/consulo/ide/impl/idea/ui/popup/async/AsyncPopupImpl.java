@@ -11,8 +11,8 @@ import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

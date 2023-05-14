@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ide.impl.idea.vcs.VcsShowToolWindowTabAction;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class VcsShowLogAction extends VcsShowToolWindowTabAction {
   @Nonnull

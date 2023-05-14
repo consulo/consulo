@@ -20,8 +20,8 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @SuppressWarnings({"deprecation"})
 public class DefaultStateSerializer {

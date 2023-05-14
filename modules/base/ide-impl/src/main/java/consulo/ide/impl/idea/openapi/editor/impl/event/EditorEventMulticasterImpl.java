@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {

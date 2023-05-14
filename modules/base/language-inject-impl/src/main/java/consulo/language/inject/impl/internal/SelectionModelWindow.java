@@ -13,8 +13,8 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.inject.DocumentWindow;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 class SelectionModelWindow implements SelectionModel {
   private final SelectionModel myHostModel;

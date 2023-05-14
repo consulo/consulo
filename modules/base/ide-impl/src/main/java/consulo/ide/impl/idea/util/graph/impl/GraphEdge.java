@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.graph.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

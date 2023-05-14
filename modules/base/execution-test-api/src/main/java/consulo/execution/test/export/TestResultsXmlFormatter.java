@@ -34,7 +34,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

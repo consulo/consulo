@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -50,7 +50,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     init();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());

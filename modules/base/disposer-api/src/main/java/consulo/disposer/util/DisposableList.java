@@ -18,7 +18,7 @@ package consulo.disposer.util;
 import consulo.disposer.Disposable;
 import consulo.disposer.internal.DisposerInternal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

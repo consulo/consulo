@@ -25,8 +25,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class SmartRefElementPointerImpl implements SmartRefElementPointer {
   public static final String FQNAME_ATTR = "FQNAME";

@@ -18,7 +18,7 @@ package consulo.language.codeStyle;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

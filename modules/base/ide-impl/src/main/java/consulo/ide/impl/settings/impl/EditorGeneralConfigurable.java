@@ -58,8 +58,8 @@ import consulo.ui.util.LabeledBuilder;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

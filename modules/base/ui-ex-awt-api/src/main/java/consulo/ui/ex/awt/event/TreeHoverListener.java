@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.event;
 import consulo.ui.ex.awt.util.RenderingUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

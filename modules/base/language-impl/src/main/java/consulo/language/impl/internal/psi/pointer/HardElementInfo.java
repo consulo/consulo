@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class HardElementInfo extends SmartPointerElementInfo {
   @Nonnull

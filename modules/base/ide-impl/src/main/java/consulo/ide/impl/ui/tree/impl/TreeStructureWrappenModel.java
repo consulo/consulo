@@ -23,8 +23,8 @@ import consulo.application.AccessRule;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Function;
 
 /**

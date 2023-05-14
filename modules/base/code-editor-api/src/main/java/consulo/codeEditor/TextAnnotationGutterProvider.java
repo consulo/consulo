@@ -20,7 +20,7 @@ import consulo.colorScheme.EditorFontType;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

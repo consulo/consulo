@@ -34,7 +34,7 @@ import consulo.ui.ex.action.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.*;

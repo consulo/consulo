@@ -3,8 +3,8 @@ package consulo.execution.coverage;
 import consulo.project.Project;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.rt.coverage.data.ProjectData;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik

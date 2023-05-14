@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.editor.ex;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.FocusChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author tav

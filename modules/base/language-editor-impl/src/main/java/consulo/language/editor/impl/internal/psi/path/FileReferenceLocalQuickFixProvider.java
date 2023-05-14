@@ -21,7 +21,7 @@ import consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider;
 import consulo.language.psi.path.FileReference;
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
 

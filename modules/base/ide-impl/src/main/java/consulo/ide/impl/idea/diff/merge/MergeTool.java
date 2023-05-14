@@ -25,8 +25,8 @@ import consulo.ide.impl.idea.openapi.util.BooleanGetter;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public interface MergeTool {
     @Nonnull
     JComponent getComponent();
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     JComponent getPreferredFocusedComponent();
 
     /**
@@ -79,7 +79,7 @@ public interface MergeTool {
 
   class ToolbarComponents {
     @Nullable public List<AnAction> toolbarActions;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public JComponent statusPanel;
 
     /**

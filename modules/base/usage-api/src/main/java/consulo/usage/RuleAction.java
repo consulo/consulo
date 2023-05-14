@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
 import consulo.usage.rule.UsageFilteringRuleListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

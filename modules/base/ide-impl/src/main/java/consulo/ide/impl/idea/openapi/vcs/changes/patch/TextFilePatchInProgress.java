@@ -34,7 +34,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.SimpleContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;

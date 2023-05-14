@@ -48,8 +48,8 @@ import consulo.util.concurrent.ActionCallback;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;
 import java.awt.*;

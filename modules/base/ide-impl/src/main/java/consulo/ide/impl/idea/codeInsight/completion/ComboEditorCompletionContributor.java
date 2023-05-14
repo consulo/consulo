@@ -27,7 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.ui.awt.StringComboboxEditor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

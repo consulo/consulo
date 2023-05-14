@@ -8,7 +8,7 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.ThreeStateCheckBox;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;

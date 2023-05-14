@@ -17,7 +17,7 @@ package consulo.util.lang;
 
 import consulo.util.lang.CharArrayCharSequence;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;

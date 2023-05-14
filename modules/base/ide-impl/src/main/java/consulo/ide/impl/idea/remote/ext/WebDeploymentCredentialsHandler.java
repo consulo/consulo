@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.remote.ext;
 import consulo.ide.impl.idea.remote.RemoteCredentials;
 import consulo.ide.impl.idea.remote.WebDeploymentCredentialsHolder;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class WebDeploymentCredentialsHandler extends RemoteCredentialsHandlerBase<WebDeploymentCredentialsHolder> {
 

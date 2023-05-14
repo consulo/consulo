@@ -15,7 +15,7 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

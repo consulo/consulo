@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.ProjectBundle;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

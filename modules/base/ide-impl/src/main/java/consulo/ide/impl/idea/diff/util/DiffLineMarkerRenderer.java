@@ -23,7 +23,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

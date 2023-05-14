@@ -24,8 +24,8 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class VcsGuess {
 
@@ -47,7 +47,7 @@ public class VcsGuess {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public AbstractVcs getVcsForDirty(@Nonnull FilePath filePath) {
     if (filePath.isNonLocal()) {
       return null;

@@ -3,7 +3,7 @@ package consulo.externalSystem.model.project;
 import consulo.externalSystem.service.project.ExternalEntityData;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implementations of this interface are not obliged to be thread-safe.

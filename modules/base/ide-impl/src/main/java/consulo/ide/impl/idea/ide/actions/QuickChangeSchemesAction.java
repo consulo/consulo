@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

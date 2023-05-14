@@ -19,7 +19,7 @@ import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

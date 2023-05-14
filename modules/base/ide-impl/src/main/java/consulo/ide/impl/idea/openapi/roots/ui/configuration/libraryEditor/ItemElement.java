@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.http.HttpFileSystem;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 

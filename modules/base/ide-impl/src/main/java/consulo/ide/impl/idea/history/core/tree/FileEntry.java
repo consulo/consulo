@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.history.core.tree;
 import consulo.ide.impl.idea.history.core.Content;
 import consulo.ide.impl.idea.history.core.StoredContent;
 import consulo.ide.impl.idea.history.core.revisions.Difference;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;

@@ -15,8 +15,8 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;

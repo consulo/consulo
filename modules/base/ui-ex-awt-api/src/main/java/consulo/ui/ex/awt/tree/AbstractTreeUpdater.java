@@ -30,7 +30,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;

@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

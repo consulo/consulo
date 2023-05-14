@@ -3,7 +3,7 @@ package consulo.ui.ex.awt.paint;
 
 import consulo.ui.ex.awt.RegionPainter;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

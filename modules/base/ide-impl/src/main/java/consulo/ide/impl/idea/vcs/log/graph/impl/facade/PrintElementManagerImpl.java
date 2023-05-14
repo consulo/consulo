@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.vcs.log.graph.api.printer.PrintElementManager;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.ColorGetterByLayoutIndex;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.GraphElementComparatorByLayoutIndex;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +41,7 @@ class PrintElementManagerImpl implements PrintElementManager {
   private final LinearGraph myLinearGraph;
   @Nonnull
   private Set<Integer> mySelectedNodeIds = Collections.emptySet();
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private PrintElementWithGraphElement mySelectedPrintElement = null;
 
   @SuppressWarnings("unchecked")

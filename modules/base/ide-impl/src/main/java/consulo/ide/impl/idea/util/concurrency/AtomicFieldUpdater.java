@@ -23,7 +23,7 @@
 package consulo.ide.impl.idea.util.concurrency;
 
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;

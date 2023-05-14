@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

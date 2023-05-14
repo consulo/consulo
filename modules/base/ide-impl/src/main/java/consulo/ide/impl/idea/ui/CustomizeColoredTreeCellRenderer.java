@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.SimpleColoredComponent;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

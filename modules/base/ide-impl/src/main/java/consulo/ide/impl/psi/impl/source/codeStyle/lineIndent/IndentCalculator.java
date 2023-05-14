@@ -28,8 +28,8 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.ide.impl.psi.impl.source.codeStyle.SemanticEditorPosition;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.language.codeStyle.Indent.Type.*;
 

@@ -18,8 +18,8 @@ package consulo.execution.ui.console;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 

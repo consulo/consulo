@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 public class PreviousProjectWindow extends AnAction implements DumbAware {

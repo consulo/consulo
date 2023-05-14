@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.application.progress.ProgressIndicator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;

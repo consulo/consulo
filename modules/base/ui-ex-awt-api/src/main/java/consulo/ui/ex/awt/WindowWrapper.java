@@ -3,9 +3,9 @@ package consulo.ui.ex.awt;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

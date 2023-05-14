@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import com.google.common.collect.Ordering;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +40,8 @@ public enum ApplyPatchStatus {
   static final Set<ApplyPatchStatus> PARTIAL_ADDITIONAL_SET = ContainerUtil.newHashSet(SUCCESS, ALREADY_APPLIED);
   private static final Ordering<ApplyPatchStatus> ORDERING = Ordering.explicit(ORDERED_TYPES).nullsFirst();
 
-  @javax.annotation.Nullable
-  public static ApplyPatchStatus and(@javax.annotation.Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
+  @jakarta.annotation.Nullable
+  public static ApplyPatchStatus and(@jakarta.annotation.Nullable ApplyPatchStatus lhs, @Nullable ApplyPatchStatus rhs) {
     Set<ApplyPatchStatus> statuses = ContainerUtil.newHashSet(lhs, rhs);
     if (PARTIAL_ADDITIONAL_SET.equals(statuses)) return PARTIAL;
     return ORDERING.max(lhs, rhs);

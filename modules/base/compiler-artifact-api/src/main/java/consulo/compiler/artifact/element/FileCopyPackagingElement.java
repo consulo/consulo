@@ -29,8 +29,8 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -100,7 +100,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     setRenamedOutputFileName(state.getRenamedOutputFileName());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Attribute(OUTPUT_FILE_NAME_ATTRIBUTE)
   public String getRenamedOutputFileName() {
     return myRenamedOutputFileName;

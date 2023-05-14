@@ -4,7 +4,7 @@ package consulo.application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.ExceptionUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

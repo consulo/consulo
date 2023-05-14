@@ -51,8 +51,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class GlobalInspectionContextBase extends UserDataHolderBase implements GlobalInspectionContext {
@@ -396,7 +396,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
   public void codeCleanup(@Nonnull Project project,
                           @Nonnull AnalysisScope scope,
                           @Nonnull InspectionProfile profile,
-                          @javax.annotation.Nullable String commandName,
+                          @jakarta.annotation.Nullable String commandName,
                           @Nullable Runnable postRunnable,
                           final boolean modal) {
   }

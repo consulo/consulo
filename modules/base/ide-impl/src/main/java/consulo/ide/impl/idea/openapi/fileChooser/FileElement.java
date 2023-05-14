@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 public class FileElement {

@@ -18,8 +18,8 @@ package consulo.http;
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
 import java.io.IOException;

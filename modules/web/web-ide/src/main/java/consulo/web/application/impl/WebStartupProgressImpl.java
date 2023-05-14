@@ -17,7 +17,7 @@ package consulo.web.application.impl;
 
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Consumer;

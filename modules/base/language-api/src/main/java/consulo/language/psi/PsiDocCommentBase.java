@@ -15,7 +15,7 @@
  */
 package consulo.language.psi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Implementers of this interface may provide their own way of finding an associated doc comment owner element

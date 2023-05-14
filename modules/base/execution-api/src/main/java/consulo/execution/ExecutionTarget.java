@@ -6,8 +6,8 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Execution targets allow running same run configuration on various targets such as devices, simulators etc.<br>

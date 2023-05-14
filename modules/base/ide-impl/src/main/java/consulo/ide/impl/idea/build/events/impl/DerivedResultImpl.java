@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.build.events.impl;
 import consulo.build.ui.event.DerivedResult;
 import consulo.build.ui.event.EventResult;
 import consulo.build.ui.event.FailureResult;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.Supplier;
 

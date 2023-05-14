@@ -33,7 +33,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

@@ -17,7 +17,7 @@ package consulo.execution.configuration;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

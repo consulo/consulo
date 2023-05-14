@@ -25,7 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
 import consulo.language.editor.refactoring.RefactoringSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;

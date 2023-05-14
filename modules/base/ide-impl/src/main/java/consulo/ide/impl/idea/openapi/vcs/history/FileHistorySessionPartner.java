@@ -33,8 +33,8 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -49,7 +49,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   private final VcsHistoryProvider myVcsHistoryProvider;
   @Nonnull
   private final FilePath myPath;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final VcsRevisionNumber myStartingRevisionNumber;
   @Nonnull
   private final LimitHistoryCheck myLimitHistoryCheck;
@@ -63,7 +63,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
 
   public FileHistorySessionPartner(@Nonnull VcsHistoryProvider vcsHistoryProvider,
                                    @Nonnull FilePath path,
-                                   @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
+                                   @jakarta.annotation.Nullable VcsRevisionNumber startingRevisionNumber,
                                    @Nonnull AbstractVcs vcs,
                                    @Nonnull FileHistoryRefresherI refresherI) {
     myVcsHistoryProvider = vcsHistoryProvider;
@@ -92,7 +92,7 @@ public class FileHistorySessionPartner implements VcsAppendableHistorySessionPar
   @Nullable
   static FileHistoryRefresherI findExistingHistoryRefresher(@Nonnull Project project,
                                                             @Nonnull FilePath path,
-                                                            @javax.annotation.Nullable VcsRevisionNumber startingRevisionNumber) {
+                                                            @jakarta.annotation.Nullable VcsRevisionNumber startingRevisionNumber) {
     JComponent component = ContentUtilEx.findContentComponent(getToolWindow(project).getContentManager(), comp ->
             comp instanceof FileHistoryPanelImpl &&
             sameHistories((FileHistoryPanelImpl)comp, path, startingRevisionNumber));

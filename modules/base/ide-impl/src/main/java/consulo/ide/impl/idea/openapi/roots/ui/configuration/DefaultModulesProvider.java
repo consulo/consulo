@@ -22,8 +22,8 @@ import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModuleRootModel;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

@@ -17,7 +17,7 @@ package consulo.execution.debug;
 
 import consulo.document.util.TextRange;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

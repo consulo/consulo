@@ -22,7 +22,7 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class EditorMouseHoverPopupManagerMouseListener implements EditorMouseListener {

@@ -34,8 +34,8 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;

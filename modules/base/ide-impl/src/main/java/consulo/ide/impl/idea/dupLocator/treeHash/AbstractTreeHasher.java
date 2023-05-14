@@ -8,7 +8,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.impl.ast.LeafElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

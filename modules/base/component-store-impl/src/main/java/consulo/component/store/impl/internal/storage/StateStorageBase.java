@@ -22,8 +22,8 @@ import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.logging.Logger;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class StateStorageBase<T extends StorageDataBase> implements StateStorage {
   protected static final Logger LOG = Logger.getInstance(StateStorageBase.class);

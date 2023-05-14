@@ -26,7 +26,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -42,7 +42,7 @@ public class VcsCommitInfoBalloon {
   private final JTree myTree;
   @Nonnull
   private final Wrapper myWrapper;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private JBPopup myBalloon;
   @Nonnull
   private final JEditorPane myEditorPane;

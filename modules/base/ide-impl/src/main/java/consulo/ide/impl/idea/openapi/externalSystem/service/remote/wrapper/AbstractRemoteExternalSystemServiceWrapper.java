@@ -20,7 +20,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemService;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;

@@ -20,8 +20,8 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.fileTemplate.FileTemplateContributor;
 import consulo.fileTemplate.FileTemplateRegistrator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

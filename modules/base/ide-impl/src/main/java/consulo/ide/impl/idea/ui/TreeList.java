@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.JBList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;

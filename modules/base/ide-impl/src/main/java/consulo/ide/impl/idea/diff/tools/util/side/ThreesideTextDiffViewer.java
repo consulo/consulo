@@ -50,13 +50,13 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
 public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEditorHolder> {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private List<? extends EditorEx> myEditors;
   @Nonnull
   private final List<? extends EditorEx> myEditableEditors;
@@ -234,8 +234,8 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     return side.select(getContents());
   }
 
-  @javax.annotation.Nullable
-  public ThreeSide getEditorSide(@javax.annotation.Nullable Editor editor) {
+  @jakarta.annotation.Nullable
+  public ThreeSide getEditorSide(@jakarta.annotation.Nullable Editor editor) {
     if (getEditor(ThreeSide.BASE) == editor) return ThreeSide.BASE;
     if (getEditor(ThreeSide.RIGHT) == editor) return ThreeSide.RIGHT;
     if (getEditor(ThreeSide.LEFT) == editor) return ThreeSide.LEFT;
@@ -252,7 +252,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
     setCurrentSide(side);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract SyncScrollSupport.SyncScrollable getSyncScrollable(@Nonnull Side side);
 
   @RequiredUIAccess
@@ -295,7 +295,7 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
   // Misc
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getCurrentContent().getNavigatable(LineCol.fromCaret(getCurrentEditor()));

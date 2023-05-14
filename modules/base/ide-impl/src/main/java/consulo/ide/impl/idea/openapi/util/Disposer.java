@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.util;
 import consulo.disposer.Disposable;
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use consulo.disposer.Disposer")

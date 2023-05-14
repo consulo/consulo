@@ -21,8 +21,8 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 /**

@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface VcsErrorHandler {
   void handleError(@Nonnull CommitLoader loader);

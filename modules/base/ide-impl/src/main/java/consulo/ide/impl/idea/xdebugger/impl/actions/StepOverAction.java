@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 
 /**

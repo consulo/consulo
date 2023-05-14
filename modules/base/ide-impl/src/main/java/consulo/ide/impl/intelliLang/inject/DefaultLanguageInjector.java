@@ -27,7 +27,7 @@ import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public final class DefaultLanguageInjector implements MultiHostInjector {

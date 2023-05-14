@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystem
 import consulo.ide.impl.idea.util.Producer;
 import java.util.HashSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.Set;

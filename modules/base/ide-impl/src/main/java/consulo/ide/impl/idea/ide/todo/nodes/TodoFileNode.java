@@ -23,7 +23,7 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public final class TodoFileNode extends PsiFileNode {

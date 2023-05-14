@@ -18,7 +18,7 @@ package consulo.language.editor.template;
 
 import consulo.language.editor.template.context.TemplateContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;

@@ -21,7 +21,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.internal.KeyRegistry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.util.dataholder.keyFMap.ArrayBackedFMap.getKeysByIndices;
 

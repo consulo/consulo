@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.dnd;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.RelativeRectangle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;

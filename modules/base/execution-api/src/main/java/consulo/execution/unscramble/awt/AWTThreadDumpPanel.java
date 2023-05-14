@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;

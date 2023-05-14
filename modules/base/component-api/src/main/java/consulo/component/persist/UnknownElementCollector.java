@@ -17,7 +17,7 @@ package consulo.component.persist;
 
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

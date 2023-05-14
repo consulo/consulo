@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorBundle;
 import consulo.ui.ex.action.Shortcut;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

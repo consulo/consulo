@@ -24,8 +24,8 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.BooleanSupplier;

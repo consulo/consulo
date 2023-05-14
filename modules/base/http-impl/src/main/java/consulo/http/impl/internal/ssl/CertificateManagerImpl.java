@@ -22,8 +22,8 @@ import jakarta.inject.Singleton;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
 import java.io.FileInputStream;

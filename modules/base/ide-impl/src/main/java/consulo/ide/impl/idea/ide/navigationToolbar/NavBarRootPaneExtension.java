@@ -42,7 +42,7 @@ import consulo.ui.ex.action.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

@@ -18,7 +18,7 @@ package consulo.component.persist;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

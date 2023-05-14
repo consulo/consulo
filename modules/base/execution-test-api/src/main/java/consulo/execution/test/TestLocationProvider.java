@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.execution.action.Location;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

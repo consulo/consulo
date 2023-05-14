@@ -50,8 +50,8 @@ import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.Future;

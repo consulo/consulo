@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.diff.tools.simple.SimpleOnesideDiffViewer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class UnifiedDiffTool implements FrameDiffTool {
   public static final UnifiedDiffTool INSTANCE = new UnifiedDiffTool();

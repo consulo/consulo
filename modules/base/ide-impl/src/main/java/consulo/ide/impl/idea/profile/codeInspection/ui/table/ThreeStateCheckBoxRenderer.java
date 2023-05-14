@@ -20,7 +20,7 @@ import consulo.util.collection.SmartList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ThreeStateCheckBox;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;

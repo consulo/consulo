@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;

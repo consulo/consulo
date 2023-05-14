@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

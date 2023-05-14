@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.text;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.text.CharacterIterator;
 

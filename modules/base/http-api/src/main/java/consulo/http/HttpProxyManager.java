@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;

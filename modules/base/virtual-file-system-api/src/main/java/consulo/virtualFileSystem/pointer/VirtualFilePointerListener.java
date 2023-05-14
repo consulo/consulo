@@ -18,7 +18,7 @@ package consulo.virtualFileSystem.pointer;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface VirtualFilePointerListener {

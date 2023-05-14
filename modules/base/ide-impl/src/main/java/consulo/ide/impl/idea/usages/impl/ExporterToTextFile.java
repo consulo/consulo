@@ -8,7 +8,7 @@ import consulo.usage.TextChunk;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageViewSettings;
 import consulo.util.lang.SystemProperties;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;

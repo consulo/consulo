@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.document.util.Segment;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * pointer to a PsiFile + range inside the file.

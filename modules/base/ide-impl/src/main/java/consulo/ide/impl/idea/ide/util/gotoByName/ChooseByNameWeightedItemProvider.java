@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ChooseByNameWeightedItemProvider extends ChooseByNameItemProvider {
 

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui.popup.util;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;

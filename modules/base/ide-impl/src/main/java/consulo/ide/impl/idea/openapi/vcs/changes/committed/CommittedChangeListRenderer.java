@@ -30,7 +30,7 @@ import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;

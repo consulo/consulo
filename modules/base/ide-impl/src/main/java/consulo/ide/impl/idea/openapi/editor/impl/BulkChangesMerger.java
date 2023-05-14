@@ -19,7 +19,7 @@ import consulo.codeEditor.impl.TextChangeImpl;
 import consulo.logging.Logger;
 import consulo.codeEditor.TextChange;
 import consulo.ide.impl.idea.util.text.StringFactory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;

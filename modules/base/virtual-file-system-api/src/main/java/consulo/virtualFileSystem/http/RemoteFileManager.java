@@ -21,7 +21,7 @@ import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.setting;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Shein

@@ -23,7 +23,7 @@ import consulo.project.ProjectManager;
 import consulo.versionControlSystem.VcsFactory;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

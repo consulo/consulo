@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.util.containers;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.ConcurrentFactoryMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 

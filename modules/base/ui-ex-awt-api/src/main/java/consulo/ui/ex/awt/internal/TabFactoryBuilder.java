@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.TabbedPane;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;

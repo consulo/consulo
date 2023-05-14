@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.dupLocator;
 
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene.Kudelevsky

@@ -25,8 +25,8 @@ import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public abstract class DiffManagerEx extends DiffManager {

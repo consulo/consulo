@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.refactoring.ui.AbstractMemberSelectionTable;
 import consulo.ide.impl.idea.refactoring.ui.MemberSelectionPanelBase;
 import consulo.language.editor.refactoring.ui.RefactoringDialog;
 import consulo.usage.UsageViewUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

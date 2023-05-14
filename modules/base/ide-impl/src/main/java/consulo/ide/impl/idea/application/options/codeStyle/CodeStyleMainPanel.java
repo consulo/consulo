@@ -30,7 +30,7 @@ import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

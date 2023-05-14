@@ -11,7 +11,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.KeyDescriptor;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface StubIndexExtension<Key, Psi extends PsiElement> {

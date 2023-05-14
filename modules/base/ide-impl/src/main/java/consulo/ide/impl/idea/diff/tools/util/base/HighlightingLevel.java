@@ -21,8 +21,8 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.util.lang.function.Condition;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public enum HighlightingLevel {
   INSPECTIONS("Inspections", AllIcons.Ide.HectorOn, rangeHighlighter -> true),

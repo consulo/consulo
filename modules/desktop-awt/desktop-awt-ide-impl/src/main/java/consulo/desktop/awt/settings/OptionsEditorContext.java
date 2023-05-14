@@ -21,8 +21,8 @@ import consulo.util.collection.MultiValuesMap;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;

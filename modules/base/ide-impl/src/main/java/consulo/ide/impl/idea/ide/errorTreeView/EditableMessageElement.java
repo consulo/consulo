@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreeCellEditor;
 

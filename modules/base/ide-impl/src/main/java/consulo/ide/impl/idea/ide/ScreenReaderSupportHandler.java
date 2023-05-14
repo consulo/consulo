@@ -24,7 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Keep {@link ScreenReader#isActive} in sync with {@link GeneralSettings#isSupportScreenReaders}

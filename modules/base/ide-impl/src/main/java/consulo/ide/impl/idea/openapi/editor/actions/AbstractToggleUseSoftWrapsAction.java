@@ -26,8 +26,8 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

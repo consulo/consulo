@@ -20,8 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to customize {@link ExternalSystemNotificationManager external system notifications} shown to end-user by the ide.

@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vcs.ex.Range;
 import consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager;
 import consulo.versionControlSystem.action.VcsContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * author: lesya

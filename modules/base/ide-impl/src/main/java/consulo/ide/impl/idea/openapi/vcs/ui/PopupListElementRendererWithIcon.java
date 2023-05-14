@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

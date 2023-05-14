@@ -12,8 +12,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 

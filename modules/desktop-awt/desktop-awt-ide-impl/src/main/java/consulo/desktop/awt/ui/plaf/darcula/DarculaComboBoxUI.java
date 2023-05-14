@@ -14,9 +14,9 @@ import consulo.ui.ex.awt.*;
 import consulo.util.lang.ObjectUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;

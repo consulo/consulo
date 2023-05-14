@@ -20,8 +20,8 @@ import consulo.execution.debug.Obsolescent;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

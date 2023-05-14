@@ -22,7 +22,7 @@ import consulo.application.ui.event.FrameStateListener;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Manager of listeners for notifications about activation and deactivation of the IDE window.

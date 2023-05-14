@@ -20,8 +20,8 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsageTarget;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

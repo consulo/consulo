@@ -28,7 +28,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;

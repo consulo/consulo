@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.Collection;
 

@@ -21,8 +21,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Default implementation of the {@link StructureViewBuilder} interface which uses the

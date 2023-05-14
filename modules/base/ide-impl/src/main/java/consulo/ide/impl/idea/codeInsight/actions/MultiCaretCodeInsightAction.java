@@ -32,7 +32,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.editor.util.PsiUtilBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base class for PSI-aware editor actions that need to support multiple carets.

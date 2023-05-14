@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.util.collection.util.WalkingState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class RecursiveTreeElementWalkingVisitor extends TreeElementVisitor implements PsiRecursiveVisitor {
   private final boolean myDoTransform;

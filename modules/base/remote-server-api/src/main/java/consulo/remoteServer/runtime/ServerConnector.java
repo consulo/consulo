@@ -3,7 +3,7 @@ package consulo.remoteServer.runtime;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

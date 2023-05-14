@@ -17,7 +17,7 @@ package consulo.language.editor.internal.intention;
 
 import consulo.language.editor.intention.IntentionActionWithOptions;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * An entity having an associated intention action

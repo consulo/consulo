@@ -16,7 +16,7 @@
 
 package consulo.language.ast;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DefaultRoleFinder implements RoleFinder {
   protected IElementType[] myElementTypes;

@@ -30,7 +30,7 @@ import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BinariesOrderRootTypeUIFactory implements OrderRootTypeUIFactory {

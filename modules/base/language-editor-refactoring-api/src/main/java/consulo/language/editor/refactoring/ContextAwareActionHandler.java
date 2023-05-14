@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ContextAwareActionHandler {
   /**

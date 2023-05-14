@@ -18,7 +18,7 @@ package consulo.execution.ui.terminal;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

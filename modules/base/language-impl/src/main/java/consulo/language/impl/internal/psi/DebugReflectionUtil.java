@@ -11,8 +11,8 @@ import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;

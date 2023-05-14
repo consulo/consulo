@@ -15,7 +15,7 @@
  */
 package consulo.util.collection;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 

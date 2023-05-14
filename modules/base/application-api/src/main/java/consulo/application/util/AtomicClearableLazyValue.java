@@ -17,7 +17,7 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")

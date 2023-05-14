@@ -18,7 +18,7 @@ package consulo.fileChooser;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public interface FileTextField {

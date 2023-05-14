@@ -4,8 +4,8 @@ package consulo.ui.ex.awt.valueEditor;
 import consulo.ui.ex.UIBundle;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public class IntegerValueEditor extends TextFieldValueEditor<Integer> {

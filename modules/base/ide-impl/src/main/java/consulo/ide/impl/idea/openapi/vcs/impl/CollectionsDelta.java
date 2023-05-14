@@ -23,7 +23,7 @@ public class CollectionsDelta {
   private CollectionsDelta() {
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static <T> Set<T> notInSecond(final Collection<T> first, final Collection<T> second) {
     Set<T> notInSecond = null;
     for (T topItem : first) {

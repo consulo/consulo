@@ -18,8 +18,8 @@ package consulo.index.io.data;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

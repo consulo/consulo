@@ -29,7 +29,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SendFeedbackAction extends AnAction implements DumbAware {
   @RequiredUIAccess

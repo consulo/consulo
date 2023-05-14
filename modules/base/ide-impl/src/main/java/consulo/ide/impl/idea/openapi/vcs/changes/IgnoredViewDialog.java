@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

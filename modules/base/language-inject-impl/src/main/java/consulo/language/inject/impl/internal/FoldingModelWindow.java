@@ -14,8 +14,8 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

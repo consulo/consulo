@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.processing;
 
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 public class Formatting extends Word {

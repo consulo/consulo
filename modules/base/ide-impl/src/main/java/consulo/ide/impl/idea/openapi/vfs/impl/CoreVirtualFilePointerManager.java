@@ -21,8 +21,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

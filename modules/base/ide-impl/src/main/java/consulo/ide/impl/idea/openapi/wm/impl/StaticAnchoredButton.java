@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;

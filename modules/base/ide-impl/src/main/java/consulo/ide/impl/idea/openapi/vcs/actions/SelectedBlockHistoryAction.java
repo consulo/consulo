@@ -34,7 +34,7 @@ import consulo.versionControlSystem.history.VcsSelection;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SelectedBlockHistoryAction extends AbstractVcsAction {
 

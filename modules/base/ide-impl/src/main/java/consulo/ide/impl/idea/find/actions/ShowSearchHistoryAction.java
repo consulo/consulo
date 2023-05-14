@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowSearchHistoryAction extends AnAction {
   public ShowSearchHistoryAction() {

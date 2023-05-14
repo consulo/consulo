@@ -24,7 +24,7 @@ import consulo.module.content.util.OrderEntryUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

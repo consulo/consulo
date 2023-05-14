@@ -181,7 +181,7 @@ public class SelectionManager {
     }
   }
 
-  public void setSelectionChangeListener(@javax.annotation.Nullable PlusMinus<VirtualFile> selectionChangeListener) {
+  public void setSelectionChangeListener(@jakarta.annotation.Nullable PlusMinus<VirtualFile> selectionChangeListener) {
     mySelectionChangeListener = selectionChangeListener;
   }
 }

@@ -7,7 +7,7 @@ import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.util.lang.ComparatorUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

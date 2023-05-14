@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.layout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

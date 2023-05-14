@@ -37,9 +37,9 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;

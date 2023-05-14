@@ -18,7 +18,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.language.editor.completion.AutoCompletionPolicy;
 import consulo.language.editor.completion.CompletionResultSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

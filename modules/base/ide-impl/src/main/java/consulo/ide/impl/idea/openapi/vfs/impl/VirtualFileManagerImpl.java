@@ -35,8 +35,8 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.*;

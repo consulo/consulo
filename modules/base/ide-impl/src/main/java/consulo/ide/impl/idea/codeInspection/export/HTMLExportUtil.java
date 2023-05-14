@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;

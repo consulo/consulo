@@ -17,7 +17,7 @@ package consulo.language.editor.impl.internal.markup;
 
 import consulo.codeEditor.Editor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public interface ErrorStripeRenderer {

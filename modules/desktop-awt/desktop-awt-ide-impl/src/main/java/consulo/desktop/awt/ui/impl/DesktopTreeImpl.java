@@ -33,8 +33,8 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Comparator;

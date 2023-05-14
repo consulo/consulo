@@ -24,8 +24,8 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

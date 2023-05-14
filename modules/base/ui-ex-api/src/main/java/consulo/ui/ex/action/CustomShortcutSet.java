@@ -17,7 +17,7 @@ package consulo.ui.ex.action;
 
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

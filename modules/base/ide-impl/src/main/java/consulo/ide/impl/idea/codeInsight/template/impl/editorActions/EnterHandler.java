@@ -29,8 +29,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "templateEnter", order = "before editorEnter")
 public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {

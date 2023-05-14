@@ -18,9 +18,9 @@ package consulo.credentialStorage.impl.internal.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.DialogWrapper;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

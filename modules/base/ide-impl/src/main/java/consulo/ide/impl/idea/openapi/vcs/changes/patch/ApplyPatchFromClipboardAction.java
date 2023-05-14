@@ -11,9 +11,9 @@ import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.language.file.light.LightVirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Collections;

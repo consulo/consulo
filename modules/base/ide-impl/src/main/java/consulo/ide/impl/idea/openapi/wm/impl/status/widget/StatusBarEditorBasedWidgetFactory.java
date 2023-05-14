@@ -7,8 +7,8 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.fileEditor.util.StatusBarUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class StatusBarEditorBasedWidgetFactory implements StatusBarWidgetFactory {
   @Override

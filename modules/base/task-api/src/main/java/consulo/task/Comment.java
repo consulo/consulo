@@ -17,7 +17,7 @@
 package consulo.task;
 
 import consulo.application.util.DateFormatUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Date;
 

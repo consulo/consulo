@@ -40,8 +40,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
 import java.util.ArrayList;

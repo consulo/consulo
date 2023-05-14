@@ -24,8 +24,8 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

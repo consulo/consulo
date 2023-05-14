@@ -40,7 +40,7 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 

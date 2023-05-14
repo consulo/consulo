@@ -6,7 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Subscribes to VFS events and processes them further on a dedicated pooled thread to {@link AsyncVfsEventsListener}s. <br/><br/>

@@ -20,7 +20,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

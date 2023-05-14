@@ -19,7 +19,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**

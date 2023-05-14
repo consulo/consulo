@@ -17,7 +17,7 @@ package consulo.language.psi.stub;
 
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 class UnsignedShortArrayList implements Cloneable {

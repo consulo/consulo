@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.application.options.codeStyle.excludedFiles;
 import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class ExcludedFilesDialogBase extends DialogWrapper {
 

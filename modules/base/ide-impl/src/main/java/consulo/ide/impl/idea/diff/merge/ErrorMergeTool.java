@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +67,7 @@ public class ErrorMergeTool implements MergeTool {
       return myPanel;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return null;
@@ -79,7 +79,7 @@ public class ErrorMergeTool implements MergeTool {
       return new ToolbarComponents();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public Action getResolveAction(@Nonnull final MergeResult result) {
       if (result == MergeResult.RESOLVED) return null;

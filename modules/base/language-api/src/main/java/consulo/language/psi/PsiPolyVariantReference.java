@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Inherit this interface if you want the reference to resolve to more than one element,

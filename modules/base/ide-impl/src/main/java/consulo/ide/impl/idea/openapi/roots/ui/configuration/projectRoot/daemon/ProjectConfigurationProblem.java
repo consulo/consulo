@@ -20,7 +20,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class DeletedTemplatesManager implements JDOMExternalizable {
   public JDOMExternalizableStringList DELETED_DEFAULT_TEMPLATES = new JDOMExternalizableStringList();

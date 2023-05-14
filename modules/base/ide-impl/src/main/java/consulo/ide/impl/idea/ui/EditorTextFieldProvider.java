@@ -22,7 +22,7 @@ import consulo.language.Language;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

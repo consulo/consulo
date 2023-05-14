@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.*;
 import java.util.concurrent.Future;

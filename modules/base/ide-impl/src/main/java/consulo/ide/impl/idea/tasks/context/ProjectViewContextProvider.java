@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 

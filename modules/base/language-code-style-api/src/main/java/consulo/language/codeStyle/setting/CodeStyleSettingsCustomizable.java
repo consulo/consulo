@@ -19,7 +19,7 @@ import consulo.language.codeStyle.CodeStyleBundle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface CodeStyleSettingsCustomizable {
   enum OptionAnchor {

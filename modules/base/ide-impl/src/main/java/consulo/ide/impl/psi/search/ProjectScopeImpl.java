@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ProjectScopeImpl extends GlobalSearchScope {
   private final FileIndexFacade myFileIndex;

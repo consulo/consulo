@@ -37,7 +37,7 @@ import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -50,7 +50,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public UsageGroup groupUsage(@Nonnull Usage usage) {
     if (usage instanceof UsageInFile) {
       UsageInFile usageInFile = (UsageInFile)usage;

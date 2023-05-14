@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.history.core.tree;
 
 import consulo.ide.impl.idea.history.core.Paths;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataOutput;
 import java.io.IOException;

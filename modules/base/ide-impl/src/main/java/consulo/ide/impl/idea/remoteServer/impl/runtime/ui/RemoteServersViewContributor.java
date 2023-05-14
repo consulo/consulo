@@ -8,8 +8,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.TreeBuilderBase;
 import consulo.ui.ex.awt.tree.Tree;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

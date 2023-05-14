@@ -17,7 +17,7 @@ package consulo.usage.rule;
 
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface UsageFilteringRule {
   UsageFilteringRule[] EMPTY_ARRAY = new UsageFilteringRule[0];

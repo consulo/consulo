@@ -23,8 +23,8 @@ import consulo.usage.Usage;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 public abstract class BackgroundUpdaterTask extends BackgroundUpdaterTaskBase<PsiElement> {

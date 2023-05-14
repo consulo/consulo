@@ -22,7 +22,7 @@ import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PlainTextFileType extends LanguageFileType implements PlainTextLikeFileType {
   public static final PlainTextFileType INSTANCE = new PlainTextFileType();

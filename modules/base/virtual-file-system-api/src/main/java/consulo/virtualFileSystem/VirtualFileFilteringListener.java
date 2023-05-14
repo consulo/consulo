@@ -21,7 +21,7 @@ package consulo.virtualFileSystem;
 
 import consulo.virtualFileSystem.event.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class VirtualFileFilteringListener implements VirtualFileListener {
   private final VirtualFileListener myDelegate;

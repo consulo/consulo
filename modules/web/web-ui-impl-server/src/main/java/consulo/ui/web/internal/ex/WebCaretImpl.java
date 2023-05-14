@@ -19,7 +19,7 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

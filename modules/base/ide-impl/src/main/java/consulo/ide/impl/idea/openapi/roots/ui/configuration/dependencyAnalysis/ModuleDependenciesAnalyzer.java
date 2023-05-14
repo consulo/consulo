@@ -38,8 +38,8 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 

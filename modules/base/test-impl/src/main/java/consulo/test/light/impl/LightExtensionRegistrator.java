@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -21,7 +21,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface Printer {
   void print(String text, ConsoleViewContentType contentType);

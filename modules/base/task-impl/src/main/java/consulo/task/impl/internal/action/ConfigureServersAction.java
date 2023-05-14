@@ -9,7 +9,7 @@ import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: Evgeny Zakrevsky

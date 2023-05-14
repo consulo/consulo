@@ -7,8 +7,8 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import org.imgscalr.Scalr;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;

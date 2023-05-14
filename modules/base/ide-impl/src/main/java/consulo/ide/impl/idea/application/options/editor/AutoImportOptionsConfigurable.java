@@ -23,8 +23,8 @@ import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

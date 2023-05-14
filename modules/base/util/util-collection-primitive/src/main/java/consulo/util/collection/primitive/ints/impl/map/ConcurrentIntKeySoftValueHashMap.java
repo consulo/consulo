@@ -19,7 +19,7 @@ package consulo.util.collection.primitive.ints.impl.map;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 

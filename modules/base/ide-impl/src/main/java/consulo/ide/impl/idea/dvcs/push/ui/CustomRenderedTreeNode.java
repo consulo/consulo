@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 interface CustomRenderedTreeNode {
 

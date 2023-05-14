@@ -6,7 +6,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
 import java.util.function.Consumer;

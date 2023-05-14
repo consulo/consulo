@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.util.lang.function.Condition;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

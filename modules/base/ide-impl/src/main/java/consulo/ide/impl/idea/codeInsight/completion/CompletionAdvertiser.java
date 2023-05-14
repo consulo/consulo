@@ -20,7 +20,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Controls the text to display at the bottom of lookup list
@@ -29,10 +29,10 @@ import javax.annotation.Nonnull;
  */
 public abstract class CompletionAdvertiser {
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract String advertise(@Nonnull CompletionParameters parameters, final ProcessingContext context);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract String handleEmptyLookup(@Nonnull CompletionParameters parameters, final ProcessingContext context);
 
   protected static String getShortcut(final String id) {

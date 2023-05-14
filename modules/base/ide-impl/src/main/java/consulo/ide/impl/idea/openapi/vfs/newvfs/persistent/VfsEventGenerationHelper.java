@@ -22,9 +22,9 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.virtualFileSystem.event.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;

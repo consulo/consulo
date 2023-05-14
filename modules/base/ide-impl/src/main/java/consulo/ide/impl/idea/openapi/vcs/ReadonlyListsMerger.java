@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.util.containers.ReadonlyList;
 import consulo.ide.impl.idea.util.containers.StepList;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;

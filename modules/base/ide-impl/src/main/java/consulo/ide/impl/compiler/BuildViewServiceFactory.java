@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 /**

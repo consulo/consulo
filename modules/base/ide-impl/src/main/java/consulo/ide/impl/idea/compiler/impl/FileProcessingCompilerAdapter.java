@@ -51,5 +51,5 @@ public class FileProcessingCompilerAdapter {
     return myCompiler;
   }
 
-  public void processOutdatedItem(CompileContext context, File file, @javax.annotation.Nullable ValidityState state){}
+  public void processOutdatedItem(CompileContext context, File file, @jakarta.annotation.Nullable ValidityState state){}
 }

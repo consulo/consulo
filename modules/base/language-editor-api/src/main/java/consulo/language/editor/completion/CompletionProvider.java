@@ -18,7 +18,7 @@ package consulo.language.editor.completion;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.util.CharTable;
 import consulo.language.parser.PsiBuilder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which are more convenient to parse separately.

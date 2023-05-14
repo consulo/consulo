@@ -10,8 +10,8 @@ import consulo.component.util.ModificationTracker;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.Consumer;
 

@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdge;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphEdgeType;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNode;
 import consulo.ide.impl.idea.vcs.log.graph.collapsing.EdgeStorageWrapper;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -17,8 +17,8 @@ package consulo.versionControlSystem.log.graph;
 
 import consulo.versionControlSystem.log.graph.action.ActionController;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A part of {@link PermanentGraph} which should be drawn on screen (e.g. with applied filters). <br/>

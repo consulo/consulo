@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.packageDependencies.ui.DependenciesPanel;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

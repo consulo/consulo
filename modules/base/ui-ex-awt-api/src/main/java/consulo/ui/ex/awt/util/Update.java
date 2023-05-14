@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.util;
 import consulo.component.util.ComparableObject;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 /**

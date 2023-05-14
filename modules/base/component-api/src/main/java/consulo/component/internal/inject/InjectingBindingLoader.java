@@ -18,7 +18,7 @@ package consulo.component.internal.inject;
 import consulo.annotation.component.*;
 import consulo.component.bind.InjectingBinding;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 

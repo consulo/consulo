@@ -19,8 +19,8 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

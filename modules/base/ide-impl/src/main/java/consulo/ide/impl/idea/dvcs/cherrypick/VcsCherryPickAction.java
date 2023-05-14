@@ -32,8 +32,8 @@ import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;

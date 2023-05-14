@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.remote.*;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -46,7 +46,7 @@ public abstract class AbstractExternalSystemFacadeImpl<S extends ExternalSystemE
     applyProgressManager(RemoteExternalSystemProgressNotificationManager.NULL_OBJECT);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected S getSettings() {
     return mySettings.get();
   }

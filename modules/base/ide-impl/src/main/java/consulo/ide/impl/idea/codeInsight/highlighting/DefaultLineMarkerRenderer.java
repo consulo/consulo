@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.LineMarkerRenderer;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

@@ -18,8 +18,8 @@ package consulo.component.persist.scheme;
 import consulo.util.lang.function.ThrowableFunction;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;

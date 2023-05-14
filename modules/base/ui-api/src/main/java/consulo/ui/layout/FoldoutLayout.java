@@ -21,7 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

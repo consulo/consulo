@@ -5,7 +5,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implement this class if a particular run configuration should be created for matching input string.

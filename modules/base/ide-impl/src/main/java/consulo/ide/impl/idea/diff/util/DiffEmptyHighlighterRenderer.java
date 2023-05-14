@@ -20,7 +20,7 @@ import consulo.codeEditor.markup.CustomHighlighterRenderer;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

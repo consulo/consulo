@@ -25,7 +25,7 @@ import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

@@ -8,8 +8,8 @@ import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntObjectHashMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;

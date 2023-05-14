@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.utils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ListenerController<Listener> {
   void addListener(@Nonnull Listener listener);

@@ -13,8 +13,8 @@ import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "postfix", order = "last")
 public class PostfixTemplateCompletionContributor extends CompletionContributor {

@@ -22,7 +22,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev

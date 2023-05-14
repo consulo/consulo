@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.designer.propertyTable.PropertyEditor;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

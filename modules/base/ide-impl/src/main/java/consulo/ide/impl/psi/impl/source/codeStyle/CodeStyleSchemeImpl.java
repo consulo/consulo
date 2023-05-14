@@ -25,8 +25,8 @@ import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.CodeStyleSettings;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class CodeStyleSchemeImpl implements JDOMExternalizable, CodeStyleScheme, ExternalizableScheme {
   private static final Logger LOG = Logger.getInstance(CodeStyleSchemeImpl.class);

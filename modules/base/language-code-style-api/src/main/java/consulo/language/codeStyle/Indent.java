@@ -2,7 +2,7 @@
 package consulo.language.codeStyle;
 
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The indent setting for a formatting model block. Indicates how the block is indented

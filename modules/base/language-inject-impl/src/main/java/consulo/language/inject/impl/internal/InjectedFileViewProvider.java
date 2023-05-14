@@ -20,7 +20,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public interface InjectedFileViewProvider extends FileViewProvider, FreeThreadedFileViewProvider {

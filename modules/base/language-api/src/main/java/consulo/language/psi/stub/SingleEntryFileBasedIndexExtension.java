@@ -21,7 +21,7 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base implementation for indices that produce single value per single file

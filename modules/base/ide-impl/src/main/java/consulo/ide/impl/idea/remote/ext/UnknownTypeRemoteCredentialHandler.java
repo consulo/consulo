@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.remote.ext;
 
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Irina.Chernushina on 7/29/2016.

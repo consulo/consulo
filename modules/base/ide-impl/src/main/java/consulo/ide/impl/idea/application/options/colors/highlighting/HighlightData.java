@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 

@@ -19,7 +19,7 @@ import consulo.language.editor.inspection.SuppressQuickFix;
 import consulo.language.psi.PsiElement;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base class to use to make spellchecking in your language suppressible.

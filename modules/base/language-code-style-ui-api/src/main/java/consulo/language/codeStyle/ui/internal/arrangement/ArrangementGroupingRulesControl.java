@@ -25,8 +25,8 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;

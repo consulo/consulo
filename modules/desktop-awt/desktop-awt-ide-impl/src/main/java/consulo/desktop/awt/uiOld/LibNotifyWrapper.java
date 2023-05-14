@@ -25,7 +25,7 @@ import com.sun.jna.Pointer;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Fokin

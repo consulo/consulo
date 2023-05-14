@@ -15,7 +15,7 @@
  */
 package consulo.ui.color;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 
 /**

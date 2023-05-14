@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ExcludeEntryDescription implements Disposable {
   private boolean myIsFile;

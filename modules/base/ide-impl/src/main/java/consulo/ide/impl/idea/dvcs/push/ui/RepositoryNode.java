@@ -23,8 +23,8 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.concurrent.Future;
@@ -73,7 +73,7 @@ public class RepositoryNode extends CheckedTreeNode implements EditableTreeNode,
     render(renderer, null);
   }
 
-  public void render(@Nonnull ColoredTreeCellRenderer renderer, @javax.annotation.Nullable String syncEditingText) {
+  public void render(@Nonnull ColoredTreeCellRenderer renderer, @jakarta.annotation.Nullable String syncEditingText) {
     int repoFixedWidth = 120;
     SimpleTextAttributes repositoryDetailsTextAttributes = PushLogTreeUtil
             .addTransparencyIfNeeded(SimpleTextAttributes.REGULAR_ATTRIBUTES, isChecked());

@@ -19,8 +19,8 @@ import consulo.content.RootProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.Synthetic;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

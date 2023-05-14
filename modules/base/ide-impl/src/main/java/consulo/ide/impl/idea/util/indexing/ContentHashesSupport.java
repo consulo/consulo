@@ -20,8 +20,8 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.ContentHashesUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.index.io.data.IOUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;

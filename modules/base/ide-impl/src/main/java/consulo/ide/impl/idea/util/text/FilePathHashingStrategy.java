@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.HashingStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

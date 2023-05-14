@@ -7,8 +7,8 @@ import consulo.localize.LocalizeValue;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class DumbAwareToggleAction extends ToggleAction implements DumbAware {
   protected DumbAwareToggleAction() {

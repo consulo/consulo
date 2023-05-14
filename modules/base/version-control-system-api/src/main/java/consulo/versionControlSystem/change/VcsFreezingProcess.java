@@ -24,7 +24,7 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Executes an action surrounding it with freezing-unfreezing of the ChangeListManager

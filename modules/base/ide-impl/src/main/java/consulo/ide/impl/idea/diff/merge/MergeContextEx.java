@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.merge;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class MergeContextEx extends MergeContext {

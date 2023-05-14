@@ -18,7 +18,7 @@ package consulo.ide.impl.desktop.awt;
 import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ui.ex.UIModificationTracker;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import java.awt.*;

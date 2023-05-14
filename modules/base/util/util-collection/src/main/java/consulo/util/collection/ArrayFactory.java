@@ -19,7 +19,7 @@
  */
 package consulo.util.collection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.IntFunction;
 
 @FunctionalInterface

@@ -26,7 +26,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
 * @author Eugene Zhuravlev

@@ -20,7 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

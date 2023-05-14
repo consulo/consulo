@@ -10,7 +10,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.wm.impl.ToolWindowBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -61,7 +61,7 @@ public class ExternalToolWindowManager {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static ToolWindow getToolWindow(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) {

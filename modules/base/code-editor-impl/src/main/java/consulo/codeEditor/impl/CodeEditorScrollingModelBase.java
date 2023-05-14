@@ -20,7 +20,7 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

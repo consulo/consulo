@@ -16,7 +16,7 @@
 package consulo.application.util;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

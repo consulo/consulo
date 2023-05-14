@@ -44,8 +44,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;

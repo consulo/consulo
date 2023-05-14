@@ -5,7 +5,7 @@ import consulo.language.Language;
 import consulo.language.MetaLanguage;
 import consulo.language.util.LanguageUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 final class MetaLanguageKindMatcher extends LanguageMatcher {
 

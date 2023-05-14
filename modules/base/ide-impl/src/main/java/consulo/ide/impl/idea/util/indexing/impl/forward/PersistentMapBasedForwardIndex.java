@@ -8,8 +8,8 @@ import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.logging.Logger;
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 

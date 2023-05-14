@@ -7,7 +7,7 @@ import consulo.document.impl.DocumentImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.language.editor.ui.awt.EditorTextField;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class TextViewer extends EditorTextField {
   private final boolean myEmbeddedIntoDialogWrapper;

@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.Url;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 

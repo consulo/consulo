@@ -17,7 +17,7 @@ package consulo.component.util;
 
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ComparableObject {
   Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;

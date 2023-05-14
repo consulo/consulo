@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.diff;
 import consulo.ui.ex.action.AnAction;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.PatternUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,12 +94,12 @@ public class DirDiffSettings {
   public interface CompareModeNameProvider {
     String COMPARE_MODE_NAME_PROVIDER = "Compare mode name provider"; //NON-NLS
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     String getName(CompareMode mode);
   }
 
   public interface CustomSourceChooser {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     DiffElement chooseSource(@Nonnull DiffElement first, @Nonnull DiffElement second);
   }
 }

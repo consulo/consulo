@@ -22,7 +22,7 @@ package consulo.language.psi.stub;
 import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface IndexableFileSet {
   boolean isInSet(@Nonnull VirtualFile file);

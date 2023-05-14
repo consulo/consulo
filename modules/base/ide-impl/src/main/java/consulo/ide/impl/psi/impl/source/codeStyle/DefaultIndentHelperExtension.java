@@ -22,7 +22,7 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.annotation.access.RequiredReadAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

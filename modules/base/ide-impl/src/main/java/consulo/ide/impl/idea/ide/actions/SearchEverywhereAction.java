@@ -32,7 +32,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;

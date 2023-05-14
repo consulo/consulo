@@ -20,7 +20,7 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.Sets;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 

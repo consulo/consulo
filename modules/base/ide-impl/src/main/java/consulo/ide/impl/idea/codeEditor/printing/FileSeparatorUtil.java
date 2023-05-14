@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.LineMarkersPass;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

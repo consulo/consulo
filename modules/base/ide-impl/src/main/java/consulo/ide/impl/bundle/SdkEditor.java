@@ -24,7 +24,7 @@ import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

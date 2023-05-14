@@ -34,7 +34,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.util.*;

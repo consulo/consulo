@@ -18,7 +18,7 @@ package consulo.language.editor.impl.highlight;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The pass which should be applied to every editor, even if there are many for this document.

@@ -18,7 +18,7 @@ package consulo.ui.web.internal;
 import consulo.ui.ComboBox;
 import consulo.ui.model.ListModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

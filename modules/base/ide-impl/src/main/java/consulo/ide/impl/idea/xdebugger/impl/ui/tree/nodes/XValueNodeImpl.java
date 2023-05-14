@@ -44,8 +44,8 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
 

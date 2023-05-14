@@ -12,7 +12,7 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public abstract class ToolbarLabelAction extends DumbAwareAction implements CustomComponentAction {

@@ -17,8 +17,8 @@ package consulo.versionControlSystem.log.graph.action;
 
 import consulo.versionControlSystem.log.graph.PrintElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface GraphAction {
 

@@ -25,8 +25,8 @@ import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsMan
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.List;

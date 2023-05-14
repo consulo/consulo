@@ -22,7 +22,7 @@ import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsLogRefs;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogFilterCollectionImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 

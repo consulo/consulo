@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;

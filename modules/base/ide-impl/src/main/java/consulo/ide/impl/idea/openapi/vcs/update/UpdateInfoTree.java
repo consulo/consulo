@@ -64,8 +64,8 @@ import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -329,7 +329,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       }
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private GroupTreeNode findParentGroupTreeNode(@Nonnull TreeNode treeNode) {
       TreeNode currentNode = treeNode;
       while (currentNode != null && !(currentNode instanceof GroupTreeNode)) {
@@ -361,7 +361,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return VfsUtil.toVirtualFileArray(result);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private File[] getFileArray() {
     ArrayList<File> result = new ArrayList<>();
     TreePath[] selectionPaths = myTree.getSelectionPaths();
@@ -493,7 +493,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String getFilterScopeName() {
     return VcsConfiguration.getInstance(myProject).UPDATE_FILTER_SCOPE_NAME;
   }

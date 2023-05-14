@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface FatalErrorHandler {
   void consume(@Nullable Object source, @Nonnull Throwable exception);

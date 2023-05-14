@@ -30,7 +30,7 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.project.ProjectCoreUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DefaultFileNavigationContributor implements GotoFileContributor, ChooseByNameContributorEx, DumbAware {

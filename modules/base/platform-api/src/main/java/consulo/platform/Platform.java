@@ -19,8 +19,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;

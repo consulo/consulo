@@ -20,8 +20,8 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -52,7 +52,7 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
                            @Nullable S settings,
                            @Nonnull List<String> vmOptions,
                            @Nonnull List<String> scriptParameters,
-                           @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                           @jakarta.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {

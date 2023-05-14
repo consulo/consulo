@@ -27,7 +27,7 @@ import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.Consumer;
 

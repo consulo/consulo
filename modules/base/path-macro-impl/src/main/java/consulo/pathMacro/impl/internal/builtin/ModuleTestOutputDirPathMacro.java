@@ -19,7 +19,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.pathMacro.PathMacroBundle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

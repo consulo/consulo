@@ -20,7 +20,7 @@
 package consulo.index.io;
 
 import consulo.util.collection.LimitedPool;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.BitSet;

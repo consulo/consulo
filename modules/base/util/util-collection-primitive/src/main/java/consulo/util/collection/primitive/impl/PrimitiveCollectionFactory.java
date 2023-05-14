@@ -23,7 +23,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.longs.LongSet;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

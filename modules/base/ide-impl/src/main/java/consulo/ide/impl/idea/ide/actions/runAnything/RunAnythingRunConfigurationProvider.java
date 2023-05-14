@@ -7,9 +7,9 @@ import consulo.ide.IdeBundle;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

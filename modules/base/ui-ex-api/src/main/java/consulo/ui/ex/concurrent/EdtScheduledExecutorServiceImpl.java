@@ -6,7 +6,7 @@ import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.SchedulingWrapper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledFuture;

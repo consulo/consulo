@@ -8,8 +8,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivationListener {
   private static final int MAX_SIZE = 100 * 1024;

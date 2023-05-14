@@ -33,7 +33,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,17 +56,17 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  private static String getDescription(@javax.annotation.Nullable ChangeList[] changeLists) {
+  private static String getDescription(@jakarta.annotation.Nullable ChangeList[] changeLists) {
     return ActionsBundle.message("action.ChangesView.RemoveChangeList.description",
                                  containsActiveChangelist(changeLists) ? "another changelist" : "active one");
   }
 
-  private static boolean containsActiveChangelist(@javax.annotation.Nullable ChangeList[] changeLists) {
+  private static boolean containsActiveChangelist(@jakarta.annotation.Nullable ChangeList[] changeLists) {
     if (changeLists == null) return false;
     return ContainerUtil.exists(changeLists, l -> l instanceof LocalChangeList && ((LocalChangeList)l).isDefault());
   }
 
-  private static boolean canRemoveChangeLists(@javax.annotation.Nullable Project project, @javax.annotation.Nullable ChangeList[] lists) {
+  private static boolean canRemoveChangeLists(@jakarta.annotation.Nullable Project project, @jakarta.annotation.Nullable ChangeList[] lists) {
     if (project == null || lists == null || lists.length == 0) return false;
 
     int allChangeListsCount = ChangeListManager.getInstance(project).getChangeListsNumber();

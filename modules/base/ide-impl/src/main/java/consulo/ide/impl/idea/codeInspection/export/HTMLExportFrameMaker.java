@@ -29,7 +29,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

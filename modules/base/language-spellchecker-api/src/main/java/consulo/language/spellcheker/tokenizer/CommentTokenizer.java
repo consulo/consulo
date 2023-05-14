@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiComment;
 import consulo.language.spellcheker.tokenizer.splitter.CommentTokenSplitter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CommentTokenizer extends Tokenizer<PsiComment> {
   @RequiredReadAction

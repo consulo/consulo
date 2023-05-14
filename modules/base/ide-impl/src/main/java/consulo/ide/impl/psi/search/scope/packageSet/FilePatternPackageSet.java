@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.regex.Pattern;
 
@@ -192,7 +192,7 @@ public class FilePatternPackageSet extends PatternBasedPackageSet {
     return Comparing.strEqual(myPathPattern, oldQName);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static String getRelativePath(@Nonnull VirtualFile virtualFile,
                                        @Nonnull ProjectFileIndex index,
                                        final boolean useFQName,

@@ -19,7 +19,7 @@ import consulo.ide.IdeBundle;
 import consulo.desktop.awt.ui.plaf.LookAndFeelInfoWithClassLoader;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

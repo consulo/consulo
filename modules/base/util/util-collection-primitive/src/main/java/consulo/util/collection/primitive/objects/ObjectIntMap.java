@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.objects;
 
 import consulo.util.collection.primitive.ints.IntCollection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.function.ObjIntConsumer;
 

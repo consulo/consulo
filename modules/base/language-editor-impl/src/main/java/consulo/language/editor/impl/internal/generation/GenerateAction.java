@@ -29,8 +29,8 @@ import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "Generate")
 public class GenerateAction extends DumbAwareAction {

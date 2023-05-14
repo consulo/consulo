@@ -38,7 +38,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.IdeLocalize;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

@@ -21,8 +21,8 @@ import consulo.process.internal.OSProcessHandler;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.process.io.BaseDataReader;
 import consulo.ide.impl.idea.util.io.BinaryOutputReader;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;

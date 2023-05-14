@@ -10,8 +10,8 @@ import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction.EXECUTOR_KEY;
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetchProject;

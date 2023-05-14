@@ -18,7 +18,7 @@ package consulo.language.sem;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 

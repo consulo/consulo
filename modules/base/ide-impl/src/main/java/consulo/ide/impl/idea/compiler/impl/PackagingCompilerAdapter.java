@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.compiler.impl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.PackagingCompiler;
 import consulo.compiler.ValidityState;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 

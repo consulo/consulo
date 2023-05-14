@@ -12,8 +12,8 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomComponentAction {
   @RequiredUIAccess

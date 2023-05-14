@@ -3,7 +3,7 @@ package consulo.project.util.query;
 
 import consulo.project.Project;
 import consulo.application.util.query.Query;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for search parameters.

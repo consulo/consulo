@@ -28,7 +28,7 @@ import java.awt.event.MouseEvent;
  * @author yole
  */
 public class TableLinkMouseListener extends AbstractBaseTagMouseListener {
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Object getTagAt(final MouseEvent e) {
     // TODO[yole]: don't update renderer on every event, like it's done in TreeLinkMouseListener
     Object tag = null;

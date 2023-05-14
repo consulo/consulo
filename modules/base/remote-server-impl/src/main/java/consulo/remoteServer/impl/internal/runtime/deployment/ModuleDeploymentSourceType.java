@@ -22,7 +22,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

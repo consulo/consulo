@@ -15,9 +15,9 @@
  */
 package consulo.ui.ex.awt;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.ArrayList;
 import java.util.Collection;

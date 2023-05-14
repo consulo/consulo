@@ -25,7 +25,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILeafElementType;
 import consulo.language.ast.ASTNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ForeignLeafType extends TokenWrapper implements ILeafElementType {
   public ForeignLeafType(IElementType delegate, CharSequence value) {

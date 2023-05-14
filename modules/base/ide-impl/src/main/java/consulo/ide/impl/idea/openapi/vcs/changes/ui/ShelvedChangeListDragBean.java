@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFile;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChange;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangeList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

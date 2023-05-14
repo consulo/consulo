@@ -19,8 +19,8 @@ import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;

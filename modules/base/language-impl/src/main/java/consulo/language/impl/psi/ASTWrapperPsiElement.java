@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

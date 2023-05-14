@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeListener;

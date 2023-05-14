@@ -21,7 +21,7 @@ import consulo.credentialStorage.impl.internal.provider.masterKey.MasterKeyUtils
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

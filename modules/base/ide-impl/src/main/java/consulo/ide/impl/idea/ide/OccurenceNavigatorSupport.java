@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.ide;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;

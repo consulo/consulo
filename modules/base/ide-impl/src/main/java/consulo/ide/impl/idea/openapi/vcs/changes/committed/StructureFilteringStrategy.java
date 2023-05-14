@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -70,7 +70,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     return VcsBundle.message("filter.structure.name");
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public JComponent getFilterUI() {
     if (myUI == null) {
       myUI = new MyUI();

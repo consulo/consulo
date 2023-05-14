@@ -19,7 +19,7 @@ import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRul
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementMatchingRulesModel;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;

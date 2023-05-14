@@ -13,8 +13,8 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class BackspaceHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

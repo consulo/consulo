@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.print.elements;
 import consulo.ide.impl.idea.vcs.log.graph.NodePrintElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.printer.PrintElementManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SimplePrintElementImpl extends PrintElementWithGraphElement implements NodePrintElement {
 

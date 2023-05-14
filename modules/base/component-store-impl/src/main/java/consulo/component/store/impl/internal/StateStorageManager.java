@@ -21,8 +21,8 @@ import consulo.component.store.impl.internal.storage.StateStorage;
 import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.util.lang.Couple;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

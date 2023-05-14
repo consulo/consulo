@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.change.commited;
 
 import consulo.ui.ex.action.AnAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

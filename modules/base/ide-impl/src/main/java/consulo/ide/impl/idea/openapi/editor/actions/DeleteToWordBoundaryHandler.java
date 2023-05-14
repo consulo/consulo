@@ -10,7 +10,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author eldar

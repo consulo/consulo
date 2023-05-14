@@ -20,7 +20,7 @@ import consulo.util.collection.primitive.PrimitiveListIterator;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.impl.IntCollectionImpls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.IntConsumer;
 

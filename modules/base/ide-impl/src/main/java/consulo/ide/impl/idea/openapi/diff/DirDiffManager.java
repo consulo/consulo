@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.ide.diff.DirDiffModel;
 import consulo.ide.impl.idea.ide.diff.DirDiffSettings;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

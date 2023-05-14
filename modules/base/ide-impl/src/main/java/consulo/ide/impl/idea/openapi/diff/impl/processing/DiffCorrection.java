@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 

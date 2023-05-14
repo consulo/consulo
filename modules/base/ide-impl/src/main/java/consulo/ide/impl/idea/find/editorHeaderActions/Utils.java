@@ -9,7 +9,7 @@ import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;

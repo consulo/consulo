@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.versionControlSystem.log.TimedVcsCommit;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;

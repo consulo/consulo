@@ -24,7 +24,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -65,7 +65,7 @@ public class UnknownOrderEntryImpl extends OrderEntryBaseImpl implements Clonabl
   }
 
   @Override
-  public <R> R accept(RootPolicy<R> policy, @javax.annotation.Nullable R initialValue) {
+  public <R> R accept(RootPolicy<R> policy, @jakarta.annotation.Nullable R initialValue) {
     return policy.visitOrderEntry(this, initialValue);
   }
 

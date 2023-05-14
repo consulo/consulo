@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.collapsing;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class GraphNodesVisibility {
   @Nonnull

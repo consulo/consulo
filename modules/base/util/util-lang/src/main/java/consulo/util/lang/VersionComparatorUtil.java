@@ -2,7 +2,7 @@ package consulo.util.lang;
 
 import consulo.util.lang.text.StringTokenizer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

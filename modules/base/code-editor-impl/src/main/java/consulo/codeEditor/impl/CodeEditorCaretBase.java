@@ -36,8 +36,8 @@ import consulo.util.lang.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 import static consulo.codeEditor.impl.CodeEditorSelectionModelBase.doSelectLineAtCaret;

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.diagnostic;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.attachment.Attachment;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

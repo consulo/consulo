@@ -37,7 +37,7 @@ import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.language.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

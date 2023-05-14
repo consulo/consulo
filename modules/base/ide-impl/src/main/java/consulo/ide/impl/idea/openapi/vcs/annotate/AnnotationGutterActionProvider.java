@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implement this to add additional custom actions to the popup invoked by right-clicking on the annotation gutter.

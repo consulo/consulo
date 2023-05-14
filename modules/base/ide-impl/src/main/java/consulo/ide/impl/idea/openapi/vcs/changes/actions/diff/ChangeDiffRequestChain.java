@@ -6,8 +6,8 @@ import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -59,7 +59,7 @@ public class ChangeDiffRequestChain extends UserDataHolderBase implements DiffRe
         return ContainerUtil.mapNotNull(myChain.getRequests(), (Function<ChangeDiffRequestProducer, Change>)presentable -> presentable.getChange());
       }
 
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       protected Change getCurrentSelection() {
         return myChain.getRequests().get(myChain.getIndex()).getChange();

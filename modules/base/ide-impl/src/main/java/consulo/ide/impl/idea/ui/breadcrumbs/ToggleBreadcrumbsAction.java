@@ -12,8 +12,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 abstract class ToggleBreadcrumbsAction extends ToggleAction implements DumbAware {
 

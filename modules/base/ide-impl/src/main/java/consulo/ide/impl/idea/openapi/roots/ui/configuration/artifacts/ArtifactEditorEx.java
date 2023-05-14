@@ -23,7 +23,7 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

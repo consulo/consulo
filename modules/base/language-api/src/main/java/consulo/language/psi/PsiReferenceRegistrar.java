@@ -18,7 +18,7 @@ package consulo.language.psi;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to register reference providers for specific locations. The locations are described by

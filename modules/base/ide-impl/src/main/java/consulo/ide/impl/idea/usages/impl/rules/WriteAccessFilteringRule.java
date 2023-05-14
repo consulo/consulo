@@ -19,7 +19,7 @@ import consulo.usage.ReadWriteAccessUsage;
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

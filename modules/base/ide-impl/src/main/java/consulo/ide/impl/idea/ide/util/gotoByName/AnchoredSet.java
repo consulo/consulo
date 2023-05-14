@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ui.ex.tree.TreeAnchorizer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -30,8 +30,8 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.virtualFileSystem.fileType.FileTypeWithPredefinedCharset;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

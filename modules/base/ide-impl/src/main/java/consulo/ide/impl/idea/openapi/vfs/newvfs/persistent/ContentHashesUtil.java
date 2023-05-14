@@ -8,8 +8,8 @@ import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.util.io.DigestUtil;
 import consulo.util.lang.ThreadLocalCachedValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;

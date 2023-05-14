@@ -45,8 +45,8 @@ import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -229,7 +229,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  private Stream<VirtualFile> getSelectedVirtualFiles(@javax.annotation.Nullable Object tag) {
+  private Stream<VirtualFile> getSelectedVirtualFiles(@jakarta.annotation.Nullable Object tag) {
     return getSelectionNodesStream(tag)
             .flatMap(ChangesBrowserNode::getFilesUnderStream)
             .distinct();
@@ -241,7 +241,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@javax.annotation.Nullable Object tag) {
+  private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@jakarta.annotation.Nullable Object tag) {
     return stream(getSelectionPaths())
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
@@ -254,7 +254,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
   }
 
   @Nonnull
-  static Stream<VirtualFile> getVirtualFiles(@javax.annotation.Nullable TreePath[] paths, @Nullable Object tag) {
+  static Stream<VirtualFile> getVirtualFiles(@jakarta.annotation.Nullable TreePath[] paths, @Nullable Object tag) {
     return stream(paths)
             .filter(path -> isUnderTag(path, tag))
             .map(TreePath::getLastPathComponent)
@@ -263,7 +263,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
             .distinct();
   }
 
-  static boolean isUnderTag(@Nonnull TreePath path, @javax.annotation.Nullable Object tag) {
+  static boolean isUnderTag(@Nonnull TreePath path, @jakarta.annotation.Nullable Object tag) {
     boolean result = true;
 
     if (tag != null) {
@@ -287,7 +287,7 @@ public class ChangesListView extends Tree implements TypeSafeDataProvider, DnDAw
     return Stream.concat(changes, hijackedChanges).distinct();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static Change toHijackedChange(@Nonnull Project project, @Nonnull VirtualFile file) {
     VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
     if (before != null) {

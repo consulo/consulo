@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;

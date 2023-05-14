@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

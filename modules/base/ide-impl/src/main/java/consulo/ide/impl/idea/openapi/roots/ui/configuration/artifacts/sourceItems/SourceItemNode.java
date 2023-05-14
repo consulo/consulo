@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ui.ex.awt.tree.SimpleTree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 import java.util.Collections;

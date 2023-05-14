@@ -22,7 +22,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

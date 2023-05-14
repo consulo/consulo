@@ -19,7 +19,7 @@ package consulo.language.psi.stub;
 import consulo.index.io.VoidDataExternalizer;
 import consulo.index.io.data.DataExternalizer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A specialization of FileBasedIndexExtension allowing to create a mapping [DataObject -> List of files containing this object]

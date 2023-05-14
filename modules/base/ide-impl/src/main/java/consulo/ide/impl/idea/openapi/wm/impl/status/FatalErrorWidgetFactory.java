@@ -12,7 +12,7 @@ import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.UIBundle;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "fatalErrorWidget", order = "after notificationsWidget")
 public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {

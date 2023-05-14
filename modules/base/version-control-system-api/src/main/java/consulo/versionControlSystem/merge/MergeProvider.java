@@ -19,7 +19,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 
 public interface MergeProvider extends VcsProviderMarker {

@@ -22,8 +22,8 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Arrays;

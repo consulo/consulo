@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.util.graph.impl;
 
 import consulo.component.util.graph.Graph;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

@@ -18,7 +18,7 @@ package consulo.language.pattern;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

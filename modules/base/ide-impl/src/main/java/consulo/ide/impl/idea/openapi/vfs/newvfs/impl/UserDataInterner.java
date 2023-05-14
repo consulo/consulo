@@ -21,7 +21,7 @@ import consulo.util.dataholder.keyFMap.ArrayBackedFMap;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.dataholder.keyFMap.OneElementFMap;
 import consulo.util.dataholder.keyFMap.PairElementsFMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;

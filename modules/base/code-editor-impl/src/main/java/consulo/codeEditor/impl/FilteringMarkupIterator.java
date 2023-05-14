@@ -2,7 +2,7 @@
 package consulo.codeEditor.impl;
 
 import consulo.document.MarkupIterator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;

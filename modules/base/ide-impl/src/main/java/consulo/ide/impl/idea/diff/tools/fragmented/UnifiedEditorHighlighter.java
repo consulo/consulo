@@ -28,7 +28,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

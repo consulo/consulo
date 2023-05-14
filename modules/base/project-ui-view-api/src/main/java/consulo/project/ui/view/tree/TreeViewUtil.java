@@ -19,7 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiPackage;
 import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

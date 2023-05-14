@@ -21,7 +21,7 @@ import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

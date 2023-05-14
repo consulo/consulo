@@ -20,7 +20,7 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author Gregory.Shrago

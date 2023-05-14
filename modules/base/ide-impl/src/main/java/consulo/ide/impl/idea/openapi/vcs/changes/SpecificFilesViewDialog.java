@@ -44,7 +44,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -189,7 +189,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
     return DataManager.getInstance().getDataContext(view).getData(ChangesBrowserBase.DATA_KEY);
   }
 
-  public static void refreshChanges(@Nonnull Project project, @javax.annotation.Nullable ChangesBrowserBase browser) {
+  public static void refreshChanges(@Nonnull Project project, @jakarta.annotation.Nullable ChangesBrowserBase browser) {
     if (browser != null) {
       ChangeListManager.getInstance(project)
               .invokeAfterUpdate(browser::rebuildList, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Delete files", null);

@@ -14,7 +14,7 @@ import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;

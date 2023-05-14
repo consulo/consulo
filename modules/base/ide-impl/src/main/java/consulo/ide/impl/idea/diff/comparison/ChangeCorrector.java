@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.collection.primitive.ints.IntList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.expand;

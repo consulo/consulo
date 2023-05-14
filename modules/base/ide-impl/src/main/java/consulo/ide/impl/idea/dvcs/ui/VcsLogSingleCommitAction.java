@@ -27,7 +27,7 @@ import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLog;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -87,6 +87,6 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
   @Nonnull
   protected abstract AbstractRepositoryManager<Repo> getRepositoryManager(@Nonnull Project project);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract Repo getRepositoryForRoot(@Nonnull Project project, @Nonnull VirtualFile root);
 }

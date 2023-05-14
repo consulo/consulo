@@ -23,8 +23,8 @@ import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -229,7 +229,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Node findNodeToTerminate(@Nonnull TreeNodeEvent treeNodeEvent) {
     Node node = findNode(treeNodeEvent);
     if (node == null) {
@@ -250,7 +250,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
 
   @Override
   public void onError(@Nonnull final String localizedMessage,
-                      @javax.annotation.Nullable final String stackTrace,
+                      @jakarta.annotation.Nullable final String stackTrace,
                       final boolean isCritical) {
     onError(null, localizedMessage, stackTrace, isCritical);
   }
@@ -347,7 +347,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     addToInvokeLater(() -> fireOnTestsCountInSuite(count));
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String validateAndGetNodeId(@Nonnull TreeNodeEvent treeNodeEvent) {
     String nodeId = treeNodeEvent.getId();
     if (nodeId == null || nodeId.equals(TreeNodeEvent.ROOT_NODE_ID)) {
@@ -362,7 +362,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     return nodeId != null ? myNodeByIdMap.get(nodeId) : null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public SMTestProxy findProxyById(@Nonnull String id) {
     Node node = myNodeByIdMap.get(id);
     return node != null ? node.getProxy() : null;
@@ -433,7 +433,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
     private final SMTestProxy myProxy;
     private State myState;
 
-    Node(@Nonnull String id, @javax.annotation.Nullable Node parentNode, @Nonnull SMTestProxy proxy) {
+    Node(@Nonnull String id, @jakarta.annotation.Nullable Node parentNode, @Nonnull SMTestProxy proxy) {
       myId = id;
       myParentNode = parentNode;
       myProxy = proxy;
@@ -445,7 +445,7 @@ public class GeneralIdBasedToSMTRunnerEventsConvertor extends GeneralTestEventsP
       return myId;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public Node getParentNode() {
       return myParentNode;
     }

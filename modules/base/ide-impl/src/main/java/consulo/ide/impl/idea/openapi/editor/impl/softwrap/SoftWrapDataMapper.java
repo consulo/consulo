@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.impl.softwrap;
 import consulo.document.Document;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Every document that is exposed to end-user via IJ editor has a number of various dimensions ({@link LogicalPosition logical}

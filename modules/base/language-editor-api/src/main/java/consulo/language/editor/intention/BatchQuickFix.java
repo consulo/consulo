@@ -18,7 +18,7 @@ package consulo.language.editor.intention;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

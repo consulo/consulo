@@ -21,8 +21,8 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubTree;
 import consulo.language.psi.stub.StubbedSpine;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

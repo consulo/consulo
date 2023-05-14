@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.util.List;

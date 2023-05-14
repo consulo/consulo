@@ -29,8 +29,8 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.LinearGraphController.Lin
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.PrintElementGeneratorImpl;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -73,7 +73,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Integer getVisibleRowIndex(@Nonnull CommitId commitId) {
     int nodeId = myPermanentGraph.getPermanentCommitsInfo().getNodeId(commitId);
     return myGraphController.getCompiledGraph().getNodeIndex(nodeId);
@@ -104,7 +104,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
 
   private class ActionControllerImpl implements ActionController<CommitId> {
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private Integer convertToNodeId(@Nullable Integer nodeIndex) {
       if (nodeIndex == null) return null;
       return myGraphController.getCompiledGraph().getNodeId(nodeIndex);
@@ -198,21 +198,21 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   private static class GraphAnswerImpl<CommitId> implements GraphAnswer<CommitId> {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final Cursor myCursor;
     @Nullable private final CommitId myCommitToJump;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final Runnable myUpdater;
     private final boolean myDoJump;
 
-    private GraphAnswerImpl(@Nullable Cursor cursor, @javax.annotation.Nullable CommitId commitToJump, @javax.annotation.Nullable Runnable updater, boolean doJump) {
+    private GraphAnswerImpl(@Nullable Cursor cursor, @jakarta.annotation.Nullable CommitId commitToJump, @jakarta.annotation.Nullable Runnable updater, boolean doJump) {
       myCursor = cursor;
       myCommitToJump = commitToJump;
       myUpdater = updater;
       myDoJump = doJump;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public Cursor getCursorToSet() {
       return myCursor;
@@ -237,7 +237,7 @@ public class VisibleGraphImpl<CommitId> implements VisibleGraph<CommitId> {
   }
 
   public static class LinearGraphActionImpl implements LinearGraphAction {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final PrintElementWithGraphElement myAffectedElement;
     @Nonnull
     private final Type myType;

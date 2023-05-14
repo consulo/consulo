@@ -17,7 +17,7 @@ package consulo.versionControlSystem;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: Irina.Chernushina

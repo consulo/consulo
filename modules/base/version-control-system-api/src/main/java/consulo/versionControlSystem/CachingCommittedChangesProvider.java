@@ -20,7 +20,7 @@ import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
   @Nls
   String getChangelistTitle();
 
-  boolean isChangeLocallyAvailable(FilePath filePath, @javax.annotation.Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
+  boolean isChangeLocallyAvailable(FilePath filePath, @jakarta.annotation.Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
 
   /**
    * Returns true if a timer-based refresh of committed changes should be followed by refresh of incoming changes, so that,

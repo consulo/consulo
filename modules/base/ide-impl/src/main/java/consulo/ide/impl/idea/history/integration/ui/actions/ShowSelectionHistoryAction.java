@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.history.VcsSelection;
 import consulo.ide.impl.idea.vcsUtil.VcsSelectionUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ShowSelectionHistoryAction extends ShowHistoryAction {
   @Override

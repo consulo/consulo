@@ -3,8 +3,8 @@ package consulo.virtualFileSystem.event;
 
 import consulo.util.io.FileAttributes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An internal class for data transfer from refresh worker to persistent FS impl, do not use.

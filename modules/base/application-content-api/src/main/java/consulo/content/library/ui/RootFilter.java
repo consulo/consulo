@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 

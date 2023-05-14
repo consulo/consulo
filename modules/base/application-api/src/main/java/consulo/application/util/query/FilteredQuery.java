@@ -6,7 +6,7 @@ import consulo.application.util.function.Processor;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

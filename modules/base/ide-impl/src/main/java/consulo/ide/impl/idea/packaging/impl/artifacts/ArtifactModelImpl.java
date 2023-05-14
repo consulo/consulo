@@ -23,8 +23,8 @@ import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -26,8 +26,8 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
   public static final String COMMAND_NAME = CodeInsightBundle.message("process.optimize.imports");
   private final List<NotificationInfo> myOptimizerNotifications = ContainerUtil.newSmartList();
 
-  public OptimizeImportsProcessor(@javax.annotation.Nonnull Project project) {
+  public OptimizeImportsProcessor(@jakarta.annotation.Nonnull Project project) {
     super(project, COMMAND_NAME, PROGRESS_TEXT, false);
   }
 

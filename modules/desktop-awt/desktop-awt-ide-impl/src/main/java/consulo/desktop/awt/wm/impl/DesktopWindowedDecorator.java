@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.FrameWrapper;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.ex.toolWindow.ToolWindowWindowedDecorator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class DesktopWindowedDecorator extends FrameWrapper implements ToolWindowWindowedDecorator {
   private final Project myProject;

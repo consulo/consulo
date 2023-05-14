@@ -24,7 +24,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author oleg

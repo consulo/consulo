@@ -23,8 +23,8 @@ import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.undoRedo.CommandProcessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 
 public class FormatterUtil {

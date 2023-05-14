@@ -19,7 +19,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev

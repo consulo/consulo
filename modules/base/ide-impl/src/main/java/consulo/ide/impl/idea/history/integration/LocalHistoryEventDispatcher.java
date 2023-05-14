@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;

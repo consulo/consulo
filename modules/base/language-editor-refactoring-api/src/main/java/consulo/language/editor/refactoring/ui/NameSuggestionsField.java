@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;

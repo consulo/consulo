@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.actions;
 
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

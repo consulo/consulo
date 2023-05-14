@@ -39,7 +39,7 @@ import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;

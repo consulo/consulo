@@ -10,8 +10,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

@@ -17,7 +17,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.OrderedSet;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

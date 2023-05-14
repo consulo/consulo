@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class AddOccurrenceAction extends OccurrenceAction {

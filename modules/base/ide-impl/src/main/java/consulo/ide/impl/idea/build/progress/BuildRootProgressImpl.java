@@ -11,7 +11,7 @@ import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.StartEvent;
 import consulo.ide.impl.idea.build.events.impl.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 //@ApiStatus.Internal
 public class BuildRootProgressImpl extends BuildProgressImpl {

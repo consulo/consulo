@@ -36,7 +36,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

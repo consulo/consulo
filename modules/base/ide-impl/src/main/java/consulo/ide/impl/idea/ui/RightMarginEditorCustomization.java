@@ -19,7 +19,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.ui.SimpleEditorCustomization;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RightMarginEditorCustomization extends SimpleEditorCustomization {
 

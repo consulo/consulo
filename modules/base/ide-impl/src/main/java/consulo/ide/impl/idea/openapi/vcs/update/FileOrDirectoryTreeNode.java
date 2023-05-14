@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.File;
@@ -49,7 +49,7 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
   protected FileOrDirectoryTreeNode(@Nonnull String path,
                                     @Nonnull SimpleTextAttributes invalidAttributes,
                                     @Nonnull Project project,
-                                    @javax.annotation.Nullable String parentPath) {
+                                    @jakarta.annotation.Nullable String parentPath) {
     String preparedPath = path.replace(File.separatorChar, '/');
     String url = VirtualFileManager.constructUrl(LocalFileSystem.getInstance().getProtocol(), preparedPath);
     setUserObject(VirtualFilePointerManager.getInstance().create(url, this, this));

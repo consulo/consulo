@@ -4,8 +4,8 @@ package consulo.application.util.matcher;
 
 import consulo.application.internal.InternalKeyboardLayoutUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

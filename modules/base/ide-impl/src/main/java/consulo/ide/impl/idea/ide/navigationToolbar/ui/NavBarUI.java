@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.navigationToolbar.ui;
 
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarItem;
 import consulo.ide.impl.idea.ide.navigationToolbar.NavBarPanel;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

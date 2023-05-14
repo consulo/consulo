@@ -19,7 +19,7 @@ import consulo.language.pom.event.PomModelEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class PomTransactionBase implements PomTransaction{
   private final PsiElement myScope;

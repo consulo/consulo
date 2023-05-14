@@ -34,8 +34,8 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;

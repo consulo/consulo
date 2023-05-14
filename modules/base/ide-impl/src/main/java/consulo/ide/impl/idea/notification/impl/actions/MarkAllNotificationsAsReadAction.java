@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.notification.EventLog;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MarkAllNotificationsAsReadAction extends DumbAwareAction {

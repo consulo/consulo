@@ -9,7 +9,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 
 public abstract class UserFileType<T extends UserFileType> implements FileType, Cloneable {

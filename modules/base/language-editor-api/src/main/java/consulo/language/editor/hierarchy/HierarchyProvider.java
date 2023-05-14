@@ -20,8 +20,8 @@ import consulo.dataContext.DataContext;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Implement this interface to provide hierarchy browsing actions (Type Hierarchy, Method Hierarchy,

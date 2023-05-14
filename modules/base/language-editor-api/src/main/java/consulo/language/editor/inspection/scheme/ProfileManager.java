@@ -17,7 +17,7 @@ package consulo.language.editor.inspection.scheme;
 
 import consulo.content.scope.NamedScopesHolder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**

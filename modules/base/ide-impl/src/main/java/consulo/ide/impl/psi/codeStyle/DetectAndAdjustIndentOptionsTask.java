@@ -38,7 +38,7 @@ import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 

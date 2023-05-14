@@ -19,7 +19,7 @@
  */
 package consulo.component.messagebus;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to

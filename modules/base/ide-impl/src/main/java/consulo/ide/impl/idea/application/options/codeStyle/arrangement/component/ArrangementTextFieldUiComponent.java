@@ -22,7 +22,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.util.Alarm;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

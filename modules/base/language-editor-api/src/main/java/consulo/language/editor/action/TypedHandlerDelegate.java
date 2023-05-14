@@ -11,7 +11,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Handler, extending IDE behaviour on typing in editor.

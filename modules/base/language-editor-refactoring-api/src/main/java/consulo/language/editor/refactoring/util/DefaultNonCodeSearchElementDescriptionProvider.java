@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import consulo.language.psi.PsiPackageHelper;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

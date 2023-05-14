@@ -27,7 +27,7 @@ import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class LightStubBuilder implements StubBuilder {

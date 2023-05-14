@@ -29,7 +29,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class EditorToggleDecorationAction extends ToggleAction implements DumbAware {
   @Override

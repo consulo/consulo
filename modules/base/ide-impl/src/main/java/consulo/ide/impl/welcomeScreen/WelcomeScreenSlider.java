@@ -1,6 +1,6 @@
 package consulo.ide.impl.welcomeScreen;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.comparison;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 abstract class TextChunk {
   @Nonnull

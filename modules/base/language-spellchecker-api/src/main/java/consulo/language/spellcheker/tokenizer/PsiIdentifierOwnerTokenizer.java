@@ -22,7 +22,7 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.spellcheker.tokenizer.splitter.IdentifierTokenSplitter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PsiIdentifierOwnerTokenizer extends Tokenizer<PsiNameIdentifierOwner> {
   @Override

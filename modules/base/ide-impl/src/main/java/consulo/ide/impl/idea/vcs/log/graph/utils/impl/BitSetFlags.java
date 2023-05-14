@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.BitSet;
 

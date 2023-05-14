@@ -28,7 +28,7 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**

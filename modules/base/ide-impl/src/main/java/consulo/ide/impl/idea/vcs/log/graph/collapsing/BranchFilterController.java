@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.CascadeController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.ReachableNodes;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public class BranchFilterController extends CascadeController {
 
   public BranchFilterController(@Nonnull CascadeController delegateLinearGraphController,
                                 @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
-                                @javax.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
+                                @jakarta.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     myIdsOfVisibleBranches = idsOfVisibleBranches;
     updateCollapsedGraph();

@@ -17,7 +17,7 @@ package consulo.versionControlSystem.log.util;
 
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 public class UserNameRegex implements Function<String, String> {

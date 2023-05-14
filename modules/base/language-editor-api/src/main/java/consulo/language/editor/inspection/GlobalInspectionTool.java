@@ -26,8 +26,8 @@ import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base class for global inspections. Global inspections work only in batch mode

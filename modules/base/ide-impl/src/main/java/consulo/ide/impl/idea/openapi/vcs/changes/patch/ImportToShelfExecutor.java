@@ -39,8 +39,8 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -63,7 +63,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
   @Override
   public void apply(@Nonnull List<FilePatch> remaining,
                     @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
-                    @javax.annotation.Nullable LocalChangeList localList,
+                    @jakarta.annotation.Nullable LocalChangeList localList,
                     @Nullable final String fileName,
                     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo) {
     if (fileName == null) {

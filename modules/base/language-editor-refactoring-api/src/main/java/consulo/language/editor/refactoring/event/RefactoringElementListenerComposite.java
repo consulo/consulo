@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.event;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class RefactoringElementListenerComposite implements RefactoringElementListener, UndoRefactoringElementListener {

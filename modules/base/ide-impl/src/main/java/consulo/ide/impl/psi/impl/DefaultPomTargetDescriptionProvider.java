@@ -27,7 +27,7 @@ import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

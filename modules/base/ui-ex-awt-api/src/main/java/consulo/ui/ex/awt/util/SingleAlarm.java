@@ -5,8 +5,8 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class SingleAlarm extends Alarm {
   private final Runnable task;

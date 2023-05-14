@@ -22,7 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,7 +38,7 @@ public class UnifiedDiffPanel extends DiffPanelBase {
   @Nonnull
   private final AsyncProcessIcon.Big myBusyIcon;
 
-  public UnifiedDiffPanel(@javax.annotation.Nullable Project project,
+  public UnifiedDiffPanel(@jakarta.annotation.Nullable Project project,
                           @Nonnull UnifiedContentPanel content,
                           @Nonnull DataProvider provider,
                           @Nonnull DiffContext context) {

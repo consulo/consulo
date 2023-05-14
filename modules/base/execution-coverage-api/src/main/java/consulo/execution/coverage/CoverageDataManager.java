@@ -24,8 +24,8 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 

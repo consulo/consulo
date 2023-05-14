@@ -20,8 +20,8 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiElementFilter;
 import consulo.language.psi.util.PsiTreeUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

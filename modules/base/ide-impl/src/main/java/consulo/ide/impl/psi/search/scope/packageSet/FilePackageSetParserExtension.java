@@ -27,7 +27,7 @@ import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.ParsingException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class FilePackageSetParserExtension implements PackageSetParserExtension {

@@ -6,7 +6,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorCaretModelBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DesktopCaretModelImpl extends CodeEditorCaretModelBase<DesktopCaretImpl> {
   public DesktopCaretModelImpl(@Nonnull DesktopEditorImpl editor) {

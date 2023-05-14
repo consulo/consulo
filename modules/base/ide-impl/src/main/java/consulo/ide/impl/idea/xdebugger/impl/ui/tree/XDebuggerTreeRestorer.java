@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;

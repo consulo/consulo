@@ -22,7 +22,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolderEx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface EditorWindow extends UserDataHolderEx, InjectedEditor {
   @Nonnull

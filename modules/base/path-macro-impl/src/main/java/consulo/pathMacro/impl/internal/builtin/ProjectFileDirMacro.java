@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public final class ProjectFileDirMacro extends Macro {
   @Override

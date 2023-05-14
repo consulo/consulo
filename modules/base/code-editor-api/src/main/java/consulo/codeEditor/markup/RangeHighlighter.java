@@ -19,8 +19,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.RangeMarker;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Comparator;
 

@@ -31,8 +31,8 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Collections;

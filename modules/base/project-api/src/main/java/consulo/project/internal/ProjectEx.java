@@ -18,7 +18,7 @@ package consulo.project.internal;
 import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ProjectEx extends Project {
   boolean isOptimiseTestLoadSpeed();

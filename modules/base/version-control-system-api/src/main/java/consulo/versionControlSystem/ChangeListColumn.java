@@ -27,7 +27,7 @@ import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 public abstract class ChangeListColumn<T extends ChangeList> {

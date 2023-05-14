@@ -34,8 +34,8 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;

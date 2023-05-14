@@ -8,8 +8,8 @@ import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Sergey.Malenkov

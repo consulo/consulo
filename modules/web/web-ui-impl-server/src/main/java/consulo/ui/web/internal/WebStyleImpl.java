@@ -21,7 +21,7 @@ import consulo.ui.style.StyleColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.Style;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

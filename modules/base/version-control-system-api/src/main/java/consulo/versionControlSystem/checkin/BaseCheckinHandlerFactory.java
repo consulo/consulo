@@ -18,7 +18,7 @@ package consulo.versionControlSystem.checkin;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.CommitContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author irengrig

@@ -20,7 +20,7 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

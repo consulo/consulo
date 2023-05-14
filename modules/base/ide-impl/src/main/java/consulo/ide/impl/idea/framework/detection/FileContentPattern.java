@@ -20,7 +20,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.language.psi.stub.FileContent;
 import consulo.util.xml.fastReader.NanoXmlUtil;
 import consulo.util.xml.fastReader.XmlFileHeader;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 

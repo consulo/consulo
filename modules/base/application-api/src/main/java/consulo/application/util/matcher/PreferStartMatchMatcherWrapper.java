@@ -3,8 +3,8 @@ package consulo.application.util.matcher;
 
 import consulo.util.collection.FList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PreferStartMatchMatcherWrapper extends MinusculeMatcher {
   public static final int START_MATCH_WEIGHT = 10000;

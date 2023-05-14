@@ -19,7 +19,7 @@ import consulo.util.collection.Maps;
 import consulo.util.collection.impl.map.RefHashMap;
 import consulo.util.collection.impl.map.RefKeyRefValueHashMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Map;

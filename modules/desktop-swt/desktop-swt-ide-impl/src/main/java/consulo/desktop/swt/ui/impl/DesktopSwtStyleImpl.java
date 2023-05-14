@@ -19,7 +19,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.StyleColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

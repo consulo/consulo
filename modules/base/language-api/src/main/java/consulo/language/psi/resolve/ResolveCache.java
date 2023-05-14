@@ -21,8 +21,8 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.*;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

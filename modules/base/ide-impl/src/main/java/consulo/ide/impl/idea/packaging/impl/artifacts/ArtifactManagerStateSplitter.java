@@ -19,7 +19,7 @@ import consulo.component.persist.StateSplitterEx;
 import consulo.ide.impl.idea.packaging.impl.artifacts.state.ArtifactState;
 import consulo.util.lang.Pair;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

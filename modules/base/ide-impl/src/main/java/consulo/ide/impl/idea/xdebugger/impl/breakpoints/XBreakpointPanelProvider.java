@@ -39,8 +39,8 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointC
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointFileGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping.XBreakpointGroupingByTypeRule;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

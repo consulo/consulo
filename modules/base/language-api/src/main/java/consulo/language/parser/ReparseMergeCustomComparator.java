@@ -20,7 +20,7 @@ import consulo.language.ast.LighterASTNode;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Comparator which called during reparse when merge algorithm is not sure what to merge

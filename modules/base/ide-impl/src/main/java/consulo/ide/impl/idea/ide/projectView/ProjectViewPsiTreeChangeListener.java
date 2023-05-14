@@ -25,7 +25,7 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import static consulo.util.lang.ObjectUtil.notNull;

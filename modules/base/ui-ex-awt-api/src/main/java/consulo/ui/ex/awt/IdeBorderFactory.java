@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.JBColor;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;

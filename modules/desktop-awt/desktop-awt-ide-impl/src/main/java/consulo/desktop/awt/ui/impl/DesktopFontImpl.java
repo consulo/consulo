@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**

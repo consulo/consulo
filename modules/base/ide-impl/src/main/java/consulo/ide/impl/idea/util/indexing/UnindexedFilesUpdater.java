@@ -25,7 +25,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

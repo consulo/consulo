@@ -21,7 +21,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.AbstractCommitChangesAction;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

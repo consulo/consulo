@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

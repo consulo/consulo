@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public class FileListRenderer extends ColoredListCellRenderer {

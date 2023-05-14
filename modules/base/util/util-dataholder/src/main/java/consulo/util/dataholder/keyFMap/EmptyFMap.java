@@ -17,7 +17,7 @@ package consulo.util.dataholder.keyFMap;
 
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class EmptyFMap implements KeyFMap {
   private static final Key[] EMPTY_KEYS_ARRAY = {};

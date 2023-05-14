@@ -18,7 +18,7 @@ package consulo.localHistory;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface Label {
   Label NULL_INSTANCE = new Label() {

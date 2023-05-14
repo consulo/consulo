@@ -24,7 +24,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

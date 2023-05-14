@@ -1,7 +1,7 @@
 package consulo.language.impl.psi.template;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class DefaultOuterLanguagePatcher implements OuterLanguageRangePatcher {
   public static final String OUTER_EXPRESSION_PLACEHOLDER = "jbIdentifier6b52cc4b";

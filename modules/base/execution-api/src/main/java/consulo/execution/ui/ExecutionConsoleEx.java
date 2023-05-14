@@ -18,7 +18,7 @@ package consulo.execution.ui;
 
 import consulo.execution.ui.layout.RunnerLayoutUi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Gregory.Shrago

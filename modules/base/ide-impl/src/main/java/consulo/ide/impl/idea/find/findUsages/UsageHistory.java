@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.findUsages;
 import consulo.util.lang.function.Condition;
 import consulo.usage.ConfigurableUsageTarget;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

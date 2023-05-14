@@ -19,7 +19,7 @@ import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.impl.map.*;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;

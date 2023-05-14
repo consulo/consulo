@@ -2,7 +2,7 @@ package consulo.externalSystem.model.project;
 
 import consulo.externalSystem.service.project.Named;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Not thread-safe.

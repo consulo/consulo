@@ -25,7 +25,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

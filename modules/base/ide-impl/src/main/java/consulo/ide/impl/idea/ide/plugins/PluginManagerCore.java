@@ -30,8 +30,8 @@ import consulo.container.plugin.PluginIds;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

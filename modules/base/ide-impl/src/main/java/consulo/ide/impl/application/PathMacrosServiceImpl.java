@@ -22,8 +22,8 @@ import consulo.application.macro.PathMacros;
 import consulo.component.store.impl.internal.PathMacrosService;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 

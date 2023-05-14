@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class InlayModelImpl extends CodeEditorInlayModelBase {
   InlayModelImpl(@Nonnull CodeEditorBase editor) {

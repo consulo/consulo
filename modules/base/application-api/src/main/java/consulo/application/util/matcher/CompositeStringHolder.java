@@ -15,7 +15,7 @@
  */
 package consulo.application.util.matcher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**

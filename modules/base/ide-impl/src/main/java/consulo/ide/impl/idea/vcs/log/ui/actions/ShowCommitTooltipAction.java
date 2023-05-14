@@ -24,7 +24,7 @@ import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowCommitTooltipAction extends DumbAwareAction {
   public ShowCommitTooltipAction() {

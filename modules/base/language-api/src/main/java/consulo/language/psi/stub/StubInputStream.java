@@ -21,8 +21,8 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.IOUtil;
 import consulo.index.io.StringRef;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;

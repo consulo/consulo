@@ -19,7 +19,7 @@ import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

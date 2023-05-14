@@ -19,7 +19,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DirtBuilder implements DirtBuilderReader {
   private final VcsGuess myGuess;

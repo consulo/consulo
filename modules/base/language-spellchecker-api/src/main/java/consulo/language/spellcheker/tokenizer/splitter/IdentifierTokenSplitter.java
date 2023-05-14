@@ -18,8 +18,8 @@ package consulo.language.spellcheker.tokenizer.splitter;
 import consulo.document.util.TextRange;
 import consulo.language.spellcheker.internal.SpellcheckerStringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

@@ -27,7 +27,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.PackageSet;
 import consulo.content.scope.ParsingException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PackageSetParserExtension {

@@ -5,7 +5,7 @@ import consulo.language.Language;
 import consulo.language.MetaLanguage;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class LanguageMatcher {
 

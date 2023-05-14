@@ -18,7 +18,7 @@ package consulo.find;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FindUsagesUtil {
   private FindUsagesUtil() {

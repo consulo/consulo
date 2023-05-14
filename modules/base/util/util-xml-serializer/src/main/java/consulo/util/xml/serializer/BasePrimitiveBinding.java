@@ -17,8 +17,8 @@ package consulo.util.xml.serializer;
 
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 abstract class BasePrimitiveBinding extends Binding {
   protected final String myName;

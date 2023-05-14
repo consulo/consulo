@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LastRunReformatCodeOptionsProvider {
 

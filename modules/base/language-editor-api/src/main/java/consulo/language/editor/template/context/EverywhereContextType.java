@@ -18,7 +18,7 @@ package consulo.language.editor.template.context;
 
 import consulo.annotation.component.ExtensionImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

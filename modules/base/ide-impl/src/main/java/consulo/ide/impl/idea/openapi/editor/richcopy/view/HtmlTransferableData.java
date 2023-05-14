@@ -23,7 +23,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import gnu.trove.TIntObjectHashMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 

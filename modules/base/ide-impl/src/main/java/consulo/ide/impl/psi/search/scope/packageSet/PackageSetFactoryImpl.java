@@ -29,7 +29,7 @@ import consulo.content.scope.ParsingException;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @ServiceImpl

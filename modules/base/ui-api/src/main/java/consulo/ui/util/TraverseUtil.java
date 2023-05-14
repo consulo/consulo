@@ -19,7 +19,7 @@ import consulo.ui.Component;
 import consulo.ui.Window;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

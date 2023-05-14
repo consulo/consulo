@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

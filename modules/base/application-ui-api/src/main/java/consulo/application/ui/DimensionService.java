@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Size;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class represents map between strings and rectangles. It's intended to store

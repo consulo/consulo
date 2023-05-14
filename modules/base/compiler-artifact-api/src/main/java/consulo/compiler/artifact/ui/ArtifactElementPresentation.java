@@ -22,7 +22,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -62,7 +62,7 @@ public class ArtifactElementPresentation extends TreeNodePresentation {
     presentationData.addText(getPresentableName(), artifact != null ? mainAttributes : SimpleTextAttributes.ERROR_ATTRIBUTES);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Artifact findArtifact() {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(myContext.getArtifactModel()) : null;
   }

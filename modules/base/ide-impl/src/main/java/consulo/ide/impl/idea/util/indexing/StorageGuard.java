@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @SuppressWarnings({"WhileLoopSpinsOnField", "SynchronizeOnThis"})
 class StorageGuard {

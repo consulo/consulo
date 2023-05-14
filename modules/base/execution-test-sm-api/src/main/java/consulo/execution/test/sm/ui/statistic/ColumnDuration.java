@@ -39,7 +39,7 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     return TestsPresentationUtil.getDurationPresentation(testProxy);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Comparator<SMTestProxy> getComparator(){
     return this;
   }

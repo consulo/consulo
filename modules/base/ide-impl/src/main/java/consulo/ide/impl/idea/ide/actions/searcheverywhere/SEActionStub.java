@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SEActionStub extends DumbAwareAction {
 

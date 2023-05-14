@@ -23,7 +23,7 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

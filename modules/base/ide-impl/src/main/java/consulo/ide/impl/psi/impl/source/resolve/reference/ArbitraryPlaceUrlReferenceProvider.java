@@ -27,7 +27,7 @@ import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 

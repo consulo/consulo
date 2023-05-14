@@ -21,7 +21,7 @@ import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.ui.image.IconLibraryManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

@@ -18,7 +18,7 @@ package consulo.pathMacro.impl.internal.builtin;
 import consulo.pathMacro.PathMacroBundle;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.ProductionContentFolderTypeProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -3,7 +3,7 @@ package consulo.language.editor.inspection;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This kind of suppression fix allows to clients to specify whether the fix should

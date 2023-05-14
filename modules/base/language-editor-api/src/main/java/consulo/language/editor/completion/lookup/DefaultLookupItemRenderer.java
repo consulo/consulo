@@ -24,7 +24,7 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

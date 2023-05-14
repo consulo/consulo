@@ -22,7 +22,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

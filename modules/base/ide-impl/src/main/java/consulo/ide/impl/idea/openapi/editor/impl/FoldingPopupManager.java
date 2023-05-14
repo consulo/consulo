@@ -18,7 +18,7 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.util.Alarm;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

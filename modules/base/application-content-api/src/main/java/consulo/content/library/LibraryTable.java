@@ -17,8 +17,8 @@ package consulo.content.library;
 
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.EventListener;
 import java.util.Iterator;
 

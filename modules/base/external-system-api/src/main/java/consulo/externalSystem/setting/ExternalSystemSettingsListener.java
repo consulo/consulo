@@ -15,7 +15,7 @@
  */
 package consulo.externalSystem.setting;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 

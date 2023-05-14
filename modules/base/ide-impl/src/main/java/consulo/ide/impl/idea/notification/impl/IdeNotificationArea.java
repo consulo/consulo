@@ -40,8 +40,8 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.style.ComponentColors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

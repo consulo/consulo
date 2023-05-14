@@ -26,7 +26,7 @@ import consulo.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

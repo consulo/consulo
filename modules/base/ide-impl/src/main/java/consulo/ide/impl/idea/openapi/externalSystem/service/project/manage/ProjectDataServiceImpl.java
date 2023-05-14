@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

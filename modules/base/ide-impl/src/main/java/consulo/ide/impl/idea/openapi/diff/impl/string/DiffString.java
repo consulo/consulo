@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.string;
 import consulo.ide.impl.idea.openapi.diff.LineTokenizerBase;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

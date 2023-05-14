@@ -17,8 +17,8 @@ package consulo.execution.ui.console;
 
 import consulo.language.editor.scratch.RootType;
 import consulo.util.lang.StringHash;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author gregsh

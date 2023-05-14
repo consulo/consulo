@@ -20,7 +20,7 @@ import consulo.execution.unscramble.StacktraceAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Default impl of stacktrace analyzer. Not support clipboard sync, and preferring for projects

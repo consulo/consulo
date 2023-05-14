@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

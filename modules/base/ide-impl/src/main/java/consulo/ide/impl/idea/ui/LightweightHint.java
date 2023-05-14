@@ -17,7 +17,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.OpaquePanel;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;

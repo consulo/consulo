@@ -20,7 +20,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public static ProjectRootManagerEx getInstanceEx(Project project) {

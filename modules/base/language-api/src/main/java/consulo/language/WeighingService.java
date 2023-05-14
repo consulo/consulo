@@ -18,8 +18,8 @@ package consulo.language;
 import consulo.application.util.function.Computable;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 

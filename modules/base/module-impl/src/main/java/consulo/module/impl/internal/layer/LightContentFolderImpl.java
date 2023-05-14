@@ -22,8 +22,8 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -79,7 +79,7 @@ public class LightContentFolderImpl implements ContentFolder {
   }
 
   @Override
-  public <T> void setPropertyValue(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void setPropertyValue(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
 
   }
 

@@ -29,8 +29,8 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class ProjectInspectionToolsConfigurable extends InspectionToolsConfigurable implements ProjectConfigurable {

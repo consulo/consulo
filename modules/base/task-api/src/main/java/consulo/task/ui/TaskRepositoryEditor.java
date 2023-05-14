@@ -17,7 +17,7 @@ package consulo.task.ui;
 
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

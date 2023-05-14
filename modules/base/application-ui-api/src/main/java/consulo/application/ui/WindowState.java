@@ -4,8 +4,8 @@ package consulo.application.ui;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Size;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 public interface WindowState {

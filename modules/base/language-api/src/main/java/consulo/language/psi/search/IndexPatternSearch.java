@@ -8,7 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryFactory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to search for occurrences of specified regular expressions in the comments of source files.

@@ -23,7 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.CommentUtilCore;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CommentUtil extends CommentUtilCore {
   private CommentUtil() { }

@@ -18,7 +18,7 @@ package consulo.externalSystem.util;
 import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka

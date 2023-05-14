@@ -21,8 +21,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class WaitForProgressToShow {
   private WaitForProgressToShow() {

@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

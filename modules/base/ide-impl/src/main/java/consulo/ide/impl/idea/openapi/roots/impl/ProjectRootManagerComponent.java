@@ -57,8 +57,8 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;

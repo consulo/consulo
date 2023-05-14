@@ -19,7 +19,7 @@ package consulo.virtualFileSystem.internal.matcher;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

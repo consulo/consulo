@@ -21,7 +21,7 @@ import consulo.language.editor.generation.MemberChooserBuilder;
 import consulo.language.editor.internal.MemberChooserBuilderFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

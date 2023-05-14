@@ -19,8 +19,8 @@ import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

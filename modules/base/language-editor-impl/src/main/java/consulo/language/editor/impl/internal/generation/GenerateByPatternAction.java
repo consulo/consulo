@@ -28,7 +28,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ArrayUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

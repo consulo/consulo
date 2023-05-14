@@ -5,7 +5,7 @@
  */
 package consulo.component.impl.internal.messagebus;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 public final class ReflectionMessage<T> implements Message<T> {

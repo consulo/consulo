@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.ServerNode;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

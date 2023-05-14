@@ -21,7 +21,7 @@ import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class EditorTrackerEditorFactoryListener implements EditorFactoryListener {

@@ -21,7 +21,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.NamedScopesHolderProvider;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

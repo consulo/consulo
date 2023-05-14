@@ -31,8 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class CompareFileWithEditorAction extends BaseShowDiffAction {
   @Override

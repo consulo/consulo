@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.xdebugger.impl.frame.XWatchesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This action works only in the variables view

@@ -20,8 +20,8 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class SkipDefaultsSerializationFilter extends SkipDefaultValuesSerializationFilters {
   boolean equal(@Nonnull Binding binding, @Nonnull Object bean) {

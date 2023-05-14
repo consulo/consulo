@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.formatting.*;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class IndentAdjuster {
   private final AlignmentHelper myAlignmentHelper;

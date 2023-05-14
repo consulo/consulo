@@ -46,8 +46,8 @@ import consulo.util.lang.function.Conditions;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;

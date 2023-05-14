@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public final class GotoProjectDirectory extends FileChooserAction {
   @Override

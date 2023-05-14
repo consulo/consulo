@@ -39,8 +39,8 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

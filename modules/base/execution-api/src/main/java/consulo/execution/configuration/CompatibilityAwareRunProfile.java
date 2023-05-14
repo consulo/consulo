@@ -2,7 +2,7 @@ package consulo.execution.configuration;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface CompatibilityAwareRunProfile extends RunProfile {
   /**

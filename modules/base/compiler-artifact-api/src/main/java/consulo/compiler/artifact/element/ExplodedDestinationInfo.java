@@ -18,7 +18,7 @@ package consulo.compiler.artifact.element;
 
 import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

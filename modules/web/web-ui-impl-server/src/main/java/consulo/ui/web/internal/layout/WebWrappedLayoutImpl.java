@@ -24,8 +24,8 @@ import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.BaseSingleLayoutState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

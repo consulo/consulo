@@ -16,8 +16,8 @@
 
 package consulo.language.ast;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface RoleFinder {
   @Nullable

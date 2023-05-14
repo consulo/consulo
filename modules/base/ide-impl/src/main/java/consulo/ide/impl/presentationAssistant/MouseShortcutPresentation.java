@@ -18,7 +18,7 @@ package consulo.ide.impl.presentationAssistant;
 
 import consulo.ui.ex.action.MouseShortcut;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;

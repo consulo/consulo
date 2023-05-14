@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.util.indexing.impl.forward;
 
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.index.io.data.DataExternalizer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 

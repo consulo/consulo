@@ -18,8 +18,8 @@ package consulo.execution.debug.breakpoint;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represent a breakpoint which is set on some line in a file. This interface isn't supposed to be implemented by a plugin. In order to

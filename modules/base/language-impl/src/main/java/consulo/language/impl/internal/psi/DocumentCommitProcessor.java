@@ -22,8 +22,8 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DocumentCommitProcessor {

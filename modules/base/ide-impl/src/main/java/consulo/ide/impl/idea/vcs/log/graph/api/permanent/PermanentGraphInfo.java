@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph.api.permanent;
 
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 

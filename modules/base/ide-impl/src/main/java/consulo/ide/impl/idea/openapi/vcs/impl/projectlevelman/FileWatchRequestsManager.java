@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ui.ex.awt.util.Alarm;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FileWatchRequestsManager {
   private final FileWatchRequestModifier myModifier;

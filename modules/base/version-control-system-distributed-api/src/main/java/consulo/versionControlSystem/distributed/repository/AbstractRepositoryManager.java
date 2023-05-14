@@ -8,8 +8,8 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractRepositoryManager<T extends Repository>

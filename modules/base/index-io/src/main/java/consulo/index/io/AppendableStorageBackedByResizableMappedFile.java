@@ -21,8 +21,8 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.LimitedInputStream;
 import consulo.util.io.UnsyncByteArrayInputStream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.function.Predicate;

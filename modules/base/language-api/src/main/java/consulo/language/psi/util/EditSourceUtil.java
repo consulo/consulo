@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class EditSourceUtil {
   private EditSourceUtil() {

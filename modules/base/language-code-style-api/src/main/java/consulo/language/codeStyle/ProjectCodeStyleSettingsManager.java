@@ -24,7 +24,7 @@ import consulo.component.persist.Storage;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Singleton
 @State(name = "ProjectCodeStyleSettingsManager", storages = @Storage("codeStyleSettings.xml"))

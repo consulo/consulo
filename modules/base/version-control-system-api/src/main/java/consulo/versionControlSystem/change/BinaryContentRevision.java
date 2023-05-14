@@ -18,7 +18,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.VcsException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

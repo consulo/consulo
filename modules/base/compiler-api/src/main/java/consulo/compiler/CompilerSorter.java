@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.util.collection.Chunk;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

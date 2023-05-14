@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

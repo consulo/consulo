@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

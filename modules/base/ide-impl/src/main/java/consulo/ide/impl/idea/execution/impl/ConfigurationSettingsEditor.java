@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

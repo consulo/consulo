@@ -32,7 +32,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Locale;
 
 import static consulo.language.ast.StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN;

@@ -4,9 +4,9 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Objects;
 
 @ExtensionImpl(order = "first")

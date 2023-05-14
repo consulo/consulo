@@ -42,7 +42,7 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;

@@ -3,8 +3,8 @@ package consulo.execution.coverage;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik

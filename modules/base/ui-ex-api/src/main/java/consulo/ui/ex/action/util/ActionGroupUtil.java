@@ -19,8 +19,8 @@ package consulo.ui.ex.action.util;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

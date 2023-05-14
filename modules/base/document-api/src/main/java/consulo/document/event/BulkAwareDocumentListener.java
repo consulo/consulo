@@ -3,7 +3,7 @@ package consulo.document.event;
 
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Convenience interface for {@link DocumentListener}-s which only process notifications on document changes performed not in

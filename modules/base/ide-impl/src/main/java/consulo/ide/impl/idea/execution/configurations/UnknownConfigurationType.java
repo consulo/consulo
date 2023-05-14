@@ -23,7 +23,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

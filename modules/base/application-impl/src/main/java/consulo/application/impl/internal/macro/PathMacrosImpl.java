@@ -33,7 +33,7 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

@@ -50,7 +50,7 @@ public class VcsHandleType extends HandleType {
     myChangeFunction = myChangeListManager::getChange;
   }
 
-  public void processFiles(final Collection<VirtualFile> files, @javax.annotation.Nullable final String changelist) {
+  public void processFiles(final Collection<VirtualFile> files, @jakarta.annotation.Nullable final String changelist) {
     try {
       EditFileProvider provider = myVcs.getEditFileProvider();
       assert provider != null;

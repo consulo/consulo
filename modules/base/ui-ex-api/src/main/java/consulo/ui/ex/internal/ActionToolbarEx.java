@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.action.ActionToolbar;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

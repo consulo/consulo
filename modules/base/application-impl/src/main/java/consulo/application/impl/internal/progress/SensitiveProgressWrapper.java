@@ -17,7 +17,7 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.progress.ProgressIndicator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Progress indicator wrapper which reacts to its own cancellation in addition to the cancellation of its wrappee.

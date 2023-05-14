@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.tools.holders;
 
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
@@ -26,7 +26,7 @@ public abstract class EditorHolder implements Disposable {
   @Nonnull
   public abstract JComponent getComponent();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract JComponent getPreferredFocusedComponent();
 
   public void installFocusListener(@Nonnull FocusListener listener) {

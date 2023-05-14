@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
 import consulo.compiler.artifact.Artifact;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

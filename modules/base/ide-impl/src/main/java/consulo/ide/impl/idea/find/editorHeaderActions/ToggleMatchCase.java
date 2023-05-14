@@ -19,7 +19,7 @@ import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorHeaderToggleAction implements Embeddable {
   public ToggleMatchCase() {

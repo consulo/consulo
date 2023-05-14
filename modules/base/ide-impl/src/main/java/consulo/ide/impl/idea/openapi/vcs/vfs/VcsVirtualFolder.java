@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.vfs;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 

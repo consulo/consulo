@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface EditorSchemeAttributeDescriptor {
   @Nonnull

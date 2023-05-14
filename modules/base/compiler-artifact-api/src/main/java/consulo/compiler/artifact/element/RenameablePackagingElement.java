@@ -15,7 +15,7 @@
  */
 package consulo.compiler.artifact.element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

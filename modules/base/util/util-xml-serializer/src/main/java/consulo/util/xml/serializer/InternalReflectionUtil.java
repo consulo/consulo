@@ -15,7 +15,7 @@
  */
 package consulo.util.xml.serializer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 

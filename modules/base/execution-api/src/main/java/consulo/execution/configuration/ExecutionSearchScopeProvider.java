@@ -21,8 +21,8 @@ import consulo.module.content.scope.ModuleSearchScopes;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vojtech Krasa

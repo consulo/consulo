@@ -40,8 +40,8 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -112,7 +112,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public DependencyRule getViolatorDependencyRule(@Nonnull PsiFile from, @Nonnull PsiFile to) {
     for (DependencyRule dependencyRule : myRules) {
       if (dependencyRule.isForbiddenToUse(from, to)) return dependencyRule;
@@ -271,8 +271,8 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
   }
 
   @Override
-  @javax.annotation.Nullable
-  public NamedScope getScope(@javax.annotation.Nullable final String name) {
+  @jakarta.annotation.Nullable
+  public NamedScope getScope(@jakarta.annotation.Nullable final String name) {
     final NamedScope scope = super.getScope(name);
     if (scope == null) {
       final PackageSet packageSet = myUnnamedScopes.get(name);
@@ -287,7 +287,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
     return scope;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static Element writeRule(DependencyRule rule) {
     NamedScope fromScope = rule.getFromScope();
     NamedScope toScope = rule.getToScope();

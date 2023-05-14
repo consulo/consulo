@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.ExcludingTraversalPolicy;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;

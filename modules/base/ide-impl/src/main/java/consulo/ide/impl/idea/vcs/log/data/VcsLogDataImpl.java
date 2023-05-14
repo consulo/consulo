@@ -37,8 +37,8 @@ import consulo.ide.impl.idea.vcs.log.impl.FatalErrorHandler;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogCachesInvalidator;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.versionControlSystem.util.StopWatch;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;

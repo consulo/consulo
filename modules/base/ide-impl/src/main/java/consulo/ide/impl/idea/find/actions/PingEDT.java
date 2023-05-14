@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;

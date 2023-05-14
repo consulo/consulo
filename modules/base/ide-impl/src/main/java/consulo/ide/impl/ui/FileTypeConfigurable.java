@@ -47,8 +47,8 @@ import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

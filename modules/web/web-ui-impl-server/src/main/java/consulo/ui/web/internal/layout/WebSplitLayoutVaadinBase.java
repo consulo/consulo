@@ -20,7 +20,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

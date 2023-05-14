@@ -27,9 +27,9 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.Topic;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 
 /**

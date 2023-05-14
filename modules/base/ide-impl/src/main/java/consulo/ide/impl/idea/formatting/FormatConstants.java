@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.formatting;
 
 import consulo.codeEditor.Editor;
 import consulo.language.plain.PlainTextLanguage;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.language.editor.util.PsiUtilBase.getLanguageInEditor;
 

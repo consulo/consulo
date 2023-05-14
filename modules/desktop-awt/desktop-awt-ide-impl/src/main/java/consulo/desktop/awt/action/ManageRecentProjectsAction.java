@@ -27,7 +27,7 @@ import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

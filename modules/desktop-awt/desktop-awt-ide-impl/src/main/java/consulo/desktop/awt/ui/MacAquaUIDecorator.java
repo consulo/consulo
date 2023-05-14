@@ -21,8 +21,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

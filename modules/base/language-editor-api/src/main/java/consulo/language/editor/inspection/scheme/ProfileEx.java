@@ -24,7 +24,7 @@ import consulo.util.xml.serializer.annotation.Transient;
 import consulo.logging.Logger;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna

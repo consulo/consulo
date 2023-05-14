@@ -16,8 +16,8 @@
 package consulo.ide.impl.psi.codeStyle.autodetect;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface IndentOptionsDetector {
 

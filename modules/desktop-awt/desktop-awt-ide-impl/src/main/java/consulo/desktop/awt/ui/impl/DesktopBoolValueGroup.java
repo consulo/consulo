@@ -19,7 +19,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.ValueGroup;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

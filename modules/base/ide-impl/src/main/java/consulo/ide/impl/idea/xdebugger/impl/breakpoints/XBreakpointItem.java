@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 class XBreakpointItem extends BreakpointItem {
   private final XBreakpoint<?> myBreakpoint;

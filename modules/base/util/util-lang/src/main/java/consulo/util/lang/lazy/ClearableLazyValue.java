@@ -19,7 +19,7 @@ import consulo.util.lang.lazy.impl.ClearableAtomicLazyValueImpl;
 import consulo.util.lang.lazy.impl.ClearableDefaultLazyValueImpl;
 import consulo.util.lang.lazy.impl.ClearableNullableLazyValueImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

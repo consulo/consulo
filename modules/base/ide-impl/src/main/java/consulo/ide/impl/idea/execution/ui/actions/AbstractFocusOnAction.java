@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.execution.ui.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.content.Content;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class AbstractFocusOnAction extends BaseViewAction implements Toggleable {
   @Nonnull

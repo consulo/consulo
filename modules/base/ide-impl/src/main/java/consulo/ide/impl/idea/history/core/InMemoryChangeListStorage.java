@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import java.util.function.Consumer;
 import consulo.util.collection.primitive.ints.IntSet;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

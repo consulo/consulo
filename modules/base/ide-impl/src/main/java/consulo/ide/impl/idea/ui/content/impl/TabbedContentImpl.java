@@ -20,7 +20,7 @@ import consulo.util.lang.Pair;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ide.impl.idea.util.ContentUtilEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

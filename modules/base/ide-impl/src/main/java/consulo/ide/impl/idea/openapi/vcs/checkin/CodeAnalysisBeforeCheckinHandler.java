@@ -35,7 +35,7 @@ import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.function.PairConsumer;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +61,7 @@ public class CodeAnalysisBeforeCheckinHandler extends CheckinHandler {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
     final JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.standard.options.check.smells"));
     return new RefreshableOnComponent() {

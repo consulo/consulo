@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.refactoring.ui.MethodSignatureComponent;
 import consulo.ide.impl.idea.refactoring.util.SimpleParameterTablePanel;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import java.util.HashMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

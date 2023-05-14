@@ -18,7 +18,7 @@ package consulo.language.version;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.Language;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

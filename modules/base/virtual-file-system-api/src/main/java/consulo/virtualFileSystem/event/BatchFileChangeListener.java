@@ -20,8 +20,8 @@ import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This listener is notified when some operation performs a massive batch file change, and when this change is completed.

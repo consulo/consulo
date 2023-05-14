@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Function;

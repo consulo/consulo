@@ -21,7 +21,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Common base class that should be used for configurations that can be created from context by a {@link consulo.ide.impl.idea.execution.actions.RunConfigurationProducer}}.

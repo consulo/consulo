@@ -19,7 +19,7 @@
  */
 package consulo.application.impl.internal.progress;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface NonCancelableSection {
   void done();

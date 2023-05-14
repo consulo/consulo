@@ -24,7 +24,7 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowProcessWindowAction extends ToggleAction implements DumbAware {
 

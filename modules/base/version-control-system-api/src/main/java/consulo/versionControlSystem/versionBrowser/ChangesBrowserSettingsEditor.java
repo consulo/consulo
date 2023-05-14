@@ -22,7 +22,7 @@
  */
 package consulo.versionControlSystem.versionBrowser;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public interface ChangesBrowserSettingsEditor<T extends ChangeBrowserSettings> {

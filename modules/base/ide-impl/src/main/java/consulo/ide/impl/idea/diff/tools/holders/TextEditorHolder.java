@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.FocusListener;
@@ -56,7 +56,7 @@ public class TextEditorHolder extends EditorHolder {
     myEditor.getContentComponent().addFocusListener(listener);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myEditor.getContentComponent();
@@ -67,7 +67,7 @@ public class TextEditorHolder extends EditorHolder {
   //
 
   @Nonnull
-  public static TextEditorHolder create(@javax.annotation.Nullable Project project, @Nonnull DocumentContent content) {
+  public static TextEditorHolder create(@jakarta.annotation.Nullable Project project, @Nonnull DocumentContent content) {
     EditorEx editor = DiffUtil.createEditor(content.getDocument(), project, false, true);
     DiffUtil.configureEditor(editor, content, project);
     return new TextEditorHolder(editor);

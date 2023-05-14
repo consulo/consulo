@@ -18,7 +18,7 @@ package consulo.execution.test.sm;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.OutputToGeneralTestEventsConverter;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh

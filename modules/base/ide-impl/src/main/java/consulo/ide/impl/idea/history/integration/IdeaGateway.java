@@ -48,8 +48,8 @@ import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -166,7 +166,7 @@ public class IdeaGateway {
     return !h.ensureFilesWritable(VfsUtilCore.toVirtualFileArray(ff)).hasReadonlyFiles();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VirtualFile findVirtualFile(@Nonnull String path) {
     return LocalFileSystem.getInstance().findFileByPath(path);
   }
@@ -273,7 +273,7 @@ public class IdeaGateway {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Entry doCreateEntryForPathOnly(@Nonnull VirtualFile file, @Nonnull String path) {
     if (!file.isDirectory()) {
       if (!isVersioned(file)) return null;
@@ -286,7 +286,7 @@ public class IdeaGateway {
     return newDir;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Entry createTransientEntry(@Nonnull VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     return doCreateEntry(file, false);
@@ -370,7 +370,7 @@ public class IdeaGateway {
   }
 
   // returns null is content has not been changes since last time
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Pair<StoredContent, Long> acquireAndUpdateActualContent(@Nonnull VirtualFile f, @Nullable Document d) {
     ContentAndTimestamps contentAndStamp = f.getUserData(SAVED_DOCUMENT_CONTENT_AND_STAMP_KEY);
     if (contentAndStamp == null) {

@@ -42,7 +42,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

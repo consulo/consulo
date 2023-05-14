@@ -22,7 +22,7 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

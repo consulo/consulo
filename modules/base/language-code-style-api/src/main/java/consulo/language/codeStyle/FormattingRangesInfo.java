@@ -16,7 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface FormattingRangesInfo {
   boolean isWhitespaceReadOnly(@Nonnull TextRange range);

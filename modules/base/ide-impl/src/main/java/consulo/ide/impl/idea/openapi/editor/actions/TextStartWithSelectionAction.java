@@ -28,7 +28,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

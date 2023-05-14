@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.util.concurrency;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.*;
 import java.util.concurrent.Semaphore;
 

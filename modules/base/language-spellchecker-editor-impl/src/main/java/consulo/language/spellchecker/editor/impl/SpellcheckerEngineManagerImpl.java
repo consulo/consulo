@@ -22,7 +22,7 @@ import consulo.language.spellchecker.editor.SpellcheckerEngineManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

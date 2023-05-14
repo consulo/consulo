@@ -23,8 +23,8 @@ import consulo.project.ui.wm.BalloonLayout;
 import consulo.ui.Window;
 import consulo.ui.Rectangle2D;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 /**

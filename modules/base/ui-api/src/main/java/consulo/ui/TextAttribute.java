@@ -20,7 +20,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

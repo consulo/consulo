@@ -37,8 +37,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

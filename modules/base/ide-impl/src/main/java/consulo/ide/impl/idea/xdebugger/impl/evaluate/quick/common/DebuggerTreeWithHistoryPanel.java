@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

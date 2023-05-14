@@ -80,8 +80,8 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultTreeModel;
@@ -450,7 +450,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
   private static class FilePresentationModel {
     @Nonnull
     private final String myPath;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private VirtualFile myVf;
 
     private FilePresentationModel(@Nonnull String path) {
@@ -463,7 +463,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
       myVf = file;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public VirtualFile getVf() {
       if (myVf == null) {
         final VirtualFile file = VfsUtil.findFileByIoFile(new File(myPath), true);

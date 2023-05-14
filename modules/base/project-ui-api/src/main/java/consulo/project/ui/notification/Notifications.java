@@ -22,8 +22,8 @@ import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 /**

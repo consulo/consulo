@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.editor.ex;
 import consulo.language.editor.impl.internal.markup.ErrorStripeEvent;
 import consulo.language.editor.impl.internal.markup.ErrorStripeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

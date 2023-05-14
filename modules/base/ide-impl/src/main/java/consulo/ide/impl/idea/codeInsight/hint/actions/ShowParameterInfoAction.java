@@ -25,7 +25,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowParameterInfoAction extends BaseCodeInsightAction implements DumbAware {
   public ShowParameterInfoAction() {

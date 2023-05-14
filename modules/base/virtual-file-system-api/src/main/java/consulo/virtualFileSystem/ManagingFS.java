@@ -6,8 +6,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.function.Function;

@@ -19,7 +19,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public interface DeferredIcon extends Icon {

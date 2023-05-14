@@ -25,7 +25,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.List;

@@ -34,7 +34,7 @@ import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import consulo.language.content.LanguageContentFolderScopes;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class PackageViewProjectNode extends AbstractProjectNode {

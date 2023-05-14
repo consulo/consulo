@@ -20,7 +20,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.fileChooser.FileChooserDescriptor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class SdkPathEditor extends PathEditor {

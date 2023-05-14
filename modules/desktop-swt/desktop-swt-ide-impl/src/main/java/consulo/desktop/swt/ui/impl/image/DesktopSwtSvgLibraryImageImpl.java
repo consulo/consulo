@@ -20,7 +20,7 @@ import org.eclipse.nebula.cwt.svg.SvgDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -33,8 +33,8 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -135,7 +135,7 @@ public abstract class AbstractVcsHelper {
     return showMergeDialog(files, provider);
   }
 
-  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider, @Nonnull FilePath path, @Nonnull AbstractVcs vcs, @javax.annotation.Nullable String repositoryPath);
+  public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider, @Nonnull FilePath path, @Nonnull AbstractVcs vcs, @jakarta.annotation.Nullable String repositoryPath);
 
   public abstract void showFileHistory(@Nonnull VcsHistoryProvider historyProvider,
                                        @Nullable AnnotationProvider annotationProvider,
@@ -158,10 +158,10 @@ public abstract class AbstractVcsHelper {
                                                                final String singleFilePromptTemplate,
                                                                final VcsShowConfirmationOption confirmationOption);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public abstract Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                                 final String title,
-                                                                @javax.annotation.Nullable final String prompt,
+                                                                @jakarta.annotation.Nullable final String prompt,
                                                                 final String singleFileTitle,
                                                                 final String singleFilePromptTemplate,
                                                                 final VcsShowConfirmationOption confirmationOption);
@@ -169,7 +169,7 @@ public abstract class AbstractVcsHelper {
   @Nullable
   public Collection<FilePath> selectFilePathsToProcess(List<FilePath> files,
                                                        final String title,
-                                                       @javax.annotation.Nullable final String prompt,
+                                                       @jakarta.annotation.Nullable final String prompt,
                                                        final String singleFileTitle,
                                                        final String singleFilePromptTemplate,
                                                        final VcsShowConfirmationOption confirmationOption,
@@ -191,7 +191,7 @@ public abstract class AbstractVcsHelper {
   public abstract boolean commitChanges(@Nonnull Collection<Change> changes,
                                         @Nonnull LocalChangeList initialChangeList,
                                         @Nonnull String commitMessage,
-                                        @javax.annotation.Nullable CommitResultHandler customResultHandler);
+                                        @jakarta.annotation.Nullable CommitResultHandler customResultHandler);
 
   public abstract void loadAndShowCommittedChangesDetails(@Nonnull Project project,
                                                           @Nonnull VcsRevisionNumber revision,

@@ -27,8 +27,8 @@ import consulo.execution.debug.frame.presentation.XErrorValuePresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

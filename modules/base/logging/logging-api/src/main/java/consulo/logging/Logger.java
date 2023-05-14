@@ -19,8 +19,8 @@ import consulo.logging.attachment.Attachment;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import consulo.util.nodep.ArrayUtilRt;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

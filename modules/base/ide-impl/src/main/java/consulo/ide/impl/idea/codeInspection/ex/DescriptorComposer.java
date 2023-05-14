@@ -29,7 +29,7 @@ import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;

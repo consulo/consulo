@@ -25,8 +25,8 @@ import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
   @Override

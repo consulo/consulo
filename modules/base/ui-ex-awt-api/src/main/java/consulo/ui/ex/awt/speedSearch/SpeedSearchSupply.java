@@ -19,8 +19,8 @@ import consulo.application.util.matcher.MatcherTextRange;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

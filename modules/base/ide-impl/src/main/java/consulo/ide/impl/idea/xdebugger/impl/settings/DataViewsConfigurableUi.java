@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.IdeaTitledBorder;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.execution.debug.XDebuggerBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

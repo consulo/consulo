@@ -1,6 +1,6 @@
 package consulo.versionControlSystem.log;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Graphical UI for filtering commits in the log.

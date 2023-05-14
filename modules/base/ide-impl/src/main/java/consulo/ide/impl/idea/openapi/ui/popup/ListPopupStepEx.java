@@ -5,8 +5,8 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.InputEvent;
 
 public interface ListPopupStepEx<T> extends ListPopupStep<T> {

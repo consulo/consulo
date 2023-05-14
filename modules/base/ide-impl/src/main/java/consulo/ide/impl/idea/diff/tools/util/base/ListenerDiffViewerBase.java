@@ -31,8 +31,8 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +80,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
     };
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected VirtualFileListener createFileListener(@Nonnull ContentDiffRequest request) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>(0);
     for (DiffContent content : request.getContents()) {

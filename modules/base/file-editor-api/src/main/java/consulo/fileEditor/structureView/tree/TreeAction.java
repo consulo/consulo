@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A grouping, sorting or filtering action which can be applied to a generic tree.

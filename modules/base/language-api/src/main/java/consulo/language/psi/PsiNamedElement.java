@@ -20,8 +20,8 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A PSI element which has a name and can be renamed (for example, a class or a method).

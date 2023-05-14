@@ -19,8 +19,8 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.change.VcsInvalidated;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -86,7 +86,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     throw new UnsupportedOperationException();
   }
 
-  public void filePathsDirty(@javax.annotation.Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty) {
+  public void filePathsDirty(@jakarta.annotation.Nullable final Collection<FilePath> filesDirty, @Nullable final Collection<FilePath> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myFiles.addAll(filesDirty);
     }
@@ -96,7 +96,7 @@ class VcsDirtyScopeManagerProxy extends VcsDirtyScopeManager {
     return;
   }
 
-  public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @javax.annotation.Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
+  public void filesDirty(@Nullable final Collection<VirtualFile> filesDirty, @jakarta.annotation.Nullable final Collection<VirtualFile> dirsRecursivelyDirty) {
     if (filesDirty != null) {
       myVFiles.addAll(filesDirty);
     }

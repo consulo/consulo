@@ -26,7 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
   public OpenProjectFileChooserDescriptor(final boolean chooseFiles) {

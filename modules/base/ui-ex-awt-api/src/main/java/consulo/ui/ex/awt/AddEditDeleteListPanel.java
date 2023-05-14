@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.event.DoubleClickListener;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.util.List;
 

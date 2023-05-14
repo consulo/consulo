@@ -28,8 +28,8 @@ import consulo.util.collection.HashingStrategy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 
@@ -46,7 +46,7 @@ public class RemoteFilePath implements FilePath {
     myIsDirectory = isDirectory;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public VirtualFile getVirtualFile() {
     return null;

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.codeInsight.completion.impl;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.language.editor.completion.WeighingContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Peter

@@ -39,8 +39,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -106,7 +106,7 @@ public class MergeUtil {
       myMergeContext = mergeContext;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public Project getProject() {
       return myMergeContext.getProject();
@@ -127,14 +127,14 @@ public class MergeUtil {
       myMergeContext.requestFocus();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public <T> T getUserData(@Nonnull Key<T> key) {
       return myMergeContext.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+    public <T> void putUserData(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
       myMergeContext.putUserData(key, value);
     }
   }

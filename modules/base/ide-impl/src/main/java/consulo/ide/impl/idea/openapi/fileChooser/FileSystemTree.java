@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.openapi.fileChooser;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 

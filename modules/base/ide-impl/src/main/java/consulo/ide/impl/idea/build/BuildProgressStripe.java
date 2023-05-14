@@ -6,7 +6,7 @@ import consulo.ui.ex.awt.JBPanel;
 import consulo.ide.impl.idea.ui.components.ProgressBarLoadingDecorator;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

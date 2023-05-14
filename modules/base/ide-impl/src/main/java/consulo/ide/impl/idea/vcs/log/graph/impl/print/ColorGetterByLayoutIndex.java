@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphNode;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.NormalEdge;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ColorGetterByLayoutIndex<CommitId> {
   @Nonnull

@@ -22,7 +22,7 @@ import consulo.language.psi.search.TodoItem;
 import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;

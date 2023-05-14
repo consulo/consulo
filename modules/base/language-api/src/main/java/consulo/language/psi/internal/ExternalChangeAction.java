@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.document.DocumentRunnable;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ExternalChangeAction extends Runnable, IgnorePsiEventsMarker {
   abstract class ExternalDocumentChange extends DocumentRunnable implements ExternalChangeAction {

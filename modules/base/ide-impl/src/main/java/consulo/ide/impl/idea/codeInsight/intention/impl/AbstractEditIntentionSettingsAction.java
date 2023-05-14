@@ -8,7 +8,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 abstract class AbstractEditIntentionSettingsAction implements SyntheticIntentionAction {
   private static final Logger LOG = Logger.getInstance(AbstractEditIntentionSettingsAction.class);

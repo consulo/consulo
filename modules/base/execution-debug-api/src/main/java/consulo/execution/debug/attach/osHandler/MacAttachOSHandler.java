@@ -2,7 +2,7 @@
 package consulo.execution.debug.attach.osHandler;
 
 import consulo.execution.debug.attach.EnvironmentAwareHost;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class MacAttachOSHandler extends UnixAttachOSHandler {
   MacAttachOSHandler(@Nonnull EnvironmentAwareHost host) {

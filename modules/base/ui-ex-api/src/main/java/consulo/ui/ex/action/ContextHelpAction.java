@@ -22,7 +22,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ContextHelpAction extends AnAction implements DumbAware {
   private final String myHelpID;

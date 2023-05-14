@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface NullableComputable<T> extends Computable<T> {
   @Nullable

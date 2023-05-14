@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSys
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProgressNotificationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemProjectResolver;
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExternalSystemTaskManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

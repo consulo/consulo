@@ -22,8 +22,8 @@ import consulo.colorScheme.impl.FontPreferencesImpl;
 import consulo.ide.impl.idea.util.text.CharArrayIterator;
 import consulo.ide.impl.idea.util.text.CharSequenceIterator;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;

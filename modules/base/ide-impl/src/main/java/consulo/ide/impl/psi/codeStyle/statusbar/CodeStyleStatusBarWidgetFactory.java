@@ -19,8 +19,8 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "codeStyleWidget", order = "after selectionModeWidget")
 public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetFactory {

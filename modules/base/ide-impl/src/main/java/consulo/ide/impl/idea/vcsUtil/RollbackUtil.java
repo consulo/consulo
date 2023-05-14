@@ -20,7 +20,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

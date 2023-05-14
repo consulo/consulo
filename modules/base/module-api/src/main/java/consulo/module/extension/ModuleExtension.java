@@ -21,7 +21,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

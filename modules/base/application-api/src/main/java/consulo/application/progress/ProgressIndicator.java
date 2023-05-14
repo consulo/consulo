@@ -21,8 +21,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An object accompanying a computation, usually in a background thread. It allows to display process status to the user

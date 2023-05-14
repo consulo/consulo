@@ -19,7 +19,7 @@ import consulo.execution.action.PsiLocation;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

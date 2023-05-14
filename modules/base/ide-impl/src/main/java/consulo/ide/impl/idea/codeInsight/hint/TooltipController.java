@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

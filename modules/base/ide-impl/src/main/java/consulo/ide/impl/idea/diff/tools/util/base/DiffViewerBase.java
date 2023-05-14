@@ -42,8 +42,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Nonnull
   private final List<DiffViewerListener> myListeners = new SmartList<>();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected final Project myProject;
   @Nonnull
   protected final DiffContext myContext;
@@ -166,7 +166,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Getters
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Project getProject() {
     return myProject;
   }
@@ -213,7 +213,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return group;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent getStatusPanel() {
     return null;
   }
@@ -295,7 +295,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Helpers
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.NAVIGATABLE == dataId) {

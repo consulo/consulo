@@ -18,8 +18,8 @@ package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.Block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

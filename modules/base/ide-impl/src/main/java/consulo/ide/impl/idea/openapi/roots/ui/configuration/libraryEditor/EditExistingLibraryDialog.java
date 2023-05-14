@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

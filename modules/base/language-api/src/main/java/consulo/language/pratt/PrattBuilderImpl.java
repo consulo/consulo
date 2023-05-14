@@ -22,8 +22,8 @@ import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.parser.PsiBuilder;
 import consulo.util.lang.Trinity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 

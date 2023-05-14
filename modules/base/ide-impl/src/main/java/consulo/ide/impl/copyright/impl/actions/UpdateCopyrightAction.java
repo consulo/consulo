@@ -36,7 +36,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "UpdateCopyright", parents = {
         @ActionParentRef(@ActionRef(id = "ProjectViewPopupMenu")),

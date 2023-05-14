@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import java.util.HashSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;

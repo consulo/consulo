@@ -18,7 +18,7 @@ package consulo.util.collection.impl.map;
 import consulo.util.collection.ImmutableMapBuilder;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

@@ -6,8 +6,8 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.application.util.matcher.Matcher;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 public abstract class RunAnythingGroupBase extends RunAnythingGroup {

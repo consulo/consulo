@@ -27,7 +27,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

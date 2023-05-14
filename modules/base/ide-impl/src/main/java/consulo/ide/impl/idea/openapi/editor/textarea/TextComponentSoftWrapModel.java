@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.editor.textarea;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.SoftWrapModel;
 import consulo.codeEditor.VisualPosition;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

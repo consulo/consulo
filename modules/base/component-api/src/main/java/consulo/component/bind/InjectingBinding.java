@@ -17,7 +17,7 @@ package consulo.component.bind;
 
 import consulo.annotation.component.ComponentScope;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 /**

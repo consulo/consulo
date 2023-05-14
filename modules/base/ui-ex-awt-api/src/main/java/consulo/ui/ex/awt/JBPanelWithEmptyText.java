@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

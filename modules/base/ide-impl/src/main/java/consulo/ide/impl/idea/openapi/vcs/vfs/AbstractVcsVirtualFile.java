@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.*;
 

@@ -3,7 +3,7 @@ package consulo.remoteServer.impl.internal.configuration;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

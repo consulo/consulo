@@ -26,8 +26,8 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl
 public class HomeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

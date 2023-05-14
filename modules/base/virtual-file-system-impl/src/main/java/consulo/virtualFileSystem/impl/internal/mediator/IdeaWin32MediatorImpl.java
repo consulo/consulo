@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.impl.internal.windows.FileInfo;
 import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class IdeaWin32MediatorImpl implements FileSystemMediator {
   private WindowsFileSystemHelper myInstance = WindowsFileSystemHelper.getInstance();

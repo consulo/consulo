@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -118,7 +118,7 @@ public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Charset getPreferredModuleEncoding(@Nonnull Module module) {
     final Set<Charset> encodings = myModuleFileEncodings.getValue().get(module);
     return ContainerUtil.getFirstItem(encodings, EncodingProjectManager.getInstance(myProject).getDefaultCharset());

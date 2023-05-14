@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExterna
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -61,7 +61,7 @@ public class ExternalSystemResolveProjectTask extends AbstractExternalSystemTask
     return resolver.cancelTask(getId());
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public DataNode<ProjectData> getExternalProject() {
     return myExternalProject.get();
   }

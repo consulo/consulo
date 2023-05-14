@@ -13,7 +13,7 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

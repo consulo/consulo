@@ -21,7 +21,7 @@ import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultEditorKit;

@@ -23,7 +23,7 @@ import consulo.fileEditor.structureView.tree.*;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<Value> {

@@ -19,7 +19,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.SimpleEditorCustomization;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov

@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.vcs.log.graph.api.elements.GraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
 import consulo.ide.impl.idea.vcs.log.graph.impl.print.elements.PrintElementWithGraphElement;
 import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class CascadeController implements LinearGraphController {
   @Nullable private final CascadeController myDelegateController;

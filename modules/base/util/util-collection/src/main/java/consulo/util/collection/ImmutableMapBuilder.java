@@ -18,7 +18,7 @@ package consulo.util.collection;
 import consulo.util.collection.impl.map.ImmutableMapBuilderImpl;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 public interface ImmutableMapBuilder<K, V> {

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.ui.SimpleEditorCustomization;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

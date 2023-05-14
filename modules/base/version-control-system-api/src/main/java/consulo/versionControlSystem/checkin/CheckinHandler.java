@@ -24,7 +24,7 @@ import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalCommitExecutor;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

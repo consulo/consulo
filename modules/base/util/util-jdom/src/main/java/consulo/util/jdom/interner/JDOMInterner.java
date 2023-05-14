@@ -18,7 +18,7 @@ import consulo.util.interner.Interner;
 import consulo.util.lang.Comparing;
 import org.jdom.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class JDOMInterner {

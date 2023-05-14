@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

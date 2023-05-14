@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.ui.font.Font;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**

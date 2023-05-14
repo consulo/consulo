@@ -17,8 +17,8 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.util.List;
 import java.util.function.Supplier;

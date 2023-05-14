@@ -23,7 +23,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemService;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -39,12 +39,12 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
   /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemProjectResolverImpl}. */
   RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> NULL_OBJECT
     = new RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings>() {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
                                                     @Nonnull String projectPath,
                                                     boolean isPreviewMode,
-                                                    @javax.annotation.Nullable ExternalSystemExecutionSettings settings)
+                                                    @jakarta.annotation.Nullable ExternalSystemExecutionSettings settings)
       throws ExternalSystemException, IllegalArgumentException, IllegalStateException
     {
       return null;
@@ -76,10 +76,10 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
   };
 
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
                                            @Nonnull String projectPath,
                                            boolean isPreviewMode,
-                                           @javax.annotation.Nullable S settings)
+                                           @jakarta.annotation.Nullable S settings)
     throws RemoteException, ExternalSystemException, IllegalArgumentException, IllegalStateException;
 }

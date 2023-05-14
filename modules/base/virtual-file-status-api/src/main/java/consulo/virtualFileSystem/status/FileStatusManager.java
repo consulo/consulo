@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author mike

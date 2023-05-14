@@ -24,8 +24,8 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.

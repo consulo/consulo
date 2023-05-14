@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor.impl.softwrap.mapping;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface SoftWrapAwareDocumentParsingListener {
 

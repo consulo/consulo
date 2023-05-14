@@ -27,8 +27,8 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A control which knows how to manage settings of external project being imported.

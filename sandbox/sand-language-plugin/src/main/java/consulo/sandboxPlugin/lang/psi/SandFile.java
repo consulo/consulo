@@ -19,7 +19,7 @@ import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.version.LanguageVersion;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileViewProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;

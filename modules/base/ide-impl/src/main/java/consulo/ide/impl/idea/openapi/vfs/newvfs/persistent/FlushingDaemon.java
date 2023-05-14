@@ -22,7 +22,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.ConcurrencyUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 

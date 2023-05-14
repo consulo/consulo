@@ -44,7 +44,7 @@ public class ShowTestProxy extends AnAction {
     presentation.setEnabled(getSelectedTestProxy(e) != null);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
     return e.getData(AbstractTestProxy.KEY);
   }

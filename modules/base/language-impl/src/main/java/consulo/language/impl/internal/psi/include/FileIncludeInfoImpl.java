@@ -18,7 +18,7 @@ package consulo.language.impl.internal.psi.include;
 
 import consulo.language.psi.include.FileIncludeInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 

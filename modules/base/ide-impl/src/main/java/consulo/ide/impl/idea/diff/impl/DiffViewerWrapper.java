@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool.DiffViewer;
 import consulo.diff.request.DiffRequest;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DiffViewerWrapper {
   Key<DiffViewerWrapper> KEY = Key.create("Diff.DiffViewerWrapper");

@@ -17,7 +17,7 @@ package consulo.util.xml.serializer;
 
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
 

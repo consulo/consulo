@@ -29,7 +29,7 @@ import consulo.application.util.query.Query;
 import consulo.logging.Logger;
 import consulo.language.content.LanguageContentFolderScopes;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ResourceFileUtil {
   public static final Logger LOGGER = Logger.getInstance(ResourceFileUtil.class);

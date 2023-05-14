@@ -23,8 +23,8 @@ import consulo.language.Language;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A lazy-parseable element type which allows for incremental reparse. When the infrastructure detects

@@ -49,7 +49,7 @@ import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -58,7 +58,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
   @Nonnull
   private final List<? extends EditorEx> myEditableEditors;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private List<? extends EditorEx> myEditors;
 
   @Nonnull
@@ -67,7 +67,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   @Nonnull
   private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private TwosideSyncScrollSupport mySyncScrollSupport;
 
   public TwosideTextDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
@@ -256,7 +256,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     return getContent(Side.RIGHT);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public TwosideSyncScrollSupport getSyncScrollSupport() {
     return mySyncScrollSupport;
   }
@@ -279,14 +279,14 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     setCurrentSide(side);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract SyncScrollSupport.SyncScrollable getSyncScrollable();
 
   //
   // Misc
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     Side side = getCurrentSide();
@@ -352,7 +352,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
   // Helpers
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.CURRENT_EDITOR == dataId) {

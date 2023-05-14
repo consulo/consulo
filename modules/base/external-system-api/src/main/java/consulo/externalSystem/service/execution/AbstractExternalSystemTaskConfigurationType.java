@@ -19,7 +19,7 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -122,7 +122,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   @Nonnull
   public static String generateName(@Nonnull Project project,
                                     @Nonnull ProjectSystemId externalSystemId,
-                                    @javax.annotation.Nullable String externalProjectPath,
+                                    @jakarta.annotation.Nullable String externalProjectPath,
                                     @Nonnull List<String> taskNames)
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);

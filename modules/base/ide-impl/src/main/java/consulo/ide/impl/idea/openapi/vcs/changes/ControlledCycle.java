@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ControlledCycle {

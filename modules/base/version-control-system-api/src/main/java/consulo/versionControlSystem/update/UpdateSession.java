@@ -17,7 +17,7 @@ package consulo.versionControlSystem.update;
 
 import consulo.versionControlSystem.VcsException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

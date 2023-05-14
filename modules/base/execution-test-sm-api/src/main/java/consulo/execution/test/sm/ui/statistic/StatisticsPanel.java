@@ -39,8 +39,8 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -171,7 +171,7 @@ public class StatisticsPanel implements DataProvider {
    */
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
-      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
         selectProxy(selectedTestProxy, sender, requestFocus);
       }
     };
@@ -232,7 +232,7 @@ public class StatisticsPanel implements DataProvider {
     };
   }
 
-  protected void selectProxy(@javax.annotation.Nullable final SMTestProxy selectedTestProxy) {
+  protected void selectProxy(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy) {
     // Send event to model
     myTableModel.updateModelOnProxySelected(selectedTestProxy);
 
@@ -273,7 +273,7 @@ public class StatisticsPanel implements DataProvider {
     });
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected SMTestProxy getSelectedItem() {
     return myStatisticsTableView.getSelectedObject();
   }

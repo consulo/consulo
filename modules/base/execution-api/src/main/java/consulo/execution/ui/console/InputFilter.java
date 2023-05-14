@@ -17,7 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public interface InputFilter {

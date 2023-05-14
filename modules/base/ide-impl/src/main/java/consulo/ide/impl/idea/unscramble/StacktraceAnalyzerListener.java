@@ -20,8 +20,8 @@ import consulo.execution.unscramble.StacktraceAnalyzer;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardAnalyzeListener;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

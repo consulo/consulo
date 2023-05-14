@@ -17,7 +17,7 @@ package consulo.util.lang.lazy.impl;
 
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

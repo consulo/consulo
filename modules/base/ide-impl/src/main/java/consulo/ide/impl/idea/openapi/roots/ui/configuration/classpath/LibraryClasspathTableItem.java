@@ -31,7 +31,7 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

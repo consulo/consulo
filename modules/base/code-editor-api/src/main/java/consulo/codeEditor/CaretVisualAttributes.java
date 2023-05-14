@@ -17,8 +17,8 @@ package consulo.codeEditor;
 
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Used to override caret painting color and, for non-block carets, their width.

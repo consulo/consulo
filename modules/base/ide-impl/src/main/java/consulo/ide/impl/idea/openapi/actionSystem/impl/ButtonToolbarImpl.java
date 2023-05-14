@@ -10,7 +10,7 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.dataContext.BaseDataManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

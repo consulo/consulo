@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.util.Producer;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -88,7 +88,7 @@ public class ChangeSet {
     isLocked = true;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getLabel() {
     return accessChanges(new Producer<String>() {
       @Override

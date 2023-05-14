@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.search.FindSymbolParameters;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface ChooseByNameModelEx extends ChooseByNameModel {
   /**

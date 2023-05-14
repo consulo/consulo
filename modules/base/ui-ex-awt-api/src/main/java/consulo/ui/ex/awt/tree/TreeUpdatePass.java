@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.tree.NodeDescriptor;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.HashSet;

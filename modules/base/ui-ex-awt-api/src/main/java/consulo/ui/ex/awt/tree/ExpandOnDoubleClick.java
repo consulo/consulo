@@ -2,7 +2,7 @@
 package consulo.ui.ex.awt.tree;
 
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

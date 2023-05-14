@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.editor.moveUpDown.StatementUpDownMover;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 class MoveStatementHandler extends BaseMoveHandler {
 

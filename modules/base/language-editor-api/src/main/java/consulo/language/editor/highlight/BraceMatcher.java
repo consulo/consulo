@@ -22,8 +22,8 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @see PairedBraceMatcher simple implementation of paired tokens per language

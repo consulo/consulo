@@ -24,8 +24,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.UIBundle;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -64,7 +64,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
     return title != null ? title : UIBundle.message("file.chooser.save.dialog.default.title");
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VirtualFileWrapper save(@Nullable VirtualFile baseDir, @Nullable final String filename) {
     init();
     restoreSelection(baseDir);

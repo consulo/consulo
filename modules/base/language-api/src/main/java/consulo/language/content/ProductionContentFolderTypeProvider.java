@@ -26,7 +26,7 @@ import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

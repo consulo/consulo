@@ -18,7 +18,7 @@ package consulo.language.version;
 import consulo.language.parser.PsiParser;
 import consulo.language.lexer.Lexer;
 import consulo.language.ast.TokenSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

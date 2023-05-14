@@ -46,7 +46,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "afterUnmatchedBrace", order = "after inLineComment")
 public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter {

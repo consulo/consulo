@@ -8,7 +8,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.ChangedRangesInfo;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;

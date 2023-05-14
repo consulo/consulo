@@ -28,7 +28,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;

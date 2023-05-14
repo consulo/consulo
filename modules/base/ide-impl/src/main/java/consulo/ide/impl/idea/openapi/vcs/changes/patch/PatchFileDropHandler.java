@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.List;

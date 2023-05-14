@@ -22,7 +22,7 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -120,7 +120,7 @@ public class ExternalSystemFacadeManager {
    * @throws Exception    in case of inability to return the facade
    */
   @Nonnull
-  public RemoteExternalSystemFacade getFacade(@javax.annotation.Nullable Project project,
+  public RemoteExternalSystemFacade getFacade(@jakarta.annotation.Nullable Project project,
                                               @Nonnull String externalProjectPath,
                                               @Nonnull ProjectSystemId externalSystemId) throws Exception
   {
@@ -272,7 +272,7 @@ public class ExternalSystemFacadeManager {
       myKey.set(key);
     }
     
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       if ("consume".equals(method.getName())) {

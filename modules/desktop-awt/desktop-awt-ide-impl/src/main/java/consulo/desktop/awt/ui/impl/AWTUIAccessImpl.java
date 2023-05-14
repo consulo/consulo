@@ -25,7 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ModalityStateListener;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;

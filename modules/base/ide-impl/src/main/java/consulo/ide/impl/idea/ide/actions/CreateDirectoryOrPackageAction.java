@@ -48,7 +48,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.Trinity;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;

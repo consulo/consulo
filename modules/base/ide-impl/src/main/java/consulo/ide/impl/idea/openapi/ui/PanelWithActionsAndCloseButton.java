@@ -29,7 +29,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.content.ContentsUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

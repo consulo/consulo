@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

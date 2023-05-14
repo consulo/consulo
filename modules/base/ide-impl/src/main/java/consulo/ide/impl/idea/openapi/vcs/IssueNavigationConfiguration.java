@@ -31,7 +31,7 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

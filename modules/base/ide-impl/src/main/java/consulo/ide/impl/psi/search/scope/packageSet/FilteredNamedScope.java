@@ -8,7 +8,7 @@ import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FilteredNamedScope extends NamedScope {
   public FilteredNamedScope(@Nonnull @NonNls String name, LocalizeValue presentableName, @Nonnull Image icon, int priority, @Nonnull VirtualFileFilter filter) {

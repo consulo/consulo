@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class XBreakpointPropertiesSubPanel {
   protected Project myProject;

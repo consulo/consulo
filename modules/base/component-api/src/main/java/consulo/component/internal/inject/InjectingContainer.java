@@ -15,8 +15,8 @@
  */
 package consulo.component.internal.inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ServiceLoader;

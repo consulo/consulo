@@ -24,7 +24,7 @@ import consulo.util.io.ClassPathUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.Supplier;

@@ -28,7 +28,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.util.ContentUtilEx;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ViewUpdateInfoNotification extends NotificationAction {
   @Nonnull

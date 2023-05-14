@@ -19,8 +19,8 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.index.io.IndexId;
 import consulo.index.io.StorageException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Map;

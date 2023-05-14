@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.usage.UsageViewUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

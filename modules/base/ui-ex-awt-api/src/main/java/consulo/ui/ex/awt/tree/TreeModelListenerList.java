@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.util.List;

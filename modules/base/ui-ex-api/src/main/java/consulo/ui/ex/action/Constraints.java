@@ -15,8 +15,8 @@
  */
 package consulo.ui.ex.action;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents constraints for some action. Constraints are used to specify

@@ -21,8 +21,8 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,12 +65,12 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
   // Abstract
   //
 
-  protected abstract int findSelectedStep(@javax.annotation.Nullable Change change);
+  protected abstract int findSelectedStep(@jakarta.annotation.Nullable Change change);
 
   @Nonnull
   protected abstract List<Change> getChanges();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract Change getCurrentSelection();
 
   //
@@ -155,7 +155,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     protected abstract FileStatus getFileStatus(int index);
 
     @Override
-    protected int findSelectedStep(@javax.annotation.Nullable Change change) {
+    protected int findSelectedStep(@jakarta.annotation.Nullable Change change) {
       return myChanges.indexOf(change);
     }
 
@@ -165,7 +165,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       return myChanges;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected Change getCurrentSelection() {
       if (mySelection < 0 || mySelection >= myChanges.size()) return null;

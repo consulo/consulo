@@ -17,7 +17,7 @@ package consulo.execution.debug.frame;
 
 import consulo.ui.ex.SimpleTextAttributes;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 
 /**

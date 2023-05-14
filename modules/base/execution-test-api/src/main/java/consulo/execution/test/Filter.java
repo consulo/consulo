@@ -15,7 +15,7 @@
  */
 package consulo.execution.test;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.VirtualFile;
 import net.miginfocom.swing.MigLayout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

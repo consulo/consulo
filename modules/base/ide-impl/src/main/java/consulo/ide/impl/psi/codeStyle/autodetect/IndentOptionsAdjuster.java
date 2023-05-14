@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.codeStyle.autodetect;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface IndentOptionsAdjuster {
   void adjust(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions);

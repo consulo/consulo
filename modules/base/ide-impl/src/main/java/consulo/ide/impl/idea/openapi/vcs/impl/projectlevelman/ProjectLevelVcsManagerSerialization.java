@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import java.util.HashMap;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 

@@ -35,8 +35,8 @@ import consulo.language.editor.refactoring.inline.InlineHandler;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class InlineAction extends BasePlatformRefactoringAction {

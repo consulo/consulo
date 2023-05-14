@@ -58,8 +58,8 @@ import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -727,7 +727,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(new Runnable() {
           @Override
           public void run() {

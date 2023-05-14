@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.component.util.graph.Graph;
 import consulo.util.collection.Chunk;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;

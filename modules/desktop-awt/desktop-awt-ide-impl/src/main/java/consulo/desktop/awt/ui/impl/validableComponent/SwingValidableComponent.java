@@ -20,7 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValidableComponent;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

@@ -47,8 +47,8 @@ import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

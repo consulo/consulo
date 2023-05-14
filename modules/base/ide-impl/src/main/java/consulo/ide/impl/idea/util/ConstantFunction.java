@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

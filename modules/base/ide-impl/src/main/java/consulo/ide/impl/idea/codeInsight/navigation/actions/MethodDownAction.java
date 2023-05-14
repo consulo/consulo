@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.codeInsight.navigation.MethodDownHandler;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MethodDownAction extends BaseCodeInsightAction {
   @Nonnull

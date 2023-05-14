@@ -19,7 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

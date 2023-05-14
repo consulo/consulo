@@ -18,8 +18,8 @@ package consulo.externalSystem.model.task;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.service.project.ExternalConfigPathAware;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Container for external system task information.

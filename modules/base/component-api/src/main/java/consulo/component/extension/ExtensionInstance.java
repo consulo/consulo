@@ -19,7 +19,7 @@ import consulo.component.internal.ExtensionInstanceRef;
 import consulo.component.internal.LazyExtensionInstance;
 import consulo.component.internal.StableExtensionInstance;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

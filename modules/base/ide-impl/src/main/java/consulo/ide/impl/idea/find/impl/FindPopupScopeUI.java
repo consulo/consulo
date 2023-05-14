@@ -22,7 +22,7 @@ import consulo.util.lang.Pair;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.*;
+import jakarta.annotation.*;
 import javax.swing.*;
 
 public interface FindPopupScopeUI {

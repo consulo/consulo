@@ -19,7 +19,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.project.ui.wm.IdeFrame;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface IdeFrameEx extends IdeFrame {
   public static final Key<Boolean> SHOULD_OPEN_IN_FULL_SCREEN = Key.create("should.open.in.full.screen");

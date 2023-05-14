@@ -19,7 +19,7 @@ package consulo.language.inject.impl.internal;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PlaceImpl extends SmartList<PsiLanguageInjectionHost.Shred> implements PsiLanguageInjectionHost.Place {
   PlaceImpl() {

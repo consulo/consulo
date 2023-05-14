@@ -18,7 +18,7 @@ package consulo.language.editor.ui.navigation;
 import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

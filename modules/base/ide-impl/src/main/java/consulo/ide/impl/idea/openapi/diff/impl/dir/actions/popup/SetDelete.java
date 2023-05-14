@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup;
 
 import consulo.ide.impl.idea.ide.diff.DirDiffElement;
 import consulo.ide.impl.idea.ide.diff.DirDiffOperation;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

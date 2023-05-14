@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents the result of resolving a {@link PsiPolyVariantReference}.

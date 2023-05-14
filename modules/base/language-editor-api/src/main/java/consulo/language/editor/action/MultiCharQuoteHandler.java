@@ -6,8 +6,8 @@ import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Max Medvedev

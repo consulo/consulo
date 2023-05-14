@@ -22,7 +22,7 @@ import consulo.content.library.LibraryTablesRegistrar;
 import consulo.disposer.Disposable;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl

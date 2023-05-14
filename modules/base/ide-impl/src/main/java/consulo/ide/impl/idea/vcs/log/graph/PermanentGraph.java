@@ -19,7 +19,7 @@ import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.VisibleGraph;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,8 +36,8 @@ public interface PermanentGraph<Id> {
 
   @Nonnull
   VisibleGraph<Id> createVisibleGraph(@Nonnull SortType sortType,
-                                      @javax.annotation.Nullable Set<Id> headsOfVisibleBranches,
-                                      @javax.annotation.Nullable Set<Id> matchedCommits);
+                                      @jakarta.annotation.Nullable Set<Id> headsOfVisibleBranches,
+                                      @jakarta.annotation.Nullable Set<Id> matchedCommits);
 
   @Nonnull
   List<GraphCommit<Id>> getAllCommits();

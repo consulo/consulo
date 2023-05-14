@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class BeforeCheckinDialogHandler {

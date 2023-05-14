@@ -17,7 +17,7 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Interface for breaking a file into a sequence of tokens.

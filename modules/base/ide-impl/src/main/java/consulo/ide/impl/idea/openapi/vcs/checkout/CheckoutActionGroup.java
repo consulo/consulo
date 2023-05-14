@@ -22,8 +22,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class CheckoutActionGroup extends ActionGroup implements DumbAware {

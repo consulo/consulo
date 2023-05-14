@@ -15,7 +15,7 @@
  */
 package consulo.usage;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

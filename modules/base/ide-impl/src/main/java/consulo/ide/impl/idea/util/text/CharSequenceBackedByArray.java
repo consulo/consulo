@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util.text;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A char sequence base on a char array, Gives access to that array. May be used for performance optimizations

@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditorPosition implements Cloneable {
   public int logicalLine;

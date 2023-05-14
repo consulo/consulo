@@ -10,8 +10,8 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.DocumentUtil;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldRegion {
   private static final Key<Boolean> MUTE_INNER_HIGHLIGHTERS = Key.create("mute.inner.highlighters");

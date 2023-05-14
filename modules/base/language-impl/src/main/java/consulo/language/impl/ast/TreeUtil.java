@@ -29,8 +29,8 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;

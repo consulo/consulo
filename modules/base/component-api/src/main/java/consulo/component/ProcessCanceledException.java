@@ -18,7 +18,7 @@ package consulo.component;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.ControlFlowException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * An exception indicating that the currently running operation was terminated and should finish as soon as possible.

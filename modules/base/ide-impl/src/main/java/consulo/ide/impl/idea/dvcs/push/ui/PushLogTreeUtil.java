@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.dvcs.push.ui;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;

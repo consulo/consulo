@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.util;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

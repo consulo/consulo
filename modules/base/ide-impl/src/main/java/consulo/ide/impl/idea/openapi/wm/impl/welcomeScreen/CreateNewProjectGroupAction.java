@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

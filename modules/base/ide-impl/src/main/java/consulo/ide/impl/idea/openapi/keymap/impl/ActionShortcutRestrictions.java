@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ActionShortcutRestrictions {
   private static final ActionShortcutRestrictions ourInstance = new ActionShortcutRestrictions();

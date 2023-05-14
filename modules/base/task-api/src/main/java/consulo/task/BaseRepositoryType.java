@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.task.ui.BaseRepositoryEditor;
 import consulo.task.ui.TaskRepositoryEditor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov

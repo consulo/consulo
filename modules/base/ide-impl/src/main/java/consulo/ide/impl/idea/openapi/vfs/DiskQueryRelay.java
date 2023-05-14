@@ -5,7 +5,7 @@ import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

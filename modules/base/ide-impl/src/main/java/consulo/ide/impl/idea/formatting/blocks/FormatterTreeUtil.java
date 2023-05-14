@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.formatting.blocks;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * from kotlin

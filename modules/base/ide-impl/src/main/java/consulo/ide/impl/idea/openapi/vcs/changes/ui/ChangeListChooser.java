@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.LocalChangeList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -37,9 +37,9 @@ public class ChangeListChooser extends DialogWrapper {
 
   public ChangeListChooser(@Nonnull Project project,
                            @Nonnull Collection<? extends ChangeList> changelists,
-                           @javax.annotation.Nullable ChangeList defaultSelection,
+                           @jakarta.annotation.Nullable ChangeList defaultSelection,
                            final String title,
-                           @javax.annotation.Nullable final String suggestedName) {
+                           @jakarta.annotation.Nullable final String suggestedName) {
     super(project, false);
     myProject = project;
 
@@ -52,7 +52,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
 
     myPanel = new ChangeListChooserPanel(myProject, new Consumer<String>() {
-      public void accept(final @javax.annotation.Nullable String errorMessage) {
+      public void accept(final @jakarta.annotation.Nullable String errorMessage) {
         setOKActionEnabled(errorMessage == null);
         setErrorText(errorMessage);
       }
@@ -85,7 +85,7 @@ public class ChangeListChooser extends DialogWrapper {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public LocalChangeList getSelectedList() {
     return mySelectedList;
   }

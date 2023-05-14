@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.updateSettings.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

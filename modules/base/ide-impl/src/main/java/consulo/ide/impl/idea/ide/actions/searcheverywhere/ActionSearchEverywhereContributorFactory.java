@@ -21,7 +21,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ActionSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<GotoActionModel.MatchedValue> {

@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.ui.tree.AbstractTreeNodeVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.util.function.Predicate;

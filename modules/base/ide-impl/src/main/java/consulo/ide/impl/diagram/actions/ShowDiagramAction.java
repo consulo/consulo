@@ -22,7 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.diagram.provider.GraphProvider;
 import consulo.application.eap.EarlyAccessProgramManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchFileType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

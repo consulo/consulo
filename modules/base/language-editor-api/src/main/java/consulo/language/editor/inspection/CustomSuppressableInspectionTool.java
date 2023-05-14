@@ -20,8 +20,8 @@ import consulo.language.editor.inspection.GlobalInspectionTool;
 import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This interface needs to be implemented by implementers of {@link LocalInspectionTool} and {@link GlobalInspectionTool}

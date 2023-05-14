@@ -21,8 +21,8 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Describes a process which is ready to be started. Normally, a RunProfileState contains an initialized command line, set of environment

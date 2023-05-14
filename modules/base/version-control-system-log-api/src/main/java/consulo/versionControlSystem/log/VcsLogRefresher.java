@@ -1,7 +1,7 @@
 package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Tells the VCS Log, that some data has possibly become obsolete and needs to be refreshed.

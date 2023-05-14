@@ -15,7 +15,7 @@
  */
 package consulo.util.socketConnection;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 

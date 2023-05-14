@@ -18,7 +18,7 @@ package consulo.colorScheme.setting;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines interface of text/color descriptors operated by color schemes.

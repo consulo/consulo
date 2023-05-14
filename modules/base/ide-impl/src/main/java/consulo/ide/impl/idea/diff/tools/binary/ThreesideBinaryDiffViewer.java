@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.diff.tools.holders.BinaryEditorHolder;
 import consulo.ide.impl.idea.diff.tools.util.side.ThreesideDiffViewer;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.EmptyRunnable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ThreesideBinaryDiffViewer extends ThreesideDiffViewer<BinaryEditorHolder> {
   public ThreesideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {

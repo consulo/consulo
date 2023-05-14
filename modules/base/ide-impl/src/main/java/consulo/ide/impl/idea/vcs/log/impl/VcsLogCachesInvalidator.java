@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class VcsLogCachesInvalidator extends CachesInvalidator {

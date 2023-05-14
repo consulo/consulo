@@ -18,7 +18,7 @@ package consulo.fileEditor.structureView;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines the implementation of Structure View and the file structure popup for

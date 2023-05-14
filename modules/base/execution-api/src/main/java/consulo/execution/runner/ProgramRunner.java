@@ -26,8 +26,8 @@ import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A ProgramRunner is responsible for the execution workflow of certain types of run configurations with a certain executor. For example,

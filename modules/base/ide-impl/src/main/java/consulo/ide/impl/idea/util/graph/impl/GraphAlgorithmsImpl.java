@@ -22,7 +22,7 @@ import consulo.application.util.graph.GraphAlgorithms;
 import consulo.util.collection.Chunk;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

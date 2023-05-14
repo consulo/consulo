@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 import consulo.language.editor.DaemonBundle;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DaemonTooltipsUtil {
   @Nonnull

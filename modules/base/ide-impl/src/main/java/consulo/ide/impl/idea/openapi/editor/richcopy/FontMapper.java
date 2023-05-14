@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.richcopy;
 
 import consulo.awt.hacking.FontManagerFactoryHacking;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;

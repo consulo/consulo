@@ -16,8 +16,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 import consulo.ide.impl.util.LocalFileFinder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

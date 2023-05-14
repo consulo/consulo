@@ -26,8 +26,8 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PsiBuilderAdapter implements PsiBuilder {
   protected final PsiBuilder myDelegate;

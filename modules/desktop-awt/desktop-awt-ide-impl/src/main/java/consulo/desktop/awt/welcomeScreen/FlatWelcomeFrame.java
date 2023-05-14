@@ -43,7 +43,7 @@ import consulo.ui.Rectangle2D;
 import consulo.application.ui.ApplicationWindowStateService;
 
 import javax.accessibility.AccessibleContext;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;

@@ -22,7 +22,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.process.TaskExecutor;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 

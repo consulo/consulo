@@ -16,7 +16,7 @@
 package consulo.compiler.artifact.ui;
 
 import consulo.content.library.Library;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

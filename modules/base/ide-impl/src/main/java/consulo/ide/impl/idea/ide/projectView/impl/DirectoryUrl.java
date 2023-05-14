@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author cdr

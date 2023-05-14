@@ -4,8 +4,8 @@ package consulo.virtualFileSystem.encoding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 // FIXME [VISTALL] this topic is app&project
 @TopicAPI(ComponentScope.APPLICATION)

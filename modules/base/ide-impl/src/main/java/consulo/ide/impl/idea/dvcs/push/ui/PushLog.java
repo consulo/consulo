@@ -43,7 +43,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.versionControlSystem.log.Hash;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogActionPlaces;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -69,7 +69,7 @@ public class PushLog extends JPanel implements DataProvider {
   private final VcsCommitInfoBalloon myBalloon;
   private boolean myShouldRepaint = false;
   private boolean mySyncStrategy;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private String mySyncRenderedText;
   private final boolean myAllowSyncStrategy;
 
@@ -276,7 +276,7 @@ public class PushLog extends JPanel implements DataProvider {
     }
   }
 
-  private void restoreSelection(@javax.annotation.Nullable DefaultMutableTreeNode node) {
+  private void restoreSelection(@jakarta.annotation.Nullable DefaultMutableTreeNode node) {
     if (node != null) {
       TreeUtil.selectNode(myTree, node);
     }
@@ -393,7 +393,7 @@ public class PushLog extends JPanel implements DataProvider {
   }
 
   // Make changes available for diff action; revisionNumber for create patch and copy revision number actions
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     if (VcsDataKeys.CHANGES == dataId) {
@@ -454,7 +454,7 @@ public class PushLog extends JPanel implements DataProvider {
     return super.processKeyBinding(ks, e, condition, pressed);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private DefaultMutableTreeNode getFirstNodeToEdit() {
     // start edit last selected component if editable
     if (myTree.getLastSelectedPathComponent() instanceof RepositoryNode) {
@@ -692,7 +692,7 @@ public class PushLog extends JPanel implements DataProvider {
 
     final int myHeightToReduce;
 
-    public MyTreeViewPort(@javax.annotation.Nullable Component view, int heightToReduce) {
+    public MyTreeViewPort(@jakarta.annotation.Nullable Component view, int heightToReduce) {
       super();
       setView(view);
       myHeightToReduce = heightToReduce;

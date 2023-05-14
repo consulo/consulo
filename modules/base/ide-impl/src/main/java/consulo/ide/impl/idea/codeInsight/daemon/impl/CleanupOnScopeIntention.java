@@ -26,7 +26,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Created by anna on 5/13/2014.

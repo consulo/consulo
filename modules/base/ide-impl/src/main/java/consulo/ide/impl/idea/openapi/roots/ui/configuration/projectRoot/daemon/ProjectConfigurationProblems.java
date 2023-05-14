@@ -17,7 +17,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.ConfigurationError;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ConfigurationErrors;
 import consulo.util.collection.MultiValuesMap;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

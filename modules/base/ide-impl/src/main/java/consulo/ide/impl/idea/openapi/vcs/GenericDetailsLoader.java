@@ -46,7 +46,7 @@ public class GenericDetailsLoader<Id, Data> implements Details<Id,Data>, Disposa
   }
 
   @RequiredUIAccess
-  public void updateSelection(@javax.annotation.Nullable final Id id, boolean force) {
+  public void updateSelection(@jakarta.annotation.Nullable final Id id, boolean force) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (myIsDisposed) return;
     myValueConsumer.setId(id);

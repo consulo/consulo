@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.accessibility;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;

@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.editor.*;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.codeEditor.Caret;

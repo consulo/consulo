@@ -32,7 +32,7 @@ import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class CodeBlockEndAction extends EditorAction {
   public CodeBlockEndAction() {

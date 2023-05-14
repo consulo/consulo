@@ -25,7 +25,7 @@ import consulo.ui.*;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;

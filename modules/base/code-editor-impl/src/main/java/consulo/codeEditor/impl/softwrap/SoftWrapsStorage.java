@@ -21,8 +21,8 @@ import consulo.codeEditor.TextChange;
 import consulo.codeEditor.event.SoftWrapChangeListener;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

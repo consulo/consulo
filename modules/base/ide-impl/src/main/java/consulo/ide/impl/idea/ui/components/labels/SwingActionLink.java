@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

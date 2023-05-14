@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.tree;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

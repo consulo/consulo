@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
 
@@ -290,7 +290,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
 
   @Override
   public void onError(@Nonnull final String localizedMessage,
-                      @javax.annotation.Nullable final String stackTrace,
+                      @jakarta.annotation.Nullable final String stackTrace,
                       final boolean isCritical) {
     addToInvokeLater(() -> {
       final SMTestProxy currentProxy = findCurrentTestOrSuite();
@@ -450,7 +450,7 @@ public class GeneralToSMTRunnerEventsConvertor extends GeneralTestEventsProcesso
     return myRunningTestsFullNameToProxy.size();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected SMTestProxy getProxyByFullTestName(final String fullTestName) {
     return myRunningTestsFullNameToProxy.get(fullTestName);
   }

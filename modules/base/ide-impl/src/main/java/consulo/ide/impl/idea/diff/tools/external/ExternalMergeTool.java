@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ExternalMergeTool {
     return ExternalDiffSettings.getInstance().isMergeEnabled();
   }
 
-  public static void show(@javax.annotation.Nullable final Project project,
+  public static void show(@jakarta.annotation.Nullable final Project project,
                           @Nonnull final MergeRequest request) {
     try {
       if (canShow(request)) {
@@ -61,7 +61,7 @@ public class ExternalMergeTool {
     }
   }
 
-  public static void showRequest(@javax.annotation.Nullable Project project, @Nonnull MergeRequest request)
+  public static void showRequest(@jakarta.annotation.Nullable Project project, @Nonnull MergeRequest request)
           throws ExecutionException, IOException {
     ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
 

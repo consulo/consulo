@@ -20,7 +20,7 @@ import consulo.language.pom.PomRenameableTarget;
 import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.PsiNamedElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

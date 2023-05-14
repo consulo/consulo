@@ -27,7 +27,7 @@ import consulo.util.lang.ThreeState;
 import consulo.util.collection.SLRUMap;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Date;
 import java.util.Map;

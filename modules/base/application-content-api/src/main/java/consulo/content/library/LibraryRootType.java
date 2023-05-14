@@ -16,7 +16,7 @@
 package consulo.content.library;
 
 import consulo.content.OrderRootType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

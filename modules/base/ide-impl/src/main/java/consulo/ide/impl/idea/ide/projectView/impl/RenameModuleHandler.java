@@ -38,8 +38,8 @@ import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author dsl

@@ -15,7 +15,7 @@
  */
 package consulo.awt.hacking;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.lang.reflect.Method;
 

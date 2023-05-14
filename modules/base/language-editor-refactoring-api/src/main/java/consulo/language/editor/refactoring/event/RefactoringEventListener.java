@@ -18,8 +18,8 @@ package consulo.language.editor.refactoring.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Listener to get high level notifications about performed refactorings in the selected project.

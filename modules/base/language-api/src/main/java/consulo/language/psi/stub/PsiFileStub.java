@@ -22,8 +22,8 @@ package consulo.language.psi.stub;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface PsiFileStub<T extends PsiFile> extends StubElement<T>, UserDataHolder {
   PsiFileStub[] EMPTY_ARRAY = new PsiFileStub[0];

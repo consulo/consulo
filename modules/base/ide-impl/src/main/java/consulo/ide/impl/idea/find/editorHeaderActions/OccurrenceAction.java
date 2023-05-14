@@ -23,8 +23,8 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class OccurrenceAction extends DumbAwareAction implements ShortcutProvider {
   protected OccurrenceAction(@Nonnull String baseActionId, @Nonnull Image icon) {

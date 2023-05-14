@@ -18,7 +18,7 @@ package consulo.ide.impl.welcomeScreen;
 import consulo.ui.ex.action.AnAction;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

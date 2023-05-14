@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

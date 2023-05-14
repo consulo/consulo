@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.text.CaseInsensitiveStringHashingStrategy;
 import consulo.util.collection.Maps;
 import gnu.trove.TIntObjectHashMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

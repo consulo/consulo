@@ -27,7 +27,7 @@ import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

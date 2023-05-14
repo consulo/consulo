@@ -17,7 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows plugins to create an instance of the standard {@link FormattingModel} implementation.

@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.content.ContentFolderPropertyProvider;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

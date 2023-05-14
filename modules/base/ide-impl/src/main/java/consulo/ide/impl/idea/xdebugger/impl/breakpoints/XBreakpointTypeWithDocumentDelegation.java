@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.document.Document;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface XBreakpointTypeWithDocumentDelegation {
   /*

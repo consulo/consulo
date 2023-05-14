@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.PairProcessor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

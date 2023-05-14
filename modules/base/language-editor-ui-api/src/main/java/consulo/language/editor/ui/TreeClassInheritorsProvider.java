@@ -19,7 +19,7 @@ import consulo.application.util.query.Query;
 import consulo.language.psi.PsiNamedElement;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

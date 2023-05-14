@@ -22,8 +22,8 @@ import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
 import consulo.platform.Platform;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

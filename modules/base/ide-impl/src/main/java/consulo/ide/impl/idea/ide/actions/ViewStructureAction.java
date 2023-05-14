@@ -43,8 +43,8 @@ import consulo.language.psi.PsiManager;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.PlaceHolder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 

@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl.source.tree;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.plain.psi.PsiPlainText;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {
   protected PsiPlainTextImpl(CharSequence text) {

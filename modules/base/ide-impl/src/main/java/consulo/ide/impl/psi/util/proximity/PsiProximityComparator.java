@@ -29,7 +29,7 @@ import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.psi.util.ProximityLocation;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.FactoryMap;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;

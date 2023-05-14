@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.agent.impl;
 
 import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentProxyFactory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,7 @@ public class RemoteAgentThreadProxyFactory implements RemoteAgentProxyFactory {
   private final RemoteAgentProxyFactory myDelegate;
 
   public RemoteAgentThreadProxyFactory(CallerClassLoaderProvider callerClassLoaderProvider, @Nonnull RemoteAgentProxyFactory delegate,
-                                       @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
+                                       @jakarta.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myCreator = new RemoteAgentThreadProxyCreator(callerClassLoaderProvider, preWrapperCreator);
     myDelegate = delegate;
   }

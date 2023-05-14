@@ -20,7 +20,7 @@ import consulo.desktop.awt.uiOld.mac.growl.Growl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 import java.util.TreeSet;
 

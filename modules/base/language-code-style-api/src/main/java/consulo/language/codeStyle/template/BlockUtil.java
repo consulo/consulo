@@ -23,8 +23,8 @@ import consulo.language.codeStyle.Indent;
 import consulo.language.codeStyle.Spacing;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

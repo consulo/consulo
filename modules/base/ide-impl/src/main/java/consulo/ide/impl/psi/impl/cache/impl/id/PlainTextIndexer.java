@@ -21,7 +21,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 @ExtensionImpl

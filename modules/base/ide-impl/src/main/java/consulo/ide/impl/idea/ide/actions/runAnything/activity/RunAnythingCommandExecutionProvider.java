@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.ide.actions.runAnything.activity;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(order = "last")
 public class RunAnythingCommandExecutionProvider extends RunAnythingCommandProvider {

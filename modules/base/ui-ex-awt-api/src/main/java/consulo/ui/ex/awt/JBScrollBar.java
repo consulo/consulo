@@ -15,7 +15,7 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A single threaded, resizable, circular char queue backed by an array.

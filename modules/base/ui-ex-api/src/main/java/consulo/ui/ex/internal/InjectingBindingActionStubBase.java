@@ -17,7 +17,7 @@ package consulo.ui.ex.internal;
 
 import consulo.annotation.component.ActionImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

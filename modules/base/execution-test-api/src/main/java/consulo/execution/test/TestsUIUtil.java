@@ -36,8 +36,8 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -112,7 +112,7 @@ public class TestsUIUtil {
     return null;
   }
 
-  public static void notifyByBalloon(@Nonnull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @javax.annotation.Nullable final String comment) {
+  public static void notifyByBalloon(@Nonnull final Project project, boolean started, final AbstractTestProxy root, final TestConsoleProperties properties, @jakarta.annotation.Nullable final String comment) {
     notifyByBalloon(project, root, properties, new TestResultPresentation(root, started, comment).getPresentation());
   }
 

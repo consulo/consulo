@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.List;

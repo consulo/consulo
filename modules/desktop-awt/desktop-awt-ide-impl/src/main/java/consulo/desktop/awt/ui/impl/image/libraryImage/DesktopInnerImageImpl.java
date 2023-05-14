@@ -21,8 +21,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.awt.image.ImageFilter;
 import java.util.function.Supplier;

@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

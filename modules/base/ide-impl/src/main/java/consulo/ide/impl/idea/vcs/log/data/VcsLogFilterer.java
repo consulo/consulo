@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.versionControlSystem.log.VcsLogFilterCollection;
 import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  */

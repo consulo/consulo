@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.ide.impl.idea.diff.tools.util.base.DiffViewerBase;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotateDiffExtension extends DiffExtension {

@@ -7,8 +7,8 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.lang.SystemProperties;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 

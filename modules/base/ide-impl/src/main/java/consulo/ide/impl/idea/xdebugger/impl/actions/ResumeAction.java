@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

@@ -26,7 +26,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.util.dataholder.Key;
 import java.util.HashSet;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

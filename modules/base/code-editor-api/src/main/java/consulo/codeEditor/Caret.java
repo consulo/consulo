@@ -18,8 +18,8 @@ package consulo.codeEditor;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a specific caret instance in the editor.
@@ -254,7 +254,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param startOffset     start selection offset
    * @param endOffset       end selection offset
    */
-  void setSelection(@javax.annotation.Nullable VisualPosition startPosition, int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset);
+  void setSelection(@jakarta.annotation.Nullable VisualPosition startPosition, int startOffset, @jakarta.annotation.Nullable VisualPosition endPosition, int endOffset);
 
   /**
    * Selects target range based on its visual boundaries.
@@ -271,7 +271,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param endOffset       end selection offset
    * @param updateSystemSelection whether system selection should be updated (might not have any effect if current editor doesn't support such a feature)
    */
-  void setSelection(@javax.annotation.Nullable VisualPosition startPosition, int startOffset, @javax.annotation.Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
+  void setSelection(@jakarta.annotation.Nullable VisualPosition startPosition, int startOffset, @jakarta.annotation.Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
 
   /**
    * Removes the selection in the editor.

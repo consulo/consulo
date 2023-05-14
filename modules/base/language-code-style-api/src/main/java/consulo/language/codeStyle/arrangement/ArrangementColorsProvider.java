@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement;
 
 import consulo.colorScheme.TextAttributes;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

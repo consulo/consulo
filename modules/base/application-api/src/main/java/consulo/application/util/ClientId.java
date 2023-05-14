@@ -15,7 +15,7 @@
  */
 package consulo.application.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Stub from IDEA - API for CodeWithMe

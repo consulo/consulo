@@ -34,8 +34,8 @@ import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.change.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,11 +56,11 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     }
   }
 
-  public static boolean canShowDiff(@Nullable Project project, @javax.annotation.Nullable Change[] changes) {
+  public static boolean canShowDiff(@Nullable Project project, @jakarta.annotation.Nullable Change[] changes) {
     return changes != null && canShowDiff(project, Arrays.asList(changes));
   }
 
-  public static boolean canShowDiff(@javax.annotation.Nullable Project project, @Nullable List<Change> changes) {
+  public static boolean canShowDiff(@jakarta.annotation.Nullable Project project, @Nullable List<Change> changes) {
     if (changes == null || changes.size() == 0) return false;
     for (Change change : changes) {
       if (ChangeDiffRequestProducer.canCreate(project, change)) return true;

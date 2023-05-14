@@ -22,7 +22,7 @@ import consulo.versionControlSystem.change.IgnoredFileProvider;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

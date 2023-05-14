@@ -28,7 +28,7 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;

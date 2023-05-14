@@ -19,9 +19,9 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.impl.internal.FileTemplateBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

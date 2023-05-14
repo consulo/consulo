@@ -49,8 +49,8 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -458,7 +458,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     myTable = table;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     try {

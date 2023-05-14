@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.dnd;
 
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.tree.TreePathUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;

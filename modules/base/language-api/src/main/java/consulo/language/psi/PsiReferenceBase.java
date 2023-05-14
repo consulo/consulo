@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -175,7 +175,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public PsiElement resolve() {
       ResolveResult[] resolveResults = multiResolve(false);
       return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
@@ -212,7 +212,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public PsiElement resolve() {
       return myResolveTo;
     }

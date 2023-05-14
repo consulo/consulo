@@ -19,7 +19,7 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

@@ -6,7 +6,7 @@ import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.language.file.FileTypeManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.BiPredicate;

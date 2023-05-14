@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.vcs.log.graph.utils;
 
 import consulo.util.collection.primitive.ints.IntStack;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DfsUtil {
   public DfsUtil() {

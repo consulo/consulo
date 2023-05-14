@@ -26,8 +26,8 @@ import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.language.editor.inspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
 import static consulo.language.editor.inspection.ProblemDescriptorUtil.TRIM_AT_TREE_END;

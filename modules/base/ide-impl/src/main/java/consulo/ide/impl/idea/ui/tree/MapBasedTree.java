@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui.tree;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreePath;

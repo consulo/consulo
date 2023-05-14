@@ -66,8 +66,8 @@ import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

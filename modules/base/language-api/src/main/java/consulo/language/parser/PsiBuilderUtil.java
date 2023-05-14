@@ -20,8 +20,8 @@ import consulo.language.ast.TokenSet;
 import consulo.language.lexer.Lexer;
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PsiBuilderUtil {
   private PsiBuilderUtil() {

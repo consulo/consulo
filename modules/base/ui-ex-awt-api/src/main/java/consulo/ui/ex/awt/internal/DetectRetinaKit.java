@@ -5,7 +5,7 @@ import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

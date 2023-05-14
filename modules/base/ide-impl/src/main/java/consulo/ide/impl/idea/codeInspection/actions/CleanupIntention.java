@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class CleanupIntention implements IntentionAction, LowPriorityAction {
 
@@ -53,7 +53,7 @@ public abstract class CleanupIntention implements IntentionAction, LowPriorityAc
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected abstract AnalysisScope getScope(Project project, PsiFile file);
 
   @Override

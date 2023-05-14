@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.diff.util.Side;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

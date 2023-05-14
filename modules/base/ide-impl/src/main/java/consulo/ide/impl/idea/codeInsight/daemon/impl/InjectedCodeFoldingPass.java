@@ -24,7 +24,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");

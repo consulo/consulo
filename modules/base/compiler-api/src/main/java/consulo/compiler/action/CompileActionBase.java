@@ -30,7 +30,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.UpdateInBackground;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class CompileActionBase extends AnAction implements DumbAware, UpdateInBackground {
   @RequiredUIAccess

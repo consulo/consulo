@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Holds utility methods for {@link KillRingTransferable kill ring}-aware processing.

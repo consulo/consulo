@@ -35,7 +35,7 @@ public class ThreadInvocationHandler implements InvocationHandler {
   }
 
   public ThreadInvocationHandler(SequentialTaskExecutor taskExecutor, ClassLoader callerClassLoader, Object target,
-                                 @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
+                                 @jakarta.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myTaskExecutor = taskExecutor;
     myCallerClassLoader = callerClassLoader;
     myTarget = target;

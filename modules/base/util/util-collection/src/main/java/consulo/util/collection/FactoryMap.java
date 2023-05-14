@@ -18,8 +18,8 @@ package consulo.util.collection;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;

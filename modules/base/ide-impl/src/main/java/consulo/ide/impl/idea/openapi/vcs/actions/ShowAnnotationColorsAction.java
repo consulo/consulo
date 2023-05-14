@@ -17,7 +17,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.EditorGutterComponentEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class ShowAnnotationColorsAction extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
     return myChildren;
   }
 

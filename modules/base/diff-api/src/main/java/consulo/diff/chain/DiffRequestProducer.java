@@ -19,7 +19,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DiffRequestProducer {
   @Nonnull

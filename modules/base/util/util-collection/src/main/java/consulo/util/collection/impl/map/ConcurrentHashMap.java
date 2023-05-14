@@ -11,7 +11,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.ThreadLocalRandom;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;

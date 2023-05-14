@@ -40,8 +40,8 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;

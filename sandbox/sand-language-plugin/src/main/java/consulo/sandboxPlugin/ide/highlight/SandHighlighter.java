@@ -24,7 +24,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

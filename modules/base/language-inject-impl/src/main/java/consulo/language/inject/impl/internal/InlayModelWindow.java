@@ -8,8 +8,8 @@ import consulo.codeEditor.VisualPosition;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collections;

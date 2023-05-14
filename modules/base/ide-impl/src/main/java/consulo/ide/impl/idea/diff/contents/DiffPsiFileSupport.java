@@ -19,7 +19,7 @@ import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class DiffPsiFileSupport {
   public static final Key<Boolean> KEY = Key.create("Diff.DiffPsiFileSupport");

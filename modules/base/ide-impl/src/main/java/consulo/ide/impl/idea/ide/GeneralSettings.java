@@ -30,7 +30,7 @@ import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)

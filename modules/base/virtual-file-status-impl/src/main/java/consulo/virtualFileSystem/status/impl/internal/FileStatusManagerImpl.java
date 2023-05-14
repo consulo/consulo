@@ -40,7 +40,7 @@ import consulo.virtualFileSystem.status.FileStatusProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

@@ -25,7 +25,7 @@ import consulo.util.xml.serializer.*;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

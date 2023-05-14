@@ -18,7 +18,7 @@ package consulo.ui;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.model.TableModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

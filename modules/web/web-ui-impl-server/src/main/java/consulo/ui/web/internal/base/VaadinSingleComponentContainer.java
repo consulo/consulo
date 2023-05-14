@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.AbstractSingleComponentContainerState;
 import com.vaadin.ui.AbstractSingleComponentContainer;
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -23,7 +23,7 @@ import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.ui.ex.action.IdeActions;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to register actions which are activated by typing and navigation keystrokes

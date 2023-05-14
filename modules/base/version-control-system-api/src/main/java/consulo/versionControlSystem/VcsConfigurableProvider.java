@@ -20,7 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

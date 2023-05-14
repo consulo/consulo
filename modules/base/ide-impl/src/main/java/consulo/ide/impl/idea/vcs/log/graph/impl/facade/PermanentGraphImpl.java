@@ -38,8 +38,8 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.function.Condition;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

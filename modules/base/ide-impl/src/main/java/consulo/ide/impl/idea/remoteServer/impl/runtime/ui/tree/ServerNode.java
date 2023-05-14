@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree;
 
 import consulo.execution.executor.Executor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

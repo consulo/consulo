@@ -21,7 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

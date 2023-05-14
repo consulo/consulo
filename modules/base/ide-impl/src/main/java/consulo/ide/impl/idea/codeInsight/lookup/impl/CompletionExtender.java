@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.ide.impl.idea.ui.ListExpandableItemsHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.*;

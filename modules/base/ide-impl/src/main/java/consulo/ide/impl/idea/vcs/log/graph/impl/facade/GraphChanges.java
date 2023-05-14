@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
@@ -73,18 +73,18 @@ public interface GraphChanges<NodeId> {
   class EdgeImpl<NodeId> implements Edge<NodeId> {
     @Nullable private final NodeId myUpNodeId;
     @Nullable private final NodeId myDownNodeId;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final NodeId myTargetId;
     private final boolean myRemoved;
 
-    public EdgeImpl(@Nullable NodeId upNodeId, @javax.annotation.Nullable NodeId downNodeId, @Nullable NodeId targetId, boolean removed) {
+    public EdgeImpl(@Nullable NodeId upNodeId, @jakarta.annotation.Nullable NodeId downNodeId, @Nullable NodeId targetId, boolean removed) {
       myUpNodeId = upNodeId;
       myDownNodeId = downNodeId;
       myTargetId = targetId;
       myRemoved = removed;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public NodeId upNodeId() {
       return myUpNodeId;

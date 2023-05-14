@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 

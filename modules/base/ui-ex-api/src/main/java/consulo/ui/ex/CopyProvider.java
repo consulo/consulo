@@ -18,7 +18,7 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface CopyProvider {
   Key<CopyProvider> KEY = Key.create(CopyProvider.class);

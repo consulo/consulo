@@ -18,7 +18,7 @@ package consulo.virtualFileSystem.impl.internal.windows;
 import consulo.util.io.FileAttributes;
 import consulo.util.lang.BitUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Do not use this class directly.

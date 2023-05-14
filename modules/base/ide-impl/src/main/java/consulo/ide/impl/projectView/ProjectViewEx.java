@@ -18,7 +18,7 @@ package consulo.ide.impl.projectView;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

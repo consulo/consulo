@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The element of the branch popup which allows to show branches of the selected repository.
@@ -44,7 +44,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
    * @param actionsGroup
    * @param branchText
    */
-  public RootAction(@Nonnull T repository, @javax.annotation.Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
+  public RootAction(@Nonnull T repository, @jakarta.annotation.Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
     super("", true);
     myRepository = repository;
     myGroup = actionsGroup;
@@ -67,7 +67,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
     return myGroup.getChildren(e);
   }
 }

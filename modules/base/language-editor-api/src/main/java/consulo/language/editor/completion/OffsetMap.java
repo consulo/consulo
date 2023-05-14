@@ -21,7 +21,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
 

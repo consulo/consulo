@@ -26,8 +26,8 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -69,7 +69,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
 
-  public void addDisabledLink(@Nonnull String url, @javax.annotation.Nullable String text) {
+  public void addDisabledLink(@Nonnull String url, @jakarta.annotation.Nullable String text) {
     disabledLinks.put(url, text);
   }
 
@@ -101,7 +101,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     }
   }
 
-  protected void updateStyle(@Nonnull JEditorPane editorPane, @javax.annotation.Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  protected void updateStyle(@Nonnull JEditorPane editorPane, @jakarta.annotation.Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     super.updateStyle(editorPane, tree, value, selected, hasFocus);
 
     final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();

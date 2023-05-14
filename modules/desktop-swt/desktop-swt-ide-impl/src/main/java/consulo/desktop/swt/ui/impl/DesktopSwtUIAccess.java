@@ -20,7 +20,7 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import org.eclipse.swt.widgets.Display;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Supplier;
 

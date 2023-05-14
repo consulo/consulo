@@ -5,8 +5,8 @@ import consulo.component.util.localize.BundleBase;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An immutable object which represents a text string with mnemonic character.

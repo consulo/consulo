@@ -17,7 +17,7 @@ package consulo.ui.image.internal;
 
 import consulo.ui.image.IconLibraryDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;

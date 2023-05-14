@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.execution.filters;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 public class PatternBasedFileHyperlinkFilter extends AbstractFileHyperlinkFilter implements DumbAware {

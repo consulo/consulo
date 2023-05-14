@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class GlobalUndoableAction extends BasicUndoableAction {
   public GlobalUndoableAction() {

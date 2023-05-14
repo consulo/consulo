@@ -21,7 +21,7 @@ import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.function.Function;
 

@@ -23,7 +23,7 @@ import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

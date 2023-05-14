@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.external.api.StatisticsBean;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

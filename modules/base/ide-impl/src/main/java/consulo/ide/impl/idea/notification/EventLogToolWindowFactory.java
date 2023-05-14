@@ -43,7 +43,7 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.event.AncestorEvent;
 
 /**

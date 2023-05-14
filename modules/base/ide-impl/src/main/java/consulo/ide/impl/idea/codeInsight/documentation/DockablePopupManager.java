@@ -33,8 +33,8 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.update.Activatable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class DockablePopupManager<T extends JComponent & Disposable> {

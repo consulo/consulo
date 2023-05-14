@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

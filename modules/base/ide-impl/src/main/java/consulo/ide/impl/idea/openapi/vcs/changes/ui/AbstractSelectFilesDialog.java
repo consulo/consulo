@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,7 +49,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
   @Nonnull
   protected abstract ChangesTreeList getFileList();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private JLabel createPromptLabel() {
     if (myPrompt != null) {
       final JLabel label = new JLabel(myPrompt);
@@ -85,7 +85,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     return getFileList();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createToolbar(), BorderLayout.NORTH);

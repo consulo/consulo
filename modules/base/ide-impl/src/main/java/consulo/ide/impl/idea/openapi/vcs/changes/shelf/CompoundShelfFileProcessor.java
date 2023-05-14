@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.util.io.CharsetToolkit;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.*;
 

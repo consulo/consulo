@@ -35,8 +35,8 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ import java.util.Set;
 
 class CollapsedActionManager {
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static LinearGraphAnswer performAction(@Nonnull CollapsedController graphController, @Nonnull LinearGraphAction action) {
     ActionContext context = new ActionContext(graphController.getCollapsedGraph(), graphController.getPermanentGraphInfo(), action);
 
@@ -123,7 +123,7 @@ class CollapsedActionManager {
       return myGraphAction.getType();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     GraphElement getAffectedGraphElement() {
       return myGraphAction.getAffectedElement() == null ? null : myGraphAction.getAffectedElement().getGraphElement();
     }
@@ -179,7 +179,7 @@ class CollapsedActionManager {
   }
 
   private final static ActionCase LINEAR_COLLAPSE_CASE = new ActionCase() {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public LinearGraphAnswer performAction(@Nonnull final ActionContext context) {
       if (isForDelegateGraph(context)) return null;
@@ -251,7 +251,7 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase COLLAPSE_ALL = new ActionCase() {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
@@ -283,7 +283,7 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase LINEAR_EXPAND_CASE = new ActionCase() {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
       if (isForDelegateGraph(context)) return null;

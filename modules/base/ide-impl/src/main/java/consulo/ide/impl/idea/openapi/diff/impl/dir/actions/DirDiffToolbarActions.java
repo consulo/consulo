@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.ide.diff.DirDiffModelHolder;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
 import consulo.ui.ex.action.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class DirDiffToolbarActions extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
     return myActions;
   }
 }

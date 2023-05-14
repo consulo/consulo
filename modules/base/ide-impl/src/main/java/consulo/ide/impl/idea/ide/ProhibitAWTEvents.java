@@ -19,7 +19,7 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

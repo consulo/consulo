@@ -21,7 +21,7 @@ import consulo.versionControlSystem.log.VcsLogHighlighter;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.versionControlSystem.log.VcsLogUi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class MyCommitsHighlighterFactory implements VcsLogHighlighterFactory {

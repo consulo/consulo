@@ -19,7 +19,7 @@ package consulo.versionControlSystem.root;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

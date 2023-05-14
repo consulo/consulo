@@ -21,8 +21,8 @@ import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

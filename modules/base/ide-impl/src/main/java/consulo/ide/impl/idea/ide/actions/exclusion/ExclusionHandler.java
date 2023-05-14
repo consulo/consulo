@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.actions.exclusion;
 
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ExclusionHandler<Node> {
   Key<ExclusionHandler> EXCLUSION_HANDLER = Key.create("tree.exclusion.handler");

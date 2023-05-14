@@ -21,7 +21,7 @@ import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author Denis Zhdanov
@@ -36,7 +36,7 @@ public interface ExternalProjectRefreshCallback {
    *
    * @param externalProject  target external project (if available)
    */
-  void onSuccess(@javax.annotation.Nullable DataNode<ProjectData> externalProject);
+  void onSuccess(@jakarta.annotation.Nullable DataNode<ProjectData> externalProject);
 
-  void onFailure(@Nonnull String errorMessage, @javax.annotation.Nullable String errorDetails);
+  void onFailure(@Nonnull String errorMessage, @jakarta.annotation.Nullable String errorDetails);
 }

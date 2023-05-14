@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FileSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {

@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.remoteServer.agent.impl;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author michael.golubev

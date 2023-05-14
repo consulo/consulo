@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.render;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

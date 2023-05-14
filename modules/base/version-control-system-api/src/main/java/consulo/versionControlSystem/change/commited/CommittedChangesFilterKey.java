@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.change.commited;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
 * @author irengrig

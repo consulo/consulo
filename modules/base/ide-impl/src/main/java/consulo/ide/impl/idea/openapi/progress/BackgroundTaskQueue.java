@@ -31,8 +31,8 @@ import consulo.disposer.Disposer;
 import consulo.application.progress.ProgressIndicator;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;

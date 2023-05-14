@@ -23,8 +23,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RecentProjectsGroup extends ActionGroup implements DumbAware {
   public RecentProjectsGroup() {

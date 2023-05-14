@@ -17,7 +17,7 @@ package consulo.util.collection.primitive.ints;
 
 import consulo.util.collection.primitive.ints.impl.set.EmptyIntSet;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

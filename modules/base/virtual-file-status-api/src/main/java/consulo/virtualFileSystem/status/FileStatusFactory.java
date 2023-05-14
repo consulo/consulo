@@ -20,8 +20,8 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -23,9 +23,9 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBCheckBox;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

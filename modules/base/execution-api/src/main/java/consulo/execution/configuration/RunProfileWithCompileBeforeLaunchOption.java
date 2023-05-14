@@ -18,7 +18,7 @@ package consulo.execution.configuration;
 
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

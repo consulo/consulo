@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.ide.impl.idea.diff.FrameDiffTool;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DirDiffTool implements FrameDiffTool {
   public static final DirDiffTool INSTANCE = new DirDiffTool();

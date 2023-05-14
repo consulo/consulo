@@ -28,7 +28,7 @@ import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;

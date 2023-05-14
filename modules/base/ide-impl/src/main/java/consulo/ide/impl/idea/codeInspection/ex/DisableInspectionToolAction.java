@@ -35,7 +35,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 public class DisableInspectionToolAction implements IntentionAction, SyntheticIntentionAction, Iconable {

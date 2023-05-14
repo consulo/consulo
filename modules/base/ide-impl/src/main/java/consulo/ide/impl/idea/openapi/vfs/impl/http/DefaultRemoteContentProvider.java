@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.io.UrlConnectionUtil;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.net.HttpURLConnection;

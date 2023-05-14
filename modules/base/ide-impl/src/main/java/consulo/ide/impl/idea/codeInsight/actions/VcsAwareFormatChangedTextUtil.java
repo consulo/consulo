@@ -40,7 +40,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @Singleton
@@ -77,7 +77,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
                                   : ContainerUtil.<TextRange>emptyList();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static String getRevisionedContentFrom(@Nonnull Change change) {
     ContentRevision revision = change.getBeforeRevision();
     if (revision == null) {
@@ -93,7 +93,7 @@ public class VcsAwareFormatChangedTextUtil extends FormatChangedTextUtil {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static List<TextRange> getCachedChangedLines(@Nonnull Project project, @Nonnull Document document) {
     LineStatusTracker tracker = LineStatusTrackerManager.getInstance(project).getLineStatusTracker(document);
     if (tracker != null && tracker.isValid()) {

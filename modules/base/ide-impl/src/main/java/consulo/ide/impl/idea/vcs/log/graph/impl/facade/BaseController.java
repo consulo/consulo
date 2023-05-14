@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade;
 
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.api.permanent.PermanentGraphInfo;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class BaseController extends CascadeController {
   public BaseController(@Nonnull PermanentGraphInfo permanentGraphInfo) {

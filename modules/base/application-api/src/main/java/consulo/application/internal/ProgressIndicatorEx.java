@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ProgressIndicatorEx extends ProgressIndicator {
   @Deprecated

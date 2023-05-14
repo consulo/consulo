@@ -8,8 +8,8 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.application.util.registry.Registry.is;
 import static consulo.ide.impl.idea.openapi.vfs.VfsUtilCore.isAncestor;

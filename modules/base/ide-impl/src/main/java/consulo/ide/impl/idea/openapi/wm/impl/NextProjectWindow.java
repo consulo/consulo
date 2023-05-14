@@ -22,7 +22,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class NextProjectWindow extends AnAction implements DumbAware {
   private final ActionManager myActionManager;

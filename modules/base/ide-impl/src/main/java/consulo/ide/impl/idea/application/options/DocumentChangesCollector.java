@@ -21,7 +21,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.codeEditor.impl.TextChangeImpl;
 import gnu.trove.TIntArrayList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

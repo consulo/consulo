@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
 import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

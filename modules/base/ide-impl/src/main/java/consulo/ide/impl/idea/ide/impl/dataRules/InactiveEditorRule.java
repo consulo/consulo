@@ -25,8 +25,8 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class InactiveEditorRule implements GetDataRule<Editor> {
   @Nonnull

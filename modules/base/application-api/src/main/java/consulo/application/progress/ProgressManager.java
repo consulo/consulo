@@ -24,8 +24,8 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;

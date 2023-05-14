@@ -20,7 +20,7 @@ import com.ibm.icu.util.ValueIterator;
 import consulo.annotation.UsedInPlugin;
 import consulo.hacking.java.base.CharacterNameHacking;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

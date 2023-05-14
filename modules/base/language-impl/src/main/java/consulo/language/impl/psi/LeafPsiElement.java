@@ -41,7 +41,7 @@ import consulo.project.Project;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LeafPsiElement extends LeafElement implements PsiElement, NavigationItem {
   private static final Logger LOG = Logger.getInstance(LeafPsiElement.class);

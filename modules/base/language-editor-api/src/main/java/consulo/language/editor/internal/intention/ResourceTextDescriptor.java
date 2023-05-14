@@ -20,7 +20,7 @@ import consulo.util.io.ResourceUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

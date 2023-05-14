@@ -23,7 +23,7 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;

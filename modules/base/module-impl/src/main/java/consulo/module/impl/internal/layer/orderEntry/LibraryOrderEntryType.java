@@ -25,7 +25,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

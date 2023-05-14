@@ -16,7 +16,7 @@
 package consulo.language.pattern.compiler;
 
 import consulo.language.pattern.ElementPattern;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Gregory.Shrago

@@ -37,8 +37,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -210,8 +210,8 @@ public class NewMappings implements Disposable {
     mappingsChanged();
   }
 
-  @javax.annotation.Nullable
-  public VcsDirectoryMapping getMappingFor(@javax.annotation.Nullable VirtualFile file) {
+  @jakarta.annotation.Nullable
+  public VcsDirectoryMapping getMappingFor(@jakarta.annotation.Nullable VirtualFile file) {
     if (file == null) return null;
     if (!file.isInLocalFileSystem()) {
       return null;
@@ -243,7 +243,7 @@ public class NewMappings implements Disposable {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getVcsFor(@Nonnull VirtualFile file) {
     VcsDirectoryMapping mapping = getMappingFor(file);
     if (mapping == null) {
@@ -333,7 +333,7 @@ public class NewMappings implements Disposable {
     myFileWatchRequestsManager.ping();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String haveDefaultMapping() {
     synchronized (myLock) {
       // empty mapping MUST be first
@@ -488,7 +488,7 @@ public class NewMappings implements Disposable {
       }
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private static Set<String> notInBottom(final Set<String> top, final Set<String> bottom) {
       Set<String> notInBottom = null;
       for (String topItem : top) {

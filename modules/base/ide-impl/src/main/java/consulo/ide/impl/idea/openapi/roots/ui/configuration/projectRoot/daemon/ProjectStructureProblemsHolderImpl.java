@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

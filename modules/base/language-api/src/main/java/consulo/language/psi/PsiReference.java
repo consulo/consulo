@@ -23,8 +23,8 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A reference to a PSI element. For example, the variable name used in an expression.

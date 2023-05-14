@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.BitSetFlags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;

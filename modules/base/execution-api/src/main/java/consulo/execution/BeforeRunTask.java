@@ -18,7 +18,7 @@ package consulo.execution;
 
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

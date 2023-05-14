@@ -27,7 +27,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.usage.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UsageContextCallHierarchyPanelProvider implements UsageContextPanelProvider {

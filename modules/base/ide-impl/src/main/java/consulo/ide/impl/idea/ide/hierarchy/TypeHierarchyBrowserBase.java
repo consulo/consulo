@@ -29,7 +29,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.PopupHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Map;

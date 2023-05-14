@@ -18,8 +18,8 @@ package consulo.component.extension;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Deprecated
 @DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")

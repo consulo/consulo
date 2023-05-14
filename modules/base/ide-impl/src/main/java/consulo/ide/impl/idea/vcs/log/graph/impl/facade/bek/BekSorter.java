@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

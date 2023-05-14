@@ -23,7 +23,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev

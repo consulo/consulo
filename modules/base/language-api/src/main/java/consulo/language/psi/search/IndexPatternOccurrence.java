@@ -4,7 +4,7 @@ package consulo.language.psi.search;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 

@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

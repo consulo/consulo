@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.animation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -29,7 +29,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.event.KeyEvent;
 
 public class ShowExpressionTypeAction extends BaseCodeInsightAction implements DumbAware {

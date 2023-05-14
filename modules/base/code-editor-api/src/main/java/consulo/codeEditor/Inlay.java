@@ -4,9 +4,9 @@ package consulo.codeEditor;
 import consulo.disposer.Disposable;
 import consulo.document.RangeMarker;
 import consulo.util.dataholder.UserDataHolderEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

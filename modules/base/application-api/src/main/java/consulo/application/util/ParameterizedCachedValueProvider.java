@@ -15,7 +15,7 @@
  */
 package consulo.application.util;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ParameterizedCachedValueProvider<T, P> {
   @Nullable

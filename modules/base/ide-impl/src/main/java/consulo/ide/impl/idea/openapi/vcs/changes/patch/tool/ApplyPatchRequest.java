@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
 import consulo.diff.content.DocumentContent;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 interface ApplyPatchRequest {
   @Nonnull

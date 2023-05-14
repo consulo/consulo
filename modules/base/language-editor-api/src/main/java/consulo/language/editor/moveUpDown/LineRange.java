@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LineRange {
   private static final Logger LOG = Logger.getInstance(LineRange.class);

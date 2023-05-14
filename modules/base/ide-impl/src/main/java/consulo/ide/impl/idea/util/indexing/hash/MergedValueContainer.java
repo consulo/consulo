@@ -2,8 +2,8 @@
 package consulo.ide.impl.idea.util.indexing.hash;
 
 import consulo.index.io.ValueContainer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class MergedValueContainer<Value> extends ValueContainer<Value> {
   private final ValueContainer<Value> myContainer1;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle.arrangement.engine;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

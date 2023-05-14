@@ -21,7 +21,7 @@ import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunA
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author AG

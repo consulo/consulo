@@ -29,8 +29,8 @@ import consulo.language.psi.PsiManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.language.editor.highlight.LexerEditorHighlighterLexer;
 import consulo.ide.impl.idea.reference.SoftReference;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 

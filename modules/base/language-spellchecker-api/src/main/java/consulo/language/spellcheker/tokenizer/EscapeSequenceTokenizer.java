@@ -7,7 +7,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.spellcheker.tokenizer.splitter.PlainTextTokenSplitter;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Tokenizer<T> {
   private static final Key<int[]> ESCAPE_OFFSETS = Key.create("escape.tokenizer.offsets");

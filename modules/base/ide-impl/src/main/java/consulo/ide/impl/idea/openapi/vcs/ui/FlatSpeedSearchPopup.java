@@ -24,8 +24,8 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class FlatSpeedSearchPopup extends PopupFactoryImpl.ActionGroupPopup {
 

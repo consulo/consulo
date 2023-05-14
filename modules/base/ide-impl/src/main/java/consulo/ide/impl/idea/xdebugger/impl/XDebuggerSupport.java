@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointPanelProvider
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.XQuickEvaluateHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

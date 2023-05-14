@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.packaging.impl.ui;
 
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

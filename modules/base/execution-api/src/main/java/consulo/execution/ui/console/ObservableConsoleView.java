@@ -18,7 +18,7 @@ package consulo.execution.ui.console;
 
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 public interface ObservableConsoleView  {

@@ -21,9 +21,9 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

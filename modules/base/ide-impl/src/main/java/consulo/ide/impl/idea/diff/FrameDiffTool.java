@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff;
 import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -37,7 +37,7 @@ public interface FrameDiffTool extends DiffTool {
     @Nonnull
     JComponent getComponent();
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     JComponent getPreferredFocusedComponent();
 
     /**
@@ -53,11 +53,11 @@ public interface FrameDiffTool extends DiffTool {
   }
 
   class ToolbarComponents {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public List<AnAction> toolbarActions;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public List<AnAction> popupActions;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public JComponent statusPanel;
   }
 }

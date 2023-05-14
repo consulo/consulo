@@ -8,7 +8,7 @@ import consulo.module.ModuleManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ModuleLinkFilter implements Filter {
 

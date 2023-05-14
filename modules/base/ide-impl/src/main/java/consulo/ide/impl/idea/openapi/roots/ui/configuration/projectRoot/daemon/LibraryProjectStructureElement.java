@@ -44,7 +44,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;

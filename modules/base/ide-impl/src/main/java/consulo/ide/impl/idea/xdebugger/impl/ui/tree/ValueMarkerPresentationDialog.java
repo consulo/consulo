@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

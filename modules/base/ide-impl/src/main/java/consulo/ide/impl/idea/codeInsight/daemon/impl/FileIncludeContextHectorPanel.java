@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.include.FileIncludeManager;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

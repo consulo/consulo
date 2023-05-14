@@ -17,7 +17,7 @@ package consulo.ui.web.internal.image;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

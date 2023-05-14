@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
 import consulo.versionControlSystem.VcsException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -25,10 +25,10 @@ public interface AirContentRevision {
   boolean isBinary();
   @Nullable
   String getContentAsString() throws VcsException;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   byte[] getContentAsBytes() throws VcsException;
   
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   String getRevisionNumber();
 
   @Nonnull

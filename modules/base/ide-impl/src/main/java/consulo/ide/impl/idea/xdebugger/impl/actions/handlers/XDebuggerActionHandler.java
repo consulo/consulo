@@ -21,7 +21,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

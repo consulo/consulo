@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.project.autoimport;
 import consulo.externalSystem.ExternalSystemAutoImportAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +42,7 @@ public class CachingExternalSystemAutoImportAware implements ExternalSystemAutoI
     myDelegate = delegate;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
     String cached = myCache.get(changedFileOrDirPath);

@@ -20,8 +20,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

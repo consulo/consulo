@@ -4,8 +4,8 @@ package consulo.virtualFileSystem;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

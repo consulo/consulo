@@ -26,7 +26,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class InspectionManagerBase extends InspectionManager {
   private final Project myProject;

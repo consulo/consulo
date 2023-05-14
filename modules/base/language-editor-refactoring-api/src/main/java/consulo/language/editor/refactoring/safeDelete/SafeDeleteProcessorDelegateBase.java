@@ -22,7 +22,7 @@ import consulo.usage.UsageView;
 import consulo.usage.UsageViewManager;
 import consulo.usage.UsageViewPresentation;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

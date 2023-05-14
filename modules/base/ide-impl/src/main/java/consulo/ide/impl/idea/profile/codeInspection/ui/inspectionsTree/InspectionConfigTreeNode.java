@@ -19,8 +19,8 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.application.util.ClearableLazyValue;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

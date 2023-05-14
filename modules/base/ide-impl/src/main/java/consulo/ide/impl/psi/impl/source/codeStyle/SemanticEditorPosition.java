@@ -21,8 +21,8 @@ import consulo.language.editor.highlight.HighlighterIteratorWrapper;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;

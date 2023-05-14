@@ -22,7 +22,7 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntKeyWeakValue
 import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMap;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

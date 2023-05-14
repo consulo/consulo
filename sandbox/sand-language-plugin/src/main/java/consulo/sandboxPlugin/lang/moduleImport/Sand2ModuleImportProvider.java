@@ -37,7 +37,7 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.FormBuilder;
 import consulo.ui.ex.wizard.WizardStep;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 

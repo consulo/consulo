@@ -26,7 +26,7 @@ import consulo.application.progress.DumbProgressIndicator;
 import consulo.util.lang.Pair;
 import consulo.application.util.LineTokenizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;

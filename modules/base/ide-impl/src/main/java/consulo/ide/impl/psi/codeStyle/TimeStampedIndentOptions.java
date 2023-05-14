@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.codeStyle;
 import consulo.document.Document;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 
 public class TimeStampedIndentOptions extends CommonCodeStyleSettings.IndentOptions {

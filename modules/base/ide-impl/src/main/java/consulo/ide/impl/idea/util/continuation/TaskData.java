@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.continuation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TaskData {
   private final String myName;

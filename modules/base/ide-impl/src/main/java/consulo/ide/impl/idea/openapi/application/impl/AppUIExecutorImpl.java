@@ -23,7 +23,7 @@ import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.Executor;

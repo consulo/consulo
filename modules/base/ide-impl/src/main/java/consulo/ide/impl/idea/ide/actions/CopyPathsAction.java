@@ -7,7 +7,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 

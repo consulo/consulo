@@ -21,7 +21,7 @@ import consulo.compiler.artifact.element.ArchivePackageInfo;
 import consulo.compiler.CompileContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -86,12 +86,12 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
     return true;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public ArchivePackageInfo getJarInfo(String outputPath) {
     return myJarByPath.get(outputPath);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VirtualFile getSourceByOutput(String outputPath) {
     return mySourceByOutput.get(outputPath);
   }

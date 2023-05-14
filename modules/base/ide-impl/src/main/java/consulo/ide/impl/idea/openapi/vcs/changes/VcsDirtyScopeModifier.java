@@ -27,7 +27,7 @@ import java.util.Iterator;
 public interface VcsDirtyScopeModifier {
   Iterator<FilePath> getDirtyFilesIterator();
   Collection<VirtualFile> getAffectedVcsRoots();
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   Iterator<FilePath> getDirtyDirectoriesIterator(VirtualFile root);
   void recheckDirtyKeys();
 }

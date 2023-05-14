@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;

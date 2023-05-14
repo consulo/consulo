@@ -9,7 +9,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * An interface used to support tracking of common PSI modifications. It has three main usage patterns:

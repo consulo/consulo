@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.deployment;
 
 import consulo.compiler.artifact.ArtifactUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 public abstract class DeploymentUtil {

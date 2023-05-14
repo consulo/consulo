@@ -5,8 +5,8 @@ import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 //@ApiStatus.Internal
 public class ChildInfoImpl implements ChildInfo {

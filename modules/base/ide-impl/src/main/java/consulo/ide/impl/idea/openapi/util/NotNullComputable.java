@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev

@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Function;

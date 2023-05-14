@@ -17,7 +17,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.AbstractVcsHelper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

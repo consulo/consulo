@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.util.io;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;

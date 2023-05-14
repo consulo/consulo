@@ -23,9 +23,9 @@ import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

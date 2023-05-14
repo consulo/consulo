@@ -4,7 +4,7 @@ package consulo.language.editor.intention;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public final class CommonQuickFixBundle extends AbstractBundle {

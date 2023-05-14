@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.openapi.wm.ex;
 
 import consulo.project.ui.wm.ToolWindowManagerListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 public abstract class ToolWindowManagerAdapter implements ToolWindowManagerListener {

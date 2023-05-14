@@ -25,7 +25,7 @@ import consulo.ui.TableColumn;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.model.TableModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;

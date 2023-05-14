@@ -18,7 +18,7 @@ package consulo.platform.os;
 import consulo.platform.LineSeparator;
 import consulo.platform.PlatformOperatingSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 
 /**

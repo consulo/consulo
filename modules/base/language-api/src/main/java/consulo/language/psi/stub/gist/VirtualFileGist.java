@@ -19,8 +19,8 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Calculates some data based on {@link VirtualFile} content, persists it between IDE restarts,

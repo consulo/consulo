@@ -18,8 +18,8 @@ package consulo.ui.ex.awt;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

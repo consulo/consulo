@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.toolWindow;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public final class ToolWindowAnchor {

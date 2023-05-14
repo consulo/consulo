@@ -36,7 +36,7 @@ public class ApplyTextFilePatch extends ApplyFilePatchBase<TextFilePatch> {
     super(patch);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected Result applyChange(final Project project, final VirtualFile fileToPatch, final FilePath pathBeforeRename, final Getter<CharSequence> baseContents) throws IOException {
     byte[] fileContents = fileToPatch.contentsToByteArray();
     CharSequence text = LoadTextUtil.getTextByBinaryPresentation(fileContents, fileToPatch);

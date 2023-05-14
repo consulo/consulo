@@ -18,7 +18,7 @@ package consulo.web.platform;
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

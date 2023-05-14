@@ -22,7 +22,7 @@ package consulo.language.psi.stub;
 import consulo.language.psi.stub.internal.StubSpine;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class StubTree extends ObjectStubTree<StubElement<?>> {

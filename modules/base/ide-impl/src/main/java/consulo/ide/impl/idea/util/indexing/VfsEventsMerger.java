@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 

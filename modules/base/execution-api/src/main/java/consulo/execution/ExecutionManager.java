@@ -27,8 +27,8 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.

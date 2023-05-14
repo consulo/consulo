@@ -13,8 +13,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.util.LineSeparator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
   public LineSeparatorPanel(@Nonnull Project project) {

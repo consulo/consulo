@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

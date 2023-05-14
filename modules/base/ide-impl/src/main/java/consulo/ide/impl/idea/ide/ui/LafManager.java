@@ -22,7 +22,7 @@ import consulo.ide.ServiceManager;
 import consulo.disposer.Disposable;
 import consulo.ui.style.Style;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.TreeCellRenderer;
 
 public interface ClickableTreeCellRenderer extends TreeCellRenderer {

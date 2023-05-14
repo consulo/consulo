@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.Language;
 import consulo.language.util.ProcessingContext;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: ik

@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class BasicDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
     return VfsUtil.isAncestor(myBaseDir, file, false);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Object getMatchContext(final VirtualFile file) {
     return null;
   }

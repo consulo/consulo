@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

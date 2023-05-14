@@ -52,8 +52,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -309,7 +309,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   private static abstract class MyDiffRequestProducer implements DiffRequestProducer {
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private final ShelvedChange myTextChange;
     @Nullable private final ShelvedBinaryFile myBinaryChange;
     @Nonnull
@@ -332,7 +332,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
       return myTextChange;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public ShelvedBinaryFile getBinaryChange() {
       return myBinaryChange;
     }

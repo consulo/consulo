@@ -1,8 +1,8 @@
 package consulo.execution.ui.console.language;
 
 import consulo.codeEditor.Editor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

@@ -23,7 +23,7 @@ import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionState;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

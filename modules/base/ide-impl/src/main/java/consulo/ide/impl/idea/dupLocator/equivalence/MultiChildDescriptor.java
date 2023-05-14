@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.dupLocator.equivalence;
 
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene.Kudelevsky

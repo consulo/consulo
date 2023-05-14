@@ -21,7 +21,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

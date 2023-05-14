@@ -21,7 +21,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

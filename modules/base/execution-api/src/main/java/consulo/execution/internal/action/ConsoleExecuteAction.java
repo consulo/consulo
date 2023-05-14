@@ -35,8 +35,8 @@ import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class ConsoleExecuteAction extends DumbAwareAction {

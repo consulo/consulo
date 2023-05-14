@@ -21,7 +21,7 @@ import consulo.util.xml.serializer.SmartSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CopyrightProfile implements Comparable<CopyrightProfile> {
   public static final String DEFAULT_COPYRIGHT_NOTICE = EntityUtil.encode("Copyright (c) $today.year. Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" +

@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.BadLocationException;

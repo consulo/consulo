@@ -4,7 +4,7 @@ package consulo.codeEditor.event;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 

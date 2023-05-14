@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

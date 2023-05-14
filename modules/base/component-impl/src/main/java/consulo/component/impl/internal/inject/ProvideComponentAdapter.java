@@ -19,7 +19,7 @@ package consulo.component.impl.internal.inject;
 import consulo.component.internal.inject.InjectingKey;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

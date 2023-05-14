@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.ide.impl.psi.impl.source.LightPsiFileImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {
   public LightPsiFileBase(final FileViewProvider provider, final Language language) {

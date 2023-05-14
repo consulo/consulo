@@ -22,7 +22,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

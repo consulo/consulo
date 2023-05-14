@@ -20,7 +20,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.SetValueInplaceEditor;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.WatchNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

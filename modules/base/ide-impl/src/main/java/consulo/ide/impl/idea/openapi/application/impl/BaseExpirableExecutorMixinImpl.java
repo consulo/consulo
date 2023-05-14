@@ -20,7 +20,7 @@ import consulo.application.constraint.ExpirableConstrainedExecution;
 import consulo.application.constraint.Expiration;
 import consulo.util.concurrent.CancellablePromise;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;

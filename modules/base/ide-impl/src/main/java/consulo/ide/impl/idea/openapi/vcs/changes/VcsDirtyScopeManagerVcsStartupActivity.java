@@ -21,7 +21,7 @@ import consulo.versionControlSystem.VcsStartupActivity;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

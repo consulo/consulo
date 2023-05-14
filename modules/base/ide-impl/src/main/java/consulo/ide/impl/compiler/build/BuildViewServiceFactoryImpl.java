@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ide.impl.compiler.BuildViewServiceFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 /**

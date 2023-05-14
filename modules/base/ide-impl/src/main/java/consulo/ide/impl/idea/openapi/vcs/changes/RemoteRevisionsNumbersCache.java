@@ -34,7 +34,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
@@ -205,7 +205,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private VirtualFile getRootForPath(final String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }

@@ -3,8 +3,8 @@ package consulo.ui.ex.awt.internal.laf;
 
 import consulo.ui.ex.awt.JBUIScale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

@@ -8,7 +8,7 @@ import consulo.util.collection.WeakList;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public final class IdeaModalityStateEx extends IdeaModalityState {

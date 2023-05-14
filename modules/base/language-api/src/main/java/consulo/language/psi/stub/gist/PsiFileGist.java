@@ -17,7 +17,7 @@ package consulo.language.psi.stub.gist;
 
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Calculates some data based on {@link PsiFile} content, persists it between IDE restarts,

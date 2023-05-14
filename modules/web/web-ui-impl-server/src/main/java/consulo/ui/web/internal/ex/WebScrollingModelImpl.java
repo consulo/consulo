@@ -21,7 +21,7 @@ import consulo.codeEditor.ScrollingModelEx;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

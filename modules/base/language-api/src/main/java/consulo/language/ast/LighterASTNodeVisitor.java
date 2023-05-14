@@ -15,7 +15,7 @@
  */
 package consulo.language.ast;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class LighterASTNodeVisitor {
   public abstract void visitNode(@Nonnull LighterASTNode node);

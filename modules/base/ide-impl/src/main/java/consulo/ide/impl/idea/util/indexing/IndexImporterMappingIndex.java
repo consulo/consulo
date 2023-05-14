@@ -5,8 +5,8 @@ import consulo.ide.impl.idea.index.IndexImporterFactory;
 import consulo.index.io.IndexExtension;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;

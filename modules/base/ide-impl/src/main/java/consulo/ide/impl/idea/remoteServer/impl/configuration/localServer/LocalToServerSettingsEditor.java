@@ -29,9 +29,9 @@ import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SortedComboBoxModel;
 import consulo.ui.ex.awt.FormBuilder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

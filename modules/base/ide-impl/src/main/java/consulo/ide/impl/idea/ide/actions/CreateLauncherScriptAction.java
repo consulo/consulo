@@ -35,7 +35,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.io.File;

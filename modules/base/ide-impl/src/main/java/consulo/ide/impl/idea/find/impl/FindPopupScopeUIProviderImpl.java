@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.annotation.component.ServiceImpl;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl

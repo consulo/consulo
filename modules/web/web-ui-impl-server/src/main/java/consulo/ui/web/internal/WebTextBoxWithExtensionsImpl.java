@@ -17,7 +17,7 @@ package consulo.ui.web.internal;
 
 import consulo.ui.TextBoxWithExtensions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

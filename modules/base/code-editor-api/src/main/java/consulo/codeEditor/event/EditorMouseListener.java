@@ -6,7 +6,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 

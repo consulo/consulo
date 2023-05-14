@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class BooleanPropertyToggleAction extends ToggleAction implements DumbAware {
   public BooleanPropertyToggleAction() {

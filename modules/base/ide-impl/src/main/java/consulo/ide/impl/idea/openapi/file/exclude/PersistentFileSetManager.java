@@ -15,7 +15,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
 import consulo.document.util.FileContentUtilCore;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;

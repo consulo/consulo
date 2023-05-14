@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "BreadcrumbsInitializing", order = "after InitToolWindows")
 public final class BreadcrumbsInitializingActivity implements PostStartupActivity, DumbAware {

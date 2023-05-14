@@ -5,7 +5,7 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.logging.Logger;
 import consulo.execution.debug.attach.EnvironmentAwareHost;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.BufferedReader;
 import java.io.IOException;

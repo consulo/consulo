@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class HttpFileSystem extends BaseVirtualFileSystem {
   public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;

@@ -28,7 +28,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;

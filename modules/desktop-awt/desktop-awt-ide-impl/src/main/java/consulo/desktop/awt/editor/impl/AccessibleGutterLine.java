@@ -24,8 +24,8 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.ShortcutSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;

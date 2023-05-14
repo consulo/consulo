@@ -26,7 +26,7 @@ import consulo.sandboxPlugin.lang.lexer.Sand2Lexer;
 import consulo.sandboxPlugin.lang.psi.Sand2Tokens;
 import consulo.sandboxPlugin.lang.psi.SandElements;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

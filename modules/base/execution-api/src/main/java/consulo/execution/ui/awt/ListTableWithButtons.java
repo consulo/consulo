@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -263,7 +263,7 @@ public abstract class ListTableWithButtons<T> extends Observable {
       return myRenderer;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     protected abstract String getDescription(T element);
   }
 }

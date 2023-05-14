@@ -37,8 +37,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class LibraryUtil {
     return child != null && findInFile(child, tokenizer);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static Library findInTable(LibraryTable table, String fqn) {
     for (Library library : table.getLibraries()) {
       if (isClassAvailableInLibrary(library, fqn)) {

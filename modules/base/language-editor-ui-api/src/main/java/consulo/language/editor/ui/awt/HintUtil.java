@@ -16,8 +16,8 @@ import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;

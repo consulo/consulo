@@ -17,8 +17,8 @@ package consulo.util.dataholder;
 
 import consulo.util.dataholder.keyFMap.KeyFMap;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 

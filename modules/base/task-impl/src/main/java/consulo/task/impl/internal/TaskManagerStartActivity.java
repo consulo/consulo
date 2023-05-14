@@ -22,7 +22,7 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.task.TaskManager;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

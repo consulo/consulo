@@ -29,8 +29,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -306,7 +306,7 @@ public class GenericPatchApplier {
 
   private boolean testForPartialContextMatch(final SplitHunk splitHunkWithExtendedContext,
                                              final MismatchSolver mismatchSolver,
-                                             final int maxWalkFromBinding, @javax.annotation.Nullable final SplitHunk originalSplitHunk) {
+                                             final int maxWalkFromBinding, @jakarta.annotation.Nullable final SplitHunk originalSplitHunk) {
     final List<BeforeAfter<List<String>>> steps = splitHunkWithExtendedContext.getPatchSteps();
     final BetterPoint betterPoint = new BetterPoint();
 
@@ -590,7 +590,7 @@ public class GenericPatchApplier {
     myAppliedInfo.add(new AppliedTextPatch.AppliedSplitPatchHunk(original, -1, -1, AppliedTextPatch.HunkStatus.NOT_APPLIED));
   }
 
-  private void processAppliedInfo(@javax.annotation.Nullable SplitHunk hunk, @Nonnull TextRange lineWithPartContextApplied,
+  private void processAppliedInfo(@jakarta.annotation.Nullable SplitHunk hunk, @Nonnull TextRange lineWithPartContextApplied,
                                   @Nonnull IntPair contextRangeShift,
                                   AppliedTextPatch.HunkStatus hunkStatus) {
     if (hunk != null) {

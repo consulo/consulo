@@ -18,7 +18,7 @@ package consulo.fileEditor.event;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class FileEditorManagerAdapter implements FileEditorManagerListener {
   @Override

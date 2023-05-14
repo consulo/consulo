@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.ArrayList;

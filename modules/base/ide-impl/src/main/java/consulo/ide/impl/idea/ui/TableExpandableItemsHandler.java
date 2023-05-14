@@ -5,7 +5,7 @@ import consulo.util.lang.Pair;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.TableCell;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

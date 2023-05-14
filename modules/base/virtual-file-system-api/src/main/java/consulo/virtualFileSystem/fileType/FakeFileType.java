@@ -24,7 +24,7 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class FakeFileType implements FileTypeIdentifiableByVirtualFile {
 

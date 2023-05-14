@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promises;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;

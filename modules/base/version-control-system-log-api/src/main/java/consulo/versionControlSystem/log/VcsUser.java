@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates information about a VcsUser - author or committer to the VCS.

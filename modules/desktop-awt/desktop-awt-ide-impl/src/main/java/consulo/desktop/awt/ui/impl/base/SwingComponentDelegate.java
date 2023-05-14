@@ -15,10 +15,11 @@
  */
 package consulo.desktop.awt.ui.impl.base;
 
-import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.facade.ToSwingComponentWrapper;
+import consulo.desktop.awt.ui.impl.DesktopFontImpl;
+import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
+import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyListener;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -29,22 +30,20 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.cursor.Cursor;
-import consulo.desktop.awt.ui.impl.DesktopFontImpl;
-import consulo.desktop.awt.ui.impl.util.AWTFocusAdapterAsFocusListener;
-import consulo.desktop.awt.ui.impl.util.AWTKeyAdapterAsKeyListener;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
 import consulo.ui.event.FocusListener;
 import consulo.ui.event.KeyListener;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.Font;
 import consulo.ui.impl.BorderInfo;
 import consulo.ui.impl.UIDataObject;
 import consulo.ui.util.MnemonicInfo;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.EventListener;
@@ -188,7 +187,7 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
 
   @Override
   @RequiredUIAccess
-  public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, @Nonnegative int width) {
+  public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
     for (BorderPosition position : BorderPosition.values()) {
       dataObject().addBorder(position, borderStyle, colorKey, width);
     }

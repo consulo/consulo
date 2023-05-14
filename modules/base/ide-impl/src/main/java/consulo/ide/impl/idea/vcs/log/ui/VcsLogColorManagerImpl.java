@@ -6,7 +6,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.*;

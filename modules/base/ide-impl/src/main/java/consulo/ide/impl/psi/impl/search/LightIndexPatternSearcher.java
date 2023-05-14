@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.impl.search;
 import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.IndexPatternSearch;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig

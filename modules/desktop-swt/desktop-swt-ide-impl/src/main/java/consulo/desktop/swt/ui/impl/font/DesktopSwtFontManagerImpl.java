@@ -20,7 +20,7 @@ import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import org.eclipse.swt.graphics.FontData;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;

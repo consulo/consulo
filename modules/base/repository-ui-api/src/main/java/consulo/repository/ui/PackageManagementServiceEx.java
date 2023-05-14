@@ -5,8 +5,8 @@ package consulo.repository.ui;
 
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 public abstract class PackageManagementServiceEx extends PackageManagementService {

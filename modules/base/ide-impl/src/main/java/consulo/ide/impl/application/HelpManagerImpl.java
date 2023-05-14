@@ -22,7 +22,7 @@ import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

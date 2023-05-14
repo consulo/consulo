@@ -39,7 +39,7 @@ import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class StatusBarUpdater implements Disposable {
   private final Project myProject;

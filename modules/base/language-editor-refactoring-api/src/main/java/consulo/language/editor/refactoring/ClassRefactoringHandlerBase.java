@@ -12,7 +12,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov

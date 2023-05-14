@@ -3,7 +3,7 @@ package consulo.ui.ex.concurrent;
 
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 
 /**

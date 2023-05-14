@@ -22,7 +22,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.*;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max

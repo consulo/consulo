@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.WebBrowserBundle;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.io.File;

@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XDependentBreakpointManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

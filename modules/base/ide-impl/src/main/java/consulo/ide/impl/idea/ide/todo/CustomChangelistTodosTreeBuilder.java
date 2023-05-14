@@ -27,7 +27,7 @@ import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;

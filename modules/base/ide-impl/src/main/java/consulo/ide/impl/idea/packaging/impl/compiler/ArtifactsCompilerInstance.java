@@ -46,7 +46,7 @@ import consulo.ide.impl.packaging.impl.util.DeploymentUtilImpl;
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.*;
 

@@ -3,7 +3,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

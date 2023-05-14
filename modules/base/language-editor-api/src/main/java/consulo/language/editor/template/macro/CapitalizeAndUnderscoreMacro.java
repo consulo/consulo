@@ -24,7 +24,7 @@ import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

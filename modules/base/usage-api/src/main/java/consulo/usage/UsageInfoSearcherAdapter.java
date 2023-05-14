@@ -22,7 +22,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public abstract class UsageInfoSearcherAdapter implements UsageSearcher {

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.document.DocumentReference;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class DocumentReferenceByDocument implements DocumentReference {
   private final Document myDocument;

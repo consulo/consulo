@@ -29,8 +29,8 @@ import consulo.virtualFileSystem.http.RemoteContentProvider;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

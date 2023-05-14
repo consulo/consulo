@@ -2,7 +2,7 @@ package consulo.externalService.statistic;
 
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

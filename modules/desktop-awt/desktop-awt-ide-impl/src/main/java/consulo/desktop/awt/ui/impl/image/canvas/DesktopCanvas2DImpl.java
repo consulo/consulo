@@ -12,7 +12,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 import org.imgscalr.Scalr;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

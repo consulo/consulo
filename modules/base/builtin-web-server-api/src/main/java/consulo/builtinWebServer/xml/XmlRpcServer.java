@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 @ServiceAPI(ComponentScope.APPLICATION)

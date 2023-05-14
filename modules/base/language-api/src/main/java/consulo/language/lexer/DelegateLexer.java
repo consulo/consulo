@@ -21,7 +21,7 @@ package consulo.language.lexer;
 
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class DelegateLexer extends LexerBase {
   protected final Lexer myDelegate;

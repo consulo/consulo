@@ -27,9 +27,9 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.application.ApplicationProperties;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class LazyUiDisposable<T extends Disposable> implements Activatable {

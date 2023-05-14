@@ -21,8 +21,8 @@ import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementAtomMatchConditionComponent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 /**

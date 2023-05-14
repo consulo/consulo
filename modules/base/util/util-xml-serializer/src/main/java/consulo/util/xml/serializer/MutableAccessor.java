@@ -15,8 +15,8 @@
  */
 package consulo.util.xml.serializer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface MutableAccessor extends Accessor {
   void set(@Nonnull Object host, @Nullable Object value);

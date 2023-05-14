@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.ide.impl.idea.openapi.util.io.ByteArraySequence;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;

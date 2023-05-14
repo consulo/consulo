@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement.std;
 
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -17,7 +17,7 @@ package consulo.externalSystem.service;
 
 import consulo.process.ExecutionException;
 import consulo.process.cmd.SimpleJavaParameters;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.net.URL;
 import java.util.List;

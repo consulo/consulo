@@ -21,8 +21,8 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

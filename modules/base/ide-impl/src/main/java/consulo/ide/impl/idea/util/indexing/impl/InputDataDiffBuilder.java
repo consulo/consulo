@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.indexing.impl;
 
 import consulo.index.io.StorageException;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 

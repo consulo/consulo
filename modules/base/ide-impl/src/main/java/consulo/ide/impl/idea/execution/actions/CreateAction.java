@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
 import consulo.ui.ex.action.Presentation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class CreateAction extends BaseRunConfigurationAction {

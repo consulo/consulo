@@ -27,7 +27,7 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

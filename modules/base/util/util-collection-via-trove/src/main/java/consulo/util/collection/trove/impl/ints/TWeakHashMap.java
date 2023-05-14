@@ -18,7 +18,7 @@ package consulo.util.collection.trove.impl.ints;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.impl.map.WeakHashMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

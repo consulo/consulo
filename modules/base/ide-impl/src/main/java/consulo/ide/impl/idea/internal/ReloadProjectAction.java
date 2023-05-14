@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author mike

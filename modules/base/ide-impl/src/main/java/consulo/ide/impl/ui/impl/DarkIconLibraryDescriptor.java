@@ -19,8 +19,8 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -26,8 +26,8 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

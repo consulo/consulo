@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 

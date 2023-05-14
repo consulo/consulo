@@ -19,7 +19,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**

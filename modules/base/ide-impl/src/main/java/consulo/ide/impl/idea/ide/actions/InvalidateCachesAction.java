@@ -9,7 +9,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.actions.InvalidateCacheDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class InvalidateCachesAction extends AnAction implements DumbAware {
   public InvalidateCachesAction() {

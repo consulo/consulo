@@ -44,8 +44,8 @@ import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.lang.*;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;

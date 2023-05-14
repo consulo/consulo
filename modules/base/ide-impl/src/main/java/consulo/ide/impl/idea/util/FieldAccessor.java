@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.lang.reflect.Field;
 

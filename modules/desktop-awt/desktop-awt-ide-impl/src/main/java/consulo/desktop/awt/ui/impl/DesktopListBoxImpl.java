@@ -23,7 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.model.ListModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

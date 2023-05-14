@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
     return getChangesSelection(dataProvider);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public ChangesSelection getChangesSelection(@Nonnull DataProvider dataProvider) {
     Change currentChange = dataProvider.getDataUnchecked(VcsDataKeys.CURRENT_CHANGE);
 

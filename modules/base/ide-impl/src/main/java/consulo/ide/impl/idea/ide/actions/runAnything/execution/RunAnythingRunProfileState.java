@@ -12,7 +12,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RunAnythingRunProfileState extends CommandLineState {
   public RunAnythingRunProfileState(@Nonnull ExecutionEnvironment environment, @Nonnull String originalCommand) {

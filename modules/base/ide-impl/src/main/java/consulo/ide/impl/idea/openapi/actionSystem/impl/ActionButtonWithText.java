@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Size;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

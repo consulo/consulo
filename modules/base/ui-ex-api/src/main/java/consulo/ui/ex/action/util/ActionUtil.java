@@ -20,7 +20,7 @@ import consulo.ui.ex.action.*;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Collections;

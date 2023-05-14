@@ -22,7 +22,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

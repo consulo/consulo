@@ -27,8 +27,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Allows to invoke and control Find, Replace and Find Usages operations.

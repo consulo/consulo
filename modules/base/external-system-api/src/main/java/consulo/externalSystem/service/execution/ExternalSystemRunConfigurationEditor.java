@@ -6,7 +6,7 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

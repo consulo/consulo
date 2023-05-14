@@ -19,7 +19,7 @@ import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.util.collection.SLRUCache;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

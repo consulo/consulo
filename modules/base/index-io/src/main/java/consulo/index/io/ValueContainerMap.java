@@ -18,7 +18,7 @@ package consulo.index.io;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.internal.ValueContainerImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.function.IntUnaryOperator;
 

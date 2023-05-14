@@ -18,9 +18,9 @@ package consulo.desktop.awt.editor.impl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import gnu.trove.TLongArrayList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

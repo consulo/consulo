@@ -18,7 +18,7 @@ import consulo.desktop.awt.editor.impl.view.WrapElementMeasuringIterator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Class that calculates soft wrap positions for a given text fragment and available visible width.

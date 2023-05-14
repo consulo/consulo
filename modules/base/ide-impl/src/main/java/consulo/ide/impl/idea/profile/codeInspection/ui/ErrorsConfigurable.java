@@ -21,8 +21,8 @@ import consulo.language.Language;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

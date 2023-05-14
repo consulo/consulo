@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.document.event.BulkAwareDocumentListener;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;

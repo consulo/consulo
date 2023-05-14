@@ -17,7 +17,7 @@ package consulo.externalSystem.ui.awt;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;

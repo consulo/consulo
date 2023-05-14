@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -345,7 +345,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   public ActionToolbar createGroupFilterToolbar(final Project project,
                                                 final ActionGroup leadGroup,
-                                                @javax.annotation.Nullable final ActionGroup tailGroup,
+                                                @jakarta.annotation.Nullable final ActionGroup tailGroup,
                                                 final List<AnAction> extra) {
     DefaultActionGroup toolbarGroup = new DefaultActionGroup();
     toolbarGroup.add(leadGroup);

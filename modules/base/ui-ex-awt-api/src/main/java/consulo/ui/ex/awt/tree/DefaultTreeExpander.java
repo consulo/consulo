@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.TreeExpander;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Supplier;
 

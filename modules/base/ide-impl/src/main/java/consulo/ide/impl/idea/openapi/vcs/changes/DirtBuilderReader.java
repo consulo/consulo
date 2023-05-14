@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DirtBuilderReader {
   boolean isEverythingDirty();

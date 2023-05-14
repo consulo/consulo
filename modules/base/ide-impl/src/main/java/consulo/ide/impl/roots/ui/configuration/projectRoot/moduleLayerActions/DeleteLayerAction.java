@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.util.IconUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**

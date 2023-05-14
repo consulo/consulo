@@ -20,7 +20,7 @@ import consulo.component.internal.inject.InjectingPoint;
 import consulo.component.internal.inject.PostInjectListener;
 import jakarta.inject.Provider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 

@@ -36,7 +36,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Listener for Highlighting settings modified from the 'Hector Inspector' slider.

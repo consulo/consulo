@@ -17,7 +17,7 @@ package consulo.sandboxPlugin.ide.module.extension;
 
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

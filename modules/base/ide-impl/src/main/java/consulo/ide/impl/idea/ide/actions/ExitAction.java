@@ -23,7 +23,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ExitAction extends AnAction implements DumbAware {
   @RequiredUIAccess

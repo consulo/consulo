@@ -29,7 +29,7 @@ import consulo.ide.impl.actions.AboutManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.Window;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.util.List;

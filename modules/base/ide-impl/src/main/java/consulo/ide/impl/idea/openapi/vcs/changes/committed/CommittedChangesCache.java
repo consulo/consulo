@@ -56,8 +56,8 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -204,7 +204,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     updateRefreshTimer();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public CommittedChangesProvider getProviderForProject() {
     final AbstractVcs[] vcss = myVcsManager.getAllActiveVcss();
     List<AbstractVcs> vcsWithProviders = new ArrayList<AbstractVcs>();
@@ -806,7 +806,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     myTaskQueue.run(task);
   }
 
-  private void pendingUpdateProcessed(@javax.annotation.Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+  private void pendingUpdateProcessed(@jakarta.annotation.Nullable Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     myPendingUpdateCount--;
     if (myPendingUpdateCount == 0) {
       notifyIncomingChangesUpdated(myNewIncomingChanges);
@@ -819,7 +819,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
 
   private void processUpdatedFilesAfterRefresh(final ChangesCacheFile cache,
                                                final UpdatedFiles updatedFiles,
-                                               @javax.annotation.Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
+                                               @jakarta.annotation.Nullable final Consumer<List<CommittedChangeList>> incomingChangesConsumer) {
     refreshCacheAsync(cache, false, new RefreshResultConsumer() {
       @Override
       public void receivedChanges(final List<CommittedChangeList> committedChangeLists) {
@@ -1002,7 +1002,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     notifyIncomingChangesUpdated(null);
   }
 
-  private void refreshCacheAsync(final ChangesCacheFile cache, final boolean initIfEmpty, @javax.annotation.Nullable final RefreshResultConsumer consumer) {
+  private void refreshCacheAsync(final ChangesCacheFile cache, final boolean initIfEmpty, @jakarta.annotation.Nullable final RefreshResultConsumer consumer) {
     refreshCacheAsync(cache, initIfEmpty, consumer, true);
   }
 

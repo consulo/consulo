@@ -19,7 +19,7 @@ import consulo.versionControlSystem.distributed.push.PushTargetPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SingleRepositoryNode extends RepositoryNode {
 

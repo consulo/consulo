@@ -16,7 +16,7 @@
 package consulo.application.ui.util;
 
 import consulo.util.xml.serializer.annotation.OptionTag;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TodoPanelSettings {
   @OptionTag(tag = "are-packages-shown", nameAttribute = "")

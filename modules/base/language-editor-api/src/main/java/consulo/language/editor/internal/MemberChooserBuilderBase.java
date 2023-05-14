@@ -21,7 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

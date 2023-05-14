@@ -23,8 +23,8 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides ability to inject languages inside other PSI elements.<br/>

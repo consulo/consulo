@@ -3,7 +3,7 @@ package consulo.ide.impl.fileEditor.text;
 import consulo.codeEditor.Editor;
 import consulo.ui.Component;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

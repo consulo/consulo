@@ -18,7 +18,7 @@ package consulo.ide.navigation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @see GotoFileContributor

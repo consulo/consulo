@@ -6,8 +6,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A node in the AST tree. The AST is an intermediate parsing tree created by {@link PsiBuilder},

@@ -16,8 +16,8 @@
 package consulo.virtualFileSystem.pointer;
 
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface VirtualFilePointer {
   VirtualFilePointer[] EMPTY_ARRAY = new VirtualFilePointer[0];

@@ -21,8 +21,8 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.ParameterizedType;

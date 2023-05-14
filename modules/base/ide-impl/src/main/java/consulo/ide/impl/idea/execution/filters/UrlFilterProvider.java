@@ -23,7 +23,7 @@ import consulo.execution.ui.console.UrlFilter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UrlFilterProvider implements ConsoleFilterProviderEx {

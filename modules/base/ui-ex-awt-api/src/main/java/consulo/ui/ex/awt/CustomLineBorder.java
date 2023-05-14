@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.border.Border;
 import java.awt.*;
 

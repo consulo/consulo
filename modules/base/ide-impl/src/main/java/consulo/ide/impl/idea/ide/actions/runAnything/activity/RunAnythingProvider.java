@@ -11,9 +11,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.application.util.matcher.Matcher;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;

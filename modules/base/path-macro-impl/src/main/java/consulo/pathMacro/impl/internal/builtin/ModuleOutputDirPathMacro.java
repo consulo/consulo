@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

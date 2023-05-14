@@ -38,7 +38,7 @@ import consulo.eawt.wrapper.event.FullScreenListenerWrapper;
 import consulo.logging.Logger;
 import consulo.util.concurrent.ActionCallback;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.EventListener;

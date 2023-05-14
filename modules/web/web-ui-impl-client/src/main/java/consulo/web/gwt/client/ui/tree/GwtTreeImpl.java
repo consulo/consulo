@@ -22,8 +22,8 @@ import com.google.gwt.user.client.Event;
 import consulo.web.gwt.client.ui.DefaultCellTreeResources;
 import consulo.web.gwt.shared.ui.state.tree.TreeState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;

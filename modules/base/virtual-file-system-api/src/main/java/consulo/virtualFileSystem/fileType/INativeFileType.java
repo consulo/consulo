@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface INativeFileType extends FileType {
   boolean openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file);

@@ -19,8 +19,8 @@ import consulo.application.ui.UISettings;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;

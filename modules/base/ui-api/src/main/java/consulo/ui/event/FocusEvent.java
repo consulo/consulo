@@ -17,7 +17,7 @@ package consulo.ui.event;
 
 import consulo.ui.FocusableComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

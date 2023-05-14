@@ -24,7 +24,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.icon.PlatformIconGroup;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**

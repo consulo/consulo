@@ -20,8 +20,8 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 // todo: move to lang-impl ?
 public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {

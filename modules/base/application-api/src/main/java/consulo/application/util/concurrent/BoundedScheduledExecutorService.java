@@ -5,7 +5,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.concurrent.SchedulingWrapper;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

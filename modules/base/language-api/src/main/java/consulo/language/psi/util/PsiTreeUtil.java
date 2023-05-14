@@ -36,8 +36,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;

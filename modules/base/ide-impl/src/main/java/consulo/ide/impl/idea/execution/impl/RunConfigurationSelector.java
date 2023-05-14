@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface RunConfigurationSelector {
   Key<RunConfigurationSelector> KEY = Key.create("RunConfigurationSelector.Key");

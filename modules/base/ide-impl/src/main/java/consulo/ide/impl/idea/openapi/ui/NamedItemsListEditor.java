@@ -41,7 +41,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;

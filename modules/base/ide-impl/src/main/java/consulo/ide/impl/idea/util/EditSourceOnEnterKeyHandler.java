@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.OpenSourceUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

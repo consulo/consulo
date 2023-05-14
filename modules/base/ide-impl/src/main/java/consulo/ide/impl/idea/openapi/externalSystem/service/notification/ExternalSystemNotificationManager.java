@@ -45,8 +45,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import jakarta.inject.Singleton;
 
@@ -248,7 +248,7 @@ public class ExternalSystemNotificationManager {
   }
 
   public int getMessageCount(@Nonnull final NotificationSource notificationSource,
-                             @javax.annotation.Nullable final NotificationCategory notificationCategory,
+                             @jakarta.annotation.Nullable final NotificationCategory notificationCategory,
                              @Nonnull final ProjectSystemId externalSystemId) {
     return getMessageCount(null, notificationSource, notificationCategory, externalSystemId);
   }

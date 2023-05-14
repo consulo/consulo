@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.vcs.log.graph.api.elements;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class GraphNode implements GraphElement {
   private final int myNodeIndex;

@@ -24,7 +24,7 @@ import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

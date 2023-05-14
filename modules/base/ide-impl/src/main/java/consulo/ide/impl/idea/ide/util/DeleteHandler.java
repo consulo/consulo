@@ -55,8 +55,8 @@ import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;

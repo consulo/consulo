@@ -18,7 +18,7 @@ package consulo.util.collection.primitive.ints;
 import consulo.util.collection.impl.CollectionFactory;
 import consulo.util.collection.primitive.impl.PrimitiveCollectionFactory;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

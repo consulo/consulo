@@ -25,7 +25,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {

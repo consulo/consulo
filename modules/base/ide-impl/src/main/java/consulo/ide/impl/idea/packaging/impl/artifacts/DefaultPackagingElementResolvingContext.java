@@ -24,8 +24,8 @@ import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
 * @author nik

@@ -28,7 +28,7 @@ import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class VirtualFileRule implements GetDataRule<VirtualFile> {

@@ -23,8 +23,8 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.DocumentUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Implementation of the markup element for the editor and document.

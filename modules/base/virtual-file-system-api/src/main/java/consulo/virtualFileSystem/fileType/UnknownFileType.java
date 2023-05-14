@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class UnknownFileType implements FileType {
   public static final FileType INSTANCE = new UnknownFileType();

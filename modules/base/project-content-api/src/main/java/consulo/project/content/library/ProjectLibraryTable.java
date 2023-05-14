@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.content.library.LibraryTable;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

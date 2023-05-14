@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.lang;
 import consulo.language.Language;
 import consulo.language.MetaLanguage;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 final class MetaLanguageMatcher extends LanguageMatcher {
 

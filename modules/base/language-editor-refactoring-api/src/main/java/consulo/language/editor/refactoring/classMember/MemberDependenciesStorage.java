@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.classMember;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

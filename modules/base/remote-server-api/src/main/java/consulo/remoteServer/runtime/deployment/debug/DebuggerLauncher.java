@@ -4,7 +4,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ExecutionException;
 import consulo.remoteServer.configuration.RemoteServer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

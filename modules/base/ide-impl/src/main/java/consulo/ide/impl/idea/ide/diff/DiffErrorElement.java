@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -71,7 +71,7 @@ public class DiffErrorElement extends DiffElement {
     return EMPTY_ARRAY;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public byte[] getContent() throws IOException {
     return null;
@@ -88,7 +88,7 @@ public class DiffErrorElement extends DiffElement {
   }
 
   @Nonnull
-  public DiffContent createDiffContent(@javax.annotation.Nullable Project project, @Nonnull ProgressIndicator indicator)
+  public DiffContent createDiffContent(@jakarta.annotation.Nullable Project project, @Nonnull ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     throw new DiffRequestProducerException(myMessage);
   }

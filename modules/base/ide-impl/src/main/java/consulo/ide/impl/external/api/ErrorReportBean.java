@@ -20,7 +20,7 @@ import consulo.container.plugin.PluginId;
 import consulo.externalService.update.UpdateChannel;
 import consulo.logging.attachment.Attachment;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 @SuppressWarnings("unused")

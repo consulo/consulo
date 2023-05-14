@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.language.psi.PsiElement;
 import consulo.application.util.StringSearcher;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @FunctionalInterface
 interface BulkOccurrenceProcessor {

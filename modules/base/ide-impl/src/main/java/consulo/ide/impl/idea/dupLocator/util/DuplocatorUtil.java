@@ -16,8 +16,8 @@ import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.ast.IElementType;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;

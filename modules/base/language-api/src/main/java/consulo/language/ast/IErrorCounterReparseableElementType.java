@@ -19,7 +19,7 @@ package consulo.language.ast;
 import consulo.language.Language;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class IErrorCounterReparseableElementType extends IReparseableElementType {
   public static final int NO_ERRORS = 0;

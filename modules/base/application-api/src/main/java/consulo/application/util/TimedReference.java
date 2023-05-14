@@ -18,7 +18,7 @@ package consulo.application.util;
 
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
 public class TimedReference<T> extends Timed<T> {

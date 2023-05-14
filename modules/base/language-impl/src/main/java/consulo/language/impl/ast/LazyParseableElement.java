@@ -31,8 +31,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class LazyParseableElement extends CompositeElement {

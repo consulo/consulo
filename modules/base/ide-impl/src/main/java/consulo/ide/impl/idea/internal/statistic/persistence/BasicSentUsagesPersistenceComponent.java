@@ -21,7 +21,7 @@ import consulo.externalService.impl.internal.statistic.PatchedUsage;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

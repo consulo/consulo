@@ -19,8 +19,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.platform.os.MacOperatingSystem;
 import consulo.platform.os.WindowsOperatingSystem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.Map;
 

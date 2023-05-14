@@ -7,7 +7,7 @@ import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.CompletionType;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.util.PsiUtilBase;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

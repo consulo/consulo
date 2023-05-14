@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.util.textCompletion.DefaultTextCompletionValueDescr
 import consulo.ide.impl.idea.util.textCompletion.TextCompletionProvider;
 import consulo.ide.impl.idea.util.textCompletion.TextFieldWithCompletion;
 import consulo.ide.impl.idea.util.textCompletion.ValuesCompletionProvider.ValuesCompletionProviderDumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

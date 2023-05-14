@@ -23,7 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes logic for injecting language inside hosting PSI element.

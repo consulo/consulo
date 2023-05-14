@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class BackgroundableActionLock {

@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl

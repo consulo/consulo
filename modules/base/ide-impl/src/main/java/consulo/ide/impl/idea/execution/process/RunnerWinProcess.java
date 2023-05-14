@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.process;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.application.util.SystemInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RunnerWinProcess extends ProcessWrapper {
 

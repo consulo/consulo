@@ -27,8 +27,8 @@ import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.TextComponentAccessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

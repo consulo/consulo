@@ -29,6 +29,6 @@ import java.util.List;
  */
 public interface DiffRequestFromChange<T extends DiffContent> {
   boolean canCreateRequest(final Change change);
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   List<BeforeAfter<T>> createRequestForChange(final Change change, int extraLines) throws VcsException;
 }

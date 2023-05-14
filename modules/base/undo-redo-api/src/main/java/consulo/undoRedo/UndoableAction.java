@@ -17,7 +17,7 @@ package consulo.undoRedo;
 
 import consulo.document.DocumentReference;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @see UndoManager#undoableActionPerformed(UndoableAction)

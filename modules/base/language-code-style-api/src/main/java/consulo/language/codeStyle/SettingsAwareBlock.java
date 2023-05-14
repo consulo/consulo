@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

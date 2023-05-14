@@ -17,7 +17,7 @@ package consulo.language.editor.postfixTemplate;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixTemplateBase

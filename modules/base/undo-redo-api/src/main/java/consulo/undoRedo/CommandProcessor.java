@@ -13,8 +13,8 @@ import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A class for defining 'command' scopes. Every undoable change should be executed as part of a command. Commands can nest, in such a case

@@ -43,7 +43,7 @@ import consulo.language.psi.PsiManager;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.ArrayList;

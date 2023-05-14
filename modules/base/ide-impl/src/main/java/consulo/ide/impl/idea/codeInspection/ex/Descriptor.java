@@ -27,8 +27,8 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.content.scope.NamedScope;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * User: anna

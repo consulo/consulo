@@ -25,7 +25,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LazyPatchContentRevision implements ContentRevision {
   private volatile String myContent;

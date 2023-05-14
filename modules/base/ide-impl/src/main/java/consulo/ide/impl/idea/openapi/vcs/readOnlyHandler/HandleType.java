@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;

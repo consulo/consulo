@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.progress.util;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
 @FunctionalInterface

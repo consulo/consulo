@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -20,7 +20,7 @@ import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageContextPanelProvider;
 import consulo.usage.UsageView;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 /**

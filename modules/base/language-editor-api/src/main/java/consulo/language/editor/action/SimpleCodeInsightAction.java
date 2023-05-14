@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev

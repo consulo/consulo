@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.diff.tools.util;
 import consulo.util.collection.SLRUMap;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 public class SoftHardCacheMap<K, V> {

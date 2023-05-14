@@ -5,8 +5,8 @@ import consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopup;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.ui.image.Image;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class RunAnythingRunConfigurationItem extends RunAnythingItemBase {
   public static final String RUN_CONFIGURATION_AD_TEXT = RunAnythingUtil.AD_CONTEXT_TEXT + ", " + RunAnythingUtil.AD_DEBUG_TEXT;

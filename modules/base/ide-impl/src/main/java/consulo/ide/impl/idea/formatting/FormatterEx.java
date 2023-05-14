@@ -6,8 +6,8 @@ import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class FormatterEx implements Formatter {
   public abstract void format(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, FormatTextRanges affectedRanges)

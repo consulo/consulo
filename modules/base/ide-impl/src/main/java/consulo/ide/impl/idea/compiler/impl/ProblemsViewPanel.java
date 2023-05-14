@@ -29,7 +29,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
   public ProblemsViewPanel(Project project) {

@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.vcs.log.util;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PagedFileStorage;
 import consulo.index.io.PersistentBTreeEnumerator;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;

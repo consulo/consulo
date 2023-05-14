@@ -43,8 +43,8 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,7 +95,7 @@ public abstract class CacheChangeProcessor extends DiffRequestProcessor {
   }
 
   @CalledInAwt
-  public void updateRequest(final boolean force, boolean useCache, @javax.annotation.Nullable final ScrollToPolicy scrollToChangePolicy) {
+  public void updateRequest(final boolean force, boolean useCache, @jakarta.annotation.Nullable final ScrollToPolicy scrollToChangePolicy) {
     if (isDisposed()) return;
     final Change change = myCurrentChange;
 

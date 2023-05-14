@@ -26,8 +26,8 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class TypeSafeDataProviderAdapter implements DataProvider, DataSink {
   private final TypeSafeDataProvider myProvider;

@@ -15,7 +15,7 @@
  */
 package consulo.codeEditor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Provides generic contract for object encapsulating information about single unit of text change.

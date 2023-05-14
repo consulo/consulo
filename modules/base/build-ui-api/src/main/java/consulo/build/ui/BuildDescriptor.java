@@ -17,7 +17,7 @@ package consulo.build.ui;
 
 import consulo.build.ui.event.BuildEventsNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka

@@ -5,7 +5,7 @@ import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

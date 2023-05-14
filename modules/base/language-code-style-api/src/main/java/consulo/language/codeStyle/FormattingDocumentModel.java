@@ -21,8 +21,8 @@ import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents a model of the document containing the formatted text, as seen by the

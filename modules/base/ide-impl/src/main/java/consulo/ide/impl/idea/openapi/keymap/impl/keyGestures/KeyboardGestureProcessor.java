@@ -25,7 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

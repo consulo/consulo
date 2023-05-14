@@ -18,7 +18,7 @@ package consulo.language.ast;
 
 import consulo.util.collection.util.WalkingState;
 import consulo.util.collection.Stack;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

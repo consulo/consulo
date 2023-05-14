@@ -17,7 +17,7 @@ package consulo.component.util;
 
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ComparableObjectCheck {
   public static boolean equals(@Nonnull ComparableObject me, Object him) {

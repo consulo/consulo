@@ -17,7 +17,7 @@ package consulo.versionControlSystem.log.base;
 
 import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;

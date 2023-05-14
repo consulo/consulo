@@ -24,7 +24,7 @@ import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;

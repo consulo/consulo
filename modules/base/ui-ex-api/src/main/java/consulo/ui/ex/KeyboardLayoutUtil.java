@@ -17,8 +17,8 @@ package consulo.ui.ex;
 
 import consulo.application.internal.InternalKeyboardLayoutUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Map;

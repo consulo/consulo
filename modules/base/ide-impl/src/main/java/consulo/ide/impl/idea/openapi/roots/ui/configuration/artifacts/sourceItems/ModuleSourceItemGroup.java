@@ -31,7 +31,7 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.ide.impl.idea.packaging.ui.*;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

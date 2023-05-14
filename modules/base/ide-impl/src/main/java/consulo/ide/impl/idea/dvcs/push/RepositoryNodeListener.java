@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.dvcs.push;
 
 import consulo.versionControlSystem.distributed.push.PushTarget;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface RepositoryNodeListener<T extends PushTarget> {
 

@@ -8,7 +8,7 @@ import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.ex.content.Content;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to customize xdebug layout for 'Debug' tool window.

@@ -18,7 +18,7 @@ package consulo.credentialStorage.impl.internal.provider;
 import consulo.credentialStorage.PasswordSafeException;
 import consulo.credentialStorage.impl.internal.PasswordSafeProvider;
 import consulo.project.Project;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * The most secure provider that does not store anything, so it cannot be cracked

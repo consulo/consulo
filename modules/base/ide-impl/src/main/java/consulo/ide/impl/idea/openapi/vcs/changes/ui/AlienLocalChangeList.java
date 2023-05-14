@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +67,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     throw new UnsupportedOperationException();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData() {
     throw new UnsupportedOperationException();

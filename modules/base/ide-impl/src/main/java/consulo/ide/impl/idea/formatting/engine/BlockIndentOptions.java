@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class BlockIndentOptions {
   private final CodeStyleSettings mySettings;

@@ -32,8 +32,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Set;

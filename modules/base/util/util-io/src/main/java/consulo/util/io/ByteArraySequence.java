@@ -13,7 +13,7 @@
 // limitations under the License.
 package consulo.util.io;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInputStream;
 

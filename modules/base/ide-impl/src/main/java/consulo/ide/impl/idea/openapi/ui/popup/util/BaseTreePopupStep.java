@@ -20,7 +20,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.TreePopupStep;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

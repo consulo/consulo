@@ -20,7 +20,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfile
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;

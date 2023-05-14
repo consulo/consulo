@@ -20,7 +20,7 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntIterator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

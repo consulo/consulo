@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.remote.ext;
 
 import org.jdom.Attribute;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;

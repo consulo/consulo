@@ -24,7 +24,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.fileEditor.text.TextEditorProvider;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FileEditorRule implements GetDataRule<FileEditor> {
   @Nonnull

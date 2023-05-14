@@ -22,7 +22,7 @@ import consulo.diff.DiffUserDataKeys;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

@@ -29,8 +29,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 
@@ -128,7 +128,7 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Document getDocument() {
     VirtualFile file = getVirtualFile();
     if (file == null || file.getFileType().isBinary()) {

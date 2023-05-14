@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.util.BeforeAfter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.BitSet;

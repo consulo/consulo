@@ -11,7 +11,7 @@ import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Read-only document optimized for rendering of millions of EditorTextFields.

@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

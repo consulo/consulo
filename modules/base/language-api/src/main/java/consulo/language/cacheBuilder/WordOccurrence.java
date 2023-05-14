@@ -37,7 +37,7 @@ public class WordOccurrence {
    * @param kind The type of text where the word was encountered (code, comments or literals).
    */
 
-  public WordOccurrence(final CharSequence text, int start, int end, @javax.annotation.Nullable final Kind kind) {
+  public WordOccurrence(final CharSequence text, int start, int end, @jakarta.annotation.Nullable final Kind kind) {
     myKind = kind;
     myText = text;
     myStart = start;
@@ -51,7 +51,7 @@ public class WordOccurrence {
    * @param end end offset in initial char sequence.
    * @param kind The type of text where the word was encountered (code, comments or literals).
    */
-  public final void init(final CharSequence text, int start, int end, @javax.annotation.Nullable final Kind kind) {
+  public final void init(final CharSequence text, int start, int end, @jakarta.annotation.Nullable final Kind kind) {
     myKind = kind;
     myText = text;
     myStart = start;
@@ -63,7 +63,7 @@ public class WordOccurrence {
    * @return the kind of the occurrence.
    */
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Kind getKind() {
     return myKind;
   }

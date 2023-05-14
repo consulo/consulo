@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import java.util.ArrayList;

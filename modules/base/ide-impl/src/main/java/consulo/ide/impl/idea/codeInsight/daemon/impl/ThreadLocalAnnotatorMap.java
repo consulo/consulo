@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.application.ApplicationManager;
 import consulo.component.internal.inject.InjectingContainer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

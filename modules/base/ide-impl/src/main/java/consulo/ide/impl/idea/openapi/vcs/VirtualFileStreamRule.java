@@ -22,7 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.stream.Stream;
 
@@ -34,7 +34,7 @@ public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
     return VcsDataKeys.VIRTUAL_FILE_STREAM;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Stream<VirtualFile> getData(@Nonnull DataProvider dataProvider) {
     VirtualFile[] files = dataProvider.getDataUnchecked(CommonDataKeys.VIRTUAL_FILE_ARRAY);

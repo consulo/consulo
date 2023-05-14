@@ -33,7 +33,7 @@ import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.continuation.ModalityIgnorantBackgroundableTask;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

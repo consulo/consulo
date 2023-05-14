@@ -9,9 +9,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

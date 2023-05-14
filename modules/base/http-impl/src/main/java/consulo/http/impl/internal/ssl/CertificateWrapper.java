@@ -3,7 +3,7 @@ package consulo.http.impl.internal.ssl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.security.auth.x500.X500Principal;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;

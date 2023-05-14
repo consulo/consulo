@@ -18,7 +18,7 @@ package consulo.language.impl.util;
 import consulo.project.Project;
 import consulo.virtualFileSystem.util.PerFileMappings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**

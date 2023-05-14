@@ -6,7 +6,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 

@@ -29,8 +29,8 @@ import consulo.util.xml.serializer.annotation.MapAnnotation;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;

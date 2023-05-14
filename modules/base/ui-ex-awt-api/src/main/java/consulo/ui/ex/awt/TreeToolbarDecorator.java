@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.tree.EditableTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.tree.LeafState;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

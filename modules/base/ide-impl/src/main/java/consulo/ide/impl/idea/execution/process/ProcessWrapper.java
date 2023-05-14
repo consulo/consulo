@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.io.OutputStream;

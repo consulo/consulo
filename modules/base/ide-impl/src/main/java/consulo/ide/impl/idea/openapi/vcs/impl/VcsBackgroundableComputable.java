@@ -25,8 +25,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
@@ -61,7 +61,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     myActionParameter = actionParameter;
   }
 
-  public static <T> void createAndRunSilent(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
+  public static <T> void createAndRunSilent(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
                                  @Nullable final Object actionParameter, final String title,
                                  final ThrowableComputable<T, VcsException> backgroundable,
                                  @Nullable final Consumer<T> awtSuccessContinuation) {
@@ -76,7 +76,7 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
   }
 
-  public static <T> void createAndRun(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
+  public static <T> void createAndRun(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
                                  @Nullable final Object actionParameter,
                                  final String title,
                                  final String errorTitle,
@@ -86,12 +86,12 @@ public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
     createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation, false);
   }
 
-  private static <T> void createAndRun(final Project project, @javax.annotation.Nullable final VcsBackgroundableActions actionKey,
-                                 @javax.annotation.Nullable final Object actionParameter,
+  private static <T> void createAndRun(final Project project, @jakarta.annotation.Nullable final VcsBackgroundableActions actionKey,
+                                 @jakarta.annotation.Nullable final Object actionParameter,
                                  final String title,
                                  final String errorTitle,
                                  final ThrowableComputable<T, VcsException> backgroundable,
-                                 @javax.annotation.Nullable final Consumer<T> awtSuccessContinuation,
+                                 @jakarta.annotation.Nullable final Consumer<T> awtSuccessContinuation,
                                  @Nullable final Runnable awtErrorContinuation, final boolean silent) {
     final ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
     final BackgroundableActionEnabledHandler handler;

@@ -3,7 +3,7 @@ package consulo.ui.web.servlet;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.image.WebImageWithVaadinState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.URL;
 
 /**

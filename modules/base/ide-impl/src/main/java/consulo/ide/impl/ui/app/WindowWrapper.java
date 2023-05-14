@@ -27,8 +27,8 @@ import consulo.ui.layout.Layout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

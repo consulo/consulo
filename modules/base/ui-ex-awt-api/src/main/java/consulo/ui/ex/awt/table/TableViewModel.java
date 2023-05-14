@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.table;
 
 import consulo.ui.ex.awt.SortableColumnModel;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 

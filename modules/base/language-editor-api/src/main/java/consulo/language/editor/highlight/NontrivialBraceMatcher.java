@@ -19,7 +19,7 @@ package consulo.language.editor.highlight;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public interface NontrivialBraceMatcher extends BraceMatcher {

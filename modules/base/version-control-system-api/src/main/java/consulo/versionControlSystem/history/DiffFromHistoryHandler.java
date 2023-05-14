@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.FilePath;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This handler is called when the user selects one or two revisions in the file history and invokes "Show Diff",

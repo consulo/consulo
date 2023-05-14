@@ -2,7 +2,7 @@
 package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.impl.FontInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Arrays;

@@ -17,7 +17,7 @@ package consulo.language.psi.stub;
 
 import consulo.language.psi.stub.Stub;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

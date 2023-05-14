@@ -21,7 +21,7 @@ import consulo.language.editor.internal.QuickFixActionRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public interface QuickFixActionRegistrar {

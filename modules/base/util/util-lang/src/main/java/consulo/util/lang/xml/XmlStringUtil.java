@@ -20,8 +20,8 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.internal.Verifier;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.util.lang.xml.CommonXmlStrings.*;
 

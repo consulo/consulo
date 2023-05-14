@@ -22,7 +22,7 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

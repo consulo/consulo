@@ -25,8 +25,8 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +116,7 @@ public class MergeWindow {
       return myProcessor.getPreferredFocusedComponent();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected String getDimensionServiceKey() {
       return StringUtil.notNullize(myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY), "MergeDialog");
@@ -157,7 +157,7 @@ public class MergeWindow {
       return super.getCancelAction();
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     protected String getHelpId() {
       return myProcessor.getHelpId();

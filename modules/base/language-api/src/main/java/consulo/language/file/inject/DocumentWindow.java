@@ -22,8 +22,8 @@ package consulo.language.file.inject;
 import consulo.document.Document;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface DocumentWindow extends Document {
   @Nonnull

@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.tree;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class CachingSimpleNode extends SimpleNode {
 

@@ -20,7 +20,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 

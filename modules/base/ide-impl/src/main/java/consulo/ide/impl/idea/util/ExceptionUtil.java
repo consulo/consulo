@@ -19,8 +19,8 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

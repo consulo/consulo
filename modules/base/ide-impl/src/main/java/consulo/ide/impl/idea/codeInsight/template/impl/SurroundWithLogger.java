@@ -7,7 +7,7 @@ import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //private static final EventLogGroup GROUP = new EventLogGroup("surround.with", 3);

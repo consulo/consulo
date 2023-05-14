@@ -22,8 +22,8 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XNavigatable;
 import consulo.execution.debug.frame.XValue;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

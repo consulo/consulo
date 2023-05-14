@@ -16,7 +16,7 @@
 
 package consulo.language.psi.path;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

@@ -19,8 +19,8 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import org.jdom.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev

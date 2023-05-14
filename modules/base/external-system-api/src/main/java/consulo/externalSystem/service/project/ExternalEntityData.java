@@ -1,7 +1,7 @@
 package consulo.externalSystem.service.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 

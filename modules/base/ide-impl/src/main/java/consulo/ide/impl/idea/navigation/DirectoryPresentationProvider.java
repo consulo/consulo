@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DirectoryPresentationProvider implements ItemPresentationProvider<PsiDirectory> {

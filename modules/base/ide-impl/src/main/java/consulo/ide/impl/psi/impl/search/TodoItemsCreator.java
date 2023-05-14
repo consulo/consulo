@@ -8,7 +8,7 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig

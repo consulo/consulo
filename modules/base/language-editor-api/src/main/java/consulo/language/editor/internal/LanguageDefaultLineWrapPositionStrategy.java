@@ -19,7 +19,7 @@ import consulo.codeEditor.DefaultLineWrapPositionStrategy;
 import consulo.language.Language;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

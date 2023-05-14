@@ -23,8 +23,8 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 // TODO[spLeaner]: eliminate
 @Singleton

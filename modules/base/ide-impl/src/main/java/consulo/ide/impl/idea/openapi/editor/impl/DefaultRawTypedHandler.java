@@ -15,7 +15,7 @@ import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class DefaultRawTypedHandler implements TypedActionHandlerEx {
   private final TypedAction myAction;

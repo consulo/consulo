@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

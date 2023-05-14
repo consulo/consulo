@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

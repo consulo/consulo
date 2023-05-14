@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.graph.GraphCommit;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

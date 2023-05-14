@@ -19,8 +19,8 @@ import consulo.document.util.TextRange;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 // IMPL class hardcoding logic to react to errors/warnings found during highlighting

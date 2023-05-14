@@ -20,7 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.ProgressBar;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

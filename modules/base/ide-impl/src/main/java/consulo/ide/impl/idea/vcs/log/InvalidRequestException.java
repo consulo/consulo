@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class InvalidRequestException extends RuntimeException {
 

@@ -30,7 +30,7 @@ import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
 import consulo.ide.impl.wm.impl.ToolWindowBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

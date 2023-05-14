@@ -20,7 +20,7 @@ import consulo.component.extension.ExtensionList;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.IElementType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;

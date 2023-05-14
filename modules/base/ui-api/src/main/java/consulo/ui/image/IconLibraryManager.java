@@ -18,8 +18,8 @@ package consulo.ui.image;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.style.Style;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 
 /**

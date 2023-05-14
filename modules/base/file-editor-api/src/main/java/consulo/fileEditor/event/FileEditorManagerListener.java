@@ -21,7 +21,7 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)

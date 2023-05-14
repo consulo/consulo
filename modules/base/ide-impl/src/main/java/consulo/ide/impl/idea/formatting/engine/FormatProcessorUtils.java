@@ -23,7 +23,7 @@ import consulo.language.codeStyle.IndentInside;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FormatProcessorUtils {
 

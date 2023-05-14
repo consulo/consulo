@@ -16,7 +16,7 @@
 package consulo.fileEditor.structureView.tree;
 
 import consulo.navigation.ItemPresentation;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * An element in a generic tree control displayed in the IDEA user interface.

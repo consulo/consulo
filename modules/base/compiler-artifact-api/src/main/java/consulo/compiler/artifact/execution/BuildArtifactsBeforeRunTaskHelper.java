@@ -21,7 +21,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

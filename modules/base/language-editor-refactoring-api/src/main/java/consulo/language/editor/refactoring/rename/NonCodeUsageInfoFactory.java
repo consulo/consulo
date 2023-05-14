@@ -21,8 +21,8 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfoFactory;
 import consulo.usage.UsageInfo;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class NonCodeUsageInfoFactory implements UsageInfoFactory {
   private final PsiElement myElement;

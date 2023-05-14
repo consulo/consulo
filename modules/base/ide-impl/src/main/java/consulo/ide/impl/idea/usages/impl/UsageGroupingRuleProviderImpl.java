@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.usages.impl.rules.*;
 import consulo.usage.rule.FileStructureGroupRuleProvider;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageGroupingRuleProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;

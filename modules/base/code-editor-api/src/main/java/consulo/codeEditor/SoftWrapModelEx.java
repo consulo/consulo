@@ -17,7 +17,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.SoftWrapChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;

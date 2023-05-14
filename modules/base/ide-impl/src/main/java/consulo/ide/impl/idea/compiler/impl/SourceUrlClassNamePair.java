@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Eugene Zhuravlev

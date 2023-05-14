@@ -28,8 +28,8 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 

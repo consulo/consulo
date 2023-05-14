@@ -8,7 +8,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.psi.ReferenceRange;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

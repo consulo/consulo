@@ -31,7 +31,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -106,7 +106,7 @@ public class ErrorDiffTool implements FrameDiffTool {
       return myPanel;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return null;

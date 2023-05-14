@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 

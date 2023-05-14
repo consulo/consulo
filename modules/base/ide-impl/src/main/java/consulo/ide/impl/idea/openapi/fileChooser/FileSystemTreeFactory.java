@@ -21,7 +21,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ide.ServiceManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileSystemTreeFactory {

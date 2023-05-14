@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.structureView.tree.TreeAction;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Comparator;
 
 /**

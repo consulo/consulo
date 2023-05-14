@@ -11,7 +11,7 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListener;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The general idea of soft wraps processing is to build a cache to use for quick document dimensions mapping

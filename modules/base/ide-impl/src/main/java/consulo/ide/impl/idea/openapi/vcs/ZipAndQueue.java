@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig

@@ -17,7 +17,7 @@ package consulo.language.codeStyle.arrangement.model;
 
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

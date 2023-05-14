@@ -33,8 +33,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(order = "first")
 public class UnSelectWordHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

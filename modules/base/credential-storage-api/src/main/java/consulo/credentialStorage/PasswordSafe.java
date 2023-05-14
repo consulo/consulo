@@ -21,7 +21,7 @@ import consulo.application.Application;
 import consulo.credentialStorage.ui.PasswordSafePromptDialog;
 import consulo.project.Project;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @see PasswordSafePromptDialog

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.table.JBTable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;

@@ -17,7 +17,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Provides data for event which is fired when the name or writable status of a virtual file is changed.

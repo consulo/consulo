@@ -58,8 +58,8 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -99,7 +99,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   @NonNls private final static String FLATTEN_OPTION_KEY = "ChangesBrowser.SHOW_FLATTEN";
 
   @Nullable private final Runnable myInclusionListener;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ChangeNodeDecorator myChangeDecorator;
   private Runnable myGenericSelectionListener;
   @Nonnull
@@ -111,7 +111,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
                          final boolean showCheckboxes,
                          final boolean highlightProblems,
                          @Nullable final Runnable inclusionListener,
-                         @javax.annotation.Nullable final ChangeNodeDecorator decorator) {
+                         @jakarta.annotation.Nullable final ChangeNodeDecorator decorator) {
     super(ChangesBrowserNode.create(project, ROOT));
     myProject = project;
     myShowCheckboxes = showCheckboxes;

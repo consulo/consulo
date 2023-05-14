@@ -23,7 +23,7 @@ import consulo.execution.debug.setting.XDebuggerSettings;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 

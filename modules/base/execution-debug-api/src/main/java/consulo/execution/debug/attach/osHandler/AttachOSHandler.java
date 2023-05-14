@@ -9,8 +9,8 @@ import consulo.execution.debug.attach.EnvironmentAwareHost;
 import consulo.execution.debug.attach.LocalAttachHost;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 

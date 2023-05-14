@@ -20,7 +20,7 @@ import consulo.language.pattern.PlatformPatterns;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;

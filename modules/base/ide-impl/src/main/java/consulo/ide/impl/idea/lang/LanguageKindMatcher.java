@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.lang;
 
 import consulo.language.Language;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 final class LanguageKindMatcher extends LanguageMatcher {
 

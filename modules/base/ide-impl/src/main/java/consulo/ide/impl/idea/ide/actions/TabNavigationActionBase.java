@@ -31,7 +31,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.content.ContentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   private static final Logger LOG = Logger.getInstance(TabNavigationActionBase.class);

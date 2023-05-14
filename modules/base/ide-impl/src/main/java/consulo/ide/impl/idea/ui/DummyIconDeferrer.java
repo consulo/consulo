@@ -25,7 +25,7 @@ import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 @Singleton

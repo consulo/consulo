@@ -25,7 +25,7 @@ import consulo.application.Application;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.APPLICATION)

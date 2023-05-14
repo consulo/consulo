@@ -23,7 +23,7 @@ import consulo.ide.impl.progress.util.ProgressDialog;
 import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

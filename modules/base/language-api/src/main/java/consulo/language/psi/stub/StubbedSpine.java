@@ -17,7 +17,7 @@ package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Represents the list of stubbed PSI elements in the file, backed by either AST or stubs.

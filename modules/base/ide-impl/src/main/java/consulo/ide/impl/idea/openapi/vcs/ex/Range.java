@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -39,10 +39,10 @@ public class Range {
   private final int myVcsLine1;
   private final int myVcsLine2;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final List<InnerRange> myInnerRanges;
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private RangeHighlighter myRangeHighlighter;
   private boolean myValid = true;
 
@@ -54,7 +54,7 @@ public class Range {
     this(line1, line2, vcsLine1, vcsLine2, null);
   }
 
-  public Range(int line1, int line2, int vcsLine1, int vcsLine2, @javax.annotation.Nullable List<InnerRange> innerRanges) {
+  public Range(int line1, int line2, int vcsLine1, int vcsLine2, @jakarta.annotation.Nullable List<InnerRange> innerRanges) {
     assert line1 != line2 || vcsLine1 != vcsLine2;
 
     myLine1 = line1;
@@ -136,11 +136,11 @@ public class Range {
     return myRangeHighlighter != null;
   }
 
-  public void setHighlighter(@javax.annotation.Nullable RangeHighlighter highlighter) {
+  public void setHighlighter(@jakarta.annotation.Nullable RangeHighlighter highlighter) {
     myRangeHighlighter = highlighter;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public RangeHighlighter getHighlighter() {
     return myRangeHighlighter;
   }

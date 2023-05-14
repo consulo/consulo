@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.project.Project;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author cdr

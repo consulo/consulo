@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
@@ -88,7 +88,7 @@ public class CompileContextExDelegate implements CompileContextEx {
   }
 
   @Override
-  public void addMessage(final CompilerMessageCategory category, final String message, @javax.annotation.Nullable final String url,
+  public void addMessage(final CompilerMessageCategory category, final String message, @jakarta.annotation.Nullable final String url,
                          final int lineNum,
                          final int columnNum,
                          final Navigatable navigatable) {

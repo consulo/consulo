@@ -34,8 +34,8 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;

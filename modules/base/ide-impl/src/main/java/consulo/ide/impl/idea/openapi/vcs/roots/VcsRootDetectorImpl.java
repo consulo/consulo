@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -63,7 +63,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   }
 
   @Nonnull
-  public Collection<VcsRoot> detect(@javax.annotation.Nullable VirtualFile startDir) {
+  public Collection<VcsRoot> detect(@jakarta.annotation.Nullable VirtualFile startDir) {
     if (startDir == null || myCheckers.isEmpty()) {
       return Collections.emptyList();
     }

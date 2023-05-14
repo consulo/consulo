@@ -25,7 +25,7 @@ import consulo.project.DumbModeTask;
 import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.project.Project;
 import consulo.util.lang.TimeoutUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

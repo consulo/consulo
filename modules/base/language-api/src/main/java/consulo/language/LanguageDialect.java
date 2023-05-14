@@ -17,7 +17,7 @@ package consulo.language;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("See consulo.lang.LanguageVersion")

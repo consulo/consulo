@@ -2,8 +2,8 @@ package consulo.language.editor.generation;
 
 import consulo.language.editor.template.Template;
 import consulo.dataContext.DataContext;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

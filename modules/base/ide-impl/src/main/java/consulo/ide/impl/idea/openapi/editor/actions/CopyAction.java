@@ -32,7 +32,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.application.util.registry.Registry;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class CopyAction extends TextComponentEditorAction {
 

@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.http.RemoteContentProvider;
 import consulo.virtualFileSystem.http.RemoteFileManager;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

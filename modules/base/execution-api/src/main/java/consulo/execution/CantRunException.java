@@ -21,7 +21,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.process.ExecutionException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CantRunException extends ExecutionException {
   public CantRunException(final String message) {

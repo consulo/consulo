@@ -23,7 +23,7 @@ import consulo.execution.debug.frame.XValueChildrenList;
 import consulo.execution.debug.frame.XValueContainer;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

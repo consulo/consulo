@@ -15,7 +15,7 @@
  */
 package consulo.util.lang;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SingleCharSequence implements CharSequence {
   private final char myCh;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.tools.fragmented;
 
 import consulo.diff.fragment.LineFragment;
 import consulo.ide.impl.idea.diff.util.LineRange;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class ChangedBlock {
   private final int myLine1;

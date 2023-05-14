@@ -25,8 +25,8 @@ import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -65,19 +65,19 @@ public class ExternalActionUtil {
 
     public static final MyInfo EMPTY = new MyInfo(null, null, null, null, null);
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public final AbstractExternalSystemSettings<?, ?, ?> settings;
     @Nullable public final AbstractExternalSystemLocalSettings  localSettings;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public final ExternalProjectPojo                  externalProject;
     @Nullable public final Project                              ideProject;
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public final ProjectSystemId                      externalSystemId;
 
     MyInfo(@Nullable AbstractExternalSystemSettings<?, ?, ?> settings,
            @Nullable AbstractExternalSystemLocalSettings localSettings,
-           @javax.annotation.Nullable ExternalProjectPojo externalProject,
-           @javax.annotation.Nullable Project ideProject,
+           @jakarta.annotation.Nullable ExternalProjectPojo externalProject,
+           @jakarta.annotation.Nullable Project ideProject,
            @Nullable ProjectSystemId externalSystemId)
     {
       this.settings = settings;

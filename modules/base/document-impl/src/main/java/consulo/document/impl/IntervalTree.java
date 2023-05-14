@@ -16,7 +16,7 @@
 package consulo.document.impl;
 
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 interface IntervalTree<T> {
   boolean processAll(@Nonnull Processor<? super T> processor);

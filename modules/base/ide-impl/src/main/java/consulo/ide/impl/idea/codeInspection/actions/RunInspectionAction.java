@@ -40,9 +40,9 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.content.scope.SearchScope;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 

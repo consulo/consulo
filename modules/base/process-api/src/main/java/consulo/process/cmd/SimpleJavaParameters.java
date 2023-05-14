@@ -22,8 +22,8 @@ import consulo.process.local.ProcessHandlerFactory;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.util.PathsList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.nio.charset.Charset;
 
 /**

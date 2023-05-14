@@ -30,7 +30,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.function.Condition;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov

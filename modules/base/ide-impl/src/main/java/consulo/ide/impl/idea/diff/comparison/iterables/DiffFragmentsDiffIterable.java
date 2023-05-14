@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.comparison.iterables;
 
 import consulo.diff.fragment.DiffFragment;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

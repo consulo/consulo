@@ -4,7 +4,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.codeEditor.Editor;
 import consulo.document.internal.DocumentEx;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FocusRegion extends RangeMarkerImpl {
   private final Editor myEditor;

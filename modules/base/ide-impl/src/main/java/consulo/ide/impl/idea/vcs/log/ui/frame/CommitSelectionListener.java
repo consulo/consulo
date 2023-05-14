@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogDataImpl;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

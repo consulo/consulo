@@ -19,7 +19,7 @@ package consulo.language.editor.refactoring.safeDelete.usageInfo;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageInfo;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl

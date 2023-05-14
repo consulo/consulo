@@ -17,7 +17,7 @@ package consulo.language.psi.event;
 
 import consulo.language.psi.PsiManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 

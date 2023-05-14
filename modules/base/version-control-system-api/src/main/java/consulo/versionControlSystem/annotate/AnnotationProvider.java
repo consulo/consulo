@@ -22,7 +22,7 @@ import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface AnnotationProvider extends VcsProviderMarker {
   @Nonnull

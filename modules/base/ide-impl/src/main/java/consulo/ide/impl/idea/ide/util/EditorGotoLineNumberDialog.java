@@ -6,7 +6,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditorGotoLineNumberDialog extends GotoLineNumberDialog {
   private final Editor myEditor;

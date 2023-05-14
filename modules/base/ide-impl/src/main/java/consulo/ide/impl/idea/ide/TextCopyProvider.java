@@ -19,8 +19,8 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.Collection;

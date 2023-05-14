@@ -25,8 +25,8 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -165,7 +165,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return new StdArrangementExtendableSettings(groupingRules, sectionRules, tokensDefinition);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Set<StdArrangementRuleAliasToken> deserializeTokensDefinition(@Nonnull Element element, @Nonnull ArrangementSettings defaultSettings) {
     if (!(defaultSettings instanceof ArrangementExtendableSettings)) {
       return null;
@@ -229,7 +229,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
 
   @Nonnull
   private List<ArrangementSectionRule> deserializeSectionRules(@Nonnull Element rulesElement,
-                                                               @javax.annotation.Nullable Set<StdArrangementRuleAliasToken> tokens) {
+                                                               @jakarta.annotation.Nullable Set<StdArrangementRuleAliasToken> tokens) {
     final List<ArrangementSectionRule> sectionRules = new ArrayList<ArrangementSectionRule>();
     for (Object o : rulesElement.getChildren(SECTION_ELEMENT_NAME)) {
       final Element sectionElement = (Element)o;
@@ -304,7 +304,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Element serialize(@Nonnull ArrangementSectionRule section) {
     final Element sectionElement = new Element(SECTION_ELEMENT_NAME);
     if (StringUtil.isNotEmpty(section.getStartComment())) {

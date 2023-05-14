@@ -23,7 +23,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

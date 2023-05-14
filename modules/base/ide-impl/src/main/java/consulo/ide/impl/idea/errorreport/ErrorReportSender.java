@@ -27,7 +27,7 @@ import consulo.ide.impl.externalService.impl.WebServiceException;
 import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Consumer;

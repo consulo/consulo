@@ -19,7 +19,7 @@ import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

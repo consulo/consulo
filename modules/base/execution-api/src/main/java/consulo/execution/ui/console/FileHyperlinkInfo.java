@@ -18,7 +18,7 @@ package consulo.execution.ui.console;
 
 import consulo.navigation.OpenFileDescriptor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

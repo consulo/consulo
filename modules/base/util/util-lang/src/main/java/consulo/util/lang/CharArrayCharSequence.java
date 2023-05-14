@@ -15,7 +15,7 @@
  */
 package consulo.util.lang;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class CharArrayCharSequence implements CharSequenceBackedByArray {
   protected final char[] myChars;

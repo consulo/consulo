@@ -15,7 +15,7 @@
  */
 package consulo.credentialStorage.impl.internal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 

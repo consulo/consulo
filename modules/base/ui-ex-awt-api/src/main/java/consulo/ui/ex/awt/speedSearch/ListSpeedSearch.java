@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.speedSearch;
 
 import consulo.ui.ex.awt.ScrollingUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Function;
 

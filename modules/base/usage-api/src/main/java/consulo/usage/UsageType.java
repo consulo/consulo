@@ -18,7 +18,7 @@ package consulo.usage;
 import consulo.component.util.localize.BundleBase;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public final class UsageType {
   public static final UsageType CLASS_INSTANCE_OF = new UsageType(UsageViewBundle.message("usage.type.instanceof"));

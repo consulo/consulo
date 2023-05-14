@@ -9,7 +9,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormattingModeAwareIndentAdjuster;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FormatterBasedIndentAdjuster {
 

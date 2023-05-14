@@ -28,7 +28,7 @@ import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * User: anna

@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 

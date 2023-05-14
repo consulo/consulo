@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ide.util.treeView.smartTree;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.PlaceHolder;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 

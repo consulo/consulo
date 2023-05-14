@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.psi.util.ProximityLocation;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

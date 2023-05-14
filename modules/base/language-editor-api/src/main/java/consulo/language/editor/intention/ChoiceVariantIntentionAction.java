@@ -6,8 +6,8 @@ import consulo.language.editor.inspection.IntentionAndQuickFixAction;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Intention action that is used as a variant of [IntentionActionWithChoice].

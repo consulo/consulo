@@ -24,7 +24,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;

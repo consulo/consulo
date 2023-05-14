@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.util.containers.BiDirectionalEnumerator;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsRef;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.canonicalStrategy;
 

@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.ServerConnection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

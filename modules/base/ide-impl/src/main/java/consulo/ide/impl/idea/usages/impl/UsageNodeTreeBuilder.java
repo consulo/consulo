@@ -23,7 +23,7 @@ import consulo.usage.UsageTarget;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageGroupingRule;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;

@@ -24,8 +24,8 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.ui.Component;
 import consulo.ui.PopupMenu;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

@@ -15,7 +15,7 @@
  */
 package consulo.component.persist.scheme;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * A scheme processor can implement this interface to provide a file extension different from default .xml.

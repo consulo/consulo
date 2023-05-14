@@ -5,7 +5,7 @@ import consulo.execution.executor.Executor;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.ServerNode;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

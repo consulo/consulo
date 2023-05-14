@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.core.tree.RootEntry;
 import consulo.util.lang.Pair;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

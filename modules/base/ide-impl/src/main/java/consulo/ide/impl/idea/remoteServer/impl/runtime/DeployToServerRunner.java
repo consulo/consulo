@@ -6,7 +6,7 @@ import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.ide.impl.idea.remoteServer.impl.configuration.deployment.DeployToServerRunConfiguration;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

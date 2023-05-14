@@ -86,7 +86,7 @@ public class SwitchedFileHolder extends RecursiveFileHolder<Pair<Boolean, String
     return false;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getBranchForFile(final VirtualFile file) {
     final VirtualFile floor = myMap.floorKey(file);
     if (floor == null) return null;

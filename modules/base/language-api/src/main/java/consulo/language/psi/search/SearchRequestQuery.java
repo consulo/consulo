@@ -6,7 +6,7 @@ import consulo.application.util.query.AbstractQuery;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

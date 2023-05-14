@@ -3,8 +3,8 @@ package consulo.util.io;
 
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

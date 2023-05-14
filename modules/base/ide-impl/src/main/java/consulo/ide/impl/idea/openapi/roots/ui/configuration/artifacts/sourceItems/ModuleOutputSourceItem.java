@@ -26,7 +26,7 @@ import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.ide.impl.idea.packaging.ui.SourceItemWeights;
 import consulo.component.util.pointer.NamedPointer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;

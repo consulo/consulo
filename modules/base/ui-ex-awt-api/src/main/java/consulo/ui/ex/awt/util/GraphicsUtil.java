@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.DesktopAntialiasingType;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;

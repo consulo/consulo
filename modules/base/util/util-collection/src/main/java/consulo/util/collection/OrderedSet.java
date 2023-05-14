@@ -15,7 +15,7 @@
  */
 package consulo.util.collection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 // have to extend ArrayList because otherwise the spliterator() methods declared in Set and List are in conflict

@@ -21,7 +21,7 @@ import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.project.Project;
 import consulo.ui.ex.tree.NodeDescriptor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

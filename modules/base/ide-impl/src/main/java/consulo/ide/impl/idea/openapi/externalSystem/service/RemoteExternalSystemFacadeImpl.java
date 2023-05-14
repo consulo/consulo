@@ -21,7 +21,7 @@ import consulo.externalSystem.task.ExternalSystemTaskManager;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;

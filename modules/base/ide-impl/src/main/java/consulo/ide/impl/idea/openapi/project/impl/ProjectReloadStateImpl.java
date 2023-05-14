@@ -23,7 +23,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @State(name = "ProjectReloadState", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))

@@ -5,7 +5,7 @@ import consulo.document.util.TextRange;
 import consulo.util.lang.Pair;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

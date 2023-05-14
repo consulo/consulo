@@ -10,8 +10,8 @@ import consulo.webBrowser.BrowserFamily;
 import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.WebBrowser;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 

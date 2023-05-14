@@ -5,7 +5,7 @@ import consulo.find.FindSettings;
 import consulo.ide.impl.idea.find.SearchSession;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ToggleWholeWordsOnlyAction extends EditorHeaderToggleAction implements Embeddable {
   public ToggleWholeWordsOnlyAction() {

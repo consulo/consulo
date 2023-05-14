@@ -16,7 +16,7 @@
 
 package consulo.language.psi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

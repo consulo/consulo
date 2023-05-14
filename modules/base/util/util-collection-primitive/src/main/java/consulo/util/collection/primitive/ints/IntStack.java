@@ -19,7 +19,7 @@
  */
 package consulo.util.collection.primitive.ints;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EmptyStackException;
 import java.util.PrimitiveIterator;
 

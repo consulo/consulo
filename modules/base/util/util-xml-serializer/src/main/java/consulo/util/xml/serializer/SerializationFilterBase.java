@@ -15,8 +15,8 @@
  */
 package consulo.util.xml.serializer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class SerializationFilterBase implements SerializationFilter {
   @Override

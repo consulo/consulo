@@ -8,7 +8,7 @@ import consulo.util.collection.primitive.ints.impl.map.ConcurrentIntObjectHashMa
 import consulo.util.collection.primitive.longs.ConcurrentLongObjectMap;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.LockSupport;
 

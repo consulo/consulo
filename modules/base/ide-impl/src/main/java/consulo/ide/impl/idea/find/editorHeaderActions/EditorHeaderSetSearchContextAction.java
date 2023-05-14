@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.SearchSession;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {
   private final FindModel.SearchContext myContext;

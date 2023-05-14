@@ -18,7 +18,7 @@ package consulo.fileEditor;
 
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * File editor which supports possibility to navigate to {@link Navigatable} element

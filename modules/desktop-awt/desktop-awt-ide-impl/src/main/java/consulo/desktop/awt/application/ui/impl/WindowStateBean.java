@@ -8,7 +8,7 @@ import consulo.ui.Coordinate2D;
 import consulo.ui.Size;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 final class WindowStateBean extends BaseWindowStateBean {

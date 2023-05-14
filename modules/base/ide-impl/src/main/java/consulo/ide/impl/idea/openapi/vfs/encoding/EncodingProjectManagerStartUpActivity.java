@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -18,7 +18,7 @@ package consulo.language.editor.completion;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

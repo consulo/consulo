@@ -16,7 +16,7 @@
 
 package consulo.language.psi;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * <tt>PsiQualifiedNamedElement</tt> interface marks psi elements that can have

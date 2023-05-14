@@ -33,8 +33,8 @@ import consulo.component.util.graph.GraphGenerator;
 import consulo.logging.Logger;
 import consulo.ide.impl.packaging.impl.util.DeploymentUtilImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.*;
 

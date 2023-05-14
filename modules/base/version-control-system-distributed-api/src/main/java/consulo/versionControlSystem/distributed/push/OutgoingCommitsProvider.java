@@ -17,7 +17,7 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Provider for outgoing commits

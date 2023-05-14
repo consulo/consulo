@@ -25,7 +25,7 @@ import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class GotoPreviousErrorAction extends BaseCodeInsightAction implements DumbAware {
   public GotoPreviousErrorAction() {

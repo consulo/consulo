@@ -6,7 +6,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

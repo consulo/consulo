@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.Gray;
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

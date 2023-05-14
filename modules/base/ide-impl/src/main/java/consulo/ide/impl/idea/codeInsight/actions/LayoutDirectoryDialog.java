@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LayoutDirectoryDialog extends LayoutProjectCodeDialog implements DirectoryFormattingOptions {
   public LayoutDirectoryDialog(@Nonnull Project project,

@@ -8,8 +8,8 @@ import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,12 +91,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
    * {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
    * doesn't provide specific compile output path
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getCompileOutputPath(@Nonnull ExternalSystemSourceType type) {
     return myCompileOutputPaths.get(type);
   }
 
-  public void setCompileOutputPath(@Nonnull ExternalSystemSourceType type, @javax.annotation.Nullable String path) {
+  public void setCompileOutputPath(@Nonnull ExternalSystemSourceType type, @jakarta.annotation.Nullable String path) {
     if (path == null) {
       myCompileOutputPaths.remove(type);
       return;
@@ -104,12 +104,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getGroup() {
     return group;
   }
 
-  public void setGroup(@javax.annotation.Nullable String group) {
+  public void setGroup(@jakarta.annotation.Nullable String group) {
     this.group = group;
   }
 
@@ -118,7 +118,7 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     return version;
   }
 
-  public void setVersion(@javax.annotation.Nullable String version) {
+  public void setVersion(@jakarta.annotation.Nullable String version) {
     this.version = version;
   }
 

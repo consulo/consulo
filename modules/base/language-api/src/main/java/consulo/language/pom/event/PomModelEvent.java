@@ -18,8 +18,8 @@ package consulo.language.pom.event;
 import consulo.language.pom.PomModel;
 import consulo.language.pom.PomModelAspect;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class PomModelEvent extends EventObject {

@@ -18,8 +18,8 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.awt.valueEditor.IntegerValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A validating text field to input integer numbers with minimum, maximum and default values.

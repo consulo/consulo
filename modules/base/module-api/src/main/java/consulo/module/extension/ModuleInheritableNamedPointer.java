@@ -19,7 +19,7 @@ import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.module.Module;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

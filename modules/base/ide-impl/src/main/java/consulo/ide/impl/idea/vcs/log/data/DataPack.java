@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.vcs.log.graph.PermanentGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.PermanentGraphImpl;
 import consulo.versionControlSystem.util.StopWatch;
 import gnu.trove.TIntHashSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Function;

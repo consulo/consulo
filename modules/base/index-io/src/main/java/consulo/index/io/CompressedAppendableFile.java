@@ -12,7 +12,7 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.LimitedInputStream;
 import consulo.util.lang.SystemProperties;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.Arrays;
 

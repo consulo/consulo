@@ -16,8 +16,8 @@
 package consulo.diff.fragment;
 
 import consulo.diff.util.ThreeSide;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

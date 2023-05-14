@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.push;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

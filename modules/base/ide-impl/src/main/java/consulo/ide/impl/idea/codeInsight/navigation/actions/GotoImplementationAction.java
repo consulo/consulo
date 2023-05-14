@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.codeInsight.navigation.GotoImplementationHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.language.psi.search.DefinitionsScopedSearch;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class GotoImplementationAction extends BaseCodeInsightAction implements DumbAware {

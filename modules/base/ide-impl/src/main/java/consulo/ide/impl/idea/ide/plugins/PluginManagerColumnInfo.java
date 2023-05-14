@@ -24,7 +24,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;

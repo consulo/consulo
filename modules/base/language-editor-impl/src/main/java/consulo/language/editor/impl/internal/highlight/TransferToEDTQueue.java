@@ -25,7 +25,7 @@ import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;

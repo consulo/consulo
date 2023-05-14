@@ -17,7 +17,7 @@ package consulo.util.lang.ref;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author ven

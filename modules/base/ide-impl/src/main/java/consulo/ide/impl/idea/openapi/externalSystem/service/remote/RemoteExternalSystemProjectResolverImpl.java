@@ -7,7 +7,7 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.ide.impl.idea.util.Producer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines common interface for resolving gradle project, i.e. building object-level representation of <code>'build.gradle'</code>.
@@ -25,7 +25,7 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
     myDelegate = delegate;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public DataNode<ProjectData> resolveProjectInfo(@Nonnull final ExternalSystemTaskId id,
                                                   @Nonnull final String projectPath,
@@ -34,7 +34,7 @@ public class RemoteExternalSystemProjectResolverImpl<S extends ExternalSystemExe
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException
   {
     return execute(id, new Producer<DataNode<ProjectData>>() {
-      @javax.annotation.Nullable
+      @jakarta.annotation.Nullable
       @Override
       public DataNode<ProjectData> produce() {
         return myDelegate.resolveProjectInfo(id, projectPath, isPreviewMode, getSettings(), getNotificationListener());

@@ -15,7 +15,7 @@
  */
 package consulo.index.io.data;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 

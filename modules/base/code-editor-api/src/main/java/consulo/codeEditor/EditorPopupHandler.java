@@ -3,7 +3,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.EditorMouseEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Handler of popup trigger mouse events in editor

@@ -18,7 +18,7 @@ package consulo.component.internal.inject;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 

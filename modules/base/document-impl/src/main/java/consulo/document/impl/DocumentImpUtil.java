@@ -17,7 +17,7 @@ package consulo.document.impl;
 
 import consulo.undoRedo.util.UndoUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -5,8 +5,8 @@ import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 //@ApiStatus.Experimental

@@ -32,7 +32,7 @@ import consulo.ui.web.servlet.VaadinWebSessionImpl;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 /**

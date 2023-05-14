@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.execution.ui.layout.actions;
 import consulo.ide.impl.idea.execution.ui.layout.impl.RunnerContentUi;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ToggleToolbarLayoutAction extends ToggleAction {
 

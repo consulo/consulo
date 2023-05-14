@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.util.collection.SLRUMap;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 

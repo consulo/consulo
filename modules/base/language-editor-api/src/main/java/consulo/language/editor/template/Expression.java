@@ -18,7 +18,7 @@ package consulo.language.editor.template;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public abstract class Expression {
 

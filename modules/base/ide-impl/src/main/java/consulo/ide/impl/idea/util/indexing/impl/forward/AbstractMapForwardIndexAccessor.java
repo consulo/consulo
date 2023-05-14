@@ -6,8 +6,8 @@ import consulo.ide.impl.idea.util.indexing.impl.MapInputDataDiffBuilder;
 import consulo.index.io.data.DataExternalizer;
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 

@@ -25,8 +25,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class FindAction extends EditorAction {
   private static class Handler extends EditorActionHandler {

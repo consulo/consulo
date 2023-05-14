@@ -17,7 +17,7 @@ package consulo.desktop.awt.facade;
 
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

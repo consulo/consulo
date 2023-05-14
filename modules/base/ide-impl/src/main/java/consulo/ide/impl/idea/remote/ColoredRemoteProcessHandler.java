@@ -19,8 +19,8 @@ import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.remote.BaseRemoteProcessHandler;
 import consulo.process.remote.RemoteProcess;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.nio.charset.Charset;
 

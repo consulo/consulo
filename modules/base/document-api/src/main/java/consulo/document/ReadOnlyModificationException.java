@@ -15,7 +15,7 @@
  */
 package consulo.document;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ReadOnlyModificationException extends RuntimeException {
   private final Document myDocument;

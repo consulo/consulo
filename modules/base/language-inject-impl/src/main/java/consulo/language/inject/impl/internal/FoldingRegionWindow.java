@@ -9,7 +9,7 @@ import consulo.document.internal.RangeMarkerEx;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.inject.DocumentWindow;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion {
   private final EditorWindow myEditorWindow;

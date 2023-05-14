@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.contents;
 
 import consulo.diff.content.FileContent;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 

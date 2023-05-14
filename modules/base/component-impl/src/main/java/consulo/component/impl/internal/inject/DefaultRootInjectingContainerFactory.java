@@ -20,8 +20,8 @@ import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.RootInjectingContainerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;

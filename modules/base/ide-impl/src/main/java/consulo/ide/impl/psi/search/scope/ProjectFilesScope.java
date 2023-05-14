@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,7 +33,7 @@ public class ProjectFilesScope extends NamedScope {
   public ProjectFilesScope() {
     super(NAME, new AbstractPackageSet("ProjectFiles") {
       @Override
-      public boolean contains(VirtualFile file, @Nonnull Project project, @javax.annotation.Nullable NamedScopesHolder holder) {
+      public boolean contains(VirtualFile file, @Nonnull Project project, @jakarta.annotation.Nullable NamedScopesHolder holder) {
         if (file == null) return false;
         final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         return holder.getProject().isInitialized() && !fileIndex.isExcluded(file) && fileIndex.getContentRootForFile(file) != null;

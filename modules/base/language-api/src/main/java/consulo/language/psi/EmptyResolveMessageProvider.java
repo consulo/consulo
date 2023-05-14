@@ -18,7 +18,7 @@ package consulo.language.psi;
 
 import consulo.language.psi.PsiReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Implement this in your {@link PsiReference} to provide custom error message.

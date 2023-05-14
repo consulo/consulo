@@ -20,7 +20,7 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.module.content.layer.ModuleRootLayer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

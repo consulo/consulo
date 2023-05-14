@@ -27,7 +27,7 @@ import consulo.codeEditor.impl.action.EditorAction;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class SelectAllOccurrencesAction extends EditorAction {
   public SelectAllOccurrencesAction() {

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.tools.holders;
 
 import consulo.ide.impl.idea.diff.DiffContext;
 import consulo.diff.content.DiffContent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class EditorHolderFactory<T extends EditorHolder> {
   public abstract boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context);

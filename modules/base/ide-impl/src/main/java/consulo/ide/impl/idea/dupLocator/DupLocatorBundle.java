@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.dupLocator;
 
 import consulo.application.CommonBundle;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;

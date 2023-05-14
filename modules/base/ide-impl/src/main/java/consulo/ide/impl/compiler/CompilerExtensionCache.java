@@ -28,7 +28,7 @@ import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Predicate;

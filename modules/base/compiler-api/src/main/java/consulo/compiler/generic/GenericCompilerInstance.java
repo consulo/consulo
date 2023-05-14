@@ -20,7 +20,7 @@ import consulo.compiler.generic.BuildTarget;
 import consulo.compiler.generic.CompileItem;
 import consulo.compiler.generic.GenericCompilerCacheState;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.List;

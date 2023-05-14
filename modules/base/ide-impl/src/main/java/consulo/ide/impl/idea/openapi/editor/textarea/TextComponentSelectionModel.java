@@ -24,8 +24,8 @@ import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.text.JTextComponent;
 
 /**

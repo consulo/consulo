@@ -18,8 +18,8 @@ package consulo.execution.ui.console;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

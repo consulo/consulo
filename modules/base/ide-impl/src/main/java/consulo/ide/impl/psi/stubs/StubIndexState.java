@@ -21,7 +21,7 @@ package consulo.ide.impl.psi.stubs;
 
 import consulo.language.psi.stub.StubIndexKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;

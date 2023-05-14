@@ -22,8 +22,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;

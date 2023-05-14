@@ -18,7 +18,7 @@ package consulo.awt.hacking;
 import sun.awt.DisplayChangedListener;
 import sun.java2d.SunGraphicsEnvironment;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

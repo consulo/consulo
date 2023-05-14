@@ -30,7 +30,7 @@ import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.util.lang.Couple;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

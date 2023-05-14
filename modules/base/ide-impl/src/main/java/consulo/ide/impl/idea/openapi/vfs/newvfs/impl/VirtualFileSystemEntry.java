@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.ide.impl.idea.util.text.StringFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;

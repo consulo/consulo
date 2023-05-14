@@ -17,7 +17,7 @@ package consulo.language.ast;
 
 import consulo.language.ast.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

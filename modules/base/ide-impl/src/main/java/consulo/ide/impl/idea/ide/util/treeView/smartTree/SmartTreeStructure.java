@@ -22,7 +22,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.fileEditor.structureView.tree.TreeModel;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class SmartTreeStructure extends AbstractTreeStructure {
 

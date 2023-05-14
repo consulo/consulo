@@ -19,8 +19,8 @@ import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.component.util.pointer.NamedPointerManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

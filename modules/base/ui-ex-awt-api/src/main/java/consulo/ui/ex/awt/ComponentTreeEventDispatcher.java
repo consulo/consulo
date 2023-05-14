@@ -4,8 +4,8 @@ package consulo.ui.ex.awt;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.JBTreeTraverser;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.EventListener;

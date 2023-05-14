@@ -24,7 +24,7 @@ import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.SystemProperties;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 

@@ -26,8 +26,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.ui.awt.TextFieldCompletionProvider;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;

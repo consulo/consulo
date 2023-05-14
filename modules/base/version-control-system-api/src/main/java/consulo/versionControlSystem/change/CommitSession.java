@@ -19,7 +19,7 @@ package consulo.versionControlSystem.change;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 

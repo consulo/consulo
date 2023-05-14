@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class BekEdgeRestrictions {
   @Nonnull

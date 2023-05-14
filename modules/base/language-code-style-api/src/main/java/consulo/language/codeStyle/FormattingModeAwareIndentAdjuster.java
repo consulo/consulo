@@ -17,7 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.document.Document;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Used to differentiate between line indent adjustment on a new line after Enter and explicit indent adjustment action.

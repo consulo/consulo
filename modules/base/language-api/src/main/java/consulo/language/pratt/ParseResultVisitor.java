@@ -16,7 +16,7 @@
 package consulo.language.pratt;
 
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

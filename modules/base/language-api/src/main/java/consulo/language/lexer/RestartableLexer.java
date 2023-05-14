@@ -3,7 +3,7 @@ package consulo.language.lexer;
 
 import consulo.document.event.DocumentEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This interface is suitable for providing even distribution for restartable states in highlighting lexer implementation.

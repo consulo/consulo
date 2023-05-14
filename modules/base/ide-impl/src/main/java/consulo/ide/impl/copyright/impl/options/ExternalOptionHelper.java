@@ -23,7 +23,7 @@ import consulo.language.copyright.config.CopyrightProfile;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

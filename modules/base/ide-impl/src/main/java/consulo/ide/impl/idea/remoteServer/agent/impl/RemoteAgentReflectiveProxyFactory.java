@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.remoteServer.agent.impl;
 
 import consulo.logging.Logger;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.lang.reflect.*;
 import java.net.URL;
 import java.net.URLClassLoader;

@@ -17,7 +17,7 @@ package consulo.ui.image;
 
 import consulo.ui.internal.UIInternal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.function.Function;

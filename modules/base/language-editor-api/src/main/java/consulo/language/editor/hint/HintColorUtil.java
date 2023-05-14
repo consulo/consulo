@@ -24,7 +24,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

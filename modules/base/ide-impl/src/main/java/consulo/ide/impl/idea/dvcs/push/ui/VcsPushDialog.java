@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.OptionAction;
 import consulo.ui.ex.awt.ValidationInfo;
 import net.miginfocom.swing.MigLayout;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,12 +44,12 @@ public class VcsPushDialog extends DialogWrapper {
   private final Map<PushSupport, VcsPushOptionsPanel> myAdditionalPanels;
 
   private Action myPushAction;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private ForcePushAction myForcePushAction;
 
   public VcsPushDialog(@Nonnull Project project,
                        @Nonnull List<? extends Repository> selectedRepositories,
-                       @javax.annotation.Nullable Repository currentRepo) {
+                       @jakarta.annotation.Nullable Repository currentRepo) {
     super(project);
     myController = new PushController(project, this, selectedRepositories, currentRepo);
     myAdditionalPanels = myController.createAdditionalPanels();
@@ -79,7 +79,7 @@ public class VcsPushDialog extends DialogWrapper {
     return ID;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected ValidationInfo doValidate() {
     updateOkActions();
@@ -113,7 +113,7 @@ public class VcsPushDialog extends DialogWrapper {
     return myController.isForcePushEnabled() && myController.getProhibitedTarget() == null && myController.isPushAllowed(true);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myListPanel.getPreferredFocusedComponent();
@@ -150,7 +150,7 @@ public class VcsPushDialog extends DialogWrapper {
     myPushAction.setEnabled(false);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public VcsPushOptionValue getAdditionalOptionValue(@Nonnull PushSupport support) {
     VcsPushOptionsPanel panel = myAdditionalPanels.get(support);
     return panel == null ? null : panel.getValue();

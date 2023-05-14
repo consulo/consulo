@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

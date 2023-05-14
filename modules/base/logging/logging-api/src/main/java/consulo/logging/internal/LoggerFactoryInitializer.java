@@ -15,7 +15,7 @@
  */
 package consulo.logging.internal;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;

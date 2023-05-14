@@ -5,7 +5,7 @@ import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -320,7 +320,7 @@ public class SpacingBuilder {
     return this;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Spacing getSpacing(Block parent, Block child1, Block child2) {
     if (!(parent instanceof ASTBlock) || !(child1 instanceof ASTBlock) || !(child2 instanceof ASTBlock)) {
       return null;

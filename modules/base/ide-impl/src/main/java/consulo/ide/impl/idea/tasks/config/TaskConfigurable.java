@@ -16,7 +16,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

@@ -21,7 +21,7 @@ import com.pty4j.util.PtyUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;

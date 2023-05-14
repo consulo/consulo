@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.collection.Stack;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.*;

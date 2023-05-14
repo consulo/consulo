@@ -21,8 +21,8 @@ import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 
 class OptionTagBinding extends BasePrimitiveBinding {

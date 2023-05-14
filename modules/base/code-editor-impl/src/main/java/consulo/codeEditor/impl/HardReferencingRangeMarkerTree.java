@@ -4,7 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.document.Document;
 import consulo.document.impl.RangeMarkerTree;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

@@ -25,7 +25,7 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

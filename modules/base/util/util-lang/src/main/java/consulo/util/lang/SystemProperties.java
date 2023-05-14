@@ -17,8 +17,8 @@ package consulo.util.lang;
 
 import consulo.annotation.DeprecationInfo;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Utility wrappers for accessing system properties.

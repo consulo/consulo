@@ -18,7 +18,7 @@ package consulo.localize;
 import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Locale;
 import java.util.ServiceLoader;
 import java.util.Set;

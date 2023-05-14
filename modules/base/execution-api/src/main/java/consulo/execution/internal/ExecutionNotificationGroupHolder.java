@@ -20,7 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 import static consulo.project.ui.notification.NotificationDisplayType.STICKY_BALLOON;

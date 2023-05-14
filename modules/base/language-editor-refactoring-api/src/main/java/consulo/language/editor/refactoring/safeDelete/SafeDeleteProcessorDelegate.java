@@ -24,7 +24,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.usage.UsageInfo;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 

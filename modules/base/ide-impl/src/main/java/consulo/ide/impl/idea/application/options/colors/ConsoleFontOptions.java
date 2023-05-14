@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.colorScheme.ModifiableFontPreferences;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: anna

@@ -23,7 +23,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;

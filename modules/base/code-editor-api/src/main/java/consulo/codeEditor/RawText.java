@@ -22,7 +22,7 @@
  */
 package consulo.codeEditor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

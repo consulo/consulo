@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;

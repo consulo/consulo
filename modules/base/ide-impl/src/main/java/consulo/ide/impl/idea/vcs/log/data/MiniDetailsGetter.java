@@ -6,8 +6,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.log.VcsLogProvider;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
 import consulo.ide.impl.idea.vcs.log.data.index.VcsLogIndex;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;

@@ -15,7 +15,7 @@
  */
 package consulo.application;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class AccessToken implements AutoCloseable {
   @Override

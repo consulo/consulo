@@ -7,7 +7,7 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class VirtualFileWindowImpl extends LightVirtualFile implements VirtualFileWindow {
   private final VirtualFile myDelegate;

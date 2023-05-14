@@ -19,7 +19,7 @@ package consulo.language.codeStyle.internal;
 import consulo.language.codeStyle.Wrap;
 import consulo.language.codeStyle.WrapType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.*;
 

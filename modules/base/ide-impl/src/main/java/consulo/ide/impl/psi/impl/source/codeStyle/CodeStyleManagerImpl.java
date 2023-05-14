@@ -47,8 +47,8 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

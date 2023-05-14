@@ -18,7 +18,7 @@ package consulo.application.progress;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

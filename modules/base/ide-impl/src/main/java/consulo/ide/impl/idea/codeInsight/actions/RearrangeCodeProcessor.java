@@ -30,8 +30,8 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;

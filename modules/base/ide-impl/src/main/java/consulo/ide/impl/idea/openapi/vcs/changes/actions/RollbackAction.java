@@ -49,7 +49,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.vcsUtil.RollbackUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -159,7 +159,7 @@ public class RollbackAction extends AnAction implements DumbAware {
     return Collections.emptyList();
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static LinkedHashSet<VirtualFile> getModifiedWithoutEditing(final AnActionEvent e, Project project) {
     final List<VirtualFile> modifiedWithoutEditing = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
     if (modifiedWithoutEditing != null && modifiedWithoutEditing.size() > 0) {

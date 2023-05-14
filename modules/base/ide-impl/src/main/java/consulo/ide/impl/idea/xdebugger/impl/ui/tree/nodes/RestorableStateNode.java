@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.execution.debug.ui.XNamedTreeNode;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.TreePath;
 

@@ -18,7 +18,7 @@ package consulo.language.pom;
 
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

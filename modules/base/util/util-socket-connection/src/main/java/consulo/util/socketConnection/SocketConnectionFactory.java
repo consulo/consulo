@@ -18,8 +18,8 @@ package consulo.util.socketConnection;
 import consulo.util.socketConnection.impl.ServerSocketConnectionImpl;
 import consulo.util.socketConnection.impl.SocketConnectionImpl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.net.InetAddress;
 import java.util.concurrent.ScheduledExecutorService;
 

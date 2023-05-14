@@ -29,7 +29,7 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This interface is assumed to define general contract for Emacs-like functionality.

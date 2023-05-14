@@ -29,7 +29,7 @@ import consulo.logging.Logger;
 import consulo.component.util.PluginExceptionUtil;
 import gnu.trove.TIntHashSet;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;

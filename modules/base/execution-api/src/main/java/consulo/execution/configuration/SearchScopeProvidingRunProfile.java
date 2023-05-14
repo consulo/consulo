@@ -18,7 +18,7 @@ package consulo.execution.configuration;
 
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for run configurations that can specify which part of the project should be used to search sources. This information

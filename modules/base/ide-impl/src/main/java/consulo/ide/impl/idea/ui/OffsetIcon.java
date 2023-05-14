@@ -7,7 +7,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Contract;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.hash.MergedInvertedIndex;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;

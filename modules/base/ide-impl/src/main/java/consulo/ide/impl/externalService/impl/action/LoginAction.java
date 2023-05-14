@@ -34,7 +34,7 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Provider;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;

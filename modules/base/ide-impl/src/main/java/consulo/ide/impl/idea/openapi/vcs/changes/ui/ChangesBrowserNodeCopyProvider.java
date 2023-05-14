@@ -23,7 +23,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.datatransfer.StringSelection;

@@ -15,8 +15,8 @@
  */
 package consulo.virtualFileSystem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * To be used for those non-LocalFileSystems which can provide corresponding

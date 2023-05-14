@@ -24,7 +24,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @see ProcessHandlerBuilder

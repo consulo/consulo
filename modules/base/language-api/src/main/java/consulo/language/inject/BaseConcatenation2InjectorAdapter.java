@@ -19,7 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

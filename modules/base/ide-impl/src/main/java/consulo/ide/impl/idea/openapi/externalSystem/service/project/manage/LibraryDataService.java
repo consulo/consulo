@@ -29,7 +29,7 @@ import consulo.content.base.BinariesOrderRootType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;

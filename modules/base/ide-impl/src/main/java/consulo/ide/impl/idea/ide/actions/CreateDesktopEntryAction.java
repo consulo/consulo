@@ -43,8 +43,8 @@ import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;

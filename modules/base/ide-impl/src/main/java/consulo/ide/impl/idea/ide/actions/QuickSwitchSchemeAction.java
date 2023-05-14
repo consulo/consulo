@@ -29,7 +29,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

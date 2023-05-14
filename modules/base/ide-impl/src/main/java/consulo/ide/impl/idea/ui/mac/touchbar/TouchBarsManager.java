@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.disposer.Disposable;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

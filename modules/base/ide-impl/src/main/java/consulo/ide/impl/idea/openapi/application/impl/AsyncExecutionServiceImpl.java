@@ -8,7 +8,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ModalityState;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 

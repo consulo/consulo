@@ -18,8 +18,8 @@ package consulo.versionControlSystem.distributed.push;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public abstract class PushTargetPanel<T extends PushTarget> extends JPanel {

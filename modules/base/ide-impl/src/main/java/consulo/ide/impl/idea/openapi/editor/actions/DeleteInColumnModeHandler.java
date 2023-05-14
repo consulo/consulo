@@ -16,8 +16,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "delete.in.column.mode")
 public class DeleteInColumnModeHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {

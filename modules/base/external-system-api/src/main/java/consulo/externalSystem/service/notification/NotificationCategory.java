@@ -17,7 +17,7 @@ package consulo.externalSystem.service.notification;
 
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.MessageCategory;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka

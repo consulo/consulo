@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

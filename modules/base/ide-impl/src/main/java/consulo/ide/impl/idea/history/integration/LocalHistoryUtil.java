@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

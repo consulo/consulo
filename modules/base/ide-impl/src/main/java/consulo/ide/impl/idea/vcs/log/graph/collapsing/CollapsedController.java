@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.vcs.log.graph.impl.facade.CascadeController;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.GraphChanges;
 import consulo.ide.impl.idea.vcs.log.graph.impl.facade.ReachableNodes;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UnsignedBitSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class CollapsedController extends CascadeController {
 
   public CollapsedController(@Nonnull CascadeController delegateLinearGraphController,
                              @Nonnull final PermanentGraphInfo<?> permanentGraphInfo,
-                             @javax.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
+                             @jakarta.annotation.Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility =
       ReachableNodes.getReachableNodes(permanentGraphInfo.getLinearGraph(), idsOfVisibleBranches);
@@ -89,7 +89,7 @@ public class CollapsedController extends CascadeController {
     CollapsedActionManager.expandNodes(myCollapsedGraph, nodesToShow);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
     return CollapsedActionManager.performAction(this, action);
@@ -106,13 +106,13 @@ public class CollapsedController extends CascadeController {
     return myCollapsedGraph;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
     return convertToDelegate(graphElement, myCollapsedGraph);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static GraphElement convertToDelegate(@Nonnull GraphElement graphElement, CollapsedGraph collapsedGraph) {
     if (graphElement instanceof GraphEdge) {
       Integer upIndex = ((GraphEdge)graphElement).getUpNodeIndex();

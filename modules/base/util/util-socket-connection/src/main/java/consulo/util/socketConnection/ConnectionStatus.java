@@ -1,6 +1,6 @@
 package consulo.util.socketConnection;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum ConnectionStatus {
   NOT_CONNECTED("Not connected"),

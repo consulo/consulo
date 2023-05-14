@@ -20,8 +20,8 @@ import consulo.externalSystem.service.module.extension.ExternalSystemModuleExten
 import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

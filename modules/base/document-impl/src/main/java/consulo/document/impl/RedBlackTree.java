@@ -18,8 +18,8 @@ package consulo.document.impl;
 import consulo.application.util.function.Processor;
 import consulo.util.lang.BitUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 

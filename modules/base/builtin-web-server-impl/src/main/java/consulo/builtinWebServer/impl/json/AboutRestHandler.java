@@ -21,7 +21,7 @@ import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

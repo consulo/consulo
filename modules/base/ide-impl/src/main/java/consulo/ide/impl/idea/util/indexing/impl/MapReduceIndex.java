@@ -33,8 +33,8 @@ import consulo.ide.impl.idea.util.indexing.impl.forward.IntForwardIndex;
 import consulo.ide.impl.idea.util.indexing.impl.forward.IntForwardIndexAccessor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;

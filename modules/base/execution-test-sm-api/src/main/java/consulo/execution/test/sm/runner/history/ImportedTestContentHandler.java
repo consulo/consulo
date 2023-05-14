@@ -26,7 +26,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ImportedTestContentHandler extends DefaultHandler {
   private final GeneralTestEventsProcessor myProcessor;

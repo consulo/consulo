@@ -30,8 +30,8 @@ import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.MagicConstant;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton

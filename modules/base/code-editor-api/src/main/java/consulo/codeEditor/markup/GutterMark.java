@@ -17,8 +17,8 @@ package consulo.codeEditor.markup;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Interface which should be implemented in order to draw icons in the gutter area.

@@ -29,7 +29,7 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

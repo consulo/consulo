@@ -19,7 +19,7 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.versionControlSystem.log.*;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MergeCommitsHighlighter implements VcsLogHighlighter {
   public static final JBColor MERGE_COMMIT_FOREGROUND = new JBColor(Gray._128, Gray._96);

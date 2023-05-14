@@ -21,7 +21,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.DiffFromHistoryHandler;
 import consulo.versionControlSystem.history.VcsFileRevision;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class StandardDiffFromHistoryHandler implements DiffFromHistoryHandler {
 

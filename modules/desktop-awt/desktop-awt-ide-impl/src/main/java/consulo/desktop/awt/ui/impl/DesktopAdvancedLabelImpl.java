@@ -20,7 +20,7 @@ import consulo.ui.AdvancedLabel;
 import consulo.ui.TextItemPresentation;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

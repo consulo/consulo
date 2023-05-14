@@ -32,8 +32,8 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.ManagingFS;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
 import java.io.File;

@@ -19,7 +19,7 @@ import consulo.ui.image.Image;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

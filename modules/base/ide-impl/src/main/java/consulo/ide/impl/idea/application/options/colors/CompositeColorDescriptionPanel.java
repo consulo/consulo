@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.ide.impl.idea.application.options.colors.OptionsPanelImpl.ColorDescriptionPanel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.util.lang.function.Condition;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

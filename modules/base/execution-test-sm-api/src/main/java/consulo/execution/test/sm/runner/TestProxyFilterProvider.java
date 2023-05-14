@@ -16,8 +16,8 @@
 package consulo.execution.test.sm.runner;
 
 import consulo.execution.ui.console.Filter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Sergey Simonchik

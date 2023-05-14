@@ -20,7 +20,7 @@ import consulo.util.collection.primitive.longs.impl.LongCollectionImpls;
 import gnu.trove.TLongHashSet;
 import gnu.trove.TLongIterator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.PrimitiveIterator;
 
 /**

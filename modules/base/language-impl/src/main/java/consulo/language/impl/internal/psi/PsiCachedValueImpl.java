@@ -21,8 +21,8 @@ import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.PsiManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

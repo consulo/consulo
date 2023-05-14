@@ -34,8 +34,8 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 

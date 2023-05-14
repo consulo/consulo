@@ -23,7 +23,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

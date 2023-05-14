@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 

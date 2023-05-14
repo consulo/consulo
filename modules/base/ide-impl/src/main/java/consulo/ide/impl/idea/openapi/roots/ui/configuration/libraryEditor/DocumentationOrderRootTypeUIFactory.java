@@ -40,7 +40,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DocumentationOrderRootTypeUIFactory implements OrderRootTypeUIFactory {

@@ -1,6 +1,6 @@
 package consulo.versionControlSystem.log;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * <p>Represents a unique reference to a VCS commit.</p>

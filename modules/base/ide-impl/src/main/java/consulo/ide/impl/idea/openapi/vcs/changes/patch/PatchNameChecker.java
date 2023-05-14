@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -24,7 +24,7 @@ public class PatchNameChecker {
   public final static int MAX = 100;
   private final static int MAX_PATH = 255; // Windows path len restrictions
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static String validateName(@Nonnull String name) {
     String fileName = new File(name).getName();
     if (StringUtil.isEmptyOrSpaces(fileName)) {

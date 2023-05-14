@@ -17,7 +17,7 @@ package consulo.diff.util;
 
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LineCol {
   // counting from zero

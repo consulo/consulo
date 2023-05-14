@@ -21,7 +21,7 @@ import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

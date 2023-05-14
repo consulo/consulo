@@ -16,7 +16,7 @@
 
 package consulo.virtualFileSystem.fileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

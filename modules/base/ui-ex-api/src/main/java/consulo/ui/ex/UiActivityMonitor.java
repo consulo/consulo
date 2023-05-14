@@ -22,7 +22,7 @@ import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
 import consulo.ui.ModalityState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UiActivityMonitor {

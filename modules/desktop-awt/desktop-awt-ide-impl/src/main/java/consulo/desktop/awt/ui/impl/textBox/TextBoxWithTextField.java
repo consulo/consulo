@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.ui.TextBox;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

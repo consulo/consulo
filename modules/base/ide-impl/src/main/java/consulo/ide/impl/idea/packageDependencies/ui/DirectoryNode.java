@@ -34,7 +34,7 @@ import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 

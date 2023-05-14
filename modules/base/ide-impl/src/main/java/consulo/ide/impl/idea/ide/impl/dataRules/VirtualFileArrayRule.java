@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.usages.UsageDataUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -15,7 +15,7 @@
 package consulo.ide.impl.idea.codeInsight.dataflow;
 
 import consulo.ide.impl.idea.codeInsight.controlflow.Instruction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DfaInstance<E> {
   // Please ensure that E has correctly implemented equals method

@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.util.indexing.impl.forward;
 
 import consulo.util.io.ByteArraySequence;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class EmptyForwardIndex implements ForwardIndex {
   @Nullable

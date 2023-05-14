@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
 import consulo.ui.ex.action.ActionPopupMenu;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Allows to receive notifications when popup menus created from action groups are shown and closed.

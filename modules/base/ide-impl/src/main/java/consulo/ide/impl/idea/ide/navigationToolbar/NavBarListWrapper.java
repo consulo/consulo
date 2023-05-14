@@ -23,9 +23,9 @@ import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

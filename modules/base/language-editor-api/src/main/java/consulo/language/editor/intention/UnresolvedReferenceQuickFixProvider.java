@@ -23,7 +23,7 @@ import consulo.language.psi.PsiReference;
 import consulo.project.DumbService;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {

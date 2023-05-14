@@ -8,7 +8,7 @@ import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This class customizes 'Run Anything' command line and its data context.

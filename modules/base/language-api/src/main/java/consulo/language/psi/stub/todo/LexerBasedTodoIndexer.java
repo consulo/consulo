@@ -20,7 +20,7 @@ import consulo.language.psi.stub.BaseFilterLexerUtil;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IdAndToDoScannerBasedOnFilterLexer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 /**

@@ -19,8 +19,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 // We implement UserDataHolder to support DataManager.saveInDataContext/loadFromDataContext methods
 public class DataContextWrapper implements DataContext, UserDataHolder {

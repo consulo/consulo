@@ -23,7 +23,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.component.messagebus.MessageBusConnection;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.application.util.mac.foundation.Foundation.invoke;
 import static consulo.application.util.mac.foundation.Foundation.nsString;

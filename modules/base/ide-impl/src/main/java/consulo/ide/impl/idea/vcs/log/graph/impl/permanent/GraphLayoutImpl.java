@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.permanent;
 import consulo.ide.impl.idea.vcs.log.graph.api.GraphLayout;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;
 import consulo.ide.impl.idea.vcs.log.graph.utils.impl.CompressedIntList;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

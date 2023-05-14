@@ -21,8 +21,8 @@ import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.NotificationType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

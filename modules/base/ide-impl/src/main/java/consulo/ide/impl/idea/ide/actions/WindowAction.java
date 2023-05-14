@@ -24,7 +24,7 @@ import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

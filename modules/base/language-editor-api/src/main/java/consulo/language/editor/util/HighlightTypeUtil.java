@@ -21,7 +21,7 @@ import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

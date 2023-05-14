@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

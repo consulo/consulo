@@ -7,7 +7,7 @@ import consulo.ui.ex.awt.paint.PaintUtil.ParityMode;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;

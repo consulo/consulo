@@ -24,7 +24,7 @@ import consulo.language.Language;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface HTMLComposerExtension<T> {
   Key<T> getID();

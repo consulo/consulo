@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.collection.PeekableIterator;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

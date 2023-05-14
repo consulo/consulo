@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.frame.presentation;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

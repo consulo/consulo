@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.dvcs.ui;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface PopupElementWithAdditionalInfo {
   @Nullable

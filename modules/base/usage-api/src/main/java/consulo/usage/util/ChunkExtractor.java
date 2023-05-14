@@ -43,7 +43,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -295,7 +295,7 @@ public final class ChunkExtractor {
                                int end,
                                @Nonnull TextAttributes originalAttrs,
                                boolean bold,
-                               @javax.annotation.Nullable UsageType usageType,
+                               @jakarta.annotation.Nullable UsageType usageType,
                                @Nonnull List<TextChunk> result) {
     if (start >= end) return;
 

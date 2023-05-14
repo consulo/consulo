@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * External system integration consists of common 'external system' functionality and external system-specific code. There are at
@@ -48,7 +48,7 @@ public interface ExternalSystemCommunicationManager {
    * @return newly created facade for the given arguments (if it was possible to create one)
    * @throws Exception in case something goes wrong
    */
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId)
     throws Exception;
 

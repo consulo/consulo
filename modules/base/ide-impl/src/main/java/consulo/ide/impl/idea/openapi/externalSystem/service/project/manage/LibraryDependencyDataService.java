@@ -44,7 +44,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.content.base.BinariesOrderRootType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 

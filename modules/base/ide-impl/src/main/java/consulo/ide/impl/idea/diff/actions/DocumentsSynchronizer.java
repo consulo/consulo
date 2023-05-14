@@ -25,14 +25,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 abstract class DocumentsSynchronizer {
   @Nonnull
   protected final Document myDocument1;
   @Nonnull
   protected final Document myDocument2;
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Project myProject;
 
   private volatile boolean myDuringModification = false;
@@ -60,7 +60,7 @@ abstract class DocumentsSynchronizer {
     }
   };
 
-  protected DocumentsSynchronizer(@javax.annotation.Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
+  protected DocumentsSynchronizer(@jakarta.annotation.Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
     myProject = project;
     myDocument1 = document1;
     myDocument2 = document2;

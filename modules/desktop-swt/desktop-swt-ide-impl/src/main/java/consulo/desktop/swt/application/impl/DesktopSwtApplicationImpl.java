@@ -21,7 +21,7 @@ import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.history.core.changes.Change;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.revertion.UndoChangeRevertingVisitor;
 import consulo.util.lang.ref.Ref;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class ChangeRange {
     this(gw, vcs, changeId, changeId);
   }
 
-  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @javax.annotation.Nullable Long fromChangeId, @javax.annotation.Nullable Long toChangeId) {
+  private ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @jakarta.annotation.Nullable Long fromChangeId, @jakarta.annotation.Nullable Long toChangeId) {
     myGateway = gw;
     myVcs = vcs;
     myFromChangeId = fromChangeId;

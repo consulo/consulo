@@ -9,8 +9,8 @@ import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class verifies that delegate lexer generates a continuous sequence of tokens (without gaps), and that it

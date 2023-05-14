@@ -26,7 +26,7 @@ import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

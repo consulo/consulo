@@ -18,8 +18,8 @@ package consulo.ui.ex.awt;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Major difference between the parent class and <code>JBSplitter</code> is an ability to save proportion

@@ -21,8 +21,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class DirectoryContentImpl extends DiffContentBase implements DirectoryContent {
   @Nonnull
@@ -35,7 +35,7 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
     myFile = file;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Navigatable getNavigatable() {
     if (myProject == null || myProject.isDefault() || !myFile.isValid()) return null;
@@ -48,7 +48,7 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
     return myFile;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public FileType getContentType() {
     return null;

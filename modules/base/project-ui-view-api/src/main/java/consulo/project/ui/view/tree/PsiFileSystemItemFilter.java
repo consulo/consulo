@@ -18,7 +18,7 @@ package consulo.project.ui.view.tree;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface PsiFileSystemItemFilter {
 

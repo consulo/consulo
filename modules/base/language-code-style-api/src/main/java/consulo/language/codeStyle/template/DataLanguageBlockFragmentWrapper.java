@@ -20,8 +20,8 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.codeStyle.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

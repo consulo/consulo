@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

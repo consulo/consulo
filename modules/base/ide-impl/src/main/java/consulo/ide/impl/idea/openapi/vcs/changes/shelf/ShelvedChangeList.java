@@ -35,7 +35,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;

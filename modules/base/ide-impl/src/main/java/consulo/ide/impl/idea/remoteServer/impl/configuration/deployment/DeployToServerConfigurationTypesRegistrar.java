@@ -22,7 +22,7 @@ import consulo.remoteServer.ServerType;
 import consulo.component.extension.ExtensionExtender;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

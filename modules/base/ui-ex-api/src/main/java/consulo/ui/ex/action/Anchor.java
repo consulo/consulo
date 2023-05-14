@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.action;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines possible positions of an action relative to another action.

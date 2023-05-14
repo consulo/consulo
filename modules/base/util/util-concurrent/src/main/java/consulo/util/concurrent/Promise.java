@@ -4,8 +4,8 @@ package consulo.util.concurrent;
 import consulo.util.concurrent.internal.DonePromise;
 import consulo.util.concurrent.internal.InternalPromiseUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

@@ -24,7 +24,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.application.util.function.AsynchConsumer;
 import consulo.ide.impl.idea.util.ui.AdjustComponentWhenShown;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

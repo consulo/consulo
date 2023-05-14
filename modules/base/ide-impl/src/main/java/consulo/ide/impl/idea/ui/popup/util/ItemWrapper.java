@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui.popup.util;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 

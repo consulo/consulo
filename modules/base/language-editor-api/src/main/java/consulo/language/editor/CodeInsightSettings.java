@@ -37,8 +37,8 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Singleton
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))

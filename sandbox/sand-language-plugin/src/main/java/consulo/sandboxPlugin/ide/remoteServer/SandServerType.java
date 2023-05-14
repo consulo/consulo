@@ -37,8 +37,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

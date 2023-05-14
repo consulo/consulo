@@ -43,8 +43,8 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;

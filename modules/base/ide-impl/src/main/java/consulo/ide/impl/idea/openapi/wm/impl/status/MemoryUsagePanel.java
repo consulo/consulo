@@ -17,8 +17,8 @@ import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntToIntMap;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UpdatableIntToIntMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class IDIntToIntMap implements IntToIntMap {
   @Nonnull

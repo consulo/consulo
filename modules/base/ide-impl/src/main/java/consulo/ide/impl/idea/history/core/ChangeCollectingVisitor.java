@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.history.core;
 import consulo.ide.impl.idea.history.core.changes.*;
 import consulo.application.util.matcher.NameUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

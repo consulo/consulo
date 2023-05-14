@@ -31,8 +31,8 @@ import consulo.versionControlSystem.log.util.VcsUserUtil;
 import consulo.dataContext.DataContext;
 import consulo.util.lang.Couple;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

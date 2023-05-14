@@ -21,7 +21,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Global inspection tool which doesn't need the graph and, therefore, can be run on per-file basis concurrently.

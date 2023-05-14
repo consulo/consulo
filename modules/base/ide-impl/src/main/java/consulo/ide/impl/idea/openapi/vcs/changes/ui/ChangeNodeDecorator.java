@@ -19,7 +19,7 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.Change;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

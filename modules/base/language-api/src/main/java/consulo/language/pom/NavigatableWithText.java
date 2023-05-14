@@ -17,7 +17,7 @@ package consulo.language.pom;
 
 import consulo.navigation.Navigatable;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

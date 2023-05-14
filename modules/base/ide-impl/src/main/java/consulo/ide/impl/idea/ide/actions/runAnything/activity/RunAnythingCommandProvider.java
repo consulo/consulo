@@ -19,8 +19,8 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.*;

@@ -18,7 +18,7 @@ package consulo.language.editor.completion;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

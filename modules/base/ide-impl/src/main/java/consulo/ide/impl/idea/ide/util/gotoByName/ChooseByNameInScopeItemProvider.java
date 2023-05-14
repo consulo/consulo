@@ -5,7 +5,7 @@ import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.search.FindSymbolParameters;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.dnd;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;

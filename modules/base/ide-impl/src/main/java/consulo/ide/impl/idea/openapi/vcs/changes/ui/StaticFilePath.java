@@ -55,7 +55,7 @@ public class StaticFilePath {
     return myVf;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public StaticFilePath getParent() {
     final int idx = myKey.lastIndexOf('/');
     return (idx == -1) || (idx == 0) ? null :

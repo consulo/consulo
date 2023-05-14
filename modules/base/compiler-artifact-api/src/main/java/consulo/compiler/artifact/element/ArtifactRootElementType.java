@@ -21,7 +21,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @SuppressWarnings("ExtensionImplIsNotAnnotatedInspection")

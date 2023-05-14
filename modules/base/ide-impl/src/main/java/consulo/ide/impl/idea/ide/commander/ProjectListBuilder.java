@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.Alarm;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;

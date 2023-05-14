@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.EditorColorKey;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Describes a color which can be configured in a custom colors and fonts page.

@@ -19,8 +19,8 @@ import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

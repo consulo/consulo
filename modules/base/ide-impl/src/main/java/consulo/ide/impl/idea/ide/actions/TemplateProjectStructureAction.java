@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
   @RequiredUIAccess

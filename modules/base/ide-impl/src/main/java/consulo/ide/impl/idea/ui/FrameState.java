@@ -22,7 +22,7 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;

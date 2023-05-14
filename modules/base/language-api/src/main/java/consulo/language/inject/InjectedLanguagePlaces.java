@@ -21,8 +21,8 @@ import consulo.language.Language;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Storage for places where PSI language being injected to.
@@ -41,5 +41,5 @@ public interface InjectedLanguagePlaces {
    * @param suffix Optional footer to be passed on to the language parser after the host element text.
    *        Might be useful e.g. for making the text parsable or providing some context.
    */
-  void addPlace(@Nonnull Language language, @Nonnull TextRange rangeInsideHost, @NonNls @Nullable String prefix, @NonNls @javax.annotation.Nullable String suffix);
+  void addPlace(@Nonnull Language language, @Nonnull TextRange rangeInsideHost, @NonNls @Nullable String prefix, @NonNls @jakarta.annotation.Nullable String suffix);
 }

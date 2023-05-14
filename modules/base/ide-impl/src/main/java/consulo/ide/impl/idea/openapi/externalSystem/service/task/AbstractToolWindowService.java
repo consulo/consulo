@@ -23,7 +23,7 @@ import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -52,7 +52,7 @@ public abstract class AbstractToolWindowService<T extends ExternalEntityData> im
 
   protected abstract void processData(@Nonnull Collection<DataNode<T>> nodes,
                                       @Nonnull Project project,
-                                      @javax.annotation.Nullable ExternalSystemTasksTreeModel model);
+                                      @jakarta.annotation.Nullable ExternalSystemTasksTreeModel model);
 
   @Override
   public void removeData(@Nonnull Collection<? extends Void> toRemove, @Nonnull Project project, boolean synchronous) {

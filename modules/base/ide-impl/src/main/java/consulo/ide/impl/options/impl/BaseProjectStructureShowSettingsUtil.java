@@ -22,8 +22,8 @@ import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.project.Project;
 import consulo.ide.impl.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.dvcs.push.ui;
 
 import consulo.versionControlSystem.distributed.push.OutgoingResult;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.concurrent.Future;

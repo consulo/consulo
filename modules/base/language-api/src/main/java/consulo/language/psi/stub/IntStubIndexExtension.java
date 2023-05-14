@@ -22,7 +22,7 @@ package consulo.language.psi.stub;
 import consulo.language.psi.PsiElement;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class IntStubIndexExtension<Psi extends PsiElement> extends AbstractStubIndex<Integer, Psi> {
   public int getVersion() {

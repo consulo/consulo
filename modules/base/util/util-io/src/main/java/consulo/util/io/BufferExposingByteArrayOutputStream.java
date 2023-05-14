@@ -15,7 +15,7 @@
  */
 package consulo.util.io;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class BufferExposingByteArrayOutputStream extends UnsyncByteArrayOutputStream {
   public BufferExposingByteArrayOutputStream() {

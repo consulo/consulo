@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

@@ -20,7 +20,7 @@ import consulo.compiler.artifact.element.ArchivePackagingElement;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author nik

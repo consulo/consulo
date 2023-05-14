@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.execution.RunnerAndConfigurationSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev

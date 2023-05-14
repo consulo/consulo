@@ -3,7 +3,7 @@ package consulo.execution.debug.attach;
 
 import consulo.process.ProcessInfo;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface XAttachProcessPresentationGroup extends XAttachPresentationGroup<ProcessInfo> {
   @Override

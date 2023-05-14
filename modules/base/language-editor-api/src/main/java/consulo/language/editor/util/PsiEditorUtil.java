@@ -33,8 +33,8 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PsiEditorUtil {
   private static final Logger LOG = Logger.getInstance(PsiEditorUtil.class);

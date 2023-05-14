@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorBundle;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 
 /**

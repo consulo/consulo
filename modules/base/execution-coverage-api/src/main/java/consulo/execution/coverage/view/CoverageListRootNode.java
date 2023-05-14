@@ -7,7 +7,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 

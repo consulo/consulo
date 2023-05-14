@@ -31,7 +31,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author anna

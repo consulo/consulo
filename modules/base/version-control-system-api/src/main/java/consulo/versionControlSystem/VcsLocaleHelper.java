@@ -17,7 +17,7 @@ package consulo.versionControlSystem;
 
 import consulo.application.util.registry.Registry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.MissingResourceException;

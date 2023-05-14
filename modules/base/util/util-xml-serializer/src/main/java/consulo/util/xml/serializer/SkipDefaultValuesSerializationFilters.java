@@ -19,8 +19,8 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

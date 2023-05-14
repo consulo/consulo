@@ -19,7 +19,7 @@ import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.component.PropertyName;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov

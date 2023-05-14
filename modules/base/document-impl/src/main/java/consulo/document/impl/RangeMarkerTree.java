@@ -9,8 +9,8 @@ import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.SmartList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

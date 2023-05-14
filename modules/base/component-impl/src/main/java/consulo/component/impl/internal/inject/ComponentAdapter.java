@@ -7,8 +7,8 @@
  *****************************************************************************/
 package consulo.component.impl.internal.inject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * A component adapter is responsible for providing a specific component instance. An instance of an implementation of

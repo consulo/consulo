@@ -5,7 +5,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Represents the state and settings of a "choose by name" popup from the point of view of the logic which fills it with items.

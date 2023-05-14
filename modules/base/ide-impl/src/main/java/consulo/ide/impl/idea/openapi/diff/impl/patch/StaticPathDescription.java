@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.patch;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class StaticPathDescription implements PathDescription {
   private final String myPath;

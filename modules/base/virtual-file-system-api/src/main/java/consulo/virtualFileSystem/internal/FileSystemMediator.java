@@ -17,8 +17,8 @@ package consulo.virtualFileSystem.internal;
 
 import consulo.util.io.FileAttributes;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 public interface FileSystemMediator {

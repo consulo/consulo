@@ -18,7 +18,7 @@ package consulo.application.util.query;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 

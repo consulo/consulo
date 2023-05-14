@@ -32,7 +32,7 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -128,7 +128,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     settings.SHOW_PATCH_IN_EXPLORER = getShowPatchValue();
   }
   
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private Boolean getShowPatchValue() {
     final int index = myOnPatchCreation.getSelectedIndex();
     if (index == 0) {

@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.versionControlSystem.VcsBundle;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

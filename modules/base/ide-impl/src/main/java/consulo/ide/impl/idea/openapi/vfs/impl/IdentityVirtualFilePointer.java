@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr

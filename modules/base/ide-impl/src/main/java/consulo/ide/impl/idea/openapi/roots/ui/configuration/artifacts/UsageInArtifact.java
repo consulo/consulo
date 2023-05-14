@@ -7,7 +7,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author nik

@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;

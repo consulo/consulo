@@ -28,8 +28,8 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.HashSet;
 import java.util.List;

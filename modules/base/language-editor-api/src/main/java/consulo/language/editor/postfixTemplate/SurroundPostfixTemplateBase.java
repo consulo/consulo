@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 public abstract class SurroundPostfixTemplateBase extends StatementWrapPostfixTemplate {

@@ -13,7 +13,7 @@ public class RemoteAgentThreadProxyCreator {
   private final ChildWrapperCreator myPreWrapperCreator;
 
   public RemoteAgentThreadProxyCreator(CallerClassLoaderProvider callerClassLoaderProvider,
-                                       @javax.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
+                                       @jakarta.annotation.Nullable ChildWrapperCreator preWrapperCreator) {
     myPreWrapperCreator = preWrapperCreator;
     myCallerClassLoaderProvider = callerClassLoaderProvider;
   }

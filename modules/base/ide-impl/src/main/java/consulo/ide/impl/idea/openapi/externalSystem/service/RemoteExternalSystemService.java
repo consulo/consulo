@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.externalSystem.service;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemTaskAware;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

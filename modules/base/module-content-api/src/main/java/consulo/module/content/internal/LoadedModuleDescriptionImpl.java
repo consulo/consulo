@@ -18,7 +18,7 @@ package consulo.module.content.internal;
 import consulo.module.LoadedModuleDescription;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;

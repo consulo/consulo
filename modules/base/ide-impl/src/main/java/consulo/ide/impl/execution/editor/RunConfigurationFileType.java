@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

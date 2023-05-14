@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.index.io.ID;
 import consulo.logging.Logger;
 import consulo.application.util.function.ThrowableComputable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.text.MessageFormat;
 

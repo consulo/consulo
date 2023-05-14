@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -55,7 +55,7 @@ public class CompletionLocation implements UserDataHolder {
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putUserData(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
     myProcessingContext.put(key, value);
   }
 }

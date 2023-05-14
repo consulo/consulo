@@ -31,8 +31,8 @@ import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.SingleCharSequence;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public class LexerEditorHighlighter implements EditorHighlighter, PrioritizedDocumentListener {

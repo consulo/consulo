@@ -5,7 +5,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by IntelliJ IDEA.

@@ -23,7 +23,7 @@ import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -108,7 +108,7 @@ public class RootsCalculator {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private RepositoryLocation getLocation(@Nonnull VirtualFile file) {
     return myLocationCache.getLocation(myVcs, getFilePath(file), false);
   }

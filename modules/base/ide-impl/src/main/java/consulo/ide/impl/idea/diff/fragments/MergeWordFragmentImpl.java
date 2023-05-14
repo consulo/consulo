@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.diff.fragments;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.diff.util.ThreeSide;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MergeWordFragmentImpl implements MergeWordFragment {
   private final int myStartOffset1;

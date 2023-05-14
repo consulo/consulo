@@ -20,7 +20,7 @@ import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ShowRootsColumnAction extends BooleanPropertyToggleAction {
 

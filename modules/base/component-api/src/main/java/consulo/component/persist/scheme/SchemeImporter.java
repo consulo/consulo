@@ -5,8 +5,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.internal.RootComponentHolder;
 import consulo.component.util.pointer.Named;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;

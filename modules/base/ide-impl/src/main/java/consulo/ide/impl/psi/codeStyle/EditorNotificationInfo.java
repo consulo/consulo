@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.Icon;
 import java.util.List;
@@ -27,7 +27,7 @@ public abstract class EditorNotificationInfo {
   @Nonnull
   public abstract String getTitle();
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public Icon getIcon() {
     return null;
   }

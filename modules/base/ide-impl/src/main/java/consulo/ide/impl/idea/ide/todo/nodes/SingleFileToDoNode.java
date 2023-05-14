@@ -23,7 +23,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.TodoItem;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;

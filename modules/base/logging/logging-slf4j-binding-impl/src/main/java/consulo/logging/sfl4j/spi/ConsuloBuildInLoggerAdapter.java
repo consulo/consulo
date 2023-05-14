@@ -18,7 +18,7 @@ package consulo.logging.sfl4j.spi;
 import consulo.logging.Logger;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Arrays;

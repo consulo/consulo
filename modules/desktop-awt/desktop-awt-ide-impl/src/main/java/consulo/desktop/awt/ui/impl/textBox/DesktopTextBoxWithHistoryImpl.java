@@ -22,7 +22,7 @@ import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.desktop.awt.ui.impl.validableComponent.SwingValidableComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

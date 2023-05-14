@@ -17,7 +17,7 @@ package consulo.credentialStorage.impl.internal;
 
 import consulo.credentialStorage.PasswordSafeException;
 import consulo.project.Project;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * The interface defines basic password management operations

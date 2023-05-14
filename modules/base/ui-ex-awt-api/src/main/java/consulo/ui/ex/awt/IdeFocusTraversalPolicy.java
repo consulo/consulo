@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.awt.hacking.ContainerHacking;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;

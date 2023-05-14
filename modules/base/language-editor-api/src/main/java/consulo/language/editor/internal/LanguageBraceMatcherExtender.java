@@ -21,7 +21,7 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.editor.highlight.LanguageBraceMatcher;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**

@@ -23,7 +23,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 

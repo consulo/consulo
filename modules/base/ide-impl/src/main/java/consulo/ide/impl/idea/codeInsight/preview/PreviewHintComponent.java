@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.preview;
 
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * User: zolotov

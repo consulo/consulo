@@ -15,7 +15,7 @@
  */
 package consulo.component.impl.internal.messagebus;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

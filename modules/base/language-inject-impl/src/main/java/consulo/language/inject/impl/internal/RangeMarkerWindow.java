@@ -8,7 +8,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class RangeMarkerWindow implements RangeMarkerEx {
   private final DocumentWindow myDocumentWindow;

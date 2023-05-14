@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;

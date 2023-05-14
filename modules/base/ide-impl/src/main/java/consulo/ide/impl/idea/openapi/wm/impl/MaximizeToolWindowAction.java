@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   public MaximizeToolWindowAction() {

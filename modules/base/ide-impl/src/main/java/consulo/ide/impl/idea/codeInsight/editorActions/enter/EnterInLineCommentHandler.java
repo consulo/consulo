@@ -32,7 +32,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inLineComment", order = "after inStringLiteral")
 public class EnterInLineCommentHandler extends EnterHandlerDelegateAdapter {

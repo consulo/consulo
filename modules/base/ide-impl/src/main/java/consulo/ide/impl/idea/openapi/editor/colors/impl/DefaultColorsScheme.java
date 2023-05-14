@@ -22,8 +22,8 @@ package consulo.ide.impl.idea.openapi.editor.colors.impl;
 import consulo.colorScheme.*;
 import consulo.ui.color.ColorValue;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Map;

@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.task.Comment;
 import consulo.task.Task;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 

@@ -22,8 +22,8 @@ import consulo.language.editor.inspection.scheme.Tools;
 import consulo.language.Language;
 import consulo.language.editor.annotation.HighlightSeverity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;

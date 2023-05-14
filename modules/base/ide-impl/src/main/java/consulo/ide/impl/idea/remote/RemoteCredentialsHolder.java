@@ -19,7 +19,7 @@ import consulo.application.util.PasswordUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.xml.serializer.annotation.Transient;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author michael.golubev

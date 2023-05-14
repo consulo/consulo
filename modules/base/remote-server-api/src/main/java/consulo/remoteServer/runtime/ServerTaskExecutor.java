@@ -2,7 +2,7 @@ package consulo.remoteServer.runtime;
 
 import consulo.util.lang.function.ThrowableRunnable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.Executor;
 
 /**

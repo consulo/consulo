@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.table.JBTable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 

@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.tree.TreeVisitor;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.ide.impl.idea.openapi.vfs.VfsUtilCore.isAncestor;
 

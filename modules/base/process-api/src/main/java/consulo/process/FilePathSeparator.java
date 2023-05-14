@@ -17,7 +17,7 @@ package consulo.process;
 
 import consulo.platform.Platform;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public enum FilePathSeparator {
   WINDOWS('\\', ';'), UNIX('/', ':');

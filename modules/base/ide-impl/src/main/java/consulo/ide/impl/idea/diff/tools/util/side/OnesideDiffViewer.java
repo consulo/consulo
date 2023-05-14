@@ -34,8 +34,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 
@@ -105,7 +105,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myPanel;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     if (!myPanel.isGoodContent()) return null;
@@ -127,7 +127,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return myHolder;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (CommonDataKeys.VIRTUAL_FILE == dataId) {
@@ -143,7 +143,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Misc
   //
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   protected Navigatable getNavigatable() {
     return getContent().getNavigatable();

@@ -8,8 +8,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;

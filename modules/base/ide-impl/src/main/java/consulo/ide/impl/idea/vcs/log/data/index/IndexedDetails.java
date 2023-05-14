@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.data.index;
 
 import consulo.ide.impl.idea.vcs.log.data.LoadingDetails;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStorage;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class IndexedDetails extends LoadingDetails {
   @Nonnull

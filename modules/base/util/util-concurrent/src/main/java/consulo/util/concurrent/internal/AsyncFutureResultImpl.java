@@ -18,7 +18,7 @@ package consulo.util.concurrent.internal;
 import consulo.util.concurrent.AsyncFutureResult;
 import consulo.util.concurrent.ResultConsumer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 
 /**

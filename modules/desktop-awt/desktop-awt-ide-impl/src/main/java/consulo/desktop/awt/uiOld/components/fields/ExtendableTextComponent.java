@@ -3,7 +3,7 @@ package consulo.desktop.awt.uiOld.components.fields;
 
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;

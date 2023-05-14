@@ -24,8 +24,8 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageInfoAdapter;
 import consulo.application.util.function.Processor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.Set;
 

@@ -19,7 +19,7 @@ import consulo.desktop.awt.language.editor.DesktopEditorPanelLayer;
 import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

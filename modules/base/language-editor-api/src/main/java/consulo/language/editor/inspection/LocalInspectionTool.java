@@ -24,8 +24,8 @@ import consulo.logging.Logger;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 

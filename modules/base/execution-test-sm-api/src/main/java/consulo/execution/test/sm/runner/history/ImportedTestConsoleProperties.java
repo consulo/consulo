@@ -29,8 +29,8 @@ import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 
@@ -69,7 +69,7 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
     return false;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
     return myProperties == null ? null : myProperties.getErrorNavigatable(location, stacktrace);
@@ -100,7 +100,7 @@ public class ImportedTestConsoleProperties extends SMTRunnerConsoleProperties im
   }
 
   @Override
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public TestProxyFilterProvider getFilterProvider() {
     return myProperties == null ? null : myProperties.getFilterProvider();
   }

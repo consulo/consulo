@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.internal;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

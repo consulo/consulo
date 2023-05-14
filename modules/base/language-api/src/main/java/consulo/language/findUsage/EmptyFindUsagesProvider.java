@@ -19,8 +19,8 @@ import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * The default empty implementation of the {@link FindUsagesProvider} interface.

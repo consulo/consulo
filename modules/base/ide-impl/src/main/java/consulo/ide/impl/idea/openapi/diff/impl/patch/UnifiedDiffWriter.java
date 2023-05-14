@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.change.CommitContext;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;

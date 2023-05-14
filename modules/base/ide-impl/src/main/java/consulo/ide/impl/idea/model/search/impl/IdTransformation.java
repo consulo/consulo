@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;

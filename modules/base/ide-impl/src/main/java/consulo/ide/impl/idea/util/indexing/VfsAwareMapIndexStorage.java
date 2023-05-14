@@ -42,8 +42,8 @@ import consulo.util.lang.function.ThrowableRunnable;
 import gnu.trove.TIntHashSet;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 import java.util.function.Predicate;
 

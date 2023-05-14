@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.SearchableConfigurable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**

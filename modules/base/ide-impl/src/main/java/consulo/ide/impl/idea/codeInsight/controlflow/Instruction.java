@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.controlflow;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 
 /**

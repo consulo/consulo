@@ -22,7 +22,7 @@ import consulo.document.Document;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

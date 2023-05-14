@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld.mac.growl;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import com.sun.jna.Pointer;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner

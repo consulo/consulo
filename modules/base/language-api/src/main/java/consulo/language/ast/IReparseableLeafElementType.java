@@ -15,8 +15,8 @@
  */
 package consulo.language.ast;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * An interface to be implemented by {@link IElementType} instances for leaf AST nodes, providing a possibility for quick reparse.

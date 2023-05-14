@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.script;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.Reader;
 import java.io.Writer;

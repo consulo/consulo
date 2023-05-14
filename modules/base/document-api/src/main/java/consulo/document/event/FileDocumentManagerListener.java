@@ -6,7 +6,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

@@ -22,7 +22,7 @@ import consulo.language.template.TemplateLanguage;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Arrays;
 

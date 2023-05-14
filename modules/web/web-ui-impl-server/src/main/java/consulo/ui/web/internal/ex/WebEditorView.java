@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.impl.CodeEditorBase;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

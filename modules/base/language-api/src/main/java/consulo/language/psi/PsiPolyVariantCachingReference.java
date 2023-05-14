@@ -17,8 +17,8 @@ package consulo.language.psi;
 
 import consulo.language.psi.resolve.ResolveCache;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

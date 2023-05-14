@@ -28,7 +28,7 @@ import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

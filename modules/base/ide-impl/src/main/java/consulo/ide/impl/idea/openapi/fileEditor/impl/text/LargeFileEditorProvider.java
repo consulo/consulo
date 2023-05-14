@@ -30,8 +30,8 @@ import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.fileEditor.text.TextEditorProvider;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

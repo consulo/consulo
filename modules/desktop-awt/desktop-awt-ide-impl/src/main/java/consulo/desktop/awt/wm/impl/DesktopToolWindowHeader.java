@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;

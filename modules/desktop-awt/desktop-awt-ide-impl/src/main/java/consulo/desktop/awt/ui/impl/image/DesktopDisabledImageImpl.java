@@ -21,7 +21,7 @@ import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
 import consulo.ui.image.Image;
 import consulo.desktop.awt.ui.util.AWTIconLoader;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

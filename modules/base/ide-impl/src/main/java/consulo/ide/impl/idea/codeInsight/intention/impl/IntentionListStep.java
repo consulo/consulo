@@ -24,8 +24,8 @@ import consulo.ui.ex.popup.SpeedSearchFilter;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

@@ -5,7 +5,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class XSwitchWatchesInVariables extends ToggleAction {
   @Override

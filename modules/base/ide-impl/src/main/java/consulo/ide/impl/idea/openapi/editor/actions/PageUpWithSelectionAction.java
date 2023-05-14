@@ -32,7 +32,7 @@ import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class PageUpWithSelectionAction extends EditorAction {
   public static class Handler extends EditorActionHandler {

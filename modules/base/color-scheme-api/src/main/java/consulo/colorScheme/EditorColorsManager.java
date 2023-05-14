@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 @ServiceAPI(ComponentScope.APPLICATION)

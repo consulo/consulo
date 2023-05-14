@@ -68,8 +68,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ import java.util.List;
 class ApplyPatchViewer implements DataProvider, Disposable {
   public static final Logger LOG = Logger.getInstance(ApplyPatchViewer.class);
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private final Project myProject;
   @Nonnull
   private final DiffContext myContext;
@@ -266,7 +266,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
     return myPanel;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public JComponent getPreferredFocusedComponent() {
     return myResultEditor.getContentComponent();
   }
@@ -782,7 +782,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       super(new EditorEx[]{editor}, disposable);
     }
 
-    public void install(@javax.annotation.Nullable List<ApplyPatchChange> changes,
+    public void install(@jakarta.annotation.Nullable List<ApplyPatchChange> changes,
                         @Nonnull FoldingModelSupport.Settings settings) {
       //noinspection ConstantConditions
       Iterator<int[]> it = map(changes, fragment -> new int[]{

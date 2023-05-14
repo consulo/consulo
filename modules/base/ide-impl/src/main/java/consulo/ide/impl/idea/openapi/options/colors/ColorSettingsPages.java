@@ -23,7 +23,7 @@ import consulo.ide.ServiceManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Registry for custom pages shown in the "Colors and Fonts" settings dialog.

@@ -4,7 +4,7 @@ import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

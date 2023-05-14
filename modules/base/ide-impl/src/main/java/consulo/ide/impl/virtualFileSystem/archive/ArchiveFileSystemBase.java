@@ -28,8 +28,8 @@ import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;

@@ -25,7 +25,7 @@ import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class MockAbstractVcs extends AbstractVcs {
   private static final String NAME = "mock";

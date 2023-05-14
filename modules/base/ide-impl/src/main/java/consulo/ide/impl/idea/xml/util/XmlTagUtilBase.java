@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xml.util;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class XmlTagUtilBase {
   public static String escapeString(@Nullable final String str, final boolean escapeWhiteSpace) {

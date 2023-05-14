@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,7 @@ public class ShowShortenNames extends ActionGroup {
 
   @Nonnull
   @Override
-  public AnAction[] getChildren(@javax.annotation.Nullable AnActionEvent e) {
+  public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
     return myChildren;
   }
 

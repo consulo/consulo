@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.filtering;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

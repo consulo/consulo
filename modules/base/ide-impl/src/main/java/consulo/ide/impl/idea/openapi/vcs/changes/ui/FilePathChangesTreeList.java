@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
@@ -27,7 +27,7 @@ public class FilePathChangesTreeList extends ChangesTreeList<FilePath> {
 
   public FilePathChangesTreeList(@Nonnull Project project, @Nonnull List<FilePath> originalFiles,
                                  boolean showCheckboxes, boolean highlightProblems,
-                                 @javax.annotation.Nullable Runnable inclusionListener, @javax.annotation.Nullable ChangeNodeDecorator nodeDecorator) {
+                                 @jakarta.annotation.Nullable Runnable inclusionListener, @jakarta.annotation.Nullable ChangeNodeDecorator nodeDecorator) {
     super(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, nodeDecorator);
   }
 

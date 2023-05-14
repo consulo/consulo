@@ -19,7 +19,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.collection.ArrayFactory;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole

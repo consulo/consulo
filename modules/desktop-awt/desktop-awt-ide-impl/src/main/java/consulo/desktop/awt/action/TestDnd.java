@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.dnd.DnDImage;
 import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 /**

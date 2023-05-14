@@ -19,7 +19,7 @@ import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIteratorBase;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.reflect.Array;
 import java.util.*;
 

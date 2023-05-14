@@ -27,8 +27,8 @@ import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.externalSystem.util.ExternalSystemConstants;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Denis Zhdanov

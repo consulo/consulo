@@ -25,7 +25,7 @@ import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsException;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableRunnable;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
   }
 
   @Override
-  public void run(@Nonnull Task.Backgroundable task, @javax.annotation.Nullable IdeaModalityState modalityState, @javax.annotation.Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @jakarta.annotation.Nullable IdeaModalityState modalityState, @jakarta.annotation.Nullable ProgressIndicator indicator) {
     throw new UnsupportedOperationException();
   }
 

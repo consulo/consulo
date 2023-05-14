@@ -10,7 +10,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.AWTAccessorHacking;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.event.*;

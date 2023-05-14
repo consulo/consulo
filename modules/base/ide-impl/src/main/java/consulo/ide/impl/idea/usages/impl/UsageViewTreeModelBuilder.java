@@ -20,7 +20,7 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;

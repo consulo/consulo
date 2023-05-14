@@ -18,7 +18,7 @@ package consulo.execution.debug.event;
 
 import consulo.execution.debug.breakpoint.XBreakpoint;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 

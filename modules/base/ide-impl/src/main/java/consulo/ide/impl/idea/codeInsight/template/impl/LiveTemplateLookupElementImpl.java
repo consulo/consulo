@@ -21,7 +21,7 @@ import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {
   private final Template myTemplate;

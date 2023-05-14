@@ -18,7 +18,7 @@ package consulo.language.parser;
 import consulo.language.ast.TokenSet;
 import consulo.language.parser.WhitespacesAndCommentsBinder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class WhitespacesBinders {
   private WhitespacesBinders() {

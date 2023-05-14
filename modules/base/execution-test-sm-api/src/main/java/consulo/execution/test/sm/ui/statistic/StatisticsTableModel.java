@@ -20,8 +20,8 @@ import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -109,8 +109,8 @@ public class StatisticsTableModel extends ListTableModel<SMTestProxy> {
     LOG.error("value: " + aValue + " row: " + rowIndex + " column: " + columnIndex);
   }
 
-  @javax.annotation.Nullable
-  private SMTestProxy getCurrentSuiteFor(@javax.annotation.Nullable final SMTestProxy proxy) {
+  @jakarta.annotation.Nullable
+  private SMTestProxy getCurrentSuiteFor(@jakarta.annotation.Nullable final SMTestProxy proxy) {
     if (proxy == null) {
       return null;
     }

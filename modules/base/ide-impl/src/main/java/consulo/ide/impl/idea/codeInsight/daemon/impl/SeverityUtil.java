@@ -21,7 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 

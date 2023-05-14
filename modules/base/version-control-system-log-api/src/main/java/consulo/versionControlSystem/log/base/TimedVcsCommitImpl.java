@@ -5,7 +5,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

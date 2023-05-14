@@ -18,8 +18,8 @@ package consulo.language.pratt;
 import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.lexer.Lexer;
 import consulo.language.ast.IElementType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.ListIterator;

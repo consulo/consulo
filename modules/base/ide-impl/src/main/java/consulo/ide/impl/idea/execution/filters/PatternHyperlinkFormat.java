@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.filters;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.regex.Pattern;
 
 public class PatternHyperlinkFormat {

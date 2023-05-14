@@ -17,7 +17,7 @@ package consulo.application.ui.wm;
 
 import consulo.component.ComponentManager;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ExpirableRunnable extends Runnable, Expirable  {
 

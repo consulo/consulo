@@ -57,7 +57,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -163,14 +163,14 @@ public class ApplyPatchAction extends DumbAwareAction {
   }
 
   @Nonnull
-  public static ApplyPatchStatus applyOnly(@javax.annotation.Nullable final Project project,
+  public static ApplyPatchStatus applyOnly(@jakarta.annotation.Nullable final Project project,
                                            @Nonnull final ApplyFilePatchBase patch,
-                                           @javax.annotation.Nullable final ApplyPatchContext context,
+                                           @jakarta.annotation.Nullable final ApplyPatchContext context,
                                            @Nonnull final VirtualFile file,
-                                           @javax.annotation.Nullable final CommitContext commitContext,
+                                           @jakarta.annotation.Nullable final CommitContext commitContext,
                                            boolean reverse,
-                                           @javax.annotation.Nullable String leftPanelTitle,
-                                           @javax.annotation.Nullable String rightPanelTitle) {
+                                           @jakarta.annotation.Nullable String leftPanelTitle,
+                                           @jakarta.annotation.Nullable String rightPanelTitle) {
     final ApplyFilePatch.Result result = tryApplyPatch(project, patch, context, file, commitContext);
 
     final ApplyPatchStatus status = result.getStatus();
@@ -250,11 +250,11 @@ public class ApplyPatchAction extends DumbAwareAction {
   }
 
   @Nonnull
-  private static ApplyFilePatch.Result tryApplyPatch(@javax.annotation.Nullable final Project project,
+  private static ApplyFilePatch.Result tryApplyPatch(@jakarta.annotation.Nullable final Project project,
                                                      @Nonnull final ApplyFilePatchBase patch,
-                                                     @javax.annotation.Nullable final ApplyPatchContext context,
+                                                     @jakarta.annotation.Nullable final ApplyPatchContext context,
                                                      @Nonnull final VirtualFile file,
-                                                     @javax.annotation.Nullable final CommitContext commitContext) {
+                                                     @jakarta.annotation.Nullable final CommitContext commitContext) {
     final FilePatch patchBase = patch.getPatch();
     return ApplicationManager.getApplication().runWriteAction(new Computable<ApplyFilePatch.Result>() {
               @Override
@@ -277,8 +277,8 @@ public class ApplyPatchAction extends DumbAwareAction {
             });
   }
 
-  @javax.annotation.Nullable
-  private static String toString(@javax.annotation.Nullable CharSequence charSequence) {
+  @jakarta.annotation.Nullable
+  private static String toString(@jakarta.annotation.Nullable CharSequence charSequence) {
     return charSequence != null ? StringUtil.convertLineSeparators(charSequence.toString()) : null;
   }
 }

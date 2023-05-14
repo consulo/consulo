@@ -19,8 +19,8 @@ import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 import consulo.disposer.util.DisposableList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ServiceLoader;
 
 /**

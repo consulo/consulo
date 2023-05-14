@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.history;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface VcsRevisionNumber extends Comparable<VcsRevisionNumber>{
   VcsRevisionNumber NULL = new VcsRevisionNumber() {

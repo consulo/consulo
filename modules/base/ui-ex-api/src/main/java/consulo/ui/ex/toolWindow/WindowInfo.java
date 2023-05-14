@@ -18,8 +18,8 @@ package consulo.ui.ex.toolWindow;
 
 import consulo.ui.Rectangle2D;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface WindowInfo {
   @Nonnull

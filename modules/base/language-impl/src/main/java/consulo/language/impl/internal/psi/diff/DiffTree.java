@@ -20,7 +20,7 @@ import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.ref.SimpleReference;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

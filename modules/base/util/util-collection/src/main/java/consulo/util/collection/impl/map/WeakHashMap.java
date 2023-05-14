@@ -17,7 +17,7 @@ package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 

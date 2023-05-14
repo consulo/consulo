@@ -33,8 +33,8 @@ import consulo.language.psi.path.PsiDynaReference;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 import static consulo.language.pattern.StandardPatterns.character;

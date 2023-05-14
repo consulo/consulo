@@ -4,8 +4,8 @@ package consulo.ide.impl.idea.ui.speedSearch;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 

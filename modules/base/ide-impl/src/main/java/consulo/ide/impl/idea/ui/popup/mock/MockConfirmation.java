@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.popup.mock;
 
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.datatransfer.Clipboard;

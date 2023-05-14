@@ -30,8 +30,8 @@ import consulo.language.version.LanguageVersionWithDefinition;
 import consulo.language.version.LanguageVersionWithParsing;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.parser.SandParser;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public abstract class BaseSandLanguageVersion extends LanguageVersion implements
   }
 
   @Override
-  public boolean isMyFile(@javax.annotation.Nullable Project project, @javax.annotation.Nullable VirtualFile virtualFile) {
+  public boolean isMyFile(@jakarta.annotation.Nullable Project project, @jakarta.annotation.Nullable VirtualFile virtualFile) {
     if (virtualFile == null) {
       return false;
     }

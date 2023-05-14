@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.concurrency;
 
 import java.util.HashSet;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.concurrent.locks.Condition;

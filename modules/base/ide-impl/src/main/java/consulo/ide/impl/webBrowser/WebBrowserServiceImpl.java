@@ -30,8 +30,8 @@ import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 

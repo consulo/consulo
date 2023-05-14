@@ -36,7 +36,7 @@ import org.apache.velocity.runtime.resource.ResourceManagerImpl;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.apache.velocity.util.ExtProperties;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;

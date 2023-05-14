@@ -3,7 +3,7 @@ package consulo.util.collection.primitive.ints.impl.map;
 
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class SimpleIntObjectEntry<V> implements IntObjectMap.IntObjectEntry<V> {
   private final int myKey;

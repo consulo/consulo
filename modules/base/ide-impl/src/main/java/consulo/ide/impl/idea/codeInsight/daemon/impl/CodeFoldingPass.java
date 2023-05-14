@@ -26,7 +26,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 
 class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDumbAware {

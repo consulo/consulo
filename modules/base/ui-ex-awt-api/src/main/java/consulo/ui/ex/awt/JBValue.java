@@ -5,7 +5,7 @@ import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;

@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEd
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

@@ -15,7 +15,7 @@
  */
 package consulo.index.io;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Created by Maxim.Mossienko on 11/22/2016.

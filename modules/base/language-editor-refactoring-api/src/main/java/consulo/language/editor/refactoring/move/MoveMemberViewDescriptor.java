@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewBundle;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class MoveMemberViewDescriptor implements UsageViewDescriptor {
   private final PsiElement[] myElementsToMove;

@@ -18,8 +18,8 @@ package consulo.language.codeStyle;
 
 import consulo.util.lang.CharArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class IndentInside {
   public int whiteSpaces = 0;

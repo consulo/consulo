@@ -4,8 +4,8 @@ import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class EmptyRunProfileState implements RunProfileState {
   public static RunProfileState INSTANCE = new EmptyRunProfileState();

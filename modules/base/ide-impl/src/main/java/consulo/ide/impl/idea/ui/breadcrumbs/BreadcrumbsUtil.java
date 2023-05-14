@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
 import consulo.language.Language;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class BreadcrumbsUtil {

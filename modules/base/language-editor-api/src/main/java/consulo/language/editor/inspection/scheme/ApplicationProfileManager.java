@@ -35,7 +35,7 @@ public abstract class ApplicationProfileManager implements ProfileManager {
 
   public abstract void fireProfileChanged(Profile profile);
 
-  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @javax.annotation.Nullable NamedScope scope);
+  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @jakarta.annotation.Nullable NamedScope scope);
 
   public abstract void setRootProfile(String rootProfile);
 

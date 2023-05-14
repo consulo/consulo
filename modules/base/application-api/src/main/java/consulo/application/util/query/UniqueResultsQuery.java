@@ -10,7 +10,7 @@ import consulo.util.collection.Sets;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.lang.function.Functions;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;

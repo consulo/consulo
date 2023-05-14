@@ -26,7 +26,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

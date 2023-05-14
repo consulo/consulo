@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ContentUI extends Disposable {
   void setManager(@Nonnull ContentManager manager);

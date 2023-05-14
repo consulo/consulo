@@ -21,8 +21,8 @@ import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

@@ -29,8 +29,8 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -47,7 +47,7 @@ public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber
     return VcsDataKeys.VCS_REVISION_NUMBERS;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public VcsRevisionNumber[] getData(@Nonnull DataProvider dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);

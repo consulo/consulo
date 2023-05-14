@@ -22,7 +22,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.Notifications;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Tokens that can be used in conditions in inverted state,

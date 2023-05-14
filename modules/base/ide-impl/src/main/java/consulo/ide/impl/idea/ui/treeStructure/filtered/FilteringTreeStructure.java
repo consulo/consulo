@@ -22,7 +22,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.*;
 

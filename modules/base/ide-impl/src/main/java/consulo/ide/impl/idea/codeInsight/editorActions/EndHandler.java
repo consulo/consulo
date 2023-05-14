@@ -37,8 +37,8 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.document.Document;
 import consulo.ui.ex.action.IdeActions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(order = "first")
 public class EndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {

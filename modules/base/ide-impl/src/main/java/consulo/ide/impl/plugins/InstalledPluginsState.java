@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;

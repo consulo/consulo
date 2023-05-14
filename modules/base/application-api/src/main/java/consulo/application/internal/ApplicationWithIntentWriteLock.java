@@ -18,7 +18,7 @@ package consulo.application.internal;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ApplicationWithIntentWriteLock extends Application {
   /**

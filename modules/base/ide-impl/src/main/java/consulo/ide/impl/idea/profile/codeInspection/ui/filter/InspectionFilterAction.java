@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.profile.codeInspection.ui.LevelChooserAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.SortedSet;

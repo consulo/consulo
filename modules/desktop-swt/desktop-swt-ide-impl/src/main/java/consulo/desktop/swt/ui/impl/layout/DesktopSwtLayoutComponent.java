@@ -24,7 +24,7 @@ import consulo.util.lang.Pair;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

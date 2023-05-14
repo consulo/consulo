@@ -23,7 +23,7 @@ import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

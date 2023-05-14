@@ -17,7 +17,7 @@ package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.border.Border;
 import java.awt.*;
 

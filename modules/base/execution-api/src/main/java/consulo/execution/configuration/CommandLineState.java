@@ -40,8 +40,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
  * {@link ExecutionResult}. Does not contain any logic for actually starting the process.

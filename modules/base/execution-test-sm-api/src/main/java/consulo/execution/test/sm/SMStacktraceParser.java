@@ -17,8 +17,8 @@ package consulo.execution.test.sm;
 
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Roman.Chernyatchik

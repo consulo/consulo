@@ -37,6 +37,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>jsr305</artifactId>
     </dependency>

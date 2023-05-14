@@ -31,8 +31,8 @@ import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubElement;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

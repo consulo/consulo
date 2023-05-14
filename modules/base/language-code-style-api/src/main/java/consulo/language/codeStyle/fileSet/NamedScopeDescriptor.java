@@ -7,8 +7,8 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class NamedScopeDescriptor implements FileSetDescriptor {
   public final static String NAMED_SCOPE_TYPE = "namedScope";

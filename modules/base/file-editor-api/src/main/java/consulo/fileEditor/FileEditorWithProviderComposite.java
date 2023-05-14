@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**

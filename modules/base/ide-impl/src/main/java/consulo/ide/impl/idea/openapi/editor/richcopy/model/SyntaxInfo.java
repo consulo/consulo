@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.editor.richcopy.model;
 
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

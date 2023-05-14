@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.keymap.KeymapManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

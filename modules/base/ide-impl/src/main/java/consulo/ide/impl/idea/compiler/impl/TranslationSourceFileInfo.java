@@ -28,8 +28,8 @@ import gnu.trove.TIntLongHashMap;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntProcedure;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.*;
 
 public class TranslationSourceFileInfo {

@@ -20,7 +20,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants.FontStyle;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;

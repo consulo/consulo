@@ -21,7 +21,7 @@ import consulo.language.psi.PsiManager;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
   private final ParameterizedCachedValueProvider<T, P> myProvider;

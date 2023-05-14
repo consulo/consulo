@@ -14,7 +14,7 @@
 package consulo.ide.impl.idea.openapi.util.io;
 
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInputStream;
 

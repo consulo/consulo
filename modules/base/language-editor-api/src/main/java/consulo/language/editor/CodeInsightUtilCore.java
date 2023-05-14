@@ -25,8 +25,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.Arrays;
 import java.util.function.IntUnaryOperator;
 

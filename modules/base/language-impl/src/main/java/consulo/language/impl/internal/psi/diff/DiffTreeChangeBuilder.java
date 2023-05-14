@@ -16,7 +16,7 @@
 
 package consulo.language.impl.internal.psi.diff;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author max

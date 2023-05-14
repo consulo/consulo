@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.utils.TimestampGetter;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.List;
 

@@ -15,7 +15,7 @@
  */
 package consulo.process;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.OutputStream;
 
 public class NopProcessHandler extends ProcessHandler {

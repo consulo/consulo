@@ -23,8 +23,8 @@ import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.project.Project;
 import consulo.ui.ex.awt.popup.AWTPopupChooserBuilder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;
 

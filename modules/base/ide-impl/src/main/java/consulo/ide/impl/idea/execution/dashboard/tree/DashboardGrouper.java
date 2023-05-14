@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.dashboard.tree;
 
 import consulo.ide.impl.idea.execution.dashboard.DashboardGroupingRule;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev

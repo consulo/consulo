@@ -46,7 +46,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**

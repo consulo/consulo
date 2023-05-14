@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.getDownNodes;
 import static consulo.ide.impl.idea.vcs.log.graph.utils.LinearGraphUtils.getUpNodes;
@@ -33,7 +33,7 @@ public class BekChecker {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public static Pair<Integer, Integer> findReversedEdge(@Nonnull LinearGraph linearGraph) {
     for (int i = 0; i < linearGraph.nodesCount(); i++) {
       for (int downNode : getDownNodes(linearGraph, i)) {

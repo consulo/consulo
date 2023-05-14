@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvider {
   private final Document myDocument;

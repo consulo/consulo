@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.util.collection.primitive.ints.IntList;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

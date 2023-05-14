@@ -20,7 +20,7 @@ import consulo.application.ApplicationProperties;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

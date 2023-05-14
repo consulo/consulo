@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vfs.local;
 
 import consulo.virtualFileSystem.ManagingFS;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;

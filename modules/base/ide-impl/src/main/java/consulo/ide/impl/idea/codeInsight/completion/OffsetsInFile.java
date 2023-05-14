@@ -31,7 +31,7 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
 import consulo.util.lang.ObjectUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

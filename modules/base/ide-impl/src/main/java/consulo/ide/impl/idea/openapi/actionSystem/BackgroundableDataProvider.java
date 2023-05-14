@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.openapi.actionSystem;
 
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface BackgroundableDataProvider extends DataProvider {
 

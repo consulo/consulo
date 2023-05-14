@@ -21,7 +21,7 @@ import consulo.index.io.IndexId;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev

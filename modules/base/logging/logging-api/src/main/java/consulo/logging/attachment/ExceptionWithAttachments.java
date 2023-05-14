@@ -17,7 +17,7 @@ package consulo.logging.attachment;
 
 import consulo.logging.attachment.Attachment;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

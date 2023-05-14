@@ -21,7 +21,7 @@ import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UpdateToolWindowVcsStartupActivity implements VcsStartupActivity {

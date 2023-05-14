@@ -21,7 +21,7 @@ import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

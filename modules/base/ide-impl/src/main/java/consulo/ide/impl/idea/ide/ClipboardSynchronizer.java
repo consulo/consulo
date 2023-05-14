@@ -20,8 +20,8 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 import sun.awt.datatransfer.DataTransferer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;

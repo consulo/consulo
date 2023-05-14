@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import consulo.util.lang.SystemProperties;
 import com.sun.jna.platform.win32.Shell32Util;
 import com.sun.jna.platform.win32.ShlObj;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.File;
 

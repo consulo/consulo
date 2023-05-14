@@ -17,7 +17,7 @@ package consulo.execution.test.sm.runner.state;
 
 import consulo.execution.test.sm.runner.SMTestProxy;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**

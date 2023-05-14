@@ -20,7 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.tree.NodeDescriptor;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;

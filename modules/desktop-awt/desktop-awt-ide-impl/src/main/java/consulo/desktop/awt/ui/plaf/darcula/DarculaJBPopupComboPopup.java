@@ -14,8 +14,8 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.JBUI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

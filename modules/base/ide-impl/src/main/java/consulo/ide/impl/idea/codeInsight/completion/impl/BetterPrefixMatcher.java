@@ -23,8 +23,8 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.CamelHumpMatcher;
 import consulo.util.collection.FList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author peter

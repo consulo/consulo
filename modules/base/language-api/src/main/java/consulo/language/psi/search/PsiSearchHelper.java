@@ -28,8 +28,8 @@ import consulo.project.Project;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Provides low-level search and find usages services for a project, like finding references

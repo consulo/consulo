@@ -7,7 +7,7 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * This service keeps track of scopes inside quotes or brackets in editor, which user can exit (moving caret just to the right of closing

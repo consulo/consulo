@@ -22,7 +22,7 @@ import consulo.document.MarkupIterator;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.impl.TextRangeInterval;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 class RangeHighlighterTree extends RangeMarkerTree<RangeHighlighterEx> {

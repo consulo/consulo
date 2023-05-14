@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.internal;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.paint.PaintUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;

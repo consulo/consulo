@@ -20,8 +20,8 @@ import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogTextFilter;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;

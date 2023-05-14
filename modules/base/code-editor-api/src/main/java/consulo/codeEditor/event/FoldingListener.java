@@ -2,7 +2,7 @@
 package consulo.codeEditor.event;
 
 import consulo.codeEditor.FoldRegion;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Defines common contract for clients interested in folding processing.

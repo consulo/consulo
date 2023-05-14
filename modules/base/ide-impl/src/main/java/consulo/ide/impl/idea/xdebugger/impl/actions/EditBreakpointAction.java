@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class EditBreakpointAction extends XDebuggerActionBase {
 

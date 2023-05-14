@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**

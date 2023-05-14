@@ -26,7 +26,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SyntheticElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class RenameElementAction extends BaseRefactoringAction {
 

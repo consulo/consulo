@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserBuilder;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

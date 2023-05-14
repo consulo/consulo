@@ -23,8 +23,8 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.text.Bidi;
 import java.util.List;

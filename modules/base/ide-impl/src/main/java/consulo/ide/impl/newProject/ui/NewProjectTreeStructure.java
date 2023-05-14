@@ -25,8 +25,8 @@ import consulo.ide.newModule.NewModuleContextGroup;
 import consulo.ide.newModule.NewModuleContextNode;
 import consulo.util.collection.ArrayUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

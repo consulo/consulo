@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Common base interface for quick fixes provided by local and global inspections.

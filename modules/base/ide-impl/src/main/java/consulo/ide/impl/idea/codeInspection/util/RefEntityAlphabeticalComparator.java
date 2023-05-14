@@ -25,7 +25,7 @@
 package consulo.ide.impl.idea.codeInspection.util;
 
 import consulo.language.editor.inspection.reference.RefEntity;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 

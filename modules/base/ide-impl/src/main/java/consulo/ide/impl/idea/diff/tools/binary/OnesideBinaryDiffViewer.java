@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.diff.tools.util.side.OnesideDiffViewer;
 import consulo.logging.Logger;
 import consulo.fileEditor.FileEditor;
 import consulo.application.progress.ProgressIndicator;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,7 +47,7 @@ public class OnesideBinaryDiffViewer extends OnesideDiffViewer<BinaryEditorHolde
   }
 
   @Nonnull
-  private Runnable applyNotification(@javax.annotation.Nullable final JComponent notification) {
+  private Runnable applyNotification(@jakarta.annotation.Nullable final JComponent notification) {
     return new Runnable() {
       @Override
       public void run() {

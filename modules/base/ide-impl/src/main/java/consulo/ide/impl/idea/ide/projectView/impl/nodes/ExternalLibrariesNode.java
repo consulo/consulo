@@ -46,7 +46,7 @@ import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class ExternalLibrariesNode extends ProjectViewNode<String> {

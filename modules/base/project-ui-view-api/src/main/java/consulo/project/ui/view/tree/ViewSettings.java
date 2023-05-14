@@ -17,7 +17,7 @@ package consulo.project.ui.view.tree;
 
 import consulo.util.dataholder.KeyWithDefaultValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * The view settings for the project view.

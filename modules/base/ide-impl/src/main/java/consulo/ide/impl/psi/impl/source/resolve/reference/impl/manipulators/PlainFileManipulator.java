@@ -24,7 +24,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * User: ik

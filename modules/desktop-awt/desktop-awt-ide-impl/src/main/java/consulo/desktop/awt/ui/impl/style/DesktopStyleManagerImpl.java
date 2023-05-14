@@ -24,7 +24,7 @@ import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
 import consulo.util.lang.lazy.LazyValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

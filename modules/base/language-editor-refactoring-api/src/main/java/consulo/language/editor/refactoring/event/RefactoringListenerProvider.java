@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author spleaner

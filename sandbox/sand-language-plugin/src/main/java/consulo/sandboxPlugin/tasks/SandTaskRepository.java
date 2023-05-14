@@ -19,8 +19,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.task.BaseRepository;
 import consulo.task.Task;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

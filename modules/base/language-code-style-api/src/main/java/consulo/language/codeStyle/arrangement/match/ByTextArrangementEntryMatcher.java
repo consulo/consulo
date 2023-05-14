@@ -18,7 +18,7 @@ package consulo.language.codeStyle.arrangement.match;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Svetlana.Zemlyanskaya

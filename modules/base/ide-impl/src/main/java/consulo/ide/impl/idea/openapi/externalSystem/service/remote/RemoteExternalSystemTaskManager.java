@@ -21,8 +21,8 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemService;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -44,10 +44,10 @@ public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecuti
       public void executeTasks(@Nonnull ExternalSystemTaskId id,
                                @Nonnull List<String> taskNames,
                                @Nonnull String projectPath,
-                               @javax.annotation.Nullable ExternalSystemExecutionSettings settings,
+                               @jakarta.annotation.Nullable ExternalSystemExecutionSettings settings,
                                @Nonnull List<String> vmOptions,
                                @Nonnull List<String> scriptParameters,
-                               @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                               @jakarta.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
       {
       }
 
@@ -83,7 +83,7 @@ public interface RemoteExternalSystemTaskManager<S extends ExternalSystemExecuti
                     @Nullable S settings,
                     @Nonnull List<String> vmOptions,
                     @Nonnull List<String> scriptParameters,
-                    @javax.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException;
+                    @jakarta.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException;
 
   boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException;
 }

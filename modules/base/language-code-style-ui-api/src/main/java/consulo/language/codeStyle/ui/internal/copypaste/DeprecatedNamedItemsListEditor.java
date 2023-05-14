@@ -36,7 +36,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;

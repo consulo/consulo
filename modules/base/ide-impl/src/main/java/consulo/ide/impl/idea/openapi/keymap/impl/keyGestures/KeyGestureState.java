@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.keyGestures;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.KeyboardGestureAction;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

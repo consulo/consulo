@@ -20,9 +20,9 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 
 public interface DiffRequestPanel extends Disposable {

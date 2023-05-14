@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @TopicImpl(ComponentScope.APPLICATION)
 final class VcsShutDownProjectListener implements ProjectManagerListener {

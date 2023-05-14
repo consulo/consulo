@@ -22,7 +22,7 @@ import consulo.language.lexer.Lexer;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Controls the syntax highlighting of a file.

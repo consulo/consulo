@@ -16,7 +16,7 @@
 
 package consulo.task.impl.internal.context;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev

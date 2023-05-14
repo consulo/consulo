@@ -21,7 +21,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
 import consulo.ide.impl.idea.dvcs.DvcsImplIcons;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
 

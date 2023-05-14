@@ -21,7 +21,7 @@ import consulo.desktop.ui.laf.windows.icon.WindowsIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Locale;
 import java.util.Map;

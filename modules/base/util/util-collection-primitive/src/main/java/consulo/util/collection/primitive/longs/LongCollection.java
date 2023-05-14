@@ -15,7 +15,7 @@
  */
 package consulo.util.collection.primitive.longs;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.LongStream;

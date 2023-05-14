@@ -5,7 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.util.concurrent.CancellablePromise;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
 /**

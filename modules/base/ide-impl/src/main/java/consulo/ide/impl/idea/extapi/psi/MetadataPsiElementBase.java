@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.extapi.psi;
 
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class MetadataPsiElementBase extends PsiElementBase {
 

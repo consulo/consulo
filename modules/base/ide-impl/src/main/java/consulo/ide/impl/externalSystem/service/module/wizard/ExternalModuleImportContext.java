@@ -19,8 +19,8 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImp
 import consulo.project.Project;
 import consulo.ide.moduleImport.ModuleImportContext;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

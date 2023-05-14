@@ -18,7 +18,7 @@ package consulo.application.internal.util;
 import consulo.application.util.CachedValue;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

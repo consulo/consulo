@@ -37,8 +37,8 @@ import consulo.ui.web.internal.WebFontImpl;
 import consulo.ui.web.internal.cursor.CursorConverter;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.EventListener;
 import java.util.function.Function;
 

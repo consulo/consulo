@@ -18,7 +18,7 @@ package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ElementFilter {
   /**

@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public class FocusOppositePaneAction extends AnAction implements DumbAware {

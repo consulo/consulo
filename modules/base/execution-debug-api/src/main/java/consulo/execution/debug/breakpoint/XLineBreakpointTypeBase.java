@@ -6,8 +6,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public abstract class XLineBreakpointTypeBase extends XLineBreakpointType<XBreakpointProperties> {
   private final XDebuggerEditorsProvider myEditorsProvider;
@@ -18,7 +18,7 @@ public abstract class XLineBreakpointTypeBase extends XLineBreakpointType<XBreak
     myEditorsProvider = editorsProvider;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   @Override
   public XDebuggerEditorsProvider getEditorsProvider(@Nonnull XLineBreakpoint<XBreakpointProperties> breakpoint, @Nonnull Project project) {
     return myEditorsProvider;

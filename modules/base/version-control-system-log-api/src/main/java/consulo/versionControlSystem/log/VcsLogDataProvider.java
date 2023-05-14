@@ -18,8 +18,8 @@ package consulo.versionControlSystem.log;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public interface VcsLogDataProvider {
   Key<VcsLogDataProvider> KEY = Key.create(VcsLogDataProvider.class);

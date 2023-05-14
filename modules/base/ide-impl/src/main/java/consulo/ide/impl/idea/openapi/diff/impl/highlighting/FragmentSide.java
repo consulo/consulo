@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.openapi.diff.impl.highlighting;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public enum FragmentSide {
 

@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.attachment.Attachment;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

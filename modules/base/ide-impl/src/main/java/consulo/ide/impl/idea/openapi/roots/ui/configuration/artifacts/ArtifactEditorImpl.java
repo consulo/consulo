@@ -52,8 +52,8 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ui.ex.awt.ThreeStateCheckBox;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -17,7 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface ModuleProblemDescriptor extends CommonProblemDescriptor {
   @Nonnull

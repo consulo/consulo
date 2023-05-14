@@ -7,7 +7,7 @@ import consulo.codeEditor.impl.CodeEditorCaretBase;
 import consulo.desktop.awt.editor.impl.view.EditorPainter;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class DesktopCaretImpl extends CodeEditorCaretBase {

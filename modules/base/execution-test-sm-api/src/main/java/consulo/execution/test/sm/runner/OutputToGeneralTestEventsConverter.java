@@ -13,7 +13,7 @@ import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.*;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.text.ParseException;
 import java.util.Map;
 
@@ -53,7 +53,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     };
   }
 
-  public void setProcessor(@javax.annotation.Nullable final GeneralTestEventsProcessor processor) {
+  public void setProcessor(@jakarta.annotation.Nullable final GeneralTestEventsProcessor processor) {
     myProcessor = processor;
   }
 
@@ -228,7 +228,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
   }
 
 
-  private void fireRootPresentationAdded(String rootName, @javax.annotation.Nullable String comment, String rootLocation) {
+  private void fireRootPresentationAdded(String rootName, @jakarta.annotation.Nullable String comment, String rootLocation) {
     final GeneralTestEventsProcessor processor = myProcessor;
     if (processor != null) {
       processor.onRootPresentationAdded(rootName, comment, rootLocation);
@@ -304,7 +304,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
   }
 
   protected void fireOnErrorMsg(final String localizedMessage,
-                                @javax.annotation.Nullable final String stackTrace,
+                                @jakarta.annotation.Nullable final String stackTrace,
                                 boolean isCritical) {
     assertNotNull(localizedMessage);
 
@@ -387,7 +387,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
       fireOnSuiteStarted(suiteStartedEvent);
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private String fetchTestLocation(final TestSuiteStarted suiteStarted) {
       final Map<String, String> attrs = suiteStarted.getAttributes();
       final String location = attrs.get(ATTR_KEY_LOCATION_URL);

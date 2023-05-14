@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.vcs.log.graph.utils.impl;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.vcs.log.graph.utils.Flags;
 import consulo.ide.impl.idea.vcs.log.graph.utils.UpdatableIntToIntMap;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;

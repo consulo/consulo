@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * <p>Runs an activity on project open.</p>

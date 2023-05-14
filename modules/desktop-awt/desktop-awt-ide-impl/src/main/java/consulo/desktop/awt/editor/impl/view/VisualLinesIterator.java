@@ -9,7 +9,7 @@ import consulo.desktop.awt.editor.impl.SoftWrapModelImpl;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

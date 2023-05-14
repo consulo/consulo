@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.ModuleProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;
 import consulo.module.Module;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public class ModuleProblemDescriptorImpl extends CommonProblemDescriptorBase implements ModuleProblemDescriptor {
   private final Module myModule;

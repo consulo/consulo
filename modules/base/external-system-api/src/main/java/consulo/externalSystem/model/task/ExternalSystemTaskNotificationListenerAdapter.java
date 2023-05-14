@@ -1,6 +1,6 @@
 package consulo.externalSystem.model.task;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov

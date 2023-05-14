@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public interface DvcsSyncSettings {
 

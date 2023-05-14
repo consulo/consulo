@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.ui.Rectangle2D;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.File;
 
 public interface IdeFrame extends FocusableFrame {

@@ -8,8 +8,8 @@ import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.ide.impl.idea.execution.process.KillableProcessHandlerImpl;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class customizes 'run anything' command execution settings depending on input command

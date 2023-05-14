@@ -35,7 +35,7 @@ import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

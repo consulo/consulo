@@ -32,8 +32,8 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Pair;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -269,7 +269,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       return myConnection;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     @Override
     public LoggingHandlerImpl getLoggingHandler() {
       DeploymentLogManagerImpl logManager = getLogManager();

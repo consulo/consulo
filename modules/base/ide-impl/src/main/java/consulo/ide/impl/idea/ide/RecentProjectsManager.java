@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;

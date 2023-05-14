@@ -30,8 +30,8 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @ExtensionImpl(id = "lookup")
 public class LookupTypedHandler extends TypedActionHandlerBase implements ExtensionTypedActionHandler {

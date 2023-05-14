@@ -23,7 +23,7 @@ import consulo.application.util.query.Query;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**

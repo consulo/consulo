@@ -2,7 +2,7 @@ package consulo.application.util.matcher;
 
 import consulo.application.progress.ProgressManager;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**

@@ -21,7 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.RichTextItem;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 

@@ -34,8 +34,8 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -323,7 +323,7 @@ public class MatchPatchPaths {
     return new Pair<>(parent, idx + 1);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static AbstractFilePatchInProgress processMatch(final FilePatch patch, final VirtualFile file) {
     final String beforeName = patch.getBeforeName();
     final Pair<VirtualFile, Integer> pair = compareNames(beforeName, file);

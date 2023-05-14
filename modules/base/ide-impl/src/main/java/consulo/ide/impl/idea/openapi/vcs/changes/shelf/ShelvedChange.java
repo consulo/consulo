@@ -45,8 +45,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class ShelvedChange {
     return myAfterPath;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public String getAfterFileName() {
     if (myAfterPath == null) return null;
     int pos = myAfterPath.lastIndexOf('/');
@@ -170,7 +170,7 @@ public class ShelvedChange {
     return file;
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   public TextFilePatch loadFilePatch(final Project project, CommitContext commitContext) throws IOException, PatchSyntaxException {
     List<TextFilePatch> filePatches = ShelveChangesManager.loadPatches(project, myPatchPath, commitContext);
     for(TextFilePatch patch: filePatches) {
@@ -218,7 +218,7 @@ public class ShelvedChange {
     }
 
     @Override
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     public String getContent() throws VcsException {
       if (myContent == null) {
         try {
@@ -232,7 +232,7 @@ public class ShelvedChange {
       return myContent;
     }
 
-    @javax.annotation.Nullable
+    @jakarta.annotation.Nullable
     private String loadContent() throws IOException, PatchSyntaxException, ApplyPatchException {
       TextFilePatch patch = loadFilePatch(myProject, null);
       if (patch != null) {

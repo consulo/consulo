@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
   private final String myName;

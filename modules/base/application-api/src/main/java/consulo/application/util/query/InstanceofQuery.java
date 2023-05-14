@@ -4,7 +4,7 @@ package consulo.application.util.query;
 import consulo.application.util.function.Processor;
 import consulo.util.concurrent.AsyncFuture;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @param <S> source type

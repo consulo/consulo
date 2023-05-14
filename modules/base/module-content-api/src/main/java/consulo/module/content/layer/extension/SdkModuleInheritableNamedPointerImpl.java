@@ -23,7 +23,7 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

@@ -17,8 +17,8 @@ package consulo.credentialStorage;
 
 import consulo.annotation.UsedInPlugin;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Container for authentication data: login and password.

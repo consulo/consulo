@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.refactoring.actions;
 
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class ExtractInterfaceAction extends ExtractSuperActionBase {
 

@@ -28,8 +28,8 @@ import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

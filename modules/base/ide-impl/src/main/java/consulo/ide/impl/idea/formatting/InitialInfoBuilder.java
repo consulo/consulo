@@ -12,8 +12,8 @@ import consulo.util.collection.MultiMap;
 import consulo.util.collection.Stack;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**

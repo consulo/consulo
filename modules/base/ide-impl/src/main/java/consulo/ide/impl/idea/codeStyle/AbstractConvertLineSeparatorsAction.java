@@ -33,8 +33,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import consulo.ui.annotation.RequiredUIAccess;
 

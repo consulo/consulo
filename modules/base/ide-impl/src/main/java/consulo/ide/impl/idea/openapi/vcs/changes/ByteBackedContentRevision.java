@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ContentRevision;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public interface ByteBackedContentRevision extends ContentRevision {
   /**

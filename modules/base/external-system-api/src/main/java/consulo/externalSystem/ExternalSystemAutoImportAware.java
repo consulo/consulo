@@ -17,8 +17,8 @@ package consulo.externalSystem;
 
 import consulo.project.Project;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * External system integration provides 'auto-import' feature, i.e. it listens for external system config files changes

@@ -63,8 +63,8 @@ import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -242,7 +242,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     return m.createActionPopupMenu(ActionPlaces.UNKNOWN, ag);
   }
 
-  private void scheduleDiffUpdate(@javax.annotation.Nullable final Couple<Integer> toSelect) {
+  private void scheduleDiffUpdate(@jakarta.annotation.Nullable final Couple<Integer> toSelect) {
     doScheduleUpdate(UPDATE_DIFFS, () -> {
       synchronized (myModel) {
         if (toSelect == null) {
@@ -636,7 +636,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     @Nonnull
     private final CreatePatchConfigurationPanel myPanel;
 
-    protected MyDialogWrapper(@javax.annotation.Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
+    protected MyDialogWrapper(@jakarta.annotation.Nullable Project project, @Nonnull CreatePatchConfigurationPanel centralPanel) {
       super(project, true);
       myPanel = centralPanel;
       init();

@@ -21,8 +21,8 @@ import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.FontUtil;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;

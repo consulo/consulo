@@ -18,8 +18,8 @@ package consulo.module.content.layer;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.module.content.ModuleRootManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Model of roots that should be used by clients to modify module roots.

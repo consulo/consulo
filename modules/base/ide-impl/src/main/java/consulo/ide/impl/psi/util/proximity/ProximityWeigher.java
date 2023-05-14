@@ -20,7 +20,7 @@ import consulo.language.Weigher;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

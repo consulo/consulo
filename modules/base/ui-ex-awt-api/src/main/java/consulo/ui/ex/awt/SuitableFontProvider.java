@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import org.intellij.lang.annotations.JdkConstants;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**

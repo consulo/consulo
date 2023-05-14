@@ -23,7 +23,7 @@ import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.util.lang.ref.Ref;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class TreeHelper {

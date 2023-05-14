@@ -31,7 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -187,7 +187,7 @@ public class RollbackChangesDialog extends DialogWrapper {
                       myAfterVcsRefreshInAwt, null);
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new GridBagLayout());
     final GridBagConstraints gb =

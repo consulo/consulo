@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Is intended to hold utility methods to use during {@link Document} processing.

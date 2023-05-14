@@ -17,7 +17,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import java.io.DataInputStream;
 import java.io.IOException;

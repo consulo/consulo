@@ -21,7 +21,7 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class EnvironmentVariable implements JDOMExternalizable, Cloneable {
   public String NAME;

@@ -16,7 +16,7 @@
 
 package consulo.language.psi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author yole

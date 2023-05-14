@@ -15,8 +15,8 @@ import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Obsolescent;
 import consulo.util.concurrent.Promise;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;

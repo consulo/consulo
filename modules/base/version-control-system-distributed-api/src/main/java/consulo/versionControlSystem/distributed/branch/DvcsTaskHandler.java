@@ -27,8 +27,8 @@ import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.util.*;
 
 public abstract class DvcsTaskHandler<R extends Repository> extends VcsTaskHandler {

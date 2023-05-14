@@ -39,7 +39,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import org.jetbrains.annotations.NonNls;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -468,7 +468,7 @@ public class VcsDirtyScopeImpl extends VcsModifiableDirtyScope {
     }
   }
 
-  @javax.annotation.Nullable
+  @jakarta.annotation.Nullable
   private static VirtualFile obtainVirtualFile(FilePath file) {
     VirtualFile vFile = file.getVirtualFile();
     return vFile == null ? VfsUtil.findFileByIoFile(file.getIOFile(), false) : vFile;

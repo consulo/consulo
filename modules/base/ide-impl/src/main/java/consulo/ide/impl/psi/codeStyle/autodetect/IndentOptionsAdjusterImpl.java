@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.codeStyle.autodetect;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 class IndentOptionsAdjusterImpl implements IndentOptionsAdjuster {
   private static final double RATE_THRESHOLD = 0.8;

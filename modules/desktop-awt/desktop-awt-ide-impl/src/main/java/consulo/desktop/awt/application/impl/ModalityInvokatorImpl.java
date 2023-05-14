@@ -20,7 +20,7 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.BooleanSupplier;
 
 /**

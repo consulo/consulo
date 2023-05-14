@@ -19,7 +19,7 @@ import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.JBUI;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

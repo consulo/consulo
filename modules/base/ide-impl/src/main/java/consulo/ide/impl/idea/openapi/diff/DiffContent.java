@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.List;

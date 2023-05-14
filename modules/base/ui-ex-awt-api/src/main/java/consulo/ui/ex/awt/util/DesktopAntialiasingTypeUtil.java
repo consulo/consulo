@@ -19,7 +19,7 @@ import consulo.application.ui.UISettings;
 import consulo.ui.AntialiasingType;
 import consulo.ui.ex.awt.DesktopAntialiasingType;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public class DesktopAntialiasingTypeUtil {

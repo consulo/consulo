@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.log;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Specifies the log filter by text.

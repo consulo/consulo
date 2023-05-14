@@ -21,8 +21,8 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.execution.test.sm.runner.GeneralTestEventsProcessor;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.function.Supplier;

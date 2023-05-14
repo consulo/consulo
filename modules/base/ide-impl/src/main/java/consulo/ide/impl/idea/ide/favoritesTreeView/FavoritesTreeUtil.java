@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.ide.favoritesTreeView;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.Tree;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;

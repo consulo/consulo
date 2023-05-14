@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author peter

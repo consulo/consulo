@@ -20,7 +20,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class BiDirectionalEnumerator<T> extends Enumerator<T> {

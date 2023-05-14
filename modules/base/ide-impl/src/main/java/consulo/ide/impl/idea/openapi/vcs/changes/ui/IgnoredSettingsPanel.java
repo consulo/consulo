@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;

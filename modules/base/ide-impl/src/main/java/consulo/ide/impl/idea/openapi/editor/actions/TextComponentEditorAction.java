@@ -23,8 +23,8 @@ import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import javax.swing.text.JTextComponent;
 
 /**

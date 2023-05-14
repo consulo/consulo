@@ -16,7 +16,7 @@
 package consulo.language.codeStyle.arrangement.model;
 
 import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 /**
  * Generic data model for {@link ArrangementEntryMatcher arrangement entry matcher}.

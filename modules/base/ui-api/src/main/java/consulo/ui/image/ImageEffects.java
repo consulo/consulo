@@ -20,7 +20,7 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.image.canvas.Canvas2D;
 import consulo.ui.color.ColorValue;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Consumer;
 

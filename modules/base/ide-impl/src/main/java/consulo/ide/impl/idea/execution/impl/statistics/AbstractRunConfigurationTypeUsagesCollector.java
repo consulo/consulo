@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import java.util.HashSet;
 import consulo.ui.ex.awt.UIUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**

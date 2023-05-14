@@ -24,7 +24,7 @@ import consulo.language.impl.internal.psi.diff.ShallowNodeComparator;
 import consulo.language.psi.PsiErrorElement;
 import consulo.util.lang.ThreeState;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**

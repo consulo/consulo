@@ -21,7 +21,7 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
