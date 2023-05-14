@@ -16,6 +16,7 @@
 
 package consulo.language.editor.scope;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -383,13 +384,9 @@ public class AnalysisScope {
     });
   }
 
+  @RequiredReadAction
   private static boolean isInGeneratedSources(@Nonnull VirtualFile file, @Nonnull Project project) {
-    for (GeneratedSourcesFilter filter : GeneratedSourcesFilter.EP_NAME.getExtensionList()) {
-      if (filter.isGeneratedSource(file, project)) {
-        return true;
-      }
-    }
-    return false;
+    return GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project);
   }
 
   private static boolean processFile(@Nonnull final VirtualFile vFile,

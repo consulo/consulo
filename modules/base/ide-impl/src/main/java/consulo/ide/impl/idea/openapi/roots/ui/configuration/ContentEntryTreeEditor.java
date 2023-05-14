@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.FileNode;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.FileRenderer;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ToggleFolderStateAction;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.roots.ContentFoldersSupportUtil;
+import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.language.psi.PsiPackageSupportProvider;

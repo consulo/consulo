@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.safeDelete;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
@@ -28,7 +29,6 @@ import consulo.usage.UsageInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * @author dsl
@@ -42,7 +42,6 @@ class UsageHolder {
     Project project = element.getProject();
     myElementPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
 
-    List<GeneratedSourcesFilter> filters = GeneratedSourcesFilter.EP_NAME.getExtensionList();
     for (UsageInfo usageInfo : usageInfos) {
       if (!(usageInfo instanceof SafeDeleteReferenceUsageInfo)) continue;
       final SafeDeleteReferenceUsageInfo usage = (SafeDeleteReferenceUsageInfo)usageInfo;
@@ -50,23 +49,17 @@ class UsageHolder {
 
       if (!usage.isSafeDelete()) {
         myUnsafeUsages++;
-        if (usage.isNonCodeUsage || isInGeneratedCode(usage, project, filters)) {
+        if (usage.isNonCodeUsage || isInGeneratedCode(usage, project)) {
           myNonCodeUnsafeUsages++;
         }
       }
     }
   }
 
-  private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project, List<GeneratedSourcesFilter> filters) {
+  @RequiredReadAction
+  private static boolean isInGeneratedCode(SafeDeleteReferenceUsageInfo usage, Project project) {
     VirtualFile file = usage.getVirtualFile();
-    if (file == null) return false;
-
-    for (GeneratedSourcesFilter filter : filters) {
-      if (filter.isGeneratedSource(file, project)) {
-        return true;
-      }
-    }
-    return false;
+    return file != null && GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project);
   }
 
   @Nonnull

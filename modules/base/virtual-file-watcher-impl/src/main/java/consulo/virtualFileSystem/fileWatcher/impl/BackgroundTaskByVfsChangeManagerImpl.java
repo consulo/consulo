@@ -139,6 +139,11 @@ public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsCha
     return myTasks.toArray(new BackgroundTaskByVfsChangeTask[myTasks.size()]);
   }
 
+  @Nonnull
+  public List<BackgroundTaskByVfsChangeTaskImpl> getTasksImpl() {
+    return myTasks;
+  }
+
   @Override
   public boolean removeTask(@Nonnull BackgroundTaskByVfsChangeTask task) {
     assert task instanceof BackgroundTaskByVfsChangeTaskImpl;

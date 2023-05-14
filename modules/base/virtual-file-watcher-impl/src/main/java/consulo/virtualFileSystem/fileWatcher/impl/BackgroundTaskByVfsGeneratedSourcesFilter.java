@@ -17,25 +17,38 @@ package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 04.03.14
  */
 @ExtensionImpl
-public class BackgroundTaskByVfsGeneratedSourcesFilter extends GeneratedSourcesFilter {
+public class BackgroundTaskByVfsGeneratedSourcesFilter implements GeneratedSourcesFilter {
+  private final BackgroundTaskByVfsChangeManager myBackgroundTaskByVfsChangeManager;
+
+  @Inject
+  public BackgroundTaskByVfsGeneratedSourcesFilter(BackgroundTaskByVfsChangeManager backgroundTaskByVfsChangeManager) {
+    myBackgroundTaskByVfsChangeManager = backgroundTaskByVfsChangeManager;
+  }
+
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
-    BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(project);
-    for (BackgroundTaskByVfsChangeTask o : vfsChangeManager.getTasks()) {
+  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
+    List<BackgroundTaskByVfsChangeTaskImpl> tasksImpl =
+      ((BackgroundTaskByVfsChangeManagerImpl)myBackgroundTaskByVfsChangeManager).getTasksImpl();
+    if (tasksImpl.isEmpty()) {
+      return false;
+    }
+
+    for (BackgroundTaskByVfsChangeTask o : tasksImpl) {
       for (VirtualFile virtualFile : o.getGeneratedFiles()) {
         if (virtualFile.equals(file)) {
           return true;

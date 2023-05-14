@@ -13,6 +13,7 @@ module consulo.language.editor.impl {
   requires consulo.external.service.api;
   requires consulo.application.impl;
   requires consulo.project.impl;
+  requires consulo.project.ui.view.api;
 
   exports consulo.language.editor.impl.action;
   exports consulo.language.editor.impl.intention;

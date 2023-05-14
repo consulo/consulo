@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.projectView.impl.*;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.ide.impl.ui.tree.impl.TreeStructureWrappenModel;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;

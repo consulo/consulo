@@ -17,18 +17,17 @@ package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
+import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import jakarta.inject.Inject;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -36,33 +35,29 @@ import java.util.*;
  * @since 04.03.14
  */
 @ExtensionImpl
-public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStructureProvider, DumbAware {
+public class BackgroundTaskByVfsProjectViewProvider implements TreeStructureProvider, DumbAware {
   private final Project myProject;
+  private final BackgroundTaskByVfsChangeManager myBackgroundTaskByVfsChangeManager;
 
   @Inject
-  public BackgroundTaskByVfsProjectViewProvider(Project project) {
+  public BackgroundTaskByVfsProjectViewProvider(Project project, BackgroundTaskByVfsChangeManager backgroundTaskByVfsChangeManager) {
     myProject = project;
-  }
-
-  @Nullable
-  @Override
-  public PsiElement getTopLevelElement(PsiElement element) {
-    return null;
+    myBackgroundTaskByVfsChangeManager = backgroundTaskByVfsChangeManager;
   }
 
   @Override
+  @RequiredUIAccess
   public Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings) {
     if (parent instanceof BackgroundTaskPsiFileTreeNode) {
       return children;
     }
 
-    List<VirtualFile> allGeneratedFiles = new ArrayList<VirtualFile>();
-    BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(myProject);
-    for (BackgroundTaskByVfsChangeTask o : vfsChangeManager.getTasks()) {
+    List<VirtualFile> allGeneratedFiles = new ArrayList<>();
+    for (BackgroundTaskByVfsChangeTask o : myBackgroundTaskByVfsChangeManager.getTasks()) {
       Collections.addAll(allGeneratedFiles, o.getGeneratedFiles());
     }
 
-    List<AbstractTreeNode> list = new ArrayList<AbstractTreeNode>(children);
+    List<AbstractTreeNode> list = new ArrayList<>(children);
     for (ListIterator<AbstractTreeNode> iterator = list.listIterator(); iterator.hasNext(); ) {
       AbstractTreeNode next = iterator.next();
 
@@ -76,7 +71,7 @@ public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStr
         if (allGeneratedFiles.contains(virtualFile)) {
           iterator.remove();
         }
-        else if (!vfsChangeManager.findTasks(virtualFile).isEmpty()) {
+        else if (!myBackgroundTaskByVfsChangeManager.findTasks(virtualFile).isEmpty()) {
           iterator.set(new BackgroundTaskPsiFileTreeNode(myProject, (PsiFile)value, settings));
         }
       }

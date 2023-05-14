@@ -17,22 +17,22 @@ package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * This filters can be used to prevent error highlighting (invalid code, unresolved references etc.) in files outside of project scope.
- *
+ * <p>
  * Filter implementations should be permissive - i.e. should prevent highlighting only for files it absolutely knows about,
  * and return true otherwise.
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class ProblemHighlightFilter {
-  public static final ExtensionPointName<ProblemHighlightFilter> EP_NAME = ExtensionPointName.create(ProblemHighlightFilter.class);
-
   /**
    * @param psiFile file to decide about
    * @return false if this filter disables highlighting for given file, true if filter enables highlighting or can't decide
@@ -52,13 +52,12 @@ public abstract class ProblemHighlightFilter {
   }
 
   private static boolean shouldProcess(PsiFile psiFile, boolean onTheFly) {
-    if (psiFile == null) return true;
+    if (psiFile == null || !psiFile.isValid()) return true;
 
-    final List<ProblemHighlightFilter> filters = EP_NAME.getExtensionList();
-    for (ProblemHighlightFilter filter : filters) {
-      if (onTheFly ? !filter.shouldHighlight(psiFile) : !filter.shouldProcessInBatch(psiFile)) return false;
-    }
-
-    return true;
+    Project project = psiFile.getProject();
+    ExtensionPoint<ProblemHighlightFilter> point = project.getExtensionPoint(ProblemHighlightFilter.class);
+    ProblemHighlightFilter result =
+      point.findFirstSafe(filter -> onTheFly ? !filter.shouldHighlight(psiFile) : !filter.shouldProcessInBatch(psiFile));
+    return result == null;
   }
 }

@@ -47,7 +47,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.Gray;

@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.roots.ContentFoldersSupportUtil;
+import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.ide.internal.DirectoryChooserDialog;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.psi.PsiDirectory;

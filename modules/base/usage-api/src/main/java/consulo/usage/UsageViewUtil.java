@@ -16,6 +16,7 @@
 
 package consulo.usage;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -94,16 +95,14 @@ public class UsageViewUtil {
     return false;
   }
 
+  @RequiredReadAction
   public static boolean hasUsagesInGeneratedCode(UsageInfo[] usages, Project project) {
-    GeneratedSourcesFilter[] filters = GeneratedSourcesFilter.EP_NAME.getExtensions();
     for (UsageInfo usage : usages) {
       VirtualFile file = usage.getVirtualFile();
       if (file != null) {
-        for (GeneratedSourcesFilter filter : filters) {
-          if (filter.isGeneratedSource(file, project)) {
-            return true;
-          }
-        }
+       if (GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, project)) {
+         return true;
+       }
       }
     }
 

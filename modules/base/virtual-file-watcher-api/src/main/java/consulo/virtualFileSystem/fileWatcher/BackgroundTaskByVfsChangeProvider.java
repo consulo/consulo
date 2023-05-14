@@ -47,20 +47,31 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     }
   }
 
-  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
+  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME =
+    ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
 
   public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return true;
   }
 
-  public abstract void setDefaultParameters(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull BackgroundTaskByVfsParameters parameters);
+  public abstract void setDefaultParameters(@Nonnull Project project,
+                                            @Nonnull VirtualFile virtualFile,
+                                            @Nonnull BackgroundTaskByVfsParameters parameters);
 
   @Nonnull
   public abstract String getTemplateName();
 
+  public boolean containsGeneratedFiles() {
+    return false;
+  }
+
   @Nonnull
   @RequiredReadAction
   public String[] getGeneratedFiles(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    if (!containsGeneratedFiles()) {
+      return ArrayUtil.EMPTY_STRING_ARRAY;
+    }
+    
     PsiManager psiManager = PsiManager.getInstance(project);
     PsiFile file = psiManager.findFile(virtualFile);
     if (file != null) {

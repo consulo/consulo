@@ -15,27 +15,31 @@
  */
 package consulo.project.content;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.application.ReadAction;
-import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.ExtensionPoint;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class GeneratedSourcesFilter {
-  public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create(GeneratedSourcesFilter.class);
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface GeneratedSourcesFilter {
+  @RequiredReadAction
+  boolean isGeneratedSource(@Nonnull VirtualFile file);
 
   @RequiredReadAction
-  public abstract boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project);
-
   public static boolean isGeneratedSourceByAnyFilter(@Nonnull VirtualFile file, @Nonnull Project project) {
-    return ReadAction.compute(() -> !project.isDisposed() && file.isValid() && EP_NAME.getExtensionList().stream().anyMatch(filter -> filter.isGeneratedSource(file, project)));
+    if (project.isDisposed() || !file.isValid()) {
+      return false;
+    }
+
+    ExtensionPoint<GeneratedSourcesFilter> point = project.getExtensionPoint(GeneratedSourcesFilter.class);
+    return point.findFirstSafe(it -> it.isGeneratedSource(file)) != null;
   }
 
   @RequiredReadAction

@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;

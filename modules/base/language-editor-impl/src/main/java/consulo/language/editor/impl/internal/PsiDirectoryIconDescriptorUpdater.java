@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl;
+package consulo.language.editor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
-import consulo.ide.impl.roots.ContentFoldersSupportUtil;
+import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.language.content.PackageBasedContentFolderTypeProvider;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
@@ -32,6 +31,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ContentFolder;
 import consulo.project.Project;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;

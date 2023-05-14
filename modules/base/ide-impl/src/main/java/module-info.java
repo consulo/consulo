@@ -950,7 +950,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.psi.util.proximity;
   exports consulo.ide.impl.remoteServer.ui;
-  exports consulo.ide.impl.roots;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
   exports consulo.ide.impl.roots.ui;

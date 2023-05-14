@@ -17,7 +17,6 @@ package consulo.sandboxPlugin.ide.fileEditor;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.sandboxPlugin.lang.SandFileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,10 +28,10 @@ import javax.annotation.Nonnull;
  * @since 20-Jul-22
  */
 @ExtensionImpl
-public class SandGeneratedSourcesFilter extends GeneratedSourcesFilter {
+public class SandGeneratedSourcesFilter implements GeneratedSourcesFilter {
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
     return file.getFileType() == SandFileType.INSTANCE && file.getNameWithoutExtension().endsWith("_gen");
   }
 }

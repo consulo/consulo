@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.application.AllIcons;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.project.ui.view.tree.BaseProjectViewDirectoryHelper;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

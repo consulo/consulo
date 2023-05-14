@@ -15,35 +15,36 @@
  */
 package consulo.ide.impl.roots.impl.property;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.base.GeneratedContentFolderPropertyProvider;
-import consulo.project.ui.view.tree.ProjectRootsUtil;
-import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.layer.ContentFolder;
 import consulo.project.content.GeneratedSourcesFilter;
-import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 /**
+ * TODO module-content-impl module source
+ *
  * @author VISTALL
  * @since 22:15/25.11.13
  */
 @ExtensionImpl
-public class GeneratedOnRootSourcesFilter extends GeneratedSourcesFilter {
+public class GeneratedOnRootSourcesFilter implements GeneratedSourcesFilter {
+  private final ProjectFileIndex myProjectFileIndex;
+
+  @Inject
+  public GeneratedOnRootSourcesFilter(ProjectFileIndex projectFileIndex) {
+    myProjectFileIndex = projectFileIndex;
+  }
+
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project) {
-    VirtualFile contentRootForFile = ProjectFileIndex.getInstance(project).getSourceRootForFile(file);
-    if(contentRootForFile == null) {
-      return false;
-    }
-    ContentFolder contentFolder = ProjectRootsUtil.findContentFolderForDirectory(contentRootForFile, project);
-    if(contentFolder == null) {
-      return false;
-    }
-
-    return contentFolder.getPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED) == Boolean.TRUE;
+  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
+    ContentFolder folder = myProjectFileIndex.getContentFolder(file);
+    return folder != null && folder.getPropertyValue(GeneratedContentFolderPropertyProvider.IS_GENERATED) == Boolean.TRUE;
   }
 }

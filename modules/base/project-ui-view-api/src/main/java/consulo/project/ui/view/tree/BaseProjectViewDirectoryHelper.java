@@ -21,6 +21,7 @@
 package consulo.project.ui.view.tree;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.*;
 import consulo.logging.Logger;

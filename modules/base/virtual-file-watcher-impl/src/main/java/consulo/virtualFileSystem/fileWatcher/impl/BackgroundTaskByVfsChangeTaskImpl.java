@@ -29,8 +29,8 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.local.ProcessHandlerFactory;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -139,7 +139,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
       ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
-      processHandler.addProcessListener(new ProcessAdapter() {
+      processHandler.addProcessListener(new ProcessListener() {
         @Override
         public void onTextAvailable(ProcessEvent event, Key outputType) {
           buildProgress.output(event.getText(), outputType == ProcessOutputTypes.STDOUT || outputType == ProcessOutputTypes.SYSTEM);
@@ -262,6 +262,10 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
   @Nonnull
   @Override
   public VirtualFile[] getGeneratedFiles() {
+    if (myProvider.containsGeneratedFiles()) {
+      return VirtualFile.EMPTY_ARRAY;
+    }
+
     String[] generatedFilePaths = getGeneratedFilePaths();
     if (generatedFilePaths.length == 0) {
       return VirtualFile.EMPTY_ARRAY;

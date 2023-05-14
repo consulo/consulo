@@ -19,6 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.component.util.Iconable;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;

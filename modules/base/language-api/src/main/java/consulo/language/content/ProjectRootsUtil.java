@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.project.ui.view.tree;
+package consulo.language.content;
 
 import consulo.module.Module;
 import consulo.project.Project;

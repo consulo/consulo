@@ -28,6 +28,7 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageViewModuleGroupNo
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageViewModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewModuleGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewModuleNode;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiDirectory;
