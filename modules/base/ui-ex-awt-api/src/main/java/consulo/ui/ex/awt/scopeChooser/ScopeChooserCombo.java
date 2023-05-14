@@ -17,16 +17,16 @@ import consulo.util.concurrent.Promise;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
-import org.intellij.lang.annotations.MagicConstant;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Disposable {
 
@@ -38,7 +38,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
 
   private Project myProject;
   private int myOptions = OPT_FROM_SELECTION | OPT_USAGE_VIEW;
-  private Condition<? super ScopeDescriptor> myScopeFilter;
+  private Predicate<? super ScopeDescriptor> myScopeFilter;
   private BrowseListener myBrowseListener = null;
 
   public ScopeChooserCombo() {
@@ -58,7 +58,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     init(project, suggestSearchInLibs, prevSearchWholeFiles, preselect, null);
   }
 
-  public void init(final Project project, final boolean suggestSearchInLibs, final boolean prevSearchWholeFiles, final Object selection, @Nullable Condition<? super ScopeDescriptor> scopeFilter) {
+  public void init(final Project project, final boolean suggestSearchInLibs, final boolean prevSearchWholeFiles, final Object selection, @Nullable Predicate<? super ScopeDescriptor> scopeFilter) {
     if (myProject != null) {
       throw new IllegalStateException("scope chooser combo already initialized");
     }
@@ -171,7 +171,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     Promise<DataContext> promise = DataManager.getInstance().getDataContextFromFocusAsync();
     promise.onSuccess(c -> {
       processScopes(myProject, c, myOptions, descriptor -> {
-        if (myScopeFilter == null || myScopeFilter.value(descriptor)) {
+        if (myScopeFilter == null || myScopeFilter.test(descriptor)) {
           model.addElement(descriptor);
         }
         return true;

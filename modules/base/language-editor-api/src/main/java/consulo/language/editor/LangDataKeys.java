@@ -31,7 +31,7 @@ import consulo.util.lang.function.Condition;
  */
 public interface LangDataKeys extends PlatformDataKeys {
   @Deprecated(forRemoval = true)
-  Key<Module> MODULE = CommonDataKeys.MODULE;
+  Key<Module> MODULE = Module.KEY;
   /**
    * Returns module if module node is selected (in module view)
    */

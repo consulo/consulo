@@ -15,49 +15,41 @@
  */
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBase;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
-import consulo.ide.impl.idea.ide.scratch.ScratchesSearchScope;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.fileEditor.FileEditorManager;
-import consulo.util.lang.Pair;
-import consulo.content.scope.PredefinedSearchScopeProvider;
-import consulo.usage.Usage;
-import consulo.usage.UsageView;
-import consulo.usage.UsageViewManager;
-import consulo.usage.rule.PsiElementUsage;
-import consulo.util.lang.TreeItem;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
+import consulo.content.scope.PredefinedSearchScopeProvider;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBase;
+import consulo.ide.impl.idea.ide.scratch.ScratchesSearchScope;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
+import consulo.usage.UsageViewManager;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -67,6 +59,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
 
   @Nonnull
   @Override
+  @RequiredReadAction
   public List<SearchScope> getPredefinedScopes(@Nonnull final Project project,
                                                @Nullable final DataContext dataContext,
                                                boolean suggestSearchInLibs,
@@ -74,7 +67,8 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
                                                boolean currentSelection,
                                                boolean usageView,
                                                boolean showEmptyScopes) {
-    Collection<SearchScope> result = ContainerUtil.newLinkedHashSet();
+    List<SearchScope> result = new LinkedList<>();
+    result.add(GlobalSearchScope.everythingScope(project));
     result.add(GlobalSearchScope.projectScope(project));
     if (suggestSearchInLibs) {
       result.add(GlobalSearchScope.allScope(project));
@@ -94,14 +88,15 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
     }
 
     final Editor selectedTextEditor =
-            ApplicationManager.getApplication().isDispatchThread() ? FileEditorManager.getInstance(project).getSelectedTextEditor() : null;
-    PsiFile psiFile = selectedTextEditor == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(selectedTextEditor.getDocument());
+      ApplicationManager.getApplication().isDispatchThread() ? FileEditorManager.getInstance(project).getSelectedTextEditor() : null;
+    PsiFile psiFile =
+      selectedTextEditor == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(selectedTextEditor.getDocument());
     PsiFile currentFile = psiFile;
 
     if (dataContext != null) {
-      PsiElement dataContextElement = dataContext.getData(CommonDataKeys.PSI_FILE);
+      PsiElement dataContextElement = dataContext.getData(PsiFile.KEY);
       if (dataContextElement == null) {
-        dataContextElement = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        dataContextElement = dataContext.getData(PsiElement.KEY);
       }
 
       if (dataContextElement == null && psiFile != null) {
@@ -109,9 +104,9 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       }
 
       if (dataContextElement != null) {
-        Module module = ModuleUtilCore.findModuleForPsiElement(dataContextElement);
+        Module module = dataContextElement.getModule();
         if (module == null) {
-          module = dataContext.getData(LangDataKeys.MODULE);
+          module = dataContext.getData(Module.KEY);
         }
         if (module != null) {
           result.add(GlobalSearchScope.moduleScope(module));
@@ -161,7 +156,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       addHierarchyScope(project, result);
       UsageView selectedUsageView = UsageViewManager.getInstance(project).getSelectedUsageView();
       if (selectedUsageView != null && !selectedUsageView.isSearchInProgress()) {
-        final Set<Usage> usages = ContainerUtil.newTroveSet(selectedUsageView.getUsages());
+        final Set<Usage> usages = new LinkedHashSet<>(selectedUsageView.getUsages());
         usages.removeAll(selectedUsageView.getExcludedUsages());
 
         if (prevSearchFiles) {
@@ -220,45 +215,9 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
       }
     }
 
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
-    if (favoritesManager != null) {
-      for (final String favorite : favoritesManager.getAvailableFavoritesListNames()) {
-        final Collection<TreeItem<Pair<AbstractUrl, String>>> rootUrls = favoritesManager.getFavoritesListRootUrls(favorite);
-        if (rootUrls.isEmpty()) continue;  // ignore unused root
-        result.add(new GlobalSearchScope(project) {
-          @Nonnull
-          @Override
-          public String getDisplayName() {
-            return "Favorite \'" + favorite + "\'";
-          }
-
-          @Override
-          public boolean contains(@Nonnull final VirtualFile file) {
-            ThrowableComputable<Boolean,RuntimeException> action = () -> favoritesManager.contains(favorite, file);
-            return AccessRule.read(action);
-          }
-
-          @Override
-          public int compare(@Nonnull final VirtualFile file1, @Nonnull final VirtualFile file2) {
-            return 0;
-          }
-
-          @Override
-          public boolean isSearchInModuleContent(@Nonnull final Module aModule) {
-            return true;
-          }
-
-          @Override
-          public boolean isSearchInLibraries() {
-            return true;
-          }
-        });
-      }
-    }
-
     ContainerUtil.addIfNotNull(result, getSelectedFilesScope(project, dataContext));
 
-    return ContainerUtil.newArrayList(result);
+    return result;
   }
 
   private static void addHierarchyScope(@Nonnull Project project, Collection<SearchScope> result) {
@@ -285,7 +244,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
 
   @Nullable
   private static SearchScope getSelectedFilesScope(final Project project, @Nullable DataContext dataContext) {
-    final VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] filesOrDirs = dataContext == null ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (filesOrDirs != null) {
       final List<VirtualFile> selectedFiles = ContainerUtil.filter(filesOrDirs, file -> !file.isDirectory());
       if (!selectedFiles.isEmpty()) {
