@@ -123,6 +123,7 @@ public class WebServiceApiSender {
           case HttpURLConnection.HTTP_OK:
             String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             return ourGson.fromJson(json, resultType);
+          case 302:
           case HttpURLConnection.HTTP_UNAUTHORIZED:
             throw new AuthorizationFailedException();
           default:

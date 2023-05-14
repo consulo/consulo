@@ -34,16 +34,15 @@ import consulo.ide.impl.externalService.UpdateAvailableException;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceException;
 import consulo.ide.impl.idea.errorreport.ErrorReportSender;
-import consulo.project.ui.notification.NotificationAction;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
@@ -52,6 +51,7 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -91,7 +91,7 @@ public class ITNReporter extends ErrorReportSubmitter {
                                   final ErrorReportBean errorBean,
                                   final String description) {
     final DataContext dataContext = DataManager.getInstance().getDataContext(parentComponent);
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
 
     errorBean.setInstallationID(PermanentInstallationID.get());
     errorBean.setDescription(description);
@@ -135,12 +135,10 @@ public class ITNReporter extends ErrorReportSubmitter {
       errorBean.setAttachments(((LogMessageEx)data).getAttachments());
     }
 
-    // TODO send assignUserId
-    
     ErrorReportSender.sendReport(project, errorBean, assignUserId, id -> {
       ourPreviousErrorReporterId = id;
       String shortId = id.substring(0, 8);
-      final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl("#" + id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+      final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl(id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
       callback.accept(reportInfo);
 
       ApplicationManager.getApplication().invokeLater(() -> {

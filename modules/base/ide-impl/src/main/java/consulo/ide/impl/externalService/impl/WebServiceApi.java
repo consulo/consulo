@@ -26,14 +26,14 @@ import java.util.Locale;
 public enum WebServiceApi {
   MAIN("https://consulo.io"),
   HELP("https://consulo.help/"),
-  ERROR_REPORTER_API("https://hub.consulo.io/api/errorReporter/"),
-  ERROR_REPORT("https://hub.consulo.io/errorReport"),
-  STATISTICS_API("https://hub.consulo.io/api/statistics/"),
-  DEVELOPER_API("https://hub.consulo.io/api/developer/"),
-  STORAGE_API("https://hub.consulo.io/api/storage/"),
-  OAUTH_API("https://hub.consulo.io/api/oauth/"),
-  LINK_CONSULO("https://hub.consulo.io/#!linkConsulo"),
-  REPOSITORY_API("https://hub.consulo.io/api/repository/");
+  ERROR_REPORTER_API("https://api.consulo/errorReporter/"),
+  ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
+  STATISTICS_API("https://api.consulo.io/statistics/"),
+  DEVELOPER_API("https://api.consulo.io/developer/"),
+  STORAGE_API("https://api.consulo.io/storage/"),
+  OAUTH_API("https://api.consulo.io/oauth/"),
+  LINK_CONSULO("https://hub.consulo.io/link"),
+  REPOSITORY_API("https://api.consulo.io/repository/");
 
   private String myDefaultUrl;
   private String myOverrideProperty;
