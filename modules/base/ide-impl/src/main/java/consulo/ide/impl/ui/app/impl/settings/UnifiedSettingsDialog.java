@@ -16,6 +16,7 @@
 package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.*;
@@ -80,7 +81,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected Couple<Component> createComponents() {
+  protected Couple<Component> createComponents(Disposable uiDisposable) {
     TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
       @Override
       public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
@@ -112,7 +113,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
       }
     };
 
-    Tree<Configurable> component = Tree.create(configurableTreeModel);
+    Tree<Configurable> component = Tree.create(configurableTreeModel, uiDisposable);
 
     DockLayout rightPart = DockLayout.create();
     rightPart.center(Label.create(LocalizeValue.localizeTODO("Select configurable")));

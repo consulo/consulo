@@ -29,13 +29,13 @@ import java.util.EventListener;
  */
 public interface Tree<E> extends Component {
   @Nonnull
-  static <E> Tree<E> create(@Nonnull TreeModel<E> model) {
-    return create(null, model);
+  static <E> Tree<E> create(@Nonnull TreeModel<E> model, @Nonnull Disposable disposable) {
+    return create(null, model, disposable);
   }
 
   @Nonnull
-  static <E> Tree<E> create(@Nullable E rootValue, @Nonnull TreeModel<E> model) {
-    return UIInternal.get()._Components_tree(rootValue, model);
+  static <E> Tree<E> create(@Nullable E rootValue, @Nonnull TreeModel<E> model, @Nonnull Disposable disposable) {
+    return UIInternal.get()._Components_tree(rootValue, model, disposable);
   }
 
   interface SelectListener<K> extends EventListener {

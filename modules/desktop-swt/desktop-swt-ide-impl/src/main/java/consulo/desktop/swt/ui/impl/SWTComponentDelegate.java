@@ -98,11 +98,6 @@ public abstract class SWTComponentDelegate<SWT extends Widget> implements Compon
     throw new UnsupportedOperationException(getClass().getName());
   }
 
-  @Override
-  public void dispose() {
-    disposeSWT();
-  }
-
   public void setParent(@Nullable Component component) {
     disposeSWT();
   }

@@ -18,6 +18,7 @@ package consulo.ide.impl.projectView;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.ide.impl.idea.ide.projectView.impl.*;
@@ -69,7 +70,7 @@ import java.util.function.Function;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
-public class UnifiedProjectViewImpl implements ProjectViewEx {
+public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
   private final class MyDataProvider implements Function<Key<?>, Object> {
     @Nullable
     private Object getSelectedNodeElement() {
@@ -212,7 +213,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
       return null;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private LibraryOrderEntry getSelectedLibrary() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       DefaultMutableTreeNode node = viewPane != null ? viewPane.getSelectedNode() : null;
@@ -266,7 +267,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
       }, title, null);
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     private Module[] getSelectedModules() {
       final AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
       if (viewPane == null) return null;
@@ -321,7 +322,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
    * => MODULE_CONTEXT should be only available for the module node
    * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
    */
-  @jakarta.annotation.Nullable
+  @Nullable
   private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
     if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
       Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
@@ -376,7 +377,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
       }
     };
 
-    myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model);
+    myTree = Tree.create((AbstractTreeNode)structure.getRootElement(), model, this);
     WrappedLayout wrappedLayout = WrappedLayout.create(myTree);
     wrappedLayout.addUserDataProvider(new MyDataProvider());
 
@@ -551,5 +552,10 @@ public class UnifiedProjectViewImpl implements ProjectViewEx {
   @Override
   public Collection<SelectInTarget> getSelectInTargets() {
     return mySelectInTargets.values();
+  }
+
+  @Override
+  public void dispose() {
+
   }
 }

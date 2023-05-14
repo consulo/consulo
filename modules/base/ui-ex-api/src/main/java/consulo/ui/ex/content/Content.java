@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.content;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Computable;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
@@ -24,9 +25,9 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -89,9 +90,16 @@ public interface Content extends UserDataHolder, ComponentContainer {
    */
   void setDisposer(Disposable disposer);
 
-  void setShouldDisposeContent(boolean value);
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Since components can't not be extended by user, this methods can't not be used")
+  default void setShouldDisposeContent(boolean value) {
+  }
 
-  boolean shouldDisposeContent();
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Since components can't not be extended by user, this methods can't not be used")
+  default boolean shouldDisposeContent() {
+    return false;
+  }
 
   String getDescription();
 

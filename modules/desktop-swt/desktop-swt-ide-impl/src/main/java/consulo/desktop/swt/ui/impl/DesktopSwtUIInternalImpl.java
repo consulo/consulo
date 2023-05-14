@@ -18,6 +18,7 @@ package consulo.desktop.swt.ui.impl;
 import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
 import consulo.desktop.swt.ui.impl.layout.*;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -343,7 +344,7 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
     return new DesktopSwtTreeImpl<E>(rootValue, model);
   }
 }

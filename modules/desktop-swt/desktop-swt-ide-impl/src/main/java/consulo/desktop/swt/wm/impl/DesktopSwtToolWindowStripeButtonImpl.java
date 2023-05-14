@@ -171,4 +171,9 @@ public class DesktopSwtToolWindowStripeButtonImpl extends SWTComponentDelegate<D
   public Component getComponent() {
     return this;
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

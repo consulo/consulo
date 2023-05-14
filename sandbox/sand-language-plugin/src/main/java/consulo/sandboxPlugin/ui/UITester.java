@@ -57,7 +57,7 @@ public class UITester {
       });
       tabbedLayout.addTab("Components", components());
       tabbedLayout.addTab("Components > Table", table());
-      tabbedLayout.addTab("Components > Tree", tree());
+      tabbedLayout.addTab("Components > Tree", tree(uiDisposable));
       tabbedLayout.addTab("Alerts", alerts());
 
       return tabbedLayout;
@@ -208,7 +208,7 @@ public class UITester {
     }
 
     @RequiredUIAccess
-    private Component tree() {
+    private Component tree(Disposable uiDisposable) {
       Tree<String> tree = Tree.create(new TreeModel<String>() {
         @Override
         public void buildChildren(@Nonnull Function<String, TreeNode<String>> nodeFactory, @Nullable String parentValue) {
@@ -236,7 +236,7 @@ public class UITester {
             }
           }
         }
-      });
+      }, uiDisposable);
 
       return ScrollableLayout.create(tree);
     }

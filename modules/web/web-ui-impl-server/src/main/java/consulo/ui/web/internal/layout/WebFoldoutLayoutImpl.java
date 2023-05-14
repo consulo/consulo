@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -45,6 +44,7 @@ public class WebFoldoutLayoutImpl extends WebUnsupportedComponent implements Fol
   @Nonnull
   @Override
   public Disposable addStateListener(@Nonnull StateListener stateListener) {
-    return this;
+    return () -> {
+    };
   }
 }

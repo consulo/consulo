@@ -122,4 +122,9 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
   public boolean isActive() {
     return true;
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 09-Jun-16
  */
-public interface Component extends Disposable, UserDataHolder {
+public interface Component extends UserDataHolder {
 
   @RequiredUIAccess
   default void addBorder(@Nonnull BorderPosition borderPosition) {
@@ -219,9 +219,5 @@ public interface Component extends Disposable, UserDataHolder {
   @Nonnull
   default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
     return addListener(ClickListener.class, clickListener);
-  }
-
-  @Override
-  default void dispose() {
   }
 }

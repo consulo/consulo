@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.ui.app;
 
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -52,7 +53,7 @@ public abstract class WindowWrapper {
 
   @Nonnull
   @RequiredUIAccess
-  protected abstract Component createCenterComponent();
+  protected abstract Component createCenterComponent(@Nonnull Disposable uiDisposable);
 
   @Nullable
   protected Size getDefaultSize() {
@@ -76,7 +77,7 @@ public abstract class WindowWrapper {
       myWindow.setSize(defaultSize);
     }
 
-    Layout rootLayout = buildRootLayout();
+    Layout rootLayout = buildRootLayout(myWindow);
     myWindow.setContent(rootLayout);
 
     myWindow.show();
@@ -86,9 +87,9 @@ public abstract class WindowWrapper {
 
   @Nonnull
   @RequiredUIAccess
-  protected Layout buildRootLayout() {
+  protected Layout buildRootLayout(Disposable uiDisposable) {
     DockLayout rootLayout = DockLayout.create();
-    rootLayout.center(createCenterComponent());
+    rootLayout.center(createCenterComponent(uiDisposable));
     rootLayout.bottom(buildButtonsLayout());
     return rootLayout;
   }

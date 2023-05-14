@@ -136,8 +136,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
-    return new DesktopTreeImpl<>(rootValue, model);
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+    return new DesktopTreeImpl<>(rootValue, model, disposable);
   }
 
   @Override

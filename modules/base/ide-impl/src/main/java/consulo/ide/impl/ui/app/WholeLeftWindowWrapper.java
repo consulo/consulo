@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.ui.app;
 
+import consulo.disposer.Disposable;
 import consulo.util.lang.Couple;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,11 +38,11 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
   @Override
   @Nonnull
   @RequiredUIAccess
-  protected Layout buildRootLayout() {
+  protected Layout buildRootLayout(Disposable uiDisposable) {
     TwoComponentSplitLayout layout = TwoComponentSplitLayout.create(SplitLayoutPosition.HORIZONTAL);
     layout.setProportion(30);
 
-    Couple<Component> compoents = createComponents();
+    Couple<Component> compoents = createComponents(uiDisposable);
 
     layout.setFirstComponent(compoents.getFirst());
 
@@ -55,12 +56,12 @@ public abstract class WholeLeftWindowWrapper extends WindowWrapper {
 
   @Nonnull
   @RequiredUIAccess
-  protected abstract Couple<Component> createComponents();
+  protected abstract Couple<Component> createComponents(Disposable uiDisposable);
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  protected final Component createCenterComponent() {
+  protected final Component createCenterComponent(Disposable uiDisposable) {
     throw new UnsupportedOperationException();
   }
 }

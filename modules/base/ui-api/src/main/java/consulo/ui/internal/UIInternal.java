@@ -123,7 +123,7 @@ public abstract class UIInternal {
 
   public abstract ColorBox _Components_colorBox(@Nullable ColorValue colorValue);
 
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
     throw new UnsupportedOperationException();
   }
 

@@ -16,6 +16,7 @@
 package consulo.ui.web.internal;
 
 import com.vaadin.ui.UI;
+import consulo.disposer.Disposable;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
@@ -208,7 +209,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
   }
 
-  public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model) {
+  public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
     getVaadinComponent().init(rootValue, model);
   }
 

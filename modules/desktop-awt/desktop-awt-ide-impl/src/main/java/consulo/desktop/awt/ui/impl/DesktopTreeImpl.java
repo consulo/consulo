@@ -213,8 +213,8 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
   }
 
-  public DesktopTreeImpl(E rootValue, TreeModel<E> model) {
-    initialize(new MyTree(this, rootValue, model));
+  public DesktopTreeImpl(E rootValue, TreeModel<E> model, Disposable disposable) {
+    initialize(new MyTree(disposable, rootValue, model));
     MyTree tree = toAWTComponent();
     tree.setRootVisible(false);
     tree.setCellRenderer(new NodeRenderer());

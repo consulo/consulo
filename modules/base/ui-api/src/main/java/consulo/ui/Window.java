@@ -15,6 +15,7 @@
  */
 package consulo.ui;
 
+import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
@@ -26,7 +27,7 @@ import java.util.EventListener;
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface Window extends Component {
+public interface Window extends Component, Disposable {
   static interface CloseListener extends EventListener {
     @RequiredUIAccess
     void onClose();

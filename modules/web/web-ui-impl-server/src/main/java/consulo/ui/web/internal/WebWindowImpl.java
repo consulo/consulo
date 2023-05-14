@@ -111,6 +111,11 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     return true;
   }
 
+  @Override
+  public void dispose() {
+
+  }
+
   @Nullable
   @Override
   public Window getParent() {

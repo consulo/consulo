@@ -153,4 +153,9 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   public void updatePresentation() {
 
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -57,10 +58,10 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
     @RequiredUIAccess
     @Nonnull
     @Override
-    protected Component createCenterComponent() {
+    protected Component createCenterComponent(Disposable uiDisposable) {
       setOKEnabled(false);
 
-      myTree = FileTreeComponent.create(myProject, myDescriptor);
+      myTree = FileTreeComponent.create(myProject, myDescriptor, uiDisposable);
       
       myTree.addSelectListener(node -> {
         VirtualFile file = node.getValue().getFile();

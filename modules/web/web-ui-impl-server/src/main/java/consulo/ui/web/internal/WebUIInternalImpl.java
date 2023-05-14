@@ -17,6 +17,7 @@ package consulo.ui.web.internal;
 
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -190,8 +191,8 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model) {
-    return new WebTreeImpl<>(rootValue, model);
+  public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
+    return new WebTreeImpl<>(rootValue, model, disposable);
   }
 
   @Override

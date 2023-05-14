@@ -46,7 +46,6 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   private boolean myIsPinned = false;
   private boolean myPinnable = true;
   private Disposable myDisposer = null;
-  private boolean myShouldDisposeContent = true;
   private String myTabName;
   private String myToolwindowTitle;
   private boolean myCloseable = true;
@@ -162,16 +161,6 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   @Override
   public void setDisposer(Disposable disposer) {
     myDisposer = disposer;
-  }
-
-  @Override
-  public void setShouldDisposeContent(boolean value) {
-    myShouldDisposeContent = value;
-  }
-
-  @Override
-  public boolean shouldDisposeContent() {
-    return myShouldDisposeContent;
   }
 
   @Override
@@ -293,10 +282,6 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
   @Override
   public void dispose() {
-    if (myShouldDisposeContent && myComponent != null) {
-      Disposer.dispose(myComponent);
-    }
-
     myComponent = null;
     myFocusRequest = null;
     myManager = null;

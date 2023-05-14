@@ -157,4 +157,9 @@ public class DummyWindow implements Window {
   public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
 
   }
+
+  @Override
+  public void dispose() {
+
+  }
 }

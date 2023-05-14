@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
@@ -31,7 +32,7 @@ import java.util.Comparator;
  * @since 14-Sep-17
  */
 public class FileTreeComponent {
-  public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor) {
+  public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor, Disposable uiDisposable) {
     FileTreeStructure fileTreeStructure = new FileTreeStructure(project, descriptor);
     fileTreeStructure.showHiddens(true);
     TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<>(fileTreeStructure) {
@@ -41,6 +42,6 @@ public class FileTreeComponent {
         return UnifiedFileComparator.getInstance();
       }
     };
-    return Tree.create(treeStructureWrappenModel.getRootElement(), treeStructureWrappenModel);
+    return Tree.create(treeStructureWrappenModel.getRootElement(), treeStructureWrappenModel, uiDisposable);
   }
 }
