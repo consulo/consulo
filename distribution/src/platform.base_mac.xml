@@ -21,6 +21,7 @@
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-annotation</include>
+        <include>jakarta.annotation:jakarta.annotation-api</include>
         <include>consulo:consulo-component-api</include>
         <include>consulo:consulo-application-api</include>
         <include>consulo:consulo-bookmark-api</include>
