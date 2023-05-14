@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.language.editor.QualifiedNameProviderUtil;
-import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
+import consulo.find.ui.ScopeChooserCombo;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.NavigationItem;

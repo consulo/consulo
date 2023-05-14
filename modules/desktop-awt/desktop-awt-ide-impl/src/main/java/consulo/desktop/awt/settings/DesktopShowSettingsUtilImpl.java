@@ -28,6 +28,8 @@ import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.impl.options.impl.BaseProjectStructureShowSettingsUtil;
+import consulo.ide.impl.options.impl.ConfigurablePreselectStrategy;
+import consulo.ide.impl.options.impl.DefaultConfigurablePreselectStrategy;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.bundle.SettingsSdksModel;
@@ -41,12 +43,12 @@ import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -57,7 +59,7 @@ import java.util.function.Function;
  */
 @Singleton
 @ServiceImpl
-public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil  {
+public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil {
   private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 
   private final AtomicBoolean myShown = new AtomicBoolean(false);
@@ -81,9 +83,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @SuppressWarnings("deprecation")
   private AsyncResult<Void> showSettingsImpl(@Nullable Project tempProject,
-                                @Nonnull Function<Project, Configurable[]> buildConfigurables,
-                                @Nullable Configurable toSelect,
-                                @Nonnull Consumer<DesktopSettingsDialog> onShow) {
+                                             @Nonnull Function<Project, Configurable[]> buildConfigurables,
+                                             @Nonnull ConfigurablePreselectStrategy strategy,
+                                             @Nonnull Consumer<DesktopSettingsDialog> onShow) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
     AsyncResult<Void> result = AsyncResult.undefined();
@@ -107,10 +109,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
           DesktopSettingsDialog dialog;
           if (ModalityPerProjectEAPDescriptor.is()) {
-            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect, true);
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, strategy, true);
           }
           else {
-            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, toSelect);
+            dialog = new DesktopSettingsDialog(actualProject, myConfigurables, strategy);
           }
 
           Disposer.register(dialog.getDisposable(), () -> clearCaches());
@@ -136,16 +138,28 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> configurableClass, @Nonnull Consumer<T> afterSelect) {
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project,
+                                                                         @Nonnull Class<T> configurableClass,
+                                                                         @Nonnull Consumer<T> afterSelect) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
     Configurable[] configurables = buildConfigurables(project);
 
-    return showSettingsImpl(project, project1 -> configurables, null, dialog -> {
+    return showSettingsImpl(project, project1 -> configurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       assert editor != null;
       editor.select(configurableClass).doWhenDone(afterSelect);
     });
+  }
+
+  @RequiredUIAccess
+  @Override
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
+    return showSettingsImpl(project,
+                            BaseShowSettingsUtil::buildConfigurables,
+                            ConfigurablePreselectStrategy.lastStored(project == null ? myDefaultProjectFactory.getDefaultProject() : project),
+                            dialog -> {
+                            });
   }
 
   @Nonnull
@@ -154,9 +168,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   public AsyncResult<Void> showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
     Configurable[] configurables = buildConfigurables(project);
 
-    Configurable toSelect = DesktopSettingsDialog.getPreselectedByDisplayName(configurables, nameToSelect, project);
+    Configurable toSelect = DefaultConfigurablePreselectStrategy.getPreselectedByDisplayName(configurables, nameToSelect, project);
 
-    return showSettingsImpl(project, it -> configurables, toSelect, dialog -> {
+    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.preOrNotSelected(toSelect), dialog -> {
     });
   }
 
@@ -168,7 +182,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
 
-    return showSettingsImpl(project, it -> configurables, configurable2Select, dialog -> {
+    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.preOrNotSelected(configurable2Select), dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       assert editor != null;
       editor.select(configurable2Select, filter);
@@ -186,7 +200,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @Nullable
   private static Configurable containsId(String id2Select, Configurable configurable) {
-    if (configurable instanceof SearchableConfigurable && id2Select.equals(((SearchableConfigurable)configurable).getId())) {
+    if (id2Select.equals(configurable.getId())) {
       return configurable;
     }
     if (configurable instanceof SearchableConfigurable.Parent) {
@@ -202,8 +216,11 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
-    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, toSelect, dialog -> {
-    });
+    return showSettingsImpl(project,
+                            BaseShowSettingsUtil::buildConfigurables,
+                            ConfigurablePreselectStrategy.preOrNotSelected(toSelect),
+                            dialog -> {
+                            });
   }
 
   @RequiredUIAccess
@@ -211,7 +228,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
     Configurable[] configurables = buildConfigurables(project);
 
-    return showSettingsImpl(project, it -> configurables, SKIP_SELECTION_CONFIGURATION, dialog -> {
+    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
       final ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
       assert editor != null;
       consumer.accept(editor);
@@ -226,7 +243,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title, Project project, String dimensionServiceKey, @Nonnull Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(@Nullable String title,
+                                            Project project,
+                                            String dimensionServiceKey,
+                                            @Nonnull Configurable configurable) {
     return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
@@ -244,7 +264,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(final Component parent, final Configurable configurable, @Nullable final Runnable advancedInitialization) {
+  public AsyncResult<Void> editConfigurable(final Component parent,
+                                            final Configurable configurable,
+                                            @Nullable final Runnable advancedInitialization) {
     return editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
   }
 
@@ -280,7 +302,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   }
 
   @Override
-  public boolean isAlreadyShown() {
+  public boolean isAlreadyShown(Project project) {
     return myShown.get();
   }
 }

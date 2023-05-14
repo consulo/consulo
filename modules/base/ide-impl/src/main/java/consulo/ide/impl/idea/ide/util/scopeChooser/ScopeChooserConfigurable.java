@@ -17,41 +17,40 @@
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
 import consulo.configurable.*;
 import consulo.content.internal.scope.CustomScopesProvider;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.execution.ExecutionBundle;
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.content.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
+import consulo.execution.ExecutionBundle;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
+import consulo.language.editor.scope.NamedScopeManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.function.Condition;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
-import consulo.ui.image.Image;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -70,7 +69,6 @@ import java.util.*;
  */
 @ExtensionImpl
 public class ScopeChooserConfigurable extends MasterDetailsComponent implements SearchableConfigurable, Configurable.NoMargin, ProjectConfigurable {
-  @NonNls
   public static final String SCOPE_CHOOSER_CONFIGURABLE_UI_KEY = "ScopeChooserConfigurable.UI";
   public static final String PROJECT_SCOPES = "project.scopes";
   private final NamedScopesHolder myLocalScopesManager;

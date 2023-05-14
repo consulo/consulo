@@ -20,7 +20,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
+import consulo.find.ui.ScopeChooserCombo;
 import consulo.project.Project;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;

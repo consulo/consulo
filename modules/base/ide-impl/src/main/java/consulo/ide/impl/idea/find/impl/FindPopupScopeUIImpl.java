@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
-import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
+import consulo.find.ui.ScopeChooserCombo;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

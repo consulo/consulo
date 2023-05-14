@@ -39,7 +39,6 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.tree.table;
   exports consulo.ui.ex.awt.update;
   exports consulo.ui.ex.awt.util;
-  exports consulo.ui.ex.awt.scopeChooser;
   exports consulo.ui.ex.awt.speedSearch;
   exports consulo.ui.ex.awt.valueEditor;
   exports consulo.ui.ex.awt.popup;

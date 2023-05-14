@@ -130,7 +130,7 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
   }
 
   @Override
-  public boolean isAlreadyShown() {
+  public boolean isAlreadyShown(Project project) {
     return false;
   }
 

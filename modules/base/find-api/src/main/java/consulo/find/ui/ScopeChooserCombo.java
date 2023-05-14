@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ui.ex.awt.scopeChooser;
+package consulo.find.ui;
 
 import consulo.application.util.function.Processor;
 import consulo.component.util.WeighedItem;
@@ -7,7 +7,9 @@ import consulo.content.scope.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.find.internal.FindApiInternal;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
@@ -23,7 +25,6 @@ import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -75,7 +76,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     for (NamedScopesHolder holder : holders) {
       holder.addScopeListener(scopeListener, this);
     }
-    addActionListener(this::handleScopeChooserAction);
+    addActionListener(e -> handleScopeChooserAction());
 
     ComboBox<ScopeDescriptor> combo = getComboBox();
     combo.setMinimumAndPreferredWidth(JBUIScale.scale(300));
@@ -120,17 +121,19 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
   }
 
-  private void handleScopeChooserAction(ActionEvent ignore) {
-    throw new UnsupportedOperationException();
-    // TODO implement opening settings
-    //String selection = getSelectedScopeName();
-    //if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
-    //EditScopesDialog dlg = EditScopesDialog.showDialog(myProject, selection);
-    //if (dlg.isOK()) {
-    //  NamedScope namedScope = dlg.getSelectedScope();
-    //  rebuildModelAndSelectScopeOnSuccess(namedScope == null ? null : namedScope.getName());
-    //}
-    //if (myBrowseListener != null) myBrowseListener.onAfterBrowseFinished();
+  @RequiredUIAccess
+  private void handleScopeChooserAction() {
+    String selectedScopeName = getSelectedScopeName();
+    SearchScope selectedScope = getSelectedScope();
+
+    if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
+
+    FindApiInternal findApiInternal = myProject.getApplication().getInstance(FindApiInternal.class);
+    findApiInternal.openScopeConfigurable(myProject, selectedScopeName).doWhenDone(() -> {
+      rebuildModelAndSelectScopeOnSuccess(selectedScope);
+
+      if (myBrowseListener != null) myBrowseListener.onAfterBrowseFinished();
+    });
   }
 
   public static boolean processScopes(@Nonnull Project project,

@@ -144,7 +144,7 @@ public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
    */
   public abstract <T extends Configurable> T findApplicationConfigurable(Class<T> confClass);
 
-  public abstract boolean isAlreadyShown();
+  public abstract boolean isAlreadyShown(Project project);
 
   @Nonnull
   public static String getSettingsMenuName() {

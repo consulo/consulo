@@ -16,4 +16,6 @@ module consulo.find.api {
 
   exports consulo.find;
   exports consulo.find.ui;
+
+  exports consulo.find.internal to consulo.ide.impl;
 }

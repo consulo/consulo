@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.find.internal;
 
-package consulo.ide.impl.idea.ide.todo;
-
-import consulo.find.ui.ScopeChooserCombo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.swing.*;
-
-public class ScopeBasedTodosTreeBuilder extends TodoTreeBuilder {
-  private final ScopeChooserCombo myScopes;
-
-  public ScopeBasedTodosTreeBuilder(JTree tree, Project project, ScopeChooserCombo scopes) {
-    super(tree, project);
-    myScopes = scopes;
-  }
-
-  @Override
+/**
+ * @author VISTALL
+ * @since 14/05/2023
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface FindApiInternal {
   @Nonnull
-  protected TodoTreeStructure createTreeStructure() {
-    return new ScopeBasedTodosTreeStructure(myProject, myScopes);
-  }
-
+  @RequiredUIAccess
+  AsyncResult<Void> openScopeConfigurable(Project project, @Nullable String selection);
 }

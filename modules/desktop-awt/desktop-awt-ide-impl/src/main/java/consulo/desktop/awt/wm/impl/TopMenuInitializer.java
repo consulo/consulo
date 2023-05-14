@@ -64,7 +64,7 @@ public class TopMenuInitializer {
       desktop.setPreferencesHandler(e -> {
         final Project project = getNotNullProject();
         final ShowSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
-        if (!showSettingsUtil.isAlreadyShown()) {
+        if (!showSettingsUtil.isAlreadyShown(project)) {
           TransactionGuard.submitTransaction(project, () -> showSettingsUtil.showSettingsDialog(project));
         }
       });

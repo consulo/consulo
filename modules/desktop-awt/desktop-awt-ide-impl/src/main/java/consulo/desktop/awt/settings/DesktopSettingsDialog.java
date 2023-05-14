@@ -18,15 +18,12 @@ package consulo.desktop.awt.settings;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
-import consulo.application.TransactionGuard;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
+import consulo.ide.impl.options.impl.ConfigurablePreselectStrategy;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
 import consulo.platform.base.localize.CommonLocalize;
@@ -40,28 +37,26 @@ import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class DesktopSettingsDialog extends WholeWestDialogWrapper implements DataProvider {
 
   private Project myProject;
   private Configurable[] myConfigurables;
-  private Configurable myPreselected;
+  private ConfigurablePreselectStrategy myPreselectStrategy;
   private OptionsEditor myEditor;
 
   private ApplyAction myApplyAction;
   public static final String DIMENSION_KEY = "OptionsEditor";
-  static final String LAST_SELECTED_CONFIGURABLE = "options.lastSelected";
 
   /**
    * This constructor should be eliminated after the new modality approach
@@ -69,31 +64,27 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
    *
    * @deprecated
    */
-  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable, boolean applicationModalIfPossible) {
+  public DesktopSettingsDialog(Project project,
+                               Configurable[] configurables,
+                               @Nonnull ConfigurablePreselectStrategy strategy,
+                               boolean applicationModalIfPossible) {
     super(true, applicationModalIfPossible);
-    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
+    init(project, configurables, strategy);
   }
 
-  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nullable Configurable preselectedConfigurable) {
+  public DesktopSettingsDialog(Project project, Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
     super(project, true);
-    init(project, configurables, preselectedConfigurable != null ? preselectedConfigurable : findLastSavedConfigurable(configurables, project));
+    init(project, configurables, strategy);
   }
 
-  private void init(final Project project, final Configurable[] configurables, @Nullable final Configurable preselected) {
+  private void init(final Project project, final Configurable[] configurables, @Nonnull ConfigurablePreselectStrategy strategy) {
     myProject = project;
     myConfigurables = configurables;
-    myPreselected = preselected;
+    myPreselectStrategy = strategy;
 
     setTitle(CommonBundle.settingsTitle());
 
     init();
-  }
-
-  @Nullable
-  public static Configurable getPreselectedByDisplayName(final Configurable[] configurables, final String preselectedConfigurableDisplayName, final Project project) {
-    Configurable result = findPreselectedByDisplayName(preselectedConfigurableDisplayName, configurables);
-
-    return result == null ? findLastSavedConfigurable(configurables, project) : result;
   }
 
   @Override
@@ -135,7 +126,8 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   @Nonnull
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
-    myEditor = new OptionsEditor(myProject, myConfigurables, myPreselected, rootPanel);
+    Configurable configurable = myPreselectStrategy.get(myConfigurables);
+    myEditor = new OptionsEditor(myProject, myConfigurables, configurable, rootPanel);
     myEditor.getContext().addColleague(new OptionsEditorColleague() {
       @Override
       public AsyncResult<Void> onModifiedAdded(final Configurable configurable) {
@@ -196,11 +188,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
   }
 
   @Override
-  public void show() {
-    TransactionGuard.getInstance().submitTransactionAndWait(super::show);
-  }
-
-  @Override
   public void doOKAction() {
     myEditor.flushModifications();
 
@@ -220,54 +207,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     final Configurable current = myEditor.getContext().getCurrentConfigurable();
     if (current == null) return;
 
-    final PropertiesComponent props = PropertiesComponent.getInstance(myProject);
-
-    if (current instanceof SearchableConfigurable) {
-      props.setValue(LAST_SELECTED_CONFIGURABLE, ((SearchableConfigurable)current).getId());
-    }
-    else {
-      props.setValue(LAST_SELECTED_CONFIGURABLE, current.getClass().getName());
-    }
-  }
-
-  @Nullable
-  private static Configurable findLastSavedConfigurable(Configurable[] configurables, final Project project) {
-    final String id = PropertiesComponent.getInstance(project).getValue(LAST_SELECTED_CONFIGURABLE);
-    if (id == null) return null;
-
-    return findConfigurableInGroups(id, configurables);
-  }
-
-  @Nullable
-  private static Configurable findConfigurableInGroups(String id, Configurable[] configurables) {
-    // avoid unnecessary group expand: check top-level configurables in all groups before looking at children
-    for (Configurable c : configurables) {
-      if (c instanceof SearchableConfigurable && id.equals(((SearchableConfigurable)c).getId())) {
-        return c;
-      }
-      else if (id.equals(c.getClass().getName())) {
-        return c;
-      }
-    }
-
-    for (Configurable c : configurables) {
-      if (c instanceof Configurable.Composite) {
-        Configurable result = findConfigurableInGroups(id, ((Configurable.Composite)c).getConfigurables());
-        if (result != null) {
-          return result;
-        }
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  private static Configurable findPreselectedByDisplayName(final String preselectedConfigurableDisplayName, Configurable[] configurables) {
-    final List<Configurable> all = SearchUtil.expand(configurables);
-    for (Configurable each : all) {
-      if (preselectedConfigurableDisplayName.equals(each.getDisplayName())) return each;
-    }
-    return null;
+    myPreselectStrategy.save(current);
   }
 
   @Override
@@ -312,7 +252,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
     if (Settings.KEY == dataId) {
       return myEditor;
     }
-    else if(ProjectStructureSelector.KEY == dataId) {
+    else if (ProjectStructureSelector.KEY == dataId) {
       return new ProjectStructureSelectorOverSettings(myEditor);
     }
     return null;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.analysis;
 
 import consulo.find.FindSettings;
-import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
+import consulo.find.ui.ScopeChooserCombo;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.module.Module;
