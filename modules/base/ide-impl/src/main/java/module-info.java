@@ -679,7 +679,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vfs.impl.http;
   exports consulo.ide.impl.idea.openapi.vfs.impl.jar;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
-  exports consulo.ide.impl.idea.openapi.vfs.impl.win32;
   exports consulo.ide.impl.idea.openapi.vfs.local;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs.impl;

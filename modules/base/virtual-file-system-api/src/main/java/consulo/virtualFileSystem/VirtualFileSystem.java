@@ -19,11 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.virtualFileSystem.event.VirtualFileListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Represents a virtual file system.
@@ -156,7 +158,10 @@ public interface VirtualFileSystem {
    * @see VirtualFile#copy(Object, VirtualFile, String)
    */
   @Nonnull
-  VirtualFile copyFile(Object requestor, @Nonnull VirtualFile virtualFile, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
+  VirtualFile copyFile(Object requestor,
+                       @Nonnull VirtualFile virtualFile,
+                       @Nonnull VirtualFile newParent,
+                       @Nonnull String copyName) throws IOException;
 
   boolean isReadOnly();
 
@@ -166,5 +171,16 @@ public interface VirtualFileSystem {
 
   default boolean isValidName(@Nonnull String name) {
     return name.length() > 0 && name.indexOf('\\') < 0 && name.indexOf('/') < 0;
+  }
+
+  /**
+   * @return a related {@link Path} for a given virtual file where possible or
+   * {@code null} otherwise.
+   * <br />
+   * The returned {@link Path} may not have a default filesystem behind.
+   */
+  @Nullable
+  default Path getNioPath(@Nonnull VirtualFile file) {
+    return null;
   }
 }

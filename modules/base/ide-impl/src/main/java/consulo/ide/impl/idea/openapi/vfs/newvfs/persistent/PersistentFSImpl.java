@@ -163,7 +163,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
   @Nonnull
   private static FSRecords.NameId[] persistAllChildren(@Nonnull VirtualFile file, int id, @Nonnull FSRecords.NameId[] current) {
-    final NewVirtualFileSystem fs = replaceWithNativeFS(getDelegate(file));
+    final NewVirtualFileSystem fs = getDelegate(file);
 
     String[] delegateNames = VfsUtil.filterNames(fs.list(file));
     if (delegateNames.length == 0 && current.length > 0) {
@@ -1033,7 +1033,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     NewVirtualFile vf = findFileById(parentId);
     if (!(vf instanceof VirtualDirectoryImpl)) return;
     parent = (VirtualDirectoryImpl)vf;  // retain in myIdToDirCache at least for the duration of this block in order to subsequent findFileById() won't crash
-    final NewVirtualFileSystem delegate = replaceWithNativeFS(getDelegate(parent));
+    final NewVirtualFileSystem delegate = getDelegate(parent);
     IntSet parentChildrenIds = IntSets.newHashSet(createEvents.size());
 
     List<ChildInfo> childrenAdded = getOrCreateChildInfos(parent, createEvents, VFileCreateEvent::getChildName, parentChildrenIds, delegate, (createEvent, childId) -> {

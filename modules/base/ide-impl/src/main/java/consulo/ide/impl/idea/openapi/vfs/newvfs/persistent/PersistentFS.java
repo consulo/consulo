@@ -1,20 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.impl.win32.Win32LocalFileSystem;
+import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
-import org.intellij.lang.annotations.MagicConstant;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
@@ -103,14 +100,6 @@ public abstract class PersistentFS extends ManagingFS {
   public abstract int getCurrentContentId(@Nonnull VirtualFile file);
 
   public abstract void processEvents(@Nonnull List<? extends VFileEvent> events);
-
-  @Nonnull
-  public static NewVirtualFileSystem replaceWithNativeFS(@Nonnull final NewVirtualFileSystem fs) {
-    if (SystemInfo.isWindows && !(fs instanceof Win32LocalFileSystem) && fs.getProtocol().equals(LocalFileSystem.PROTOCOL) && Win32LocalFileSystem.isAvailable()) {
-      return Win32LocalFileSystem.getWin32Instance();
-    }
-    return fs;
-  }
 
   // true if FS persisted at least one child or it has never been queried for children
   public abstract boolean mayHaveChildren(int id);

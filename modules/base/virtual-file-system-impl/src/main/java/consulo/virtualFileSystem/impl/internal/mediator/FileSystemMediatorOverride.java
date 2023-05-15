@@ -18,9 +18,7 @@ package consulo.virtualFileSystem.impl.internal.mediator;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.util.jna.JnaLoader;
-import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -30,7 +28,7 @@ import jakarta.annotation.Nullable;
 public class FileSystemMediatorOverride {
   private static final Logger LOG = Logger.getInstance(FileSystemMediatorOverride.class);
 
-  public static final String FORCE_USE_NIO2_KEY = "idea.io.use.nio2";
+  public static final String FORCE_USE_NIO2_KEY = "consulo.io.use.nio2";
 
   public static void replaceIfNeedMediator() {
     FileSystemUtil.setMediatorLock(getMediator());
@@ -40,10 +38,7 @@ public class FileSystemMediatorOverride {
   private static FileSystemMediator getMediator() {
     if (!Boolean.getBoolean(FORCE_USE_NIO2_KEY)) {
       try {
-        if (SystemInfo.isWindows && WindowsFileSystemHelper.isAvailable()) {
-          return check(new IdeaWin32MediatorImpl());
-        }
-        else if ((SystemInfo.isLinux || SystemInfo.isMac || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
+        if ((SystemInfo.isLinux || SystemInfo.isMac || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
           return check(new JnaUnixMediatorImpl());
         }
       }

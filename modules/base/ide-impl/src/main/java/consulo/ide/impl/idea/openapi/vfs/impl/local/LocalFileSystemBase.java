@@ -1,34 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
-import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
-import consulo.virtualFileSystem.LocalFileOperationsHandler;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.SafeFileOutputStream;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
+import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
+import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.io.SafeFileOutputStream;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.virtualFileSystem.*;
-
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -42,12 +37,14 @@ import java.util.List;
 public abstract class LocalFileSystemBase extends LocalFileSystem {
   protected static final Logger LOG = Logger.getInstance(LocalFileSystemBase.class);
 
-  private static final FileAttributes FAKE_ROOT_ATTRIBUTES = new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
+  private static final FileAttributes UNC_ROOT_ATTRIBUTES =
+    new FileAttributes(true, false, false, false, DEFAULT_LENGTH, DEFAULT_TIMESTAMP, false);
 
   private final List<LocalFileOperationsHandler> myHandlers = new ArrayList<>();
 
-  private final DiskQueryRelay<String, FileAttributes> myAttrGetter = new DiskQueryRelay<>(FileSystemUtil::getAttributes);
-  private final DiskQueryRelay<File, String[]> myChildrenGetter = new DiskQueryRelay<>(dir -> dir.list());
+  private final DiskQueryRelay<VirtualFile, FileAttributes> myAttrGetter =
+    new DiskQueryRelay<>(LocalFileSystemBase::getAttributesWithCustomTimestamp);
+  private final DiskQueryRelay<Path, String[]> myNioChildrenGetter = new DiskQueryRelay<>(LocalFileSystemBase::listPathChildren);
 
   @Override
   @Nullable
@@ -74,7 +71,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Nonnull
   protected static String toIoPath(@Nonnull VirtualFile file) {
     String path = file.getPath();
-    if (StringUtil.endsWithChar(path, ':') && path.length() == 2 && SystemInfo.isWindows) {
+    if (path.length() == 2 && SystemInfo.isWindows && consulo.util.io.PathUtil.startsWithWindowsDrive(path)) {
       // makes 'C:' resolve to a root directory of the drive C:, not the current directory on that drive
       path += '/';
     }
@@ -135,7 +132,8 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Nonnull
   @Override
   public String[] list(@Nonnull VirtualFile file) {
-    String[] names = myChildrenGetter.accessDiskWithCheckCanceled(convertToIOFile(file));
+    Path path = getNioPath(file);
+    String[] names = path == null ? null : myNioChildrenGetter.accessDiskWithCheckCanceled(path);
     return names == null ? ArrayUtil.EMPTY_STRING_ARRAY : names;
   }
 
@@ -425,7 +423,8 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
   @Nonnull
   public OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
     File ioFile = convertToIOFileAndCheck(file);
-    OutputStream stream = SafeWriteRequestor.shouldUseSafeWrite(requestor) ? new SafeFileOutputStream(ioFile) : new FileOutputStream(ioFile);
+    OutputStream stream =
+      SafeWriteRequestor.shouldUseSafeWrite(requestor) ? new SafeFileOutputStream(ioFile) : new FileOutputStream(ioFile);
     return new BufferedOutputStream(stream) {
       @Override
       public void close() throws IOException {
@@ -517,7 +516,10 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Nonnull
   @Override
-  public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
+  public VirtualFile copyFile(Object requestor,
+                              @Nonnull VirtualFile file,
+                              @Nonnull VirtualFile newParent,
+                              @Nonnull String copyName) throws IOException {
     if (!isValidName(copyName)) {
       throw new IOException(VfsBundle.message("file.invalid.name.error", copyName));
     }
@@ -714,15 +716,9 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   public FileAttributes getAttributes(@Nonnull VirtualFile file) {
-    String path = file.getPath();
-    if (SystemInfo.isWindows && file.getParent() == null && path.startsWith("//")) {
-      return FAKE_ROOT_ATTRIBUTES;  // UNC roots
-    }
-    return getAttributes(path);
-  }
-
-  protected FileAttributes getAttributes(@Nonnull String path) {
-    return myAttrGetter.accessDiskWithCheckCanceled(FileUtilRt.toSystemDependentName(path));
+    return SystemInfo.isWindows && file.getParent() == null && file.getPath().startsWith("//")
+      ? UNC_ROOT_ATTRIBUTES
+      : myAttrGetter.accessDiskWithCheckCanceled(file);
   }
 
   @Override
@@ -738,8 +734,44 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(file.getPath()))) {
       return stream.iterator().hasNext();  // make sure to not load all children
     }
+    catch (DirectoryIteratorException e) {
+      return false;  // a directory can't be iterated over
+    }
     catch (InvalidPathException | IOException | SecurityException e) {
       return true;
+    }
+  }
+
+  @Override
+  @Nullable
+  public Path getNioPath(@Nonnull VirtualFile file) {
+    return file.getFileSystem() == this ? Paths.get(toIoPath(file)) : null;
+  }
+
+  @Nullable
+  private static FileAttributes getAttributesWithCustomTimestamp(VirtualFile file) {
+    var pathStr = FileUtil.toSystemDependentName(file.getPath());
+    if (pathStr.length() == 2 && pathStr.charAt(1) == ':') pathStr += '\\';
+    var attributes = FileSystemUtil.getAttributes(pathStr);
+    return copyWithCustomTimestamp(file, attributes);
+  }
+
+  @Nullable
+  private static FileAttributes copyWithCustomTimestamp(VirtualFile file, @Nullable FileAttributes attributes) {
+    return attributes;
+  }
+
+  private static String[] listPathChildren(@Nonnull Path dir) {
+    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
+      List<String> result = new ArrayList<>();
+      for (Path path : dirStream) {
+        result.add(path.getFileName().toString());
+      }
+      return result.toArray(String[]::new);
+    }
+    catch (IOException e) {
+      LOG.warn("Unable to list children for path: " + dir, e);
+      return null;
     }
   }
 }

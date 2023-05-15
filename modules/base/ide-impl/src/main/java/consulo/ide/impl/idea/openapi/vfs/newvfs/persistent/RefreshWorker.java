@@ -74,7 +74,7 @@ public class RefreshWorker {
     NewVirtualFile root = myRefreshQueue.pullFirst();
     NewVirtualFileSystem fs = root.getFileSystem();
     if (root.isDirectory()) {
-      fs = PersistentFS.replaceWithNativeFS(fs);
+      fs = fs;
     }
     PersistentFS persistence = PersistentFS.getInstance();
 

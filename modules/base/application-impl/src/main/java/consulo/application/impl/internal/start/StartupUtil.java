@@ -32,7 +32,6 @@ import consulo.process.local.EnvironmentUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -172,10 +171,6 @@ public class StartupUtil {
     }
 
     JnaLoader.load(org.slf4j.LoggerFactory.getLogger(StartupUtil.class));
-
-    if (SystemInfo.isWin2kOrNewer) {
-      WindowsFileSystemHelper.isAvailable();  // logging is done there
-    }
 
     if (SystemInfo.isWindows) {
       // WinP should not unpack .dll files into parent directory

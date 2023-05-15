@@ -16,12 +16,13 @@
 package consulo.util.io;
 
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
-import org.slf4j.LoggerFactory;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Set;
@@ -206,5 +207,16 @@ public class PathUtil {
     }
 
     return null;
+  }
+
+  /**
+   * @return true when the path starts with a drive letter followed by colon, e.g., "C:"
+   */
+  public static boolean startsWithWindowsDrive(@Nonnull String path) {
+    return path.length() >= 2 && path.charAt(1) == ':' && isDriveLetter(path.charAt(0));
+  }
+
+  public static boolean isDriveLetter(char c) {
+    return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z';
   }
 }

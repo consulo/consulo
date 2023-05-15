@@ -2,29 +2,18 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.impl.win32.Win32LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.virtualFileSystem.event.ChildInfo;
-import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.language.impl.internal.psi.PsiCachedValue;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.CharSequenceHashingStrategy;
+import consulo.language.impl.internal.psi.PsiCachedValue;
 import consulo.logging.Logger;
+import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -32,9 +21,15 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
-
+import consulo.util.io.FileAttributes;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.PairConsumer;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.ChildInfo;
+import consulo.virtualFileSystem.event.VFileCreateEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -230,7 +225,6 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
     catch (VfsData.FileAlreadyCreatedException e) {
       throw new RuntimeException("dir=" + myId + "; dir.children=" + Arrays.toString(FSRecords.listAll(myId)), e);
     }
-    LOG.assertTrue(!(getFileSystem() instanceof Win32LocalFileSystem));
 
     VirtualFileSystemEntry child = mySegment.vfsData.getFileById(id, this);
     assert child != null;
@@ -316,7 +310,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
 
   private void loadPersistedChildren() {
     final String[] names = ourPersistence.listPersisted(this);
-    final NewVirtualFileSystem delegate = PersistentFS.replaceWithNativeFS(getFileSystem());
+    final NewVirtualFileSystem delegate = getFileSystem();
     for (String name : names) {
       findChild(name, false, false, delegate);
     }

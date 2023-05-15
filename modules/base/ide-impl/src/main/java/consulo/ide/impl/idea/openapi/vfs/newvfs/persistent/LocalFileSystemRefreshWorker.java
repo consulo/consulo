@@ -69,7 +69,7 @@ class LocalFileSystemRefreshWorker {
       return;
     }
     if (rootAttributes.isDirectory()) {
-      fs = PersistentFS.replaceWithNativeFS(fs);
+      fs = fs;
     }
 
     RefreshContext context = createRefreshContext(fs, PersistentFS.getInstance(), FilePathHashingStrategy.create(fs.isCaseSensitive()));
