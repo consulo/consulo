@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.Cell;
+import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.action.AnAction;

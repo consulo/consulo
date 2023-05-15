@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.execution.debug.ui.ValueMarkup;
+import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

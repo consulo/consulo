@@ -25,7 +25,7 @@ import consulo.content.internal.scope.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ide.impl.idea.ui.ColorChooser;
+import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.language.editor.FileColorManager;
 import consulo.ui.ex.JBColor;

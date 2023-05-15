@@ -22,7 +22,7 @@ import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.ColorPickerListener;
+import consulo.ui.ex.awt.event.ColorPickerListener;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.DialogWrapper;

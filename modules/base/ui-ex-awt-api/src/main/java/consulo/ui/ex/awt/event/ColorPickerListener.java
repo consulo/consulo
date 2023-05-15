@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt.event;
 
 import jakarta.annotation.Nullable;
 import java.awt.*;
+import java.util.EventListener;
 
-public interface ColorPickerListener {
+public interface ColorPickerListener extends EventListener {
   ColorPickerListener[] EMPTY_ARRAY = new ColorPickerListener[0];
 
   /**

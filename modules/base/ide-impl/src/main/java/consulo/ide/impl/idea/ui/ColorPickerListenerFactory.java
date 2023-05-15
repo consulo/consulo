@@ -21,6 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiElement;
 
+import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nullable;
 import java.util.List;
 

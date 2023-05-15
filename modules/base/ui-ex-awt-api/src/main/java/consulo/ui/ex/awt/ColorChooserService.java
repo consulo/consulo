@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui;
+package consulo.ui.ex.awt;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-
+import consulo.application.Application;
+import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.function.Consumer;
 
@@ -29,18 +30,23 @@ import java.util.function.Consumer;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ColorChooserService {
   public static ColorChooserService getInstance() {
-    return ServiceManager.getService(ColorChooserService.class);
+    return Application.get().getInstance(ColorChooserService.class);
   }
 
-  public void showDialog(Component parent, String caption, Color preselectedColor, boolean enableOpacity, ColorPickerListener[] listeners, @Nonnull Consumer<Color> colorConsumer) {
+  public void showDialog(Component parent,
+                         String caption,
+                         Color preselectedColor,
+                         boolean enableOpacity,
+                         ColorPickerListener[] listeners,
+                         @Nonnull Consumer<Color> colorConsumer) {
     showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false, colorConsumer);
   }
 
   public abstract void showDialog(Component parent,
-                                   String caption,
-                                   Color preselectedColor,
-                                   boolean enableOpacity,
-                                   ColorPickerListener[] listeners,
-                                   boolean opacityInPercent,
-                                   @Nonnull Consumer<Color> colorConsumer);
+                                  String caption,
+                                  Color preselectedColor,
+                                  boolean enableOpacity,
+                                  ColorPickerListener[] listeners,
+                                  boolean opacityInPercent,
+                                  @Nonnull Consumer<Color> colorConsumer);
 }

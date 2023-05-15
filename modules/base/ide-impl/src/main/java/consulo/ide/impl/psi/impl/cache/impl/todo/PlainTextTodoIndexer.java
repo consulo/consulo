@@ -16,57 +16,14 @@
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.pattern.StringPattern;
-import consulo.language.psi.stub.IndexPatternUtil;
-import consulo.language.psi.stub.OccurrenceConsumer;
 import consulo.language.plain.PlainTextFileType;
-import consulo.language.psi.search.IndexPattern;
-import consulo.language.psi.stub.FileContent;
-import consulo.language.psi.stub.todo.TodoIndexEntry;
+import consulo.language.plain.psi.stub.todo.PlainTextTodoIndexerBase;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @ExtensionImpl
-public class PlainTextTodoIndexer implements VersionedTodoIndexer {
-  @Override
-  @Nonnull
-  public Map<TodoIndexEntry, Integer> map(@Nonnull final FileContent inputData) {
-    String chars = inputData.getContentAsText().toString(); // matching strings is faster than HeapCharBuffer
-
-    final IndexPattern[] indexPatterns = IndexPatternUtil.getIndexPatterns();
-    if (indexPatterns.length <= 0) {
-      return Collections.emptyMap();
-    }
-    OccurrenceConsumer occurrenceConsumer = new OccurrenceConsumer(null, true);
-    for (IndexPattern indexPattern : indexPatterns) {
-      Pattern pattern = indexPattern.getOptimizedIndexingPattern();
-      if (pattern != null) {
-        Matcher matcher = pattern.matcher(StringPattern.newBombedCharSequence(chars));
-        while (matcher.find()) {
-          if (matcher.start() != matcher.end()) {
-            occurrenceConsumer.incTodoOccurrence(indexPattern);
-          }
-        }
-      }
-    }
-    Map<TodoIndexEntry, Integer> map = new HashMap<>();
-    for (IndexPattern indexPattern : indexPatterns) {
-      final int count = occurrenceConsumer.getOccurrenceCount(indexPattern);
-      if (count > 0) {
-        map.put(new TodoIndexEntry(indexPattern.getPatternString(), indexPattern.isCaseSensitive()), count);
-      }
-    }
-    return map;
-  }
-
+public class PlainTextTodoIndexer extends PlainTextTodoIndexerBase implements VersionedTodoIndexer {
   @Nonnull
   @Override
   public FileType getFileType() {

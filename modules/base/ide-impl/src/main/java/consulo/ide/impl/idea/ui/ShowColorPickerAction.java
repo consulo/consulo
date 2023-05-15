@@ -24,6 +24,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.ui.ex.awt.ColorChooser;
+import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
