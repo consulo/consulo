@@ -16,6 +16,7 @@
 package consulo.ide.impl.options;
 
 import consulo.compiler.artifact.Artifact;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnnamedConfigurable;
@@ -87,7 +88,12 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
         return;
       }
       moduleStructureConfigurable.selectNodeInTree(moduleToSelect).doWhenDone((node) -> {
-        ModuleEditor moduleEditor = ((ModuleConfigurable)((MasterDetailsComponent.MyNode)node).getConfigurable()).getModuleEditor();
+        MasterDetailsConfigurable configurable = ((MasterDetailsComponent.MyNode)node).getConfigurable();
+        if (configurable == null) {
+          return;
+        }
+
+        ModuleEditor moduleEditor = ((ModuleConfigurable)configurable).getModuleEditor();
 
         if (tabId == null) {
           moduleEditor.selectEditor(ProjectBundle.message("module.paths.title"));
