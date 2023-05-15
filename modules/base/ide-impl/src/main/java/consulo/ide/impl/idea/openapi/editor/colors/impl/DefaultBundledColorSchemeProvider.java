@@ -33,18 +33,7 @@ public class DefaultBundledColorSchemeProvider implements BundledColorSchemeProv
       "/colorSchemes/Default.xml",
       "/colorSchemes/IDEA.xml",
       "/colorSchemes/Consulo Light.xml",
-      "/colorSchemes/Darcula.xml",
-      "/colorSchemes/all_hallows_eve.xml",
-      "/colorSchemes/blackboard.xml",
-      "/colorSchemes/cobalt.xml",
-      "/colorSchemes/github.xml",
-      "/colorSchemes/monokai.xml",
-      "/colorSchemes/rails_casts.xml",
-      "/colorSchemes/twilight.xml",
-      "/colorSchemes/vibrant_ink.xml",
-      "/colorSchemes/WarmNeon.xml",
-      "/colorSchemes/Visual Studio Light.xml",
-      "/colorSchemes/Visual Studio Dark.xml"
+      "/colorSchemes/Darcula.xml"
     };
   }
 }

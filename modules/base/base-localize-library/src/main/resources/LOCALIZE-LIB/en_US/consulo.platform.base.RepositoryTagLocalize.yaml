@@ -64,3 +64,5 @@ editor.spelling:
   text: Editor Spelling
 serialize.framework:
   text: Serialize Framework
+editor.color.scheme:
+  text: Editor Color Scheme
