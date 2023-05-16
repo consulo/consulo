@@ -40,36 +40,17 @@ public interface ConfigurablePreselectStrategy {
     }
 
     Objects.requireNonNull(configurable);
-    return new ConfigurablePreselectStrategy() {
-      @Override
-      public Configurable get(@Nonnull Configurable[] configurables) {
-        return configurable;
-      }
-
-      @Override
-      public void save(@Nonnull Configurable configurable) {
-
-      }
-    };
+    return configurables -> configurable;
   }
 
   @Nonnull
   static ConfigurablePreselectStrategy notSelected() {
-    return new ConfigurablePreselectStrategy() {
-      @Override
-      public Configurable get(@Nonnull Configurable[] configurables) {
-        return BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION;
-      }
-
-      @Override
-      public void save(@Nonnull Configurable configurable) {
-
-      }
-    };
+    return configurables -> BaseShowSettingsUtil.SKIP_SELECTION_CONFIGURATION;
   }
 
   @Nullable
   Configurable get(@Nonnull Configurable[] configurables);
 
-  void save(@Nonnull Configurable configurable);
+  default void save(@Nonnull Configurable configurable) {
+  }
 }

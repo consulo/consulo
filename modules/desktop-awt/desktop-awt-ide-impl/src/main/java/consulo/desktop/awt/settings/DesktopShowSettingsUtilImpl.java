@@ -143,15 +143,14 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
                                                                          @Nonnull Consumer<T> afterSelect) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
-    Configurable[] configurables = buildConfigurables(project);
-
-    return showSettingsImpl(project, project1 -> configurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
+    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
       final Settings editor = dialog.getDataUnchecked(Settings.KEY);
       assert editor != null;
       editor.select(configurableClass).doWhenDone(afterSelect);
     });
   }
 
+  @Nonnull
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
@@ -166,11 +165,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
-    Configurable[] configurables = buildConfigurables(project);
-
-    Configurable toSelect = DefaultConfigurablePreselectStrategy.getPreselectedByDisplayName(configurables, nameToSelect, project);
-
-    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.preOrNotSelected(toSelect), dialog -> {
+    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, configurables -> {
+      return DefaultConfigurablePreselectStrategy.getPreselectedByDisplayName(configurables, nameToSelect, project);
+    }, dialog -> {
     });
   }
 
@@ -178,15 +175,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @Override
   @RequiredUIAccess
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
-    Configurable[] configurables = buildConfigurables(project);
-
-    final Configurable configurable2Select = findConfigurable2Select(id2Select, configurables);
-
-    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.preOrNotSelected(configurable2Select), dialog -> {
-      final Settings editor = dialog.getDataUnchecked(Settings.KEY);
-      assert editor != null;
-      editor.select(configurable2Select, filter);
-    });
+    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables,
+                            configurables -> findConfigurable2Select(id2Select, configurables),
+                            dialog -> {
+                            });
   }
 
   @Nullable
@@ -226,9 +218,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
-    Configurable[] configurables = buildConfigurables(project);
-
-    return showSettingsImpl(project, it -> configurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
+    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
       final ProjectStructureSelector editor = dialog.getDataUnchecked(ProjectStructureSelector.KEY);
       assert editor != null;
       consumer.accept(editor);
