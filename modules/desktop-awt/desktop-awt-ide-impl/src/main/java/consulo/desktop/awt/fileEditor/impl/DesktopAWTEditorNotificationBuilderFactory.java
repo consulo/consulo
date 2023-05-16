@@ -18,11 +18,13 @@ package consulo.desktop.awt.fileEditor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 04-Aug-22
  */
+@Singleton
 @ServiceImpl
 public class DesktopAWTEditorNotificationBuilderFactory implements EditorNotificationBuilderFactory {
   @Override
