@@ -21,26 +21,40 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 
+import consulo.logging.Logger;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 
 public class SeverityUtil {
+  private static final Logger LOG = Logger.getInstance(SeverityUtil.class);
   @Nonnull
   public static Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> getRegisteredHighlightingInfoTypes(@Nonnull SeverityRegistrarImpl registrar) {
     Collection<SeverityRegistrarImpl.SeverityBasedTextAttributes> collection = registrar.allRegisteredAttributes();
     for (HighlightInfoType type : registrar.standardSeverities()) {
-      collection.add(getSeverityBasedTextAttributes(registrar, type));
+      SeverityRegistrarImpl.SeverityBasedTextAttributes attributes = getSeverityBasedTextAttributes(registrar, type);
+      if (attributes != null) {
+        collection.add(attributes);
+      } else {
+        LOG.error("Can't find severity for type: " + type);
+      }
     }
     return collection;
   }
 
+  @Nullable
   private static SeverityRegistrarImpl.SeverityBasedTextAttributes getSeverityBasedTextAttributes(@Nonnull SeverityRegistrarImpl registrar, @Nonnull HighlightInfoType type) {
     final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     final TextAttributes textAttributes = scheme.getAttributes(type.getAttributesKey());
     if (textAttributes != null) {
       return new SeverityRegistrarImpl.SeverityBasedTextAttributes(textAttributes, (HighlightInfoType.HighlightInfoTypeImpl)type);
     }
-    return new SeverityRegistrarImpl.SeverityBasedTextAttributes(registrar.getTextAttributesBySeverity(type.getSeverity(null)), (HighlightInfoType.HighlightInfoTypeImpl)type);
+    
+    TextAttributes severity = registrar.getTextAttributesBySeverity(type.getSeverity(null));
+    if (severity == null) {
+      return null;
+    }
+    return new SeverityRegistrarImpl.SeverityBasedTextAttributes(severity, (HighlightInfoType.HighlightInfoTypeImpl)type);
   }
 }
