@@ -53,7 +53,7 @@ public interface Configurable extends UnnamedConfigurable {
 
   @Nonnull
   default String getId() {
-    throw new AbstractMethodError("#getId() implementation required");
+    throw new AbstractMethodError("#getId() implementation required for class " + getClass());
   }
 
   @Nullable
