@@ -11,7 +11,7 @@ Unicode True
 
 ManifestDPIAware True
 
-OutFile "Consulo Setup (x64).exe"
+OutFile "consulo.dist.windows64.installer.exe"
 
 InstallDir $APPDATA\Consulo
 
@@ -22,6 +22,7 @@ RequestExecutionLevel user
 ;--------------------------------
 
 !define MUI_ABORTWARNING
+!define MUI_FINISHPAGE_RUN "$INSTDIR\consulo64.exe"
 
 !insertmacro MUI_PAGE_LICENSE "LICENSE.txt"
 !insertmacro MUI_PAGE_COMPONENTS
@@ -30,6 +31,7 @@ RequestExecutionLevel user
 
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_LANGUAGE "English"
 
