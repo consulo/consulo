@@ -1,4 +1,4 @@
-!define NSIS_MAKENSIS64
+!define /ifndef NSIS_MAKENSIS64
 !include "MUI2.nsh"
 
 !define MUI_ICON "consulo.ico"
