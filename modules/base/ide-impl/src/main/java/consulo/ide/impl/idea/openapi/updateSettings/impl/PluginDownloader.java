@@ -28,15 +28,16 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PluginDownloadFailedException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.io.FilePermissionCopier;
+import consulo.util.io.FileUtil;
 import consulo.util.io.NioPathUtil;
+import consulo.util.io.StreamUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -71,31 +72,33 @@ public class PluginDownloader {
   }
 
   @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor,
+  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor d,
                                                   @Nullable String platformVersion,
                                                   boolean viaUpdate) {
-
-    String downloadUrl = null;
-    if (descriptor instanceof PluginNode pluginNode) {
-      String[] downloadUrls = pluginNode.getDownloadUrls();
-      if (downloadUrls.length > 0) {
-        downloadUrl = downloadUrls[0];
+    return new PluginDownloader(d, (descriptor, tryIndex) -> {
+      String downloadUrl = null;
+      // from 3+ try we will use repo download
+      if (descriptor instanceof PluginNode pluginNode && tryIndex <= 2) {
+        String[] downloadUrls = pluginNode.getDownloadUrls();
+        if (downloadUrls.length > 0) {
+          downloadUrl = downloadUrls[0];
+        }
       }
-    }
 
-    if (downloadUrl == null) {
-      downloadUrl = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
-                                                         descriptor.getPluginId().toString(),
-                                                         platformVersion,
-                                                         false,
-                                                         viaUpdate);
-    }
+      if (downloadUrl == null) {
+        downloadUrl = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
+                                                           descriptor.getPluginId().toString(),
+                                                           platformVersion,
+                                                           false,
+                                                           viaUpdate);
+      }
 
-    return new PluginDownloader(descriptor, downloadUrl);
+      return downloadUrl;
+    });
   }
 
   private final PluginId myPluginId;
-  private String myPluginUrl;
+  private final PluginDownloadUrlBuilder myPluginDownloadUrlBuilder;
 
   private File myFile;
   private File myOldFile;
@@ -104,11 +107,15 @@ public class PluginDownloader {
 
   private boolean myIsPlatform;
 
-  public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull String pluginUrl) {
+  public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull PluginDownloadUrlBuilder pluginDownloadUrlBuilder) {
     myPluginId = pluginDescriptor.getPluginId();
     myDescriptor = pluginDescriptor;
-    myPluginUrl = pluginUrl;
+    myPluginDownloadUrlBuilder = pluginDownloadUrlBuilder;
     myIsPlatform = PlatformOrPluginUpdateChecker.getPlatformPluginId() == pluginDescriptor.getPluginId();
+  }
+
+  private String buildUrl(int tryIndex) {
+    return myPluginDownloadUrlBuilder.buildUrl(myDescriptor, tryIndex);
   }
 
   public void download(@Nonnull ProgressIndicator pi) throws PluginDownloadFailedException {
@@ -281,7 +288,8 @@ public class PluginDownloader {
 
     LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);
 
-    return HttpRequests.request(myPluginUrl).gzip(false).connect(request -> {
+    String downloadUrl = buildUrl(tryIndex);
+    return HttpRequests.request(downloadUrl).gzip(false).connect(request -> {
       MessageDigest digest;
       try {
         digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
@@ -296,7 +304,7 @@ public class PluginDownloader {
 
       String fileName = getFileName();
       File newFile = new File(file.getParentFile(), fileName);
-      FileUtil.rename(file, newFile);
+      FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
       return Pair.create(newFile, checksum);
     });
   }
