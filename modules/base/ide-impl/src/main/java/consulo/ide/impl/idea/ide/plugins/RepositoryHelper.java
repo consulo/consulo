@@ -19,21 +19,22 @@ import com.google.gson.Gson;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.ProgressStreamUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.externalService.update.UpdateChannel;
 import consulo.http.HttpProxyManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.PluginJsonNode;
-import consulo.externalService.update.UpdateChannel;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -49,7 +50,13 @@ import java.util.zip.GZIPInputStream;
 public class RepositoryHelper {
   @Nonnull
   public static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion) {
-    return WebServiceApi.REPOSITORY_API.buildUrl("list") + "?platformVersion=" + platformVersion + "&channel=" + channel;
+    return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
+                              .append("?platformVersion=")
+                              .append(platformVersion)
+                              .append("&channel=")
+                              .append(channel)
+                              .append("&addObsoletePlatforms=false")
+                              .toString();
   }
 
   @Nonnull
@@ -138,11 +145,11 @@ public class RepositoryHelper {
 
       String encoding = connection.getContentEncoding();
       InputStream is = connection.getInputStream();
+      if ("gzip".equalsIgnoreCase(encoding)) {
+        is = new GZIPInputStream(is);
+      }
+      
       try {
-        if ("gzip".equalsIgnoreCase(encoding)) {
-          is = new GZIPInputStream(is);
-        }
-
         if (indicator != null) {
           indicator.setText2(IdeBundle.message("progress.downloading.list.of.plugins"));
         }
@@ -159,20 +166,8 @@ public class RepositoryHelper {
   }
 
   private static List<PluginDescriptor> readPluginsStream(InputStream is, ProgressIndicator indicator) throws Exception {
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    try {
-      byte[] buffer = new byte[1024];
-      int size;
-      while ((size = is.read(buffer)) > 0) {
-        os.write(buffer, 0, size);
-        if (indicator != null) {
-          indicator.checkCanceled();
-        }
-      }
-    }
-    finally {
-      os.close();
-    }
+    UnsyncByteArrayOutputStream os = new UnsyncByteArrayOutputStream();
+    ProgressStreamUtil.copyStreamContent(indicator, is, os, -1);
 
     PluginJsonNode[] nodes = new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()), StandardCharsets.UTF_8), PluginJsonNode[].class);
 
@@ -180,6 +175,7 @@ public class RepositoryHelper {
     for (PluginJsonNode jsonPlugin : nodes) {
       pluginDescriptors.add(new PluginNode(jsonPlugin));
     }
+    
     return pluginDescriptors;
   }
 }

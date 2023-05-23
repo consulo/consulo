@@ -19,6 +19,7 @@ import consulo.container.plugin.*;
 import consulo.ide.impl.plugins.PluginJsonNode;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
@@ -73,6 +74,8 @@ public class PluginNode extends PluginDescriptorStub {
 
   private final Set<String> myTags = new TreeSet<>();
 
+  private String[] myDownloadUrls = ArrayUtil.EMPTY_STRING_ARRAY;
+
   public PluginNode() {
   }
 
@@ -101,6 +104,8 @@ public class PluginNode extends PluginDescriptorStub {
     if (jsonPlugin.optionalDependencies != null) {
       addOptionalDependency(Arrays.stream(jsonPlugin.optionalDependencies).map(PluginId::getId).toArray(PluginId[]::new));
     }
+
+    myDownloadUrls = ObjectUtil.notNull(jsonPlugin.downloadUrls, ArrayUtil.EMPTY_STRING_ARRAY);
 
     myChecksumSha3_256 = jsonPlugin.checksum.sha3_256;
     myExperimental = jsonPlugin.experimental;
@@ -150,6 +155,10 @@ public class PluginNode extends PluginDescriptorStub {
       }
     }
     return ArrayUtil.EMPTY_BYTE_ARRAY;
+  }
+
+  public String[] getDownloadUrls() {
+    return myDownloadUrls;
   }
 
   @Nonnull

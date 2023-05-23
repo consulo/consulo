@@ -47,11 +47,11 @@ public class PluginJsonNode {
   public int downloads;
   public Long length;
   public Long date;
-  public Integer rating;
   public String version;
   public String iconBytes;
   public String iconDarkBytes;
   public String platformVersion;
+  public String[] downloadUrls = ArrayUtil.EMPTY_STRING_ARRAY;
   public String[] dependencies;
   public String[] optionalDependencies;
   // public Extension[] extensions;  old extensions impl

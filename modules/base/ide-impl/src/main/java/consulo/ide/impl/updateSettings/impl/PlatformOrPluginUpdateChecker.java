@@ -15,49 +15,45 @@
  */
 package consulo.ide.impl.updateSettings.impl;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.ide.impl.idea.ide.plugins.PluginNode;
-import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
-import consulo.platform.PlatformOperatingSystem;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.application.internal.ApplicationInfo;
-import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.DateFormatUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.update.UpdateChannel;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PluginNode;
+import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import consulo.externalService.update.UpdateChannel;
+import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.logging.Logger;
 import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.*;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 
@@ -71,27 +67,29 @@ public class PlatformOrPluginUpdateChecker {
   public static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   // windows ids
-  private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
-  private static final PluginId ourWin = PluginId.getId("consulo-win");
-  private static final PluginId ourWin64 = PluginId.getId("consulo-win64");
-  private static final PluginId ourWinA64 = PluginId.getId("consulo-winA64");
+  private static final PluginId ourWinNoJre = PluginId.getId("consulo.dist.windows.no.jre");
+  private static final PluginId ourWin = PluginId.getId("consulo.dist.windows");
+  private static final PluginId ourWin64 = PluginId.getId("consulo.dist.windows64");
+  private static final PluginId ourWinA64 = PluginId.getId("consulo.dist.windowsA64");
 
-  // windows dummy zip ids
-  private static final PluginId ourWinNoJreZip = PluginId.getId("consulo-win-no-jre-zip");
-  private static final PluginId ourWinZip = PluginId.getId("consulo-win-zip");
-  private static final PluginId ourWin64Zip = PluginId.getId("consulo-win64-zip");
-  private static final PluginId ourWinA64Zip = PluginId.getId("consulo-winA64-zip");
+  private static final PluginId ourWinNoJreZip = PluginId.getId("consulo.dist.windows.no.jre.zip");
+  private static final PluginId ourWinZip = PluginId.getId("consulo.dist.windows.zip");
+  private static final PluginId ourWin64Zip = PluginId.getId("consulo.dist.windows64.zip");
+  private static final PluginId ourWinA64Zip = PluginId.getId("consulo.dist.windowsA64.zip");
+
+  // windows installers
+  private static final PluginId ourWin64Installer = PluginId.getId("consulo.dist.windows64.installer");
 
   // linux ids
-  private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
-  private static final PluginId ourLinux = PluginId.getId("consulo-linux");
-  private static final PluginId ourLinux64 = PluginId.getId("consulo-linux64");
+  private static final PluginId ourLinuxNoJre = PluginId.getId("consulo.dist.linux.no.jre");
+  private static final PluginId ourLinux = PluginId.getId("consulo.dist.linux");
+  private static final PluginId ourLinux64 = PluginId.getId("consulo.dist.linux64");
 
   // mac ids
-  private static final PluginId ourMac64NoJre = PluginId.getId("consulo-mac-no-jre");
-  private static final PluginId ourMacA64NoJre = PluginId.getId("consulo-macA64-no-jre");
-  private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
-  private static final PluginId ourMacA64 = PluginId.getId("consulo-macA64");
+  private static final PluginId ourMac64NoJre = PluginId.getId("consulo.dist.mac64.no.jre");
+  private static final PluginId ourMacA64NoJre = PluginId.getId("consulo.dist.macA64.no.jre");
+  private static final PluginId ourMac64 = PluginId.getId("consulo.dist.mac64");
+  private static final PluginId ourMacA64 = PluginId.getId("consulo.dist.macA64");
 
   private static final PluginId[] ourPlatformIds = {
           // win no jre (tar)
@@ -124,7 +122,8 @@ public class PlatformOrPluginUpdateChecker {
           ourMacA64NoJre,
           // mac ARM64 with jre (tar)
           ourMacA64,
-          // ...
+          // win 64 installer
+          ourWin64Installer
   };
 
   private static final String ourForceJREBuild = "force.jre.build.on.update";

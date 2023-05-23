@@ -25,11 +25,11 @@ import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateSettings;
 import consulo.http.HttpRequests;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PluginDownloadFailedException;
@@ -37,16 +37,17 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.io.NioPathUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -70,10 +71,27 @@ public class PluginDownloader {
   }
 
   @Nonnull
-  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, @Nullable String platformVersion, boolean viaUpdate) {
-    String url = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(), descriptor.getPluginId().toString(), platformVersion, false, viaUpdate);
+  public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor,
+                                                  @Nullable String platformVersion,
+                                                  boolean viaUpdate) {
 
-    return new PluginDownloader(descriptor, url);
+    String downloadUrl = null;
+    if (descriptor instanceof PluginNode pluginNode) {
+      String[] downloadUrls = pluginNode.getDownloadUrls();
+      if (downloadUrls.length > 0) {
+        downloadUrl = downloadUrls[0];
+      }
+    }
+
+    if (downloadUrl == null) {
+      downloadUrl = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
+                                                         descriptor.getPluginId().toString(),
+                                                         platformVersion,
+                                                         false,
+                                                         viaUpdate);
+    }
+
+    return new PluginDownloader(descriptor, downloadUrl);
   }
 
   private final PluginId myPluginId;
@@ -103,7 +121,7 @@ public class PluginDownloader {
     }
 
     boolean checkChecksum = true;
-    
+
     // if there no checksum at server, disable check
     String expectedChecksum = myDescriptor.getChecksumSHA3_256();
     if (expectedChecksum == null) {
@@ -244,7 +262,9 @@ public class PluginDownloader {
   }
 
   @Nonnull
-  private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator, String expectedChecksum, int tryIndex) throws IOException {
+  private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator,
+                                            String expectedChecksum,
+                                            int tryIndex) throws IOException {
     File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
     if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
       throw new IOException(IdeBundle.message("error.cannot.create.temp.dir", pluginsTemp));
