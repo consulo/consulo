@@ -365,6 +365,20 @@ class JarLoader extends Loader {
 
   private static final Object ourLock = new Object();
 
+  @Override
+  void close() throws Exception {
+    JarFile zipFile = SoftReference.dereference(myZipFileSoftReference);
+    if (zipFile == null) {
+      return;
+    }
+
+    synchronized (ourLock) {
+      myZipFileSoftReference = null;
+
+      zipFile.close();
+    }
+  }
+
   protected JarFile getJarFile() throws IOException {
     // This code is executed at least 100K times (O(number of classes needed to load)) and it takes considerable time to open ZipFile's
     // such number of times so we store reference to ZipFile if we allowed to lock the file (assume it isn't changed)

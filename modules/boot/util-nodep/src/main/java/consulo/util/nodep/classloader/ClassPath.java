@@ -79,6 +79,19 @@ public class ClassPath {
     push(urls);
   }
 
+  public void close() throws Exception {
+    synchronized (myLoaders) {
+      for (int i = 0; i < myLoaders.size(); i++) {
+        Loader loader = myLoaders.get(i);
+        if (loader == null) {
+          continue;
+        }
+
+        loader.close();
+      }
+    }
+  }
+
   /**
    * @deprecated Adding additional urls to classpath at runtime could lead to hard-to-debug errors
    */

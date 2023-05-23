@@ -24,6 +24,9 @@ abstract class Loader {
     return myURL;
   }
 
+  void close() throws Exception {
+  }
+
   abstract Resource getResource(String name);
 
   abstract ClasspathCache.LoaderData buildData() throws IOException;

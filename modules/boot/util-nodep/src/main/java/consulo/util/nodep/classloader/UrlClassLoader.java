@@ -20,7 +20,7 @@ import java.util.*;
  * A class loader that allows for various customizations, e.g. not locking jars or using a special cache to speed up class loading.
  * Should be constructed using {@link #build()} method.
  */
-public class UrlClassLoader extends ClassLoader {
+public class UrlClassLoader extends ClassLoader implements AutoCloseable {
   static final String CLASS_EXTENSION = ".class";
   private static final Set<Class<?>> ourParallelCapableLoaders;
 
@@ -433,6 +433,10 @@ public class UrlClassLoader extends ClassLoader {
     return resource;
   }
 
+  @Override
+  public void close() throws Exception {
+    myClassPath.close();
+  }
 
   @Override
   public InputStream getResourceAsStream(String name) {
