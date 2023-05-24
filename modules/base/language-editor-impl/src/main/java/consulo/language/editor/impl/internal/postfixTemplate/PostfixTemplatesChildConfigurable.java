@@ -54,6 +54,15 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
     return myPostfixTemplateProvider;
   }
 
+  /**
+   * @see PostfixTemplatesConfigurable#getId()
+   */
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editing.postfixCompletion." + myPostfixTemplateProvider.getLanguage().getID();
+  }
+
   @Nls
   @Override
   public String getDisplayName() {
