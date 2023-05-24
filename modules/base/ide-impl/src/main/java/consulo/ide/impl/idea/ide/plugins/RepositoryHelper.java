@@ -60,7 +60,12 @@ public class RepositoryHelper {
   }
 
   @Nonnull
-  public static String buildUrlForDownload(@Nonnull UpdateChannel channel, @Nonnull String pluginId, @Nullable String platformVersion, boolean noTracking, boolean viaUpdate) {
+  public static String buildUrlForDownload(@Nonnull UpdateChannel channel,
+                                           @Nonnull String pluginId,
+                                           @Nullable String platformVersion,
+                                           boolean noTracking,
+                                           boolean viaUpdate,
+                                           boolean noRedirect) {
     if (platformVersion == null) {
       platformVersion = ApplicationInfo.getInstance().getBuild().asString();
     }
@@ -84,6 +89,9 @@ public class RepositoryHelper {
     if (viaUpdate) {
       builder.append("&viaUpdate=true");
     }
+    if (noRedirect) {
+      builder.append("&noRedirect=true");
+    }
     return builder.toString();
   }
 
@@ -91,8 +99,10 @@ public class RepositoryHelper {
    * Load & return only plugins from repository
    */
   @Nonnull
-  public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel, @Nonnull EarlyAccessProgramManager eapManager)
-          throws Exception {
+  public static List<PluginDescriptor> loadOnlyPluginsFromRepository(@Nullable ProgressIndicator indicator,
+                                                                     @Nonnull UpdateChannel channel,
+                                                                     @Nonnull EarlyAccessProgramManager eapManager)
+    throws Exception {
     List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
     return ContainerUtil.filter(ideaPluginDescriptors, it -> isPluginAllowed(it, eapManager));
   }
@@ -106,7 +116,8 @@ public class RepositoryHelper {
   }
 
   @Nonnull
-  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel) throws Exception {
+  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
+                                                                 @Nonnull UpdateChannel channel) throws Exception {
     return loadPluginsFromRepository(indicator, channel, null);
   }
 
@@ -118,7 +129,9 @@ public class RepositoryHelper {
    * @throws Exception
    */
   @Nonnull
-  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator, @Nonnull UpdateChannel channel, @Nullable String buildNumber) throws Exception {
+  public static List<PluginDescriptor> loadPluginsFromRepository(@Nullable ProgressIndicator indicator,
+                                                                 @Nonnull UpdateChannel channel,
+                                                                 @Nullable String buildNumber) throws Exception {
     if (buildNumber == null) {
       ApplicationInfo appInfo = ApplicationInfo.getInstance();
       buildNumber = appInfo.getBuild().asString();
@@ -148,7 +161,7 @@ public class RepositoryHelper {
       if ("gzip".equalsIgnoreCase(encoding)) {
         is = new GZIPInputStream(is);
       }
-      
+
       try {
         if (indicator != null) {
           indicator.setText2(IdeBundle.message("progress.downloading.list.of.plugins"));
@@ -169,13 +182,14 @@ public class RepositoryHelper {
     UnsyncByteArrayOutputStream os = new UnsyncByteArrayOutputStream();
     ProgressStreamUtil.copyStreamContent(indicator, is, os, -1);
 
-    PluginJsonNode[] nodes = new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()), StandardCharsets.UTF_8), PluginJsonNode[].class);
+    PluginJsonNode[] nodes = new Gson().fromJson(new InputStreamReader(new ByteArrayInputStream(os.toByteArray()), StandardCharsets.UTF_8),
+                                                 PluginJsonNode[].class);
 
     List<PluginDescriptor> pluginDescriptors = new ArrayList<>(nodes.length);
     for (PluginJsonNode jsonPlugin : nodes) {
       pluginDescriptors.add(new PluginNode(jsonPlugin));
     }
-    
+
     return pluginDescriptors;
   }
 }

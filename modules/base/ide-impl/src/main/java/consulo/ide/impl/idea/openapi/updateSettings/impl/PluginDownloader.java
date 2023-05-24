@@ -25,7 +25,6 @@ import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateSettings;
 import consulo.http.HttpRequests;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.plugins.PluginNode;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.util.io.ZipUtil;
@@ -50,6 +49,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -76,24 +76,13 @@ public class PluginDownloader {
                                                   @Nullable String platformVersion,
                                                   boolean viaUpdate) {
     return new PluginDownloader(d, (descriptor, tryIndex) -> {
-      String downloadUrl = null;
-      // from 3+ try we will use repo download
-      if (descriptor instanceof PluginNode pluginNode && tryIndex <= 2) {
-        String[] downloadUrls = pluginNode.getDownloadUrls();
-        if (downloadUrls.length > 0) {
-          downloadUrl = downloadUrls[0];
-        }
-      }
-
-      if (downloadUrl == null) {
-        downloadUrl = RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
-                                                           descriptor.getPluginId().toString(),
-                                                           platformVersion,
-                                                           false,
-                                                           viaUpdate);
-      }
-
-      return downloadUrl;
+      boolean noRedirect = tryIndex > 2;
+      return RepositoryHelper.buildUrlForDownload(UpdateSettings.getInstance().getChannel(),
+                                                  descriptor.getPluginId().toString(),
+                                                  platformVersion,
+                                                  false,
+                                                  viaUpdate,
+                                                  noRedirect);
     });
   }
 

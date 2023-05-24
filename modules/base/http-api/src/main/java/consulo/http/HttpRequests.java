@@ -432,6 +432,11 @@ public final class HttpRequests {
         connection = HttpProxyManager.getInstance().openConnection(url);
       }
 
+      if (connection instanceof HttpURLConnection httpURLConnection) {
+        // we will control redirection by code lower
+        httpURLConnection.setInstanceFollowRedirects(false);
+      }
+
       connection.setConnectTimeout(builder.myConnectTimeout);
       connection.setReadTimeout(builder.myTimeout);
 
