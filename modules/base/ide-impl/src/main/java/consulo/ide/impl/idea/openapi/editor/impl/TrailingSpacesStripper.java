@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.OverrideEditorFileKeys;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.dataContext.DataContext;
@@ -38,17 +39,14 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
 public final class TrailingSpacesStripper implements FileDocumentManagerListener {
-  public static final Key<String> OVERRIDE_STRIP_TRAILING_SPACES_KEY = Key.create("OVERRIDE_TRIM_TRAILING_SPACES_KEY");
-  public static final Key<Boolean> OVERRIDE_ENSURE_NEWLINE_KEY = Key.create("OVERRIDE_ENSURE_NEWLINE_KEY");
-
   private static final Key<Boolean> DISABLE_FOR_FILE_KEY = Key.create("DISABLE_TRAILING_SPACE_STRIPPER_FOR_FILE_KEY");
 
   private final Set<Document> myDocumentsToStripLater = new HashSet<>();
@@ -75,8 +73,8 @@ public final class TrailingSpacesStripper implements FileDocumentManagerListener
 
     final EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
 
-    final String overrideStripTrailingSpacesData = file.getUserData(OVERRIDE_STRIP_TRAILING_SPACES_KEY);
-    final Boolean overrideEnsureNewlineData = file.getUserData(OVERRIDE_ENSURE_NEWLINE_KEY);
+    final String overrideStripTrailingSpacesData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_STRIP_TRAILING_SPACES_KEY);
+    final Boolean overrideEnsureNewlineData = file.getUserData(OverrideEditorFileKeys.OVERRIDE_ENSURE_NEWLINE_KEY);
     @EditorSettingsExternalizable.StripTrailingSpaces
     String stripTrailingSpaces = overrideStripTrailingSpacesData != null ? overrideStripTrailingSpacesData : settings.getStripTrailingSpaces();
     final boolean doStrip = !stripTrailingSpaces.equals(EditorSettingsExternalizable.STRIP_TRAILING_SPACES_NONE);
