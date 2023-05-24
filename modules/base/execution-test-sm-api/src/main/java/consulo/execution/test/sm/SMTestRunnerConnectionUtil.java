@@ -16,7 +16,6 @@
 package consulo.execution.test.sm;
 
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.CommandLineState;
@@ -42,9 +41,9 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.io.URLUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -248,10 +247,6 @@ public class SMTestRunnerConnectionUtil {
     eventsProcessor.addEventsListener(resultsViewer);
     // subscribes test runner's actions on results viewer events
     resultsViewer.addEventsListener(uiActionsHandler);
-    // subscribes statistics tab viewer on event processor
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      eventsProcessor.addEventsListener(statisticsPane.createTestEventsListener());
-    }
 
     processHandler.addProcessListener(new ProcessAdapter() {
       @Override

@@ -20,18 +20,18 @@
  */
 package consulo.ide.impl.idea.ide.util.scopeChooser;
 
-import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ide.impl.idea.packageDependencies.DependencyUISettings;
 
 public final class ShowModulesAction extends ToggleAction {
   private final Runnable myUpdate;
 
   public ShowModulesAction(final Runnable update) {
     super(IdeBundle.message("action.show.modules"),
-          IdeBundle.message("action.description.show.modules"), AllIcons.ObjectBrowser.ShowModules);
+          IdeBundle.message("action.description.show.modules"), PlatformIconGroup.actionsGroupbymodule());
     myUpdate = update;
   }
 

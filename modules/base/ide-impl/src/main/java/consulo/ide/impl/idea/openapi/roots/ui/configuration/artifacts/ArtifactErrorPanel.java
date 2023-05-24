@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class ArtifactErrorPanel {
   private String myErrorText;
 
   public ArtifactErrorPanel(final ArtifactEditorImpl artifactEditor) {
-    myErrorLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
+    myErrorLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
     new UiNotifyConnector(myMainPanel, new Activatable() {
       @Override
       public void showNotify() {

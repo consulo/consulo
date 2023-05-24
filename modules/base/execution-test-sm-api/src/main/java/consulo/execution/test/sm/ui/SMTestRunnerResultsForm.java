@@ -20,7 +20,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.DateFormatUtil;
-import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -32,14 +31,13 @@ import consulo.execution.test.export.TestResultsXmlFormatter;
 import consulo.execution.test.sm.SMRunnerUtil;
 import consulo.execution.test.sm.TestHistoryConfiguration;
 import consulo.execution.test.sm.action.AbstractImportTestsAction;
-import consulo.execution.test.sm.runner.history.ImportedTestConsoleProperties;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.sm.runner.SMTRunnerEventsListener;
 import consulo.execution.test.sm.runner.SMTestProxy;
+import consulo.execution.test.sm.runner.history.ImportedTestConsoleProperties;
 import consulo.execution.test.sm.ui.statistic.StatisticsPanel;
 import consulo.execution.test.ui.TestResultsPanel;
 import consulo.execution.test.ui.TestTreeView;
-import consulo.execution.test.ui.TestsProgressAnimator;
 import consulo.execution.test.ui.ToolbarPanel;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.logging.Logger;
@@ -56,10 +54,9 @@ import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -69,8 +66,6 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -79,18 +74,15 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * @author: Roman Chernyatchik
+ * @author Roman Chernyatchik
  */
 public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFrameworkRunningModel, TestResultsViewer, SMTRunnerEventsListener {
-  @NonNls public static final String HISTORY_DATE_FORMAT = "yyyy.MM.dd 'at' HH'h' mm'm' ss's'";
-  @NonNls private static final String DEFAULT_SM_RUNNER_SPLITTER_PROPERTY = "SMTestRunner.Splitter.Proportion";
+  public static final String HISTORY_DATE_FORMAT = "yyyy.MM.dd 'at' HH'h' mm'm' ss's'";
+  private static final String DEFAULT_SM_RUNNER_SPLITTER_PROPERTY = "SMTestRunner.Splitter.Proportion";
 
-  public static final Color DARK_YELLOW = JBColor.YELLOW.darker();
   private static final Logger LOG = Logger.getInstance(SMTestRunnerResultsForm.class);
 
   private SMTRunnerTestTreeView myTreeView;
-
-  private TestsProgressAnimator myAnimator;
 
   /**
    * Fake parent suite for all tests and suites
@@ -130,7 +122,11 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
                                  AnAction[] consoleActions,
                                  final TestConsoleProperties consoleProperties,
                                  @Nullable String splitterPropertyName) {
-    super(console, consoleActions, consoleProperties, StringUtil.notNullize(splitterPropertyName, DEFAULT_SM_RUNNER_SPLITTER_PROPERTY), 0.2f);
+    super(console,
+          consoleActions,
+          consoleProperties,
+          StringUtil.notNullize(splitterPropertyName, DEFAULT_SM_RUNNER_SPLITTER_PROPERTY),
+          0.2f);
     myProject = consoleProperties.getProject();
 
     //Create tests common suite root
@@ -150,21 +146,6 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   }
 
   @Override
-  public void initUI() {
-    super.initUI();
-
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      final KeyStroke shiftEnterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK);
-      SMRunnerUtil.registerAsAction(shiftEnterKey, "show-statistics-for-test-proxy", new Runnable() {
-        @Override
-        public void run() {
-          showStatisticsForSelectedProxy();
-        }
-      }, myTreeView);
-    }
-  }
-
-  @Override
   protected ToolbarPanel createToolbarPanel() {
     return new SMTRunnerToolbarPanel(myProperties, this, this);
   }
@@ -176,24 +157,11 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     myTreeView.setLargeModel(true);
     myTreeView.attachToModel(this);
     myTreeView.setTestResultsViewer(this);
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      addTestsTreeSelectionListener(new TreeSelectionListener() {
-        @Override
-        public void valueChanged(TreeSelectionEvent e) {
-          AbstractTestProxy selectedTest = getTreeView().getSelectedTest();
-          if (selectedTest instanceof SMTestProxy) {
-            myStatisticsPane.selectProxy(((SMTestProxy)selectedTest), this, false);
-          }
-        }
-      });
-    }
 
     final SMTRunnerTreeStructure structure = new SMTRunnerTreeStructure(myProject, myTestsRootNode);
     myTreeBuilder = new SMTRunnerTreeBuilder(myTreeView, structure);
     myTreeBuilder.setTestsComparator(TestConsoleProperties.SORT_ALPHABETICALLY.value(myProperties));
     Disposer.register(this, myTreeBuilder);
-
-    myAnimator = new TestsProgressAnimator(myTreeBuilder);
 
     TrackRunningTestUtil.installStopListeners(myTreeView, myProperties, new Consumer<AbstractTestProxy>() {
       @Override
@@ -272,7 +240,6 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
    */
   @Override
   public void onTestingStarted(@Nonnull SMTestProxy.SMRootTestProxy testsRoot) {
-    myAnimator.setCurrentTestCase(myTestsRootNode);
     myTreeBuilder.updateFromRoot();
 
     // Status line
@@ -309,8 +276,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     updateStatusLabel(true);
     updateIconProgress(true);
 
-    myAnimator.stopMovie();
-    myTreeBuilder.updateFromRoot();
+    myTreeBuilder.queueUpdate();
 
     LvcsHelper.addLabel(this);
 
@@ -339,14 +305,14 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
 
     if (testsRoot.isEmptySuite() &&
-        testsRoot.isTestsReporterAttached() &&
-        myProperties instanceof SMTRunnerConsoleProperties &&
-        ((SMTRunnerConsoleProperties)myProperties).fixEmptySuite()) {
+      testsRoot.isTestsReporterAttached() &&
+      myProperties instanceof SMTRunnerConsoleProperties &&
+      ((SMTRunnerConsoleProperties)myProperties).fixEmptySuite()) {
       return;
     }
     final TestsUIUtil.TestResultPresentation presentation = new TestsUIUtil.TestResultPresentation(testsRoot, myStartTime > 0, null)
-            .getPresentation(myFailedTestCount, Math.max(0, myFinishedTestCount - myFailedTestCount - myIgnoredTestCount),
-                             myTotalTestCount - myFinishedTestCount, myIgnoredTestCount);
+      .getPresentation(myFailedTestCount, Math.max(0, myFinishedTestCount - myFailedTestCount - myIgnoredTestCount),
+                       myTotalTestCount - myFinishedTestCount, myIgnoredTestCount);
     Application.get().invokeLater(() -> TestsUIUtil.notifyByBalloon(myProperties.getProject(), testsRoot, myProperties, presentation));
     addToHistory(testsRoot, myProperties, this);
   }
@@ -354,9 +320,9 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   private void addToHistory(final SMTestProxy.SMRootTestProxy root, TestConsoleProperties consoleProperties, Disposable parentDisposable) {
     final RunProfile configuration = consoleProperties.getConfiguration();
     if (configuration instanceof RunConfiguration &&
-        !(consoleProperties instanceof ImportedTestConsoleProperties) &&
-        !ApplicationManager.getApplication().isUnitTestMode() &&
-        !myDisposed) {
+      !(consoleProperties instanceof ImportedTestConsoleProperties) &&
+      !ApplicationManager.getApplication().isUnitTestMode() &&
+      !myDisposed) {
       final MySaveHistoryTask backgroundable = new MySaveHistoryTask(consoleProperties, root, (RunConfiguration)configuration);
       Disposer.register(parentDisposable, () -> backgroundable.dispose());
       backgroundable.queue();
@@ -403,8 +369,8 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
     //still expand failure when user selected another test
     if (myLastSelected != null &&
-        TestConsoleProperties.TRACK_RUNNING_TEST.value(myProperties) &&
-        TestConsoleProperties.HIDE_PASSED_TESTS.value(myProperties)) {
+      TestConsoleProperties.TRACK_RUNNING_TEST.value(myProperties) &&
+      TestConsoleProperties.HIDE_PASSED_TESTS.value(myProperties)) {
       myTreeBuilder.expand(test, null);
     }
   }
@@ -526,12 +492,6 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
   private void selectAndNotify(@Nullable final AbstractTestProxy testProxy, @Nullable Runnable onDone) {
     selectWithoutNotify(testProxy, onDone);
-
-    // Is used by Statistic tab to differ use selection in tree
-    // from manual selection from API (e.g. test runner events)
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      showStatisticsForSelectedProxy(testProxy, false);
-    }
   }
 
   @Override
@@ -630,8 +590,6 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     }
     myTreeBuilder.repaintWithParents(newTestOrSuite);
 
-    myAnimator.setCurrentTestCase(newTestOrSuite);
-
     if (TestConsoleProperties.TRACK_RUNNING_TEST.value(myProperties)) {
       if (myLastSelected == null || myLastSelected == newTestOrSuite) {
         myLastSelected = null;
@@ -690,11 +648,21 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
     // initializing will be "launchedAndFinished"
     final boolean launchedAndFinished = myTestsRootNode.wasLaunched() && !myTestsRootNode.isInProgress();
     if (!TestsPresentationUtil.hasNonDefaultCategories(myMentionedCategories)) {
-      myStatusLine.formatTestMessage(myTotalTestCount, myFinishedTestCount, myFailedTestCount, myIgnoredTestCount, myTestsRootNode.getDuration(), myEndTime);
+      myStatusLine.formatTestMessage(myTotalTestCount,
+                                     myFinishedTestCount,
+                                     myFailedTestCount,
+                                     myIgnoredTestCount,
+                                     myTestsRootNode.getDuration(),
+                                     myEndTime);
     }
     else {
-      myStatusLine.setText(TestsPresentationUtil.getProgressStatus_Text(myStartTime, myEndTime, myTotalTestCount, myFinishedTestCount, myFailedTestCount,
-                                                                        myMentionedCategories, launchedAndFinished));
+      myStatusLine.setText(TestsPresentationUtil.getProgressStatus_Text(myStartTime,
+                                                                        myEndTime,
+                                                                        myTotalTestCount,
+                                                                        myFinishedTestCount,
+                                                                        myFailedTestCount,
+                                                                        myMentionedCategories,
+                                                                        launchedAndFinished));
     }
   }
 
@@ -727,7 +695,9 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
       @Override
-      public void handlePropagateSelectionRequest(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@jakarta.annotation.Nullable final SMTestProxy selectedTestProxy,
+                                                  @Nonnull final Object sender,
+                                                  final boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(new Runnable() {
           @Override
           public void run() {
@@ -833,7 +803,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         handler.getTransformer().setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
         final String configurationNameIncludedDate = PathUtil.suggestFileName(myConfiguration.getName()) + " - " +
-                                                     new SimpleDateFormat(HISTORY_DATE_FORMAT).format(new Date());
+          new SimpleDateFormat(HISTORY_DATE_FORMAT).format(new Date());
 
         myOutputFile = new File(TestStateStorage.getTestHistoryRoot((Project)myProject), configurationNameIncludedDate + ".xml");
         FileUtil.createParentDirs(myOutputFile);
@@ -860,11 +830,14 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         TestStateStorage storage = TestStateStorage.getInstance(project);
         List<SMTestProxy> tests = myRoot.getAllTests();
         for (SMTestProxy proxy : tests) {
-          String url = proxy instanceof SMTestProxy.SMRootTestProxy ? ((SMTestProxy.SMRootTestProxy)proxy).getRootLocation() : proxy.getLocationUrl();
+          String url =
+            proxy instanceof SMTestProxy.SMRootTestProxy ? ((SMTestProxy.SMRootTestProxy)proxy).getRootLocation() : proxy.getLocationUrl();
           if (url != null) {
             String configurationName = myConfiguration != null ? myConfiguration.getName() : null;
             storage.writeState(url,
-                               new TestStateStorage.Record(proxy.getMagnitude(), new Date(), configurationName == null ? 0 : configurationName.hashCode()));
+                               new TestStateStorage.Record(proxy.getMagnitude(),
+                                                           new Date(),
+                                                           configurationName == null ? 0 : configurationName.hashCode()));
           }
         }
       });
@@ -875,7 +848,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
       if (myOutputFile != null && myOutputFile.exists()) {
         AbstractImportTestsAction.adjustHistory((Project)myProject);
         TestHistoryConfiguration.getInstance((Project)myProject)
-                .registerHistoryItem(myOutputFile.getName(), myConfiguration.getName(), myConfiguration.getType().getId());
+                                .registerHistoryItem(myOutputFile.getName(), myConfiguration.getName(), myConfiguration.getType().getId());
       }
     }
 

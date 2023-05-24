@@ -16,25 +16,29 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.execution.configurations.*;
-import consulo.execution.*;
+import consulo.application.AllIcons;
+import consulo.configurable.ConfigurationException;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerRegistry;
+import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ProgramRunner;
-import consulo.application.AllIcons;
-import consulo.configurable.ConfigurationException;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.execution.configuration.ui.SettingsEditorConfigurable;
+import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.JBCheckBox;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -292,7 +296,7 @@ public final class SingleConfigurationConfigurable<Config extends RunConfigurati
 
       getEditor().addSettingsEditorListener(settingsEditor -> updateWarning());
 
-      myWarningLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
+      myWarningLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
 
       myComponentPlace.add(getEditorComponent(), BorderLayout.CENTER);
       

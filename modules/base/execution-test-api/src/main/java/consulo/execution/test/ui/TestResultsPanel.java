@@ -105,22 +105,6 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
     rightPanel.add(SameHeightPanel.wrap(myStatusLine, myToolbarPanel), BorderLayout.NORTH);
     myStatisticsSplitter = createSplitter(myStatisticsSplitterProportionProperty, 0.5f, false);
     myStatisticsSplitter.setFirstComponent(createOutputTab(myConsole, myConsoleActions));
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      if (TestConsoleProperties.SHOW_STATISTICS.value(myProperties)) {
-        showStatistics();
-      }
-      myProperties.addListener(TestConsoleProperties.SHOW_STATISTICS, new TestFrameworkPropertyListener<Boolean>() {
-        @Override
-        public void onChanged(Boolean value) {
-          if (value.booleanValue()) {
-            showStatistics();
-          }
-          else {
-            myStatisticsSplitter.setSecondComponent(null);
-          }
-        }
-      });
-    }
     rightPanel.add(myStatisticsSplitter, BorderLayout.CENTER);
     mySplitter.setSecondComponent(rightPanel);
     testTreeView.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));

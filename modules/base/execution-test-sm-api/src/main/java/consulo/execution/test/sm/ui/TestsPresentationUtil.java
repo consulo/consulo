@@ -20,7 +20,6 @@ import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.execution.test.*;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
-import consulo.execution.test.ui.TestsProgressAnimator;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.process.ProcessOutputTypes;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -28,10 +27,10 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.awt.*;
 import java.util.List;
 import java.util.Set;
@@ -287,8 +286,7 @@ public class TestsPresentationUtil {
           return hasErrors ? SMPoolOfTestIcons.PAUSED_E_ICON : AllIcons.RunConfigurations.TestPaused;
         }
         else {
-          final int frameIndex = TestsProgressAnimator.getCurrentFrameIndex();
-          return hasErrors ? SMPoolOfTestIcons.FRAMES_E[frameIndex] : TestsProgressAnimator.FRAMES[frameIndex];
+          return hasErrors ? SMPoolOfTestIcons.RUNNING_E_ICON : SMPoolOfTestIcons.RUNNING_ICON;
         }
       case SKIPPED_INDEX:
         return hasErrors ? SMPoolOfTestIcons.SKIPPED_E_ICON : PoolOfTestIcons.SKIPPED_ICON;

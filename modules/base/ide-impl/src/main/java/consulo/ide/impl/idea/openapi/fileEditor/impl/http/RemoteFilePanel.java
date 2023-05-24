@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.net.HttpProxyConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -34,16 +34,16 @@ import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.http.event.FileDownloadingListener;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileInfo;
 import consulo.virtualFileSystem.http.RemoteFileState;
+import consulo.virtualFileSystem.http.event.FileDownloadingListener;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -79,7 +79,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
   public RemoteFilePanel(final Project project, final HttpVirtualFile virtualFile) {
     myProject = project;
     myVirtualFile = virtualFile;
-    myErrorLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
+    myErrorLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
     myUrlTextField.setText(virtualFile.getUrl());
     myProgressUpdatesQueue = new MergingUpdateQueue("downloading progress updates", 300, false, myMainPanel);
     initToolbar(project);

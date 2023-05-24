@@ -818,10 +818,8 @@ public class AllIcons {
     public static final Image AbbreviatePackageNames = PlatformIconGroup.objectbrowserAbbreviatepackagenames(); // 16x16
     public static final Image CompactEmptyPackages = PlatformIconGroup.objectbrowserCompactemptypackages(); // 16x16
     public static final Image FlattenPackages = PlatformIconGroup.objectbrowserFlattenpackages(); // 16x16
-    public static final Image ShowEditorHighlighting = PlatformIconGroup.objectbrowserShoweditorhighlighting(); // 16x16
     public static final Image ShowLibraryContents = PlatformIconGroup.objectbrowserShowlibrarycontents(); // 16x16
     public static final Image ShowMembers = PlatformIconGroup.objectbrowserShowmembers(); // 16x16
-    public static final Image ShowModules = PlatformIconGroup.objectbrowserShowmodules(); // 16x16
     public static final Image SortByType = PlatformIconGroup.objectbrowserSortbytype(); // 16x16
     public static final Image Sorted = PlatformIconGroup.objectbrowserSorted(); // 16x16
     public static final Image SortedByUsage = PlatformIconGroup.objectbrowserSortedbyusage(); // 16x16
@@ -898,37 +896,18 @@ public class AllIcons {
   }
 
   public static class RunConfigurations {
-    public static final Image Applet = PlatformIconGroup.runconfigurationsApplet(); // 16x16
     public static final Image Application = PlatformIconGroup.runconfigurationsApplication(); // 16x16
-    public static final Image ConfigurationWarning = PlatformIconGroup.runconfigurationsConfigurationwarning(); // 16x16
-    public static final Image HideIgnored = PlatformIconGroup.runconfigurationsHideignored(); // 16x16
     public static final Image HidePassed = PlatformIconGroup.runconfigurationsHidepassed(); // 16x16
     public static final Image IgnoredTest = PlatformIconGroup.runconfigurationsIgnoredtest(); // 16x16
-    public static final Image IncludeNonStartedTests_Rerun = PlatformIconGroup.runconfigurationsIncludenonstartedtests_rerun(); // 16x16
     public static final Image InvalidConfigurationLayer = PlatformIconGroup.runconfigurationsInvalidconfigurationlayer(); // 16x16
     public static final Image Junit = PlatformIconGroup.runconfigurationsJunit(); // 16x16
-    public static final Image LoadingTree = PlatformIconGroup.runconfigurationsLoadingtree(); // 16x16
-    public static final Image Ql_console = PlatformIconGroup.runconfigurationsQl_console(); // 16x16
     public static final Image Remote = PlatformIconGroup.runconfigurationsRemote(); // 16x16
     public static final Image RerunFailedTests = PlatformIconGroup.runconfigurationsRerunfailedtests(); // 16x16
-    public static final Image SaveTempConfig = PlatformIconGroup.runconfigurationsSavetempconfig(); // 16x16
     public static final Image Scroll_down = PlatformIconGroup.runconfigurationsScroll_down(); // 16x16
-    public static final Image ScrollToStackTrace = PlatformIconGroup.runconfigurationsScrolltostacktrace(); // 16x16
-    public static final Image SelectFirstDefect = PlatformIconGroup.runconfigurationsSelectfirstdefect(); // 16x16
     public static final Image SortbyDuration = PlatformIconGroup.runconfigurationsSortbyduration(); // 16x16
-    public static final Image ShowStatistics = PlatformIconGroup.runconfigurationsShowstatistics(); // 16x16
-    public static final Image SourceAtException = PlatformIconGroup.runconfigurationsSourceatexception(); // 16x16
     public static final Image TestError = PlatformIconGroup.runconfigurationsTesterror(); // 16x16
     public static final Image TestFailed = PlatformIconGroup.runconfigurationsTestfailed(); // 16x16
     public static final Image TestIgnored = PlatformIconGroup.runconfigurationsTestignored(); // 16x16
-    public static final Image TestInProgress1 = PlatformIconGroup.runconfigurationsTestinprogress1(); // 16x16
-    public static final Image TestInProgress2 = PlatformIconGroup.runconfigurationsTestinprogress2(); // 16x16
-    public static final Image TestInProgress3 = PlatformIconGroup.runconfigurationsTestinprogress3(); // 16x16
-    public static final Image TestInProgress4 = PlatformIconGroup.runconfigurationsTestinprogress4(); // 16x16
-    public static final Image TestInProgress5 = PlatformIconGroup.runconfigurationsTestinprogress5(); // 16x16
-    public static final Image TestInProgress6 = PlatformIconGroup.runconfigurationsTestinprogress6(); // 16x16
-    public static final Image TestInProgress7 = PlatformIconGroup.runconfigurationsTestinprogress7(); // 16x16
-    public static final Image TestInProgress8 = PlatformIconGroup.runconfigurationsTestinprogress8(); // 16x16
     public static final Image TestMark = PlatformIconGroup.runconfigurationsTestmark(); // 16x16
     public static final Image TestNotRan = PlatformIconGroup.runconfigurationsTestnotran(); // 16x16
     public static final Image TestPassed = PlatformIconGroup.runconfigurationsTestpassed(); // 16x16
@@ -944,12 +923,8 @@ public class AllIcons {
       public static final Image Yellow2 = PlatformIconGroup.runconfigurationsTeststateYellow2(); // 12x12
     }
 
-    public static final Image Tomcat = PlatformIconGroup.runconfigurationsTomcat(); // 16x16
     public static final Image TrackCoverage = PlatformIconGroup.runconfigurationsTrackcoverage(); // 16x16
-    public static final Image TrackTests = PlatformIconGroup.runconfigurationsTracktests(); // 16x16
-    public static final Image Variables = PlatformIconGroup.runconfigurationsVariables(); // 16x16
     public static final Image Web_app = PlatformIconGroup.runconfigurationsWeb_app(); // 16x16
-    public static final Image WithCoverageLayer = PlatformIconGroup.runconfigurationsWithcoveragelayer(); // 16x16
 
   }
 

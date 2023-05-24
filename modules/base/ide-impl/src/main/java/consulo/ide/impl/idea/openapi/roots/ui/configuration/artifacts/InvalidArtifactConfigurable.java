@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.application.AllIcons;
 import consulo.configurable.ConfigurationException;
-import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifact;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class InvalidArtifactConfigurable extends ArtifactConfigurableBase {
     private JLabel myIconLabel;
 
     private InvalidArtifactComponent(String errorMessage) {
-      myIconLabel.setIcon(TargetAWT.to(AllIcons.RunConfigurations.ConfigurationWarning));
+      myIconLabel.setIcon(TargetAWT.to(PlatformIconGroup.generalError()));
       myDescriptionLabel.setText(errorMessage);
     }
   }

@@ -15,15 +15,6 @@ import consulo.ui.ex.action.ToggleAction;
  * @author yole
  */
 public class ToggleAutoTestAction extends ToggleAction {
-  /**
-   * @param environment To be removed in IDEA 16
-   * @deprecated use default constructor instead
-   */
-  @Deprecated
-  public ToggleAutoTestAction(ExecutionEnvironment environment) {
-    this();
-  }
-
   public ToggleAutoTestAction() {
     super("Toggle auto-test", "Toggle automatic rerun of tests on code changes", AllIcons.Actions.SwapPanels);
   }

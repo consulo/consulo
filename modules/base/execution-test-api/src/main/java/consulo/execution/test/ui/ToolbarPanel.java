@@ -107,9 +107,7 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
     secondaryGroup
             .add(new DumbAwareToggleBooleanProperty(ExecutionBundle.message("junit.runing.info.track.test.action.name"), ExecutionBundle.message("junit.runing.info.track.test.action.description"),
                                                     null, properties, TestConsoleProperties.TRACK_RUNNING_TEST));
-    if (Registry.is("tests.view.old.statistics.panel")) {
-      secondaryGroup.add(new ShowStatisticsAction(properties));
-    }
+
     secondaryGroup.add(new DumbAwareToggleBooleanProperty("Show Inline Statistics", "Toggle the visibility of the test duration in the tree", null, properties,
                                                           TestConsoleProperties.SHOW_INLINE_STATISTICS));
 

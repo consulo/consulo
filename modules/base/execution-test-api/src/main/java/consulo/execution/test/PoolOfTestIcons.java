@@ -25,7 +25,6 @@ public interface PoolOfTestIcons {
   Image FAILED_ICON = AllIcons.RunConfigurations.TestFailed;
   Image ERROR_ICON = AllIcons.RunConfigurations.TestError;
   Image NOT_RAN = AllIcons.RunConfigurations.TestNotRan;
-  Image LOADING_ICON = AllIcons.RunConfigurations.LoadingTree;
   Image TERMINATED_ICON = AllIcons.RunConfigurations.TestTerminated;
   Image IGNORED_ICON = AllIcons.RunConfigurations.TestIgnored;
   Image ERROR_ICON_MARK = AllIcons.Nodes.ErrorMark;
