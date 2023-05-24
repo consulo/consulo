@@ -15,9 +15,9 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 | JVM           | Github Actions|
 | ------------- |-----------------:|
 | Java 17       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk17/badge.svg) |
-| Java 18       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk18/badge.svg) |
-| Java 19       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk19/badge.svg) |
-| Java 20       | ![jdk17](https://github.com/consulo/consulo/workflows/jdk20/badge.svg) |
+| Java 18       | ![jdk18](https://github.com/consulo/consulo/workflows/jdk18/badge.svg) |
+| Java 19       | ![jdk19](https://github.com/consulo/consulo/workflows/jdk19/badge.svg) |
+| Java 20       | ![jdk20](https://github.com/consulo/consulo/workflows/jdk20/badge.svg) |
 
 First of all, you need those tools:
 
