@@ -39,38 +39,13 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   }
 
   /**
-   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
-   */
-  @Deprecated
-  public abstract void registerFileType(@Nonnull FileType type, @Nonnull List<? extends FileNameMatcher> defaultAssociations);
-
-  /**
-   * Registers a file type.
-   *
-   * @param type                        The file type to register.
-   * @param defaultAssociatedExtensions The list of extensions which cause the file to be
-   *                                    treated as the specified file type. The extensions should not start with '.'.
-   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
-   */
-  @Deprecated
-  public final void registerFileType(@Nonnull FileType type, @NonNls @Nullable String... defaultAssociatedExtensions) {
-    List<FileNameMatcher> matchers = new ArrayList<>();
-    if (defaultAssociatedExtensions != null) {
-      for (String extension : defaultAssociatedExtensions) {
-        matchers.add(FileNameMatcherFactory.getInstance().createExtensionFileNameMatcher(extension));
-      }
-    }
-    registerFileType(type, matchers);
-  }
-
-  /**
    * Checks if the specified file is ignored by the IDE. Ignored files are not visible in
    * different project views and cannot be opened in the editor. They will neither be parsed nor compiled.
    *
    * @param name The name of the file to check.
    * @return {@code true} if the file is ignored, {@code false} otherwise.
    */
-  public abstract boolean isFileIgnored(@NonNls @Nonnull String name);
+  public abstract boolean isFileIgnored(@Nonnull String name);
 
   /**
    * Returns the list of extensions associated with the specified file type.

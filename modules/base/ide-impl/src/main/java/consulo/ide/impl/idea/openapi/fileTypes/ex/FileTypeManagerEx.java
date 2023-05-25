@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.language.file.FileTypeManager;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -30,28 +28,6 @@ import java.util.StringTokenizer;
 public abstract class FileTypeManagerEx extends FileTypeManager {
   public static FileTypeManagerEx getInstanceEx() {
     return (FileTypeManagerEx)getInstance();
-  }
-
-  /**
-   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
-   */
-  @Deprecated
-  public abstract void registerFileType(@Nonnull FileType fileType);
-
-  /**
-   * @deprecated use {@code com.intellij.fileType} extension point or {@link FileTypeFactory} instead
-   */
-  @Deprecated
-  public abstract void unregisterFileType(@Nonnull FileType fileType);
-
-  @Deprecated
-  public boolean isIgnoredFilesListEqualToCurrent(@Nonnull String list) {
-    Set<String> tempSet = new HashSet<>();
-    StringTokenizer tokenizer = new StringTokenizer(list, ";");
-    while (tokenizer.hasMoreTokens()) {
-      tempSet.add(tokenizer.nextToken());
-    }
-    return tempSet.equals(getIgnoredFiles());
   }
 
   @Nonnull

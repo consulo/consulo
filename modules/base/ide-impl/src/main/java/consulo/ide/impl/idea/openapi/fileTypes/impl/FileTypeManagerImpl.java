@@ -1087,32 +1087,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
   }
 
-  @Override
-  @Deprecated
-  public void registerFileType(@Nonnull FileType fileType) {
-    registerFileType(fileType, ArrayUtilRt.EMPTY_STRING_ARRAY);
-  }
-
-  @Override
-  public void registerFileType(@Nonnull final FileType type, @Nonnull final List<? extends FileNameMatcher> defaultAssociations) {
-    DeprecatedMethodException.report("Use fileType extension instead.");
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      fireBeforeFileTypesChanged();
-      registerFileTypeWithoutNotification(type, defaultAssociations, true);
-      fireFileTypesChanged(type, null);
-    });
-  }
-
-  @Override
-  public void unregisterFileType(@Nonnull final FileType fileType) {
-    ApplicationManager.getApplication().runWriteAction(() -> {
-      fireBeforeFileTypesChanged();
-      unregisterFileTypeWithoutNotification(fileType);
-      myStandardFileTypes.remove(fileType.getName());
-      fireFileTypesChanged(null, fileType);
-    });
-  }
-
   private void unregisterFileTypeWithoutNotification(@Nonnull FileType fileType) {
     myPatternsTable.removeAllAssociations(fileType);
     myInitialAssociations.removeAllAssociations(fileType);
@@ -1343,7 +1317,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
   }
 
-  private void addIgnore(@NonNls @Nonnull String ignoreMask) {
+  private void addIgnore(@Nonnull String ignoreMask) {
     myIgnoredPatterns.addIgnoreMask(ignoreMask);
   }
 
