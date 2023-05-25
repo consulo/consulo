@@ -137,8 +137,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   private final MessageBus myMessageBus;
   private final Map<String, StandardFileType> myStandardFileTypes = new LinkedHashMap<>();
-  @NonNls
-  private static final String[] FILE_TYPES_WITH_PREDEFINED_EXTENSIONS = {"JSP", "JSPX", "DTD", "HTML", "Properties", "XHTML"};
   private final SchemeManager<FileType, AbstractFileType> mySchemeManager;
 
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/filetypes";
@@ -525,14 +523,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       for (StandardFileType pair : myStandardFileTypes.values()) {
         bindUnresolvedMappings(pair.fileType);
       }
-    }
-
-    boolean isAtLeastOneStandardFileTypeHasBeenRead = false;
-    for (FileType fileType : mySchemeManager.loadSchemes()) {
-      isAtLeastOneStandardFileTypeHasBeenRead |= myInitialAssociations.hasAssociationsFor(fileType);
-    }
-    if (isAtLeastOneStandardFileTypeHasBeenRead) {
-      restoreStandardFileExtensions();
     }
   }
 
@@ -1215,10 +1205,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         addIgnore(".svn");
       }
 
-      if (savedVersion < 2) {
-        restoreStandardFileExtensions();
-      }
-
       addIgnore("*.pyc");
       addIgnore("*.pyo");
       addIgnore(".git");
@@ -1321,26 +1307,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     myIgnoredPatterns.addIgnoreMask(ignoreMask);
   }
 
-  private void restoreStandardFileExtensions() {
-    for (final String name : FILE_TYPES_WITH_PREDEFINED_EXTENSIONS) {
-      final StandardFileType stdFileType = myStandardFileTypes.get(name);
-      if (stdFileType != null) {
-        FileType fileType = stdFileType.fileType;
-        for (FileNameMatcher matcher : myPatternsTable.getAssociations(fileType)) {
-          FileType defaultFileType = myInitialAssociations.findAssociatedFileType(matcher);
-          if (defaultFileType != null && defaultFileType != fileType) {
-            removeAssociation(fileType, matcher, false);
-            associate(defaultFileType, matcher, false);
-          }
-        }
-
-        for (FileNameMatcher matcher : myInitialAssociations.getAssociations(fileType)) {
-          associate(fileType, matcher, false);
-        }
-      }
-    }
-  }
-
   @Nonnull
   @Override
   public Element getState() {
@@ -1352,7 +1318,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       ignoreFiles = "";
     }
     else {
-      String[] strings = ArrayUtilRt.toStringArray(masks);
+      String[] strings = ArrayUtil.toStringArray(masks);
       Arrays.sort(strings);
       ignoreFiles = StringUtil.join(strings, ";") + ";";
     }
@@ -1371,7 +1337,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       }
     }
     if (!notExternalizableFileTypes.isEmpty()) {
-      Collections.sort(notExternalizableFileTypes, Comparator.comparing(FileType::getName));
+      Collections.sort(notExternalizableFileTypes, Comparator.comparing(FileType::getId));
       for (FileType type : notExternalizableFileTypes) {
         writeExtensionsMap(map, type, true);
       }
