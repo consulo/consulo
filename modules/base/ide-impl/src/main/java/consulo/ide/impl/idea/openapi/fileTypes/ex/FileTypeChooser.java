@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
+import consulo.container.plugin.PluginExtensionPreview;
 import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
@@ -26,7 +27,6 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.project.UnknownExtension;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -125,9 +125,9 @@ public class FileTypeChooser extends DialogWrapper {
     myList.setModel(model);
     myPattern.setModel(new CollectionComboBoxModel<>(ContainerUtil.map(patterns, FunctionUtil.<String>id()), patterns.get(0)));
 
-    UnknownExtension fileFeatureForChecking = new UnknownExtension(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName(), fileName);
+    PluginExtensionPreview fileFeatureForChecking = new PluginExtensionPreview(FileTypeFactory.class, fileName);
     myAllPlugins = PluginsAdvertiserHolder.getLoadedPluginDescriptors();
-    myFeaturePlugins = PluginsAdvertiser.findByFeature(myAllPlugins, fileFeatureForChecking);
+    myFeaturePlugins = PluginsAdvertiser.findImpl(myAllPlugins, fileFeatureForChecking);
 
     ItemListener listener = e -> {
       boolean selected = myOpenInIdea.isSelected();

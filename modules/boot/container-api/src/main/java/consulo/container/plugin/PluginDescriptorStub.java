@@ -163,7 +163,7 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public List<SimpleExtension> getSimpleExtensions() {
+  public List<PluginExtensionPreview> getExtensionPreviews() {
     return Collections.emptyList();
   }
 

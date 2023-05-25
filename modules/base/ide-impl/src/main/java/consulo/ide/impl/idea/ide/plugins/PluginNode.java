@@ -21,9 +21,9 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -67,7 +67,7 @@ public class PluginNode extends PluginDescriptorStub {
   private byte[] myIconBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
   private byte[] myIconDarkBytes = ArrayUtil.EMPTY_BYTE_ARRAY;
 
-  private List<SimpleExtension> mySimpleExtensions = Collections.emptyList();
+  private List<PluginExtensionPreview> myPluginExtensionPreviews = Collections.emptyList();
   private Map<PluginPermissionType, PluginPermissionDescriptor> myPermissions = Collections.emptyMap();
 
   private String myChecksumSha3_256;
@@ -109,11 +109,13 @@ public class PluginNode extends PluginDescriptorStub {
 
     myChecksumSha3_256 = jsonPlugin.checksum.sha3_256;
     myExperimental = jsonPlugin.experimental;
-    PluginJsonNode.Extension[] extensions = jsonPlugin.extensionsV2;
-    if (extensions != null) {
-      mySimpleExtensions = new ArrayList<>(extensions.length);
-      for (PluginJsonNode.Extension extension : extensions) {
-        mySimpleExtensions.add(new SimpleExtension(extension.key, extension.values));
+    PluginJsonNode.ExtensionPreview[] extensionPreviews = jsonPlugin.extensionPreviews;
+    if (extensionPreviews != null && extensionPreviews.length > 0) {
+      myPluginExtensionPreviews = new ArrayList<>(extensionPreviews.length);
+      for (PluginJsonNode.ExtensionPreview extension : extensionPreviews) {
+        myPluginExtensionPreviews.add(new PluginExtensionPreview(PluginId.getId(extension.apiPluginId),
+                                                                 extension.apiClassName,
+                                                                 extension.implId));
       }
     }
 
@@ -165,12 +167,6 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public Set<String> getTags() {
     return myTags;
-  }
-
-  @Override
-  @Nonnull
-  public List<SimpleExtension> getSimpleExtensions() {
-    return mySimpleExtensions;
   }
 
   @Nullable
@@ -241,6 +237,11 @@ public class PluginNode extends PluginDescriptorStub {
   @Override
   public String getDescription() {
     return description;
+  }
+
+  @Override
+  public List<PluginExtensionPreview> getExtensionPreviews() {
+    return myPluginExtensionPreviews;
   }
 
   @Nonnull

@@ -16,39 +16,36 @@
 package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.preview.ExtensionPreviewAcceptor;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginExtensionPreview;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.container.plugin.SimpleExtension;
 import consulo.externalService.update.UpdateSettings;
 import consulo.fileEditor.EditorNotifications;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.UnknownExtension;
 import consulo.project.UnknownFeaturesCollector;
 import consulo.project.startup.BackgroundStartupActivity;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.*;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
-import consulo.virtualFileSystem.fileType.FileTypeFactory;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 @ExtensionImpl
 public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
+  private static final Logger LOG = Logger.getInstance(PluginsAdvertiser.class);
+
   public static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
@@ -70,14 +67,14 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
       }
 
       final UnknownFeaturesCollector collectorSuggester = UnknownFeaturesCollector.getInstance(project);
-      final Set<UnknownExtension> unknownExtensions = collectorSuggester.getUnknownExtensions();
+      final Set<PluginExtensionPreview> unknownExtensions = collectorSuggester.getUnknownExtensions();
       if (unknownExtensions.isEmpty()) {
         return;
       }
 
       final Set<PluginDescriptor> ids = new HashSet<>();
-      for (UnknownExtension feature : unknownExtensions) {
-        final Set<PluginDescriptor> descriptors = findByFeature(pluginDescriptors, feature);
+      for (PluginExtensionPreview feature : unknownExtensions) {
+        final Set<PluginDescriptor> descriptors = findImpl(pluginDescriptors, feature);
         //do not suggest to download disabled plugins
         final Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
         for (PluginDescriptor id : descriptors) {
@@ -91,7 +88,8 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
         return;
       }
 
-      Notification notification = ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
+      Notification notification =
+        ourGroup.createNotification("Features covered by non-installed plugins are detected.", NotificationType.INFORMATION);
       notification.addAction(new NotificationAction("Install plugins...") {
         @RequiredUIAccess
         @Override
@@ -107,7 +105,7 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
         public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
           notification.expire();
 
-          for (UnknownExtension feature : unknownExtensions) {
+          for (PluginExtensionPreview feature : unknownExtensions) {
             collectorSuggester.ignoreFeature(feature);
           }
         }
@@ -117,67 +115,38 @@ public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
   }
 
   @Nonnull
-  public static Set<PluginDescriptor> findByFeature(List<PluginDescriptor> descriptors, UnknownExtension feature) {
+  public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, PluginExtensionPreview feature) {
+    ExtensionPreviewAcceptor<?> acceptor = findAcceptor(feature);
+
     Set<PluginDescriptor> filter = new LinkedHashSet<>();
     for (PluginDescriptor descriptor : descriptors) {
-      for (SimpleExtension simpleExtension : descriptor.getSimpleExtensions()) {
-        // check is is my extension
-        if (feature.getExtensionKey().equals(simpleExtension.getKey())) {
-          for (String value : simpleExtension.getValues()) {
-            if (isMyFeature(value, feature)) {
-              filter.add(descriptor);
-            }
+      List<PluginExtensionPreview> extensionPreviews = descriptor.getExtensionPreviews();
+      if (extensionPreviews.isEmpty()) {
+        continue;
+      }
+
+      for (PluginExtensionPreview extensionPreview : extensionPreviews) {
+        try {
+          if (acceptor.accept(extensionPreview, feature)) {
+            filter.add(descriptor);
           }
+        }
+        catch (Exception e) {
+          LOG.error(e);
         }
       }
     }
     return filter;
   }
 
-  private static boolean isMyFeature(String extensionValue, UnknownExtension feature) {
-    if (feature.getExtensionKey().equals(FileTypeFactory.FILE_TYPE_FACTORY_EP.getName())) {
-      FileNameMatcher matcher = createMatcher(extensionValue);
-      return matcher != null && matcher.acceptsCharSequence(feature.getValue());
-    }
-    else {
-      return extensionValue.equals(feature.getValue());
-    }
-  }
+  @Nonnull
+  private static ExtensionPreviewAcceptor<?> findAcceptor(PluginExtensionPreview feature) {
+    ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 
-  /**
-   * for correct specification - see hub impl
-   */
-  @Nullable
-  public static FileNameMatcher createMatcher(@Nonnull String extensionValue) {
-    if (extensionValue.length() < 2) {
-      return null;
-    }
-
-    List<String> values = StringUtil.split(extensionValue, "|");
-
-    String id = values.get(0);
-    if (id.length() != 1) {
-      return null;
-    }
-
-
-    FileNameMatcherFactory factory = FileNameMatcherFactory.getInstance();
-    String value = values.get(1);
-
-    char idChar = id.charAt(0);
-
-    switch (idChar) {
-      case '?':
-        return factory.createWildcardFileNameMatcher(value);
-      case '*':
-        return factory.createExtensionFileNameMatcher(value);
-      case '!':
-        return factory.createExactFileNameMatcher(value, true);
-      case '¡':
-        return factory.createExactFileNameMatcher(value, false);
-      default:
-        return null;
-    }
+    ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(extensionPreviewAcceptor -> {
+      return Objects.equals(extensionPreviewAcceptor.getApiClass().getName(), feature.getApiClassName());
+    });
+    return ObjectUtil.notNull(acceptor, ExtensionPreviewAcceptor.DEFAULT);
   }
 }
 

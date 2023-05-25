@@ -22,6 +22,8 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.container.plugin.PluginExtensionPreview;
+import consulo.container.plugin.PluginId;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -37,32 +39,33 @@ import java.util.Set;
 @ServiceImpl
 @State(name = "UnknownFeatures", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
-  private static final String FEATURE_ID = "featureType";
-  private static final String IMPLEMENTATION_NAME = "implementationName";
+  private static final String API_PLUGIN_ID = "apiPluginId";
+  private static final String API_CLASS_NAME = "apiClassName";
+  private static final String IMPL_ID = "implId";
 
-  private final Set<UnknownExtension> myUnknownExtensions = new HashSet<>();
-  private final Set<UnknownExtension> myIgnoredUnknownExtensions = new HashSet<>();
+  private final Set<PluginExtensionPreview> myUnknownExtensions = new HashSet<>();
+  private final Set<PluginExtensionPreview> myIgnoredUnknownExtensions = new HashSet<>();
 
   public static UnknownFeaturesCollector getInstance(Project project) {
     return project.getInstance(UnknownFeaturesCollector.class);
   }
 
   public void registerUnknownFeature(Class extensionClass, String implementationName) {
-    final UnknownExtension feature = new UnknownExtension(extensionClass.getName(), implementationName);
-    if (!isIgnored(feature)) {
-      myUnknownExtensions.add(feature);
+    final PluginExtensionPreview extensionPreview = new PluginExtensionPreview(extensionClass, implementationName);
+    if (!isIgnored(extensionPreview)) {
+      myUnknownExtensions.add(extensionPreview);
     }
   }
 
-  public boolean isIgnored(UnknownExtension feature) {
+  public boolean isIgnored(PluginExtensionPreview feature) {
     return myIgnoredUnknownExtensions.contains(feature);
   }
 
-  public void ignoreFeature(UnknownExtension feature) {
+  public void ignoreFeature(PluginExtensionPreview feature) {
     myIgnoredUnknownExtensions.add(feature);
   }
 
-  public Set<UnknownExtension> getUnknownExtensions() {
+  public Set<PluginExtensionPreview> getUnknownExtensions() {
     return myUnknownExtensions;
   }
 
@@ -71,11 +74,12 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   public Element getState() {
     if (myIgnoredUnknownExtensions.isEmpty()) return null;
 
-    final Element ignored = new Element("ignored");
-    for (UnknownExtension feature : myIgnoredUnknownExtensions) {
-      final Element option = new Element("option");
-      option.setAttribute(FEATURE_ID, feature.getExtensionKey());
-      option.setAttribute(IMPLEMENTATION_NAME, feature.getValue());
+    final Element ignored = new Element("ignoreExtensions");
+    for (PluginExtensionPreview feature : myIgnoredUnknownExtensions) {
+      final Element option = new Element("ignoreExtensions");
+      option.setAttribute(API_CLASS_NAME, feature.getApiClassName());
+      option.setAttribute(API_PLUGIN_ID, feature.getApiPluginId().getIdString());
+      option.setAttribute(IMPL_ID, feature.getImplId());
       ignored.addContent(option);
     }
     return ignored;
@@ -85,7 +89,10 @@ public class UnknownFeaturesCollector implements PersistentStateComponent<Elemen
   public void loadState(Element state) {
     myIgnoredUnknownExtensions.clear();
     for (Element element : state.getChildren()) {
-      myIgnoredUnknownExtensions.add(new UnknownExtension(element.getAttributeValue(FEATURE_ID), element.getAttributeValue(IMPLEMENTATION_NAME)));
+      String apiPluginId = element.getAttributeValue(API_PLUGIN_ID);
+      String apiClassName = element.getAttributeValue(API_CLASS_NAME);
+      String implId = element.getAttributeValue(IMPL_ID);
+      myIgnoredUnknownExtensions.add(new PluginExtensionPreview(PluginId.getId(apiPluginId), apiClassName, implId));
     }
   }
 }

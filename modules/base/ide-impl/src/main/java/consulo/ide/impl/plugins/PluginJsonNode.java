@@ -22,10 +22,10 @@ import consulo.util.collection.ArrayUtil;
  * @since 30-Aug-16
  */
 public class PluginJsonNode {
-  public static class Extension {
-    public String key;
-
-    public String[] values = ArrayUtil.EMPTY_STRING_ARRAY;
+  public class ExtensionPreview {
+    public String apiPluginId;
+    public String apiClassName;
+    public String implId;
   }
 
   public static class Checksum {
@@ -54,10 +54,9 @@ public class PluginJsonNode {
   public String[] downloadUrls = ArrayUtil.EMPTY_STRING_ARRAY;
   public String[] dependencies;
   public String[] optionalDependencies;
-  // public Extension[] extensions;  old extensions impl
-  public Extension[] extensionsV2;
   public boolean experimental;
   public Permission[] permissions;
   public String[] tags;
   public Checksum checksum = new Checksum();
+  public ExtensionPreview[] extensionPreviews = new ExtensionPreview[0];
 }
