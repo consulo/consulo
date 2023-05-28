@@ -16,12 +16,13 @@
 package consulo.logging.sfl4j.spi;
 
 import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
-import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 import java.text.MessageFormat;
-import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -159,9 +160,30 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
       return format(format, args);
     }
     catch (Exception e) {
-      return "Fail to build '" + format + "' args: " + Arrays.asList(args);
+      CharSequence sequence = format;
+
+      for (int i = 0; i < args.length; i++) {
+        Object arg = args[i];
+
+        sequence = replaceFirst(sequence, "{}", Objects.toString(arg));
+      }
+
+      return sequence.toString();
     }
   }
+
+  private static CharSequence replaceFirst(CharSequence value, String search, String replacement) {
+    int i = StringUtil.indexOf(value, search);
+    if (i != -1) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(value.subSequence(0, i));
+      builder.append(replacement);
+      builder.append(value.subSequence(i + search.length(), value.length()));
+      return builder;
+    }
+    return search;
+  }
+
 
   @Nonnull
   private static String format(@Nonnull String value, @Nonnull Object... params) {
@@ -194,7 +216,12 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void error(String format, Object arg1, Object arg2) {
-    error(buildMessage(format, arg1, arg2));
+    if (arg2 instanceof Throwable throwable) {
+      error(buildMessage(format, arg1), throwable);
+    }
+    else {
+      error(buildMessage(format, arg1, arg2));
+    }
   }
 
   @Override
