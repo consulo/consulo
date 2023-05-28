@@ -508,6 +508,10 @@
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-icons-flow</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-split-layout-flow</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

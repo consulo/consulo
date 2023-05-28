@@ -59,6 +59,10 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     nodeMap.put(getId(), this);
   }
 
+  public boolean isNotLoaded() {
+    return myChildren.size() == 1 && myChildren.get(0) instanceof NotLoaded;
+  }
+
   @Nullable
   public WebTreeNodeImpl<N> getParent() {
     return myParent;
@@ -90,6 +94,9 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
   @Override
   public void setLeaf(boolean leaf) {
     myLeaf = leaf;
+    if (leaf) {
+      myChildren = List.of();
+    }
   }
 
   @Override

@@ -15,7 +15,8 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.TwoComponentSplitLayout;
@@ -30,9 +31,9 @@ import jakarta.annotation.Nullable;
  * @since 28/05/2023
  */
 public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDelegate<WebHorizontalTwoComponentSplitLayoutImpl.Vaadin> implements TwoComponentSplitLayout {
-  public class Vaadin extends HorizontalLayout implements FromVaadinComponentWrapper {
+  public class Vaadin extends SplitLayout implements FromVaadinComponentWrapper {
     public Vaadin() {
-      setHeightFull();
+      setOrientation(Orientation.HORIZONTAL);
     }
 
     @Nullable
@@ -44,14 +45,16 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
 
   @Override
   public void setProportion(int percent) {
-
+    toVaadinComponent().setSplitterPosition(percent);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
+    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+    ((HasSize)vComponent).setSizeFull();
+    toVaadinComponent().addToPrimary(vComponent);
     return this;
   }
 
@@ -59,7 +62,9 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends VaadinComponentDel
   @Nonnull
   @Override
   public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
+    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+    ((HasSize)vComponent).setSizeFull();
+    toVaadinComponent().addToSecondary(vComponent);
     return this;
   }
 

@@ -441,6 +441,10 @@
       <artifactId>vaadin-lumo-theme</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-split-layout-flow</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-css</artifactId>
     </dependency>

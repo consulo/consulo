@@ -13,29 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
 import consulo.localize.LocalizeValue;
-import consulo.ui.TextItemPresentation;
 import consulo.ui.TextAttribute;
+import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
-import consulo.ui.web.servlet.WebImageMapper;
-import consulo.web.gwt.shared.ui.state.combobox.ComboBoxState;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
 public class WebItemPresentationImpl implements TextItemPresentation {
-  private ComboBoxState.Item myItem = new ComboBoxState.Item();
+  public static class Fragment {
+    public String inlineHTML;
+
+    @Override
+    public String toString() {
+      return inlineHTML;
+    }
+  }
+
+  private List<Fragment> myFragments = new ArrayList<>();
 
   @Nonnull
   @Override
   public TextItemPresentation withIcon(@Nullable Image image) {
-    myItem.myImageState = image == null ? null : WebImageMapper.map(image).getState();
 
     after();
     return this;
@@ -43,23 +52,22 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    ComboBoxState.ItemSegment segment = new ComboBoxState.ItemSegment();
-    segment.myText = text.getValue();
-    //TODO [VISTALL] style!
-    myItem.myItemSegments.add(segment);
+    Fragment fragment = new Fragment();
+    fragment.inlineHTML = text.get();
+    myFragments.add(fragment);
 
     after();
   }
 
   @Override
   public void clearText() {
-    myItem.myItemSegments.clear();
+    myFragments.clear();
 
     after();
   }
 
-  public ComboBoxState.Item getItem() {
-    return myItem;
+  public String toHTML() {
+    return "<span>" + StringUtil.join(myFragments, "") + "</span>";
   }
 
   protected void after() {

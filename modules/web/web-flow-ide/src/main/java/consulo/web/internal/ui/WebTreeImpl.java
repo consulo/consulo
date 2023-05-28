@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
@@ -26,6 +27,8 @@ import consulo.ui.Component;
 import consulo.ui.Tree;
 import consulo.ui.TreeModel;
 import consulo.ui.TreeNode;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
@@ -38,20 +41,27 @@ import java.util.*;
  * @author VISTALL
  * @since 2019-02-18
  */
+@SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
-
-
   public class Vaadin extends org.vaadin.tatu.Tree<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
-    //private final List<TreeState.TreeChange> myChanges = new ArrayList<>();
     private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
-
-    private String mySelectedValue;
 
     private WebTreeNodeImpl<NODE> myRootNode;
     private TreeModel<NODE> myModel;
 
     public Vaadin() {
       super(ValueProvider.identity());
+
+      setHtmlProvider(node -> {
+        WebItemPresentationImpl item = new WebItemPresentationImpl();
+        if (node instanceof WebTreeNodeImpl.NotLoaded) {
+          item.append("Loading...");
+        }
+        else {
+          node.getRender().accept(node.getValue(), item);
+        }
+        return item.toHTML();
+      });
     }
 
     public void init(NODE rootValue, TreeModel<NODE> model) {
@@ -63,21 +73,13 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         fetchChildren(myRootNode, false);
       }
 
-      updateData();
-
-      setItemCaptionProvider(node -> {
-        if (node instanceof WebTreeNodeImpl.NotLoaded) {
-          return "loading...";
-        }
-        return Objects.toString(node.getValue());
-      });
+      initTreeData(true);
 
       addExpandListener(event -> {
         Collection<WebTreeNodeImpl<NODE>> items = event.getItems();
 
         for (WebTreeNodeImpl<NODE> item : items) {
-          List<WebTreeNodeImpl<NODE>> children = item.getChildren();
-          if (children.size() == 1 && children.get(0) instanceof WebTreeNodeImpl.NotLoaded) {
+          if (item.isNotLoaded()) {
             UI ui = UI.getCurrent();
             // items not loaded
             queue(item, ui);
@@ -87,20 +89,43 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
 
-    // TODO async tree
-    private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+      super.onAttach(attachEvent);
 
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
+      UI ui = UI.getCurrent();
+
+      invokeLater(() -> {
+        fetchChildren(myRootNode, false);
+
+        ui.access(() -> {
+          initTreeData(false);
+        });
+      });
+    }
+
+    private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
+      invokeLater(() -> {
         List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
-        if (children.size() == 1 && children.get(0) instanceof WebTreeNodeImpl.NotLoaded) {
+        if (parent.isNotLoaded()) {
           WebTreeNodeImpl<NODE> unloaded = children.get(0);
 
-          children = fetchChildren(parent, true);
+          children = fetchChildren(parent, false);
 
+          final List<WebTreeNodeImpl<NODE>> finalChildren = children;
           ui.access(() -> {
-            myNodeMap.remove(unloaded.getId());
+            TreeData<WebTreeNodeImpl<NODE>> data = getTreeData();
 
-            updateData();
+            data.removeItem(unloaded);
+
+            data.addItems(parent, finalChildren);
+
+            // add raw children
+            for (WebTreeNodeImpl<NODE> finalChild : finalChildren) {
+              data.addItems(finalChild, finalChild.getChildren());
+            }
+
+            myNodeMap.remove(unloaded.getId());
 
             ui.push();
           });
@@ -108,9 +133,24 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
       });
     }
 
-    private void updateData() {
-      TreeDataProvider<WebTreeNodeImpl<NODE>> provider = new TreeDataProvider<>(
-        new TreeData<WebTreeNodeImpl<NODE>>().addItems(List.of(myRootNode), WebTreeNodeImpl::getChildren)) {
+    private void invokeLater(Runnable runnable) {
+      AppExecutorUtil.getAppExecutorService().execute(runnable);
+    }
+
+    private void initTreeData(boolean init) {
+      TreeData<WebTreeNodeImpl<NODE>> data = new TreeData<>();
+      // will set not loaded node
+      if (init) {
+        data.addRootItems(List.of(new WebTreeNodeImpl.NotLoaded<>(null, null, myNodeMap)));
+      }
+      else {
+        data.addRootItems(myRootNode.getChildren());
+        for (WebTreeNodeImpl<NODE> node : myRootNode.getChildren()) {
+          data.addItems(node, node.getChildren());
+        }
+      }
+
+      TreeDataProvider<WebTreeNodeImpl<NODE>> provider = new TreeDataProvider<>(data) {
         @Override
         public Object getId(WebTreeNodeImpl<NODE> item) {
           return item.getId();
@@ -136,37 +176,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
       setDataProvider(provider);
       getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
     }
-
-
-//
-//    @Override
-//    public void beforeClientResponse(boolean initial) {
-//      super.beforeClientResponse(initial);
-//
-//      synchronized (myChanges) {
-//        TreeState state = getState();
-//        state.myChanges.clear();
-//
-//        state.myChanges.addAll(myChanges);
-//
-//        myChanges.clear();
-//      }
-//    }
-//
-//    @Nonnull
-//    private TreeState.TreeNodeState convert(WebTreeNodeImpl<E> child) {
-//      TreeState.TreeNodeState e = new TreeState.TreeNodeState();
-//      e.myId = child.getId();
-//      e.myLeaf = child.isLeaf();
-//      e.myParentId = child.getParent() == null ? null : child.getId();
-//
-//      WebItemPresentationImpl presentation = new WebItemPresentationImpl();
-//
-//      child.getRender().accept(child.getValue(), presentation);
-//      e.myItemSegments = presentation.getItem().myItemSegments;
-//      e.myImageState = presentation.getItem().myImageState;
-//      return e;
-//    }
 
     @Nonnull
     private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
@@ -201,25 +210,22 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Nullable
-    public TreeNode<NODE> getSelectedNode() {
-      if (mySelectedValue == null) {
-        return null;
-      }
-      return myNodeMap.get(mySelectedValue);
-    }
-
-    @Nullable
     @Override
     public Component toUIComponent() {
       return WebTreeImpl.this;
     }
   }
 
+  @RequiredUIAccess
   public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
     Vaadin vaadin = toVaadinComponent();
     vaadin.init(rootValue, model);
     vaadin.asSingleSelect().addValueChangeListener(event -> {
       WebTreeNodeImpl<NODE> value = event.getValue();
+      if (value == null || value instanceof WebTreeNodeImpl.NotLoaded) {
+        return;
+      }
+
       getListenerDispatcher(SelectListener.class).onSelected(value);
     });
   }
@@ -233,7 +239,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
   @Nullable
   @Override
   public TreeNode<NODE> getSelectedNode() {
-    return getVaadinComponent().getSelectedNode();
+    Set selectedItems = toVaadinComponent().getSelectedItems();
+    return (TreeNode<NODE>)ContainerUtil.getFirstItem(selectedItems);
   }
 
   @Override
