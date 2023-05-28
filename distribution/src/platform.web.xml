@@ -20,20 +20,8 @@
       <unpack>false</unpack>
       <includes>
         <include>consulo:consulo-web-ide</include>
-        <include>consulo:consulo-web-ui-impl-server</include>
-        <include>consulo:consulo-web-ui-impl-shared</include>
 
-        <include>consulo.internal.vaadin:vaadin-server</include>
-        <include>consulo.internal.vaadin:vaadin-push</include>
-        <include>consulo.internal.vaadin:vaadin-shared</include>
-        <include>consulo.internal.vaadin:vaadin-themes</include>
-        <include>consulo.internal.vaadin:arquill.editor</include>
-        <include>com.vaadin:vaadin-sass-compiler</include>
-        <include>com.vaadin.external.flute:flute</include>
-        <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>
-        <include>com.vaadin.external.slf4j:vaadin-slf4j-jdk14</include>
         <include>org.jsoup:jsoup</include>
-        <include>org.w3c.css:sac</include>
         <include>ar.com.hjg:pngj</include>
 
         <include>org.eclipse.jetty:jetty-server</include>
@@ -42,15 +30,50 @@
         <include>org.eclipse.jetty:jetty-http</include>
         <include>org.eclipse.jetty:jetty-io</include>
         <include>org.eclipse.jetty:jetty-security</include>
-        <include>org.eclipse.jetty:jetty-continuation</include>
-        <include>org.eclipse.jetty.websocket:websocket-server</include>
-        <include>org.eclipse.jetty.websocket:websocket-api</include>
+        <include>org.eclipse.jetty:jetty-client</include>
         <include>org.eclipse.jetty.websocket:websocket-servlet</include>
-        <include>org.eclipse.jetty.websocket:websocket-common</include>
+        <include>org.eclipse.jetty.websocket:websocket-jakarta-server</include>
+        <include>org.eclipse.jetty.websocket:websocket-jakarta-client</include>
+        <include>org.eclipse.jetty.websocket:websocket-jakarta-common</include>
+        <include>org.eclipse.jetty.websocket:websocket-core-client</include>
+        <include>org.eclipse.jetty.websocket:websocket-core-server</include>
+        <include>org.eclipse.jetty.websocket:websocket-core-common</include>
 
-        <include>javax.servlet:javax.servlet-api</include>
+        <include>jakarta.servlet:jakarta.servlet-api</include>
+        <include>jakarta.websocket:jakarta.websocket-api</include>
 
-        <include>consulo:consulo-web-ui-impl-client</include>
+        <include>commons-io:commons-io</include>
+        <include>com.vaadin.external.gwt:gwt-elemental</include>
+        <include>com.vaadin:flow-commons-upload</include>
+        <include>com.vaadin:flow-server</include>
+        <include>com.vaadin:flow-client</include>
+        <include>com.vaadin:flow-push</include>
+        <include>com.vaadin:flow-html-components</include>
+        <include>com.vaadin:vaadin-flow-components-base</include>
+        <include>com.vaadin.external:gentyref</include>
+        <include>com.vaadin.external.atmosphere:atmosphere-runtime</include>
+        <include>com.vaadin:vaadin-dialog-flow</include>
+        <include>com.vaadin:vaadin-button-flow</include>
+        <include>com.vaadin:vaadin-renderer-flow</include>
+        <include>com.helger.commons:ph-commons</include>
+        <include>com.helger:ph-css</include>
+        <include>org.vaadin.addons.parttio:parity-theme</include>
+        <include>com.vaadin:vaadin-core-internal</include>
+        <include>com.vaadin:vaadin-list-box-flow</include>
+        <include>com.vaadin:vaadin-grid-flow</include>
+        <include>com.vaadin:vaadin-context-menu-flow</include>
+        <include>com.vaadin:flow-data</include>
+        <include>org.vaadin.tatu:tree</include>
+        <include>com.vaadin:vaadin-lumo-theme</include>
+        <include>com.vaadin:vaadin-ordered-layout-flow</include>
+
+        <include>com.vaadin:vaadin-dev-server</include>
+        <include>com.vaadin:vaadin-dev-bundle</include>
+        <include>com.vaadin:vaadin-dev</include>
+
+        <include>com.fasterxml.jackson.core:jackson-core</include>
+        <include>com.fasterxml.jackson.core:jackson-annotations</include>
+        <include>com.fasterxml.jackson.core:jackson-databind</include>
       </includes>
     </dependencySet>
 

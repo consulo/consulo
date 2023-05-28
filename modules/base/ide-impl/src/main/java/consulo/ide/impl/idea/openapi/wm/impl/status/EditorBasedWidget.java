@@ -14,19 +14,19 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.fileEditor.util.StatusBarUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.WindowManager;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {

@@ -37,15 +37,19 @@
     <httpclient.version>4.5.13</httpclient.version>
     <netty.version>4.1.66.Final</netty.version>
     <gson.version>2.8.7</gson.version>
-    <slf4j.version>2.0.0-alpha6</slf4j.version>
+    <slf4j.version>2.0.7</slf4j.version>
     <junit.version>4.13.2</junit.version>
     <gwt.version>2.9.0</gwt.version>
-    <servlet.version>3.1.0</servlet.version>
-    <websocket.version>1.1</websocket.version>
+    <servlet.version>5.0.0</servlet.version>
+    <websocket.version>2.0.0</websocket.version>
     <vaadin.version>8.12-SNAPSHOT</vaadin.version>
-    <jaxb.version>3.0.1</jaxb.version>
-    <jetty.version>9.4.31.v20200723</jetty.version>
+    <jaxb.version>4.0.0</jaxb.version>
+    <jetty.version>11.0.15</jetty.version>
     <swt.version>3.120.0</swt.version>
+
+    <vaadin.flow.version>24.0.5</vaadin.flow.version>
+
+    <jackson.version>2.14.2</jackson.version>
 
     <build.number>SNAPSHOT</build.number>
     <dev.mode>true</dev.mode>
@@ -98,7 +102,7 @@
         <version>${gson.version}</version>
       </dependency>
       <dependency>
-        <!--TODO remove this dependency - replacemt by jakarta-->
+        <!--TODO remove this dependency - replaced by jakarta-->
         <groupId>consulo.internal</groupId>
         <artifactId>jsr305</artifactId>
         <version>3.0.3</version>
@@ -112,6 +116,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-compress</artifactId>
         <version>1.21</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.11.0</version>
       </dependency>
       <dependency>
         <groupId>consulo.internal</groupId>
@@ -326,7 +335,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-imaging</artifactId>
-        <version>1.0-alpha2</version>
+        <version>1.0-alpha3</version>
       </dependency>
       <dependency>
         <groupId>org.jvnet.winp</groupId>
@@ -429,21 +438,7 @@
       <dependency>
         <groupId>org.apache.thrift</groupId>
         <artifactId>libthrift</artifactId>
-        <version>0.14.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>0.18.1</version>
       </dependency>
       <dependency>
         <groupId>com.github.markusbernhardt</groupId>
@@ -473,6 +468,12 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -491,6 +492,11 @@
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-client</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-io</artifactId>
         <version>${jetty.version}</version>
       </dependency>
@@ -500,39 +506,79 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-continuation</artifactId>
-        <version>${jetty.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jetty.websocket</groupId>
-        <artifactId>websocket-server</artifactId>
-        <version>${jetty.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jetty.websocket</groupId>
-        <artifactId>websocket-api</artifactId>
-        <version>${jetty.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.eclipse.jetty.websocket</groupId>
         <artifactId>websocket-servlet</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty.websocket</groupId>
-        <artifactId>websocket-common</artifactId>
+        <artifactId>websocket-jakarta-client</artifactId>
+        <version>${jetty.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-websocket-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-jakarta-common</artifactId>
+        <version>${jetty.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-websocket-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-core-client</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-core-server</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-core-common</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-jakarta-server</artifactId>
+        <version>${jetty.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.jetty.toolchain</groupId>
+            <artifactId>jetty-jakarta-websocket-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
         <version>${servlet.version}</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>javax.websocket</groupId>
-        <artifactId>javax.websocket-api</artifactId>
+        <groupId>jakarta.websocket</groupId>
+        <artifactId>jakarta.websocket-api</artifactId>
         <version>${websocket.version}</version>
         <scope>provided</scope>
       </dependency>
@@ -559,7 +605,177 @@
       <dependency>
         <groupId>jakarta.activation</groupId>
         <artifactId>jakarta.activation-api</artifactId>
-        <version>2.0.1</version>
+        <version>2.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-server</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-dev-server</artifactId>
+        <version>${vaadin.flow.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.vaadin</groupId>
+            <artifactId>license-checker</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-dev</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-dev-bundle</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-ordered-layout-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-lumo-theme</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-html-components</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-client</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-push</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-data</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>flow-commons-upload</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.vaadin.addons.parttio</groupId>
+        <artifactId>parity-theme</artifactId>
+        <version>1.0.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-flow-components-base</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-dialog-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-grid-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-context-menu-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-button-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-lumo-theme</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-core-internal</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-renderer-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-list-box-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>gwt-elemental</artifactId>
+        <groupId>com.vaadin.external.gwt</groupId>
+        <version>2.8.2.vaadin2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin.external</groupId>
+        <artifactId>gentyref</artifactId>
+        <version>1.2.0.vaadin1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin.external.atmosphere</groupId>
+        <artifactId>atmosphere-runtime</artifactId>
+        <version>3.0.3.slf4jvaadin1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger.commons</groupId>
+        <artifactId>ph-commons</artifactId>
+        <version>10.1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-css</artifactId>
+        <version>6.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.vaadin.tatu</groupId>
+        <artifactId>tree</artifactId>
+        <version>3.1.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev-server</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev-bundle</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -625,7 +841,7 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>                   
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compiler.plugin}</version>
@@ -634,6 +850,7 @@
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
       </plugin>
       <plugin>
@@ -684,6 +901,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>${maven.jar.plugin}</version>
         <configuration>
+          <forceCreation>false</forceCreation>
           <archive>
             <index>true</index>
             <manifestEntries>

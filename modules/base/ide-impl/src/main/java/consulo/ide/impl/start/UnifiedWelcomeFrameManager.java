@@ -17,15 +17,16 @@ package consulo.ide.impl.start;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.dataContext.DataManager;
+import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
-import consulo.application.Application;
+import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectManager;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.application.FrameTitleUtil;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -33,11 +34,10 @@ import consulo.ui.ex.action.*;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.ListModel;
-import consulo.ide.impl.wm.impl.UnifiedWelcomeIdeFrame;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,11 +54,21 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
   private final DataManager myDataManager;
 
   @Inject
-  public UnifiedWelcomeFrameManager(Application application, ProjectManager projectManager, RecentProjectsManager recentProjectsManager, DataManager dataManager) {
+  public UnifiedWelcomeFrameManager(Application application,
+                                    ProjectManager projectManager,
+                                    RecentProjectsManager recentProjectsManager,
+                                    DataManager dataManager) {
     super(application);
     myProjectManager = projectManager;
     myRecentProjectsManager = recentProjectsManager;
     myDataManager = dataManager;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void closeFrame() {
+    super.closeFrame();
+    frameClosed();
   }
 
   @RequiredUIAccess
@@ -79,7 +89,8 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     listSelect.addValueListener(event -> {
       ReopenProjectAction value = (ReopenProjectAction)event.getValue();
 
-      AnActionEvent e = AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
+      AnActionEvent e =
+        AnActionEvent.createFromAnAction(value, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
 
       value.actionPerformed(e);
     });
@@ -97,7 +108,8 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
     collectAllActions(group, quickStart);
 
     for (AnAction action : group) {
-      AnActionEvent e = AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
+      AnActionEvent e =
+        AnActionEvent.createFromAnAction(action, null, ActionPlaces.WELCOME_SCREEN, myDataManager.getDataContext(welcomeFrame));
       action.update(e);
 
       Presentation presentation = e.getPresentation();

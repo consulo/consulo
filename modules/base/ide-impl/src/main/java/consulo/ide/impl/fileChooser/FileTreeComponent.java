@@ -33,7 +33,12 @@ import java.util.Comparator;
  */
 public class FileTreeComponent {
   public static Tree<FileElement> create(Project project, FileChooserDescriptor descriptor, Disposable uiDisposable) {
-    FileTreeStructure fileTreeStructure = new FileTreeStructure(project, descriptor);
+    FileTreeStructure fileTreeStructure = new FileTreeStructure(project, descriptor) {
+      @Override
+      public boolean isToBuildChildrenInBackground(Object element) {
+        return false;
+      }
+    };
     fileTreeStructure.showHiddens(true);
     TreeStructureWrappenModel<FileElement> treeStructureWrappenModel = new TreeStructureWrappenModel<>(fileTreeStructure) {
       @Nullable

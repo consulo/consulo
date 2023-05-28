@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.base;
+package consulo.web.internal.ui.base;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
