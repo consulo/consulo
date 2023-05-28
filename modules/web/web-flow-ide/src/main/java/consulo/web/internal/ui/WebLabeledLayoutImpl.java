@@ -13,35 +13,68 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.layout;
+package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.ThemableLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
-import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
 public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayoutImpl.Vaadin> implements LabeledLayout {
-  public static class Vaadin extends VaadinSingleComponentContainer {
+  public class Vaadin extends VerticalLayout implements FromVaadinComponentWrapper {
     private LocalizeValue myLabelValue = LocalizeValue.empty();
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-      super.beforeClientResponse(initial);
+    private final Span myCaption;
 
-      getState().caption = myLabelValue.getValue();
+    public Vaadin() {
+      setMargin(false);
+      myCaption = new Span("");
+      myCaption.addClassName(LumoUtility.FontWeight.BOLD);
+      myCaption.setWidthFull();
+      add(myCaption);
+
+      addClassName(LumoUtility.Border.ALL);
+      addClassName(LumoUtility.BorderRadius.SMALL);
+      addClassName(LumoUtility.BorderColor.CONTRAST_10);
     }
 
     public void setLabelValue(LocalizeValue labelValue) {
       myLabelValue = labelValue;
+
+      myCaption.setText(myLabelValue.getValue());
+    }
+
+    public void setContent(com.vaadin.flow.component.Component content) {
+      removeAll();
+
+      add(myCaption);
+      if (content != null) {
+        if (content instanceof ThemableLayout themableLayout) {
+          themableLayout.setMargin(false);
+          themableLayout.setPadding(false);
+        }
+
+        add(content);
+      }
+    }
+
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebLabeledLayoutImpl.this;
     }
   }
 
@@ -51,13 +84,15 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
 
   @Override
   public void remove(@Nonnull Component component) {
-    getVaadinComponent().removeIfContent(TargetVaddin.to(component));
+    if (component.getParent() == this) {
+      toVaadinComponent().setContent(null);
+    }
   }
 
   @RequiredUIAccess
   @Override
   public void removeAll() {
-    getVaadinComponent().setComponent(null);
+    getVaadinComponent().setContent(null);
   }
 
   @RequiredUIAccess

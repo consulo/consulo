@@ -54,9 +54,7 @@ import java.util.function.Supplier;
 public class WebUIInternalImpl extends UIInternal {
   @Override
   public CheckBox _Components_checkBox() {
-    throw notSupported();
-
-    //return new WebCheckBoxImpl();
+    return new WebCheckBoxImpl();
   }
 
   @Override
@@ -66,9 +64,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public WrappedLayout _Layouts_wrapped() {
-    throw notSupported();
-
-    //return new WebWrappedLayoutImpl();
+    return new WebWrappedLayoutImpl();
   }
 
   @Override
@@ -110,16 +106,12 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public LabeledLayout _Layouts_labeled(LocalizeValue label) {
-    throw notSupported();
-
-    //return new WebLabeledLayoutImpl(label);
+    return new WebLabeledLayoutImpl(label);
   }
 
   @Override
   public TableLayout _Layouts_table(StaticPosition fillOption) {
-    throw notSupported();
-
-    //return new WebTableLayoutImpl(fillOption);
+    return new WebTableLayoutImpl(fillOption);
   }
 
   @Override
@@ -141,23 +133,17 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public <E> ComboBox<E> _Components_comboBox(ListModel<E> model) {
-    throw notSupported();
-
-    //return new WebComboBoxImpl<>(model);
+    return new WebComboBoxImpl<>(model);
   }
 
   @Override
   public TextBox _Components_textBox(String text) {
-    throw notSupported();
-
-    //return new WebTextBoxImpl(text);
+    return new WebTextBoxImpl(text);
   }
 
   @Override
   public TextBoxWithHistory _Components_textBoxWithHistory(String text) {
-    throw notSupported();
-
-    //return new WebTextBoxWithHistoryImpl(text);
+    return new WebTextBoxWithHistoryImpl(text);
   }
 
   @Override
@@ -170,9 +156,7 @@ public class WebUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {
-    throw notSupported();
-
-    //return new WebIntBoxImpl(value);
+    return new WebIntBoxImpl(value);
   }
 
   @Override

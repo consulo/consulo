@@ -21,16 +21,18 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.CompositeComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 27/05/2023
  */
-public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl.Vaadin> implements DockLayout {
+public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> implements DockLayout {
 
   public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
     @Nullable
@@ -38,6 +40,16 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
     public consulo.ui.Component toUIComponent() {
       return WebDockLayoutImpl.this;
     }
+  }
+
+  private List<Component> myCenterComponents = new ArrayList<>();
+
+  @RequiredUIAccess
+  @Override
+  public void removeAll() {
+    super.removeAll();
+    
+    myCenterComponents.clear();
   }
 
   @Nonnull
@@ -67,8 +79,14 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
   @Nonnull
   @Override
   public DockLayout center(@Nonnull consulo.ui.Component component) {
+    for (Component centerComponent : myCenterComponents) {
+      toVaadinComponent().remove(centerComponent);
+    }
+    myCenterComponents.clear();
+    
     Component vaadinComponent = TargetVaddin.to(component);
     ((HasSize)vaadinComponent).setSizeFull();
+    myCenterComponents.add(vaadinComponent);
     
     toVaadinComponent().add(vaadinComponent);
     //toVaadinComponent().setAlignSelf(FlexComponent.Alignment.CENTER, vaadinComponent);

@@ -445,6 +445,14 @@
       <artifactId>vaadin-split-layout-flow</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-checkbox-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.stefan</groupId>
+      <artifactId>html-table</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-css</artifactId>
     </dependency>

@@ -15,6 +15,8 @@
  */
 package consulo.web.internal.ui.vaadin;
 
+import com.vaadin.flow.component.HasEnabled;
+import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasText;
 import com.vaadin.flow.component.Tag;
 import consulo.localize.LocalizeValue;
@@ -26,11 +28,9 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 /**
  * @author VISTALL
  * @since 27/05/2023
- *
- * TODO not supported
  */
 @Tag("span")
-public abstract class VaadinLabelComponentBase extends SimpleComponent implements FromVaadinComponentWrapper, HasText {
+public abstract class VaadinLabelComponentBase extends SimpleComponent implements FromVaadinComponentWrapper, HasText, HasEnabled, HasSize {
   private Image myImage;
   private LocalizeValue myTextValue;
   private HorizontalAlignment myHorizontalAlignment;
@@ -46,7 +46,7 @@ public abstract class VaadinLabelComponentBase extends SimpleComponent implement
 
   public void setTextValue(LocalizeValue textValue) {
     myTextValue = textValue;
-    
+
     setText(textValue.getValue());
   }
 

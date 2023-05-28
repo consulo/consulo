@@ -645,6 +645,11 @@
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-checkbox-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
         <artifactId>vaadin-lumo-theme</artifactId>
         <version>${vaadin.flow.version}</version>
       </dependency>
@@ -696,6 +701,16 @@
       <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-icons-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-text-field-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-combo-box-flow</artifactId>
         <version>${vaadin.flow.version}</version>
       </dependency>
       <dependency>
@@ -767,6 +782,11 @@
         <groupId>com.helger</groupId>
         <artifactId>ph-css</artifactId>
         <version>6.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.vaadin.stefan</groupId>
+        <artifactId>html-table</artifactId>
+        <version>1.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.vaadin.tatu</groupId>

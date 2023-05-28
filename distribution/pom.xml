@@ -465,6 +465,18 @@
       <artifactId>vaadin-context-menu-flow</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-text-field-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.stefan</groupId>
+      <artifactId>html-table</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-combo-box-flow</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.helger.commons</groupId>
       <artifactId>ph-commons</artifactId>
     </dependency>
@@ -511,6 +523,10 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-split-layout-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-checkbox-flow</artifactId>
     </dependency>
   </dependencies>
 

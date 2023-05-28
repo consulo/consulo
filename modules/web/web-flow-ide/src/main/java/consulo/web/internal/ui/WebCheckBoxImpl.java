@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.checkbox.Checkbox;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.vaadin.WebBooleanValueComponentBase;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -28,18 +32,12 @@ import jakarta.annotation.Nonnull;
  */
 public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImpl.Vaadin> implements CheckBox {
 
-  public static class Vaadin extends VaadinBooleanValueComponentBase {
+  public class Vaadin extends Checkbox implements FromVaadinComponentWrapper {
     private LocalizeValue myLabelText = LocalizeValue.empty();
-
-    @Override
-    public void beforeClientResponse(boolean initial) {
-      super.beforeClientResponse(initial);
-
-      updateLabelText();
-    }
 
     public void setLabelText(LocalizeValue labelText) {
       myLabelText = labelText;
+      updateLabelText();
     }
 
     public LocalizeValue getLabelText() {
@@ -47,7 +45,13 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
     }
 
     private void updateLabelText() {
-      getState().caption = myLabelText.getValue();
+      setLabel(myLabelText.getValue());
+    }
+
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebCheckBoxImpl.this;
     }
   }
 

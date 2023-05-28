@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.layout;
+package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
-import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinSingleComponentContainer;
-import consulo.ui.web.internal.border.WebBorderBuilder;
-import consulo.web.gwt.shared.ui.state.layout.BaseSingleLayoutState;
-
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.VaadinSingleComponentContainer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,16 +28,11 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-17
  */
 public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  public static class Vaadin extends VaadinSingleComponentContainer {
+  public class Vaadin extends VaadinSingleComponentContainer {
+    @Nullable
     @Override
-    public void beforeClientResponse(boolean initial) {
-      super.beforeClientResponse(initial);
-      WebBorderBuilder.fill(toUIComponent(), getState().myBorderListState);
-    }
-
-    @Override
-    public BaseSingleLayoutState getState() {
-      return (BaseSingleLayoutState)super.getState();
+    public Component toUIComponent() {
+      return WebWrappedLayoutImpl.this;
     }
   }
 
@@ -59,14 +50,14 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
 
   @Override
   public void remove(@Nonnull Component component) {
-    getVaadinComponent().removeIfContent(TargetVaddin.to(component));
+    getVaadinComponent().removeIfContent(component);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public WrappedLayout set(@Nullable Component component) {
-    getVaadinComponent().setContent(TargetVaddin.to(component));
+    getVaadinComponent().setContent(component);
     return this;
   }
 }

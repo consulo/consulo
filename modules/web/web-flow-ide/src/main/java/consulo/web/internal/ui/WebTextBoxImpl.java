@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.textfield.TextField;
 import consulo.disposer.Disposable;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.Component;
 import consulo.ui.TextBox;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,7 +30,12 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadin> implements TextBox {
-  public static class Vaadin extends VaadinComponent {
+  public class Vaadin extends TextField implements FromVaadinComponentWrapper {
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebTextBoxImpl.this;
+    }
   }
 
   public WebTextBoxImpl(String text) {
@@ -45,14 +51,13 @@ public class WebTextBoxImpl extends VaadinComponentDelegate<WebTextBoxImpl.Vaadi
   @Nullable
   @Override
   public String getValue() {
-    return getVaadinComponent().getState().caption;
+    return getVaadinComponent().getValue();
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(String value, boolean fireListeners) {
-    getVaadinComponent().getState().caption = value;
-    getVaadinComponent().markAsDirty();
+    getVaadinComponent().setValue(value);
   }
 
   @Override

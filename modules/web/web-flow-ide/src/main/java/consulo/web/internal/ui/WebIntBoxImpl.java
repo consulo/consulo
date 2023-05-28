@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.textfield.TextField;
 import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,7 +30,12 @@ import jakarta.annotation.Nullable;
  * @since 2020-05-10
  */
 public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin> implements IntBox {
-  public static class Vaadin extends VaadinComponent {
+  public class Vaadin extends TextField implements FromVaadinComponentWrapper {
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebIntBoxImpl.this;
+    }
   }
 
   public WebIntBoxImpl(int value) {
@@ -45,14 +51,13 @@ public class WebIntBoxImpl extends VaadinComponentDelegate<WebIntBoxImpl.Vaadin>
   @Nullable
   @Override
   public Integer getValue() {
-    return Integer.parseInt(getVaadinComponent().getState().caption);
+    return Integer.parseInt(getVaadinComponent().getValue());
   }
 
   @RequiredUIAccess
   @Override
   public void setValue(Integer value, boolean fireListeners) {
-    getVaadinComponent().getState().caption = String.valueOf(value);
-    getVaadinComponent().markAsDirty();
+    getVaadinComponent().setValue(String.valueOf(value));
   }
 
   @Override

@@ -80,6 +80,11 @@
       <artifactId>consulo-platform-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-application-ui-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.vaadin.addons.parttio</groupId>
@@ -168,6 +173,18 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-icons-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-text-field-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-combo-box-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.stefan</groupId>
+      <artifactId>html-table</artifactId>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>

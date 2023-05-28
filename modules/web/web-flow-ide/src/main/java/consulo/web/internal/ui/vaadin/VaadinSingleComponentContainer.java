@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui.vaadin;
 
-import consulo.ui.ComboBox;
-import consulo.ui.model.ListModel;
-
+import consulo.ui.Component;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-02-19
+ * @since 2019-02-17
  */
-public class WebComboBoxImpl<E> extends WebSingleListComponentBase<E, WebComboBoxImpl.Vaadin<E>> implements ComboBox<E> {
-  public static class Vaadin<J> extends VaadinSingleListComponentBase<J> {
-    @Override
-    protected boolean needRenderNullValue() {
-      return true;
+public abstract class VaadinSingleComponentContainer extends CompositeComponent implements FromVaadinComponentWrapper {
+
+  public void removeIfContent(@Nonnull Component component) {
+    if (component.getParent() == this) {
+      setContent(null);
     }
   }
 
-  public WebComboBoxImpl(ListModel<E> model) {
-    super(model);
-  }
+  public void setContent(Component component) {
+    removeAll();
 
-  @Nonnull
-  @Override
-  public Vaadin<E> createVaadinComponent() {
-    return new Vaadin<>();
+    if (component != null) {
+      add(TargetVaddin.to(component));
+    }
   }
 }

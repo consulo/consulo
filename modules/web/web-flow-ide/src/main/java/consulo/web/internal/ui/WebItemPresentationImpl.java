@@ -20,6 +20,7 @@ import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,7 +54,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
     Fragment fragment = new Fragment();
-    fragment.inlineHTML = text.get();
+    fragment.inlineHTML = XmlStringUtil.escapeString(text.get());
     myFragments.add(fragment);
 
     after();

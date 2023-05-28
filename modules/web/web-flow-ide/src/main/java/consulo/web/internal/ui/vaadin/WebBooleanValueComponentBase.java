@@ -13,28 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui.vaadin;
 
-import consulo.ui.annotation.RequiredUIAccess;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import consulo.ui.UIAccess;
 import consulo.ui.ValueComponent;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-02-19
  */
-public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueComponentBase> extends VaadinComponentDelegate<E> implements ValueComponent<Boolean> {
+public abstract class WebBooleanValueComponentBase<E extends Component & HasValue<?, Boolean> & FromVaadinComponentWrapper> extends VaadinComponentDelegate<E> implements ValueComponent<Boolean> {
   public WebBooleanValueComponentBase(boolean value) {
-    getVaadinComponent().getState().myChecked = value;
+    getVaadinComponent().setValue(value);
   }
 
   @Nullable
   @Override
   public Boolean getValue() {
-    return getVaadinComponent().getState().myChecked;
+    return getVaadinComponent().getValue();
   }
 
   @RequiredUIAccess
@@ -46,18 +48,16 @@ public abstract class WebBooleanValueComponentBase<E extends VaadinBooleanValueC
       throw new IllegalArgumentException();
     }
 
-    if (getVaadinComponent().getState().myChecked == value) {
+    if (getVaadinComponent().getValue() == value) {
       return;
     }
 
     setValueImpl(value, fireListeners);
-
-    getVaadinComponent().markAsDirty();
   }
 
   @RequiredUIAccess
   protected void setValueImpl(@Nullable Boolean value, boolean fireEvents) {
-    getVaadinComponent().getState().myChecked = value;
+    getVaadinComponent().setValue(value);
 
     if (fireEvents) {
       getListenerDispatcher(ValueListener.class).valueChanged(new ValueEvent<>(this, value));
