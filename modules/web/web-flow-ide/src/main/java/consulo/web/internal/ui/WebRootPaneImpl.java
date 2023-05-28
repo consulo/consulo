@@ -16,6 +16,7 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasSize;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.ui.MenuBar;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -61,6 +62,7 @@ public class WebRootPaneImpl extends VaadinComponentDelegate<WebRootPaneImpl.Vaa
 
     if (content != null) {
       Component vaadinComponent = TargetVaddin.to(content);
+      ((HasSize)vaadinComponent).setSizeFull();
       toVaadinComponent().add(vaadinComponent);
       myCenterComponent = content;
     }

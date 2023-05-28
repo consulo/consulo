@@ -15,6 +15,8 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasSize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -48,7 +50,8 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
   @Nonnull
   @Override
   public DockLayout top(@Nonnull consulo.ui.Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
+    Component vaadinComponent = TargetVaddin.to(component);
+    toVaadinComponent().add(vaadinComponent);
     return this;
   }
 
@@ -64,7 +67,11 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
   @Nonnull
   @Override
   public DockLayout center(@Nonnull consulo.ui.Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
+    Component vaadinComponent = TargetVaddin.to(component);
+    ((HasSize)vaadinComponent).setSizeFull();
+    
+    toVaadinComponent().add(vaadinComponent);
+    //toVaadinComponent().setAlignSelf(FlexComponent.Alignment.CENTER, vaadinComponent);
     return this;
   }
 

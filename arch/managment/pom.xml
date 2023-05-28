@@ -690,6 +690,11 @@
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-icons-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
         <artifactId>vaadin-context-menu-flow</artifactId>
         <version>${vaadin.flow.version}</version>
       </dependency>

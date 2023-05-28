@@ -66,6 +66,7 @@
         <include>org.vaadin.tatu:tree</include>
         <include>com.vaadin:vaadin-lumo-theme</include>
         <include>com.vaadin:vaadin-ordered-layout-flow</include>
+        <include>com.vaadin:vaadin-icons-flow</include>
 
         <include>com.vaadin:vaadin-dev-server</include>
         <include>com.vaadin:vaadin-dev-bundle</include>

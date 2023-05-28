@@ -24,6 +24,5 @@ import com.vaadin.flow.component.*;
 @Tag("div")
 public class CompositeComponent extends Component implements HasComponents, HasOrderedComponents, HasSize {
   public CompositeComponent() {
-    setSizeFull();
   }
 }

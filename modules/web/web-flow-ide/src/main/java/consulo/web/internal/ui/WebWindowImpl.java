@@ -15,9 +15,15 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.icon.Icon;
 import consulo.disposer.Disposer;
-import consulo.ui.*;
+import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.Window;
+import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.ComponentHolder;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
@@ -56,11 +62,19 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     vaadinComponent.setResizable(options.isResizable());
     vaadinComponent.setCloseOnEsc(false);
     vaadinComponent.setCloseOnOutsideClick(false);
-    // TODO vaadinComponent.setClosable(options.isClosable());
+    if (options.isClosable()) {
+      addCloseDialogButton(vaadinComponent);
+    }
     vaadinComponent.add(TargetVaddin.to(myRootPanel));
     // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
 
     WebFocusManagerImpl.register(toVaadinComponent());
+  }
+
+  private static void addCloseDialogButton(Dialog dialog) {
+    Button closeButton = new Button(new Icon("lumo", "cross"), (e) -> dialog.close());
+    closeButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    dialog.getHeader().add(closeButton);
   }
 
   @Nonnull

@@ -78,8 +78,9 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         for (WebTreeNodeImpl<NODE> item : items) {
           List<WebTreeNodeImpl<NODE>> children = item.getChildren();
           if (children.size() == 1 && children.get(0) instanceof WebTreeNodeImpl.NotLoaded) {
+            UI ui = UI.getCurrent();
             // items not loaded
-            queue(item);
+            queue(item, ui);
           }
         }
       });
@@ -87,8 +88,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
 
     // TODO async tree
-    private void queue(@Nonnull WebTreeNodeImpl<NODE> parent) {
-      UI ui = UI.getCurrent();
+    private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
 
       AppExecutorUtil.getAppExecutorService().execute(() -> {
         List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
@@ -98,11 +98,11 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
           children = fetchChildren(parent, true);
 
           ui.access(() -> {
-            getDataProvider().refreshItem(parent, true);
+            myNodeMap.remove(unloaded.getId());
+
+            updateData();
 
             ui.push();
-
-            myNodeMap.remove(unloaded.getId());
           });
         }
       });
@@ -118,6 +118,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
       };
 
       try {
+        // TODO this hack due we can't access to original tree
         Field field = org.vaadin.tatu.Tree.class.getDeclaredField("treeGrid");
         field.setAccessible(true);
         TreeGrid o = (TreeGrid)field.get(this);
@@ -215,7 +216,12 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
   }
 
   public WebTreeImpl(@Nullable NODE rootValue, TreeModel<NODE> model, Disposable disposable) {
-    getVaadinComponent().init(rootValue, model);
+    Vaadin vaadin = toVaadinComponent();
+    vaadin.init(rootValue, model);
+    vaadin.asSingleSelect().addValueChangeListener(event -> {
+      WebTreeNodeImpl<NODE> value = event.getValue();
+      getListenerDispatcher(SelectListener.class).onSelected(value);
+    });
   }
 
   @Override
@@ -232,6 +238,6 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
   @Override
   public void expand(@Nonnull TreeNode<NODE> node) {
-    //TODO getVaadinComponent().queue((WebTreeNodeImpl<NODE>)node, TreeState.TreeChangeType.SET);
+    toVaadinComponent().expand(node);
   }
 }

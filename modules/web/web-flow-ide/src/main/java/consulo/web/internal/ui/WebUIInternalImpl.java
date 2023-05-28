@@ -85,9 +85,9 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TwoComponentSplitLayout _TwoComponentSplitLayout_create(SplitLayoutPosition position) {
-//    if (position == SplitLayoutPosition.HORIZONTAL) {
-//      return new WebHorizontalTwoComponentSplitLayoutImpl();
-//    }
+    if (position == SplitLayoutPosition.HORIZONTAL) {
+      return new WebHorizontalTwoComponentSplitLayoutImpl();
+    }
 //    else if (position == SplitLayoutPosition.VERTICAL) {
 //      return new WebVerticalTwoComponentSplitLayoutImpl();
 //    }
@@ -124,7 +124,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ScrollableLayout _ScrollLayout_create(Component component, ScrollableLayoutOptions options) {
-    return new WebScrollLayoutImpl(component);
+    return new WebScrollLayoutImpl(component, options);
   }
 
   @Override
