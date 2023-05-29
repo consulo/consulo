@@ -17,11 +17,12 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
-import consulo.util.lang.StringUtil;
+import consulo.web.internal.ui.image.WebImageConverter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,11 +34,13 @@ import java.util.List;
  * @since 2019-02-18
  */
 public class WebItemPresentationImpl implements TextItemPresentation {
+  private Image myIcon;
   private List<Component> myFragments = new ArrayList<>();
 
   @Nonnull
   @Override
   public TextItemPresentation withIcon(@Nullable Image image) {
+    myIcon = image;
 
     after();
     return this;
@@ -45,7 +48,8 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    myFragments.add(new Span(text.get()));
+    Span span = new Span(text.get());
+    myFragments.add(span);
 
     after();
   }
@@ -58,7 +62,15 @@ public class WebItemPresentationImpl implements TextItemPresentation {
   }
 
   public Component toComponent() {
-    return new Span(myFragments.toArray(Component[]::new));
+    Span span = new Span();
+    span.addClassName("web-icon");
+    if (myIcon != null) {
+      Component image = WebImageConverter.getImageCanvas(myIcon);
+      image.addClassName(LumoUtility.Margin.Right.SMALL);
+      span.add(image);
+    }
+    span.add(myFragments.toArray(Component[]::new));
+    return span;
   }
 
   protected void after() {

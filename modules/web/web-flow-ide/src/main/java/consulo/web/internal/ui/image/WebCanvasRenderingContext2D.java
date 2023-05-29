@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.ui.image.state;
+package consulo.web.internal.ui.image;
+
+import org.vaadin.pekkam.Canvas;
+import org.vaadin.pekkam.CanvasRenderingContext2D;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 29/05/2023
  */
-@Deprecated
-public class FoldedImageState extends ImageStateBase {
-  private static final long serialVersionUID = -6661638521685939456L;
+public class WebCanvasRenderingContext2D extends CanvasRenderingContext2D {
+  public WebCanvasRenderingContext2D(Canvas canvas) {
+    super(canvas);
+  }
 
-  public MultiImageState[] myChildren;
+  public void setGlobalAlpha(float value) {
+    setProperty("globalAlpha", String.valueOf(value));
+  }
 }

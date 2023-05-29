@@ -16,14 +16,12 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.image.state.FoldedImageState;
-import consulo.web.internal.ui.image.state.MultiImageState;
 
 /**
  * @author VISTALL
  * @since 11-Sep-17
  */
-public class WebLayeredImageImpl implements Image, WebImageWithVaadinState {
+public class WebLayeredImageImpl implements Image, WebImageCanvasDraw {
   private final Image[] myImages;
 
   public WebLayeredImageImpl(Image[] images) {
@@ -41,15 +39,9 @@ public class WebLayeredImageImpl implements Image, WebImageWithVaadinState {
   }
 
   @Override
-  public void toState(MultiImageState m) {
-    FoldedImageState state = new FoldedImageState();
-    state.myChildren = new MultiImageState[myImages.length];
-
-    for (int i = 0; i < myImages.length; i++) {
-      Image image = myImages[i];
-      state.myChildren[i] = WebImageMapper.map(image).getState();
+  public void drawCanvas(WebCanvasRenderingContext2D context) {
+    for (Image image : myImages) {
+      WebImageConverter.processCanvas(image, context);
     }
-
-    m.myFoldedImageState = state;
   }
 }

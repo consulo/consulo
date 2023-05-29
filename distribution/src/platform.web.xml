@@ -72,6 +72,7 @@
         <include>com.vaadin:vaadin-combo-box-flow</include>
         <include>org.vaadin.stefan:html-table</include>
         <include>com.vaadin:vaadin-progress-bar-flow</include>
+        <include>org.parttio:canvas-java</include>
 
         <include>com.vaadin:vaadin-dev-server</include>
         <include>com.vaadin:vaadin-dev-bundle</include>

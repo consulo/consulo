@@ -20,8 +20,6 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import consulo.web.internal.ui.image.state.ImageState;
-import consulo.web.internal.ui.image.state.MultiImageState;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,7 +27,7 @@ import jakarta.annotation.Nullable;
  * @author VISTALL
  * @since 2020-10-03
  */
-public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState {
+public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
   private static final BaseIconLibraryManager ourLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
   private static final UIModificationTracker ourUIModificationTracker = UIModificationTracker.getInstance();
 
@@ -52,16 +50,8 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithVaadinState {
   }
 
   @Override
-  public void toState(MultiImageState state) {
-    Image icon = calcImage();
-
-    state.myWidth = myWidth;
-    state.myHeight = myHeight;
-
-    if (icon != null) {
-      state.myImageState = new ImageState();
-      state.myImageState.myURL = "/app/image?groupId=" + myGroupId + "&imageId=" + myImageId;
-    }
+  public String getImageURL() {
+    return "/image?groupId=" + myGroupId + "&imageId=" + myImageId;
   }
 
   @Nullable

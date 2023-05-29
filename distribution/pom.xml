@@ -528,6 +528,10 @@
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-progress-bar-flow</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.parttio</groupId>
+      <artifactId>canvas-java</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

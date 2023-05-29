@@ -16,14 +16,12 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.image.state.ImageState;
-import consulo.web.internal.ui.image.state.MultiImageState;
 
 /**
  * @author VISTALL
  * @since 2019-02-21
  */
-public class WebEmptyImageImpl implements Image, WebImageWithVaadinState {
+public class WebEmptyImageImpl implements Image {
   private final int myWidth;
   private final int myHeight;
 
@@ -40,13 +38,5 @@ public class WebEmptyImageImpl implements Image, WebImageWithVaadinState {
   @Override
   public int getWidth() {
     return myWidth;
-  }
-
-  @Override
-  public void toState(MultiImageState state) {
-    state.myHeight = myHeight;
-    state.myWidth = myWidth;
-    state.myImageState = new ImageState();
-    state.myImageState.myEmpty = true;
   }
 }

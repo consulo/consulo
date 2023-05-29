@@ -44,6 +44,10 @@
         <groupId>com.vaadin</groupId>
         <artifactId>flow-maven-plugin</artifactId>
         <version>${vaadin.flow.version}</version>
+        <configuration>
+          <!--hot deploy will broke js imports, and impossible to run  in browser-->
+          <!--<frontendHotdeploy>true</frontendHotdeploy>-->
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -193,6 +197,10 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-dev-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.parttio</groupId>
+      <artifactId>canvas-java</artifactId>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>

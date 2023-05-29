@@ -19,7 +19,6 @@ import ar.com.hjg.pngj.PngReader;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.SVGDiagram;
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.image.state.MultiImageState;
 import jakarta.annotation.Nonnull;
 
 import java.awt.geom.Rectangle2D;
@@ -31,11 +30,13 @@ import java.net.URL;
  * @author VISTALL
  * @since 13-Jun-16
  */
-public class WebImageImpl implements Image, WebImageWithVaadinState {
-  private int myURLHash, myHeight, myWidth;
+public class WebImageImpl implements Image, WebImageWithURL {
+  private int myHeight, myWidth;
+
+  private URL myImageUrl;
 
   public WebImageImpl(@Nonnull URL url) {
-    myURLHash = WebImageMapper.hashCode(url);
+    myImageUrl = url;
 
     URL scaledImageUrl = url;
     String urlText = url.toString();
@@ -51,7 +52,7 @@ public class WebImageImpl implements Image, WebImageWithVaadinState {
 
     try (InputStream ignored = scaledImageUrl.openStream()) {
       // if scaled image resolved - map it for better quality
-      myURLHash = WebImageMapper.hashCode(scaledImageUrl);
+      myImageUrl = scaledImageUrl;
     }
     catch (Throwable ignored) {
     }
@@ -92,12 +93,9 @@ public class WebImageImpl implements Image, WebImageWithVaadinState {
     return myWidth;
   }
 
+  @Nonnull
   @Override
-  public void toState(MultiImageState m) {
-//    ImageState state = new ImageState();
-//    UIServlet.UIImpl current = (UIServlet.UIImpl)WebUIThreadLocal.getUI();
-//    state.myURL = WebImageMapper.createURL(myURLHash, current.getURLPrefix());
-//
-//    m.myImageState = state;
+  public String getImageURL() {
+    return myImageUrl.toExternalForm();
   }
 }

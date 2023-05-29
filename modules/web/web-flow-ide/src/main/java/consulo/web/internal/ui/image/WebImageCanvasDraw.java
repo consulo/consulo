@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.ui.image.state;
+package consulo.web.internal.ui.image;
 
-import java.io.Serializable;
+import consulo.ui.image.Image;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 29/05/2023
  */
-@Deprecated
-public abstract class ImageStateBase implements Serializable {
+public interface WebImageCanvasDraw extends Image {
+  void drawCanvas(WebCanvasRenderingContext2D context);
 }

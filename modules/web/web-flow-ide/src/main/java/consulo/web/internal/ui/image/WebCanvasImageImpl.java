@@ -17,29 +17,22 @@ package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
 import consulo.ui.image.canvas.Canvas2D;
-import consulo.web.internal.ui.image.state.MultiImageState;
 
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 2020-10-04
- *
- * TODO [VISTALL] empty impl
  */
-public class WebCanvasImageImpl implements Image, WebImageWithVaadinState {
+public class WebCanvasImageImpl implements Image, WebImageCanvasDraw {
+  private final Consumer<Canvas2D> myConsumer;
   private final int myWidth;
   private final int myHeight;
 
   public WebCanvasImageImpl(int width, int height, Consumer<Canvas2D> consumer) {
     myWidth = width;
     myHeight = height;
-  }
-
-  @Override
-  public void toState(MultiImageState state) {
-    state.myWidth = myWidth;
-    state.myHeight = myHeight;
+    myConsumer = consumer;
   }
 
   @Override
@@ -50,5 +43,10 @@ public class WebCanvasImageImpl implements Image, WebImageWithVaadinState {
   @Override
   public int getWidth() {
     return myWidth;
+  }
+
+  @Override
+  public void drawCanvas(WebCanvasRenderingContext2D context) {
+    // TODO draw
   }
 }

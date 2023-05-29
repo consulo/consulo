@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,13 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.image.state.MultiImageState;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 11-Sep-17
+ * @since 29/05/2023
  */
-@Deprecated
-public interface WebImageWithVaadinState extends Image {
-  void toState(MultiImageState state);
-
-  default MultiImageState getState() {
-    MultiImageState state = new MultiImageState();
-    state.myHeight = getHeight();
-    state.myWidth = getWidth();
-
-    toState(state);
-
-    return state;
-  }
+public interface WebImageWithURL extends Image {
+  @Nonnull
+  String getImageURL();
 }

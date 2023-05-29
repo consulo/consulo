@@ -16,14 +16,12 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
-import consulo.web.internal.ui.image.state.FoldedImageState;
-import consulo.web.internal.ui.image.state.MultiImageState;
 
 /**
  * @author VISTALL
  * @since 2018-05-08
  */
-public class WebTransparentImageImpl implements Image, WebImageWithVaadinState {
+public class WebTransparentImageImpl implements Image, WebImageCanvasDraw {
   private Image myOriginal;
   private float myAlpha;
 
@@ -43,10 +41,10 @@ public class WebTransparentImageImpl implements Image, WebImageWithVaadinState {
   }
 
   @Override
-  public void toState(MultiImageState m) {
-    m.myFoldedImageState = new FoldedImageState();
-    m.myFoldedImageState.myChildren = new MultiImageState[]{WebImageMapper.map(myOriginal).getState()};
-
-    m.myAlpha = myAlpha;
+  public void drawCanvas(WebCanvasRenderingContext2D context) {
+    context.save();
+    context.setGlobalAlpha(myAlpha);
+    WebImageConverter.processCanvas(myOriginal, context);
+    context.restore();
   }
 }
