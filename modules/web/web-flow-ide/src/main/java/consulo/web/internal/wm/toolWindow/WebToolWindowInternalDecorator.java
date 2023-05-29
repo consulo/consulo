@@ -47,6 +47,7 @@ public class WebToolWindowInternalDecorator implements ToolWindowInternalDecorat
   public WebToolWindowInternalDecorator(Project project, WindowInfoImpl windowInfo, UnifiedToolWindowImpl toolWindow, boolean canWorkInDumbMode) {
     myWindowInfo = windowInfo;
     myToolWindow = toolWindow;
+    myToolWindow.setDecorator(this);
 
     myHeader = new WebToolWindowHeader(toolWindow);
 

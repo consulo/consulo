@@ -27,6 +27,7 @@ import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.image.WebImageConverter;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -43,6 +44,10 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     public void update(LocalizeValue displayName, boolean isSecondary, Image icon) {
       removeAll();
 
+      if (icon != null) {
+        add(WebImageConverter.getImage(icon));
+      }
+      
       add(new Span(displayName.get()));
 
       String selectedPrefix = getClassNamePrefix() + "-selected";
