@@ -15,30 +15,30 @@
  */
 package consulo.web.internal.wm;
 
-import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.UI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
-import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebApplication;
-import consulo.web.internal.ui.WebFocusManagerImpl;
+import consulo.web.internal.servlet.VaadinRootLayout;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaddin;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -48,8 +48,9 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
   private final Project myProject;
   private final WebIdeRootView myRootView;
 
-  private Window myWindow;
   private UnifiedStatusBarImpl myStatusBar;
+
+  private VaadinRootLayout myRootLayout;
 
   public WebIdeFrameImpl(Project project) {
     myProject = project;
@@ -58,7 +59,15 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
   @RequiredUIAccess
   public void show() {
-    myWindow = Window.create(myProject.getName(), WindowOptions.builder().disableResize().build());
+    UI ui = UI.getCurrent();
+
+    VaadinRootLayout view = (VaadinRootLayout)ui.getCurrentView();
+
+    myRootLayout = view;
+
+    String projectTitle = FrameTitleBuilder.getInstance().getProjectTitle(myProject);
+
+    ui.getPage().setTitle(projectTitle);
 
     myStatusBar = new UnifiedStatusBarImpl(myProject.getApplication(), null);
     Disposer.register(this, myStatusBar);
@@ -68,21 +77,9 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     StatusBarWidgetsManager.getInstance(myProject).updateAllWidgets(UIAccess.current());
 
-    Dialog vaadinWindow = (Dialog)TargetVaddin.to(myWindow);
-    WebFocusManagerImpl.register(vaadinWindow);
-    vaadinWindow.setSizeFull();
-
-    myWindow.addListener(Window.CloseListener.class, () -> {
-      myWindow.close();
-
-      ProjectManager.getInstance().closeAndDisposeAsync(myProject, UIAccess.current());
-    });
-
-    myWindow.setContent(myRootView.getRootPanel().getComponent());
-
     myRootView.update();
-
-    myWindow.show();
+    
+    myRootLayout.update(TargetVaddin.to(myRootView.getRootPanel().getComponent()));
   }
 
   public WebRootPaneImpl getRootPanel() {
@@ -92,12 +89,12 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
   @Nonnull
   @Override
   public Window getWindow() {
-    return myWindow;
+    return (Window)Objects.requireNonNull(myRootLayout).toUIComponent();
   }
 
   public void close() {
     WebApplication.invokeOnCurrentSession(() -> {
-      myWindow.close();
+      UI.getCurrent().getPage().executeJs("window.close();");
     });
   }
 

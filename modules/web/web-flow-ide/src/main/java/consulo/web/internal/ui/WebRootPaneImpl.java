@@ -15,68 +15,33 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
 import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 import consulo.ui.MenuBar;
-import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
-import consulo.web.internal.ui.base.TargetVaddin;
-import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.CompositeComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.ui.layout.DockLayout;
 
 /**
  * @author VISTALL
  * @since 27/05/2023
  */
-public class WebRootPaneImpl extends VaadinComponentDelegate<WebRootPaneImpl.Vaadin> {
-  public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
-    public Vaadin() {
-      setSizeFull();
-    }
-
-    @Nullable
-    @Override
-    public consulo.ui.Component toUIComponent() {
-      return WebRootPaneImpl.this;
-    }
-  }
-
-  private consulo.ui.Component myCenterComponent;
+public class WebRootPaneImpl  {
+  private final DockLayout myDockLayout = DockLayout.create();
 
   public WebRootPaneImpl() {
   }
 
-  @Nonnull
-  @Override
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
-  }
-
   public void setCenterComponent(consulo.ui.Component content) {
-    if (myCenterComponent != null) {
-      toVaadinComponent().remove(TargetVaddin.to(myCenterComponent));
-      myCenterComponent = null;
-    }
-
-    if (content != null) {
-      Component vaadinComponent = TargetVaddin.to(content);
-      ((HasSize)vaadinComponent).setSizeFull();
-      toVaadinComponent().add(vaadinComponent);
-      myCenterComponent = content;
-    }
+    myDockLayout.center(content);
   }
 
   public void setMenuBar(MenuBar menuBar) {
+    myDockLayout.top(menuBar);
   }
 
   public void setStatusBar(UnifiedStatusBarImpl statusBar) {
-    // TODO impl
+    myDockLayout.bottom(statusBar.getUIComponent());
   }
 
-  @Deprecated
   public consulo.ui.Component getComponent() {
-    return this;
+    return myDockLayout;
   }
 }

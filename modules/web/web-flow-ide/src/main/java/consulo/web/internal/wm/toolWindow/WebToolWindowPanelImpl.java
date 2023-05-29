@@ -215,7 +215,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     vaadinComponent.myTopDiv.add(TargetVaddin.to(myTopStripe));
     vaadinComponent.myCenterDiv.add(TargetVaddin.to(myLeftStripe));
-    VaadinSizeUtil.setSizeFull(myHorizontalSplitter);
+    VaadinSizeUtil.setWidthFull(myHorizontalSplitter);
     com.vaadin.flow.component.Component splitter = TargetVaddin.to(myHorizontalSplitter);
     vaadinComponent.myCenterDiv.add(splitter);
     vaadinComponent.myCenterDiv.add(TargetVaddin.to(myRightStripe));

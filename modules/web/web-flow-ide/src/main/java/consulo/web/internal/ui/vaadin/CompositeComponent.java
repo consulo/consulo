@@ -22,6 +22,7 @@ import com.vaadin.flow.component.*;
  * @since 27/05/2023
  */
 @Tag("div")
+@Deprecated
 public class CompositeComponent extends Component implements HasComponents, HasOrderedComponents, HasSize {
   public CompositeComponent() {
   }

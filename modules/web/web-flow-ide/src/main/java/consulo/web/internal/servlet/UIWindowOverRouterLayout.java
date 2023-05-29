@@ -50,7 +50,7 @@ class UIWindowOverRouterLayout implements Window {
 
   @RequiredUIAccess
   public UIWindowOverRouterLayout(VaadinRootLayout routerLayout) {
-    routerLayout.add(TargetVaddin.to(myRootPanel));
+    routerLayout.add(TargetVaddin.to(myRootPanel.getComponent()));
   }
 
   @Override

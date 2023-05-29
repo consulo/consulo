@@ -211,6 +211,10 @@
       <artifactId>vaadin-dev-bundle</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.vaadin.addons.johannest</groupId>
+      <artifactId>border-layout-component</artifactId>
+    </dependency>
+    <dependency>
       <groupId>consulo.internal</groupId>
       <artifactId>svg-salamander</artifactId>
       <optional>true</optional>

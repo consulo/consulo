@@ -16,17 +16,18 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
-import consulo.web.internal.ui.vaadin.CompositeComponent;
+import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.vaadin.addons.johannest.borderlayout.BorderLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -34,7 +35,7 @@ import java.util.List;
  */
 public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> implements DockLayout {
 
-  public class Vaadin extends CompositeComponent implements FromVaadinComponentWrapper {
+  public class Vaadin extends BorderLayout implements FromVaadinComponentWrapper {
     @Nullable
     @Override
     public consulo.ui.Component toUIComponent() {
@@ -48,7 +49,7 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> i
   @Override
   public void removeAll() {
     super.removeAll();
-    
+
     myCenterComponents.clear();
   }
 
@@ -62,50 +63,48 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> i
   @Nonnull
   @Override
   public DockLayout top(@Nonnull consulo.ui.Component component) {
-    Component vaadinComponent = TargetVaddin.to(component);
-    toVaadinComponent().add(vaadinComponent);
-    return this;
+    return replace(component, BorderLayout.Constraint.NORTH);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout bottom(@Nonnull consulo.ui.Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
-    return this;
+    return replace(component, BorderLayout.Constraint.SOUTH);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout center(@Nonnull consulo.ui.Component component) {
-    for (Component centerComponent : myCenterComponents) {
-      toVaadinComponent().remove(centerComponent);
-    }
-    myCenterComponents.clear();
-    
-    Component vaadinComponent = TargetVaddin.to(component);
-    ((HasSize)vaadinComponent).setSizeFull();
-    myCenterComponents.add(vaadinComponent);
-    
-    toVaadinComponent().add(vaadinComponent);
-    //toVaadinComponent().setAlignSelf(FlexComponent.Alignment.CENTER, vaadinComponent);
-    return this;
+    VaadinSizeUtil.setWidthFull(component);
+    return replace(component, BorderLayout.Constraint.CENTER);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout left(@Nonnull consulo.ui.Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
-    return this;
+    return replace(component, BorderLayout.Constraint.WEST);
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
   public DockLayout right(@Nonnull consulo.ui.Component component) {
-    toVaadinComponent().add(TargetVaddin.to(component));
+    return replace(component, BorderLayout.Constraint.EAST);
+  }
+
+  private DockLayout replace(consulo.ui.Component child, BorderLayout.Constraint constraint) {
+    Component oldComponent = toVaadinComponent().getComponent(constraint);
+    if (oldComponent != null && Objects.equals(toVaadinComponent(), oldComponent.getParent().orElse(null))) {
+      toVaadinComponent().removeLayoutComponent(oldComponent);
+    }
+
+    if (child != null) {
+      toVaadinComponent().addComponent(TargetVaddin.to(child), constraint);
+    }
+
     return this;
   }
 }

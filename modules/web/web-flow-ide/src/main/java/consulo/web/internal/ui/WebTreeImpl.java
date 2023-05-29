@@ -52,6 +52,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     private TreeModel<NODE> myModel;
 
     public Vaadin() {
+      setAllRowsVisible(true);
+      
       addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS);
 
       addComponentColumn(node -> {

@@ -15,9 +15,7 @@
  */
 package consulo.web.internal.servlet;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,6 +32,14 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
   private UIWindowOverRouterLayout myUIWindow = new UIWindowOverRouterLayout(this);
 
   public VaadinRootLayout() {
+  }
+
+  public void update(Component newContent) {
+    removeAll();
+
+    ((HasSize)newContent).setSizeFull();
+
+    add(newContent);
   }
 
   @Override

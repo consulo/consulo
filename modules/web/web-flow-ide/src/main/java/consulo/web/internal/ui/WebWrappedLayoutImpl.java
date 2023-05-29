@@ -18,8 +18,10 @@ package consulo.web.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.VaadinSingleComponentContainer;
+import consulo.web.internal.ui.vaadin.SingleComponentLayout;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,7 +31,7 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-17
  */
 public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  public class Vaadin extends VaadinSingleComponentContainer {
+  public class Vaadin extends SingleComponentLayout implements FromVaadinComponentWrapper {
     @Nullable
     @Override
     public Component toUIComponent() {
@@ -51,7 +53,7 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
 
   @Override
   public void remove(@Nonnull Component component) {
-    getVaadinComponent().removeIfContent(component);
+    getVaadinComponent().removeIfContent(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
@@ -61,7 +63,7 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
     if (component != null) {
       VaadinSizeUtil.setSizeFull(component);
     }
-    getVaadinComponent().setContent(component);
+    getVaadinComponent().setContent(TargetVaddin.to(component));
     return this;
   }
 }

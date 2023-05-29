@@ -29,4 +29,16 @@ public class VaadinSizeUtil {
 
     ((HasSize)vComponent).setSizeFull();
   }
+
+  public static void setWidthFull(Component component) {
+    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+
+    ((HasSize)vComponent).setWidthFull();
+  }
+
+  public static void setHeightFull(Component component) {
+    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+
+    ((HasSize)vComponent).setHeightFull();
+  }
 }
