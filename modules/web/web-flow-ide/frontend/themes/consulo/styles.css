@@ -31,13 +31,13 @@ html:not(div) {
 .web-tool-window-stripe-top
 {
   height: 1.5em;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-bottom
 {
   height: 1.5em;
-  border-top: 1px solid gray;
+  border-top: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-left
@@ -48,7 +48,7 @@ html:not(div) {
   text-orientation: mixed;
   writing-mode: vertical-lr;
 
-  border-right: 1px solid gray;
+  border-right: 1px solid lightgray;
 }
 
 .web-tool-window-stripe-right
@@ -59,7 +59,7 @@ html:not(div) {
   text-orientation: mixed;
   writing-mode: vertical-lr;
 
-  border-left: 1px solid gray;
+  border-left: 1px solid lightgray;
 }
 
 .web-tool-window-content
