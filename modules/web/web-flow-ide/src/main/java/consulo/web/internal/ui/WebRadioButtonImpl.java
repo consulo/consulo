@@ -13,45 +13,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Input;
+import com.vaadin.flow.component.html.Label;
 import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.UUID;
 
 /**
  * @author VISTALL
  * @since 2019-02-19
  */
-public class WebRadioButtonImpl extends WebBooleanValueComponentBase<WebRadioButtonImpl.Vaadin> implements RadioButton {
+public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonImpl.Vaadin> implements RadioButton {
 
-  public static class Vaadin extends VaadinBooleanValueComponentBase {
-    public void setText(@Nonnull final LocalizeValue text) {
-      if (Comparing.equal(getState().caption, text)) {
-        return;
-      }
+  public class Vaadin extends Div implements FromVaadinComponentWrapper {
+    private final Input myInput;
+    private final Label myLabel;
 
-      getState().caption = text.getValue();
+    public Vaadin() {
+      myInput = new Input();
+      myInput.setId(UUID.randomUUID().toString());
+      myInput.setType("radio");
+      myLabel = new Label();
+      myLabel.setFor(myInput);
 
-      markAsDirty();
+      add(myInput, myLabel);
+    }
+
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebRadioButtonImpl.this;
+    }
+
+    public void setText(LocalizeValue text) {
+      myLabel.setText(text.getValue());
     }
   }
 
   private LocalizeValue myText = LocalizeValue.empty();
 
+  @RequiredUIAccess
   public WebRadioButtonImpl(boolean selected, LocalizeValue text) {
-    super(selected);
     setLabelText(text);
+    setValue(selected);
   }
 
   @Nonnull
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
+  }
+
+  @Nonnull
+  @Override
+  public Boolean getValue() {
+    // TODO
+    return Boolean.FALSE;
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    // TODO
   }
 
   @Override
@@ -66,7 +100,7 @@ public class WebRadioButtonImpl extends WebBooleanValueComponentBase<WebRadioBut
     UIAccess.assertIsUIThread();
 
     myText = text;
-    
+
     getVaadinComponent().setText(text);
   }
 }

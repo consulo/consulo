@@ -163,9 +163,7 @@ public class WebUIInternalImpl extends UIInternal {
   @Nonnull
   @Override
   public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
-    throw notSupported();
-
-    //return new WebRadioButtonImpl(selected, text);
+    return new WebRadioButtonImpl(selected, text);
   }
 
   @Override
