@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
-import com.vaadin.ui.Component;
+import com.vaadin.flow.component.Component;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.ui.web.servlet.WebImageMapper;
-import consulo.web.gwt.shared.ui.state.menu.MenuState;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,34 +35,27 @@ import java.util.List;
  * @since 2019-02-19
  */
 public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
-  public static class Vaadin extends VaadinComponentContainer {
+  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+    private String myText = "";
     private List<Component> myMenuItems = new ArrayList<>();
 
     public void add(@Nonnull MenuItem menuItem) {
       Component vaadinComponent = TargetVaddin.to(menuItem);
 
       myMenuItems.add(vaadinComponent);
-      addComponent(vaadinComponent);
+      //addComponent(vaadinComponent);
     }
 
-    @Override
-    public MenuState getState() {
-      return (MenuState)super.getState();
-    }
 
+    @Nullable
     @Override
-    public int getComponentCount() {
-      return myMenuItems.size();
-    }
-
-    @Override
-    public Iterator<Component> iterator() {
-      return myMenuItems.iterator();
+    public consulo.ui.Component toUIComponent() {
+      return WebMenuImpl.this;
     }
   }
 
   public WebMenuImpl(String text) {
-    getVaadinComponent().getState().caption = text;
+    getVaadinComponent().myText = text;
   }
 
   @Override
@@ -75,8 +67,8 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
   @Override
   public void setIcon(@Nullable Image icon) {
     Vaadin vaadinComponent = getVaadinComponent();
-    vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
-    vaadinComponent.markAsDirty();
+    //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
+    // vaadinComponent.markAsDirty();
   }
 
   @RequiredUIAccess
@@ -90,6 +82,6 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
   @Nonnull
   @Override
   public String getText() {
-    return getVaadinComponent().getState().caption;
+    return getVaadinComponent().myText;
   }
 }

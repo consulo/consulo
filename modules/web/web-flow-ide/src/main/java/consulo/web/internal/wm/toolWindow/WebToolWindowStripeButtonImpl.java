@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.ex;
+package consulo.web.internal.wm.toolWindow;
 
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import consulo.application.ui.UISettings;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.WindowInfo;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
+import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageMapper;
-import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
-import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
-import consulo.web.wm.impl.WebToolWindowInternalDecorator;
-import consulo.ide.impl.wm.impl.ToolWindowBase;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,62 +34,42 @@ import jakarta.annotation.Nonnull;
  * @since 25-Sep-17
  */
 public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebToolWindowStripeButtonImpl.Vaadin> implements ToolWindowStripeButton {
-  public static class Vaadin extends VaadinComponent {
-    private ToolWindowStripeButtonRpc myRpc = () -> {
-      WebToolWindowStripeButtonImpl component = toUIComponent();
-
-      if (isSelected()) {
-        component.myDecorator.fireHidden();
-      }
-      else {
-        component.myDecorator.fireActivated();
-      }
-    };
+  public class Vaadin extends Div implements FromVaadinComponentWrapper {
+    private boolean mySelected;
 
     public Vaadin() {
-      registerRpc(myRpc);
     }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-      super.beforeClientResponse(initial);
+    public void update(LocalizeValue displayName, boolean isSecondary, Image icon) {
+      removeAll();
 
-      WebToolWindowStripeButtonImpl component = toUIComponent();
+      add(new Span(displayName.get()));
 
-      WindowInfo windowInfo = component.getWindowInfo();
-      ToolWindowStripeButtonState state = getState();
-      ToolWindow toolWindow = component.myDecorator.getToolWindow();
-
-      state.mySecondary = windowInfo.isSplit();
-      state.caption = windowInfo.getId();
-
-      Image icon = toolWindow.getIcon();
-
-      try {
-        state.myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
+      String selectedPrefix = getClassNamePrefix() + "-selected";
+      removeClassName(selectedPrefix);
+      if (isSelected()) {
+        addClassName(selectedPrefix);
       }
-      catch (Exception e) {
-        e.printStackTrace();
+
+      String secondaryPrefix = getClassNamePrefix() + "-secondary";
+      removeClassName(secondaryPrefix);
+      if (isSecondary) {
+        addClassName(secondaryPrefix);
       }
     }
 
     public boolean isSelected() {
-      return getState().mySelected;
+      return mySelected;
     }
 
     public void setSelected(boolean selected) {
-      getState().mySelected = selected;
+      mySelected = selected;
     }
 
     @Nonnull
     @Override
     public WebToolWindowStripeButtonImpl toUIComponent() {
-      return (WebToolWindowStripeButtonImpl)super.toUIComponent();
-    }
-
-    @Override
-    public ToolWindowStripeButtonState getState() {
-      return (ToolWindowStripeButtonState)super.getState();
+      return WebToolWindowStripeButtonImpl.this;
     }
   }
 
@@ -100,6 +77,15 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
 
   public WebToolWindowStripeButtonImpl(WebToolWindowInternalDecorator decorator, WebToolWindowPanelImpl toolWindowPanel) {
     myDecorator = decorator;
+
+    toVaadinComponent().addClickListener(event -> {
+      if (isSelected()) {
+        myDecorator.fireHidden();
+      }
+      else {
+        myDecorator.fireActivated();
+      }
+    });
   }
 
   @Nonnull
@@ -112,7 +98,6 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   public void apply(@Nonnull WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
     updateState();
-    getVaadinComponent().markAsDirty();
   }
 
   @RequiredUIAccess
@@ -126,6 +111,8 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
       setVisible(toShow && (window.isShowStripeButton() || isSelected()));
     }
     setEnabled(toShow && !window.isPlaceholderMode());
+
+    toVaadinComponent().update(window.getDisplayName(), window.isSplitMode(), window.getIcon());
   }
 
   public boolean isSelected() {
@@ -151,7 +138,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
   @RequiredUIAccess
   @Override
   public void updatePresentation() {
-
+    updateState();
   }
 
   @Override

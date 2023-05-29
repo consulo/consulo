@@ -34,6 +34,7 @@ import consulo.ui.font.FontManager;
 import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import consulo.web.internal.ui.WebFontImpl;
+import consulo.web.internal.ui.vaadin.InitiableComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -54,17 +55,28 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
   private Cursor myCursor;
 
   public VaadinComponentDelegate(boolean noBody) {
- }
+  }
+
+  private String myClassNamePrefix;
 
   public VaadinComponentDelegate() {
-    myVaadinComponent = createVaadinComponent();
-    
     String[] impls = NameUtilCore.splitNameIntoWords(getClass().getSimpleName().replace("Impl", ""));
-    myVaadinComponent.addClassName(String.join("-", impls).toLowerCase(Locale.ROOT));
+    myVaadinComponent = createVaadinComponent();
+
+    myClassNamePrefix = String.join("-", impls).toLowerCase(Locale.ROOT);
+    myVaadinComponent.addClassName(myClassNamePrefix);
     myVaadinComponent.setId(getClass().getSimpleName() + "." + hashCode());
+
+    if (myVaadinComponent instanceof InitiableComponent initiableComponent) {
+      initiableComponent.init(myClassNamePrefix);
+    }
 
     myVaadinComponent.addAttachListener(event -> getListenerDispatcher(AttachListener.class).onAttach(new AttachEvent(this)));
     myVaadinComponent.addDetachListener(event -> getListenerDispatcher(DetachListener.class).onDetach(new DetachEvent(this)));
+  }
+
+  public String getClassNamePrefix() {
+    return myClassNamePrefix;
   }
 
   @Nonnull
@@ -72,7 +84,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
   @Override
   public void setFont(@Nonnull Font font) {
-    if(!(font instanceof WebFontImpl)) {
+    if (!(font instanceof WebFontImpl)) {
       throw new IllegalArgumentException("not web font");
     }
 
@@ -124,7 +136,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
   @Override
   public void setSize(@Nonnull Size size) {
     HasSize vaadinComponent = (HasSize)getVaadinComponent();
-    if(size.getHeight() == -1) {
+    if (size.getHeight() == -1) {
       vaadinComponent.setHeight(null);
     }
     else {
@@ -210,7 +222,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
   @Override
   public void setCursor(@Nullable Cursor cursor) {
     myCursor = cursor;
-   // TODO CursorConverter.setCursor(toVaadinComponent(), cursor);
+    // TODO CursorConverter.setCursor(toVaadinComponent(), cursor);
   }
 
   @Nullable

@@ -92,9 +92,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ThreeComponentSplitLayout _ThreeComponentSplitLayout_create(SplitLayoutPosition position) {
-    throw notSupported();
-
-    //return new WebThreeComponentSplitLayoutImpl();
+    return new WebThreeComponentSplitLayoutImpl();
   }
 
   @Override
@@ -148,9 +146,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public ProgressBar _Components_progressBar() {
-    throw notSupported();
-
-    //return new WebProgressBarImpl();
+    return new WebProgressBarImpl();
   }
 
   @Nonnull
@@ -268,23 +264,17 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public MenuItem _MenuItem_create(String text) {
-    throw notSupported();
-
-    //return new WebMenuItemImpl(text);
+    return new WebMenuItemImpl(text);
   }
 
   @Override
   public Menu _Menu_create(String text) {
-    throw notSupported();
-
-    //return new WebMenuImpl(text);
+    return new WebMenuImpl(text);
   }
 
   @Override
   public MenuSeparator _MenuSeparator_create() {
-    throw notSupported();
-
-    //return new WebMenuSeparatorImpl();
+    return new WebMenuSeparatorImpl();
   }
 
   @Override
@@ -306,8 +296,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public MenuBar _MenuItems_menuBar() {
-    throw notSupported();
-    //return new WebMenuBarImpl();
+    return new WebMenuBarImpl();
   }
 
   @Nonnull

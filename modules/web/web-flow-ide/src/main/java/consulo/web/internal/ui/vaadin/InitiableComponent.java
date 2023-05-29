@@ -15,15 +15,10 @@
  */
 package consulo.web.internal.ui.vaadin;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.Tag;
-
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 29/05/2023
  */
-@Tag("div")
-public class SimpleComponent extends Component implements HasSize, HasStyle {
+public interface InitiableComponent {
+  void init(String classPrefix);
 }

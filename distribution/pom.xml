@@ -528,6 +528,10 @@
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-checkbox-flow</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-progress-bar-flow</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

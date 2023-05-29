@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
+import consulo.ui.Component;
 import consulo.ui.MenuSeparator;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,8 +29,13 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebMenuSeparatorImpl extends VaadinComponentDelegate<WebMenuSeparatorImpl.Vaadin> implements MenuSeparator {
-  public static class Vaadin extends VaadinComponent {
+  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
 
+    @Nullable
+    @Override
+    public Component toUIComponent() {
+      return WebMenuSeparatorImpl.this;
+    }
   }
 
   @Override

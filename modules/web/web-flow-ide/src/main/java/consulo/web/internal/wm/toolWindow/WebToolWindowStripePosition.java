@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.internal.ui.vaadin;
-
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.Tag;
+package consulo.web.internal.wm.toolWindow;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 28/05/2023
  */
-@Tag("div")
-public class SimpleComponent extends Component implements HasSize, HasStyle {
+public enum WebToolWindowStripePosition {
+  TOP,
+  BOTTOM,
+  LEFT,
+  RIGHT
 }

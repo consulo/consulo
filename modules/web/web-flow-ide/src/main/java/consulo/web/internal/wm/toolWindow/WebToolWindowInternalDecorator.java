@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.web.internal.wm.toolWindow;
 
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.WindowInfo;
-import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
+import consulo.project.Project;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.toolWindow.InternalDecoratorListener;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.layout.DockLayout;
-import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
-
 import jakarta.annotation.Nonnull;
 
 /**

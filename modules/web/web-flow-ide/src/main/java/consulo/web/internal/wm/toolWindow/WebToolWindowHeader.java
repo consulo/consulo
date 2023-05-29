@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.web.internal.wm.toolWindow;
 
 import consulo.ui.Component;
 import consulo.ui.Label;

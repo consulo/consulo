@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
+import consulo.ui.Component;
 import consulo.ui.ProgressBar;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.web.gwt.shared.ui.state.ProgressBarState;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-05-11
  */
 public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarImpl.Vaadin> implements ProgressBar {
-  public static class Vaadin extends VaadinComponent {
+  public  class Vaadin extends com.vaadin.flow.component.progressbar.ProgressBar implements FromVaadinComponentWrapper {
+
+    @Nullable
     @Override
-    public ProgressBarState getState() {
-      return (ProgressBarState)super.getState();
+    public Component toUIComponent() {
+      return WebProgressBarImpl.this;
     }
   }
 
@@ -42,26 +44,26 @@ public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarIm
 
   @Override
   public void setIndeterminate(boolean value) {
-    getVaadinComponent().getState().indeterminate = value;
+    getVaadinComponent().setIndeterminate(value);
   }
 
   @Override
   public boolean isIndeterminate() {
-    return getVaadinComponent().getState().indeterminate;
+    return getVaadinComponent().isIndeterminate();
   }
 
   @Override
   public void setMinimum(int value) {
-    getVaadinComponent().getState().minimum = value;
+    getVaadinComponent().setMin(value);
   }
 
   @Override
   public void setMaximum(int value) {
-    getVaadinComponent().getState().maximum = value;
+    getVaadinComponent().setMax(value);
   }
 
   @Override
   public void setValue(int value) {
-    getVaadinComponent().getState().value = value;
+    getVaadinComponent().setValue(value);
   }
 }

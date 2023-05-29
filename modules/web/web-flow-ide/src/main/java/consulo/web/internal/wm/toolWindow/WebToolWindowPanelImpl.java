@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.ui.ex;
+package consulo.web.internal.wm.toolWindow;
 
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.WindowInfo;
-import consulo.project.ui.internal.WindowInfoImpl;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
-import consulo.ui.ex.toolWindow.ToolWindowPanel;
-import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.ex.toolWindow.*;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.ThreeComponentSplitLayout;
-import consulo.ui.web.internal.TargetVaddin;
-import consulo.ui.web.internal.base.VaadinComponentContainer;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
-import consulo.web.wm.impl.WebToolWindowInternalDecorator;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.TargetVaddin;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.InitiableComponent;
+import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.*;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -44,22 +44,32 @@ import java.util.*;
 public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
   private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
 
-  public static class Vaadin extends VaadinComponentContainer {
-    private final List<com.vaadin.ui.Component> myChildren = new ArrayList<>();
+  public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent {
+    private Div myTopDiv = new Div();
+    private Div myCenterDiv = new Div();
+    private Div myBottomDiv = new Div();
 
+    public Vaadin() {
+      add(myTopDiv);
+      myTopDiv.setWidthFull();
+      add(myCenterDiv);
+      myCenterDiv.addClassName(LumoUtility.Display.FLEX);
+      myCenterDiv.setSizeFull();
+      add(myBottomDiv);
+      myBottomDiv.setWidthFull();
+    }
+
+    @Nullable
     @Override
-    public int getComponentCount() {
-      return myChildren.size();
+    public Component toUIComponent() {
+      return WebToolWindowPanelImpl.this;
     }
 
     @Override
-    public Iterator<com.vaadin.ui.Component> iterator() {
-      return myChildren.iterator();
-    }
-
-    private void add(com.vaadin.ui.Component component) {
-      addComponent(component);
-      myChildren.add(component);
+    public void init(String classPrefix) {
+      myTopDiv.addClassName(classPrefix + "-top");
+      myCenterDiv.addClassName(classPrefix + "-center");
+      myBottomDiv.addClassName(classPrefix + "-bottom");
     }
   }
 
@@ -68,7 +78,9 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     private final WindowInfoImpl myInfo;
     private final Comparator<ToolWindowStripeButton> myComparator;
 
-    public AddToolStripeButtonCmd(final ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    public AddToolStripeButtonCmd(final ToolWindowStripeButton button,
+                                  @Nonnull WindowInfoImpl info,
+                                  @Nonnull Comparator<ToolWindowStripeButton> comparator) {
       myButton = button;
       myInfo = info;
       myComparator = comparator;
@@ -92,7 +104,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
       else {
         LOG.error("unknown anchor: " + anchor);
       }
-      getVaadinComponent().markAsDirtyRecursive();
+      //getVaadinComponent().markAsDirtyRecursive();
     }
   }
 
@@ -162,10 +174,6 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     @Override
     public final void run() {
       setComponent(null, myInfo.getAnchor(), 0);
-
-      if(!myDirtyMode) {
-        toVaadinComponent().markAsDirtyRecursive();
-      }
     }
   }
 
@@ -184,10 +192,10 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     }
   }
 
-  private WebToolWindowStripeImpl myTopStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.TOP);
-  private WebToolWindowStripeImpl myBottomStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.BOTTOM);
-  private WebToolWindowStripeImpl myLeftStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.LEFT);
-  private WebToolWindowStripeImpl myRightStripe = new WebToolWindowStripeImpl(DockLayoutState.Constraint.RIGHT);
+  private WebToolWindowStripeImpl myTopStripe = new WebToolWindowStripeImpl(WebToolWindowStripePosition.TOP);
+  private WebToolWindowStripeImpl myBottomStripe = new WebToolWindowStripeImpl(WebToolWindowStripePosition.BOTTOM);
+  private WebToolWindowStripeImpl myLeftStripe = new WebToolWindowStripeImpl(WebToolWindowStripePosition.LEFT);
+  private WebToolWindowStripeImpl myRightStripe = new WebToolWindowStripeImpl(WebToolWindowStripePosition.RIGHT);
 
   private final Map<String, WebToolWindowStripeButtonImpl> myId2Button = new HashMap<>();
   private final Map<String, ToolWindowInternalDecorator> myId2Decorator = new HashMap<>();
@@ -205,11 +213,23 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
   public WebToolWindowPanelImpl() {
     Vaadin vaadinComponent = getVaadinComponent();
 
-    vaadinComponent.add(TargetVaddin.to(myTopStripe));
-    vaadinComponent.add(TargetVaddin.to(myBottomStripe));
-    vaadinComponent.add(TargetVaddin.to(myLeftStripe));
-    vaadinComponent.add(TargetVaddin.to(myRightStripe));
-    vaadinComponent.add(TargetVaddin.to(myHorizontalSplitter));
+    vaadinComponent.myTopDiv.add(TargetVaddin.to(myTopStripe));
+    vaadinComponent.myCenterDiv.add(TargetVaddin.to(myLeftStripe));
+    VaadinSizeUtil.setSizeFull(myHorizontalSplitter);
+    com.vaadin.flow.component.Component splitter = TargetVaddin.to(myHorizontalSplitter);
+    vaadinComponent.myCenterDiv.add(splitter);
+    vaadinComponent.myCenterDiv.add(TargetVaddin.to(myRightStripe));
+    vaadinComponent.myBottomDiv.add(TargetVaddin.to(myBottomStripe));
+
+    // tttttttttttttttttttttttttttttttt
+    // l                              r
+    // l                              r
+    // l            content           r
+    // l                              r
+    // l                              r
+    // bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+    splitter.addClassName("web-tool-window-content");
   }
 
   @Nonnull

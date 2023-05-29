@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,33 @@
 package consulo.web.internal.ui;
 
 import consulo.ui.Component;
+import consulo.ui.MenuBar;
+import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.layout.WrappedLayout;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.VaadinSingleComponentContainer;
-import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
+import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 2019-02-17
+ * @since 29/05/2023
+ *
+ * TODO stub
  */
-public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayoutImpl.Vaadin> implements WrappedLayout {
-  public class Vaadin extends VaadinSingleComponentContainer {
+public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
+  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+
     @Nullable
     @Override
     public Component toUIComponent() {
-      return WebWrappedLayoutImpl.this;
+      return WebMenuBarImpl.this;
     }
+  }
+
+  public WebMenuBarImpl() {
+
   }
 
   @Nonnull
@@ -43,25 +51,14 @@ public class WebWrappedLayoutImpl extends VaadinComponentDelegate<WebWrappedLayo
     return new Vaadin();
   }
 
-  @RequiredUIAccess
   @Override
-  public void removeAll() {
-    getVaadinComponent().setContent(null);
-  }
-
-  @Override
-  public void remove(@Nonnull Component component) {
-    getVaadinComponent().removeIfContent(component);
+  public void clear() {
   }
 
   @RequiredUIAccess
   @Nonnull
   @Override
-  public WrappedLayout set(@Nullable Component component) {
-    if (component != null) {
-      VaadinSizeUtil.setSizeFull(component);
-    }
-    getVaadinComponent().setContent(component);
+  public MenuBar add(@Nonnull MenuItem menuItem) {
     return this;
   }
 }

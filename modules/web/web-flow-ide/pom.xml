@@ -183,6 +183,10 @@
       <artifactId>vaadin-combo-box-flow</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-progress-bar-flow</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.vaadin.stefan</groupId>
       <artifactId>html-table</artifactId>
     </dependency>

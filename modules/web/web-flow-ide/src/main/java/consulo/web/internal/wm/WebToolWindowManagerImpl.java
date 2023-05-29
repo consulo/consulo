@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.web.wm.impl;
+package consulo.web.internal.wm;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.component.persist.StoragePathMacros;
-import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -39,21 +39,21 @@ import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.toolWindow.InternalDecoratorListener;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.layout.DockLayout;
-import consulo.ui.web.internal.WebRootPaneImpl;
-import consulo.web.ui.ex.WebToolWindowPanelImpl;
-import consulo.web.ui.ex.WebToolWindowStripeButtonImpl;
-import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
-import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
+import consulo.web.internal.ui.WebRootPaneImpl;
+import consulo.web.internal.wm.toolWindow.WebToolWindowInternalDecorator;
+import consulo.web.internal.wm.toolWindow.WebToolWindowPanelImpl;
+import consulo.web.internal.wm.toolWindow.WebToolWindowStripeButtonImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL

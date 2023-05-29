@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal;
+package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.MenuItem;
-import consulo.ui.event.ClickEvent;
-import consulo.ui.event.ClickListener;
 import consulo.ui.image.Image;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
-import consulo.ui.web.servlet.WebImageMapper;
-import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
-import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
-
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
+import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,40 +29,31 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
-  public static class Vaadin extends VaadinComponent {
-    private MenuItemRpc myRpc = new MenuItemRpc() {
-      @Override
-      public void onClick() {
-        Component component = toUIComponent();
-        component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
-      }
-    };
-
-    Vaadin() {
-      registerRpc(myRpc);
-    }
-
+  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+    private String myText = "";
+    @Nullable
     @Override
-    public MenuItemState getState() {
-      return (MenuItemState)super.getState();
+    public Component toUIComponent() {
+      return WebMenuItemImpl.this;
     }
+    //         component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
+
   }
 
   public WebMenuItemImpl(String text) {
-    getVaadinComponent().getState().caption = text;
+    getVaadinComponent().myText = text;
   }
 
   @Nonnull
   @Override
   public String getText() {
-    return getVaadinComponent().getCaption();
+    return toVaadinComponent().myText;
   }
 
   @Override
   public void setIcon(@Nullable Image icon) {
     Vaadin vaadinComponent = getVaadinComponent();
-    vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
-    vaadinComponent.markAsDirty();
+    //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
   }
 
   @Nonnull

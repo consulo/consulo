@@ -17,9 +17,108 @@ html:not(div) {
   --lumo-line-height-m: 1.4;
   --lumo-line-height-s: 1.2;
   --lumo-line-height-xs: 1.1;
-  --lumo-space-xl: 1.875rem;
+  --lumo-space-xl: 1.5rem;
   --lumo-space-l: 1.25rem;
   --lumo-space-m: 0.625rem;
   --lumo-space-s: 0.3125rem;
   --lumo-space-xs: 0.1875rem;
+}
+
+.web-tool-window-panel
+{
+}
+
+.web-tool-window-stripe-top
+{
+  height: 1.5em;
+  border-bottom: 1px solid gray;
+}
+
+.web-tool-window-stripe-bottom
+{
+  height: 1.5em;
+  border-top: 1px solid gray;
+}
+
+.web-tool-window-stripe-left
+{
+  height: 100%;
+  width: 1.5em;
+
+  text-orientation: mixed;
+  writing-mode: vertical-lr;
+
+  border-right: 1px solid gray;
+}
+
+.web-tool-window-stripe-right
+{
+  height: 100%;
+  width: 1.5em;
+
+  text-orientation: mixed;
+  writing-mode: vertical-lr;
+
+  border-left: 1px solid gray;
+}
+
+.web-tool-window-content
+{
+}
+
+.web-tool-window-stripe-button
+{
+}
+
+.web-tool-window-stripe-button-selected
+{
+  background-color: lightgray;
+}
+
+.web-tool-window-stripe-top .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-left: auto;
+}
+
+.web-tool-window-stripe-bottom .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-left: auto;
+}
+
+.web-tool-window-stripe-left .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-top: auto;
+}
+
+.web-tool-window-stripe-right .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-top: auto;
+}
+
+.web-tool-window-stripe-left .web-tool-window-stripe-button span
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.web-tool-window-stripe-right .web-tool-window-stripe-button span
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.web-tool-window-stripe-top .web-tool-window-stripe-button span
+{
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.web-tool-window-stripe-bottom .web-tool-window-stripe-button span
+{
+  margin-left: 1em;
+  margin-right: 1em;
 }

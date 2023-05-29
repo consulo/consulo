@@ -15,15 +15,18 @@
  */
 package consulo.web.internal.ui.vaadin;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.Tag;
+import consulo.ui.Component;
+import consulo.web.internal.ui.base.TargetVaddin;
 
 /**
  * @author VISTALL
- * @since 27/05/2023
+ * @since 29/05/2023
  */
-@Tag("div")
-public class SimpleComponent extends Component implements HasSize, HasStyle {
+public class VaadinSizeUtil {
+  public static void setSizeFull(Component component) {
+    com.vaadin.flow.component.Component vComponent = TargetVaddin.to(component);
+
+    ((HasSize)vComponent).setSizeFull();
+  }
 }
