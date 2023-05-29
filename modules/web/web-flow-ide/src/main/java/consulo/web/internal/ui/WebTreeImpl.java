@@ -231,6 +231,15 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
 
       getListenerDispatcher(SelectListener.class).onSelected(value);
     });
+
+    vaadin.addItemDoubleClickListener(event -> {
+      TreeNode<NODE> selectedNode = getSelectedNode();
+      if (selectedNode == null) {
+        return;
+      }
+      
+      model.onDoubleClick(this, selectedNode);
+    });
   }
 
   @Override
