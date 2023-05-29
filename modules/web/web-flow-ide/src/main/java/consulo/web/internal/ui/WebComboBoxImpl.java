@@ -15,7 +15,6 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -43,9 +42,9 @@ public class WebComboBoxImpl<V> extends WebSingleListComponentBase<V, WebComboBo
     super(model);
 
     toVaadinComponent().setRenderer(new ComponentRenderer((c) -> {
-      WebItemPresentationImpl webItemPresentation = new WebItemPresentationImpl();
-      myRender.render(webItemPresentation, myModel.indexOf((V)c), (V)c);
-      return new Html(webItemPresentation.toHTML());
+      WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+      myRender.render(presentation, myModel.indexOf((V)c), (V)c);
+      return presentation.toComponent();
     }));
   }
 

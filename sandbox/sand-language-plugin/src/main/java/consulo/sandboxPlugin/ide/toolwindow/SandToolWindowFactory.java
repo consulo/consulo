@@ -18,22 +18,20 @@ package consulo.sandboxPlugin.ide.toolwindow;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -56,7 +54,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
     Content content = contentFactory.createUIContent(Label.create(LocalizeValue.localizeTODO("test")), "Test", false);
     toolWindow.getContentManager().addContent(content);
 
-    ((ToolWindowEx)toolWindow).setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {
+    toolWindow.setTitleActions(new AnAction("Expand All", null, AllIcons.Actions.Expandall) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -64,9 +62,9 @@ public class SandToolWindowFactory implements ToolWindowFactory {
       }
     });
 
-    ((ToolWindowEx)toolWindow).setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
+    toolWindow.setTabDoubleClickActions(new ToolWindowTabRenameActionBase("Sand", "Enter new session name"));
 
-    ((ToolWindowEx)toolWindow).setTabActions(new AnAction("Add Tab", null, AllIcons.General.Add) {
+    toolWindow.setTabActions(new AnAction("Add Tab", null, AllIcons.General.Add) {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {

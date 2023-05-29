@@ -429,10 +429,6 @@
       <artifactId>parity-theme</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.vaadin.tatu</groupId>
-      <artifactId>tree</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-ordered-layout-flow</artifactId>
     </dependency>

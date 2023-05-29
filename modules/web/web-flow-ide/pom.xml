@@ -163,10 +163,6 @@
       <artifactId>vaadin-list-box-flow</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.vaadin.tatu</groupId>
-      <artifactId>tree</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-grid-flow</artifactId>
     </dependency>

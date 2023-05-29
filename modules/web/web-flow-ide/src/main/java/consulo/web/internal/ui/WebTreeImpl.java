@@ -15,12 +15,11 @@
  */
 package consulo.web.internal.ui;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
-import com.vaadin.flow.function.ValueProvider;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
@@ -34,7 +33,6 @@ import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -43,16 +41,20 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadin> implements Tree<NODE> {
-  public class Vaadin extends org.vaadin.tatu.Tree<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
+  @Tag("vaadin-grid-tree-toggle")
+  public static class VaadinGridTreeToggle extends com.vaadin.flow.component.Component implements HasComponents, ClickNotifier<VaadinGridTreeToggle> {
+  }
+
+  public class Vaadin extends TreeGrid<WebTreeNodeImpl<NODE>> implements FromVaadinComponentWrapper {
     private final Map<String, WebTreeNodeImpl<NODE>> myNodeMap = new LinkedHashMap<>();
 
     private WebTreeNodeImpl<NODE> myRootNode;
     private TreeModel<NODE> myModel;
 
     public Vaadin() {
-      super(ValueProvider.identity());
+      addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS, GridVariant.LUMO_COLUMN_BORDERS);
 
-      setHtmlProvider(node -> {
+      addComponentColumn(node -> {
         WebItemPresentationImpl item = new WebItemPresentationImpl();
         if (node instanceof WebTreeNodeImpl.NotLoaded) {
           item.append("Loading...");
@@ -60,8 +62,23 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         else {
           node.getRender().accept(node.getValue(), item);
         }
-        return item.toHTML();
-      });
+        VaadinGridTreeToggle toggle = new VaadinGridTreeToggle();
+        toggle.getElement().setAttribute("leaf", node.isLeaf());
+        toggle.getElement().setAttribute("level", String.valueOf(node.getLevel()));
+
+        toggle.addClickListener(event -> {
+          if (getDataCommunicator().hasChildren(node)) {
+            if (isExpanded(node)) {
+              collapse(List.of(node), true);
+            }
+            else {
+              expand(List.of(node), true);
+            }
+          }
+        });
+        toggle.add(item.toComponent());
+        return toggle;
+      }).setAutoWidth(true).setFlexGrow(1);
     }
 
     public void init(NODE rootValue, TreeModel<NODE> model) {
@@ -157,21 +174,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
         }
       };
 
-      try {
-        // TODO this hack due we can't access to original tree
-        Field field = org.vaadin.tatu.Tree.class.getDeclaredField("treeGrid");
-        field.setAccessible(true);
-        TreeGrid o = (TreeGrid)field.get(this);
-        o.setUniqueKeyDataGenerator("key", item -> {
-          if (item instanceof WebTreeNodeImpl webTreeNode) {
-            return webTreeNode.getId();
-          }
-          return item.toString();
-        });
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
+      setUniqueKeyDataGenerator("key", WebTreeNodeImpl::getId);
 
       setDataProvider(provider);
       getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);

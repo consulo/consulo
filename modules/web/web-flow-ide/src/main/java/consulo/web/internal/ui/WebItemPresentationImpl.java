@@ -15,12 +15,13 @@
  */
 package consulo.web.internal.ui;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Span;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.xml.XmlStringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,16 +33,7 @@ import java.util.List;
  * @since 2019-02-18
  */
 public class WebItemPresentationImpl implements TextItemPresentation {
-  public static class Fragment {
-    public String inlineHTML;
-
-    @Override
-    public String toString() {
-      return inlineHTML;
-    }
-  }
-
-  private List<Fragment> myFragments = new ArrayList<>();
+  private List<Component> myFragments = new ArrayList<>();
 
   @Nonnull
   @Override
@@ -53,9 +45,7 @@ public class WebItemPresentationImpl implements TextItemPresentation {
 
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    Fragment fragment = new Fragment();
-    fragment.inlineHTML = XmlStringUtil.escapeString(text.get());
-    myFragments.add(fragment);
+    myFragments.add(new Span(text.get()));
 
     after();
   }
@@ -67,8 +57,8 @@ public class WebItemPresentationImpl implements TextItemPresentation {
     after();
   }
 
-  public String toHTML() {
-    return "<span>" + StringUtil.join(myFragments, "") + "</span>";
+  public Component toComponent() {
+    return new Span(myFragments.toArray(Component[]::new));
   }
 
   protected void after() {

@@ -108,6 +108,17 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     return myRender;
   }
 
+  public int getLevel() {
+    // we start with -1, due we already has root node
+    int level = -1;
+
+    WebTreeNodeImpl parent = this;
+    while ((parent = parent.getParent()) != null) {
+      level++;
+    }
+    return level;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("WebTreeNodeImpl{");

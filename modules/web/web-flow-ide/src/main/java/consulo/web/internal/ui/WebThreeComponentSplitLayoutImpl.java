@@ -45,7 +45,7 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
       myFirstLayout.setSizeFull();
       add(myFirstLayout);
 
-      myFirstLayout.setSplitterPosition(10);
+      myFirstLayout.setSplitterPosition(25);
       mySecondLayout.setSplitterPosition(50);
     }
 

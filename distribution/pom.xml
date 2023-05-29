@@ -493,10 +493,6 @@
       <artifactId>flow-data</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.vaadin.tatu</groupId>
-      <artifactId>tree</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-dev-server</artifactId>
     </dependency>
