@@ -16,32 +16,34 @@
 package consulo.web.internal.ui.vaadin;
 
 import com.vaadin.flow.component.Component;
-
-import java.util.Objects;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 /**
  * @author VISTALL
- * @since 29/05/2023
+ * @since 30/05/2023
  */
-public class SingleComponentLayout extends BorderLayoutEx {
-  public void setContent(Component center) {
-    removeContent();
-
-    if (center != null) {
-      addComponent(center, Constraint.CENTER);
-    }
+public class BorderLayoutEx extends HorizontalLayout {
+  public enum Constraint {
+    NORTH,
+    WEST,
+    CENTER,
+    EAST,
+    SOUTH,
+    PAGE_START,
+    PAGE_END,
+    LINE_START,
+    LINE_END
   }
 
-  public void removeIfContent(Component center) {
-    if (Objects.equals(this, center.getParent().orElse(null))) {
-      remove(center);
-    }
+  public Component getComponent(Constraint constraint) {
+    return null;
   }
 
-  private void removeContent() {
-    Component oldComponent = getComponent(Constraint.CENTER);
-    if (oldComponent != null && Objects.equals(this, oldComponent.getParent().orElse(null))) {
-      removeLayoutComponent(oldComponent);
-    }
-  }
+   public void removeLayoutComponent(Component component) {
+
+   }
+
+   public void addComponent(Component component, Constraint constraint) {
+    add(component);
+   }
 }

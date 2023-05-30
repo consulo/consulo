@@ -25,7 +25,6 @@ import com.vaadin.flow.server.startup.VaadinAppShellInitializer;
 import com.vaadin.flow.server.startup.VaadinInitializerException;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -50,6 +49,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
+import org.vaadin.addons.johannest.borderlayout.BorderLayout;
 
 import java.io.IOException;
 import java.net.URL;
@@ -104,8 +104,11 @@ public class WebContainerStartup implements ContainerStartup {
     classes.add(LookupInitializer.class);
     classes.add(ConsuloAppShellConfigurator.class);
     classes.add(VaadinRootLayout.class);
+    // handle js
+    classes.add(BorderLayout.class);
 
-    if (ApplicationProperties.isInSandbox()) {
+    boolean enableDevMode = false;// ApplicationProperties.isInSandbox()
+    if (enableDevMode) {
       classes.add(DevModeHandlerManagerImpl.class);
       classes.add(BrowserLiveReloadAccessorImpl.class);
     }
@@ -118,7 +121,7 @@ public class WebContainerStartup implements ContainerStartup {
       }
     });
 
-    if (ApplicationProperties.isInSandbox()) {
+    if (enableDevMode) {
       handler.addEventListener(new DevModeStartupListener() {
         @Override
         public void contextInitialized(ServletContextEvent ctx) {
