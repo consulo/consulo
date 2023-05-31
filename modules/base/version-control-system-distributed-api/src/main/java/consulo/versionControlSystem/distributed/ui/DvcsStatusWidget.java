@@ -1,30 +1,29 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.dvcs.ui;
+package consulo.versionControlSystem.distributed.ui;
 
-import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
-import consulo.versionControlSystem.distributed.DvcsBundle;
-import consulo.versionControlSystem.distributed.repository.Repository;
-import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.project.Project;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedWidget;
-import java.util.function.Consumer;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.distributed.DvcsBundle;
+import consulo.versionControlSystem.distributed.branch.DvcsBranchUtil;
+import consulo.versionControlSystem.distributed.repository.Repository;
+import consulo.versionControlSystem.distributed.repository.VcsRepositoryMappingListener;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 public abstract class DvcsStatusWidget<T extends Repository> extends EditorBasedWidget implements StatusBarWidget.MultipleTextValuesPresentation, StatusBarWidget.Multiframe {
   protected static final Logger LOG = Logger.getInstance(DvcsStatusWidget.class);
@@ -63,7 +62,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
 
   @Nullable
   protected Image getIcon(@Nonnull T repository) {
-    if (repository.getState() != Repository.State.NORMAL) return AllIcons.General.Warning;
+    if (repository.getState() != Repository.State.NORMAL) return PlatformIconGroup.generalWarning();
     return PlatformIconGroup.vcsBranch();
   }
 
@@ -111,6 +110,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     update();
   }
 
+  @RequiredUIAccess
   @Nullable
   @Override
   public String getSelectedValue() {
@@ -150,7 +150,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   protected void updateLater() {
     Project project = getProject();
     if (isDisposed()) return;
-    ApplicationManager.getApplication().invokeLater(() -> {
+    project.getApplication().invokeLater(() -> {
       LOG.debug("update after repository change");
       update();
     }, project.getDisposed());

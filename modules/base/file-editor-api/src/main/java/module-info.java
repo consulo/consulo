@@ -22,7 +22,7 @@ module consulo.file.editor.api {
   exports consulo.fileEditor.structureView;
   exports consulo.fileEditor.structureView.tree;
   exports consulo.fileEditor.structureView.event;
-  exports consulo.fileEditor.util;
+  exports consulo.fileEditor.statusBar;
 
   exports consulo.fileEditor.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl, consulo.language.editor.impl;
 }

@@ -1,11 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.wm.impl.status;
+package consulo.fileEditor.statusBar;
 
 import consulo.application.Application;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHolder;
+import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -14,20 +15,19 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.fileEditor.util.StatusBarUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.WindowManager;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
+
 
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
@@ -87,17 +87,17 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return true;
   }
 
-  boolean isOurEditor(Editor editor) {
+  protected boolean isOurEditor(Editor editor) {
     if(!Application.get().isSwingApplication()) {
       return true;
     }
     return editor != null &&
            editor.isShowing() &&
-           !Boolean.TRUE.equals(editor.getUserData(EditorTextField.SUPPLEMENTARY_KEY)) &&
+           !Boolean.TRUE.equals(editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY)) &&
            WindowManager.getInstance().getStatusBar(editor.getComponent(), editor.getProject()) == myStatusBar;
   }
 
-  Component getFocusedComponent() {
+  protected Component getFocusedComponent() {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner == null) {
       IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
@@ -110,7 +110,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   }
 
   @Nullable
-  Editor getFocusedEditor() {
+  protected Editor getFocusedEditor() {
     Component component = getFocusedComponent();
     Editor editor = component instanceof EditorHolder ? ((EditorHolder)component).getEditor() : getEditor();
     return editor != null && !editor.isDisposed() ? editor : null;

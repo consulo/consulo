@@ -5,7 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
+import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;

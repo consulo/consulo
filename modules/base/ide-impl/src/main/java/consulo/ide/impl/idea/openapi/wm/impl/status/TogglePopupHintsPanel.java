@@ -6,6 +6,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
