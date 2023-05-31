@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.ide.impl.idea.openapi.editor.actions.TextComponentEditorAction;
 import consulo.language.Language;
 import consulo.language.editor.PlatformDataKeys;

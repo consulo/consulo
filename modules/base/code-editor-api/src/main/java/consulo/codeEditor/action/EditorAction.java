@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl.action;
+package consulo.codeEditor.action;
 
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -27,9 +25,9 @@ import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.KeyEvent;
 import java.util.List;
 

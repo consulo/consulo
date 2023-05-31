@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 
 public class CloneCaretAbove extends EditorAction {
   public CloneCaretAbove() {

@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;

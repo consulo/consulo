@@ -24,8 +24,6 @@ module consulo.code.editor.impl {
           consulo.desktop.swt.ide.impl,
           consulo.language.editor.impl;
 
-  exports consulo.codeEditor.impl.action to consulo.ide.impl, consulo.util.xml.serializer;
-
   exports consulo.codeEditor.impl.util to
           consulo.ide.impl,
           consulo.language.inject.impl,

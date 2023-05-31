@@ -6,7 +6,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.language.editor.documentation.DocCommentFixer;

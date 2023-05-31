@@ -22,7 +22,7 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

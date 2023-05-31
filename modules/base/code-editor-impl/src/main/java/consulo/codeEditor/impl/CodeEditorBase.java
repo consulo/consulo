@@ -11,7 +11,7 @@ import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;

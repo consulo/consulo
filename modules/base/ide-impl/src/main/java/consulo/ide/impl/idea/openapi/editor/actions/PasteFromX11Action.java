@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.application.util.SystemInfo;
 

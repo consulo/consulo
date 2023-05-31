@@ -20,7 +20,7 @@ import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.ReadonlyFragmentModificationHandler;

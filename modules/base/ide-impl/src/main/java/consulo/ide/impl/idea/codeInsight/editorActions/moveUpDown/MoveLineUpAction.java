@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 
 /**
  * @author Dennis.Ushakov

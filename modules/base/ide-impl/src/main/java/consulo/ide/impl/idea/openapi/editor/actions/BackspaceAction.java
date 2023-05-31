@@ -29,7 +29,7 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.editor.*;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import jakarta.annotation.Nonnull;
