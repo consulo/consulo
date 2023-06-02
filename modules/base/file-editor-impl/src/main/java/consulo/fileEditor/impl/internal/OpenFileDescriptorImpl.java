@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor;
+package consulo.fileEditor.impl.internal;
 
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;
@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.language.file.FileTypeManager;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
@@ -36,6 +35,7 @@ import consulo.project.ui.view.SelectInTarget;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -68,7 +68,11 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
     this(project, file, logicalLine, logicalColumn, -1, false);
   }
 
-  public OpenFileDescriptorImpl(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn, boolean persistent) {
+  public OpenFileDescriptorImpl(@Nonnull Project project,
+                                @Nonnull VirtualFile file,
+                                int logicalLine,
+                                int logicalColumn,
+                                boolean persistent) {
     this(project, file, logicalLine, logicalColumn, -1, persistent);
   }
 
@@ -76,7 +80,12 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
     this(project, file, -1, -1, -1, false);
   }
 
-  public OpenFileDescriptorImpl(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn, int offset, boolean persistent) {
+  public OpenFileDescriptorImpl(@Nonnull Project project,
+                                @Nonnull VirtualFile file,
+                                int logicalLine,
+                                int logicalColumn,
+                                int offset,
+                                boolean persistent) {
     myProject = project;
     myFile = file;
     myLogicalLine = logicalLine;
@@ -86,7 +95,8 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
       myRangeMarker = LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, offset);
     }
     else if (logicalLine >= 0) {
-      myRangeMarker = LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, logicalLine, Math.max(0, logicalColumn), persistent);
+      myRangeMarker =
+        LazyRangeMarkerFactory.getInstance(project).createRangeMarker(file, logicalLine, Math.max(0, logicalColumn), persistent);
     }
     else {
       myRangeMarker = null;
@@ -137,7 +147,7 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   }
 
   private boolean navigateInEditorOrNativeApp(@Nonnull Project project, boolean requestFocus) {
-    FileType type = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(myFile, project);
+    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, project);
     if (type == null || !myFile.isValid()) return false;
 
     if (type instanceof INativeFileType) {

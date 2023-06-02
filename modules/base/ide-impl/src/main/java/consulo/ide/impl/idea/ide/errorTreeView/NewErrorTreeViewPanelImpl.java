@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.actions.NextOccurenceToolbarAction;
 import consulo.ide.impl.idea.ide.actions.PreviousOccurenceToolbarAction;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorViewTextExporter;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;

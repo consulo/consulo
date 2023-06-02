@@ -23,7 +23,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.openapi.editor.CustomFileDropHandler;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;

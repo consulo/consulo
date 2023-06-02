@@ -11,7 +11,7 @@ import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;

@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.ide.util.gotoByName.FilteringGotoByModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.language.editor.CommonDataKeys;

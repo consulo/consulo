@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vcs.CodeSmellDetector;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.language.editor.DaemonCodeAnalyzer;

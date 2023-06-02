@@ -7,7 +7,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.inject.InjectedLanguageManager;

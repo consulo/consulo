@@ -30,7 +30,7 @@ import consulo.compiler.scope.CompileScope;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.impl.compiler.CompilerMessageImpl;
 import consulo.ide.impl.idea.compiler.progress.CompilerTask;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.content.LanguageContentFolderScopes;

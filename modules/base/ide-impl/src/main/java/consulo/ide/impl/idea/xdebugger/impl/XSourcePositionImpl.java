@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.xdebugger.impl;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;

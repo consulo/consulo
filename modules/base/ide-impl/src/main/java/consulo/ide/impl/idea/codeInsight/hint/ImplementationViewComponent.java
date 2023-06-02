@@ -26,7 +26,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.ImplementationTextSelectioner;

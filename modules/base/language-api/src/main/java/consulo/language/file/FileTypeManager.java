@@ -4,6 +4,7 @@ package consulo.language.file;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
+import consulo.component.ComponentManager;
 import consulo.language.Language;
 import consulo.language.file.event.FileTypeListener;
 import consulo.project.Project;
@@ -98,6 +99,12 @@ public abstract class FileTypeManager extends FileTypeRegistry {
 
   @Nullable
   public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project);
+
+  @Nullable
+  @Override
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
+    return getKnownFileTypeOrAssociate(file, (Project)project);
+  }
 
   /**
    * Returns the semicolon-delimited list of patterns for files and folders

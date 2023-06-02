@@ -20,7 +20,7 @@ import consulo.diff.content.FileContent;
 import consulo.diff.util.LineCol;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

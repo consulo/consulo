@@ -33,7 +33,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.openapi.diff.DiffContent;
 import consulo.ide.impl.idea.openapi.diff.DocumentContent;
 import consulo.ide.impl.idea.openapi.diff.SimpleContent;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

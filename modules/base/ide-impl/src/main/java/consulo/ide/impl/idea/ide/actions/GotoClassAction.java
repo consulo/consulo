@@ -18,7 +18,7 @@ import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.ObjectUtil;

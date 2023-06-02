@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
 import consulo.ide.impl.idea.compiler.impl.ExcludeFromCompileAction;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;

@@ -24,7 +24,7 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

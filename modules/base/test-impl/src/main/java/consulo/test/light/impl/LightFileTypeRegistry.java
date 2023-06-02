@@ -15,16 +15,17 @@
  */
 package consulo.test.light.impl;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.component.ComponentManager;
 import consulo.util.collection.Maps;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,12 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
         return type;
       }
     }
+    return null;
+  }
+
+  @Nullable
+  @Override
+  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
     return null;
   }
 }
