@@ -2,6 +2,8 @@ package consulo.http.impl.internal.ssl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.http.ssl.ClientOnlyTrustManager;
+import consulo.http.ssl.ConfirmingTrustManager;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -9,9 +11,9 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -37,8 +39,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Mikhail Golubev
  */
-public class ConfirmingTrustManager extends ClientOnlyTrustManager {
-  private static final Logger LOG = Logger.getInstance(ConfirmingTrustManager.class);
+public class ConfirmingTrustManagerImpl implements ConfirmingTrustManager {
+  private static final Logger LOG = Logger.getInstance(ConfirmingTrustManagerImpl.class);
   private static final X509Certificate[] NO_CERTIFICATES = new X509Certificate[0];
   private static final X509TrustManager MISSING_TRUST_MANAGER = new ClientOnlyTrustManager() {
     @Override
@@ -53,8 +55,8 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
     }
   };
 
-  public static ConfirmingTrustManager createForStorage(@Nonnull String path, @Nonnull String password) {
-    return new ConfirmingTrustManager(getSystemDefault(), new MutableTrustManager(path, password));
+  public static ConfirmingTrustManagerImpl createForStorage(@Nonnull String path, @Nonnull String password) {
+    return new ConfirmingTrustManagerImpl(getSystemDefault(), new MutableTrustManager(path, password));
   }
 
   private static X509TrustManager getSystemDefault() {
@@ -78,7 +80,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
   private final MutableTrustManager myCustomManager;
 
 
-  private ConfirmingTrustManager(X509TrustManager system, MutableTrustManager custom) {
+  private ConfirmingTrustManagerImpl(X509TrustManager system, MutableTrustManager custom) {
     mySystemManager = system;
     myCustomManager = custom;
   }
@@ -168,7 +170,7 @@ public class ConfirmingTrustManager extends ClientOnlyTrustManager {
    *
    * @see consulo.ide.impl.idea.util.net.ssl.CertificateListener
    */
-  public static class MutableTrustManager extends ClientOnlyTrustManager {
+  public static class MutableTrustManager implements ClientOnlyTrustManager {
     private final String myPath;
     private final String myPassword;
     private final TrustManagerFactory myFactory;

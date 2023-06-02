@@ -18,12 +18,11 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.inject.Singleton;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
@@ -70,9 +69,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
 @ServiceImpl
 public class CertificateManagerImpl implements CertificateManager, PersistentStateComponent<CertificateManagerImpl.Config> {
-  @NonNls
   private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
-  @NonNls
   private static final String DEFAULT_PASSWORD = "changeit";
 
   private static final Logger LOG = Logger.getInstance(CertificateManagerImpl.class);
@@ -96,7 +93,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
   private final String myPassword;
   private final Config myConfig;
 
-  private final ConfirmingTrustManager myTrustManager;
+  private final ConfirmingTrustManagerImpl myTrustManager;
 
   /**
    * Lazy initialized
@@ -110,7 +107,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     myCacertsPath = DEFAULT_PATH;
     myPassword = DEFAULT_PASSWORD;
     myConfig = new Config();
-    myTrustManager = ConfirmingTrustManager.createForStorage(myCacertsPath, myPassword);
+    myTrustManager = ConfirmingTrustManagerImpl.createForStorage(myCacertsPath, myPassword);
     initComponent();
   }
 
@@ -273,13 +270,14 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     return myPassword;
   }
 
+  @Override
   @Nonnull
-  public ConfirmingTrustManager getTrustManager() {
+  public ConfirmingTrustManagerImpl getTrustManager() {
     return myTrustManager;
   }
 
   @Nonnull
-  public ConfirmingTrustManager.MutableTrustManager getCustomTrustManager() {
+  public ConfirmingTrustManagerImpl.MutableTrustManager getCustomTrustManager() {
     return myTrustManager.getCustomManager();
   }
 

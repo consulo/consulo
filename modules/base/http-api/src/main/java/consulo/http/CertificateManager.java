@@ -18,8 +18,9 @@ package consulo.http;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-
+import consulo.http.ssl.ConfirmingTrustManager;
 import jakarta.annotation.Nonnull;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
@@ -74,4 +75,7 @@ public interface CertificateManager {
 
   @Nonnull
   HostnameVerifier getHostnameVerifier();
+
+  @Nonnull
+  ConfirmingTrustManager getTrustManager();
 }

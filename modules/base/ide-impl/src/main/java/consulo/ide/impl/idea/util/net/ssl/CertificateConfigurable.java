@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static consulo.http.impl.internal.ssl.CertificateUtil.getCommonName;
-import static consulo.http.impl.internal.ssl.ConfirmingTrustManager.MutableTrustManager;
+import static consulo.http.impl.internal.ssl.ConfirmingTrustManagerImpl.MutableTrustManager;
 
 /**
  * @author Mikhail Golubev
