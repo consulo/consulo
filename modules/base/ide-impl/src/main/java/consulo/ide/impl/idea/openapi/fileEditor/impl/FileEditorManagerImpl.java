@@ -21,7 +21,6 @@ import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
@@ -51,13 +50,12 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -75,8 +73,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.impl.internal.ProjectImpl;
-import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -141,7 +137,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   private static final FileEditor[] EMPTY_EDITOR_ARRAY = {};
   private static final FileEditorProvider[] EMPTY_PROVIDER_ARRAY = {};
-  public static final String FILE_EDITOR_MANAGER = "FileEditorManager";
 
   protected FileEditorsSplitters mySplitters;
   protected final Project myProject;
@@ -1405,7 +1400,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   protected void projectOpened(@Nonnull MessageBusConnection connection) {
-    //myFocusWatcher.install(myWindows.getComponent ());
     getMainSplitters().startListeningFocus();
 
     final FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
@@ -1426,26 +1420,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       Extends/cuts number of opened tabs. Also updates location of tabs.
      */
     connection.subscribe(UISettingsListener.class, new MyUISettingsListener());
-
-    StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareRunnable)() -> {
-      if (myProject.isDisposed()) return;
-
-      ToolWindowManager.getInstance(myProject).invokeLater(() -> {
-        if (!myProject.isDisposed()) {
-          CommandProcessor.getInstance().executeCommand(myProject, () -> {
-            ApplicationManager.getApplication().invokeLater(() -> {
-              long currentTime = System.nanoTime();
-              Long startTime = myProject.getUserData(ProjectImpl.CREATION_TIME);
-              if (startTime != null) {
-                LOG.info("Project opening took " + (currentTime - startTime) / 1000000 + " ms");
-                PluginManagerCore.dumpPluginClassStatistics(LOG);
-              }
-            }, myProject.getDisposed());
-            // group 1
-          }, "", null);
-        }
-      });
-    });
   }
 
   @RequiredUIAccess

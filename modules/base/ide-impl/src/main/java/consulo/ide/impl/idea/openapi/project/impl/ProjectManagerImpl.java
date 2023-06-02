@@ -34,28 +34,22 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.*;
+import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.project.impl.internal.store.IProjectStore;
-import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.project.internal.StartupManagerEx;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
 import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
@@ -64,17 +58,23 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImpl;
+import consulo.project.impl.internal.ProjectStorageUtil;
+import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectManagerEx;
+import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.notification.NotificationsManager;
+import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
@@ -82,15 +82,16 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -326,7 +327,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   @Override
   public boolean isProjectOpened(Project project) {
     synchronized (lock) {
-      return consulo.util.collection.ArrayUtil.contains(project, myOpenProjects);
+      return ArrayUtil.contains(project, myOpenProjects);
     }
   }
 
@@ -379,6 +380,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
               ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
             }
           }
+
+          logStart(project);
         }
       }, IdeaModalityState.NON_MODAL);
     };
@@ -398,6 +401,15 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     return true;
+  }
+
+  private void logStart(Project project) {
+    long currentTime = System.nanoTime();
+    Long startTime = project.getUserData(ProjectImpl.CREATION_TIME);
+    if (startTime != null) {
+      LOG.info("Project opening took " + (currentTime - startTime) / 1000000 + " ms");
+      PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
+    }
   }
 
   private boolean addToOpened(@Nonnull Project project) {
@@ -927,6 +939,8 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       application.invokeLater(() -> {
         if (!project.isDisposedOrDisposeInProgress()) {
           startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
+
+          logStart(project);
         }
       }, IdeaModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
     }
