@@ -63,11 +63,12 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final MyPsiTreeChangeListener myPsiTreeChangeListener;
   private final ProblemListener myProblemListener;
 
-  public PsiAwareFileEditorManagerImpl(Project project,
+  public PsiAwareFileEditorManagerImpl(Application application,
+                                       Project project,
                                        PsiManager psiManager,
                                        Provider<WolfTheProblemSolver> problemSolver,
                                        DockManager dockManager) {
-    super(project, dockManager);
+    super(application, project, dockManager);
 
     myPsiManager = psiManager;
     myProblemSolver = problemSolver;

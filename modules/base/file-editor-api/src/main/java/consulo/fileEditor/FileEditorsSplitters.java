@@ -15,18 +15,18 @@
  */
 package consulo.fileEditor;
 
-import consulo.application.AccessToken;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awtUnsafe.AWTComponentProvider;
+import consulo.application.AccessToken;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.AWTComponentProvider;
 import consulo.util.dataholder.Key;
-import org.jdom.Element;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -104,6 +104,9 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   void setTabLayoutPolicy(int scrollTabLayout);
 
   void trimToSize(final int editor_tab_limit);
+
+  default void toFront() {
+  }
 
   @Nullable
   @RequiredUIAccess

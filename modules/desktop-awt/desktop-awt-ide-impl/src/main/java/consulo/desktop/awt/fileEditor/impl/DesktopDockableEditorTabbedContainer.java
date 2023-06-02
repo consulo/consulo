@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
@@ -23,6 +22,8 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
@@ -35,16 +36,14 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@Deprecated
-@DeprecationInfo("Desktop only")
 public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbedContainer, SwingDockContainer {
 
   private final DesktopFileEditorsSplitters mySplitters;
@@ -159,7 +158,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
 
     if (myCurrentOver != null) {
       int index = ((JBTabsImpl)myCurrentOver).getDropInfoIndex();
-      file.putUserData(DesktopFileEditorWindow.INITIAL_INDEX_KEY, index);
+      file.putUserData(FileEditorWindow.INITIAL_INDEX_KEY, index);
     }
 
     ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.get(), window, file, true);

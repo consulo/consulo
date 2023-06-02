@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.EditorColors;
@@ -32,6 +31,8 @@ import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.ui.tabs.UiDecorator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -55,9 +56,9 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -73,8 +74,6 @@ import java.util.*;
  *
  * @author Vladimir Kondratyev
  */
-@Deprecated
-@DeprecationInfo("Only desktop")
 public abstract class DesktopEditorComposite implements FileEditorComposite {
   private static final Logger LOG = Logger.getInstance(DesktopEditorComposite.class);
 

@@ -30,6 +30,7 @@ import jakarta.annotation.Nullable;
 public interface FileEditorWindow {
   FileEditorWindow[] EMPTY_ARRAY = new FileEditorWindow[0];
 
+  Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
   Key<FileEditorWindow> DATA_KEY = Key.create("editorWindow");
 
   @Nonnull

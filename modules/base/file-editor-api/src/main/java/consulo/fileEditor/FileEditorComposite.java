@@ -74,4 +74,8 @@ public interface FileEditorComposite extends Disposable {
   default Component getUIComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
+
+  default java.awt.Component getComponent() {
+    throw new UnsupportedOperationException("Unsupported platform");
+  }
 }

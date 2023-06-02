@@ -17,10 +17,12 @@ package consulo.ide.impl.fileEditor;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
@@ -42,8 +44,11 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   @Inject
-  public UnifiedPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
-    super(project, psiManager, problemSolver, dockManager);
+  public UnifiedPsiAwareFileEditorManagerImpl(Application application,
+                                              Project project,
+                                              PsiManager psiManager,
+                                              Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
+    super(application, project, psiManager, problemSolver, dockManager);
   }
 
   @Override
@@ -67,5 +72,11 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
                                                                               @Nonnull FileEditorProvider[] providers,
                                                                               @Nonnull FileEditorManagerEx fileEditorManager) {
     return new UnifiedFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+  }
+
+  @Nonnull
+  @Override
+  protected DockableEditorContainerFactory createDockContainerFactory() {
+    return new UnifiedDockableEditorContainerFactory();
   }
 }

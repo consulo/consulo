@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -34,6 +34,9 @@ import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -68,10 +71,10 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;

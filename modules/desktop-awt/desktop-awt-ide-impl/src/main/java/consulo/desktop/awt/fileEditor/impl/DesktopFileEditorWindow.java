@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
@@ -33,6 +32,8 @@ import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorWindowBase;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
@@ -51,9 +52,9 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -67,9 +68,6 @@ import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 /**
  * Author: msk
  */
-@Deprecated
-@DeprecationInfo("Desktop only")
-@SuppressWarnings("deprecation")
 public class DesktopFileEditorWindow extends FileEditorWindowBase implements FileEditorWindow {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorWindow.class);
 
@@ -79,7 +77,6 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
   private final DesktopFileEditorsSplitters myOwner;
 
   private boolean myIsDisposed;
-  static final Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
   private final Stack<Pair<String, Integer>> myRemovedTabs = new Stack<>() {
     @Override
     public void push(Pair<String, Integer> pair) {

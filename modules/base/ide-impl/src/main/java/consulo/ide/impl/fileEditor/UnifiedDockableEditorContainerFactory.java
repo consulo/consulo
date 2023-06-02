@@ -13,14 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.ide.impl.fileEditor;
 
-import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockableContent;
+import org.jdom.Element;
 
 /**
  * @author VISTALL
  * @since 02/06/2023
  */
-public interface DockableEditorContainerFactory extends DockContainerFactory.Persistent {
-  String TYPE = "file-editors";
+public class UnifiedDockableEditorContainerFactory implements DockableEditorContainerFactory {
+  @Override
+  public DockContainer loadContainerFrom(Element element) {
+    return null;
+  }
+
+  @Override
+  public DockContainer createContainer(DockableContent content) {
+    return null;
+  }
+
+  @Override
+  public void dispose() {
+
+  }
 }

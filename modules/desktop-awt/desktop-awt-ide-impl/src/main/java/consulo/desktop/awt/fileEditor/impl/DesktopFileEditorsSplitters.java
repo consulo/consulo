@@ -13,56 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.ide.impl.idea.diagnostic.Activity;
-import consulo.ide.impl.idea.diagnostic.ActivityCategory;
-import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
-import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.keymap.event.KeymapManagerListener;
-import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.Splitter;
-import consulo.util.lang.ref.Ref;
-import consulo.ui.ex.awt.util.FocusWatcher;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.RelativePoint;
-import consulo.project.ui.wm.dock.DockManager;
-import consulo.ide.impl.idea.ui.tabs.JBTabs;
-import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.ui.UISettings;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
+import consulo.ide.impl.idea.diagnostic.Activity;
+import consulo.ide.impl.idea.diagnostic.ActivityCategory;
+import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.*;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
+import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
+import consulo.ide.impl.idea.ui.tabs.JBTabs;
+import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.Logger;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.OnePixelSplitter;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.FocusWatcher;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.keymap.event.KeymapManagerListener;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -71,9 +72,6 @@ import java.awt.event.ContainerEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
-@DeprecationInfo("Desktop only")
-@SuppressWarnings("deprecation")
 public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<DesktopFileEditorWindow> {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorsSplitters.class);
 
@@ -481,6 +479,11 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
       setCurrentWindow(newWindow);
       setCurrentWindow(newWindow, false);
     }
+  }
+
+  @Override
+  public void toFront() {
+    ProjectIdeFocusManager.getInstance(myProject).toFront(getComponent());
   }
 
   private final class MyTransferHandler extends TransferHandler {

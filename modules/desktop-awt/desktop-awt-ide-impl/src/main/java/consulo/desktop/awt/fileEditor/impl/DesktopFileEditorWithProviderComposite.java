@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * Author: msk
  */
-@Deprecated
-@DeprecationInfo("Desktop only")
 public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposite implements FileEditorWithProviderComposite {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorWithProviderComposite.class);
   private FileEditorProvider[] myProviders;
