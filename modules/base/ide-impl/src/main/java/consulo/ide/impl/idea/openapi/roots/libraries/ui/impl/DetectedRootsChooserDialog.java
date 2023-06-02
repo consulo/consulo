@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.ui.TitlePanel;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

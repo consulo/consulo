@@ -53,7 +53,7 @@ public abstract class ToolbarUpdater implements Activatable {
     myListenersArmed = true;
     myActionManager.addTimerListener(500, myWeakTimerListener);
     myActionManager.addTransparentTimerListener(500, myWeakTimerListener);
-    myKeymapManager.addWeakListener(myKeymapManagerListener);
+    myKeymapManager.addKeymapManagerListener(myKeymapManagerListener);
     updateActionTooltips();
   }
 
@@ -63,7 +63,7 @@ public abstract class ToolbarUpdater implements Activatable {
     myListenersArmed = false;
     myActionManager.removeTimerListener(myWeakTimerListener);
     myActionManager.removeTransparentTimerListener(myWeakTimerListener);
-    myKeymapManager.removeWeakListener(myKeymapManagerListener);
+    myKeymapManager.removeKeymapManagerListener(myKeymapManagerListener);
   }
 
   @Nonnull

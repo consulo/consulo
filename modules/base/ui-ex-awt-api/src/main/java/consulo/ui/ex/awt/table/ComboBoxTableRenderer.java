@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.ui;
+package consulo.ui.ex.awt.table;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -95,12 +91,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
   protected Runnable onChosen(@Nonnull final T value) {
     stopCellEditing(value);
 
-    return new Runnable() {
-      @Override
-      public void run() {
-        stopCellEditing(value);
-      }
-    };
+    return () -> stopCellEditing(value);
   }
 
   @Override
@@ -139,12 +130,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     customizeComponent(t, table, true);
 
     //noinspection SSBasedInspection
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        showPopup(t, row);
-      }
-    });
+    SwingUtilities.invokeLater(() -> showPopup(t, row));
 
     return this;
   }
@@ -154,12 +140,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
   }
 
   private void showPopup(final T value, final int row) {
-    List<T> filtered = ContainerUtil.findAll(myValues, new Condition<T>() {
-      @Override
-      public boolean value(T t) {
-        return isApplicable(t, row);
-      }
-    });
+    List<T> filtered = ContainerUtil.findAll(myValues, t -> isApplicable(t, row));
     final ListPopup popup = JBPopupFactory.getInstance().createListPopup(new ListStep<T>(filtered, value) {
       @Override
       @Nonnull
@@ -192,7 +173,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     popup.addListener(this);
     popup.setRequestFocus(false);
 
-    myPopupRef = new WeakReference<ListPopup>(popup);
+    myPopupRef = new WeakReference<>(popup);
     popup.showUnderneathOf(this);
   }
 

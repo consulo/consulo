@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.ui;
+package consulo.ui.ex.awt.table;
 
 import consulo.ui.ex.Gray;
-import consulo.ui.ex.awt.table.JBTable;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;

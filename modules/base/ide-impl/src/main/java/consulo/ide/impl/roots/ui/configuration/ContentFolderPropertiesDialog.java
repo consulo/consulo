@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentFolder;
-import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
