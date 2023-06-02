@@ -123,6 +123,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author Anton Katilin
@@ -1580,7 +1581,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   /**
    * @param splitters - taken getAllSplitters() value if parameter is null
    */
-  public void runChange(@Nonnull FileEditorManagerChange change, @Nullable FileEditorsSplitters splitters) {
+  public void runChange(@Nonnull Consumer<FileEditorsSplitters> change, @Nullable FileEditorsSplitters splitters) {
     Set<FileEditorsSplitters> target = new HashSet<>();
     if (splitters == null) {
       target.addAll(getAllSplitters());
@@ -1592,7 +1593,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     for (FileEditorsSplitters each : target) {
       AccessToken token = each.increaseChange();
       try {
-        change.run(each);
+        change.accept(each);
       }
       finally {
         token.finish();
