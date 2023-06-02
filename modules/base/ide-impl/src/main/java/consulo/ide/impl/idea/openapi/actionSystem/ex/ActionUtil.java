@@ -359,8 +359,7 @@ public class ActionUtil {
    * @param actionId action id
    */
   public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
-    action.copyFrom(ActionManager.getInstance().getAction(actionId));
-    return action;
+    return consulo.ui.ex.action.util.ActionUtil.copyFrom(action, actionId);
   }
 
   /**
