@@ -23,10 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.EditorTabPresentationUtil;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
@@ -88,17 +85,16 @@ import java.util.Map;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public final class EditorTabbedContainer implements Disposable, CloseAction.CloseTarget {
+public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedContainer, Disposable, CloseAction.CloseTarget {
   private final DesktopFileEditorWindow myWindow;
   private final Project myProject;
   private final JBEditorTabs myTabs;
 
-  @NonNls
   public static final String HELP_ID = "ideaInterface.editor";
 
   private final TabInfo.DragOutDelegate myDragOutDelegate = new MyDragOutDelegate();
 
-  EditorTabbedContainer(final DesktopFileEditorWindow window, Project project) {
+  DesktopAWTEditorTabbedContainer(final DesktopFileEditorWindow window, Project project) {
     myWindow = window;
     myProject = project;
     final ActionManager actionManager = ActionManager.getInstance();
@@ -160,7 +156,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
     updateTabBorder();
 
-    ((ToolWindowManagerEx)ToolWindowManager.getInstance(myProject)).addToolWindowManagerListener(new ToolWindowManagerListener() {
+    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
       @Override
       public void stateChanged(ToolWindowManager toolWindowManager) {
         updateTabBorder();
@@ -171,21 +167,23 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
         updateTabBorder();
       }
     });
-
     project.getMessageBus().connect().subscribe(UISettingsListener.class, uiSettings -> updateTabBorder());
 
     Disposer.register(project, this);
   }
 
+  @Override
   public int getTabCount() {
     return myTabs.getTabCount();
   }
 
+  @Override
   @Nonnull
   public ActionCallback setSelectedIndex(final int indexToSelect) {
     return setSelectedIndex(indexToSelect, true);
   }
 
+  @Override
   @Nonnull
   public ActionCallback setSelectedIndex(final int indexToSelect, boolean focusEditor) {
     if (indexToSelect >= myTabs.getTabCount()) return ActionCallback.REJECTED;
@@ -264,6 +262,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     return removeTabAt(componentIndex, indexToSelect, true);
   }
 
+  @Override
   public int getSelectedIndex() {
     return myTabs.getIndexOf(myTabs.getSelectedInfo());
   }
@@ -440,7 +439,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       if (CloseAction.CloseTarget.KEY == dataId) {
         TabInfo selected = myTabs.getSelectedInfo();
         if (selected != null) {
-          return EditorTabbedContainer.this;
+          return DesktopAWTEditorTabbedContainer.this;
         }
       }
 

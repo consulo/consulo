@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.file.FileTypeManager;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
@@ -38,10 +37,11 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.INativeFileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
+import java.util.Objects;
 
 public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   /**
@@ -155,7 +155,7 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
     @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
     Editor e = ctx.getData(NAVIGATE_IN_EDITOR);
     if (e == null) return false;
-    if (!Comparing.equal(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return false;
+    if (!Objects.equals(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return false;
 
     navigateIn(e);
     return true;

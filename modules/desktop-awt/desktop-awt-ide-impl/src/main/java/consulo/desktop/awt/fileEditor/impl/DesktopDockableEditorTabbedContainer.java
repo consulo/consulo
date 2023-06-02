@@ -112,14 +112,14 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Nullable
   private JBTabs getTabsAt(DockableContent content, RelativePoint point) {
-    if (content instanceof EditorTabbedContainer.DockableEditor) {
+    if (content instanceof DesktopAWTEditorTabbedContainer.DockableEditor) {
       JBTabs targetTabs = mySplitters.getTabsAt(point);
       if (targetTabs != null) {
         return targetTabs;
       } else {
         FileEditorWindow wnd = mySplitters.getCurrentWindow();
         if (wnd != null) {
-          EditorTabbedContainer tabs = ((DesktopFileEditorWindow)wnd).getTabbedPane();
+          DesktopAWTEditorTabbedContainer tabs = ((DesktopFileEditorWindow)wnd).getTabbedPane();
           if (tabs != null) {
             return tabs.getTabs();
           }
@@ -147,7 +147,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
       }
     }
 
-    final EditorTabbedContainer.DockableEditor dockableEditor = (EditorTabbedContainer.DockableEditor)content;
+    final DesktopAWTEditorTabbedContainer.DockableEditor dockableEditor = (DesktopAWTEditorTabbedContainer.DockableEditor)content;
     VirtualFile file = dockableEditor.getFile();
 
 

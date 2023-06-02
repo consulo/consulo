@@ -16,6 +16,7 @@
 package consulo.ide.impl.fileEditor;
 
 import consulo.dataContext.DataManager;
+import consulo.fileEditor.FileEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
@@ -25,6 +26,7 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;
+import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.VfsIconUtil;
@@ -167,6 +169,33 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
   @Override
   public FileEditorsSplittersBase<UnifiedFileEditorWindow> getOwner() {
     return myOwner;
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorTabbedContainer getContainer() {
+    return new FileEditorTabbedContainer() {
+      @Override
+      public ActionCallback setSelectedIndex(int index) {
+        return ActionCallback.REJECTED;
+      }
+
+      @Nonnull
+      @Override
+      public ActionCallback setSelectedIndex(int indexToSelect, boolean focusEditor) {
+        return ActionCallback.REJECTED;
+      }
+
+      @Override
+      public int getSelectedIndex() {
+        return 0;
+      }
+
+      @Override
+      public int getTabCount() {
+        return 0;
+      }
+    };
   }
 
   @Override

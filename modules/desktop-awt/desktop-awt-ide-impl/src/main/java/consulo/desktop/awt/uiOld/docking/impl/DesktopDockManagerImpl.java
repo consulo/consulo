@@ -22,7 +22,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.util.BusyObject;
-import consulo.desktop.awt.fileEditor.impl.EditorTabbedContainer;
+import consulo.desktop.awt.fileEditor.impl.DesktopAWTEditorTabbedContainer;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditor;
@@ -388,7 +388,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     window.show(true);
     final FileEditorWindow editorWindow = ((DockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
     final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.current(), editorWindow, file, true);
-    container.add(EditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
+    container.add(DesktopAWTEditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
 
     SwingUtilities.invokeLater(() -> window.myUiContainer.setPreferredSize(null));
     return result;

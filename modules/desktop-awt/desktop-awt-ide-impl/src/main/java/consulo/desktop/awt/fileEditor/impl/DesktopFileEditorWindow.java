@@ -73,7 +73,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
   protected JPanel myPanel;
   @Nonnull
-  private final EditorTabbedContainer myTabbedPane;
+  private final DesktopAWTEditorTabbedContainer myTabbedPane;
   private final DesktopFileEditorsSplitters myOwner;
 
   private boolean myIsDisposed;
@@ -94,7 +94,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     myPanel = new JPanel(new BorderLayout());
     myPanel.setOpaque(false);
 
-    myTabbedPane = new EditorTabbedContainer(this, getManager().getProject());
+    myTabbedPane = new DesktopAWTEditorTabbedContainer(this, getManager().getProject());
     myPanel.add(myTabbedPane.getComponent(), BorderLayout.CENTER);
 
     // Tab layout policy
@@ -136,6 +136,12 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     Disposer.dispose(myTabbedPane);
     myPanel.removeAll();
     myPanel.revalidate();
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorTabbedContainer getContainer() {
+    return myTabbedPane;
   }
 
   @Override
@@ -379,7 +385,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
   }
 
   @Nonnull
-  public EditorTabbedContainer getTabbedPane() {
+  public DesktopAWTEditorTabbedContainer getTabbedPane() {
     return myTabbedPane;
   }
 

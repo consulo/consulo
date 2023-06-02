@@ -19,7 +19,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -62,6 +61,9 @@ public interface FileEditorWindow {
 
   @Nonnull
   FileEditorsSplitters getOwner();
+
+  @Nonnull
+  FileEditorTabbedContainer getContainer();
 
   VirtualFile getSelectedFile();
 

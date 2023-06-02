@@ -664,7 +664,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
   }
 
   private static void updateTabSizeLimit(DesktopFileEditorWindow editorWindow, String tabSizeLimit) {
-    EditorTabbedContainer tabbedPane = editorWindow.getTabbedPane();
+    DesktopAWTEditorTabbedContainer tabbedPane = editorWindow.getTabbedPane();
     if (tabbedPane != null) {
       if (tabSizeLimit != null) {
         try {
