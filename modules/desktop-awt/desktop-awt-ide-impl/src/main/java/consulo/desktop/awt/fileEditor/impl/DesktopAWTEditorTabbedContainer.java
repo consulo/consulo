@@ -70,7 +70,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -247,6 +246,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     return myTabs.getComponent();
   }
 
+  @Override
   public ActionCallback removeTabAt(final int componentIndex, int indexToSelect, boolean transferFocus) {
     TabInfo toSelect = indexToSelect >= 0 && indexToSelect < myTabs.getTabCount() ? myTabs.getTabAt(indexToSelect) : null;
     final TabInfo info = myTabs.getTabAt(componentIndex);
@@ -256,10 +256,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     }
     final ActionCallback callback = myTabs.removeTab(info, toSelect, transferFocus);
     return myProject.isOpen() ? callback : ActionCallback.DONE;
-  }
-
-  public ActionCallback removeTabAt(final int componentIndex, int indexToSelect) {
-    return removeTabAt(componentIndex, indexToSelect, true);
   }
 
   @Override

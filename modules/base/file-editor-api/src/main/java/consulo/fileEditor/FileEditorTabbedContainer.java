@@ -31,4 +31,17 @@ public interface FileEditorTabbedContainer {
   int getSelectedIndex();
 
   int getTabCount();
+
+  @Nonnull
+  default ActionCallback removeTabAt(final int componentIndex, int indexToSelect) {
+    return removeTabAt(componentIndex, indexToSelect, true);
+  }
+
+  @Nonnull
+  ActionCallback removeTabAt(final int componentIndex, int indexToSelect, boolean transferFocus);
+
+  /**
+   * Close selected tab if exists
+   */
+  void close();
 }
