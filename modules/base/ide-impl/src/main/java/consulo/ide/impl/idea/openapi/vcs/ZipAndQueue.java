@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
+import consulo.application.util.BackgroundTaskQueue;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
@@ -36,10 +37,10 @@ public class ZipAndQueue {
   private Runnable myInZipper;
   private Task.Backgroundable myInvokedOnQueue;
 
-  public ZipAndQueue(final Project project, final int interval, final String title, final Runnable runnable) {
+  public ZipAndQueue(Application application, Project project, final int interval, final String title, final Runnable runnable) {
     final int correctedInterval = interval <= 0 ? 300 : interval;
     myZipperUpdater = new ZipperUpdater(correctedInterval, project);
-    myQueue = new BackgroundTaskQueue(project, title);
+    myQueue = new BackgroundTaskQueue(application, project, title);
     myInZipper = new Runnable() {
       @Override
       public void run() {

@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.progress;
+package consulo.application.util;
 
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
-import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
+import consulo.application.Application;
+import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressManager;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.concurrent.QueueProcessor;
+import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.progress.ProgressIndicator;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.ui.ModalityState;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -46,6 +43,8 @@ import static consulo.application.util.concurrent.QueueProcessor.ThreadToUse;
  */
 public class BackgroundTaskQueue {
   @Nonnull
+  private final Application myApplication;
+  @Nonnull
   protected final String myTitle;
   @Nonnull
   protected final QueueProcessor<TaskData> myProcessor;
@@ -54,11 +53,12 @@ public class BackgroundTaskQueue {
   private final Object TEST_TASK_LOCK = new Object();
   private volatile boolean myForceAsyncInTests = false;
 
-  public BackgroundTaskQueue(@Nullable Project project, @Nonnull String title) {
+  public BackgroundTaskQueue(@Nonnull Application application, @Nullable ComponentManager targetComponentManager, @Nonnull String title) {
+    myApplication = application;
     myTitle = title;
 
-    BooleanSupplier disposeCondition = project != null ? project.getDisposed() : ApplicationManager.getApplication().getDisposed();
-    myProcessor = new QueueProcessor<>(TaskData::accept, true, ThreadToUse.AWT, disposeCondition);
+    BooleanSupplier disposeCondition = targetComponentManager != null ? targetComponentManager.getDisposed() : myApplication.getDisposed();
+    myProcessor = new QueueProcessor<>(TaskData::accept, true, ThreadToUse.UI, disposeCondition);
   }
 
   public void clear() {
@@ -77,9 +77,9 @@ public class BackgroundTaskQueue {
     run(task, null, null);
   }
 
-  public void run(@Nonnull Task.Backgroundable task, @Nullable IdeaModalityState modalityState, @Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
     BackgroundableTaskData taskData = new BackgroundableTaskData(task, modalityState, indicator);
-    if (!myForceAsyncInTests && ApplicationManager.getApplication().isUnitTestMode()) {
+    if (!myForceAsyncInTests && myApplication.isUnitTestMode()) {
       runTaskInCurrentThread(taskData);
     }
     else {
@@ -87,17 +87,11 @@ public class BackgroundTaskQueue {
     }
   }
 
-
   @TestOnly
   public void setForceAsyncInTests(boolean value, @Nullable Disposable disposable) {
     myForceAsyncInTests = value;
     if (disposable != null) {
-      Disposer.register(disposable, new Disposable() {
-        @Override
-        public void dispose() {
-          myForceAsyncInTests = false;
-        }
-      });
+      Disposer.register(disposable, () -> myForceAsyncInTests = false);
     }
   }
 
@@ -107,10 +101,10 @@ public class BackgroundTaskQueue {
     ProgressIndicator indicator = data.myIndicator;
     if (indicator == null) indicator = new EmptyProgressIndicator();
 
-    IdeaModalityState modalityState = data.myModalityState;
-    if (modalityState == null) modalityState = IdeaModalityState.NON_MODAL;
+    ModalityState modalityState = data.myModalityState;
+    if (modalityState == null) modalityState = myApplication.getNoneModalityState();
 
-    ProgressManagerImpl pm = (ProgressManagerImpl)ProgressManager.getInstance();
+    ProgressManagerEx pm = (ProgressManagerEx)myApplication.getProgressManager();
 
     // prohibit simultaneous execution from different threads
     synchronized (TEST_TASK_LOCK) {
@@ -125,12 +119,12 @@ public class BackgroundTaskQueue {
     @Nonnull
     private final Task.Backgroundable myTask;
     @Nullable
-    private final IdeaModalityState myModalityState;
+    private final ModalityState myModalityState;
     @Nullable
     private final ProgressIndicator myIndicator;
 
     public BackgroundableTaskData(@Nonnull Task.Backgroundable task,
-                                  @Nullable IdeaModalityState modalityState,
+                                  @Nullable ModalityState modalityState,
                                   @Nullable ProgressIndicator indicator) {
       myTask = task;
       myModalityState = modalityState;
@@ -139,29 +133,30 @@ public class BackgroundTaskQueue {
 
     @Override
     public void accept(@Nonnull Runnable continuation) {
+      ProgressManagerEx pm = (ProgressManagerEx)myApplication.getProgressManager();
+
       Task.Backgroundable task = myTask;
       ProgressIndicator indicator = myIndicator;
       if (indicator == null) {
-        if (ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        if (myApplication.isHeadlessEnvironment()) {
           indicator = new EmptyProgressIndicator();
         }
         else {
           // BackgroundableProcessIndicator should be created from EDT
-          indicator = new BackgroundableProcessIndicator(task);
+          indicator = pm.newBackgroundableProcessIndicator(task);
         }
       }
 
-      IdeaModalityState modalityState = myModalityState;
-      if (modalityState == null) modalityState = IdeaModalityState.NON_MODAL;
+      ModalityState modalityState = myModalityState;
+      if (modalityState == null) modalityState = myApplication.getNoneModalityState();
 
       if (StringUtil.isEmptyOrSpaces(task.getTitle())) {
         task.setTitle(myTitle);
       }
 
       boolean synchronous = (task.isHeadless() && !myForceAsyncInTests) ||
-                            (task.isConditionalModal() && !task.shouldStartInBackground());
+        (task.isConditionalModal() && !task.shouldStartInBackground());
 
-      ProgressManagerImpl pm = (ProgressManagerImpl)ProgressManager.getInstance();
       if (synchronous) {
         try {
           pm.runProcessWithProgressSynchronously(task);

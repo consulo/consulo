@@ -595,7 +595,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.options.colors.pages;
   exports consulo.ide.impl.idea.openapi.options.ex;
   exports consulo.ide.impl.idea.openapi.paths;
-  exports consulo.ide.impl.idea.openapi.progress;
   exports consulo.ide.impl.idea.openapi.progress.impl;
   exports consulo.ide.impl.idea.openapi.progress.util;
   exports consulo.ide.impl.idea.openapi.project;

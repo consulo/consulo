@@ -195,6 +195,17 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
       public int getTabCount() {
         return 0;
       }
+
+      @Nonnull
+      @Override
+      public ActionCallback removeTabAt(int componentIndex, int indexToSelect, boolean transferFocus) {
+        return ActionCallback.REJECTED;
+      }
+
+      @Override
+      public void close() {
+
+      }
     };
   }
 

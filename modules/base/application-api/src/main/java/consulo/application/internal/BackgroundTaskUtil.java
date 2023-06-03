@@ -226,7 +226,7 @@ public class BackgroundTaskUtil {
     });
   }
 
-  public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Computable<T> task) {
+  public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Supplier<T> task) {
     ProgressIndicator indicator = new EmptyProgressIndicator(Application.get().getDefaultModalityState());
     indicator.start();
 

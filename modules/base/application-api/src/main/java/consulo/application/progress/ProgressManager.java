@@ -18,17 +18,17 @@ package consulo.application.progress;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProgressManager extends ProgressIndicatorProvider {
@@ -59,7 +59,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    *
    * @param progress an indicator to use, {@code null} means reuse current progress
    */
-  public abstract <T> T runProcess(@Nonnull Computable<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
+  public abstract <T> T runProcess(@Nonnull Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
   @Override
   public abstract ProgressIndicator getProgressIndicator();

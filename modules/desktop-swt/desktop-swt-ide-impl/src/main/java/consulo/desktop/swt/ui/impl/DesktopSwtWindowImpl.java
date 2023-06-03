@@ -120,7 +120,7 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
 
   @Override
   public boolean isActive() {
-    return true;
+    return myComponent.isFocusControl();
   }
 
   @Override

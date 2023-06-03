@@ -21,26 +21,28 @@ import consulo.application.EdtReplacementThread;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
-  public static <T> T tryRunReadAction(@Nonnull final Computable<T> computable) throws CannotRunReadActionException {
-    final Ref<T> result = new Ref<>();
-    tryRunReadAction(() -> result.set(computable.compute()));
+  public static <T> T tryRunReadAction(@Nonnull final Supplier<T> computable) throws CannotRunReadActionException {
+    final SimpleReference<T> result = new SimpleReference<>();
+    tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }
 
@@ -54,7 +56,8 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(@Nonnull final Callable<T> callable, @Nonnull final ProgressIndicator indicator) throws Exception {
+  public static <T> T runWithCheckCanceled(@Nonnull final Callable<T> callable,
+                                           @Nonnull final ProgressIndicator indicator) throws Exception {
     final Ref<T> result = Ref.create();
     final Ref<Throwable> error = Ref.create();
 
@@ -86,30 +89,36 @@ public class ApplicationUtil {
     }
   }
 
-  public static void invokeLaterSomewhere(@Nonnull EdtReplacementThread thread, @Nonnull ModalityState modalityState, @Nonnull Runnable r) {
+  public static void invokeLaterSomewhere(@Nonnull Application application,
+                                          @Nonnull EdtReplacementThread thread,
+                                          @Nonnull ModalityState modalityState,
+                                          @Nonnull Runnable r) {
     switch (thread) {
       case EDT:
-        SwingUtilities.invokeLater(r);
+        application.getLastUIAccess().give(r);
         break;
       case WT:
-        ApplicationManager.getApplication().invokeLaterOnWriteThread(r, modalityState);
+        application.invokeLaterOnWriteThread(r, modalityState);
         break;
       case EDT_WITH_IW:
-        ApplicationManager.getApplication().invokeLater(r, modalityState);
+        application.invokeLater(r, modalityState);
         break;
     }
   }
 
-  public static void invokeAndWaitSomewhere(@Nonnull EdtReplacementThread thread, @Nonnull ModalityState modalityState, @Nonnull Runnable r) {
+  public static void invokeAndWaitSomewhere(@Nonnull Application application,
+                                            @Nonnull EdtReplacementThread thread,
+                                            @Nonnull ModalityState modalityState,
+                                            @Nonnull Runnable r) {
     switch (thread) {
       case EDT:
-        if (!SwingUtilities.isEventDispatchThread() && ApplicationManager.getApplication().isWriteThread()) {
+        if (!UIAccess.isUIThread() && application.isWriteThread()) {
           Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
         }
         Application.get().getLastUIAccess().giveAndWaitIfNeed(r);
         break;
       case WT:
-        if (ApplicationManager.getApplication().isWriteThread()) {
+        if (application.isWriteThread()) {
           r.run();
         }
         else if (SwingUtilities.isEventDispatchThread()) {
@@ -118,7 +127,7 @@ public class ApplicationUtil {
         else {
           Semaphore s = new Semaphore(1);
           AtomicReference<Throwable> throwable = new AtomicReference<>();
-          ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> {
+          application.invokeLaterOnWriteThread(() -> {
             try {
               r.run();
             }
@@ -137,10 +146,10 @@ public class ApplicationUtil {
         }
         break;
       case EDT_WITH_IW:
-        if (!SwingUtilities.isEventDispatchThread() && ApplicationManager.getApplication().isWriteThread()) {
+        if (!UIAccess.isUIThread() && application.isWriteThread()) {
           Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
         }
-        ApplicationManager.getApplication().invokeAndWait(r, modalityState);
+        application.invokeAndWait(r, modalityState);
         break;
     }
   }

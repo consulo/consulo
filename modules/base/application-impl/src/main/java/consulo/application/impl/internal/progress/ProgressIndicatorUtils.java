@@ -14,7 +14,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
@@ -23,14 +22,15 @@ import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * Most methods in this class are used to equip long background processes which take read actions with a special listener
@@ -293,7 +293,7 @@ public class ProgressIndicatorUtils {
    * @return the computation result or {@code null} if timeout has been exceeded.
    */
   @Nullable
-  public static <T> T withTimeout(long timeoutMs, @Nonnull Computable<T> computation) {
+  public static <T> T withTimeout(long timeoutMs, @Nonnull Supplier<T> computation) {
     ProgressManager.checkCanceled();
     ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
     ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);

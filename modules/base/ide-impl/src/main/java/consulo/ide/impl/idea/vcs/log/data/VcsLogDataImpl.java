@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
+import consulo.application.util.BackgroundTaskQueue;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -100,7 +100,7 @@ public class VcsLogDataImpl implements VcsLogData {
   public VcsLogDataImpl(@Nonnull Project project, @Nonnull Map<VirtualFile, VcsLogProvider> logProviders, @Nonnull FatalErrorHandler fatalErrorsConsumer) {
     myProject = project;
     myLogProviders = logProviders;
-    myDataLoaderQueue = new BackgroundTaskQueue(project, "Loading history...");
+    myDataLoaderQueue = new BackgroundTaskQueue(project.getApplication(), project, "Loading history...");
     myUserRegistry = (VcsUserRegistryImpl)ServiceManager.getService(project, VcsUserRegistry.class);
     myFatalErrorsConsumer = fatalErrorsConsumer;
 

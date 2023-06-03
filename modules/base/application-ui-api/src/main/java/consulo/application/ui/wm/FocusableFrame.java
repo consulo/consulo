@@ -28,6 +28,10 @@ public interface FocusableFrame {
   @Nonnull
   Window getWindow();
 
+  default boolean hasFocus() {
+    return getWindow().isActive();
+  }
+
   default JComponent getComponent() {
     throw new AbstractMethodError(getClass().getName() + " is not implemented");
   }
