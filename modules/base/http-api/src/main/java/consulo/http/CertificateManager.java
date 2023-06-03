@@ -22,6 +22,7 @@ import consulo.http.ssl.ConfirmingTrustManager;
 import jakarta.annotation.Nonnull;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 
 /**
@@ -74,8 +75,13 @@ public interface CertificateManager {
   SSLContext getSslContext();
 
   @Nonnull
+  SSLContext getSystemSslContext();
+
+  @Nonnull
   HostnameVerifier getHostnameVerifier();
 
   @Nonnull
   ConfirmingTrustManager getTrustManager();
+
+  KeyManager[] getDefaultKeyManagers();
 }

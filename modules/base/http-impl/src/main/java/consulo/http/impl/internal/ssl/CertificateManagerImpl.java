@@ -78,7 +78,8 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
    * Special version of hostname verifier, that asks user whether he accepts certificate, which subject's common name
    * doesn't match requested hostname.
    */
-  public static final HostnameVerifier HOSTNAME_VERIFIER = new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+  public static final HostnameVerifier HOSTNAME_VERIFIER =
+    new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
   /**
    * Used to check whether dialog is visible to prevent possible deadlock, e.g. when some external resource is loaded by
    * {@link java.awt.MediaTracker}.
@@ -175,8 +176,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     return HOSTNAME_VERIFIER;
   }
 
+  @Override
   @Nonnull
-  public static SSLContext getSystemSslContext() {
+  public SSLContext getSystemSslContext() {
     // NOTE: SSLContext.getDefault() should not be called because it automatically creates
     // default context which can't be initialized twice
     try {
@@ -196,7 +198,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
   }
 
   @Nonnull
-  private static SSLContext getDefaultSslContext() {
+  private SSLContext getDefaultSslContext() {
     try {
       return SSLContext.getDefault();
     }
@@ -211,8 +213,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
    *
    * @return key managers or {@code null} in case of any error
    */
+  @Override
   @Nullable
-  public static KeyManager[] getDefaultKeyManagers() {
+  public KeyManager[] getDefaultKeyManagers() {
     String keyStorePath = System.getProperty("javax.net.ssl.keyStore");
     if (keyStorePath != null) {
       LOG.info("Loading custom key store specified with VM options: " + keyStorePath);
@@ -318,7 +321,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
       if (!inTime) {
         DialogWrapper dialog = dialogRef.get();
         if (dialog == null || !dialog.isShowing()) {
-          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
+          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread
+            .currentThread()
+            .getName());
           proceeded.countDown();
           return false;
         }
