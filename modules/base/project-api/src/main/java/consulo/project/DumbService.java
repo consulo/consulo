@@ -11,7 +11,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -26,9 +25,9 @@ import consulo.ui.ModalityState;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A service managing the IDE's 'dumb' mode: when indexes are updated in the background, and the functionality is very much limited.
@@ -130,17 +130,17 @@ public abstract class DumbService {
    *
    * @throws ProcessCanceledException if the project is closed during dumb mode
    */
-  public <T> T runReadActionInSmartMode(@Nonnull final Computable<T> r) {
+  public <T> T runReadActionInSmartMode(@Nonnull final Supplier<T> r) {
     final SimpleReference<T> result = SimpleReference.create();
-    runReadActionInSmartMode(() -> result.set(r.compute()));
+    runReadActionInSmartMode(() -> result.set(r.get()));
     return result.get();
   }
 
   @Nullable
-  public <T> T tryRunReadActionInSmartMode(@Nonnull Computable<T> task, @Nullable String notification) {
+  public <T> T tryRunReadActionInSmartMode(@Nonnull Supplier<T> task, @Nullable String notification) {
     if (ApplicationManager.getApplication().isReadAccessAllowed()) {
       try {
-        return task.compute();
+        return task.get();
       }
       catch (IndexNotReadyException e) {
         if (notification != null) {

@@ -17,7 +17,6 @@
 package consulo.language.editor.refactoring.util;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
@@ -40,10 +39,11 @@ import consulo.logging.Logger;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfoFactory;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 
 public class TextOccurrencesUtil {
   private static final Logger LOG = Logger.getInstance(TextOccurrencesUtil.class);
@@ -76,12 +76,10 @@ public class TextOccurrencesUtil {
       @Override
       public boolean process(final PsiFile psiFile, final int startOffset, final int endOffset) {
         try {
-          UsageInfo usageInfo = ApplicationManager.getApplication().runReadAction(new Computable<UsageInfo>() {
-            @Override
-            public UsageInfo compute() {
-              return factory.createUsageInfo(psiFile, startOffset, endOffset);
-            }
-          });
+          UsageInfo usageInfo = ApplicationManager.getApplication()
+                                                  .runReadAction((Supplier<UsageInfo>)() -> factory.createUsageInfo(psiFile,
+                                                                                                                    startOffset,
+                                                                                                                    endOffset));
           return usageInfo == null || processor.process(usageInfo);
         }
         catch (ProcessCanceledException e) {
@@ -95,13 +93,17 @@ public class TextOccurrencesUtil {
     }, searchScope);
   }
 
-  private static boolean processStringLiteralsContainingIdentifier(@Nonnull String identifier, @Nonnull SearchScope searchScope, PsiSearchHelper helper, final Processor<PsiElement> processor) {
+  private static boolean processStringLiteralsContainingIdentifier(@Nonnull String identifier,
+                                                                   @Nonnull SearchScope searchScope,
+                                                                   PsiSearchHelper helper,
+                                                                   final Processor<PsiElement> processor) {
     TextOccurenceProcessor occurenceProcessor = new TextOccurenceProcessor() {
       @Override
       public boolean execute(PsiElement element, int offsetInElement) {
         final ParserDefinition definition = ParserDefinition.forLanguage(element.getLanguage());
         final ASTNode node = element.getNode();
-        if (definition != null && node != null && definition.getStringLiteralElements(element.getLanguageVersion()).contains(node.getElementType())) {
+        if (definition != null && node != null && definition.getStringLiteralElements(element.getLanguageVersion())
+                                                            .contains(node.getElementType())) {
           return processor.process(element);
         }
         return true;
@@ -125,10 +127,13 @@ public class TextOccurrencesUtil {
       }
     };
     return processStringLiteralsContainingIdentifier(stringToSearch, scope, helper, commentOrLiteralProcessor) &&
-           helper.processCommentsContainingIdentifier(stringToSearch, scope, commentOrLiteralProcessor);
+      helper.processCommentsContainingIdentifier(stringToSearch, scope, commentOrLiteralProcessor);
   }
 
-  public static void addUsagesInStringsAndComments(@Nonnull PsiElement element, @Nonnull String stringToSearch, @Nonnull final Collection<UsageInfo> results, @Nonnull final UsageInfoFactory factory) {
+  public static void addUsagesInStringsAndComments(@Nonnull PsiElement element,
+                                                   @Nonnull String stringToSearch,
+                                                   @Nonnull final Collection<UsageInfo> results,
+                                                   @Nonnull final UsageInfoFactory factory) {
     final Object lock = new Object();
     processUsagesInStringsAndComments(element, stringToSearch, false, new BiPredicate<PsiElement, TextRange>() {
       @Override
@@ -144,15 +149,19 @@ public class TextOccurrencesUtil {
     });
   }
 
-  private static boolean processTextIn(PsiElement scope, String stringToSearch, final boolean ignoreReferences, BiPredicate<PsiElement, TextRange> processor) {
+  private static boolean processTextIn(PsiElement scope,
+                                       String stringToSearch,
+                                       final boolean ignoreReferences,
+                                       BiPredicate<PsiElement, TextRange> processor) {
     String text = scope.getText();
     for (int offset = 0; offset < text.length(); offset++) {
       offset = text.indexOf(stringToSearch, offset);
       if (offset < 0) break;
       final PsiReference referenceAt = scope.findReferenceAt(offset);
       if (!ignoreReferences &&
-          referenceAt != null &&
-          (referenceAt.resolve() != null || referenceAt instanceof PsiPolyVariantReference && ((PsiPolyVariantReference)referenceAt).multiResolve(true).length > 0)) {
+        referenceAt != null &&
+        (referenceAt.resolve() != null || referenceAt instanceof PsiPolyVariantReference && ((PsiPolyVariantReference)referenceAt).multiResolve(
+          true).length > 0)) {
         continue;
       }
 
@@ -185,7 +194,12 @@ public class TextOccurrencesUtil {
     return FindUsagesUtil.isSearchForTextOccurrencesAvailable(element, false, handler);
   }
 
-  public static void findNonCodeUsages(PsiElement element, String stringToSearch, boolean searchInStringsAndComments, boolean searchInNonJavaFiles, String newQName, Collection<UsageInfo> results) {
+  public static void findNonCodeUsages(PsiElement element,
+                                       String stringToSearch,
+                                       boolean searchInStringsAndComments,
+                                       boolean searchInNonJavaFiles,
+                                       String newQName,
+                                       Collection<UsageInfo> results) {
     if (searchInStringsAndComments || searchInNonJavaFiles) {
       UsageInfoFactory factory = createUsageInfoFactory(element, newQName);
 

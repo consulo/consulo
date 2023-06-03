@@ -3,8 +3,6 @@ package consulo.language.codeStyle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
@@ -14,12 +12,14 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
-
+import consulo.util.lang.function.ThrowableRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Service for reformatting code fragments, getting names for elements
@@ -279,7 +279,7 @@ public abstract class CodeStyleManager {
   @SuppressWarnings("LambdaUnfriendlyMethodOverload")
   public abstract <T extends Throwable> void performActionWithFormatterDisabled(ThrowableRunnable<T> r) throws T;
 
-  public abstract <T> T performActionWithFormatterDisabled(Computable<T> r);
+  public abstract <T> T performActionWithFormatterDisabled(Supplier<T> r);
 
   /**
    * Calculates minimum spacing, allowed by formatting model (in columns) for a block starting at given offset,

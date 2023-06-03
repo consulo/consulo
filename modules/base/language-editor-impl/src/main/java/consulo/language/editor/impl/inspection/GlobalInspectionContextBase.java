@@ -21,14 +21,13 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.*;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.impl.inspection.reference.RefElementImpl;
 import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
+import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.daemon.DaemonProgressIndicator;
-import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.inspection.*;
@@ -49,11 +48,12 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.*;
+import java.util.function.Supplier;
 
 public class GlobalInspectionContextBase extends UserDataHolderBase implements GlobalInspectionContext {
   private static final Logger LOG = Logger.getInstance(GlobalInspectionContextBase.class);
@@ -207,12 +207,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
   @Nonnull
   public RefManager getRefManager() {
     if (myRefManager == null) {
-      myRefManager = ApplicationManager.getApplication().runReadAction(new Computable<RefManagerImpl>() {
-        @Override
-        public RefManagerImpl compute() {
-          return new RefManagerImpl(myProject, myCurrentScope, GlobalInspectionContextBase.this);
-        }
-      });
+      myRefManager = ApplicationManager.getApplication().runReadAction((Supplier<RefManagerImpl>)() -> new RefManagerImpl(myProject, myCurrentScope, GlobalInspectionContextBase.this));
     }
     return myRefManager;
   }

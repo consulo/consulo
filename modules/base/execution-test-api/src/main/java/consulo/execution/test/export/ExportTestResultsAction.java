@@ -21,7 +21,6 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionBundle;
@@ -48,10 +47,10 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.xml.sax.SAXException;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.xml.sax.SAXException;
+
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.transform.OutputKeys;
@@ -65,6 +64,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.function.Supplier;
 
 public class ExportTestResultsAction extends DumbAwareAction {
   private static final String ID = "ExportTestResults";
@@ -171,9 +171,9 @@ public class ExportTestResultsAction extends DumbAwareAction {
         ApplicationManager.getApplication().invokeAndWait(new Runnable() {
           @Override
           public void run() {
-            result.set(ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
+            result.set(ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
               @Override
-              public VirtualFile compute() {
+              public VirtualFile get() {
                 outputFile.getParentFile().mkdirs();
                 final VirtualFile parent = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(outputFile.getParentFile());
                 if (parent == null || !parent.isValid()) {

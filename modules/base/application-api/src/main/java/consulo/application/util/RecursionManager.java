@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
-import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -9,11 +8,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StackOverflowPreventedException;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -66,7 +65,7 @@ public class RecursionManager {
 
   /**
    * Run the given computation, unless it's already running in this thread.
-   * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Computable)},
+   * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Supplier)},
    * without a need to bother to create {@link RecursionGuard}.
    */
   @Nullable

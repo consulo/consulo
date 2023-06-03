@@ -23,7 +23,6 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.content.OrderRootType;
 import consulo.content.library.Library;
@@ -96,6 +95,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -655,14 +655,14 @@ public class ExternalSystemApiUtil {
     }
   }
 
-  public static <T> T executeOnEdt(@Nonnull final Computable<T> task) {
+  public static <T> T executeOnEdt(@Nonnull final Supplier<T> task) {
     final Application app = ApplicationManager.getApplication();
     final Ref<T> result = Ref.create();
-    app.invokeAndWait(() -> result.set(task.compute()));
+    app.invokeAndWait(() -> result.set(task.get()));
     return result.get();
   }
 
-  public static <T> T doWriteAction(@Nonnull final Computable<T> task) {
+  public static <T> T doWriteAction(@Nonnull final Supplier<T> task) {
     return executeOnEdt(() -> ApplicationManager.getApplication().runWriteAction(task));
   }
 

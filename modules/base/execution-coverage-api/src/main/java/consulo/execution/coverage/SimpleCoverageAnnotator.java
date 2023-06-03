@@ -4,7 +4,6 @@ import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
-import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectFileIndex;
@@ -15,9 +14,9 @@ import consulo.project.content.TestSourcesFilter;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.*;
 
@@ -61,7 +60,9 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
   }
 
   @Nullable
-  public String getDirCoverageInformationString(@Nonnull final PsiDirectory directory, @Nonnull final CoverageSuitesBundle currentSuite, @Nonnull final CoverageDataManager manager) {
+  public String getDirCoverageInformationString(@Nonnull final PsiDirectory directory,
+                                                @Nonnull final CoverageSuitesBundle currentSuite,
+                                                @Nonnull final CoverageDataManager manager) {
     DirCoverageInfo coverageInfo = getDirCoverageInfo(directory, currentSuite);
     if (coverageInfo == null) {
       return null;
@@ -100,7 +101,9 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
   }
 
   @Nullable
-  public String getFileCoverageInformationString(@Nonnull final PsiFile psiFile, @Nonnull final CoverageSuitesBundle currentSuite, @Nonnull final CoverageDataManager manager) {
+  public String getFileCoverageInformationString(@Nonnull final PsiFile psiFile,
+                                                 @Nonnull final CoverageSuitesBundle currentSuite,
+                                                 @Nonnull final CoverageDataManager manager) {
     final VirtualFile file = psiFile.getVirtualFile();
     assert file != null;
     final String path = normalizeFilePath(file.getPath());
@@ -145,7 +148,9 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
 
   private static
   @Nullable
-  ClassData getClassData(final @Nonnull String filePath, final @Nonnull ProjectData data, final @Nonnull Map<String, String> normalizedFiles2Files) {
+  ClassData getClassData(final @Nonnull String filePath,
+                         final @Nonnull ProjectData data,
+                         final @Nonnull Map<String, String> normalizedFiles2Files) {
     final String originalFileName = normalizedFiles2Files.get(filePath);
     if (originalFileName == null) {
       return null;
@@ -190,7 +195,15 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
 
     for (VirtualFile fileOrDir : children) {
       if (fileOrDir.isDirectory()) {
-        final DirCoverageInfo childCoverageInfo = collectFolderCoverage(fileOrDir, dataManager, annotator, projectInfo, trackTestFolders, index, coverageEngine, visitedDirs, normalizedFiles2Files);
+        final DirCoverageInfo childCoverageInfo = collectFolderCoverage(fileOrDir,
+                                                                        dataManager,
+                                                                        annotator,
+                                                                        projectInfo,
+                                                                        trackTestFolders,
+                                                                        index,
+                                                                        coverageEngine,
+                                                                        visitedDirs,
+                                                                        normalizedFiles2Files);
 
         if (childCoverageInfo != null) {
           dirCoverageInfo.totalFilesCount += childCoverageInfo.totalFilesCount;
@@ -254,7 +267,15 @@ public abstract class SimpleCoverageAnnotator extends BaseCoverageAnnotator {
     for (final String file : files) {
       normalizedFiles2Files.put(normalizeFilePath(file), file);
     }
-    collectFolderCoverage(contentRoot, dataManager, annotator, data, suite.isTrackTestFolders(), index, suite.getCoverageEngine(), new HashSet<>(), Collections.unmodifiableMap(normalizedFiles2Files));
+    collectFolderCoverage(contentRoot,
+                          dataManager,
+                          annotator,
+                          data,
+                          suite.isTrackTestFolders(),
+                          index,
+                          suite.getCoverageEngine(),
+                          new HashSet<>(),
+                          Collections.unmodifiableMap(normalizedFiles2Files));
   }
 
   @Override

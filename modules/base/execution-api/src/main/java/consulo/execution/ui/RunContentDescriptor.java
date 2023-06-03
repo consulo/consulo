@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui;
 
-import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.DefaultExecutionResult;
@@ -28,10 +27,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
+import java.util.function.Supplier;
 
 public class RunContentDescriptor implements Disposable {
   public static final Key<RunContentDescriptor> KEY = Key.create("Descriptor");
@@ -47,7 +47,7 @@ public class RunContentDescriptor implements Disposable {
   private boolean myActivateToolWindowWhenAdded = true;
   private boolean myReuseToolWindowActivation = false;
   private long myExecutionId = 0;
-  private Computable<JComponent> myFocusComputable = null;
+  private Supplier<JComponent> myFocusComputable = null;
   private boolean myAutoFocusContent = false;
 
   private Content myContent;
@@ -218,11 +218,11 @@ public class RunContentDescriptor implements Disposable {
     return getClass().getName() + "#" + hashCode() + "(" + getDisplayName() + ")";
   }
 
-  public Computable<JComponent> getPreferredFocusComputable() {
+  public Supplier<JComponent> getPreferredFocusComputable() {
     return myFocusComputable;
   }
 
-  public void setFocusComputable(Computable<JComponent> focusComputable) {
+  public void setFocusComputable(Supplier<JComponent> focusComputable) {
     myFocusComputable = focusComputable;
   }
 

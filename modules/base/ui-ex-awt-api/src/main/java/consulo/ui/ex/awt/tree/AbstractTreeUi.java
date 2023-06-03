@@ -12,7 +12,6 @@ import consulo.application.progress.Progressive;
 import consulo.application.util.SimpleTimer;
 import consulo.application.util.SimpleTimerTask;
 import consulo.application.util.concurrent.QueueProcessor;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
 import consulo.component.ProcessCanceledException;
@@ -1969,9 +1968,9 @@ public class AbstractTreeUi {
   }
 
   @Nullable
-  private Boolean checkValue(@Nonnull Computable<Boolean> computable, boolean attempt) {
+  private Boolean checkValue(@Nonnull Supplier<Boolean> computable, boolean attempt) {
     try (LockToken ignored = attempt ? attemptLock() : acquireLock()) {
-      return computable.compute();
+      return computable.get();
     }
     catch (InterruptedException e) {
       LOG.info(e);

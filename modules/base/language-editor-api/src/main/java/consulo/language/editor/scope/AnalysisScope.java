@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
@@ -54,13 +53,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.intellij.lang.annotations.MagicConstant;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import java.io.File;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -313,14 +313,11 @@ public class AnalysisScope {
       final ContentIterator contentIterator = new ContentIterator() {
         @Override
         public boolean processFile(@Nonnull final VirtualFile fileOrDir) {
-          final boolean isInScope = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-            @Override
-            public Boolean compute() {
-              if (!myIncludeTestSource && projectFileIndex.isInTestSourceContent(fileOrDir)) return false;
-              if (isInGeneratedSources(fileOrDir, myProject)) return false;
-              return ((GlobalSearchScope)myScope).contains(fileOrDir);
-            }
-          }).booleanValue();
+          final boolean isInScope = ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> {
+            if (!myIncludeTestSource && projectFileIndex.isInTestSourceContent(fileOrDir)) return false;
+            if (isInGeneratedSources(fileOrDir, myProject)) return false;
+            return ((GlobalSearchScope)myScope).contains(fileOrDir);
+          });
           return !isInScope || processor.process(fileOrDir);
         }
       };
@@ -337,9 +334,9 @@ public class AnalysisScope {
       final PsiElement[] psiElements = ((LocalSearchScope)myScope).getScope();
       final Set<VirtualFile> files = new HashSet<VirtualFile>();
       for (final PsiElement element : psiElements) {
-        VirtualFile file = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+        VirtualFile file = ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
           @Override
-          public VirtualFile compute() {
+          public VirtualFile get() {
             return PsiUtilCore.getVirtualFile(element);
           }
         });
@@ -367,9 +364,9 @@ public class AnalysisScope {
       return accept((PsiDirectory)myElement, processor);
     }
     if (myElement != null) {
-      VirtualFile file = ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+      VirtualFile file = ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
         @Override
-        public VirtualFile compute() {
+        public VirtualFile get() {
           return PsiUtilCore.getVirtualFile(myElement);
         }
       });
@@ -414,9 +411,9 @@ public class AnalysisScope {
     while (true) {
       final DumbService dumbService = DumbService.getInstance(project);
       dumbService.waitForSmartMode();
-      boolean passed = PsiDocumentManager.getInstance(project).commitAndRunReadAction(new Computable<Boolean>() {
+      boolean passed = PsiDocumentManager.getInstance(project).commitAndRunReadAction(new Supplier<Boolean>() {
         @Override
-        public Boolean compute() {
+        public Boolean get() {
           if (dumbService.isDumb()) return false;
           runnable.run();
           return true;

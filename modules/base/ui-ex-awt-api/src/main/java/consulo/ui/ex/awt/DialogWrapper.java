@@ -17,12 +17,10 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.*;
-import consulo.application.HelpManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JComponentHacking;
 import consulo.component.ComponentManager;
@@ -45,7 +43,6 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.awt.internal.InternalPopupUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -54,11 +51,11 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.TimeoutUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -68,6 +65,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -171,7 +169,7 @@ public abstract class DialogWrapper {
   private DoNotAskOption myDoNotAsk;
 
   private JComponent myPreferredFocusedComponent;
-  private Computable<Point> myInitialLocationCallback;
+  private Supplier<Point> myInitialLocationCallback;
 
   private Dimension myActualSize = null;
   private List<ValidationInfo> myInfo = Collections.emptyList();
@@ -1700,10 +1698,10 @@ public abstract class DialogWrapper {
    */
   @Nullable
   public Point getInitialLocation() {
-    return myInitialLocationCallback == null ? null : myInitialLocationCallback.compute();
+    return myInitialLocationCallback == null ? null : myInitialLocationCallback.get();
   }
 
-  public void setInitialLocationCallback(Computable<Point> callback) {
+  public void setInitialLocationCallback(Supplier<Point> callback) {
     myInitialLocationCallback = callback;
   }
 

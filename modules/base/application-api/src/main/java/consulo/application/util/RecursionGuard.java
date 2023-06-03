@@ -15,10 +15,9 @@
  */
 package consulo.application.util;
 
-import consulo.application.util.function.Computable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -56,7 +55,7 @@ public abstract class RecursionGuard<Key> {
    * Note: if you make decisions based on the result of this method, you'd better couple it with {@link #prohibitResultCaching},
    * otherwise you might cache inconsistent values.
    *
-   * @return the current thread-local stack of keys passed to {@link #doPreventingRecursion(Key, boolean, Computable)}.
+   * @return the current thread-local stack of keys passed to {@link #doPreventingRecursion(Key, boolean, Supplier)}.
    */
   @Nonnull
   public abstract List<? extends Key> currentStack();

@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
@@ -41,13 +40,13 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.basic.BasicHTML;
@@ -63,6 +62,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Deprecated
 @DeprecationInfo("Use Alert/Alerts class from ui-api")
@@ -1359,9 +1359,9 @@ public class Messages {
     @Override
     public void show() {
       if (false) {
-        setInitialLocationCallback(new Computable<Point>() {
+        setInitialLocationCallback(new Supplier<Point>() {
           @Override
-          public Point compute() {
+          public Point get() {
             JRootPane rootPane = SwingUtilities.getRootPane(getWindow().getParent());
             if (rootPane == null) {
               rootPane = SwingUtilities.getRootPane(getWindow().getOwner());

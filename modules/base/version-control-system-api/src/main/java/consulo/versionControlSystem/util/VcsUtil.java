@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -44,14 +43,15 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
@@ -260,10 +260,10 @@ public class VcsUtil {
 
   @Nullable
   public static VirtualFile getVirtualFile(final String path) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
       @Override
       @Nullable
-      public VirtualFile compute() {
+      public VirtualFile get() {
         return LocalFileSystem.getInstance().findFileByPath(path.replace(File.separatorChar, '/'));
       }
     });
@@ -271,10 +271,10 @@ public class VcsUtil {
 
   @Nullable
   public static VirtualFile getVirtualFile(final File file) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<VirtualFile>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<VirtualFile>() {
       @Override
       @Nullable
-      public VirtualFile compute() {
+      public VirtualFile get() {
         return LocalFileSystem.getInstance().findFileByIoFile(file);
       }
     });
@@ -292,9 +292,9 @@ public class VcsUtil {
   }
 
   public static String getFileContent(final String path) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<String>() {
       @Override
-      public String compute() {
+      public String get() {
         VirtualFile vFile = getVirtualFile(path);
         assert vFile != null;
         return FileDocumentManager.getInstance().getDocument(vFile).getText();

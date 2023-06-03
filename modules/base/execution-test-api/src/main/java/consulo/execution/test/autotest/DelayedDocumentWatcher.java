@@ -17,7 +17,6 @@ package consulo.execution.test.autotest;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
@@ -33,13 +32,14 @@ import consulo.project.ProjectCoreUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DelayedDocumentWatcher implements AutoTestWatcher {
 
@@ -159,9 +159,9 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
 
   private void asyncCheckErrors(@Nonnull final Collection<VirtualFile> files, @Nonnull final Consumer<Boolean> errorsFoundConsumer) {
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      final boolean errorsFound = ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
+      final boolean errorsFound = ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
         @Override
-        public Boolean compute() {
+        public Boolean get() {
           for (VirtualFile file : files) {
             if (PsiErrorElementUtil.hasErrors(myProject, file)) {
               return true;

@@ -18,7 +18,6 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
@@ -29,11 +28,12 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,9 +93,9 @@ public class SuppressionUtil {
   }
 
   public static boolean isSuppressedInStatement(final PsiElement place, final String toolId, final Class<? extends PsiElement> statementClass) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<Object>() {
       @Override
-      public PsiElement compute() {
+      public PsiElement get() {
         return getStatementToolSuppressedIn(place, toolId, statementClass);
       }
     }) != null;

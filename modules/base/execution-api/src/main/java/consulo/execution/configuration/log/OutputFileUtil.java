@@ -16,7 +16,6 @@
 package consulo.execution.configuration.log;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.ui.ExecutionConsole;
@@ -35,13 +34,14 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.function.Supplier;
 
 /**
  * User: anna
@@ -118,10 +118,10 @@ public class OutputFileUtil {
         return new Result(entireLength - filePath.length() - 1, entireLength, new HyperlinkInfo() {
           @Override
           public void navigate(final Project project) {
-            final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Computable<VirtualFile>() {
+            final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
               @Nullable
               @Override
-              public VirtualFile compute() {
+              public VirtualFile get() {
                 return LocalFileSystem.getInstance().refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath));
               }
             });

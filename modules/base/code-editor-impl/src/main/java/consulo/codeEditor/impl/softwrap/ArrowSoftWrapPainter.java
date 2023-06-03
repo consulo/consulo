@@ -15,15 +15,15 @@
  */
 package consulo.codeEditor.impl.softwrap;
 
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.impl.ArrowPainter;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * {@link SoftWrapPainter} implementation that draws arrows in soft wrap location.
@@ -99,19 +99,19 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
     myMinWidth = -1;
   }
 
-  private static class HeightProvider implements Computable<Integer> {
+  private static class HeightProvider implements Supplier<Integer> {
 
     public int myHeight;
 
     @Override
-    public Integer compute() {
+    public Integer get() {
       return myHeight;
     }
   }
 
-  private class WidthProvider implements Computable<Integer> {
+  private class WidthProvider implements Supplier<Integer> {
     @Override
-    public Integer compute() {
+    public Integer get() {
       return EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor);
     }
   }

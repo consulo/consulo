@@ -2,12 +2,12 @@
 
 package consulo.ide.impl.ui.impl;
 
-import consulo.ide.impl.idea.ui.popup.PopupListAdapter;
-import consulo.ide.impl.idea.ui.popup.PopupTableAdapter;
-import consulo.ide.impl.idea.ui.popup.PopupTreeAdapter;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
+import consulo.ide.impl.idea.ui.popup.PopupListAdapter;
+import consulo.ide.impl.idea.ui.popup.PopupTableAdapter;
+import consulo.ide.impl.idea.ui.popup.PopupTreeAdapter;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.awt.UIUtil;
@@ -17,11 +17,11 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -256,7 +257,7 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
   }
 
   @Override
-  public PopupChooserBuilder<T> setCancelCallback(Computable<Boolean> callback) {
+  public PopupChooserBuilder<T> setCancelCallback(Supplier<Boolean> callback) {
     addCancelCallback(callback);
     return this;
   }
@@ -541,9 +542,9 @@ public class PopupChooserBuilder<T> implements IPopupChooserBuilder<T>, AWTPopup
     return this;
   }
 
-  private void addCancelCallback(Computable<Boolean> cbb) {
-    Computable<Boolean> callback = myCancelCallback;
-    myCancelCallback = () -> cbb.compute() && (callback == null || callback.compute());
+  private void addCancelCallback(Supplier<Boolean> cbb) {
+    Supplier<Boolean> callback = myCancelCallback;
+    myCancelCallback = () -> cbb.get() && (callback == null || callback.get());
   }
 
   @Override

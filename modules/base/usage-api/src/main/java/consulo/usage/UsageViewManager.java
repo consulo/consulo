@@ -19,13 +19,12 @@ package consulo.usage;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import consulo.usage.rule.PsiElementUsage;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -73,9 +72,9 @@ public abstract class UsageViewManager {
 
   public static boolean isSelfUsage(@Nonnull final Usage usage, @Nonnull final UsageTarget[] searchForTarget) {
     if (!(usage instanceof PsiElementUsage)) return false;
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
       @Override
-      public Boolean compute() {
+      public Boolean get() {
         final PsiElement element = ((PsiElementUsage)usage).getElement();
         if (element == null) return false;
 

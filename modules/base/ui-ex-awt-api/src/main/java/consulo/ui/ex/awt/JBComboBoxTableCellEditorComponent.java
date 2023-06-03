@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
-import consulo.application.util.function.Computable;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.popup.AWTPopupFactory;
 import consulo.ui.ex.awt.util.TableUtil;
@@ -153,7 +152,7 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
           myTable.tableChanged(new TableModelEvent(myTable.getModel(), myRow));  // force repaint
         }
       })
-      .setCancelCallback((Computable<Boolean>)() -> {
+      .setCancelCallback(() -> {
         TableUtil.stopEditing(myTable);
         return true;
       })

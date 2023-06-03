@@ -3,9 +3,11 @@ package consulo.language.impl.internal.psi;
 
 import consulo.application.*;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.application.progress.*;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -14,12 +16,12 @@ import consulo.document.DocumentRunnable;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.internal.DocumentEx;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.FrozenDocument;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.impl.event.RetargetRangeMarkers;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditorDocumentPriorities;
+import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.util.FileContentUtilCore;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
@@ -31,11 +33,11 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.file.FileManager;
 import consulo.language.impl.internal.file.FileManagerImpl;
-import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
+import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiDocumentListener;
@@ -48,16 +50,21 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.*;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 public abstract class PsiDocumentManagerBase extends PsiDocumentManager implements DocumentListener, Disposable {
   static final Logger LOG = Logger.getInstance(PsiDocumentManagerBase.class);
@@ -508,9 +515,9 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
-  public <T> T commitAndRunReadAction(@Nonnull final Computable<T> computation) {
-    final Ref<T> ref = Ref.create(null);
-    commitAndRunReadAction(() -> ref.set(computation.compute()));
+  public <T> T commitAndRunReadAction(@Nonnull final Supplier<T> computation) {
+    final SimpleReference<T> ref = SimpleReference.create(null);
+    commitAndRunReadAction(() -> ref.set(computation.get()));
     return ref.get();
   }
 

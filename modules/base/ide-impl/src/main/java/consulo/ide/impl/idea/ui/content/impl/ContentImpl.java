@@ -16,22 +16,22 @@
  */
 package consulo.ide.impl.idea.ui.content.impl;
 
-import consulo.ui.ex.action.ActionGroup;
 import consulo.component.util.BusyObject;
-import consulo.application.util.function.Computable;
-import consulo.ui.ex.content.AlertIcon;
-import consulo.ui.ex.content.ContentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.wm.impl.ContentEx;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.content.AlertIcon;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.wm.impl.ContentEx;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Supplier;
 
 public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
@@ -57,7 +57,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   private JComponent myActionsContextComponent;
   private JComponent mySearchComponent;
 
-  private Computable<JComponent> myFocusRequest;
+  private Supplier<JComponent> myFocusRequest;
   private BusyObject myBusyObject;
   private String mySeparator;
   private Image myPopupIcon;
@@ -83,7 +83,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
 
   @Override
   public JComponent getPreferredFocusableComponent() {
-    return myFocusRequest == null ? myComponent : myFocusRequest.compute();
+    return myFocusRequest == null ? myComponent : myFocusRequest.get();
   }
 
   @Override
@@ -92,7 +92,7 @@ public class ContentImpl extends UserDataHolderBase implements ContentEx {
   }
 
   @Override
-  public void setPreferredFocusedComponent(final Computable<JComponent> computable) {
+  public void setPreferredFocusedComponent(final Supplier<JComponent> computable) {
     myFocusRequest = computable;
   }
 

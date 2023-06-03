@@ -18,7 +18,6 @@ package consulo.ide.ui;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.function.Computable;
 import consulo.dataContext.DataManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -40,13 +39,14 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * @author MYakovlev
@@ -329,9 +329,9 @@ public class PathEditor {
 
   @Nullable
   private static FileType findFileType(final VirtualFile file) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<FileType>() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<FileType>() {
       @Override
-      public FileType compute() {
+      public FileType get() {
         VirtualFile tempFile = file;
         if ((file.getFileSystem() instanceof ArchiveFileSystem) && file.getParent() == null) {
           //[myakovlev] It was bug - directories with *.jar extensions was saved as files of JarFileSystem.
@@ -383,9 +383,9 @@ public class PathEditor {
 
   private final class MyCellRenderer extends DefaultListCellRenderer {
     private String getPresentableString(final Object value) {
-      return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
+      return ApplicationManager.getApplication().runReadAction(new Supplier<String>() {
         @Override
-        public String compute() {
+        public String get() {
           //noinspection HardCodedStringLiteral
           return (value instanceof VirtualFile) ? ((VirtualFile)value).getPresentableUrl() : "UNKNOWN OBJECT";
         }

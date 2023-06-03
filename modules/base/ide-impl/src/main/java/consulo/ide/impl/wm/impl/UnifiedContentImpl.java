@@ -16,23 +16,23 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ui.ex.action.ActionGroup;
 import consulo.component.util.BusyObject;
-import consulo.application.util.function.Computable;
-import consulo.ui.ex.content.AlertIcon;
-import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.Component;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.content.AlertIcon;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
+import java.util.function.Supplier;
 
 public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx {
   private String myDisplayName;
@@ -57,7 +57,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   private JComponent myActionsContextComponent;
   private JComponent mySearchComponent;
 
-  private Computable<Component> myFocusRequest;
+  private Supplier<Component> myFocusRequest;
   private BusyObject myBusyObject;
   private String mySeparator;
   private Image myPopupIcon;
@@ -94,7 +94,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
 
   @Override
   public Component getUIPreferredFocusableComponent() {
-    return myFocusRequest == null ? myComponent : myFocusRequest.compute();
+    return myFocusRequest == null ? myComponent : myFocusRequest.get();
   }
 
   @Override
@@ -103,7 +103,7 @@ public class UnifiedContentImpl extends UserDataHolderBase implements ContentEx 
   }
 
   @Override
-  public void setUIPreferredFocusedComponent(final Computable<Component> computable) {
+  public void setUIPreferredFocusedComponent(final Supplier<Component> computable) {
     myFocusRequest = computable;
   }
 

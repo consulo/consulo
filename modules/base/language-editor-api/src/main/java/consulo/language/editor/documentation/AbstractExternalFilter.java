@@ -17,7 +17,6 @@ package consulo.language.editor.documentation;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.http.HttpRequests;
 import consulo.language.psi.PsiElement;
@@ -27,13 +26,14 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.*;
 import java.net.URL;
 import java.util.Locale;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,19 +46,33 @@ public abstract class AbstractExternalFilter {
 
   @NonNls
   protected static final Pattern ourAnchorSuffix = Pattern.compile("#(.*)$");
-  protected static @NonNls final Pattern ourHtmlFileSuffix = Pattern.compile("/([^/]*[.][hH][tT][mM][lL]?)$");
-  private static @NonNls final Pattern ourAnnihilator = Pattern.compile("/[^/^.]*/[.][.]/");
-  private static @NonNls final String JAR_PROTOCOL = "jar:";
-  @NonNls private static final String HR = "<HR>";
-  @NonNls private static final String P = "<P>";
-  @NonNls private static final String DL = "<DL>";
-  @NonNls protected static final String H2 = "</H2>";
-  @NonNls protected static final String HTML_CLOSE = "</HTML>";
-  @NonNls protected static final String HTML = "<HTML>";
-  @NonNls private static final String BR = "<BR>";
-  @NonNls private static final String DT = "<DT>";
+  protected static
+  @NonNls
+  final Pattern ourHtmlFileSuffix = Pattern.compile("/([^/]*[.][hH][tT][mM][lL]?)$");
+  private static
+  @NonNls
+  final Pattern ourAnnihilator = Pattern.compile("/[^/^.]*/[.][.]/");
+  private static
+  @NonNls
+  final String JAR_PROTOCOL = "jar:";
+  @NonNls
+  private static final String HR = "<HR>";
+  @NonNls
+  private static final String P = "<P>";
+  @NonNls
+  private static final String DL = "<DL>";
+  @NonNls
+  protected static final String H2 = "</H2>";
+  @NonNls
+  protected static final String HTML_CLOSE = "</HTML>";
+  @NonNls
+  protected static final String HTML = "<HTML>";
+  @NonNls
+  private static final String BR = "<BR>";
+  @NonNls
+  private static final String DT = "<DT>";
   private static final Pattern CHARSET_META_PATTERN =
-          Pattern.compile("<meta[^>]+\\s*charset=\"?([\\w\\-]*)\\s*\">", Pattern.CASE_INSENSITIVE);
+    Pattern.compile("<meta[^>]+\\s*charset=\"?([\\w\\-]*)\\s*\">", Pattern.CASE_INSENSITIVE);
   private static final String FIELD_SUMMARY = "<!-- =========== FIELD SUMMARY =========== -->";
   private static final String CLASS_SUMMARY = "<div class=\"summary\">";
 
@@ -84,13 +98,9 @@ public abstract class AbstractExternalFilter {
         prev = matcher.end(1) + 1;
         ready.append(before);
         ready.append("\"");
-        ready.append(ApplicationManager.getApplication().runReadAction(
-                new Computable<String>() {
-                  @Override
-                  public String compute() {
-                    return convertReference(root, href.toString());
-                  }
-                }
+        ready.append(ApplicationManager.getApplication().runReadAction((Supplier<String>)() -> {
+          return convertReference(root, href.toString());
+        }
         ));
         ready.append("\"");
       }
@@ -175,7 +185,11 @@ public abstract class AbstractExternalFilter {
     doBuildFromStream(url, input, data, true, true);
   }
 
-  protected void doBuildFromStream(final String url, Reader input, final StringBuilder data, boolean searchForEncoding, boolean matchStart) throws IOException {
+  protected void doBuildFromStream(final String url,
+                                   Reader input,
+                                   final StringBuilder data,
+                                   boolean searchForEncoding,
+                                   boolean matchStart) throws IOException {
     ParseSettings settings = getParseSettings(url);
     @NonNls Pattern startSection = settings.startPattern;
     @NonNls Pattern endSection = settings.endPattern;
@@ -188,20 +202,20 @@ public abstract class AbstractExternalFilter {
       data.append("<base href=\"").append(baseUrl).append("\">");
     }
     data.append("<style type=\"text/css\">" +
-                "  ul.inheritance {\n" +
-                "      margin:0;\n" +
-                "      padding:0;\n" +
-                "  }\n" +
-                "  ul.inheritance li {\n" +
-                "       display:inline;\n" +
-                "       list-style:none;\n" +
-                "  }\n" +
-                "  ul.inheritance li ul.inheritance {\n" +
-                "    margin-left:15px;\n" +
-                "    padding-left:15px;\n" +
-                "    padding-top:1px;\n" +
-                "  }\n" +
-                "</style>");
+                  "  ul.inheritance {\n" +
+                  "      margin:0;\n" +
+                  "      padding:0;\n" +
+                  "  }\n" +
+                  "  ul.inheritance li {\n" +
+                  "       display:inline;\n" +
+                  "       list-style:none;\n" +
+                  "  }\n" +
+                  "  ul.inheritance li ul.inheritance {\n" +
+                  "    margin-left:15px;\n" +
+                  "    padding-left:15px;\n" +
+                  "    padding-top:1px;\n" +
+                  "  }\n" +
+                  "</style>");
 
     String read;
     String contentEncoding = null;
@@ -219,7 +233,7 @@ public abstract class AbstractExternalFilter {
     while (read != null && matchStart && !startSection.matcher(StringUtil.toUpperCase(read)).find());
 
     if (input instanceof MyReader && contentEncoding != null && !contentEncoding.equalsIgnoreCase(CharsetToolkit.UTF8) &&
-        !contentEncoding.equals(((MyReader)input).getEncoding())) {
+      !contentEncoding.equals(((MyReader)input).getEncoding())) {
       //restart page parsing with correct encoding
       try {
         data.setLength(0);
@@ -236,10 +250,11 @@ public abstract class AbstractExternalFilter {
       if (matchStart && !settings.forcePatternSearch && input instanceof MyReader) {
         try {
           final MyReader reader = contentEncoding != null ? new MyReader(((MyReader)input).myInputStream, contentEncoding)
-                                                          : new MyReader(((MyReader)input).myInputStream, ((MyReader)input).getEncoding());
+            : new MyReader(((MyReader)input).myInputStream, ((MyReader)input).getEncoding());
           doBuildFromStream(url, reader, data, false, false);
         }
-        catch (ProcessCanceledException ignored) {}
+        catch (ProcessCanceledException ignored) {
+        }
       }
       return;
     }
@@ -261,7 +276,7 @@ public abstract class AbstractExternalFilter {
         }
       }
       while (((read = buf.readLine()) != null) && !StringUtil.toUpperCase(read).trim().equals(DL) &&
-             !StringUtil.containsIgnoreCase(read, "<div class=\"description\""));
+        !StringUtil.containsIgnoreCase(read, "<div class=\"description\""));
 
       data.append(DL);
 
@@ -284,11 +299,11 @@ public abstract class AbstractExternalFilter {
     }
 
     while (((read = buf.readLine()) != null) &&
-           !endSection.matcher(read).find() &&
-           StringUtil.indexOfIgnoreCase(read, greatestEndSection, 0) == -1) {
+      !endSection.matcher(read).find() &&
+      StringUtil.indexOfIgnoreCase(read, greatestEndSection, 0) == -1) {
       if (!StringUtil.toUpperCase(read).contains(HR)
-          && !StringUtil.containsIgnoreCase(read, "<ul class=\"blockList\">")
-          && !StringUtil.containsIgnoreCase(read, "<li class=\"blockList\">")) {
+        && !StringUtil.containsIgnoreCase(read, "<ul class=\"blockList\">")
+        && !StringUtil.containsIgnoreCase(read, "<li class=\"blockList\">")) {
         appendLine(data, read);
       }
     }
@@ -313,7 +328,7 @@ public abstract class AbstractExternalFilter {
 
   private static boolean reachTheEnd(StringBuilder data, String read, StringBuilder classDetails) {
     if (StringUtil.indexOfIgnoreCase(read, FIELD_SUMMARY, 0) != -1 ||
-        StringUtil.indexOfIgnoreCase(read, CLASS_SUMMARY, 0) != -1) {
+      StringUtil.indexOfIgnoreCase(read, CLASS_SUMMARY, 0) != -1) {
       data.append(classDetails);
       data.append(HTML_CLOSE);
       return true;
@@ -393,7 +408,9 @@ public abstract class AbstractExternalFilter {
                 }
 
                 //noinspection IOResourceOpenedButNotSafelyClosed
-                myBuilder.buildFromStream(url, contentEncoding != null ? new MyReader(stream, contentEncoding) : new MyReader(stream), data);
+                myBuilder.buildFromStream(url,
+                                          contentEncoding != null ? new MyReader(stream, contentEncoding) : new MyReader(stream),
+                                          data);
                 return null;
               }
             });

@@ -1,19 +1,19 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.popup;
 
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.ui.ex.popup.event.JBPopupListener;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface IPopupChooserBuilder<T> {
 
@@ -43,7 +43,7 @@ public interface IPopupChooserBuilder<T> {
 
   IPopupChooserBuilder<T> setUseDimensionServiceForXYLocation(boolean use);
 
-  IPopupChooserBuilder<T> setCancelCallback(Computable<Boolean> callback);
+  IPopupChooserBuilder<T> setCancelCallback(Supplier<Boolean> callback);
 
   IPopupChooserBuilder<T> setAlpha(float alpha);
 
