@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.openapi.roots.ui.configuration;
+package consulo.module.content.internal;
 
 import consulo.module.Module;
 import consulo.module.ModuleManager;

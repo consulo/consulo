@@ -15,11 +15,12 @@
  */
 package consulo.compiler.artifact.element;
 
+import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactModel;
+import consulo.compiler.artifact.internal.DefaultPackagingElementResolvingContext;
 import consulo.content.library.Library;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -27,6 +28,11 @@ import jakarta.annotation.Nullable;
  * @author nik
  */
 public interface PackagingElementResolvingContext {
+  @Nonnull
+  static PackagingElementResolvingContext of(Project project, ArtifactManager artifactManager) {
+    return new DefaultPackagingElementResolvingContext(project, artifactManager);
+  }
+
   @Nonnull
   Project getProject();
 

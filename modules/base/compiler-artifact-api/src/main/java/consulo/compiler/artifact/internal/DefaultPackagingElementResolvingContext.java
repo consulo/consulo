@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.artifacts;
+package consulo.compiler.artifact.internal;
 
-import consulo.project.Project;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.DefaultModulesProvider;
-import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryTablesRegistrar;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
-* @author nik
-*/
+ * @author nik
+ */
 public class DefaultPackagingElementResolvingContext implements PackagingElementResolvingContext {
   @Nullable
   public static Library findLibrary(Project project, String level, String libraryName) {
@@ -44,7 +43,7 @@ public class DefaultPackagingElementResolvingContext implements PackagingElement
   public DefaultPackagingElementResolvingContext(Project project, ArtifactManager artifactManager) {
     myProject = project;
     myArtifactManager = artifactManager;
-    myModulesProvider = DefaultModulesProvider.of(myProject);
+    myModulesProvider = ModulesProvider.of(myProject);
   }
 
   @Override
