@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.packaging.impl.ui;
+package consulo.compiler.artifact.ui.awt;
 
 import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.project.Project;

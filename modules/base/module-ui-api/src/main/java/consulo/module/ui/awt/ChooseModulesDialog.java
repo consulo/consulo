@@ -20,7 +20,7 @@
  * Date: 14-Aug-2006
  * Time: 12:13:18
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration;
+package consulo.module.ui.awt;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.ChooseElementsDialog;

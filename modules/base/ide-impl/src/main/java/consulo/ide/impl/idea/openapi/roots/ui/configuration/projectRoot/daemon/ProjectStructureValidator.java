@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ChooseModulesDialog;
+import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 

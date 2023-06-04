@@ -26,14 +26,14 @@ import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ChooseModulesDialog;
+import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.ide.impl.idea.packaging.impl.ui.ChooseArtifactsDialog;
+import consulo.compiler.artifact.ui.awt.ChooseArtifactsDialog;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ide.impl.idea.util.ui.classpath.ChooseLibrariesFromTablesDialog;
