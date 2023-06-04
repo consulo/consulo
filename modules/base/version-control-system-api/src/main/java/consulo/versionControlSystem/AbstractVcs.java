@@ -31,7 +31,6 @@ import consulo.versionControlSystem.change.ChangeProvider;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
-import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.RevisionSelector;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
@@ -46,9 +45,9 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
