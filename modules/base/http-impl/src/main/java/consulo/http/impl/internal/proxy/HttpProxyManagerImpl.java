@@ -185,6 +185,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
   }
 
+  @Override
   public PasswordAuthentication getGenericPassword(@Nonnull String host, int port) {
     final ProxyInfo proxyInfo;
     synchronized (myLock) {

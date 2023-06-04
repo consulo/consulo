@@ -99,4 +99,7 @@ public interface HttpProxyManager {
 
   @Nonnull
   ProxySelector getOnlyBySettingsSelector();
+
+  @Nullable
+  PasswordAuthentication getGenericPassword(@Nonnull String host, int port);
 }
