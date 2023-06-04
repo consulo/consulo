@@ -4,8 +4,8 @@ package consulo.process.internal;
 import consulo.application.progress.ProgressIndicator;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.util.CapturingProcessAdapter;
-import consulo.process.util.ProcessOutput;
+import consulo.process.local.CapturingProcessAdapter;
+import consulo.process.local.ProcessOutput;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -16,20 +16,21 @@ import java.nio.charset.Charset;
  *
  * @author yole
  */
-public final class CapturingProcessHandler extends OSProcessHandler {
-  private final CapturingProcessRunner myProcessRunner;
+@Deprecated
+public final class OldCapturingProcessHandler extends OSProcessHandler {
+  private final OldCapturingProcessRunner myProcessRunner;
 
-  public CapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public OldCapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
-    myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
+    myProcessRunner = new OldCapturingProcessRunner(this, this::createProcessAdapter);
   }
 
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public CapturingProcessHandler(@Nonnull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
+  public OldCapturingProcessHandler(@Nonnull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
     super(process, commandLine, charset);
-    myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
+    myProcessRunner = new OldCapturingProcessRunner(this, this::createProcessAdapter);
   }
 
   protected CapturingProcessAdapter createProcessAdapter(ProcessOutput processOutput) {
@@ -76,7 +77,9 @@ public final class CapturingProcessHandler extends OSProcessHandler {
   }
 
   @Nonnull
-  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
+  public ProcessOutput runProcessWithProgressIndicator(@Nonnull ProgressIndicator indicator,
+                                                       int timeoutInMilliseconds,
+                                                       boolean destroyOnTimeout) {
     return myProcessRunner.runProcess(indicator, timeoutInMilliseconds, destroyOnTimeout);
   }
 }

@@ -1,10 +1,10 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-import consulo.process.ExecutionException;
-import consulo.process.local.ProcessOutput;
 import consulo.application.util.AtomicNotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import jakarta.annotation.Nonnull;
 

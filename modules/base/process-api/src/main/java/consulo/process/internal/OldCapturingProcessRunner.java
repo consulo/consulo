@@ -7,25 +7,27 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
 import consulo.process.BaseProcessHandler;
 import consulo.process.event.ProcessListener;
-import consulo.process.util.CapturingProcessAdapter;
-import consulo.process.util.ProcessOutput;
+import consulo.process.local.CapturingProcessAdapter;
+import consulo.process.local.ProcessOutput;
 import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
-public class CapturingProcessRunner {
+@Deprecated
+public class OldCapturingProcessRunner {
   @Nonnull
   private final ProcessOutput myOutput;
   @Nonnull
   private final BaseProcessHandler myProcessHandler;
   @Nonnull
-  private static final Logger LOG = Logger.getInstance(CapturingProcessRunner.class);
+  private static final Logger LOG = Logger.getInstance(OldCapturingProcessRunner.class);
 
-  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler) {
+  public OldCapturingProcessRunner(@Nonnull BaseProcessHandler processHandler) {
     this(processHandler, CapturingProcessAdapter::new);
   }
 
-  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
+  public OldCapturingProcessRunner(@Nonnull BaseProcessHandler processHandler,
+                                   @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
     myOutput = new ProcessOutput();
     myProcessHandler = processHandler;
     myProcessHandler.addProcessListener(processAdapterProducer.apply(myOutput));

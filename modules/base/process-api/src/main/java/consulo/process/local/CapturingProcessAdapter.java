@@ -15,47 +15,19 @@
  */
 package consulo.process.local;
 
-import consulo.process.ProcessOutputTypes;
-import consulo.process.event.ProcessEvent;
-import consulo.process.event.ProcessListener;
-import consulo.util.dataholder.Key;
-
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
  */
-public class CapturingProcessAdapter implements ProcessListener {
-  private final ProcessOutput myOutput;
-
+@Deprecated
+@DeprecationInfo("Use consulo.process.util.CapturingProcessAdapter")
+public class CapturingProcessAdapter extends consulo.process.util.CapturingProcessAdapter {
   public CapturingProcessAdapter() {
-    this(new ProcessOutput());
   }
 
   public CapturingProcessAdapter(@Nonnull ProcessOutput output) {
-    myOutput = output;
-  }
-
-  @Override
-  public void onTextAvailable(@Nonnull ProcessEvent event, @Nonnull Key outputType) {
-    addToOutput(event.getText(), outputType);
-  }
-
-  protected void addToOutput(String text, Key outputType) {
-    if (outputType == ProcessOutputTypes.STDOUT) {
-      myOutput.appendStdout(text);
-    }
-    else if (outputType == ProcessOutputTypes.STDERR) {
-      myOutput.appendStderr(text);
-    }
-  }
-
-  @Override
-  public void processTerminated(@Nonnull ProcessEvent event) {
-    myOutput.setExitCode(event.getExitCode());
-  }
-
-  public ProcessOutput getOutput() {
-    return myOutput;
+    super(output);
   }
 }

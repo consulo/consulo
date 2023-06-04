@@ -121,25 +121,19 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   }
 
   public void destroyProcess() {
-    myAfterStartNotifiedRunner.execute(new Runnable() {
-      @Override
-      public void run() {
-        if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
-          fireProcessWillTerminate(true);
-          destroyProcessImpl();
-        }
+    myAfterStartNotifiedRunner.execute(() -> {
+      if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
+        fireProcessWillTerminate(true);
+        destroyProcessImpl();
       }
     });
   }
 
   public void detachProcess() {
-    myAfterStartNotifiedRunner.execute(new Runnable() {
-      @Override
-      public void run() {
-        if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
-          fireProcessWillTerminate(false);
-          detachProcessImpl();
-        }
+    myAfterStartNotifiedRunner.execute(() -> {
+      if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
+        fireProcessWillTerminate(false);
+        detachProcessImpl();
       }
     });
   }
@@ -177,35 +171,32 @@ public abstract class ProcessHandler extends UserDataHolderBase {
   }
 
   private void notifyTerminated(final int exitCode, final boolean willBeDestroyed) {
-    myAfterStartNotifiedRunner.execute(new Runnable() {
-      @Override
-      public void run() {
-        LOG.assertTrue(isStartNotified(), "Start notify is not called");
+    myAfterStartNotifiedRunner.execute(() -> {
+      LOG.assertTrue(isStartNotified(), "Start notify is not called");
 
-        if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
-          try {
-            fireProcessWillTerminate(willBeDestroyed);
-          }
-          catch (Throwable e) {
-            if (!isCanceledException(e)) {
-              LOG.error(e);
-            }
+      if (myState.compareAndSet(STATE_RUNNING, STATE_TERMINATING)) {
+        try {
+          fireProcessWillTerminate(willBeDestroyed);
+        }
+        catch (Throwable e) {
+          if (!isCanceledException(e)) {
+            LOG.error(e);
           }
         }
+      }
 
-        if (myState.compareAndSet(STATE_TERMINATING, STATE_TERMINATED)) {
-          try {
-            myExitCode = exitCode;
-            myEventMulticaster.processTerminated(new ProcessEvent(ProcessHandler.this, exitCode));
+      if (myState.compareAndSet(STATE_TERMINATING, STATE_TERMINATED)) {
+        try {
+          myExitCode = exitCode;
+          myEventMulticaster.processTerminated(new ProcessEvent(ProcessHandler.this, exitCode));
+        }
+        catch (Throwable e) {
+          if (!isCanceledException(e)) {
+            LOG.error(e);
           }
-          catch (Throwable e) {
-            if (!isCanceledException(e)) {
-              LOG.error(e);
-            }
-          }
-          finally {
-            myWaitSemaphore.up();
-          }
+        }
+        finally {
+          myWaitSemaphore.up();
         }
       }
     });

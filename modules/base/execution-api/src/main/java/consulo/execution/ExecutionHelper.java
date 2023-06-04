@@ -31,7 +31,7 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ProcessOutput;
+import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
 import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
@@ -53,9 +53,9 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;

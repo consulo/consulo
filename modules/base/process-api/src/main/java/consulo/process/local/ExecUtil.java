@@ -21,13 +21,13 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.internal.CapturingProcessHandler;
+import consulo.process.internal.OldCapturingProcessHandler;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -136,8 +136,9 @@ public class ExecUtil {
   }
 
   @Nonnull
+  @Deprecated
   public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new CapturingProcessHandler(commandLine).runProcess();
+    return new OldCapturingProcessHandler(commandLine).runProcess();
   }
 
   @Nullable
@@ -287,6 +288,6 @@ public class ExecUtil {
 
   @Nonnull
   public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
-    return new CapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
+    return new OldCapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
   }
 }

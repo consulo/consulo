@@ -1,28 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.wsl;
 
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.cmd.ParametersList;
 import consulo.credentialStorage.impl.internal.ui.PasswordSafePromptDialogImpl;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessListener;
-import consulo.process.internal.CapturingProcessHandler;
-import consulo.process.local.ProcessOutput;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemBase;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.util.lang.SystemProperties;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersList;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.process.internal.CapturingProcessHandler;
+import consulo.process.util.ProcessOutput;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
-
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintWriter;

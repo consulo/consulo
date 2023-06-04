@@ -20,6 +20,7 @@ import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.internal.CapturingProcessHandler;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -115,7 +116,7 @@ public final class ScriptRunnerUtil {
 
     final ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createColoredProcessHandler(commandLine);
     if (LOG.isDebugEnabled()) {
-      processHandler.addProcessListener(new ProcessAdapter() {
+      processHandler.addProcessListener(new ProcessListener() {
         @Override
         public void onTextAvailable(ProcessEvent event, Key outputType) {
           LOG.debug(outputType + ": " + event.getText());
@@ -147,7 +148,7 @@ public final class ScriptRunnerUtil {
     return output;
   }
 
-  public static class ScriptOutput extends ProcessAdapter {
+  public static class ScriptOutput implements ProcessListener {
     private final Predicate<Key> myScriptOutputType;
     public final StringBuilder myFilteredOutput;
     public final StringBuilder myMergedOutput;

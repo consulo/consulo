@@ -21,7 +21,7 @@ import consulo.execution.internal.ExecutionNotificationGroupHolder;
 import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
-import consulo.process.local.ProcessOutput;
+import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -30,9 +30,9 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.io.CharsetToolkit;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Collections;
