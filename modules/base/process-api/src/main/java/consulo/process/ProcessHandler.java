@@ -15,18 +15,17 @@
  */
 package consulo.process;
 
-import consulo.component.ProcessCanceledException;
 import consulo.application.util.Semaphore;
+import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -280,8 +279,8 @@ public abstract class ProcessHandler extends UserDataHolderBase {
     return value;
   }
 
-  private final class TasksRunner extends ProcessAdapter {
-    private final List<Runnable> myPendingTasks = new ArrayList<Runnable>();
+  private final class TasksRunner implements ProcessListener{
+    private final List<Runnable> myPendingTasks = new ArrayList<>();
 
     @Override
     public void startNotified(ProcessEvent event) {

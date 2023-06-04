@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
+import consulo.ide.impl.idea.util.io.BinaryOutputReader;
+import consulo.process.BinaryProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.process.io.BaseDataReader;
-import consulo.ide.impl.idea.util.io.BinaryOutputReader;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,17 +29,18 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.concurrent.Future;
 
-public class BinaryOSProcessHandler extends OSProcessHandler {
+public class BinaryOSProcessHandlerImpl extends OSProcessHandler implements BinaryProcessHandler {
   private final BufferExposingByteArrayOutputStream myOutput = new BufferExposingByteArrayOutputStream();
 
-  public BinaryOSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public BinaryOSProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
   }
 
-  public BinaryOSProcessHandler(@Nonnull Process process, @Nonnull String commandLine, @Nullable Charset charset) {
+  public BinaryOSProcessHandlerImpl(@Nonnull Process process, @Nonnull String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
   }
 
+  @Override
   @Nonnull
   public byte[] getOutput() {
     return myOutput.toByteArray();
@@ -64,7 +66,7 @@ public class BinaryOSProcessHandler extends OSProcessHandler {
     @Nonnull
     @Override
     protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
-      return BinaryOSProcessHandler.this.executeTask(runnable);
+      return BinaryOSProcessHandlerImpl.this.executeTask(runnable);
     }
   }
 }

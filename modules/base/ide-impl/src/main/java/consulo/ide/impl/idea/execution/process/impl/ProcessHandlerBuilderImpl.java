@@ -36,6 +36,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   private ProcessConsoleType myConsoleType = ProcessConsoleType.BUILTIN;
   private boolean myColored = false;
   private boolean myKillable = false;
+  private boolean myBinary = false;
   private Boolean myShouldDestroyProcessRecursively;
   private Boolean myShouldKillProcessSoftly;
 
@@ -45,6 +46,13 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   public ProcessHandlerBuilderImpl(@Nonnull GeneralCommandLine commandLine) {
     myCommandLine = commandLine;
+  }
+
+  @Nonnull
+  @Override
+  public ProcessHandlerBuilder binary() {
+    myBinary = true;
+    return this;
   }
 
   @Nonnull
@@ -99,6 +107,10 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   @Nonnull
   @Override
   public ProcessHandler build() throws ExecutionException {
+    if (myBinary) {
+      return new BinaryOSProcessHandlerImpl(myCommandLine);
+    }
+    
     ProcessHandler processHandler = null;
     switch (myConsoleType) {
       case BUILTIN:
