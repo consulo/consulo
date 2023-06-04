@@ -1,7 +1,6 @@
-package consulo.ide.impl.idea.codeInsight.daemon;
+package consulo.language.editor.ui;
 
-import consulo.language.editor.ui.PsiElementListNavigator;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
+import consulo.annotation.UsedInPlugin;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
@@ -14,6 +13,7 @@ import java.util.Collection;
 /**
 * @author yole
 */
+@UsedInPlugin
 public class DefaultGutterIconNavigationHandler<T extends PsiElement> implements GutterIconNavigationHandler<T> {
   private final Collection<? extends NavigatablePsiElement> myReferences;
   private final String myTitle;
