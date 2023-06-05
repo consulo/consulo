@@ -16,21 +16,20 @@
 package consulo.desktop.awt.execution.console.language;
 
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
-import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
-import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.*;
 import consulo.desktop.awt.editor.impl.EditorComponentImpl;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.event.DocumentEvent;
+import consulo.execution.internal.BaseLanguageConsoleBuilder;
 import consulo.execution.internal.action.ConsoleExecuteAction;
-import consulo.execution.ui.console.language.*;
+import consulo.execution.ui.console.language.BaseConsoleExecuteActionHandler;
+import consulo.execution.ui.console.language.BasicGutterContentProvider;
+import consulo.execution.ui.console.language.GutterContentProvider;
+import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.console.ConsoleHistoryController;
 import consulo.ide.impl.idea.execution.console.LanguageConsoleImpl;
 import consulo.ide.impl.idea.execution.console.UseConsoleInputAction;
@@ -42,9 +41,9 @@ import consulo.project.Project;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.BiFunction;
@@ -53,14 +52,17 @@ import java.util.function.BiFunction;
  * @author VISTALL
  * @since 15/01/2023
  */
-public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
+public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
 
   private static class MyHelper extends LanguageConsoleImpl.Helper {
     private final BiFunction<VirtualFile, Project, PsiFile> psiFileFactory;
 
     GutteredLanguageConsole console;
 
-    public MyHelper(@Nonnull Project project, @Nonnull String title, @Nonnull Language language, @Nullable BiFunction<VirtualFile, Project, PsiFile> psiFileFactory) {
+    public MyHelper(@Nonnull Project project,
+                    @Nonnull String title,
+                    @Nonnull Language language,
+                    @Nullable BiFunction<VirtualFile, Project, PsiFile> psiFileFactory) {
       super(project, new LightVirtualFile(title, language, ""));
       this.psiFileFactory = psiFileFactory;
     }
@@ -77,6 +79,10 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
 
       console.setupEditor(editor);
     }
+  }
+
+  public DesktopLanguageConsoleBuilder(Project project, Language language) {
+    super(project, language);
   }
 
   private final static class GutteredLanguageConsole extends LanguageConsoleImpl {
@@ -108,13 +114,10 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
       final ConsoleGutterComponent lineEndGutter = new ConsoleGutterComponent(editor, gutterContentProvider, false);
 
       editor.getSoftWrapModel().forceAdditionalColumnsUsage();
-      ((CodeEditorSoftWrapModelBase)editor.getSoftWrapModel()).getApplianceManager().setWidthProvider(new SoftWrapApplianceManager.VisibleAreaWidthProvider() {
-        @Override
-        public int getVisibleAreaWidth() {
-          int guttersWidth = lineEndGutter.getPreferredWidth() + lineStartGutter.getPreferredWidth();
-          EditorEx editor = getHistoryViewer();
-          return editor.getScrollingModel().getVisibleArea().width - guttersWidth;
-        }
+      ((CodeEditorSoftWrapModelBase)editor.getSoftWrapModel()).getApplianceManager().setWidthProvider(() -> {
+        int guttersWidth = lineEndGutter.getPreferredWidth() + lineStartGutter.getPreferredWidth();
+        EditorEx editor1 = getHistoryViewer();
+        return editor1.getScrollingModel().getVisibleArea().width - guttersWidth;
       });
       editor.setHorizontalScrollbarVisible(true);
 
@@ -142,7 +145,10 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
           editor.setBounds(lineStartGutterWidth, 0, w - lineStartGutterWidth, h);
 
           int lineEndGutterWidth = lineEndGutter.getPreferredSize().width;
-          lineEndGutter.setBounds(lineStartGutterWidth + (w - lineEndGutterWidth - editor.getEditor().getScrollPane().getVerticalScrollBar().getWidth()), 0, lineEndGutterWidth, h);
+          lineEndGutter.setBounds(lineStartGutterWidth + (w - lineEndGutterWidth - editor.getEditor()
+                                                                                         .getScrollPane()
+                                                                                         .getVerticalScrollBar()
+                                                                                         .getWidth()), 0, lineEndGutterWidth, h);
         }
 
         @Nonnull
@@ -236,7 +242,12 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
         }
 
         RangeHighlighter highlighter =
-                getHistoryViewer().getMarkupModel().addRangeHighlighter(0, getDocument().getTextLength(), HighlighterLayer.ADDITIONAL_SYNTAX, null, HighlighterTargetArea.EXACT_RANGE);
+          getHistoryViewer().getMarkupModel()
+                            .addRangeHighlighter(0,
+                                                 getDocument().getTextLength(),
+                                                 HighlighterLayer.ADDITIONAL_SYNTAX,
+                                                 null,
+                                                 HighlighterTargetArea.EXACT_RANGE);
         highlighter.setGreedyToRight(true);
         highlighter.setCustomRenderer(renderer);
         lineSeparatorPainter = highlighter;
@@ -257,7 +268,8 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
           addLineSeparatorPainterIfNeed();
           int startDocLine = document.getLineNumber(event.getOffset());
           int endDocLine = document.getLineNumber(event.getOffset() + event.getNewLength());
-          if (event.getOldLength() > event.getNewLength() || startDocLine != endDocLine || StringUtil.indexOf(event.getOldFragment(), '\n') != -1) {
+          if (event.getOldLength() > event.getNewLength() || startDocLine != endDocLine || StringUtil.indexOf(event.getOldFragment(),
+                                                                                                              '\n') != -1) {
             updateGutterSize(startDocLine, endDocLine);
           }
         }
@@ -320,9 +332,10 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
     }
   }
 
+  @Override
   @Nonnull
-  public LanguageConsoleView build(@Nonnull Project project, @Nonnull Language language) {
-    final MyHelper helper = new MyHelper(project, language.getDisplayName() + " Console", language, psiFileFactory);
+  public LanguageConsoleView build() {
+    final MyHelper helper = new MyHelper(myProject, myLanguage.getDisplayName() + " Console", myLanguage, psiFileFactory);
     GutteredLanguageConsole consoleView = new GutteredLanguageConsole(helper, gutterContentProvider);
     if (oneLineInput) {
       consoleView.getConsoleEditor().setOneLineMode(true);
@@ -345,7 +358,9 @@ public class DesktopLanguageConsoleBuilder extends LanguageConsoleBuilder {
     return consoleView;
   }
 
-  private void doInitAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler, @Nonnull String historyType) {
+  private void doInitAction(@Nonnull LanguageConsoleView console,
+                            @Nonnull BaseConsoleExecuteActionHandler executeActionHandler,
+                            @Nonnull String historyType) {
     ConsoleExecuteAction action = new ConsoleExecuteAction(console, executeActionHandler, executionEnabled);
     action.registerCustomShortcutSet(action.getShortcutSet(), console.getConsoleEditor().getComponent());
     new ConsoleHistoryController(new MyConsoleRootType(historyType), null, console).install();

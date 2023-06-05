@@ -92,7 +92,7 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
 
   @Nonnull
   @Override
-  public Builder builder(@Nonnull VirtualFile file) {
+  public Builder newBuilder(@Nonnull VirtualFile file) {
     return new BuilderImp(myProject, file);
   }
 }
