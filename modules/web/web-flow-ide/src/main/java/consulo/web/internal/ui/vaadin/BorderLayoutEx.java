@@ -64,6 +64,16 @@ public class BorderLayoutEx extends VerticalLayout {
     add(noPaddingMargin(myBottomLayout));
   }
 
+  @Override
+  public void removeAll() {
+    myTopLayout.removeAll();
+    myBottomLayout.removeAll();
+
+    myWestHolder.removeAll();
+    myCenterHolder.removeAll();
+    myEastHolder.removeAll();
+  }
+
   private void validate() {
     myTopLayout.setVisible(myTopLayout.getComponentCount() > 0);
     myBottomLayout.setVisible(myBottomLayout.getComponentCount() > 0);
