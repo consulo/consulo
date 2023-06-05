@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.base;
+package consulo.web.internal.ui.base;
 
-import com.vaadin.shared.AbstractComponentState;
-import com.vaadin.ui.AbstractComponent;
 import consulo.ui.Component;
 
 import jakarta.annotation.Nonnull;

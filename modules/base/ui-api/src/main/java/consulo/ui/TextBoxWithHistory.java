@@ -29,12 +29,12 @@ import java.util.List;
 public interface TextBoxWithHistory extends TextBox {
   @Nonnull
   static TextBoxWithHistory create() {
-    return create(null);
+    return create("");
   }
 
   @Nonnull
   static TextBoxWithHistory create(@Nullable String text) {
-    return UIInternal.get()._Components_textBoxWithHistory(text);
+    return UIInternal.get()._Components_textBoxWithHistory(text == null ? "" : text);
   }
 
   @Nonnull

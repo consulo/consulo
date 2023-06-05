@@ -43,6 +43,8 @@ class JarLoader extends Loader {
   private JarIndex myJarIndex;
   private PreloadedJar myPreloadedJar;
 
+  private boolean myClosed;
+
   JarLoader(URL url, int index, ClassPath configuration) throws IOException {
     super(new URL("jar", "", -1, url + "!/"), index);
 
@@ -367,6 +369,8 @@ class JarLoader extends Loader {
 
   @Override
   void close() throws Exception {
+    myClosed = true;
+    
     JarFile zipFile = SoftReference.dereference(myZipFileSoftReference);
     if (zipFile == null) {
       return;
@@ -382,7 +386,8 @@ class JarLoader extends Loader {
   protected JarFile getJarFile() throws IOException {
     // This code is executed at least 100K times (O(number of classes needed to load)) and it takes considerable time to open ZipFile's
     // such number of times so we store reference to ZipFile if we allowed to lock the file (assume it isn't changed)
-    if (myConfiguration.myCanLockJars) {
+    // if loader closed - we don't store ZipFile lock
+    if (myConfiguration.myCanLockJars && !myClosed) {
       JarFile zipFile = SoftReference.dereference(myZipFileSoftReference);
       if (zipFile != null) return zipFile;
 
@@ -407,7 +412,7 @@ class JarLoader extends Loader {
 
   protected void releaseZipFile(ZipFile zipFile) throws IOException {
     // Closing of zip file when myConfiguration.myCanLockJars=true happens in ZipFile.finalize
-    if (!myConfiguration.myCanLockJars) {
+    if (!myConfiguration.myCanLockJars || myClosed) {
       zipFile.close();
     }
   }

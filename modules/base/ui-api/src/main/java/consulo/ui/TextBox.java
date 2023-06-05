@@ -17,7 +17,6 @@ package consulo.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,7 +32,7 @@ public interface TextBox extends ValueComponent<String>, ValidableComponent<Stri
 
   @Nonnull
   static TextBox create(@Nullable String text) {
-    return UIInternal.get()._Components_textBox(text);
+    return UIInternal.get()._Components_textBox(text == null ? "" : text);
   }
 
   default void setPlaceholder(@Nonnull LocalizeValue text) {

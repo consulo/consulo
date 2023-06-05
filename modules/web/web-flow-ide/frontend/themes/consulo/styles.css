@@ -1,0 +1,139 @@
+@import url('./scrollbar.css');
+
+/* Use a stronger selector so that imports added later do not override the property values */
+html:not(div)
+{
+  --lumo-size-xl: 2.5rem;
+  --lumo-size-l: 2rem;
+  --lumo-size-m: 1.5rem;
+  --lumo-size-s: 1.5rem;
+  --lumo-size-xs: 1.25rem;
+  --lumo-font-size: 1rem;
+  --lumo-font-size-xxxl: 1.5rem;
+  --lumo-font-size-xxl: 1.2rem;
+  --lumo-font-size-xl: 1.1rem;
+  --lumo-font-size-l: 1rem;
+  --lumo-font-size-m: 0.8rem;
+  --lumo-font-size-s: 0.5em;
+  --lumo-font-size-xs: 0.5rem;
+  --lumo-font-size-xxs: 0.5rem;
+  --lumo-line-height-m: 1.2;
+  --lumo-line-height-s: 1;
+  --lumo-line-height-xs: 0.9;
+  --lumo-space-xl: 1.25rem;
+  --lumo-space-l: 1.rem;
+  --lumo-space-m: 0.5rem;
+  --lumo-space-s: 0.2rem;
+  --lumo-space-xs: 0.1rem;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.web-tool-window-panel
+{
+}
+
+.web-tool-window-stripe-top
+{
+  height: 1.5em;
+  border-bottom: 1px solid lightgray;
+}
+
+.web-tool-window-stripe-bottom
+{
+  height: 1.5em;
+  border-top: 1px solid lightgray;
+}
+
+.web-tool-window-stripe-left
+{
+  height: 100%;
+  width: 1.5em;
+
+  text-orientation: mixed;
+  writing-mode: vertical-lr;
+
+  border-right: 1px solid lightgray;
+}
+
+.web-tool-window-stripe-right
+{
+  height: 100%;
+  width: 1.5em;
+
+  text-orientation: mixed;
+  writing-mode: vertical-lr;
+
+  border-left: 1px solid lightgray;
+}
+
+.web-tool-window-content
+{
+}
+
+.web-tool-window-stripe-button
+{
+}
+
+.web-tool-window-stripe-button-selected
+{
+  background-color: lightgray;
+}
+
+.web-tool-window-stripe-top .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-left: auto;
+}
+
+.web-tool-window-stripe-bottom .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-left: auto;
+}
+
+.web-tool-window-stripe-left .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-top: auto;
+}
+
+.web-tool-window-stripe-right .web-tool-window-stripe-button-secondary
+{
+  align-self: end;
+  margin-top: auto;
+}
+
+.web-tool-window-stripe-left .web-tool-window-stripe-button span
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.web-tool-window-stripe-right .web-tool-window-stripe-button span
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.web-tool-window-stripe-top .web-tool-window-stripe-button span
+{
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.web-tool-window-stripe-bottom .web-tool-window-stripe-button span
+{
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.web-icon > *
+{
+  vertical-align: middle;
+}

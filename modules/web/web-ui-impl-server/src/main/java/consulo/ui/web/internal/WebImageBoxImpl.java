@@ -15,7 +15,6 @@
  */
 package consulo.ui.web.internal;
 
-import consulo.ui.ImageBox;
 import consulo.ui.image.Image;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
