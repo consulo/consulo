@@ -18,12 +18,11 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.inject.Singleton;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+
 import javax.crypto.BadPaddingException;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
@@ -70,9 +69,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @State(name = "CertificateManagerImpl", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
 @ServiceImpl
 public class CertificateManagerImpl implements CertificateManager, PersistentStateComponent<CertificateManagerImpl.Config> {
-  @NonNls
   private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
-  @NonNls
   private static final String DEFAULT_PASSWORD = "changeit";
 
   private static final Logger LOG = Logger.getInstance(CertificateManagerImpl.class);
@@ -81,7 +78,8 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
    * Special version of hostname verifier, that asks user whether he accepts certificate, which subject's common name
    * doesn't match requested hostname.
    */
-  public static final HostnameVerifier HOSTNAME_VERIFIER = new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+  public static final HostnameVerifier HOSTNAME_VERIFIER =
+    new ConfirmingHostnameVerifier(SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
   /**
    * Used to check whether dialog is visible to prevent possible deadlock, e.g. when some external resource is loaded by
    * {@link java.awt.MediaTracker}.
@@ -96,7 +94,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
   private final String myPassword;
   private final Config myConfig;
 
-  private final ConfirmingTrustManager myTrustManager;
+  private final ConfirmingTrustManagerImpl myTrustManager;
 
   /**
    * Lazy initialized
@@ -110,7 +108,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     myCacertsPath = DEFAULT_PATH;
     myPassword = DEFAULT_PASSWORD;
     myConfig = new Config();
-    myTrustManager = ConfirmingTrustManager.createForStorage(myCacertsPath, myPassword);
+    myTrustManager = ConfirmingTrustManagerImpl.createForStorage(myCacertsPath, myPassword);
     initComponent();
   }
 
@@ -178,8 +176,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     return HOSTNAME_VERIFIER;
   }
 
+  @Override
   @Nonnull
-  public static SSLContext getSystemSslContext() {
+  public SSLContext getSystemSslContext() {
     // NOTE: SSLContext.getDefault() should not be called because it automatically creates
     // default context which can't be initialized twice
     try {
@@ -199,7 +198,7 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
   }
 
   @Nonnull
-  private static SSLContext getDefaultSslContext() {
+  private SSLContext getDefaultSslContext() {
     try {
       return SSLContext.getDefault();
     }
@@ -214,8 +213,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
    *
    * @return key managers or {@code null} in case of any error
    */
+  @Override
   @Nullable
-  public static KeyManager[] getDefaultKeyManagers() {
+  public KeyManager[] getDefaultKeyManagers() {
     String keyStorePath = System.getProperty("javax.net.ssl.keyStore");
     if (keyStorePath != null) {
       LOG.info("Loading custom key store specified with VM options: " + keyStorePath);
@@ -273,13 +273,14 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
     return myPassword;
   }
 
+  @Override
   @Nonnull
-  public ConfirmingTrustManager getTrustManager() {
+  public ConfirmingTrustManagerImpl getTrustManager() {
     return myTrustManager;
   }
 
   @Nonnull
-  public ConfirmingTrustManager.MutableTrustManager getCustomTrustManager() {
+  public ConfirmingTrustManagerImpl.MutableTrustManager getCustomTrustManager() {
     return myTrustManager.getCustomManager();
   }
 
@@ -320,7 +321,9 @@ public class CertificateManagerImpl implements CertificateManager, PersistentSta
       if (!inTime) {
         DialogWrapper dialog = dialogRef.get();
         if (dialog == null || !dialog.isShowing()) {
-          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
+          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread
+            .currentThread()
+            .getName());
           proceeded.countDown();
           return false;
         }

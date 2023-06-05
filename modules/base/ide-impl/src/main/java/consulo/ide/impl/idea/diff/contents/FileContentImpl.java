@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.diff.contents;
 
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.diff.content.DiffContentBase;
 import consulo.diff.content.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;

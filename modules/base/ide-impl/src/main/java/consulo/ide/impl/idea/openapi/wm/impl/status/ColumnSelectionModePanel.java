@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorEventMulticaster;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
 import consulo.codeEditor.EditorEx;
 import consulo.fileEditor.FileEditorManager;

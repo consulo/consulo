@@ -4,31 +4,31 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.module.content.layer.OrderEnumerator;
-import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.DefaultModulesProvider;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.StandardFileSystems;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.module.content.layer.OrderEnumerator;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Sets;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
+import consulo.virtualFileSystem.StandardFileSystems;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -168,7 +168,7 @@ public class VfsRootAccess {
     insideGettingRoots = true;
     final Set<String> roots = new HashSet<>();
 
-    OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(DefaultModulesProvider.of(project));
+    OrderEnumerator enumerator = ProjectRootManager.getInstance(project).orderEntries().using(ModulesProvider.of(project));
     ContainerUtil.addAll(roots, enumerator.classes().getUrls());
     ContainerUtil.addAll(roots, enumerator.sources().getUrls());
 

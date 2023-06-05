@@ -4,13 +4,12 @@ package consulo.project.util.query;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.query.QueryExecutor;
 import consulo.project.DumbService;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -22,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * by accidentally returning false.
  *
  * @author peter
- * @see Application#runReadAction(Computable)
+ * @see Application#runReadAction(java.util.function.Supplier)
  * @see DumbService
  */
 public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor<Result, Params> {

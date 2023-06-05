@@ -28,7 +28,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 import consulo.ide.impl.idea.find.FindUtil;

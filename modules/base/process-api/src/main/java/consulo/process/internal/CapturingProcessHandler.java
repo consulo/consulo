@@ -4,11 +4,11 @@ package consulo.process.internal;
 import consulo.application.progress.ProgressIndicator;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.CapturingProcessAdapter;
-import consulo.process.local.ProcessOutput;
-
+import consulo.process.util.CapturingProcessAdapter;
+import consulo.process.util.ProcessOutput;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.charset.Charset;
 
 /**

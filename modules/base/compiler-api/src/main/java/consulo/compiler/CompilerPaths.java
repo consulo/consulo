@@ -16,7 +16,6 @@
 package consulo.compiler;
 
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.LanguageContentFolderScopes;
@@ -30,14 +29,15 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * A set of utility methods for working with paths
@@ -193,7 +193,7 @@ public class CompilerPaths {
     }
     else {
       outPathUrl = application.runReadAction(
-              (Computable<String>)() -> pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()));
+              (Supplier<String>)() -> pathsManager.getCompilerOutputUrl(forTestClasses ? TestContentFolderTypeProvider.getInstance() : ProductionContentFolderTypeProvider.getInstance()));
     }
 
     return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;
@@ -209,7 +209,7 @@ public class CompilerPaths {
       outPathUrl = pathsManager.getCompilerOutputUrl(contentFolderType);
     }
     else {
-      outPathUrl = application.runReadAction((Computable<String>)() -> pathsManager.getCompilerOutputUrl(contentFolderType));
+      outPathUrl = application.runReadAction((Supplier<String>)() -> pathsManager.getCompilerOutputUrl(contentFolderType));
     }
 
     return outPathUrl != null ? VirtualFileManager.extractPath(outPathUrl) : null;

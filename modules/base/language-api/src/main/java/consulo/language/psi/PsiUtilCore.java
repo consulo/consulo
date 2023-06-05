@@ -18,7 +18,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
+import consulo.content.scope.SearchScope;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
@@ -35,7 +35,6 @@ import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
@@ -48,15 +47,16 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * @author yole
@@ -670,12 +670,7 @@ public class PsiUtilCore {
 
   @Nonnull
   public static Project getProjectInReadAction(@Nonnull final PsiElement element) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Project>() {
-      @Override
-      public Project compute() {
-        return element.getProject();
-      }
-    });
+    return ApplicationManager.getApplication().runReadAction((Supplier<Project>)element::getProject);
   }
 
   @Contract("null -> null;!null -> !null")

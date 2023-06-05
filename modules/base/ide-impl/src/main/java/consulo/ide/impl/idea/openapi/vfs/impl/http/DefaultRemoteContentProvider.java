@@ -23,7 +23,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.io.UrlConnectionUtil;
+import consulo.application.util.UrlConnectionUtil;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
 
 import jakarta.annotation.Nonnull;

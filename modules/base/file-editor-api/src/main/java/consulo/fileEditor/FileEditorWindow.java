@@ -19,7 +19,6 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,6 +29,7 @@ import jakarta.annotation.Nullable;
 public interface FileEditorWindow {
   FileEditorWindow[] EMPTY_ARRAY = new FileEditorWindow[0];
 
+  Key<Integer> INITIAL_INDEX_KEY = Key.create("initial editor index");
   Key<FileEditorWindow> DATA_KEY = Key.create("editorWindow");
 
   @Nonnull
@@ -61,6 +61,9 @@ public interface FileEditorWindow {
 
   @Nonnull
   FileEditorsSplitters getOwner();
+
+  @Nonnull
+  FileEditorTabbedContainer getContainer();
 
   VirtualFile getSelectedFile();
 

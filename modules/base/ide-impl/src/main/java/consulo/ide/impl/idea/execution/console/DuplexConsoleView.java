@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
@@ -25,11 +26,9 @@ import consulo.disposer.Disposer;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.language.LanguageConsoleView;
-import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
@@ -37,11 +36,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
 
   private void setStoredState(boolean primary) {
     if (myStateStorageKey != null) {
-      PropertiesComponent.getInstance().setValue(myStateStorageKey, primary);
+      ApplicationPropertiesComponent.getInstance().setValue(myStateStorageKey, primary);
     }
   }
 
@@ -106,7 +106,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     if (myStateStorageKey == null) {
       return false;
     }
-    return PropertiesComponent.getInstance().getBoolean(myStateStorageKey);
+    return ApplicationPropertiesComponent.getInstance().getBoolean(myStateStorageKey);
   }
 
   public void enableConsole(boolean primary) {
@@ -305,7 +305,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
       else if (action2 instanceof ScrollToTheEndToolbarAction) {
         return new MergedToggleAction(((ToggleAction)action1), (ToggleAction)action2);
       }
-      else if (action2 instanceof ConsoleViewImpl.ClearAllAction) {
+      else if (action2 instanceof ClearConsoleAction) {
         return new MergedAction(action1, action2);
       }
       else {

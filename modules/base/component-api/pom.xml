@@ -83,7 +83,7 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>consulo.internal</groupId>
+      <groupId>jakarta.inject</groupId>
       <artifactId>jakarta.inject-api</artifactId>
     </dependency>
     <dependency>

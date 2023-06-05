@@ -20,7 +20,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.Key;

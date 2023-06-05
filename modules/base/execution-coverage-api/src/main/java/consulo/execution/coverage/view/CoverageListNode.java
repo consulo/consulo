@@ -2,7 +2,6 @@ package consulo.execution.coverage.view;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
 import consulo.language.editor.util.LanguageEditorNavigationUtil;
@@ -17,11 +16,12 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * User: anna
@@ -34,12 +34,7 @@ public class CoverageListNode extends AbstractTreeNode {
 
   public CoverageListNode(Project project, final PsiNamedElement classOrPackage, CoverageSuitesBundle bundle, CoverageViewManager.StateBean stateBean) {
     super(project, classOrPackage);
-    myName = ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-      @Override
-      public String compute() {
-        return classOrPackage.getName();
-      }
-    });
+    myName = ApplicationManager.getApplication().runReadAction((Supplier<String>)() -> classOrPackage.getName());
     myBundle = bundle;
     myStateBean = stateBean;
     myFileStatusManager = FileStatusManager.getInstance(myProject);
@@ -74,10 +69,10 @@ public class CoverageListNode extends AbstractTreeNode {
 
   @Override
   public FileStatus getFileStatus() {
-    final PsiFile containingFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
+    final PsiFile containingFile = ApplicationManager.getApplication().runReadAction(new Supplier<PsiFile>() {
       @Nullable
       @Override
-      public PsiFile compute() {
+      public PsiFile get() {
         Object value = getValue();
         if (value instanceof PsiElement && ((PsiElement)value).isValid()) {
           return ((PsiElement)value).getContainingFile();
@@ -114,14 +109,11 @@ public class CoverageListNode extends AbstractTreeNode {
 
   @Override
   public int getWeight() {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Integer>() {
-      @Override
-      public Integer compute() {
-        //todo weighted
-        final Object value = getValue();
-        if (value instanceof PsiElement && ((PsiElement)value).getContainingFile() != null) return 40;
-        return 30;
-      }
+    return ApplicationManager.getApplication().runReadAction((Supplier<Integer>)() -> {
+      //todo weighted
+      final Object value = getValue();
+      if (value instanceof PsiElement && ((PsiElement)value).getContainingFile() != null) return 40;
+      return 30;
     });
   }
 

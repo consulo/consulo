@@ -156,7 +156,7 @@ public class ActionUpdater {
     return ActionUpdateEdtExecutor.computeOnEdt(() -> {
       long start = System.currentTimeMillis();
       try {
-        return ProgressManager.getInstance().runProcess(call::get, ProgressWrapper.wrap(progress));
+        return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
       }
       finally {
         long elapsed = System.currentTimeMillis() - start;

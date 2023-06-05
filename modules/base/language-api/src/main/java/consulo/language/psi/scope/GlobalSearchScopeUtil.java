@@ -16,19 +16,17 @@
 package consulo.language.psi.scope;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.scope.LocalSearchScope;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class GlobalSearchScopeUtil {
   @Nonnull
@@ -37,12 +35,13 @@ public class GlobalSearchScopeUtil {
       return (GlobalSearchScope)scope;
     }
     return ApplicationManager.getApplication()
-            .runReadAction((Computable<GlobalSearchScope>)() -> GlobalSearchScope.filesScope(project, getLocalScopeFiles((LocalSearchScope)scope)));
+                             .runReadAction((Supplier<GlobalSearchScope>)() -> GlobalSearchScope.filesScope(project,
+                                                                                                            getLocalScopeFiles((LocalSearchScope)scope)));
   }
 
   @Nonnull
   public static Set<VirtualFile> getLocalScopeFiles(@Nonnull final LocalSearchScope scope) {
-    return ApplicationManager.getApplication().runReadAction((Computable<Set<VirtualFile>>)() -> {
+    return ApplicationManager.getApplication().runReadAction((Supplier<Set<VirtualFile>>)() -> {
       Set<VirtualFile> files = new LinkedHashSet<>();
       for (PsiElement element : scope.getScope()) {
         PsiFile file = element.getContainingFile();

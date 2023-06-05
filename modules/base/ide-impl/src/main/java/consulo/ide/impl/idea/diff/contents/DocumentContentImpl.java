@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.contents;
 
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.diff.content.DiffContentBase;

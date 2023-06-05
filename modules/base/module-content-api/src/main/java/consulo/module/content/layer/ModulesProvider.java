@@ -17,7 +17,8 @@ package consulo.module.content.layer;
 
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-
+import consulo.module.content.internal.DefaultModulesProvider;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -28,6 +29,7 @@ public interface ModulesProvider extends RootModelProvider {
     public Module[] getModules() {
       return Module.EMPTY_ARRAY;
     }
+
     @Override
     public Module getModule(String name) {
       return null;
@@ -38,6 +40,11 @@ public interface ModulesProvider extends RootModelProvider {
       return ModuleRootManager.getInstance(module);
     }
   };
+
+  @Nonnull
+  static ModulesProvider of(@Nullable Project project) {
+    return project == null ? EMPTY_MODULES_PROVIDER : new DefaultModulesProvider(project);
+  }
 
   @Nullable
   Module getModule(String name);

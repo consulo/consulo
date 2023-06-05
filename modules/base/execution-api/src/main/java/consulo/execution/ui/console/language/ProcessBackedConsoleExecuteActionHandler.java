@@ -15,10 +15,10 @@
  */
 package consulo.execution.ui.console.language;
 
+import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
-import consulo.process.local.BaseProcessHandler;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;

@@ -16,7 +16,6 @@
 package consulo.language.editor.ui.navigation;
 
 import consulo.application.presentation.TypePresentationService;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
@@ -33,10 +32,10 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.lazy.LazyValue;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
@@ -64,7 +63,7 @@ public class NavigationGutterIconBuilder<T> {
   private String myEmptyText;
   private String myTooltipTitle;
   private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
-  private Computable<PsiElementListCellRenderer> myCellRenderer;
+  private Supplier<PsiElementListCellRenderer> myCellRenderer;
   private Function<T, String> myNamer = createDefaultNamer();
   private final Function<T, Collection<? extends GotoRelatedItem>> myGotoRelatedItemProvider;
 
@@ -146,7 +145,7 @@ public class NavigationGutterIconBuilder<T> {
   }
 
   public NavigationGutterIconBuilder<T> setCellRenderer(@Nonnull final PsiElementListCellRenderer cellRenderer) {
-    myCellRenderer = new Computable.PredefinedValueComputable<>(cellRenderer);
+    myCellRenderer = () -> cellRenderer;
     return this;
   }
 
@@ -223,7 +222,7 @@ public class NavigationGutterIconBuilder<T> {
       myTooltipText = sb.toString();
     }
 
-    Computable<PsiElementListCellRenderer> renderer = myCellRenderer == null ? DefaultPsiElementCellRenderer::new : myCellRenderer;
+    Supplier<PsiElementListCellRenderer> renderer = myCellRenderer == null ? DefaultPsiElementCellRenderer::new : myCellRenderer;
     return new MyNavigationGutterIconRenderer(this, myAlignment, myIcon, myTooltipText, pointers, renderer, empty);
   }
 
@@ -255,7 +254,7 @@ public class NavigationGutterIconBuilder<T> {
                                           final Image icon,
                                           @Nullable final String tooltipText,
                                           @Nonnull Supplier<List<SmartPsiElementPointer>> pointers,
-                                          Computable<PsiElementListCellRenderer> cellRenderer,
+                                          Supplier<PsiElementListCellRenderer> cellRenderer,
                                           boolean empty) {
       super(builder.myPopupTitle, builder.myEmptyText, cellRenderer, pointers);
       myAlignment = alignment;

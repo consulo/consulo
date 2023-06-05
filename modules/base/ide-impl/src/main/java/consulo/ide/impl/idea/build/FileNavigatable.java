@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.build.ui.FilePosition;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.application.util.NullableLazyValue;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

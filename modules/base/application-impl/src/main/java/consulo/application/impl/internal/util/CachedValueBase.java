@@ -1,13 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.util;
 
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
-import consulo.application.util.function.Computable;
-import consulo.component.util.ModificationTracker;
-import consulo.document.Document;
 import consulo.application.internal.util.CachedValueProfiler;
 import consulo.application.util.CachedValueProvider;
+import consulo.application.util.RecursionGuard;
+import consulo.application.util.RecursionManager;
+import consulo.component.util.ModificationTracker;
+import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
@@ -16,9 +15,9 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.Reference;
 import java.util.List;
 import java.util.function.Supplier;
@@ -39,17 +38,17 @@ public abstract class CachedValueBase<T> {
   }
 
   @Nonnull
-  private Data<T> computeData(Computable<? extends CachedValueProvider.Result<T>> doCompute) {
+  private Data<T> computeData(Supplier<? extends CachedValueProvider.Result<T>> doCompute) {
     CachedValueProvider.Result<T> result;
     CachedValueProfiler.ValueTracker tracker;
     if (CachedValueProfiler.isProfiling()) {
       try (CachedValueProfiler.Frame frame = CachedValueProfiler.newFrame()) {
-        result = doCompute.compute();
+        result = doCompute.get();
         tracker = frame.newValueTracker(result);
       }
     }
     else {
-      result = doCompute.compute();
+      result = doCompute.get();
       tracker = null;
     }
     if (result == null) {

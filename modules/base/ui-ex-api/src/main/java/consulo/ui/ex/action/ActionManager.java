@@ -111,6 +111,8 @@ public abstract class ActionManager {
    */
   public abstract void registerAction(@Nonnull String actionId, @Nonnull AnAction action, @Nullable PluginId pluginId);
 
+  public abstract String[] getPluginActions(PluginId pluginId);
+
   /**
    * Unregisters the action with the specified actionId.
    *

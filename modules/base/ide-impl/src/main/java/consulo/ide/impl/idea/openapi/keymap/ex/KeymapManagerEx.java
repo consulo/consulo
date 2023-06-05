@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.ex;
 
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.keymap.event.KeymapManagerListener;
-import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
-import consulo.component.persist.scheme.SchemeManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -52,8 +50,4 @@ public abstract class KeymapManagerEx extends KeymapManager {
   public abstract String getActionBinding(String actionId);
 
   public abstract SchemeManager<Keymap, KeymapImpl> getSchemeManager();
-
-  public abstract void addWeakListener(@Nonnull KeymapManagerListener listener);
-
-  public abstract void removeWeakListener(@Nonnull KeymapManagerListener listenerToRemove);
 }

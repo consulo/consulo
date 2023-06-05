@@ -20,14 +20,14 @@ import consulo.logging.Logger;
 import consulo.process.CommandLineUtil;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.TaskExecutor;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.io.BaseOutputReader;
-import consulo.process.local.ProcessWaitFor;
+import consulo.process.util.ProcessWaitFor;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,7 +45,7 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
   protected final Charset myCharset;
   protected T myProcess;
 
-  public BaseRemoteProcessHandler(@Nonnull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public BaseRemoteProcessHandler(@Nonnull T process, String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myWaitFor = new ProcessWaitFor(process, this, CommandLineUtil.extractPresentableName(commandLine));
@@ -71,35 +71,37 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
   public void startNotify() {
     notifyTextAvailable(myCommandLine + '\n', ProcessOutputTypes.SYSTEM);
 
-    addProcessListener(new ProcessAdapter() {
+    addProcessListener(new ProcessListener() {
       @Override
       public void startNotified(final ProcessEvent event) {
         try {
-          final RemoteOutputReader stdoutReader = new RemoteOutputReader(myProcess.getInputStream(), getCharset(), myProcess, myCommandLine) {
-            @Override
-            protected void onTextAvailable(@Nonnull String text) {
-              notifyTextAvailable(text, ProcessOutputTypes.STDOUT);
-            }
+          final RemoteOutputReader stdoutReader =
+            new RemoteOutputReader(myProcess.getInputStream(), getCharset(), myProcess, myCommandLine) {
+              @Override
+              protected void onTextAvailable(@Nonnull String text) {
+                notifyTextAvailable(text, ProcessOutputTypes.STDOUT);
+              }
 
-            @Nonnull
-            @Override
-            protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
-              return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
-            }
-          };
+              @Nonnull
+              @Override
+              protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
+                return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
+              }
+            };
 
-          final RemoteOutputReader stderrReader = new RemoteOutputReader(myProcess.getErrorStream(), getCharset(), myProcess, myCommandLine) {
-            @Override
-            protected void onTextAvailable(@Nonnull String text) {
-              notifyTextAvailable(text, ProcessOutputTypes.STDERR);
-            }
+          final RemoteOutputReader stderrReader =
+            new RemoteOutputReader(myProcess.getErrorStream(), getCharset(), myProcess, myCommandLine) {
+              @Override
+              protected void onTextAvailable(@Nonnull String text) {
+                notifyTextAvailable(text, ProcessOutputTypes.STDERR);
+              }
 
-            @Nonnull
-            @Override
-            protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
-              return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
-            }
-          };
+              @Nonnull
+              @Override
+              protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
+                return BaseRemoteProcessHandler.executeOnPooledThread(runnable);
+              }
+            };
 
           myWaitFor.setTerminationCallback(exitCode -> {
             try {
@@ -107,7 +109,8 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
                 stderrReader.waitFor();
                 stdoutReader.waitFor();
               }
-              catch (InterruptedException ignore) { }
+              catch (InterruptedException ignore) {
+              }
             }
             finally {
               onOSProcessTerminated(exitCode);
@@ -192,7 +195,10 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
     private final RemoteProcess myRemoteProcess;
     private boolean myClosed;
 
-    RemoteOutputReader(@Nonnull InputStream inputStream, Charset charset, @Nonnull RemoteProcess remoteProcess, @Nonnull String commandLine) {
+    RemoteOutputReader(@Nonnull InputStream inputStream,
+                       Charset charset,
+                       @Nonnull RemoteProcess remoteProcess,
+                       @Nonnull String commandLine) {
       super(inputStream, charset);
 
       myRemoteProcess = remoteProcess;
@@ -221,9 +227,6 @@ public class BaseRemoteProcessHandler<T extends RemoteProcess> extends AbstractR
         }
       }
       catch (InterruptedException ignore) {
-      }
-      catch (IOException e) {
-        LOG.warn(e);
       }
       catch (Exception e) {
         LOG.warn(e);

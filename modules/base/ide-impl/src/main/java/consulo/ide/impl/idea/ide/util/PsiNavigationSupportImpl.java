@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.psi.PsiNavigationSupport;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.project.Project;

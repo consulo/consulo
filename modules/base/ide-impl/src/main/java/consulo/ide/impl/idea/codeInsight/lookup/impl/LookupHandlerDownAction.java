@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 
 @ActionImpl(id = "EditorLookupDown")
 public class LookupHandlerDownAction extends EditorAction {

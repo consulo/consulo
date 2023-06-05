@@ -16,13 +16,13 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
@@ -30,11 +30,11 @@ import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,9 +49,13 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   private final Object myInitLock = new Object();
 
   @Inject
-  public DesktopPsiAwareFileEditorManagerImpl(Project project, PsiManager psiManager, Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
-    super(project, psiManager, problemSolver, dockManager);
+  public DesktopPsiAwareFileEditorManagerImpl(Application application,
+                                              Project project,
+                                              PsiManager psiManager,
+                                              Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
+    super(application, project, psiManager, problemSolver, dockManager);
   }
+
 
   @Nonnull
   @Override
@@ -60,6 +64,12 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
                                                                               @Nonnull FileEditorProvider[] providers,
                                                                               @Nonnull FileEditorManagerEx fileEditorManager) {
     return new DesktopFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+  }
+
+  @Nonnull
+  @Override
+  protected DockableEditorContainerFactory createDockContainerFactory() {
+    return new DesktopAWTDockableEditorContainerFactory(myProject, this, myDockManager);
   }
 
   @Nonnull

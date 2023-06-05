@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.diff;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.util.io.CharsetToolkit;

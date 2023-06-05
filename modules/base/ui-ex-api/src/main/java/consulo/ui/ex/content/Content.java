@@ -16,7 +16,6 @@
 package consulo.ui.ex.content;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Computable;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
@@ -30,6 +29,7 @@ import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * Represents a tab or pane displayed in a toolwindow or in another content manager.
@@ -62,7 +62,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
     throw new AbstractMethodError();
   }
 
-  default void setUIPreferredFocusedComponent(Computable<Component> computable) {
+  default void setUIPreferredFocusedComponent(Supplier<Component> computable) {
     throw new AbstractMethodError();
   }
 
@@ -182,7 +182,7 @@ public interface Content extends UserDataHolder, ComponentContainer {
     throw new AbstractMethodError();
   }
 
-  default void setPreferredFocusedComponent(Computable<javax.swing.JComponent> computable) {
+  default void setPreferredFocusedComponent(Supplier<JComponent> computable) {
     throw new AbstractMethodError();
   }
   // endregion

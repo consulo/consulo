@@ -39,11 +39,11 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Transient;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,8 +72,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
   private transient final Object myLock = new Object();
 
   private transient final PropertiesEncryptionSupport myEncryptionSupport = new PropertiesEncryptionSupport(new SecretKeySpec(
-          new byte[]{(byte)0x50, (byte)0x72, (byte)0x6f, (byte)0x78, (byte)0x79, (byte)0x20, (byte)0x43, (byte)0x6f, (byte)0x6e, (byte)0x66, (byte)0x69, (byte)0x67, (byte)0x20, (byte)0x53, (byte)0x65,
-                  (byte)0x63}, "AES"));
+    new byte[]{(byte)0x50, (byte)0x72, (byte)0x6f, (byte)0x78, (byte)0x79, (byte)0x20, (byte)0x43, (byte)0x6f, (byte)0x6e, (byte)0x66, (byte)0x69, (byte)0x67, (byte)0x20, (byte)0x53, (byte)0x65,
+      (byte)0x63}, "AES"));
   private transient final Supplier<Properties> myProxyCredentials = LazyValue.notNull(() -> {
     try {
       return myEncryptionSupport.load(PROXY_CREDENTIALS_FILE);
@@ -185,6 +185,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
   }
 
+  @Override
   public PasswordAuthentication getGenericPassword(@Nonnull String host, int port) {
     final ProxyInfo proxyInfo;
     synchronized (myLock) {
@@ -197,9 +198,11 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
   }
 
   public void putGenericPassword(final String host, final int port, @Nonnull PasswordAuthentication authentication, boolean remember) {
-    PasswordAuthentication coded = new PasswordAuthentication(authentication.getUserName(), encode(String.valueOf(authentication.getPassword())).toCharArray());
+    PasswordAuthentication coded =
+      new PasswordAuthentication(authentication.getUserName(), encode(String.valueOf(authentication.getPassword())).toCharArray());
     synchronized (myLock) {
-      myGenericPasswords.put(new CommonProxy.HostInfo(null, host, port), new ProxyInfo(remember, coded.getUserName(), String.valueOf(coded.getPassword())));
+      myGenericPasswords.put(new CommonProxy.HostInfo(null, host, port),
+                             new ProxyInfo(remember, coded.getUserName(), String.valueOf(coded.getPassword())));
     }
   }
 
@@ -236,7 +239,11 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
   }
 
-  public PasswordAuthentication getGenericPromptedAuthentication(final String prefix, final String host, final String prompt, final int port, final boolean remember) {
+  public PasswordAuthentication getGenericPromptedAuthentication(final String prefix,
+                                                                 final String host,
+                                                                 final String prompt,
+                                                                 final int port,
+                                                                 final boolean remember) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myTestGenericAuthRunnable.get();
     }
@@ -253,7 +260,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return;
       }
 
-      AuthenticationData dialog = myAuthenticationDialog.showNoSafe(prefix + host, "Please enter credentials for: " + prompt, "", "", remember);
+      AuthenticationData dialog =
+        myAuthenticationDialog.showNoSafe(prefix + host, "Please enter credentials for: " + prompt, "", "", remember);
       if (dialog != null) {
         PasswordAuthentication passwordAuthentication = new PasswordAuthentication(dialog.getLogin(), dialog.getPassword());
         putGenericPassword(host, port, passwordAuthentication, remember && dialog.isRememberPassword());
@@ -280,7 +288,10 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     // do not try to show any dialogs if application is exiting
-    if (ApplicationManager.getApplication() == null || ApplicationManager.getApplication().isDisposeInProgress() || ApplicationManager.getApplication().isDisposed()) return null;
+    if (ApplicationManager.getApplication() == null || ApplicationManager.getApplication()
+                                                                         .isDisposeInProgress() || ApplicationManager.getApplication()
+                                                                                                                     .isDisposed())
+      return null;
 
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       return myTestGenericAuthRunnable.get();
@@ -302,7 +313,11 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
       }
 
       AuthenticationData data =
-              myAuthenticationDialog.showNoSafe("Proxy authentication: " + host, "Please enter credentials for: " + prompt, getSecure("proxy.login"), "", myState.KEEP_PROXY_PASSWORD);
+        myAuthenticationDialog.showNoSafe("Proxy authentication: " + host,
+                                          "Please enter credentials for: " + prompt,
+                                          getSecure("proxy.login"),
+                                          "",
+                                          myState.KEEP_PROXY_PASSWORD);
       if (data != null) {
         myState.PROXY_AUTHENTICATION = true;
         final boolean keepPass = data.isRememberPassword();
@@ -531,7 +546,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     return StringUtil.split(proxyExceptions, ",");
   }
 
-  public static boolean isRealProxy(@Nonnull Proxy proxy) {
+  @Override
+  public boolean isRealProxy(@Nonnull Proxy proxy) {
     return !Proxy.NO_PROXY.equals(proxy) && !Proxy.Type.DIRECT.equals(proxy.type());
   }
 

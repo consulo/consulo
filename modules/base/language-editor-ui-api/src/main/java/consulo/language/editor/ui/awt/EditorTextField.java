@@ -19,6 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
+import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.dataContext.DataProvider;
@@ -63,7 +64,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   private static final String uiClassID = "EditorTextFieldUI";
 
   private static final Logger LOG = Logger.getInstance(EditorTextField.class);
-  public static final Key<Boolean> SUPPLEMENTARY_KEY = Key.create("Supplementary");
   private static final Key<Boolean> MANAGED_BY_FIELD = Key.create("MANAGED_BY_FIELD");
 
   private class ProxyListeners implements FocusListener, MouseListener {
@@ -192,7 +192,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   public void setSupplementary(boolean supplementary) {
     myIsSupplementary = supplementary;
     if (myEditor != null) {
-      myEditor.putUserData(SUPPLEMENTARY_KEY, supplementary);
+      myEditor.putUserData(InternalEditorKeys.SUPPLEMENTARY_KEY, supplementary);
     }
   }
 
@@ -557,7 +557,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
       myWholeTextSelected = false;
     }
 
-    editor.putUserData(SUPPLEMENTARY_KEY, myIsSupplementary);
+    editor.putUserData(InternalEditorKeys.SUPPLEMENTARY_KEY, myIsSupplementary);
     editor.getContentComponent().setFocusCycleRoot(false);
     editor.getContentComponent().addFocusListener(myProxyListeners);
     editor.getContentComponent().addMouseListener(myProxyListeners);

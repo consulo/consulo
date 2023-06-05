@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.hint.actions;
 
 import consulo.ide.impl.idea.codeInsight.hint.PrevNextParameterHandler;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 
 /**
  * @author ven

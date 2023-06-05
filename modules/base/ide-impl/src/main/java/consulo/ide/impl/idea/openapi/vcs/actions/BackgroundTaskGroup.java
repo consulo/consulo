@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.progress.BackgroundTaskQueue;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.application.util.BackgroundTaskQueue;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.versionControlSystem.AbstractVcsHelper;
-import consulo.versionControlSystem.VcsException;
+import consulo.ui.ModalityState;
 import consulo.util.lang.function.ThrowableConsumer;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.VcsException;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 
@@ -44,12 +45,12 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
   private final Project myProject;
 
   public BackgroundTaskGroup(@Nonnull Project project, @Nonnull String title) {
-    super(project, title);
+    super(project.getApplication(), project, title);
     myProject = project;
   }
 
   @Override
-  public void run(@Nonnull Task.Backgroundable task, @jakarta.annotation.Nullable IdeaModalityState modalityState, @jakarta.annotation.Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
     throw new UnsupportedOperationException();
   }
 

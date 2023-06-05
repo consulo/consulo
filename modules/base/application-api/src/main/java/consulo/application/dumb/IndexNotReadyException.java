@@ -15,11 +15,9 @@
  */
 package consulo.application.dumb;
 
-import consulo.application.util.function.Computable;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.ExceptionWithAttachments;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -38,7 +36,7 @@ import jakarta.annotation.Nullable;
  * involves user interaction, {@link DumbService#smartInvokeLater(Runnable)} should probably not be used to avoid dialogs popping out of the blue.
  *
  * <li> If it's a non-urgent background process (e.g. compilation, usage search), consider replacing topmost read-action with
- * {@link DumbService#runReadActionInSmartMode(Computable)}.
+ * {@link DumbService#runReadActionInSmartMode(java.util.function.Supplier)}.
  *
  * <li> If the exception comes from within Java's findClass call, and the IDE is currently performing a user-initiated action or a
  * task when skipping findClass would lead to very negative consequences (e.g. not stopping at a breakpoint), then it might be possible

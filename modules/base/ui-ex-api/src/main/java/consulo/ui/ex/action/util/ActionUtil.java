@@ -46,6 +46,16 @@ public class ActionUtil {
   }
 
   /**
+   * Convenience method for copying properties from a registered action
+   *
+   * @param actionId action id
+   */
+  public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
+    action.copyFrom(ActionManager.getInstance().getAction(actionId));
+    return action;
+  }
+
+  /**
    * Convenience method for merging not null properties from a registered action
    *
    * @param action   action to merge to

@@ -16,11 +16,12 @@
 
 package consulo.application.util;
 
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.Processor;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
 import jakarta.annotation.Nonnull;
+
+import java.util.function.Supplier;
 
 /**
  * @author cdr
@@ -28,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public abstract class ReadActionProcessor<T> implements Processor<T> {
   @Override
   public boolean process(final T t) {
-    return ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> processInReadAction(t));
+    return ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processInReadAction(t));
   }
 
   @RequiredReadAction
@@ -36,6 +37,6 @@ public abstract class ReadActionProcessor<T> implements Processor<T> {
 
   @Nonnull
   public static <T> Processor<T> wrapInReadAction(@Nonnull final Processor<T> processor) {
-    return t -> ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> processor.process(t));
+    return t -> ApplicationManager.getApplication().runReadAction((Supplier<Boolean>)() -> processor.process(t));
   }
 }

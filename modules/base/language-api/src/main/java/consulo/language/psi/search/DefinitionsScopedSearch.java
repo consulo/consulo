@@ -17,13 +17,12 @@
 package consulo.language.psi.search;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.Query;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -84,12 +83,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
 
     @Nonnull
     public SearchScope getScope() {
-      return ApplicationManager.getApplication().runReadAction(new Computable<SearchScope>() {
-        @Override
-        public SearchScope compute() {
-          return myScope.intersectWith(PsiSearchHelper.SERVICE.getInstance(myElement.getProject()).getUseScope(myElement));
-        }
-      });
+      return ApplicationManager.getApplication().runReadAction((Supplier<SearchScope>)() -> myScope.intersectWith(PsiSearchHelper.getInstance(myElement.getProject()).getUseScope(myElement)));
     }
   }
 

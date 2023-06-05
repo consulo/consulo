@@ -22,7 +22,6 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.function.Computable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
@@ -32,10 +31,9 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import consulo.util.lang.function.PairConsumer;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -69,7 +67,10 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   @RequiredUIAccess
-  public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask, @Nullable Runnable onSlowAction, long waitMillis, boolean forceEDT) {
+  public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask,
+                                                    @Nullable Runnable onSlowAction,
+                                                    long waitMillis,
+                                                    boolean forceEDT) {
     ModalityState modality = Application.get().getCurrentModalityState();
 
     if (forceEDT) {
@@ -87,8 +88,11 @@ public class BackgroundTaskUtil {
     }
     else {
       Pair<Runnable, ProgressIndicator> pair =
-              computeInBackgroundAndTryWait(backgroundTask, (callback, indicator) -> ApplicationManager.getApplication().invokeLater(() -> finish(callback, indicator), modality), modality,
-                                            waitMillis);
+        computeInBackgroundAndTryWait(backgroundTask,
+                                      (callback, indicator) -> ApplicationManager.getApplication()
+                                                                                 .invokeLater(() -> finish(callback, indicator), modality),
+                                      modality,
+                                      waitMillis);
 
       Runnable callback = pair.first;
       ProgressIndicator indicator = pair.second;
@@ -132,7 +136,10 @@ public class BackgroundTaskUtil {
   @Nullable
   public static <T> T computeInBackgroundAndTryWait(@Nonnull Supplier<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
-            computeInBackgroundAndTryWait(indicator -> computable.get(), (result, indicator) -> asyncCallback.accept(result), Application.get().getDefaultModalityState(), waitMillis);
+      computeInBackgroundAndTryWait(indicator -> computable.get(),
+                                    (result, indicator) -> asyncCallback.accept(result),
+                                    Application.get().getDefaultModalityState(),
+                                    waitMillis);
     return pair.first;
   }
 
@@ -226,7 +233,7 @@ public class BackgroundTaskUtil {
     });
   }
 
-  public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Computable<T> task) {
+  public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Supplier<T> task) {
     ProgressIndicator indicator = new EmptyProgressIndicator(Application.get().getDefaultModalityState());
     indicator.start();
 

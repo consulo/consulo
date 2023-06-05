@@ -15,93 +15,14 @@
  */
 package consulo.process.local;
 
-import consulo.logging.Logger;
+import consulo.annotation.DeprecationInfo;
 import consulo.process.TaskExecutor;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
-import java.util.concurrent.*;
-import java.util.function.Consumer;
 
-public class ProcessWaitFor {
-  private static final Logger LOG = Logger.getInstance(ProcessWaitFor.class);
-
-  private final Future<?> myWaitForThreadFuture;
-  private final BlockingQueue<Consumer<Integer>> myTerminationCallback = new ArrayBlockingQueue<Consumer<Integer>>(1);
-
-  /**
-   * @deprecated use {@link #ProcessWaitFor(Process, TaskExecutor, String)} instead (to be removed in IDEA 17)
-   */
-  @Deprecated
-  public ProcessWaitFor(@Nonnull final Process process, @Nonnull TaskExecutor executor) {
-    this(process, executor, "");
+@Deprecated
+@DeprecationInfo("Use consulo.process.util.ProcessWaitFor")
+public class ProcessWaitFor extends consulo.process.util.ProcessWaitFor {
+  public ProcessWaitFor(@Nonnull Process process, @Nonnull TaskExecutor executor, @Nonnull String presentableName) {
+    super(process, executor, presentableName);
   }
-
-  public ProcessWaitFor(@Nonnull final Process process, @Nonnull TaskExecutor executor, @Nonnull final String presentableName) {
-    myWaitForThreadFuture = executor.executeTask(new Runnable() {
-      @Override
-      public void run() {
-        String oldThreadName = Thread.currentThread().getName();
-        if (!StringUtil.isEmptyOrSpaces(presentableName)) {
-          Thread.currentThread().setName("ProcessWaitFor: " + presentableName);
-        }
-        int exitCode = 0;
-        try {
-          while (true) {
-            try {
-              exitCode = process.waitFor();
-              break;
-            }
-            catch (InterruptedException e) {
-              LOG.debug(e);
-            }
-          }
-        }
-        finally {
-          try {
-            myTerminationCallback.take().accept(exitCode);
-          }
-          catch (InterruptedException e) {
-            LOG.info(e);
-          }
-          finally {
-            Thread.currentThread().setName(oldThreadName);
-          }
-        }
-      }
-    });
-  }
-
-  public void detach() {
-    myWaitForThreadFuture.cancel(true);
-  }
-
-  public void setTerminationCallback(@Nonnull Consumer<Integer> r) {
-    myTerminationCallback.offer(r);
-  }
-
-  public void waitFor() throws InterruptedException {
-    try {
-      myWaitForThreadFuture.get();
-    }
-    catch (ExecutionException e) {
-      LOG.error(e);
-    }
-    catch (CancellationException ignored) {
-    }
-  }
-
-  public boolean waitFor(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
-    try {
-      myWaitForThreadFuture.get(timeout, unit);
-    }
-    catch (ExecutionException e) {
-      LOG.error(e);
-    }
-    catch (CancellationException | TimeoutException ignored) {
-    }
-
-    return myWaitForThreadFuture.isDone();
-  }
-
 }

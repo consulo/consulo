@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.S
 import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.awt.*;
-import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;

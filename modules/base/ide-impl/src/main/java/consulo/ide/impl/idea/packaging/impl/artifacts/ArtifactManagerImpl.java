@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
@@ -24,30 +25,29 @@ import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.module.ProjectLoadingErrorsNotifier;
-import consulo.project.Project;
-import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.project.UnknownFeaturesCollector;
 import consulo.component.util.ModificationTracker;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.packaging.impl.artifacts.state.ArtifactManagerState;
 import consulo.ide.impl.idea.packaging.impl.artifacts.state.ArtifactPropertiesState;
 import consulo.ide.impl.idea.packaging.impl.artifacts.state.ArtifactState;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.module.ProjectLoadingErrorsNotifier;
+import consulo.module.content.internal.ProjectRootManagerEx;
+import consulo.project.Project;
+import consulo.project.UnknownFeaturesCollector;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -65,7 +65,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private final ArtifactManagerModel myModel;
   private final Project myProject;
   private final PackagingElementFactory myPackagingElementFactory;
-  private final DefaultPackagingElementResolvingContext myResolvingContext;
+  private final PackagingElementResolvingContext myResolvingContext;
   private boolean myInsideCommit = false;
   private boolean myLoaded;
   private long myModificationCount;
@@ -78,13 +78,14 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<>();
 
   @Inject
-  public ArtifactManagerImpl(Project project, PackagingElementFactory packagingElementFactory) {
+  public ArtifactManagerImpl(Project project, PackagingElementFactory packagingElementFactory, VirtualFileManager virtualFileManager) {
     myProject = project;
     myPackagingElementFactory = packagingElementFactory;
     myModel = new ArtifactManagerModel();
-    myResolvingContext = new DefaultPackagingElementResolvingContext(myProject, this);
+    myResolvingContext = PackagingElementResolvingContext.of(myProject, this);
 
-    VirtualFileManager.getInstance().addVirtualFileListener(new ArtifactVirtualFileListener(myProject, this), myProject);
+    virtualFileManager.addVirtualFileListener(new ArtifactVirtualFileListener(myProject, this), myProject);
+
     updateWatchedRoots();
   }
 
@@ -389,7 +390,9 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
   }
 
   @Override
-  public void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath, @Nonnull Collection<? extends PackagingElement<?>> elements) {
+  public void addElementsToDirectory(@Nonnull Artifact artifact,
+                                     @Nonnull String relativePath,
+                                     @Nonnull Collection<? extends PackagingElement<?>> elements) {
     final ModifiableArtifactModel model = createModifiableModel();
     final CompositePackagingElement<?> root = model.getOrCreateModifiableArtifact(artifact).getRootElement();
     myPackagingElementFactory.getOrCreateDirectory(root, relativePath).addOrFindChildren(elements);

@@ -18,6 +18,8 @@ package consulo.ui.ex.keymap.event;
 
 import consulo.ui.ex.keymap.Keymap;
 
-public interface KeymapManagerListener {
+import java.util.EventListener;
+
+public interface KeymapManagerListener extends EventListener {
   void activeKeymapChanged(Keymap keymap);
 }

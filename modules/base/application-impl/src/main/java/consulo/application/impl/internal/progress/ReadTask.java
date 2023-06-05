@@ -19,13 +19,13 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.ui.ModalityState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 /**
  * A computation that needs to be run in background and inside a read action, and canceled whenever a write action is about to occur.
@@ -70,7 +70,7 @@ public abstract class ReadTask {
    * @param indicator the progress indicator of the background thread
    */
   public Continuation runBackgroundProcess(@Nonnull final ProgressIndicator indicator) throws ProcessCanceledException {
-    return ApplicationManager.getApplication().runReadAction((Computable<Continuation>)() -> performInReadAction(indicator));
+    return ApplicationManager.getApplication().runReadAction((Supplier<Continuation>)() -> performInReadAction(indicator));
   }
 
   /**

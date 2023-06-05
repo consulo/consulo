@@ -31,7 +31,7 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;

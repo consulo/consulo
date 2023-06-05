@@ -31,9 +31,9 @@ import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +41,10 @@ import java.util.List;
  * @author nik
  */
 public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPackagingElement> {
-  @NonNls public static final String LIBRARY_NAME_ATTRIBUTE = "name";
-  @NonNls public static final String MODULE_NAME_ATTRIBUTE = "module-name";
-  @NonNls public static final String LIBRARY_LEVEL_ATTRIBUTE = "level";
+  public static final String LIBRARY_NAME_ATTRIBUTE = "name";
+  public static final String MODULE_NAME_ATTRIBUTE = "module-name";
+  public static final String LIBRARY_LEVEL_ATTRIBUTE = "level";
+  
   private String myLevel;
   private String myLibraryName;
   private String myModuleName;
@@ -60,14 +61,16 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
   }
 
   @Override
-  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType) {
+  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context,
+                                                             @Nonnull ArtifactType artifactType) {
     final Library library = findLibrary(context);
     if (library != null) {
       final VirtualFile[] files = library.getFiles(BinariesOrderRootType.getInstance());
       final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
       for (VirtualFile file : files) {
         final String path = FileUtil.toSystemIndependentName(VirtualFilePathUtil.getLocalPath(file));
-        elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(path));
+        elements.add(file.isDirectory() && file.isInLocalFileSystem() ? new DirectoryCopyPackagingElement(path) : new FileCopyPackagingElement(
+          path));
       }
       return elements;
     }
@@ -94,8 +97,8 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
 
     LibraryPackagingElement packagingElement = (LibraryPackagingElement)element;
     return myLevel != null && myLibraryName != null && myLevel.equals(packagingElement.getLevel())
-           && myLibraryName.equals(packagingElement.getLibraryName())
-           && Comparing.equal(myModuleName, packagingElement.getModuleName());
+      && myLibraryName.equals(packagingElement.getLibraryName())
+      && Comparing.equal(myModuleName, packagingElement.getModuleName());
   }
 
   @Override
@@ -139,10 +142,10 @@ public class LibraryPackagingElement extends ComplexPackagingElement<LibraryPack
 
   @Override
   public String toString() {
-    return "lib:" + myLibraryName + "(" + (myModuleName != null ? "module " + myModuleName: myLevel ) + ")";
+    return "lib:" + myLibraryName + "(" + (myModuleName != null ? "module " + myModuleName : myLevel) + ")";
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public Library findLibrary(@Nonnull PackagingElementResolvingContext context) {
     if (myModuleName == null) {
       return context.findLibrary(myLevel, myLibraryName);

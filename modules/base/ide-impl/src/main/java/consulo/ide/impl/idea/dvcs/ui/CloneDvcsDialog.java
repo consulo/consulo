@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.dvcs.DvcsRememberedInputs;
+import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;

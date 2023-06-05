@@ -32,11 +32,19 @@ public interface ProcessHandlerBuilder {
     return Application.get().getInstance(ProcessHandlerBuilderFactory.class).newBuilder(commandLine);
   }
 
+  /**
+   * Almost all other methods will be ignored if process handler is binary
+   *
+   * {@link #build()} will return object instance of {@link BinaryProcessHandler}
+   */
+  @Nonnull
+  ProcessHandlerBuilder binary();
+
   @Nonnull
   ProcessHandlerBuilder colored();
 
   /**
-   * @return object instance of {@link KillableProcessHandler}
+   * {@link #build()} will return object instance of {@link KillableProcessHandler}
    */
   @Nonnull
   ProcessHandlerBuilder killable();

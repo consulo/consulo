@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ChooseModulesDialog;
+import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.ide.setting.module.ClasspathPanel;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;

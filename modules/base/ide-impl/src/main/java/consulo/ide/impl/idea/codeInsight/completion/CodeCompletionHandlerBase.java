@@ -8,8 +8,6 @@ import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.util.function.Computable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -19,6 +17,7 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionAssertions.WatchingInsertionContext;
 import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAction;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
@@ -45,13 +44,14 @@ import consulo.ui.ex.action.AnAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
 public class CodeCompletionHandlerBase {
@@ -700,9 +700,9 @@ public class CodeCompletionHandlerBase {
   }
 
   @Nullable
-  private <T> T withTimeout(long maxDurationMillis, @Nonnull Computable<T> task) {
+  private <T> T withTimeout(long maxDurationMillis, @Nonnull Supplier<T> task) {
     if (isTestingMode()) {
-      return task.compute();
+      return task.get();
     }
 
     return ProgressIndicatorUtils.withTimeout(maxDurationMillis, task);

@@ -15,12 +15,12 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.application.util.function.Computable;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
+import java.util.function.Supplier;
 
 /**
  * Encapsulates logic of drawing arrows at graphics buffer (primary usage is to draw tabulation symbols representation arrows).
@@ -31,8 +31,8 @@ import java.awt.*;
 public class ArrowPainter {
 
   private final ColorProvider myColorHolder;
-  private final Computable<Integer> myWidthProvider;
-  private final Computable<Integer> myHeightProvider;
+  private final Supplier<Integer> myWidthProvider;
+  private final Supplier<Integer> myHeightProvider;
 
   /**
    * Creates an ArrowPainter with specified parameters.
@@ -41,7 +41,7 @@ public class ArrowPainter {
    * @param widthProvider defines character width, it is used to calculate an inset for the arrow's tip
    * @param heightProvider defines character height, it's used to calculate an arrow's width and height
    */
-  public ArrowPainter(@Nonnull ColorProvider colorHolder, @Nonnull Computable<Integer> widthProvider, @Nonnull Computable<Integer> heightProvider) {
+  public ArrowPainter(@Nonnull ColorProvider colorHolder, @Nonnull Supplier<Integer> widthProvider, @Nonnull Supplier<Integer> heightProvider) {
     myColorHolder = colorHolder;
     myWidthProvider = widthProvider;
     myHeightProvider = heightProvider;
@@ -56,10 +56,10 @@ public class ArrowPainter {
    * @param stop    ending <code>'x'</code> position to use during drawing
    */
   public void paint(Graphics g, int y, int start, int stop) {
-    stop -= myWidthProvider.compute() / 4;
+    stop -= myWidthProvider.get() / 4;
     Color oldColor = g.getColor();
     g.setColor(TargetAWT.to(myColorHolder.getColor()));
-    final int height = myHeightProvider.compute();
+    final int height = myHeightProvider.get();
     final int halfHeight = height / 2;
     int mid = y - halfHeight;
     int top = y - height;

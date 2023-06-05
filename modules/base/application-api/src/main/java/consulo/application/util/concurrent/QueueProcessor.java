@@ -15,13 +15,13 @@
  */
 package consulo.application.util.concurrent;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -42,7 +42,10 @@ import java.util.function.Consumer;
 public class QueueProcessor<T> {
   private static final Logger LOG = Logger.getInstance(QueueProcessor.class);
   public static enum ThreadToUse {
+    @Deprecated
+    @DeprecationInfo("Use #UI")
     AWT,
+    UI,
     POOLED
   }
 
@@ -211,8 +214,8 @@ public class QueueProcessor<T> {
         runSafely(() -> myProcessor.accept(item, myContinuationContext));
       }
     };
-    final Application application = ApplicationManager.getApplication();
-    if (myThreadToUse == ThreadToUse.AWT) {
+    final Application application = Application.get();
+    if (myThreadToUse == ThreadToUse.AWT || myThreadToUse == ThreadToUse.UI) {
       final ModalityState state = myModalityState.remove(new MyOverrideEquals(item));
       if (state != null) {
         application.invokeLater(runnable, state);

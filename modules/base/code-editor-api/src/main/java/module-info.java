@@ -28,5 +28,7 @@ module consulo.code.editor.api {
           consulo.language.code.style.ui.api,
           consulo.execution.api,
           consulo.language.editor.refactoring.api,
+          consulo.language.editor.ui.api,
+          consulo.file.editor.api,
           consulo.desktop.swt.ide.impl;
 }

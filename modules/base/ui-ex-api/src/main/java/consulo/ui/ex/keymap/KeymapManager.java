@@ -49,12 +49,17 @@ public abstract class KeymapManager {
 
   public abstract Keymap getActiveKeymap();
 
+  public abstract Keymap getDefaultKeymap();
+
   @Nullable
   public abstract Keymap getKeymap(@Nonnull String name);
+
+  public abstract void setActiveKeymap(Keymap activeKeymap);
 
   /**
    * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
    */
+  @Deprecated(forRemoval = true)
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener);
 
   public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable);

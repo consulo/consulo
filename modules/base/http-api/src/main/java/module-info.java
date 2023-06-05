@@ -10,4 +10,5 @@ module consulo.http.api {
   requires org.apache.httpcomponents.httpmime;
 
   exports consulo.http;
+  exports consulo.http.ssl;
 }

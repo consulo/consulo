@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.ui.ex.awt.Messages;

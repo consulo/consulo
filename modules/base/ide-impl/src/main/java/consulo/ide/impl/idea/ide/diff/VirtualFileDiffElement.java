@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.file.FileTypeManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

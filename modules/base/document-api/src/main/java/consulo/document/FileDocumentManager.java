@@ -5,11 +5,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,7 +34,7 @@ public interface FileDocumentManager extends SavingRequestor {
    * @return the document, or null if the file represents a directory, or is binary without an associated decompiler,
    * or is too large.
    * @see VirtualFile#contentsToByteArray()
-   * @see Application#runReadAction(Computable)
+   * @see Application#runReadAction(java.util.function.Supplier)
    */
   @Nullable
   public abstract Document getDocument(@Nonnull VirtualFile file);

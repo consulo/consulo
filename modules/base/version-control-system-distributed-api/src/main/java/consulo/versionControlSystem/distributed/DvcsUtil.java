@@ -25,7 +25,7 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.util.StatusBarUtil;
+import consulo.fileEditor.statusBar.StatusBarUtil;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;

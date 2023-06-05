@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectRootManager;

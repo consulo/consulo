@@ -15,6 +15,7 @@
  */
 package consulo.navigation;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
@@ -51,5 +52,12 @@ public interface OpenFileDescriptorFactory {
   }
 
   @Nonnull
-  Builder builder(@Nonnull VirtualFile file);
+  @Deprecated
+  @DeprecationInfo("Use #newBuilder")
+  default Builder builder(@Nonnull VirtualFile file) {
+    return newBuilder(file);
+  }
+
+  @Nonnull
+  Builder newBuilder(@Nonnull VirtualFile file);
 }

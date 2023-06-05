@@ -5,12 +5,12 @@ package consulo.process.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
+import consulo.process.BaseProcessHandler;
 import consulo.process.event.ProcessListener;
-import consulo.process.local.BaseProcessHandler;
-import consulo.process.local.CapturingProcessAdapter;
-import consulo.process.local.ProcessOutput;
-
+import consulo.process.util.CapturingProcessAdapter;
+import consulo.process.util.ProcessOutput;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Function;
 
 public class CapturingProcessRunner {

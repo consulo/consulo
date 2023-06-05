@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

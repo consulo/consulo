@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.popup;
 
-import consulo.application.util.function.Computable;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -10,10 +9,10 @@ import consulo.ui.event.UIEvent;
 import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -125,7 +124,7 @@ public interface JBPopup extends Disposable, LightweightWindow {
    * Checks if it's currently allowed to close the popup.
    *
    * @return {@code true} if the popup can be closed, {@code false} if a callback disallowed closing the popup.
-   * @see ComponentPopupBuilder#setCancelCallback(Computable)
+   * @see ComponentPopupBuilder#setCancelCallback(java.util.function.Supplier)
    */
   boolean canClose();
 

@@ -1,17 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.popup;
 
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -19,6 +18,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -49,7 +49,7 @@ public interface ComponentPopupBuilder {
   ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, @NonNls String key, boolean useForXYLocation);
 
   @Nonnull
-  ComponentPopupBuilder setCancelCallback(@Nonnull Computable<Boolean> shouldProceed);
+  ComponentPopupBuilder setCancelCallback(@Nonnull Supplier<Boolean> shouldProceed);
 
   @Nonnull
   ComponentPopupBuilder setCancelOnClickOutside(boolean cancel);

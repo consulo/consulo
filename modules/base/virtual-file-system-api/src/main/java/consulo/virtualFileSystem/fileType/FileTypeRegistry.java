@@ -2,9 +2,9 @@
 package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -116,4 +116,7 @@ public abstract class FileTypeRegistry {
    */
   @Nullable
   public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
+
+  @Nullable
+  public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project);
 }

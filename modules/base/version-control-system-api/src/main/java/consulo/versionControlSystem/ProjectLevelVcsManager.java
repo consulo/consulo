@@ -19,26 +19,26 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.history.VcsHistoryCache;
-import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Manages the version control systems used by a specific project.
@@ -73,8 +73,8 @@ public abstract class ProjectLevelVcsManager {
    * @return component instance
    */
   public static ProjectLevelVcsManager getInstanceChecked(final Project project) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<ProjectLevelVcsManager>() {
-      public ProjectLevelVcsManager compute() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<ProjectLevelVcsManager>() {
+      public ProjectLevelVcsManager get() {
         if (project.isDisposed()) throw new ProcessCanceledException();
         return getInstance(project);
       }

@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.*;

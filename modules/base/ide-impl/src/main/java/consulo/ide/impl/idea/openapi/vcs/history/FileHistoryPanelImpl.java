@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.application.CommonBundle;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
@@ -39,7 +40,6 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.idea.openapi.fileEditor.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.FileDocumentManager;
 import consulo.component.ProcessCanceledException;

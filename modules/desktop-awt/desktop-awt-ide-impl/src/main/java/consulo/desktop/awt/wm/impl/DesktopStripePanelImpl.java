@@ -150,7 +150,7 @@ final class DesktopStripePanelImpl extends JPanel {
   public void addNotify() {
     super.addNotify();
     updatePresentation();
-    KeymapManagerEx.getInstanceEx().addWeakListener(myWeakKeymapManagerListener);
+    KeymapManagerEx.getInstanceEx().addKeymapManagerListener(myWeakKeymapManagerListener, myDisposable);
     if (ScreenUtil.isStandardAddRemoveNotify(this)) {
       UISettings.getInstance().addUISettingsListener(myUISettingsListener, myDisposable);
     }
@@ -161,7 +161,6 @@ final class DesktopStripePanelImpl extends JPanel {
    */
   @Override
   public void removeNotify() {
-    KeymapManagerEx.getInstanceEx().removeWeakListener(myWeakKeymapManagerListener);
     if (ScreenUtil.isStandardAddRemoveNotify(this)) {
       Disposer.dispose(myDisposable);
     }

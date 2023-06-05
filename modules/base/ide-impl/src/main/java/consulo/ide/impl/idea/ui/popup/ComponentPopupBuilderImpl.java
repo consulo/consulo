@@ -26,9 +26,9 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.image.Image;
 import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -36,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author anna
@@ -48,7 +49,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private final JComponent myPreferredFocusedComponent;
   private boolean myRequestFocus;
   private String myDimensionServiceKey;
-  private Computable<Boolean> myCallback;
+  private Supplier<Boolean> myCallback;
   private Project myProject;
   private boolean myCancelOnClickOutside = true;
   private boolean myCancelOnWindowDeactivation = true;
@@ -167,7 +168,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setCancelCallback(@Nonnull final Computable<Boolean> shouldProceed) {
+  public ComponentPopupBuilder setCancelCallback(@Nonnull final Supplier<Boolean> shouldProceed) {
     myCallback = shouldProceed;
     return this;
   }

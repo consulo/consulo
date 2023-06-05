@@ -23,7 +23,7 @@ import consulo.application.ui.UISettings;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.ui.StripeTable;
+import consulo.ui.ex.awt.table.StripeTable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;

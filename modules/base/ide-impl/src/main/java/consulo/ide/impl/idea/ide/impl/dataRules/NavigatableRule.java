@@ -22,7 +22,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;

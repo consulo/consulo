@@ -4,39 +4,43 @@
 package consulo.ide.impl.idea.openapi.progress.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.SystemNotifications;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 @Singleton
 @ServiceImpl
 public class ProgressManagerImpl extends CoreProgressManager implements Disposable {
   private static final Key<Boolean> SAFE_PROGRESS_INDICATOR = Key.create("SAFE_PROGRESS_INDICATOR");
-  private final Set<CheckCanceledHook> myHooks = ContainerUtil.newConcurrentSet();
+  private final Set<CheckCanceledHook> myHooks = ConcurrentHashMap.newKeySet();
   private final CheckCanceledHook mySleepHook = __ -> sleepIfNeededToGivePriorityToAnotherThread();
 
-  public ProgressManagerImpl() {
+  @Inject
+  public ProgressManagerImpl(Application application) {
+    super(application);
   }
 
   @Override
@@ -56,8 +60,13 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   }
 
   @Override
+  public ProgressIndicator newBackgroundableProcessIndicator(Task.Backgroundable backgroundable) {
+    return new BackgroundableProcessIndicator(backgroundable);
+  }
+
+  @Override
   public void executeProcessUnderProgress(@Nonnull Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
-    CheckCanceledHook hook = progress instanceof PingProgress && ApplicationManager.getApplication().isDispatchThread() ? p -> {
+    CheckCanceledHook hook = progress instanceof PingProgress && myApplication.isDispatchThread() ? p -> {
       ((PingProgress)progress).interact();
       return true;
     } : null;
@@ -92,7 +101,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
       final Task.NotificationInfo notificationInfo = task.notifyFinished();
       long time = end - start;
       if (notificationInfo != null && time > 5000) { // show notification only if process took more than 5 secs
-        final JFrame frame = WindowManager.getInstance().getFrame((Project)task.getProject());
+        final IdeFrame frame = WindowManager.getInstance().getIdeFrame((Project)task.getProject());
         if (frame != null && !frame.hasFocus()) {
           systemNotify(notificationInfo);
         }
@@ -108,7 +117,7 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
   @Override
   @Nonnull
   public Future<?> runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task) {
-    ProgressIndicator progressIndicator = ApplicationManager.getApplication().isHeadlessEnvironment() ? new EmptyProgressIndicator() : new BackgroundableProcessIndicator(task);
+    ProgressIndicator progressIndicator = myApplication.isHeadlessEnvironment() ? new EmptyProgressIndicator() : new BackgroundableProcessIndicator(task);
     return runProcessWithProgressAsynchronously(task, progressIndicator, null);
   }
 

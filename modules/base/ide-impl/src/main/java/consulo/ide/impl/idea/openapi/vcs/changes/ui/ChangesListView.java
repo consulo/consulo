@@ -23,7 +23,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvider;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

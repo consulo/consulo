@@ -20,13 +20,11 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URLConnection;
+import java.net.*;
 import java.util.List;
 
 /**
@@ -96,4 +94,12 @@ public interface HttpProxyManager {
 
   @Nonnull
   List<String> getProxyExceptions();
+
+  boolean isRealProxy(@Nonnull Proxy proxy);
+
+  @Nonnull
+  ProxySelector getOnlyBySettingsSelector();
+
+  @Nullable
+  PasswordAuthentication getGenericPassword(@Nonnull String host, int port);
 }

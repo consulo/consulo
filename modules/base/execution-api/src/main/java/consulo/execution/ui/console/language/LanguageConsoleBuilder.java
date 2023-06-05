@@ -15,24 +15,26 @@
  */
 package consulo.execution.ui.console.language;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.EditorEx;
 import consulo.execution.internal.LanguageConsoleViewEx;
 import consulo.execution.internal.action.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleRootType;
-import consulo.language.Language;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiFile;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+@UsedInPlugin
+@SuppressWarnings("unused")
 public abstract class LanguageConsoleBuilder {
   protected static class MyConsoleRootType extends ConsoleRootType {
     public MyConsoleRootType(String historyType) {
@@ -55,9 +57,6 @@ public abstract class LanguageConsoleBuilder {
   protected boolean oneLineInput;
 
   protected String processInputStateKey;
-
-  public LanguageConsoleBuilder() {
-  }
 
   public LanguageConsoleBuilder processHandler(@Nonnull final ProcessHandler processHandler) {
     executionEnabled = console -> !processHandler.isProcessTerminated();
@@ -115,7 +114,6 @@ public abstract class LanguageConsoleBuilder {
   /**
    * @see {@link EditorEx#setOneLineMode(boolean)}
    */
-  @SuppressWarnings("UnusedDeclaration")
   public LanguageConsoleBuilder oneLineInput() {
     oneLineInput(true);
     return this;
@@ -136,5 +134,5 @@ public abstract class LanguageConsoleBuilder {
   }
 
   @Nonnull
-  public abstract LanguageConsoleView build(@Nonnull Project project, @Nonnull Language language);
+  public abstract LanguageConsoleView build();
 }

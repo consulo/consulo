@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;
@@ -53,14 +52,14 @@ import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -2712,12 +2711,12 @@ public class UIUtil {
     }
   }
 
-  public static <T> T invokeAndWaitIfNeeded(@Nonnull final Computable<T> computable) {
+  public static <T> T invokeAndWaitIfNeeded(@Nonnull final Supplier<T> computable) {
     final SimpleReference<T> result = SimpleReference.create();
     invokeAndWaitIfNeeded(new Runnable() {
       @Override
       public void run() {
-        result.set(computable.compute());
+        result.set(computable.get());
       }
     });
     return result.get();

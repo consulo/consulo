@@ -3,6 +3,7 @@ package consulo.process.internal;
 
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandlerFeature;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
@@ -11,12 +12,11 @@ import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseInputStreamReader;
 import consulo.process.io.BaseOutputReader;
 import consulo.process.io.ProcessIOExecutorService;
-import consulo.process.local.BaseProcessHandler;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -49,6 +49,7 @@ public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
     super(process, commandLine, charset);
     myProcessStart = new Throwable("Process creation:");
 
+    // TODO [VISTALL] we need use platform from GeneralCommandLine
     if (Platform.current().os().isUnix()) {
       registerFeature(ProcessHandlerFeature.POSIX.class, new POSIXImpl(process));
     }

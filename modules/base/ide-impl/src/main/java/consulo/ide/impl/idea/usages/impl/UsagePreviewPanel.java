@@ -31,7 +31,7 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.language.psi.*;

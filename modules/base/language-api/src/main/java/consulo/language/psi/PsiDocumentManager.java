@@ -4,18 +4,18 @@ package consulo.language.psi;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.TransactionGuard;
-import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.language.file.FileViewProvider;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.EventListener;
+import java.util.function.Supplier;
 
 /**
  * Manages the relationship between documents and PSI trees.
@@ -189,7 +189,7 @@ public abstract class PsiDocumentManager {
    * @param computation the operation to execute.
    * @return the value returned by the operation.
    */
-  public abstract <T> T commitAndRunReadAction(@Nonnull Computable<T> computation);
+  public abstract <T> T commitAndRunReadAction(@Nonnull Supplier<T> computation);
 
   /**
    * Reparses the specified set of files after an external configuration change that would cause them to be parsed differently

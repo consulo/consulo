@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 
 /**
  * @author peter

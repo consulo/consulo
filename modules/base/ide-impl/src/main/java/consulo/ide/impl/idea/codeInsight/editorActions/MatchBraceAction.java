@@ -19,7 +19,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 import gnu.trove.TIntHashSet;

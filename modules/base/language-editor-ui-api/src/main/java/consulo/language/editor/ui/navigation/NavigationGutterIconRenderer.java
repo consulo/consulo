@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.ui.navigation;
 
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import consulo.language.editor.hint.HintColorUtil;
@@ -36,9 +35,9 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -50,12 +49,12 @@ import java.util.function.Supplier;
 public abstract class NavigationGutterIconRenderer extends GutterIconRenderer implements GutterIconNavigationHandler<PsiElement> {
   private final String myPopupTitle;
   private final String myEmptyText;
-  private final Computable<PsiElementListCellRenderer> myCellRenderer;
+  private final Supplier<PsiElementListCellRenderer> myCellRenderer;
   private final Supplier<List<SmartPsiElementPointer>> myPointers;
 
   protected NavigationGutterIconRenderer(final String popupTitle,
                                          final String emptyText,
-                                         @Nonnull Computable<PsiElementListCellRenderer> cellRenderer,
+                                         @Nonnull Supplier<PsiElementListCellRenderer> cellRenderer,
                                          @Nonnull Supplier<List<SmartPsiElementPointer>> pointers) {
     myPopupTitle = popupTitle;
     myEmptyText = emptyText;
@@ -124,7 +123,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     }
     else {
       if (event != null) {
-        final JBPopup popup = PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.compute(), myPopupTitle);
+        final JBPopup popup = PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.get(), myPopupTitle);
         popup.show(new RelativePoint(event));
       }
     }

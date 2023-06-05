@@ -16,24 +16,23 @@
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.event.KeymapManagerListener;
-import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.component.persist.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.proxy.EventDispatcher;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.event.KeymapManagerListener;
+import consulo.util.lang.Comparing;
+import consulo.util.xml.serializer.InvalidDataException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
@@ -43,7 +42,9 @@ import java.util.*;
 public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 
-  private final List<KeymapManagerListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final EventDispatcher<KeymapManagerListener> myListeners = EventDispatcher.create(KeymapManagerListener.class);
+  @Nonnull
+  private final DefaultKeymap myDefaultKeymap;
   private String myActiveKeymapName;
   private final Map<String, String> myBoundShortcuts = new HashMap<>();
 
@@ -55,6 +56,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
 
   @Inject
   KeymapManagerImpl(DefaultKeymap defaultKeymap, SchemeManagerFactory factory) {
+    myDefaultKeymap = defaultKeymap;
     mySchemeManager = factory.createSchemeManager(KEYMAPS_DIR_PATH, new BaseSchemeProcessor<Keymap, KeymapImpl>() {
       @Nonnull
       @Override
@@ -124,6 +126,11 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   @Override
+  public Keymap getDefaultKeymap() {
+    return getKeymap(myDefaultKeymap.getDefaultKeymapName());
+  }
+
+  @Override
   public void setActiveKeymap(Keymap activeKeymap) {
     mySchemeManager.setCurrentSchemeName(activeKeymap == null ? null : activeKeymap.getName());
     fireActiveKeymapChanged();
@@ -149,7 +156,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
     Set<String> visited = null;
     String id = actionId, next;
     while ((next = myBoundShortcuts.get(id)) != null) {
-      if (visited == null) visited = ContainerUtil.newHashSet();
+      if (visited == null) visited = new HashSet<>();
       if (!visited.add(id = next)) break;
     }
     return Comparing.equal(id, actionId) ? null : id;
@@ -211,51 +218,21 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
   }
 
   private void fireActiveKeymapChanged() {
-    for (KeymapManagerListener listener : myListeners) {
-      listener.activeKeymapChanged(mySchemeManager.getCurrentScheme());
-    }
+    myListeners.getMulticaster().activeKeymapChanged(mySchemeManager.getCurrentScheme());
   }
 
   @Override
   public void addKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
-    pollQueue();
-    myListeners.add(listener);
+    myListeners.addListener(listener);
   }
 
   @Override
   public void addKeymapManagerListener(@Nonnull final KeymapManagerListener listener, @Nonnull Disposable parentDisposable) {
-    pollQueue();
-    myListeners.add(listener);
-    Disposer.register(parentDisposable, () -> removeKeymapManagerListener(listener));
-  }
-
-  private void pollQueue() {
-    // assume it is safe to remove elements during iteration, as is the case with the COWAL
-    for (KeymapManagerListener listener : myListeners) {
-      if (listener instanceof WeakKeymapManagerListener && ((WeakKeymapManagerListener)listener).isDead()) {
-        myListeners.remove(listener);
-      }
-    }
+    myListeners.addListener(listener, parentDisposable);
   }
 
   @Override
   public void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener) {
-    pollQueue();
-    myListeners.remove(listener);
-  }
-
-  @Override
-  public void addWeakListener(@Nonnull KeymapManagerListener listener) {
-    addKeymapManagerListener(new WeakKeymapManagerListener(this, listener));
-  }
-
-  @Override
-  public void removeWeakListener(@Nonnull KeymapManagerListener listenerToRemove) {
-    // assume it is safe to remove elements during iteration, as is the case with the COWAL
-    for (KeymapManagerListener listener : myListeners) {
-      if (listener instanceof WeakKeymapManagerListener && ((WeakKeymapManagerListener)listener).isWrapped(listenerToRemove)) {
-        myListeners.remove(listener);
-      }
-    }
+    myListeners.removeListener(listener);
   }
 }

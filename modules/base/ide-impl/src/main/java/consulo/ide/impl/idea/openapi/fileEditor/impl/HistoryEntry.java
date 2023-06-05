@@ -28,11 +28,10 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,21 +39,22 @@ import java.util.Map;
 
 /**
  * `Heavy` entries should be disposed with {@link #destroy()} to prevent leak of VirtualFilePointer
- */                                                                                                  
+ */
 public final class HistoryEntry {
-  @NonNls static final String TAG = "entry";
+  public static final String TAG = "entry";
   public static final String FILE_ATTR = "file";
-  @NonNls private static final String PROVIDER_ELEMENT = "provider";
-  @NonNls private static final String EDITOR_TYPE_ID_ATTR = "editor-type-id";
-  @NonNls private static final String SELECTED_ATTR_VALUE = "selected";
-  @NonNls private static final String STATE_ELEMENT = "state";
+  private static final String PROVIDER_ELEMENT = "provider";
+  private static final String EDITOR_TYPE_ID_ATTR = "editor-type-id";
+  private static final String SELECTED_ATTR_VALUE = "selected";
+  private static final String STATE_ELEMENT = "state";
 
   @Nonnull
   private final VirtualFilePointer myFilePointer;
   /**
    * can be null when read from XML
    */
-  @Nullable private FileEditorProvider mySelectedProvider;
+  @Nullable
+  private FileEditorProvider mySelectedProvider;
   @Nonnull
   private final HashMap<FileEditorProvider, FileEditorState> myProvider2State;
 
@@ -233,7 +233,8 @@ public final class HistoryEntry {
     public final String url;
     @Nonnull
     public final List<Pair<FileEditorProvider, FileEditorState>> providerStates;
-    @Nullable public final FileEditorProvider selectedProvider;
+    @Nullable
+    public final FileEditorProvider selectedProvider;
 
     public EntryData(@Nonnull String url,
                      @Nonnull List<Pair<FileEditorProvider, FileEditorState>> providerStates,

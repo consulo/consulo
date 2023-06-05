@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
+import consulo.codeEditor.internal.InternalEditorKeys;
+import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
-import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-
+import consulo.language.editor.PlatformDataKeys;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 public class FileEditorRule implements GetDataRule<FileEditor> {
@@ -40,7 +39,7 @@ public class FileEditorRule implements GetDataRule<FileEditor> {
       return null;
     }
 
-    final Boolean aBoolean = editor.getUserData(EditorTextField.SUPPLEMENTARY_KEY);
+    final Boolean aBoolean = editor.getUserData(InternalEditorKeys.SUPPLEMENTARY_KEY);
     if (aBoolean != null && aBoolean.booleanValue()) {
       return null;
     }

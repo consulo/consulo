@@ -2,14 +2,14 @@
 package consulo.execution.debug.attach;
 
 import consulo.execution.debug.attach.osHandler.AttachOSHandler;
+import consulo.process.BaseProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.BaseProcessHandler;
 import consulo.process.internal.CapturingProcessRunner;
-import consulo.process.local.ProcessOutput;
-
+import consulo.process.util.ProcessOutput;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 

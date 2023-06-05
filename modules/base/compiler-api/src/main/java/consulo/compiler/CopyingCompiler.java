@@ -16,21 +16,21 @@
 package consulo.compiler;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.compiler.scope.CompileScope;
 import consulo.index.io.data.IOUtil;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Compiler which copies the compiled files to a different directory.
@@ -51,7 +51,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
   @Override
   @Nonnull
   public final ProcessingItem[] getProcessingItems(final CompileContext context) {
-    return ApplicationManager.getApplication().runReadAction((Computable<ProcessingItem[]>)() -> {
+    return ApplicationManager.getApplication().runReadAction((Supplier<ProcessingItem[]>)() -> {
       final VirtualFile[] filesToCopy = getFilesToCopy(context);
       final ProcessingItem[] items = new ProcessingItem[filesToCopy.length];
       for (int idx = 0; idx < filesToCopy.length; idx++) {

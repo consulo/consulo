@@ -11,7 +11,6 @@ import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -72,9 +71,9 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -114,7 +113,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   private CaptionPanel myCaption;
   private JComponent myComponent;
   private String myDimensionServiceKey;
-  private Computable<Boolean> myCallBack;
+  private Supplier<Boolean> myCallBack;
   private Project myProject;
   private boolean myCancelOnClickOutside;
   private final List<JBPopupListener> myListeners = new CopyOnWriteArrayList<>();
@@ -244,7 +243,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                                String dimensionServiceKey,
                                boolean resizable,
                                @Nullable String caption,
-                               @Nullable Computable<Boolean> callback,
+                               @Nullable Supplier<Boolean> callback,
                                boolean cancelOnClickOutside,
                                @Nullable Set<JBPopupListener> listeners,
                                boolean useDimServiceForXYLocation,
@@ -787,7 +786,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Override
   public boolean canClose() {
-    return myCallBack == null || myCallBack.compute().booleanValue();
+    return myCallBack == null || myCallBack.get();
   }
 
   @Override
