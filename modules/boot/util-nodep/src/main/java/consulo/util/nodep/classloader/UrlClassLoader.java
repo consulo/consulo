@@ -9,12 +9,12 @@ import consulo.util.nodep.io.FileUtilRt;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.ProtectionDomain;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * A class loader that allows for various customizations, e.g. not locking jars or using a special cache to speed up class loading.
@@ -22,33 +22,13 @@ import java.util.*;
  */
 public class UrlClassLoader extends ClassLoader implements AutoCloseable {
   static final String CLASS_EXTENSION = ".class";
-  private static final Set<Class<?>> ourParallelCapableLoaders;
+  private static final Set<Class<?>> ourParallelCapableLoaders = new CopyOnWriteArraySet<>();
 
   static {
-    //this class is compiled for Java 6 so it's enough to check that it isn't running under Java 6
-    boolean isAtLeastJava7 = !System.getProperty("java.runtime.version", "unknown").startsWith("1.6.");
-    boolean ibmJvm = System.getProperty("java.vm.vendor", "unknown").toLowerCase(Locale.US).contains("ibm");
-    boolean capable = isAtLeastJava7 && !ibmJvm && Boolean.parseBoolean(System.getProperty("use.parallel.class.loading", "true"));
-    if (capable) {
-      ourParallelCapableLoaders = Collections.synchronizedSet(new HashSet<Class<?>>());
-      try {
-        //todo Patches.USE_REFLECTION_TO_ACCESS_JDK7
-        Method registerAsParallelCapable = ClassLoader.class.getDeclaredMethod("registerAsParallelCapable");
-        registerAsParallelCapable.setAccessible(true);
-        if (Boolean.TRUE.equals(registerAsParallelCapable.invoke(null))) {
-          ourParallelCapableLoaders.add(UrlClassLoader.class);
-        }
-      }
-      catch (Exception ignored) {
-      }
-    }
-    else {
-      ourParallelCapableLoaders = null;
-    }
+    if (registerAsParallelCapable()) ourParallelCapableLoaders.add(UrlClassLoader.class);
   }
 
   protected static void markParallelCapable(Class<? extends UrlClassLoader> loaderClass) {
-    assert ourParallelCapableLoaders != null;
     ourParallelCapableLoaders.add(loaderClass);
   }
 

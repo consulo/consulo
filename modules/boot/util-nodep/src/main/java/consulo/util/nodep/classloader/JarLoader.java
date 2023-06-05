@@ -42,6 +42,7 @@ class JarLoader extends Loader {
 
   private JarIndex myJarIndex;
   private PreloadedJar myPreloadedJar;
+  private final Object myJarLock = new Object();
 
   private boolean myClosed;
 
@@ -365,18 +366,16 @@ class JarLoader extends Loader {
     }
   }
 
-  private static final Object ourLock = new Object();
-
   @Override
   void close() throws Exception {
     myClosed = true;
-    
+
     JarFile zipFile = SoftReference.dereference(myZipFileSoftReference);
     if (zipFile == null) {
       return;
     }
 
-    synchronized (ourLock) {
+    synchronized (myJarLock) {
       myZipFileSoftReference = null;
 
       zipFile.close();
@@ -391,7 +390,7 @@ class JarLoader extends Loader {
       JarFile zipFile = SoftReference.dereference(myZipFileSoftReference);
       if (zipFile != null) return zipFile;
 
-      synchronized (ourLock) {
+      synchronized (myJarLock) {
         zipFile = SoftReference.dereference(myZipFileSoftReference);
         if (zipFile != null) return zipFile;
 
