@@ -39,9 +39,6 @@ public class SingleComponentLayout extends BorderLayoutEx {
   }
 
   private void removeContent() {
-    Component oldComponent = getComponent(Constraint.CENTER);
-    if (oldComponent != null && Objects.equals(this, oldComponent.getParent().orElse(null))) {
-      removeLayoutComponent(oldComponent);
-    }
+    setComponent(null, Constraint.CENTER);
   }
 }

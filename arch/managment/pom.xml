@@ -798,11 +798,6 @@
         <artifactId>html-table</artifactId>
         <version>1.2.0</version>
       </dependency>
-      <dependency>
-        <groupId>org.vaadin.addons.johannest</groupId>
-        <artifactId>border-layout-component</artifactId>
-        <version>1.0.1</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <profiles>

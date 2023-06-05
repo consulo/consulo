@@ -532,10 +532,6 @@
       <groupId>org.parttio</groupId>
       <artifactId>canvas-java</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons.johannest</groupId>
-      <artifactId>border-layout-component</artifactId>
-    </dependency>
   </dependencies>
 
   <build>

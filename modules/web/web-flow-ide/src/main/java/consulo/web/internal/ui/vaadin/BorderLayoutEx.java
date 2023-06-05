@@ -16,34 +16,133 @@
 package consulo.web.internal.ui.vaadin;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.ThemableLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 30/05/2023
  */
-public class BorderLayoutEx extends HorizontalLayout {
+public class BorderLayoutEx extends VerticalLayout {
   public enum Constraint {
     NORTH,
     WEST,
     CENTER,
     EAST,
     SOUTH,
-    PAGE_START,
-    PAGE_END,
-    LINE_START,
-    LINE_END
   }
 
-  public Component getComponent(Constraint constraint) {
-    return null;
+  private final HorizontalLayout myTopLayout = new HorizontalLayout();
+  private final HorizontalLayout myBottomLayout = new HorizontalLayout();
+  private final HorizontalLayout myCenterLayout = new HorizontalLayout();
+
+  private final Div myWestHolder = new Div();
+  private final Div myCenterHolder = new Div();
+  private final Div myEastHolder = new Div();
+
+  public BorderLayoutEx() {
+    noPaddingMargin(this);
+
+    myCenterLayout.setSizeFull();
+
+    myCenterLayout.setPadding(false);
+    myCenterLayout.setMargin(false);
+
+    myCenterHolder.setSizeFull();
+
+    myCenterLayout.add(myWestHolder);
+    myCenterLayout.add(myCenterHolder);
+    myCenterLayout.add(myEastHolder);
+
+    add(noPaddingMargin(myTopLayout));
+    add(noPaddingMargin(myCenterLayout));
+    add(noPaddingMargin(myBottomLayout));
   }
 
-   public void removeLayoutComponent(Component component) {
+  private void validate() {
+    myTopLayout.setVisible(myTopLayout.getComponentCount() > 0);
+    myBottomLayout.setVisible(myBottomLayout.getComponentCount() > 0);
 
-   }
+    myWestHolder.setVisible(myWestHolder.getComponentCount() > 0);
+    myEastHolder.setVisible(myEastHolder.getComponentCount() > 0);
+  }
 
-   public void addComponent(Component component, Constraint constraint) {
-    add(component);
-   }
+  private <T extends Component & HasSize & ThemableLayout> T noPaddingMargin(T component) {
+    component.setMargin(false);
+    component.setPadding(false);
+    return component;
+  }
+
+  @Override
+  public void addClassNames(String... classNames) {
+    for (String className : classNames) {
+      addClassName(className);
+    }
+  }
+
+  @Override
+  public void addClassName(String className) {
+    super.addClassName(className);
+
+    myTopLayout.addClassName(className + "-top");
+    myBottomLayout.addClassName(className + "-bottom");
+    myCenterLayout.addClassName(className + "-center");
+  }
+
+  public void addComponent(@Nullable Component component, Constraint constraint) {
+    setComponent(component, constraint);
+  }
+
+  public void setComponent(@Nullable Component component, Constraint constraint) {
+    switch (constraint) {
+      case NORTH:
+        myTopLayout.removeAll();
+
+        if (component != null) {
+          myTopLayout.add(component);
+        }
+        break;
+      case WEST:
+        myWestHolder.removeAll();
+
+        if (component != null) {
+          myWestHolder.add(component);
+        }
+        break;
+      case CENTER:
+        myCenterHolder.removeAll();
+        
+        if (component != null) {
+          ((HasSize)component).setSizeFull();
+
+          myCenterHolder.add(component);
+        }
+        break;
+      case EAST:
+        myEastHolder.removeAll();
+
+        if (component != null) {
+          myEastHolder.add(component);
+        }
+        break;
+      case SOUTH:
+        myBottomLayout.removeAll();
+
+        if (component != null) {
+          myBottomLayout.add(component);
+        }
+        break;
+    }
+
+    if (component != null) {
+      ComponentUtil.setData(component, Constraint.class, constraint);
+    }
+
+    validate();
+  }
 }

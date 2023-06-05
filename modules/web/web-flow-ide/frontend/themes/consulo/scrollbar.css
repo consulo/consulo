@@ -1,0 +1,23 @@
+::-webkit-scrollbar-track
+{
+	
+}
+
+::-webkit-scrollbar
+{
+	width: 0.6em;
+	height: 0.6em;
+	background-color: var(--lumo-base-color);
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: var(--lumo-contrast-20pct);
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+	background-color: var(--lumo-contrast-50pct);
+	border-radius: 5px;
+}

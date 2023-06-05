@@ -38,9 +38,6 @@
 
     <module>modules/web/web-bootstrap</module>
     <module>modules/web/web-flow-ide</module>
-    <!--<module>modules/web/web-ui-impl-client</module>-->
-    <!--<module>modules/web/web-ui-impl-shared</module>-->
-    <!--<module>modules/web/web-ui-impl-server</module>-->
 
     <module>modules/boot/bootstrap</module>
     <module>modules/boot/container-api</module>

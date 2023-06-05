@@ -56,6 +56,14 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <!--fix issues with not found vaadin-core-versions.json-->
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-core-internal</artifactId>
+            <version>${vaadin.flow.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -209,10 +217,6 @@
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-dev-bundle</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.vaadin.addons.johannest</groupId>
-      <artifactId>border-layout-component</artifactId>
     </dependency>
     <dependency>
       <groupId>consulo.internal</groupId>

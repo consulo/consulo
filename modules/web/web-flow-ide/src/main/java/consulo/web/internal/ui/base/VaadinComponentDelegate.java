@@ -122,13 +122,19 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
   @Override
   public Component getParent() {
     Optional<com.vaadin.flow.component.Component> parent = myVaadinComponent.getParent();
-    if (parent.isPresent()) {
+    while (parent.isPresent()) {
       com.vaadin.flow.component.Component component = parent.get();
       if (component instanceof UI) {
         return null;
       }
-      return TargetVaddin.from(component);
+
+      if (component instanceof FromVaadinComponentWrapper componentWrapper) {
+        return componentWrapper.toUIComponent();
+      }
+
+      parent = component.getParent();
     }
+    
     return null;
   }
 

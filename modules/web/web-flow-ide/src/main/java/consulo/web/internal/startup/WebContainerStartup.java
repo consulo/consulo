@@ -49,7 +49,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
-import org.vaadin.addons.johannest.borderlayout.BorderLayout;
 
 import java.io.IOException;
 import java.net.URL;
@@ -92,8 +91,7 @@ public class WebContainerStartup implements ContainerStartup {
         urls.add(resources.nextElement());
       }
     }
-    catch (IOException e) {
-      e.printStackTrace();
+    catch (IOException ignored) {
     }
 
     handler.setBaseResource(new ResourceCollection(ContainerUtil.map(urls, Resource::newResource)));
@@ -104,8 +102,6 @@ public class WebContainerStartup implements ContainerStartup {
     classes.add(LookupInitializer.class);
     classes.add(ConsuloAppShellConfigurator.class);
     classes.add(VaadinRootLayout.class);
-    // handle js
-    classes.add(BorderLayout.class);
 
     boolean enableDevMode = false;// ApplicationProperties.isInSandbox()
     if (enableDevMode) {

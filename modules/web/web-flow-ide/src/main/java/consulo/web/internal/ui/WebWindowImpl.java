@@ -67,7 +67,7 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
       addCloseDialogButton(vaadinComponent);
     }
 
-    VaadinSizeUtil.setWidthFull(myRootPanel.getComponent());
+    VaadinSizeUtil.setSizeFull(myRootPanel.getComponent());
     vaadinComponent.add(TargetVaddin.to(myRootPanel.getComponent()));
     // TODO vaadinComponent.addCloseListener(closeEvent -> getListenerDispatcher(Window.CloseListener.class).onClose());
 
