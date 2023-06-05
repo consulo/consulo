@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.dvcs;
+package consulo.versionControlSystem.distributed;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,7 +29,7 @@ public class DvcsRememberedInputs {
   private State myState = new State();
 
   public static class State {
-    public List<UrlAndUserName> visitedUrls = new ArrayList<UrlAndUserName>();
+    public List<UrlAndUserName> visitedUrls = new ArrayList<>();
     public String cloneParentDir = "";
   }
 
@@ -79,7 +79,7 @@ public class DvcsRememberedInputs {
 
   @Nonnull
   public List<String> getVisitedUrls() {
-    List<String> urls = new ArrayList<String>(myState.visitedUrls.size());
+    List<String> urls = new ArrayList<>(myState.visitedUrls.size());
     for (UrlAndUserName urlAndUserName : myState.visitedUrls) {
       urls.add(urlAndUserName.url);
     }
