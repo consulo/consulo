@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util.io;
+package consulo.application.util;
 
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
@@ -35,7 +35,8 @@ public class UrlConnectionUtil {
   private UrlConnectionUtil() {
   }
 
-  public static @Nullable InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
+  @Nullable
+  public static InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
     try {
       return getConnectionInputStreamWithException(connection, pi);
     }
@@ -47,10 +48,9 @@ public class UrlConnectionUtil {
     }
   }
 
-
   public static InputStream getConnectionInputStreamWithException(URLConnection connection, ProgressIndicator pi) throws IOException {
     InputStreamGetter getter = new InputStreamGetter(connection);
-    final Future<?> getterFuture = ApplicationManager.getApplication().executeOnPooledThread(getter);
+    final Future<?> getterFuture = Application.get().executeOnPooledThread(getter);
 
     while (true) {
       pi.checkCanceled();
@@ -58,7 +58,9 @@ public class UrlConnectionUtil {
         try {
           getterFuture.get(50, TimeUnit.MILLISECONDS);
         }
-        catch (TimeoutException e) {}
+        catch (TimeoutException ignored) {
+        }
+
         pi.setIndeterminate(true);
         pi.setText(pi.getText());
         if (getterFuture.isDone()) break;
@@ -74,7 +76,7 @@ public class UrlConnectionUtil {
     return getter.getInputStream();
   }
 
-  public static class InputStreamGetter implements Runnable {
+  private static class InputStreamGetter implements Runnable {
     private InputStream myInputStream;
     private final URLConnection myUrlConnection;
     private IOException myException;
@@ -91,6 +93,7 @@ public class UrlConnectionUtil {
       return myInputStream;
     }
 
+    @Override
     public void run() {
       try {
         myInputStream = myUrlConnection.getInputStream();
