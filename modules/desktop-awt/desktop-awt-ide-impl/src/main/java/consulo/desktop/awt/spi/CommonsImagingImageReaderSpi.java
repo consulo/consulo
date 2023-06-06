@@ -48,42 +48,52 @@ public class CommonsImagingImageReaderSpi extends ImageReaderSpi {
     myFormats = new ArrayList<>(Arrays.asList(ImageFormats.values()));
     myFormats.removeAll(Arrays.asList(ImageFormats.UNKNOWN, ImageFormats.JPEG, ImageFormats.TIFF, ImageFormats.PNG));
 
-    names = new String[myFormats.size() * 2];
     suffixes = new String[myFormats.size()];
     MIMETypes = new String[myFormats.size()];
     pluginClassName = MyImageReader.class.getName();
     inputTypes = new Class[]{ImageInputStream.class};
-    for (int i = 0, allFormatsLength = myFormats.size(); i < allFormatsLength; i++) {
-      final ImageFormat format = myFormats.get(i);
-      names[2 * i] = StringUtil.toLowerCase(format.getExtension());
-      names[2 * i + 1] = StringUtil.toLowerCase(format.getExtension());
-      suffixes[i] = names[2 * i];
-      MIMETypes[i] = "image/" + names[2 * i];
+
+    Set<String> names = new LinkedHashSet<>();
+    Set<String> suffixes = new LinkedHashSet<>();
+    Set<String> MIMETypes = new LinkedHashSet<>();
+
+    for (ImageFormat format : myFormats) {
+      for (String extension : format.getExtensions()) {
+        names.add(extension);
+        String loweredExtension = StringUtil.toLowerCase(extension);
+        names.add(loweredExtension);
+
+        suffixes.add(loweredExtension);
+        MIMETypes.add("image/" + loweredExtension);
+      }
     }
+
+    this.names = names.toArray(new String[names.size()]);
+    this.suffixes = suffixes.toArray(new String[suffixes.size()]);
+    this.MIMETypes = MIMETypes.toArray(new String[MIMETypes.size()]);
   }
 
+  @Override
   public String getDescription(Locale locale) {
     return "Apache Commons Imaging adapter reader";
   }
 
+  @Override
   public boolean canDecodeInput(Object input) throws IOException {
     if (!(input instanceof ImageInputStream)) {
       return false;
     }
+
     final ImageInputStream stream = (ImageInputStream)input;
-    try {
-      final ImageFormat imageFormat = Imaging.guessFormat(new MyByteSource(stream));
-      if (myFormats.contains(imageFormat)) {
-        myFormat.set(imageFormat);
-        return true;
-      }
-      return false;
+    final ImageFormat imageFormat = Imaging.guessFormat(new MyByteSource(stream));
+    if (myFormats.contains(imageFormat)) {
+      myFormat.set(imageFormat);
+      return true;
     }
-    catch (ImageReadException e) {
-      throw new IOException(e);
-    }
+    return false;
   }
 
+  @Override
   public ImageReader createReaderInstance(Object extension) {
     return new MyImageReader(this, myFormat.get());
   }

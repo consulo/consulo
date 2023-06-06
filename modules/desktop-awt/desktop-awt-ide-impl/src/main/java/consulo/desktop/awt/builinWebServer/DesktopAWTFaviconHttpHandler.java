@@ -51,7 +51,7 @@ public class DesktopAWTFaviconHttpHandler extends HttpRequestHandler {
     icon.paintIcon(null, image.getGraphics(), 0, 0);
     byte[] icoBytes;
     try {
-      icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO, null);
+      icoBytes = Imaging.writeImageToBytes(image, ImageFormats.ICO);
     }
     catch (ImageWriteException e) {
       throw new IOException(e);
