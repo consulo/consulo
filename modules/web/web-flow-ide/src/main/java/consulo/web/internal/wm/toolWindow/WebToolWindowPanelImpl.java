@@ -16,6 +16,7 @@
 package consulo.web.internal.wm.toolWindow;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
@@ -44,7 +45,7 @@ import java.util.Map;
 public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindowPanelImpl.Vaadin> implements ToolWindowPanel {
   private static final Logger LOG = Logger.getInstance(WebToolWindowPanelImpl.class);
 
-  public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent {
+  public class Vaadin extends Div implements FromVaadinComponentWrapper, InitiableComponent, FlexComponent {
     private Div myTopDiv = new Div();
     private Div myCenterDiv = new Div();
     private Div myBottomDiv = new Div();
@@ -55,6 +56,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
       add(myCenterDiv);
       myCenterDiv.addClassName(LumoUtility.Display.FLEX);
       myCenterDiv.setSizeFull();
+      setFlexGrow(1, myCenterDiv);
       add(myBottomDiv);
       myBottomDiv.setWidthFull();
     }

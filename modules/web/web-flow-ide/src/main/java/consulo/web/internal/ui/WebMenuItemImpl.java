@@ -20,7 +20,6 @@ import consulo.ui.MenuItem;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -29,15 +28,15 @@ import jakarta.annotation.Nullable;
  * @since 2019-02-18
  */
 public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaadin> implements MenuItem {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+  public class Vaadin extends com.vaadin.flow.component.Component implements FromVaadinComponentWrapper {
     private String myText = "";
+    private Image myIcon;
+
     @Nullable
     @Override
     public Component toUIComponent() {
       return WebMenuItemImpl.this;
     }
-    //         component.getListenerDispatcher(ClickListener.class).clicked(new ClickEvent(component));
-
   }
 
   public WebMenuItemImpl(String text) {
@@ -52,8 +51,7 @@ public class WebMenuItemImpl extends VaadinComponentDelegate<WebMenuItemImpl.Vaa
 
   @Override
   public void setIcon(@Nullable Image icon) {
-    Vaadin vaadinComponent = getVaadinComponent();
-    //vaadinComponent.getState().myImageState = icon == null ? null : WebImageMapper.map(icon).getState();
+    toVaadinComponent().myIcon = icon;
   }
 
   @Nonnull

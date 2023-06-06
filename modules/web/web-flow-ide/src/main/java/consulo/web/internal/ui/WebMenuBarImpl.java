@@ -21,18 +21,15 @@ import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 29/05/2023
- *
- * TODO stub
  */
 public class WebMenuBarImpl extends VaadinComponentDelegate<WebMenuBarImpl.Vaadin> implements MenuBar {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+  public class Vaadin extends com.vaadin.flow.component.menubar.MenuBar implements FromVaadinComponentWrapper {
 
     @Nullable
     @Override

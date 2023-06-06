@@ -40,6 +40,7 @@ public class VaadinRootLayout extends HorizontalLayout implements RouterLayout, 
     ((HasSize)newContent).setSizeFull();
 
     add(newContent);
+    setFlexGrow(1, newContent);
   }
 
   @Override

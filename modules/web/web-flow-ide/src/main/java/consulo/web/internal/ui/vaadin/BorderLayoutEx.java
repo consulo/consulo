@@ -57,6 +57,7 @@ public class BorderLayoutEx extends VerticalLayout {
 
     myCenterLayout.add(myWestHolder);
     myCenterLayout.add(myCenterHolder);
+    myCenterLayout.setFlexGrow(1, myCenterHolder);
     myCenterLayout.add(myEastHolder);
 
     add(noPaddingMargin(myTopLayout));

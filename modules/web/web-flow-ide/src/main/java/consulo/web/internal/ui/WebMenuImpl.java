@@ -23,7 +23,6 @@ import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import consulo.web.internal.ui.vaadin.SimpleComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,7 +34,7 @@ import java.util.List;
  * @since 2019-02-19
  */
 public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> implements Menu {
-  public class Vaadin extends SimpleComponent implements FromVaadinComponentWrapper {
+  public class Vaadin extends Component implements FromVaadinComponentWrapper {
     private String myText = "";
     private List<Component> myMenuItems = new ArrayList<>();
 
@@ -43,7 +42,6 @@ public class WebMenuImpl extends VaadinComponentDelegate<WebMenuImpl.Vaadin> imp
       Component vaadinComponent = TargetVaddin.to(menuItem);
 
       myMenuItems.add(vaadinComponent);
-      //addComponent(vaadinComponent);
     }
 
 
