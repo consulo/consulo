@@ -29,6 +29,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolderBase;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaddin;
 import jakarta.annotation.Nonnull;
@@ -41,7 +42,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 11-Sep-17
  */
-class UIWindowOverRouterLayout implements Window {
+class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
   private final WebRootPaneImpl myRootPanel = new WebRootPaneImpl();
 
   private Font myFont = FontManager.get().createFont("?", 12);
@@ -168,16 +169,5 @@ class UIWindowOverRouterLayout implements Window {
   @Override
   public boolean isActive() {
     return true;
-  }
-
-  @Nullable
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    throw new UnsupportedOperationException();
   }
 }

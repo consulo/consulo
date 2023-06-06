@@ -13,35 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.layout;
+package consulo.web.internal.ui;
 
 import consulo.ui.Component;
 import consulo.ui.Tab;
-import consulo.ui.web.internal.WebItemPresentationImpl;
-
+import consulo.ui.TextItemPresentation;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-class WebTabImpl extends WebItemPresentationImpl implements Tab {
+class WebTabImpl implements Tab {
+  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
   private BiConsumer<Tab, Component> myCloseHandler;
   private WebTabbedLayoutImpl myTabbedLayout;
-  private int myIndex;
 
-  public WebTabImpl(int index, WebTabbedLayoutImpl tabbedLayout) {
-    myIndex = index;
+  private com.vaadin.flow.component.tabs.Tab myVaadinTab;
+
+  public WebTabImpl(WebTabbedLayoutImpl tabbedLayout) {
     myTabbedLayout = tabbedLayout;
   }
 
-  public void setIndex(int index) {
-    myIndex = index;
-  }
-
-  public int getIndex() {
-    return myIndex;
+  @Override
+  public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
+    myRender = render;
   }
 
   @Override
@@ -50,19 +49,28 @@ class WebTabImpl extends WebItemPresentationImpl implements Tab {
   }
 
   @Override
+  public void update() {
+    WebItemPresentationImpl presentation = new WebItemPresentationImpl();
+    myRender.accept(this, presentation);
+
+    myVaadinTab.removeAll();
+    myVaadinTab.add(presentation.toComponent());
+  }
+
+  public BiConsumer<Tab, TextItemPresentation> getRender() {
+    return myRender;
+  }
+
+  @Override
   public void select() {
-    if (myIndex == -1) {
-      throw new UnsupportedOperationException("Tab is not added to layout");
-    }
-    myTabbedLayout.selectTab(myIndex);
+    // TODO
   }
 
   public BiConsumer<Tab, Component> getCloseHandler() {
     return myCloseHandler;
   }
 
-  @Override
-  protected void after() {
-    myTabbedLayout.markAsDirty();
+  public void setVaadinTab(com.vaadin.flow.component.tabs.Tab vaadinTab) {
+    myVaadinTab = vaadinTab;
   }
 }

@@ -449,6 +449,14 @@
       <artifactId>vaadin-checkbox-flow</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-menu-bar-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-tabs-flow</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.vaadin.stefan</groupId>
       <artifactId>html-table</artifactId>
     </dependency>

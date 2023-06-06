@@ -97,9 +97,7 @@ public class WebUIInternalImpl extends UIInternal {
 
   @Override
   public TabbedLayout _Layouts_tabbed() {
-    throw notSupported();
-
-    //return new WebTabbedLayoutImpl();
+    return new WebTabbedLayoutImpl();
   }
 
   @Override

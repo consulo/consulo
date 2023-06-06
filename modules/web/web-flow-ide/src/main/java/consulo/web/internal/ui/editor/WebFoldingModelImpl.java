@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.ex;
+package consulo.web.internal.ui.editor;
 
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.base.VaadinComponent;
+import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2019-02-18
+ * @since 2018-05-10
  */
-public class WebLoadingPanelImpl extends VaadinComponentDelegate<WebLoadingPanelImpl.Vaadin> {
-  public static class Vaadin extends VaadinComponent {
-
-  }
-
-  @Override
-  @Nonnull
-  public Vaadin createVaadinComponent() {
-    return new Vaadin();
+public class WebFoldingModelImpl extends CodeEditorFoldingModelBase {
+  public WebFoldingModelImpl(@Nonnull CodeEditorBase editor) {
+    super(editor);
   }
 }

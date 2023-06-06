@@ -22,6 +22,7 @@ import consulo.codeEditor.RealEditor;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.project.Project;
+import consulo.web.internal.ui.editor.WebEditorImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -41,7 +42,6 @@ public class WebEditorFactoryImpl extends EditorFactoryImpl {
   @Nonnull
   @Override
   protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
-    throw new UnsupportedOperationException();
-    //return new WebEditorImpl(document, isViewer, project, kind);
+    return new WebEditorImpl(document, isViewer, project, kind);
   }
 }

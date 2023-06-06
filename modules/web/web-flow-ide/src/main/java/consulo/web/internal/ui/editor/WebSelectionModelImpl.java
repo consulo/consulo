@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.ex;
+package consulo.web.internal.ui.editor;
 
+import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.impl.CodeEditorBase;
-import consulo.codeEditor.impl.CodeEditorCaretModelBase;
-
-import jakarta.annotation.Nonnull;
+import consulo.codeEditor.impl.CodeEditorSelectionModelBase;
 
 /**
  * @author VISTALL
  * @since 2018-05-10
  */
-public class WebCaretModelImpl extends CodeEditorCaretModelBase<WebCaretImpl> {
-
-  public WebCaretModelImpl(@Nonnull CodeEditorBase editor) {
+public class WebSelectionModelImpl extends CodeEditorSelectionModelBase implements SelectionModel {
+  public WebSelectionModelImpl(CodeEditorBase editor) {
     super(editor);
-  }
-
-  @Nonnull
-  @Override
-  protected WebCaretImpl createCaret(CodeEditorBase editor, CodeEditorCaretModelBase<WebCaretImpl> model) {
-    return new WebCaretImpl(editor, model);
-  }
-
-  @Override
-  public boolean supportsMultipleCarets() {
-    return false;
   }
 }

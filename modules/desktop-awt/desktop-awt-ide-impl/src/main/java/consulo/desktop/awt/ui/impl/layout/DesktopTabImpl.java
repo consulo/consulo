@@ -64,6 +64,8 @@ public class DesktopTabImpl implements Tab {
     }
   }
 
+  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+
   private final TabInfo myTabInfo = new TabInfo(null);
 
   private final DesktopTabbedLayoutImpl myTabbedLayout;
@@ -84,23 +86,32 @@ public class DesktopTabImpl implements Tab {
     return myTabInfo;
   }
 
-  @Nonnull
   @Override
-  public TextItemPresentation withIcon(@Nullable Image image) {
-    myTabInfo.setIcon(image);
-    return this;
+  public void update() {
+     myRender.accept(this, new TextItemPresentation() {
+       @Override
+       public void clearText() {
+         myTabInfo.setText("");
+       }
+
+       @Nonnull
+       @Override
+       public TextItemPresentation withIcon(@Nullable Image image) {
+         myTabInfo.setIcon(image);
+         return this;
+       }
+
+       @Override
+       public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+         String oldText = myTabInfo.getText();
+         myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
+       }
+     });
   }
 
   @Override
-  public void clearText() {
-    myTabInfo.setText("");
-  }
-
-  @Override
-  public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    String oldText = myTabInfo.getText();
-
-    myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
+  public void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render) {
+    myRender = render;
   }
 
   @Override

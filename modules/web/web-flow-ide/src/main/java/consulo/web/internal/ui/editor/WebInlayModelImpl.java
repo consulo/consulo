@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2021 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.ex;
+package consulo.web.internal.ui.editor;
 
 import consulo.codeEditor.impl.CodeEditorBase;
-import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
+import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-05-10
+ * @since 04/08/2021
  */
-public class WebFoldingModelImpl extends CodeEditorFoldingModelBase {
-  public WebFoldingModelImpl(@Nonnull CodeEditorBase editor) {
+public class WebInlayModelImpl extends CodeEditorInlayModelBase {
+  public WebInlayModelImpl(@Nonnull CodeEditorBase editor) {
     super(editor);
   }
 }

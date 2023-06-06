@@ -19,19 +19,22 @@ import consulo.desktop.swt.ui.impl.DesktopSwtTextItemPresentation;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
+import consulo.ui.TextItemPresentation;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Control;
 
-import jakarta.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
-public class DesktopSwtTabImpl extends DesktopSwtTextItemPresentation implements Tab {
+public class DesktopSwtTabImpl implements Tab {
+  private BiConsumer<Tab, TextItemPresentation> myRender = (tab, presentation) -> presentation.append(toString());
+
   private SWTComponentDelegate<? extends Control> myComponent;
 
   private CTabItem myTabItem;
@@ -44,6 +47,20 @@ public class DesktopSwtTabImpl extends DesktopSwtTextItemPresentation implements
   @Override
   public void select() {
 
+  }
+
+  @Override
+  public void setRender(BiConsumer<Tab, TextItemPresentation> render) {
+    myRender = render;
+  }
+
+  @Override
+  public void update() {
+    DesktopSwtTextItemPresentation item = new DesktopSwtTextItemPresentation();
+    myRender.accept(this, item);
+
+    // TODO more impl
+    myTabItem.setText(item.toString());
   }
 
   public void setComponent(Component component) {

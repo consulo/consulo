@@ -532,6 +532,14 @@
       <groupId>org.parttio</groupId>
       <artifactId>canvas-java</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-menu-bar-flow</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin-tabs-flow</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

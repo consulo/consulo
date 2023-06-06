@@ -13,56 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.ex;
+package consulo.web.internal.ui.editor;
 
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import com.vaadin.flow.component.textfield.TextArea;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
 import consulo.codeEditor.*;
-import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
-import consulo.internal.arquill.editor.server.ArquillEditor;
-import consulo.internal.arquill.editor.server.event.MouseDownEvent;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
-import consulo.ui.Position2D;
-import consulo.ui.color.ColorValue;
-import consulo.ui.event.details.MouseInputDetails;
-import consulo.ui.web.internal.base.ComponentHolder;
-import consulo.ui.web.internal.base.FromVaadinComponentWrapper;
-import consulo.ui.web.internal.base.VaadinComponentDelegate;
-import consulo.ui.web.internal.util.Mappers;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.BitUtil;
-import consulo.web.gwt.shared.ui.state.RGBColorShared;
-import org.intellij.lang.annotations.MagicConstant;
-
+import consulo.web.internal.ui.base.ComponentHolder;
+import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
+import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 2019-02-18
  */
 public class WebEditorImpl extends CodeEditorBase {
-  public static class Vaadin extends ArquillEditor implements ComponentHolder, FromVaadinComponentWrapper {
-    private Component myComponent;
+  // TODO text area is hack
+  public static class Vaadin extends TextArea implements ComponentHolder, FromVaadinComponentWrapper {
+    private consulo.ui.Component myComponent;
 
     public Vaadin(String text) {
       super(text);
@@ -70,21 +54,23 @@ public class WebEditorImpl extends CodeEditorBase {
 
     @Nullable
     @Override
-    public Component toUIComponent() {
+    public consulo.ui.Component toUIComponent() {
       return myComponent;
     }
 
     @Override
-    public void setComponent(Component component) {
+    public void setComponent(consulo.ui.Component component) {
       myComponent = component;
     }
   }
 
-  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements Component, FocusableComponent {
+  private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements FocusableComponent {
     @Nonnull
     @Override
     public Vaadin createVaadinComponent() {
-      return new Vaadin("");
+      Vaadin vaadin = new Vaadin("");
+      vaadin.setComponent(this);
+      return vaadin;
     }
 
     @Override
@@ -116,23 +102,22 @@ public class WebEditorImpl extends CodeEditorBase {
     myEditorComponent = new EditorComponent();
 
     Vaadin vaadin = myEditorComponent.toVaadinComponent();
-    vaadin.setWidth("100%");
-    vaadin.setHeight("100%");
-    vaadin.setText(myDocument.getText());
+    vaadin.setSizeFull();
+    vaadin.setValue(myDocument.getText());
 
-    vaadin.addMouseDownListener(this::runMousePressedCommand);
-
-    Disposable firstCall = Disposable.newDisposable("caret first");
-    myCaretModel.addCaretListener(new CaretListener() {
-      @Override
-      public void caretPositionChanged(CaretEvent e) {
-        firstCall.disposeWithTree();
-
-        int offset = e.getCaret().getOffset();
-
-        Application.get().getLastUIAccess().give(() -> vaadin.setCaretOffset(offset));
-      }
-    }, firstCall);
+//    vaadin.addMouseDownListener(this::runMousePressedCommand);
+//
+//    Disposable firstCall = Disposable.newDisposable("caret first");
+//    myCaretModel.addCaretListener(new CaretListener() {
+//      @Override
+//      public void caretPositionChanged(CaretEvent e) {
+//        firstCall.disposeWithTree();
+//
+//        int offset = e.getCaret().getOffset();
+//
+//        Application.get().getLastUIAccess().give(() -> vaadin.setCaretOffset(offset));
+//      }
+//    }, firstCall);
 
     vaadin.addAttachListener(attachEvent -> update());
   }
@@ -141,134 +126,147 @@ public class WebEditorImpl extends CodeEditorBase {
   private static final MouseEvent fakeEvent = new MouseEvent(new JLabel("fake"), 0, 0, 0, 0, 0, 1, false);
 
   public void update() {
-    HighlighterIterator iterator = myHighlighter.createIterator(0);
-    while (!iterator.atEnd()) {
-      int start = iterator.getStart();
-      int end = iterator.getEnd();
-
-      TextAttributes textAttributes = iterator.getTextAttributes();
-
-      myEditorComponent.toVaadinComponent().addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
-
-      iterator.advance();
-    }
+//    HighlighterIterator iterator = myHighlighter.createIterator(0);
+//    while (!iterator.atEnd()) {
+//      int start = iterator.getStart();
+//      int end = iterator.getEnd();
+//
+//      TextAttributes textAttributes = iterator.getTextAttributes();
+//
+//      myEditorComponent.toVaadinComponent().addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
+//
+//      iterator.advance();
+//    }
   }
 
-  private Map<String, String> convertToCssProperties(TextAttributes textAttributes) {
-    Map<String, String> map = new HashMap<>();
-    ColorValue foregroundColor = textAttributes.getForegroundColor();
-    if (foregroundColor != null) {
-      RGBColorShared rgb = Mappers.map(foregroundColor.toRGB());
-      map.put("color", rgb.toString());
-    }
-
-    ColorValue backgroundColor = textAttributes.getBackgroundColor();
-    if (backgroundColor != null) {
-      RGBColorShared rgb = Mappers.map(backgroundColor.toRGB());
-      map.put("backgroundColor", rgb.toString());
-    }
-
-    int fontType = textAttributes.getFontType();
-    if (BitUtil.isSet(fontType, Font.BOLD)) {
-      map.put("fontWeight", "bold");
-    }
-
-    if (BitUtil.isSet(fontType, Font.ITALIC)) {
-      map.put("fontStyle", "italic");
-    }
-
-    return map;
-  }
+//  private Map<String, String> convertToCssProperties(TextAttributes textAttributes) {
+//    Map<String, String> map = new HashMap<>();
+//    ColorValue foregroundColor = textAttributes.getForegroundColor();
+//    if (foregroundColor != null) {
+//      RGBColorShared rgb = Mappers.map(foregroundColor.toRGB());
+//      map.put("color", rgb.toString());
+//    }
+//
+//    ColorValue backgroundColor = textAttributes.getBackgroundColor();
+//    if (backgroundColor != null) {
+//      RGBColorShared rgb = Mappers.map(backgroundColor.toRGB());
+//      map.put("backgroundColor", rgb.toString());
+//    }
+//
+//    int fontType = textAttributes.getFontType();
+//    if (BitUtil.isSet(fontType, Font.BOLD)) {
+//      map.put("fontWeight", "bold");
+//    }
+//
+//    if (BitUtil.isSet(fontType, Font.ITALIC)) {
+//      map.put("fontStyle", "italic");
+//    }
+//
+//    return map;
+//  }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter,
+                                      boolean canImpactGutterSize,
+                                      boolean fontStyleOrColorChanged,
+                                      boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
-    Vaadin vaadin = myEditorComponent.toVaadinComponent();
-
-    Integer annId = highlighter.getUserData(ANNOTATION_ID);
-    if (annId != null) {
-      vaadin.removeAnnotation(annId);
-    }
-
-    if (remove) {
-      return;
-    }
-
-    int textLength = myDocument.getTextLength();
-
-    int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
-    int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
-
-    TextAttributes textAttributes = highlighter.getTextAttributes();
-    if (textAttributes == null) {
-      return;
-    }
-
-    annId = vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
-
-    highlighter.putUserData(ANNOTATION_ID, annId);
+//    Vaadin vaadin = myEditorComponent.toVaadinComponent();
+//
+//    Integer annId = highlighter.getUserData(ANNOTATION_ID);
+//    if (annId != null) {
+//      vaadin.removeAnnotation(annId);
+//    }
+//
+//    if (remove) {
+//      return;
+//    }
+//
+//    int textLength = myDocument.getTextLength();
+//
+//    int start = Math.min(Math.max(highlighter.getAffectedAreaStartOffset(), 0), textLength);
+//    int end = Math.min(Math.max(highlighter.getAffectedAreaEndOffset(), 0), textLength);
+//
+//    TextAttributes textAttributes = highlighter.getTextAttributes();
+//    if (textAttributes == null) {
+//      return;
+//    }
+//
+//    annId = vaadin.addAnnotation(start, end, "orion.annotation.info", convertToCssProperties(textAttributes));
+//
+//    highlighter.putUserData(ANNOTATION_ID, annId);
   }
 
-  private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
-    //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
-    //myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
-    //myCurrentDragIsSubstantial = false;
-    //myDragStarted = false;
-    //clearDnDContext();
+//  private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
+//    //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
+//    //myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
+//    //myCurrentDragIsSubstantial = false;
+//    //myDragStarted = false;
+//    //clearDnDContext();
+//
+//    boolean forceProcessing = false;
+//    //myMousePressedEvent = e;
+//    MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
+//    Position2D position = new Position2D(e.getX(), e.getY());
+//    EditorMouseEvent event =
+//      new EditorMouseEvent(this,
+//                           new MouseInputDetails(position,
+//                                                 Position2D.OUT_OF_RANGE,
+//                                                 EnumSet.noneOf(MouseInputDetails.Modifier.class),
+//                                                 mouseButton),
+//                           mouseButton == MouseInputDetails.MouseButton.RIGHT,
+//                           EditorMouseEventArea.EDITING_AREA);
+//
+//    myExpectedCaretOffset = e.getTextOffset();
+//    try {
+//      for (EditorMouseListener mouseListener : myMouseListeners) {
+//        boolean wasConsumed = event.isConsumed();
+//        mouseListener.mousePressed(event);
+//        //noinspection deprecation
+//        if (!wasConsumed && event.isConsumed() && mouseListener instanceof consulo.ide.impl.idea.util.EditorPopupHandler) {
+//          // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
+//          forceProcessing = true;
+//        }
+//        if (isReleased) return;
+//      }
+//    }
+//    finally {
+//      myExpectedCaretOffset = -1;
+//    }
+//
+//    //if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
+//    //  myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
+//    //}
+//
+//    if (event.isConsumed() && !forceProcessing) return;
+//
+//    if (myCommandProcessor != null) {
+//      Runnable runnable = () -> {
+//        if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
+//          IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+//        }
+//      };
+//      myCommandProcessor.executeCommand(myProject,
+//                                        runnable,
+//                                        "",
+//                                        DocCommandGroupId.noneGroupId(getDocument()),
+//                                        UndoConfirmationPolicy.DEFAULT,
+//                                        getDocument());
+//    }
+//    else {
+//      processMousePressed(e);
+//    }
+//
+//    invokePopupIfNeeded(event);
+//  }
 
-    boolean forceProcessing = false;
-    //myMousePressedEvent = e;
-    MouseInputDetails.MouseButton mouseButton = MouseInputDetails.MouseButton.values()[e.getButton()];
-    Position2D position = new Position2D(e.getX(), e.getY());
-    EditorMouseEvent event =
-            new EditorMouseEvent(this, new MouseInputDetails(position, Position2D.OUT_OF_RANGE, EnumSet.noneOf(MouseInputDetails.Modifier.class), mouseButton), mouseButton == MouseInputDetails.MouseButton.RIGHT,
-                                 EditorMouseEventArea.EDITING_AREA);
-
-    myExpectedCaretOffset = e.getTextOffset();
-    try {
-      for (EditorMouseListener mouseListener : myMouseListeners) {
-        boolean wasConsumed = event.isConsumed();
-        mouseListener.mousePressed(event);
-        //noinspection deprecation
-        if (!wasConsumed && event.isConsumed() && mouseListener instanceof consulo.ide.impl.idea.util.EditorPopupHandler) {
-          // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
-          forceProcessing = true;
-        }
-        if (isReleased) return;
-      }
-    }
-    finally {
-      myExpectedCaretOffset = -1;
-    }
-
-    //if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
-    //  myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
-    //}
-
-    if (event.isConsumed() && !forceProcessing) return;
-
-    if (myCommandProcessor != null) {
-      Runnable runnable = () -> {
-        if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
-          IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-        }
-      };
-      myCommandProcessor.executeCommand(myProject, runnable, "", DocCommandGroupId.noneGroupId(getDocument()), UndoConfirmationPolicy.DEFAULT, getDocument());
-    }
-    else {
-      processMousePressed(e);
-    }
-
-    invokePopupIfNeeded(event);
-  }
-
-  private boolean processMousePressed(MouseDownEvent e) {
-    CodeEditorCaretBase primaryCaret = getCaretModel().getPrimaryCaret();
-
-    primaryCaret.moveToOffset(e.getTextOffset());
-    return true;
-  }
+//  private boolean processMousePressed(MouseDownEvent e) {
+//    CodeEditorCaretBase primaryCaret = getCaretModel().getPrimaryCaret();
+//
+//    primaryCaret.moveToOffset(e.getTextOffset());
+//    return true;
+//  }
 
   @Override
   protected void bulkUpdateFinished() {
@@ -279,7 +277,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
   @Nonnull
   @Override
-  public Component getUIComponent() {
+  public consulo.ui.Component getUIComponent() {
     return myEditorComponent;
   }
 

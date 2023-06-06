@@ -655,6 +655,16 @@
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-menu-bar-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-tabs-flow</artifactId>
+        <version>${vaadin.flow.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.vaadin</groupId>
         <artifactId>vaadin-lumo-theme</artifactId>
         <version>${vaadin.flow.version}</version>
       </dependency>

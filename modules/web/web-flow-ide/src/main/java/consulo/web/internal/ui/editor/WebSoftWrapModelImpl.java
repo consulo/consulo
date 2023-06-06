@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.web.internal.ex;
+package consulo.web.internal.ui.editor;
 
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;

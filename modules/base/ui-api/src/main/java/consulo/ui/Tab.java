@@ -15,15 +15,21 @@
  */
 package consulo.ui;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
-public interface Tab extends TextItemPresentation {
+public interface Tab {
+  void setRender(@Nonnull BiConsumer<Tab, TextItemPresentation> render);
+
   void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
+
+  void update();
 
   void select();
 }
