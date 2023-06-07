@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorTabbedContainer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.event.FileEditorManagerBeforeListener;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.tabActions.CloseTab;
 import consulo.project.Project;
-import consulo.util.concurrent.ActionCallback;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.disposer.Disposable;
-import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
-
+import consulo.util.concurrent.ActionCallback;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,13 +48,39 @@ import java.util.Map;
  * @since 2018-05-09
  */
 public class UnifiedFileEditorWindow extends FileEditorWindowBase implements FileEditorWindow, Disposable {
+  private static class TabInfo {
+    private String myText = "";
+    private Image myImage;
+
+    private final Tab myTab;
+
+    private TabInfo(Tab tab) {
+      myTab = tab;
+
+      myTab.setRender((t, p) -> {
+        p.append(myText);
+        if (myImage != null) {
+          p.withIcon(myImage);
+        }
+      });
+    }
+
+    public void select() {
+      myTab.select();
+    }
+
+    public void update() {
+      myTab.update();
+    }
+  }
+
   private final Project myProject;
   private FileEditorManagerImpl myManager;
   private FileEditorsSplittersBase<UnifiedFileEditorWindow> myOwner;
 
   private TabbedLayout myTabbedLayout = TabbedLayout.create();
 
-  private Map<FileEditorWithProviderComposite, Tab> myEditors = new LinkedHashMap<>();
+  private Map<FileEditorWithProviderComposite, TabInfo> myEditors = new LinkedHashMap<>();
 
   @RequiredUIAccess
   public UnifiedFileEditorWindow(Project project, FileEditorManagerImpl manager, FileEditorsSplittersBase<UnifiedFileEditorWindow> owner) {
@@ -87,9 +113,9 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
   @Override
   protected void setTitleAt(int index, String text) {
     FileEditorWithProviderComposite editorAt = getEditorAt(index);
-    Tab tab = myEditors.get(editorAt);
-    tab.clearText();
-    tab.append(text);
+    TabInfo tab = myEditors.get(editorAt);
+    tab.myText = text;
+    tab.update();
   }
 
   @Override
@@ -161,7 +187,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     if (myEditors.isEmpty()) {
       return null;
     }
-    Map.Entry<FileEditorWithProviderComposite, Tab> entry = myEditors.entrySet().iterator().next();
+    Map.Entry<FileEditorWithProviderComposite, TabInfo> entry = myEditors.entrySet().iterator().next();
     return entry.getKey();
   }
 
@@ -212,7 +238,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
   @Override
   public VirtualFile getSelectedFile() {
     FileEditorWithProviderComposite selectedEditor = getSelectedEditor();
-    if(selectedEditor != null) {
+    if (selectedEditor != null) {
       return selectedEditor.getFile();
     }
     return null;
@@ -232,13 +258,14 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
       try {
         final FileEditorWithProviderComposite editor = findFileComposite(file);
 
-        final FileEditorManagerBeforeListener beforePublisher = editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
+        final FileEditorManagerBeforeListener beforePublisher =
+          editorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class);
 
         beforePublisher.beforeFileClosed(editorManager, file);
 
         if (editor != null) {
-          Tab tab = myEditors.remove(editor);
-          if(tab != null) {
+          TabInfo tab = myEditors.remove(editor);
+          if (tab != null) {
             editorManager.disposeComposite(editor);
           }
         }
@@ -330,16 +357,23 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     else {
       FileEditorWithProviderComposite fileComposite = findFileComposite(editor.getFile());
       if (fileComposite == null) {
-        Tab tab = myTabbedLayout.addTab(editor.getFile().getName(), editor.getUIComponent());
+        Tab tab = myTabbedLayout.createTab();
+        TabInfo tabInfo = new TabInfo(tab);
+        tabInfo.myText = editor.getFile().getName();
+        tabInfo.myImage = VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject());
+
+        myTabbedLayout.addTab(tab, editor.getUIComponent());
         tab.setCloseHandler((thisTab, component) -> {
           DataContext dataContext = DataManager.getInstance().getDataContext();
-          new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(null, "Test", null, dataContext));
+          new CloseTab(myTabbedLayout, myProject, editor.getFile(), this).actionPerformed(AnActionEvent.createFromInputEvent(null,
+                                                                                                                             "Test",
+                                                                                                                             null,
+                                                                                                                             dataContext));
         });
-        tab.withIcon(VfsIconUtil.getIcon(editor.getFile(), 0, myManager.getProject()));
-        myEditors.put(editor, tab);
+        myEditors.put(editor, tabInfo);
       }
       else {
-        Tab tab = myEditors.get(fileComposite);
+        TabInfo tab = myEditors.get(fileComposite);
         assert tab != null;
         tab.select();
       }

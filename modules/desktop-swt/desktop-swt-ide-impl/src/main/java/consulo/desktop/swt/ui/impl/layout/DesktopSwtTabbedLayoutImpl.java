@@ -85,9 +85,11 @@ public class DesktopSwtTabbedLayoutImpl extends SWTComponentDelegate<CTabFolder>
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
     DesktopSwtTabImpl tab = new DesktopSwtTabImpl();
+    tab.setRender((t, p) -> p.append(tabName));
+
     myTabs.add(tab);
-    tab.append(tabName);
     tab.setComponent(component);
+    tab.update();
 
     init(tab);
     return tab;

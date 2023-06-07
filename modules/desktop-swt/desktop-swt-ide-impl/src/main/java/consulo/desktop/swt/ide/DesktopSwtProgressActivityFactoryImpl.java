@@ -19,11 +19,13 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
 
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 16-Jul-22
  */
+@Singleton
 @ServiceImpl
 public class DesktopSwtProgressActivityFactoryImpl implements ProgressActivityFactory {
   @Nullable

@@ -73,6 +73,8 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
 
     desktopTab.setComponent(component);
 
+    desktopTab.update();
+    
     toAWTComponent().addTab(desktopTab.getTabInfo());
 
     return tab;
@@ -83,7 +85,7 @@ public class DesktopTabbedLayoutImpl extends SwingComponentDelegate<JBEditorTabs
   @Override
   public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
     Tab tab = createTab();
-    tab.append(tabName);
+    tab.setRender((t, p) -> p.append(tabName));
     return addTab(tab, component);
   }
 
