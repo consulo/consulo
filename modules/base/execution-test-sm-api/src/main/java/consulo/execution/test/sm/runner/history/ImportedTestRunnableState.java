@@ -28,9 +28,10 @@ import consulo.execution.test.sm.action.AbstractImportTestsAction;
 import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import consulo.process.ExecutionException;
-import consulo.process.ProcessHandler;
-
+import consulo.process.NopProcessHandler;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.OutputStream;
@@ -44,7 +45,7 @@ public class ImportedTestRunnableState implements RunProfileState {
     myFile = file;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
     final MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
@@ -80,7 +81,7 @@ public class ImportedTestRunnableState implements RunProfileState {
     return result;
   }
 
-  private static class MyEmptyProcessHandler extends ProcessHandler {
+  private static class MyEmptyProcessHandler extends NopProcessHandler {
     @Override
     protected void destroyProcessImpl() {}
 
@@ -94,7 +95,7 @@ public class ImportedTestRunnableState implements RunProfileState {
       return false;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public OutputStream getProcessInput() {
       return null;

@@ -18,7 +18,6 @@ package consulo.process.internal;
 import consulo.logging.Logger;
 import consulo.process.DefaultCharsetProvider;
 import consulo.process.ExecutionException;
-import consulo.process.SelfKiller;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.io.BaseOutputReader;
 import consulo.util.dataholder.Key;

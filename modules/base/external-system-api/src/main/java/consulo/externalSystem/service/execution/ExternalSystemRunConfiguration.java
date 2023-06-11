@@ -32,7 +32,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListenerA
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
-import consulo.process.ProcessHandler;
+import consulo.process.NopProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.io.NetUtil;
@@ -42,10 +42,10 @@ import consulo.util.nodep.collection.ContainerUtilRt;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -225,7 +225,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
     }
   }
 
-  private static class MyProcessHandler extends ProcessHandler {
+  private static class MyProcessHandler extends NopProcessHandler {
     private final ExternalSystemTask myTask;
 
     public MyProcessHandler(ExternalSystemTask task) {

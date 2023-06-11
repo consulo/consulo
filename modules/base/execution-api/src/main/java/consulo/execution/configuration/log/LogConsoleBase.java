@@ -33,6 +33,7 @@ import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
+import consulo.process.NopProcessHandler;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
@@ -69,7 +70,7 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
 
   private boolean myDisposed;
   private ConsoleView myConsole;
-  private final LightProcessHandler myProcessHandler = new LightProcessHandler();
+  private final ProcessHandler myProcessHandler = new NopProcessHandler();
   private ReaderThread myReaderThread;
   private StringBuffer myOriginalDocument = null;
   private String myLineUnderSelection = null;
@@ -574,29 +575,6 @@ public abstract class LogConsoleBase extends AdditionalTabComponent implements L
   private void fireLoggingWillBeStopped() {
     for (LogConsoleListener listener : myListeners) {
       listener.loggingWillBeStopped();
-    }
-  }
-
-  private static class LightProcessHandler extends ProcessHandler {
-    @Override
-    protected void destroyProcessImpl() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void detachProcessImpl() {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean detachIsDefault() {
-      return false;
-    }
-
-    @Override
-    @Nullable
-    public OutputStream getProcessInput() {
-      return null;
     }
   }
 

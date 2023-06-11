@@ -17,12 +17,13 @@ package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.execution.configuration.ConfigurationType;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.registry.Registry;
+import consulo.component.extension.ExtensionPointName;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.process.BaseProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.ui.ex.tree.PresentationData;
 
 /**
  * In order to show run configurations of the specific configuration type in Run Dashboard tool window,
@@ -68,7 +69,7 @@ public abstract class RunDashboardContributor {
     if (exitCode == null) {
       return DashboardRunConfigurationStatus.STARTED;
     }
-    Boolean terminationRequested = processHandler.getUserData(ProcessHandler.TERMINATION_REQUESTED);
+    Boolean terminationRequested = processHandler.getUserData(BaseProcessHandler.TERMINATION_REQUESTED);
     if (exitCode == 0 || (terminationRequested != null && terminationRequested)) {
       return DashboardRunConfigurationStatus.STOPPED;
     }

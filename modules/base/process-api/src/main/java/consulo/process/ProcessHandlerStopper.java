@@ -23,7 +23,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ProcessHandlerStopper {
   public static void stop(@Nonnull ProcessHandler processHandler) {
-    processHandler.putUserData(ProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
+    processHandler.putUserData(BaseProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
 
     if (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating()) {
       // process termination was requested, but it's still alive

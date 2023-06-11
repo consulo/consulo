@@ -18,7 +18,7 @@ package consulo.process;
 import jakarta.annotation.Nullable;
 import java.io.OutputStream;
 
-public class NopProcessHandler extends ProcessHandler {
+public class NopProcessHandler extends BaseProcessHandler {
   @Override
   protected void destroyProcessImpl() {
     notifyProcessTerminated(0);

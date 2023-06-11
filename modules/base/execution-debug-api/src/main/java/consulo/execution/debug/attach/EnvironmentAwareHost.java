@@ -2,10 +2,10 @@
 package consulo.execution.debug.attach;
 
 import consulo.execution.debug.attach.osHandler.AttachOSHandler;
-import consulo.process.BaseProcessHandler;
+import consulo.process.internal.LocalProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.internal.CapturingProcessRunner;
+import consulo.process.util.CapturingProcessRunner;
 import consulo.process.util.ProcessOutput;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -23,10 +23,10 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
 
   /**
    * @param commandLine commandLine to execute on this host
-   * @return {@link BaseProcessHandler}, with which the command is executed (for example with a timeout)
+   * @return {@link LocalProcessHandler}, with which the command is executed (for example with a timeout)
    */
   @Nonnull
-  public abstract BaseProcessHandler getProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+  public abstract LocalProcessHandler getProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * @param commandLine commandLine to execute on this host
@@ -34,7 +34,7 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    */
   @Nonnull
   public ProcessOutput getProcessOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    BaseProcessHandler handler = getProcessHandler(commandLine);
+    LocalProcessHandler handler = getProcessHandler(commandLine);
     CapturingProcessRunner runner = new CapturingProcessRunner(handler);
     return runner.runProcess();
   }

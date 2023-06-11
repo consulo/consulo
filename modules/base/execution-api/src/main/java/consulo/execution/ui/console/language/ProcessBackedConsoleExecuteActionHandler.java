@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console.language;
 
-import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
 import jakarta.annotation.Nonnull;
 
@@ -50,7 +49,7 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
   }
 
   public void sendText(String line) {
-    final Charset charset = myProcessHandler instanceof BaseProcessHandler ? ((BaseProcessHandler)myProcessHandler).getCharset() : null;
+    final Charset charset = myProcessHandler.getCharset();
     final OutputStream outputStream = myProcessHandler.getProcessInput();
     assert outputStream != null : "output stream is null";
     try {

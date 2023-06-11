@@ -5,7 +5,6 @@ package consulo.process.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
-import consulo.process.BaseProcessHandler;
 import consulo.process.event.ProcessListener;
 import consulo.process.local.CapturingProcessAdapter;
 import consulo.process.local.ProcessOutput;
@@ -18,15 +17,15 @@ public class OldCapturingProcessRunner {
   @Nonnull
   private final ProcessOutput myOutput;
   @Nonnull
-  private final BaseProcessHandler myProcessHandler;
+  private final LocalProcessHandler myProcessHandler;
   @Nonnull
   private static final Logger LOG = Logger.getInstance(OldCapturingProcessRunner.class);
 
-  public OldCapturingProcessRunner(@Nonnull BaseProcessHandler processHandler) {
+  public OldCapturingProcessRunner(@Nonnull LocalProcessHandler processHandler) {
     this(processHandler, CapturingProcessAdapter::new);
   }
 
-  public OldCapturingProcessRunner(@Nonnull BaseProcessHandler processHandler,
+  public OldCapturingProcessRunner(@Nonnull LocalProcessHandler processHandler,
                                    @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
     myOutput = new ProcessOutput();
     myProcessHandler = processHandler;

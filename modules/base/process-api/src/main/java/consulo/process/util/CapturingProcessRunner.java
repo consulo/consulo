@@ -1,31 +1,30 @@
 /*
  * Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  */
-package consulo.process.internal;
+package consulo.process.util;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
-import consulo.process.BaseProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;
-import consulo.process.util.CapturingProcessAdapter;
-import consulo.process.util.ProcessOutput;
+import consulo.process.internal.RawExitCodeGetterProcessHandler;
 import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
-public class CapturingProcessRunner {
+public final class CapturingProcessRunner {
   @Nonnull
   private final ProcessOutput myOutput;
   @Nonnull
-  private final BaseProcessHandler myProcessHandler;
+  private final ProcessHandler myProcessHandler;
   @Nonnull
   private static final Logger LOG = Logger.getInstance(CapturingProcessRunner.class);
 
-  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler) {
+  public CapturingProcessRunner(@Nonnull ProcessHandler processHandler) {
     this(processHandler, CapturingProcessAdapter::new);
   }
 
-  public CapturingProcessRunner(@Nonnull BaseProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
+  public CapturingProcessRunner(@Nonnull ProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
     myOutput = new ProcessOutput();
     myProcessHandler = processHandler;
     myProcessHandler.addProcessListener(processAdapterProducer.apply(myOutput));
@@ -129,7 +128,7 @@ public class CapturingProcessRunner {
     // if exit code was set on processTerminated, no need to rewrite it
     // WinPtyProcess returns -2 if pty is already closed
     if (!myOutput.isExitCodeSet()) {
-      myOutput.setExitCode(myProcessHandler.getProcess().exitValue());
+      myOutput.setExitCode(((RawExitCodeGetterProcessHandler)myProcessHandler).getRawExitCode());
     }
   }
 }

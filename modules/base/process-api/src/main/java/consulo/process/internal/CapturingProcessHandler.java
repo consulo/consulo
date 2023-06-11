@@ -5,6 +5,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessAdapter;
+import consulo.process.util.CapturingProcessRunner;
 import consulo.process.util.ProcessOutput;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

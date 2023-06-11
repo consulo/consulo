@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.process;
-
-import jakarta.annotation.Nonnull;
+package consulo.process.internal;
 
 /**
  * @author VISTALL
- * @since 04/06/2023
+ * @since 11/06/2023
  */
-public interface BinaryProcessHandler extends ProcessHandler {
-  @Nonnull
-  byte[] getOutput();
+public interface RawExitCodeGetterProcessHandler {
+  int getRawExitCode();
 }

@@ -16,10 +16,9 @@
 package consulo.execution.ui.console;
 
 import consulo.execution.ExecutionBundle;
-import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import jakarta.annotation.Nonnull;
@@ -37,19 +36,23 @@ public class ConsoleViewRunningState extends ConsoleState {
   private final ConsoleState myFinishedStated;
   private final Writer myUserInputWriter;
 
-  private final ProcessAdapter myProcessListener = new ProcessAdapter() {
+  private final ProcessListener myProcessListener = new ProcessListener() {
     @Override
     public void onTextAvailable(final ProcessEvent event, final Key outputType) {
       BiPredicate<ProcessEvent, Key> processTextFilter = myConsole.getProcessTextFilter();
       if (processTextFilter != null && processTextFilter.test(event, outputType)) {
         return;
       }
-      
+
       myConsole.print(event.getText(), ConsoleViewContentType.getConsoleViewType(outputType));
     }
   };
 
-  public ConsoleViewRunningState(final ConsoleView console, final ProcessHandler processHandler, final ConsoleState finishedStated, final boolean attachToStdOut, final boolean attachToStdIn) {
+  public ConsoleViewRunningState(final ConsoleView console,
+                                 final ProcessHandler processHandler,
+                                 final ConsoleState finishedStated,
+                                 final boolean attachToStdOut,
+                                 final boolean attachToStdIn) {
     myConsole = console;
     myProcessHandler = processHandler;
     myFinishedStated = finishedStated;
@@ -70,10 +73,8 @@ public class ConsoleViewRunningState extends ConsoleState {
   }
 
   private static OutputStreamWriter createOutputStreamWriter(OutputStream processInput, ProcessHandler processHandler) {
-    Charset charset = null;
-    if (processHandler instanceof BaseProcessHandler) {
-      charset = ((BaseProcessHandler)processHandler).getCharset();
-    }
+    Charset charset = processHandler.getCharset();
+
     if (charset == null) {
       charset = EncodingManager.getInstance().getDefaultCharset();
     }
@@ -97,7 +98,7 @@ public class ConsoleViewRunningState extends ConsoleState {
 
   @Override
   public boolean isCommandLine(@Nonnull String line) {
-    return myProcessHandler instanceof BaseProcessHandler && line.equals(((BaseProcessHandler)myProcessHandler).getCommandLine());
+    return line.equals((myProcessHandler).getCommandLine());
   }
 
   @Override

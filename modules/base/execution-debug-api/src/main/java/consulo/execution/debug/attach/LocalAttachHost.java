@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.attach;
 
-import consulo.process.BaseProcessHandler;
+import consulo.process.internal.LocalProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;
 import consulo.process.cmd.GeneralCommandLine;
@@ -28,7 +28,7 @@ public class LocalAttachHost extends EnvironmentAwareHost {
 
   @Nonnull
   @Override
-  public BaseProcessHandler getProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public LocalProcessHandler getProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     return new CapturingProcessHandler(commandLine);
   }
 

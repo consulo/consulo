@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.process;
+package consulo.process.internal;
 
 /**
  * Marker interface that represents a process that kills itself, for example a remote process, that can't be killed by the local OS.

@@ -3,7 +3,6 @@ package consulo.process.internal;
 
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandlerFeature;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessEvent;
@@ -24,7 +23,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class BaseOSProcessHandler extends BaseProcessHandler<Process> {
+public class BaseOSProcessHandler extends LocalProcessHandler<Process> {
   private static class POSIXImpl implements ProcessHandlerFeature.POSIX {
     private final Process process;
 

@@ -15,33 +15,34 @@
  */
 package consulo.ide.impl.idea.execution.rmi;
 
-import consulo.process.ExecutionException;
+import consulo.application.internal.ApplicationManagerEx;
+import consulo.application.progress.ProgressManager;
 import consulo.execution.ExecutionResult;
-import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessListener;
-import consulo.process.ProcessOutputTypes;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.execution.runner.ProgramRunner;
-import consulo.application.internal.ApplicationManagerEx;
-import consulo.application.progress.ProgressManager;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.process.BaseProcessHandler;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 import consulo.util.rmi.RemoteDeadHand;
 import consulo.util.rmi.RemoteServer;
 import consulo.util.rmi.RemoteUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -247,7 +248,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
       @Override
       public void startNotified(ProcessEvent event) {
         ProcessHandler processHandler = event.getProcessHandler();
-        processHandler.putUserData(ProcessHandler.SILENTLY_DESTROY_ON_CLOSE, Boolean.TRUE);
+        processHandler.putUserData(BaseProcessHandler.SILENTLY_DESTROY_ON_CLOSE, Boolean.TRUE);
         Info o;
         synchronized (myProcMap) {
           o = myProcMap.get(key);

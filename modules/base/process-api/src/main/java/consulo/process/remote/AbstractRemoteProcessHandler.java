@@ -15,12 +15,12 @@
  */
 package consulo.process.remote;
 
+import consulo.process.BaseProcessHandler;
 import consulo.process.TaskExecutor;
-import consulo.process.ProcessHandler;
 
 /**
  * @author Alexander Koshevoy
  */
-public abstract class AbstractRemoteProcessHandler<T extends RemoteProcess> extends ProcessHandler implements TaskExecutor {
+public abstract class AbstractRemoteProcessHandler<T extends RemoteProcess> extends BaseProcessHandler implements TaskExecutor {
   public abstract T getProcess();
 }

@@ -18,7 +18,7 @@ package consulo.process;
 /**
  * @author nik
  */
-public interface KillableProcessHandler {
+public interface KillableProcessHandler extends ProcessHandler {
   boolean canKillProcess();
 
   void killProcess();

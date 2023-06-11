@@ -1,7 +1,6 @@
 package consulo.process.remote;
 
-import consulo.process.SelfKiller;
-import consulo.process.remote.RemoteProcess;
+import consulo.process.internal.SelfKiller;
 
 /**
  * @author traff

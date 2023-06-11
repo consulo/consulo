@@ -18,15 +18,16 @@ package consulo.ide.impl.idea.execution;
 
 import consulo.application.CommonBundle;
 import consulo.execution.ExecutionBundle;
-import consulo.process.event.ProcessAdapter;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
 import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
 import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.process.BaseProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.ArrayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class TerminateRemoteProcessDialog {
 
   public static GeneralSettings.ProcessCloseConfirmation show(Project project, String sessionName, ProcessHandler processHandler) {
     //noinspection deprecation
-    if (processHandler.isSilentlyDestroyOnClose() || Boolean.TRUE.equals(processHandler.getUserData(ProcessHandler.SILENTLY_DESTROY_ON_CLOSE))) {
+    if (processHandler.isSilentlyDestroyOnClose() || Boolean.TRUE.equals(processHandler.getUserData(BaseProcessHandler.SILENTLY_DESTROY_ON_CLOSE))) {
       return GeneralSettings.ProcessCloseConfirmation.TERMINATE;
     }
 
