@@ -24,9 +24,12 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
+import consulo.process.internal.SudoBuilder;
 import consulo.process.io.BaseOutputReader;
 
 import jakarta.annotation.Nonnull;
+
+import java.io.IOException;
 
 /**
  * @author VISTALL
@@ -107,17 +110,29 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
   @Nonnull
   @Override
   public ProcessHandler build() throws ExecutionException {
+    GeneralCommandLine line = myCommandLine;
+
+    String sudoPromt = line.getSudoPromt();
+    if (sudoPromt != null) {
+      try {
+        line = SudoBuilder.sudoCommand(line, sudoPromt);
+      }
+      catch (IOException e) {
+        throw new ExecutionException(e);
+      }
+    }
+
     if (myBinary) {
-      return new BinaryOSProcessHandlerImpl(myCommandLine);
+      return new BinaryOSProcessHandlerImpl(line);
     }
     
     ProcessHandler processHandler = null;
     switch (myConsoleType) {
       case BUILTIN:
-        processHandler = createLocalProcessHandler(myCommandLine);
+        processHandler = createLocalProcessHandler(line);
         break;
       case EXTERNAL_EMULATION:
-        PtyCommandLine ptyCommandLine = new PtyCommandLine(myCommandLine);
+        PtyCommandLine ptyCommandLine = new PtyCommandLine(line);
         ProcessHandler handler = createLocalProcessHandler(ptyCommandLine);
         if (handler instanceof OSProcessHandler osProcessHandler) {
           osProcessHandler.setHasPty(true);
@@ -134,7 +149,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
           throw new ExecutionException("Can't create process with EXTERNAL console at OS " + os.name());
         }
 
-        processHandler = RunnerMediator.newInstance().createProcess(myCommandLine, true);
+        processHandler = RunnerMediator.newInstance().createProcess(line, true);
         break;
       default:
         throw new IllegalArgumentException("Unknown console type " + myConsoleType);

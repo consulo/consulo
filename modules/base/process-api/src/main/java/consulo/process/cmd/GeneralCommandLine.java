@@ -20,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.process.*;
+import consulo.process.internal.SystemExecutableInfo;
 import consulo.process.local.EnvironmentUtil;
 import consulo.util.collection.DelegateMap;
 import consulo.util.collection.HashingStrategy;
@@ -29,9 +30,9 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -78,6 +79,7 @@ public class GeneralCommandLine implements UserDataHolder {
   private Charset myCharset = CharsetToolkit.getDefaultSystemCharset();
   private boolean myRedirectErrorStream = false;
   private Map<Object, Object> myUserData = null;
+  private String mySudoPromt = null;
 
   public GeneralCommandLine() {
   }
@@ -271,6 +273,23 @@ public class GeneralCommandLine implements UserDataHolder {
     withRedirectErrorStream(redirectErrorStream);
   }
 
+  public String getSudoPromt() {
+    return mySudoPromt;
+  }
+
+  /**
+   * Run the command with superuser privileges using safe escaping and quoting.
+   * <p>
+   * No shell substitutions, input/output redirects, etc. in the command are applied.
+   *
+   * @param sudoPromt      the prompt string for the users
+   */
+  @Nonnull
+  public GeneralCommandLine withSudo(@Nonnull String sudoPromt) {
+    mySudoPromt = sudoPromt;
+    return this;
+  }
+
   /**
    * Returns string representation of this command line.<br/>
    * Warning: resulting string is not OS-dependent - <b>do not</b> use it for executing this command line.
@@ -378,7 +397,7 @@ public class GeneralCommandLine implements UserDataHolder {
    * But some commands (e.g. {@code 'cmd /c start "title" ...'}) should get they quotes non-escaped.
    * Wrapping a parameter by this method (instead of using quotes) will do exactly this.
    *
-   * @see consulo.process.local.ExecUtil#getTerminalCommand(String, String)
+   * @see SystemExecutableInfo#getTerminalCommand(String, String)
    */
   @Nonnull
   public static String inescapableQuote(@Nonnull String parameter) {

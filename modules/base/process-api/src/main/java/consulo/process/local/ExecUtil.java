@@ -15,75 +15,25 @@
  */
 package consulo.process.local;
 
-import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.SystemInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.platform.Platform;
 import consulo.process.ExecutionException;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.LocalProcessHandler;
 import consulo.process.internal.OldCapturingProcessHandler;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
+@Deprecated
+@DeprecationInfo("Use CapturingProcessUtil, or GeneralCommandLine#withSudo etc")
 public class ExecUtil {
-  private static final NotNullLazyValue<Boolean> hasGkSudo = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/gksudo").canExecute();
-    }
-  };
-
-  private static final NotNullLazyValue<Boolean> hasKdeSudo = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/kdesudo").canExecute();
-    }
-  };
-
-  private static final NotNullLazyValue<Boolean> hasPkExec = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/pkexec").canExecute();
-    }
-  };
-
-  private static final NotNullLazyValue<Boolean> hasGnomeTerminal = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/gnome-terminal").canExecute();
-    }
-  };
-
-  private static final NotNullLazyValue<Boolean> hasKdeTerminal = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/konsole").canExecute();
-    }
-  };
-
-  private static final NotNullLazyValue<Boolean> hasXTerm = new NotNullLazyValue<Boolean>() {
-    @Nonnull
-    @Override
-    protected Boolean compute() {
-      return new File("/usr/bin/xterm").canExecute();
-    }
-  };
-
   private ExecUtil() { }
 
   @Nonnull
@@ -120,10 +70,6 @@ public class ExecUtil {
     return tempFile;
   }
 
-  @Nonnull
-  public static String getOsascriptPath() {
-    return "/usr/bin/osascript";
-  }
 
   @Nonnull
   public static String getOpenCommandPath() {
@@ -163,127 +109,24 @@ public class ExecUtil {
     }
   }
 
-  /**
-   * Run the command with superuser privileges using safe escaping and quoting.
-   *
-   * No shell substitutions, input/output redirects, etc. in the command are applied.
-   *
-   * @param commandLine the command line to execute
-   * @param prompt the prompt string for the users
-   * @return the results of running the process
-   */
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use GeneralCommandLine#withSudo()")
   public static Process sudo(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
-    return sudoCommand(commandLine, prompt).createProcess();
+    LocalProcessHandler handler = (LocalProcessHandler)ProcessHandlerBuilder.create(commandLine.withSudo(prompt)).build();
+    return handler.getProcess();
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Use GeneralCommandLine#withSudo()")
   private static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
-    if(Platform.current().user().superUser()) {
-      return commandLine;
-    }
-
-    List<String> command = new ArrayList<>();
-    command.add(commandLine.getExePath());
-    command.addAll(commandLine.getParametersList().getList());
-
-    GeneralCommandLine sudoCommandLine;
-    if (SystemInfo.isMac) {
-      String escapedCommandLine = StringUtil.join(command, ExecUtil::escapeAppleScriptArgument, " & \" \" & ");
-      String escapedScript = "tell current application\n" +
-                             "   activate\n" +
-                             "   do shell script " + escapedCommandLine + " with administrator privileges without altering line endings\n" +
-                             "end tell";
-      sudoCommandLine = new GeneralCommandLine(getOsascriptPath(), "-e", escapedScript);
-    }
-    else if (hasGkSudo.getValue()) {
-      List<String> sudoCommand = new ArrayList<>();
-      sudoCommand.addAll(Arrays.asList("gksudo", "--message", prompt, "--"));
-      sudoCommand.addAll(command);
-      sudoCommandLine = new GeneralCommandLine(sudoCommand);
-    }
-    else if (hasKdeSudo.getValue()) {
-      List<String> sudoCommand = new ArrayList<>();
-      sudoCommand.addAll(Arrays.asList("kdesudo", "--comment", prompt, "--"));
-      sudoCommand.addAll(command);
-      sudoCommandLine = new GeneralCommandLine(sudoCommand);
-    }
-    else if (hasPkExec.getValue()) {
-      command.add(0, "pkexec");
-      sudoCommandLine = new GeneralCommandLine(command);
-    }
-    else if (SystemInfo.isUnix && hasTerminalApp()) {
-      String escapedCommandLine = StringUtil.join(command, ExecUtil::escapeUnixShellArgument, " ");
-      File script = createTempExecutableScript(
-              "sudo", ".sh",
-              "#!/bin/sh\n" +
-              "echo " + escapeUnixShellArgument(prompt) + "\n" +
-              "echo\n" +
-              "sudo -- " + escapedCommandLine + "\n" +
-              "STATUS=$?\n" +
-              "echo\n" +
-              "read -p \"Press Enter to close this window...\" TEMP\n" +
-              "exit $STATUS\n");
-      sudoCommandLine = new GeneralCommandLine(getTerminalCommand("Install", script.getAbsolutePath()));
-    }
-    else {
-      throw new UnsupportedSystemException();
-    }
-
-    return sudoCommandLine
-            .withWorkDirectory(commandLine.getWorkDirectory())
-            .withEnvironment(commandLine.getEnvironment())
-            .withParentEnvironmentType(commandLine.getParentEnvironmentType())
-            .withRedirectErrorStream(commandLine.isRedirectErrorStream());
+    return commandLine.withSudo(prompt);
   }
 
   @Nonnull
   public static ProcessOutput sudoAndGetOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws IOException, ExecutionException {
     return execAndGetOutput(sudoCommand(commandLine, prompt));
-  }
-
-  @Nonnull
-  private static String escapeAppleScriptArgument(@Nonnull String arg) {
-    return "quoted form of \"" + arg.replace("\"", "\\\"") + "\"";
-  }
-
-  @Nonnull
-  public static String escapeUnixShellArgument(@Nonnull String arg) {
-    return "'" + arg.replace("'", "'\"'\"'") + "'";
-  }
-
-  public static boolean hasTerminalApp() {
-    return SystemInfo.isWindows || SystemInfo.isMac || hasKdeTerminal.getValue() || hasGnomeTerminal.getValue() || hasXTerm.getValue();
-  }
-
-  @Nonnull
-  public static List<String> getTerminalCommand(@Nullable String title, @Nonnull String command) {
-    if (SystemInfo.isWindows) {
-      title = title != null ? title.replace("\"", "'") : "";
-      return Arrays.asList(getWindowsShellName(), "/c", "start", GeneralCommandLine.inescapableQuote(title), command);
-    }
-    else if (SystemInfo.isMac) {
-      return Arrays.asList(getOpenCommandPath(), "-a", "Terminal", command);
-    }
-    else if (hasKdeTerminal.getValue()) {
-      return Arrays.asList("/usr/bin/konsole", "-e", command);
-    }
-    else if (hasGnomeTerminal.getValue()) {
-      return title != null ? Arrays.asList("/usr/bin/gnome-terminal", "-t", title, "-x", command)
-                           : Arrays.asList("/usr/bin/gnome-terminal", "-x", command);
-    }
-    else if (hasXTerm.getValue()) {
-      return title != null ? Arrays.asList("/usr/bin/xterm", "-T", title, "-e", command)
-                           : Arrays.asList("/usr/bin/xterm", "-e", command);
-    }
-
-    throw new UnsupportedSystemException();
-  }
-
-  public static class UnsupportedSystemException extends UnsupportedOperationException {
-    public UnsupportedSystemException() {
-      super("Unsupported OS/desktop: " + SystemInfo.OS_NAME + '/' + SystemInfo.SUN_DESKTOP);
-    }
   }
 
   @Nonnull

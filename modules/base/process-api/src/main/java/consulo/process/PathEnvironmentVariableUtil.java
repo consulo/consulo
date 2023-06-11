@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * TODO works only for local platform
+ *
  * @author Sergey Simonchik
  */
 public class PathEnvironmentVariableUtil {

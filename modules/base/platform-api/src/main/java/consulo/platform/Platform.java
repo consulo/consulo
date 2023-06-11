@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.image.Image;
 
+import consulo.util.dataholder.UserDataHolder;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.io.File;
@@ -31,7 +32,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 16-May-17
  */
-public interface Platform {
+public interface Platform extends UserDataHolder {
   static String LOCAL = "local";
 
   @Deprecated

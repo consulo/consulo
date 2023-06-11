@@ -17,6 +17,7 @@ package consulo.platform.impl;
 
 import consulo.platform.*;
 
+import consulo.util.dataholder.UserDataHolderBase;
 import jakarta.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -27,7 +28,7 @@ import java.util.Properties;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public abstract class PlatformBase implements Platform {
+public abstract class PlatformBase extends UserDataHolderBase implements Platform {
   private final PlatformFileSystem myFileSystem;
   private final PlatformOperatingSystem myOperatingSystem;
   private final PlatformJvm myJvm;
