@@ -15,10 +15,9 @@
  */
 package consulo.execution.debug.attach;
 
-import consulo.process.ProcessInfo;
+import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
 
 /**

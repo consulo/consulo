@@ -16,11 +16,10 @@
 package consulo.execution.debug.attach;
 
 import consulo.application.AllIcons;
-import consulo.process.ProcessInfo;
+import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

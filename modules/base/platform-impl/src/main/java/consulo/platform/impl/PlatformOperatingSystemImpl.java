@@ -16,12 +16,16 @@
 package consulo.platform.impl;
 
 import consulo.platform.PlatformOperatingSystem;
+import consulo.platform.ProcessInfo;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.Locale;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -30,6 +34,8 @@ import java.util.function.Supplier;
  * @since 25/04/2023
  */
 public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
+  private static final Logger LOG = LoggerFactory.getLogger(PlatformOperatingSystemImpl.class);
+  
   private final String myOSArch;
   protected final String OS_NAME;
   private final String OS_VERSION;
@@ -70,6 +76,37 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
 
   public boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
+  }
+
+  @Nonnull
+  @Override
+  public Collection<ProcessInfo> processes() {
+    List<ProcessInfo> processInfos = new ArrayList<>();
+
+    ProcessHandle.allProcesses().forEach(it -> {
+      long pid = it.pid();
+
+      try {
+        ProcessHandle.Info info = it.info();
+
+        Optional<String> commandOptional = info.command();
+        // no access to process info
+        if (commandOptional.isEmpty() && info.user().isEmpty()) {
+          return;
+        }
+
+        String command = commandOptional.orElse("");
+        String commandLine = info.commandLine().orElse("");
+        String args = StringUtil.join(info.arguments().orElse(ArrayUtil.EMPTY_STRING_ARRAY), " ");
+
+        processInfos.add(new ProcessInfo((int)pid, commandLine, new File(command).getName(), args, command));
+      }
+      catch (Throwable e) {
+        LOG.warn("Failed to get #info() for processId: " + pid, e);
+      }
+    });
+
+    return processInfos;
   }
 
   @Override

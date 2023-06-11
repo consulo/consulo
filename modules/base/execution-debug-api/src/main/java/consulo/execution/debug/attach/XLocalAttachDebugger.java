@@ -1,10 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.attach;
 
+import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
-import consulo.process.ProcessInfo;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 public interface XLocalAttachDebugger extends XAttachDebugger {

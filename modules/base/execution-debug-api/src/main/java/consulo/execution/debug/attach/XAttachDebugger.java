@@ -16,11 +16,10 @@
 package consulo.execution.debug.attach;
 
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
-import consulo.process.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

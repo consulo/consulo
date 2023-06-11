@@ -4,12 +4,12 @@ package consulo.execution.debug.attach;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
-import consulo.process.ProcessInfo;
+import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 

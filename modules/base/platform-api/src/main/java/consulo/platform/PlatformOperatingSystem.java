@@ -18,10 +18,12 @@ package consulo.platform;
 import consulo.annotation.DeprecationInfo;
 import consulo.platform.os.MacOperatingSystem;
 import consulo.platform.os.WindowsOperatingSystem;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +31,9 @@ import java.util.Map;
  * @since 25/04/2023
  */
 public interface PlatformOperatingSystem extends Platform.OperatingSystem {
+  @Nonnull
+  Collection<ProcessInfo> processes();
+
   boolean isWindows();
 
   @Nonnull

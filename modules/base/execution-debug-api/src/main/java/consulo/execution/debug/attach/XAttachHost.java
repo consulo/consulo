@@ -15,11 +15,11 @@
  */
 package consulo.execution.debug.attach;
 
+import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
-import consulo.process.ProcessInfo;
-
 import jakarta.annotation.Nonnull;
-import java.util.List;
+
+import java.util.Collection;
 
 /**
  * This interface describes the host(local or remote), from which list of processes can be obtained
@@ -29,5 +29,5 @@ public interface XAttachHost {
    * @return a list of running processes on this host
    */
   @Nonnull
-  List<ProcessInfo> getProcessList() throws ExecutionException;
+  Collection<ProcessInfo> getProcessList() throws ExecutionException;
 }

@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.process;
+package consulo.platform;
 
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-@Deprecated
 public final class ProcessInfo {
   public static ProcessInfo[] EMPTY_ARRAY = new ProcessInfo[0];
 
@@ -99,7 +98,7 @@ public final class ProcessInfo {
   @Override
   public String toString() {
     return myPid + " '" + myCommandLine + "' '" + myExecutableName + "' '" + myArgs + "'" +
-           (myExecutablePath.isPresent() ? " " + myExecutablePath.get() : "");
+      (myExecutablePath.isPresent() ? " " + myExecutablePath.get() : "");
   }
 
   @Override

@@ -53,6 +53,7 @@ public class OSProcessUtil {
   }
 
   @Nonnull
+  @Deprecated
   public static List<ProcessInfo> getProcessList() {
     List<ProcessInfo> processInfos = new ArrayList<>();
 

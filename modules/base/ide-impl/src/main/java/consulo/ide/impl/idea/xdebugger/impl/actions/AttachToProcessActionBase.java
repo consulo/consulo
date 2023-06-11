@@ -1,47 +1,43 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.PerformInBackgroundOption;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
 import consulo.execution.ExecutionUtil;
+import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.attach.*;
+import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
+import consulo.ide.impl.idea.ui.popup.async.AsyncPopupStep;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.platform.ProcessInfo;
+import consulo.process.ExecutionException;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ide.impl.idea.ui.popup.async.AsyncPopupStep;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.StatusText;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.PerformInBackgroundOption;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.logging.Logger;
-import consulo.process.ExecutionException;
-import consulo.process.ProcessInfo;
-import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListSeparator;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -221,7 +217,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
   }
 
   @Nonnull
-  private static List<ProcessInfo> getProcessInfos(@Nonnull XAttachHost host) {
+  private static Collection<ProcessInfo> getProcessInfos(@Nonnull XAttachHost host) {
     try {
       return host.getProcessList();
     }
@@ -247,7 +243,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
   @Nonnull
   static List<AttachToProcessItem> doCollectAttachProcessItems(@Nonnull final Project project,
                                                                @Nonnull XAttachHost host,
-                                                               @Nonnull List<? extends ProcessInfo> processInfos,
+                                                               @Nonnull Collection<? extends ProcessInfo> processInfos,
                                                                @Nonnull ProgressIndicator indicator,
                                                                @Nonnull List<? extends XAttachDebuggerProvider> providers) {
     UserDataHolderBase dataHolder = new UserDataHolderBase();
