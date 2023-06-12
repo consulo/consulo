@@ -6,6 +6,7 @@ package consulo.process.internal;
 import consulo.logging.Logger;
 import consulo.process.BaseProcessHandler;
 import consulo.process.CommandLineUtil;
+import consulo.process.NativeProcessHandler;
 import consulo.process.TaskExecutor;
 import consulo.process.util.ProcessWaitFor;
 import consulo.util.lang.StringUtil;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-public abstract class LocalProcessHandler<T extends Process> extends BaseProcessHandler implements TaskExecutor, RawExitCodeGetterProcessHandler {
+public abstract class LocalProcessHandler<T extends Process> extends BaseProcessHandler implements TaskExecutor, RawExitCodeGetterProcessHandler, NativeProcessHandler {
   private static final Logger LOG = Logger.getInstance(LocalProcessHandler.class);
 
   protected final T myProcess;
@@ -44,6 +45,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
     return myProcess.pid();
   }
 
+  @Override
   @Nonnull
   public final T getProcess() {
     return myProcess;
