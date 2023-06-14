@@ -181,9 +181,14 @@ public class ExecutionUtil {
   }
 
   @Nonnull
-  public static Image getIconWithLiveIndicator(@Nullable final Image base) {
-    int width = base == null ? 13 : base.getWidth();
-    int height = base == null ? 13 : base.getHeight();
+  public static Image getIconWithLiveIndicator(@Nullable Image base) {
+    if (base == null) {
+      base = Image.empty(13);
+    }
+
+    int width = base.getWidth();
+    int height = base.getHeight();
+
     return ImageEffects.layered(base, ImageEffects.canvas(width, height, ctx -> {
       int iSize = 2;
 
