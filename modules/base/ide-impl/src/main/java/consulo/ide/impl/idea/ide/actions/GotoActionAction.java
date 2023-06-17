@@ -4,8 +4,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -13,13 +11,13 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ActionSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -31,18 +29,20 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -102,7 +102,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
     ChooseByNamePopup popup = new ChooseByNamePopup(project, model, new GotoActionItemProvider(model), oldPopup, initialText, false, initialIndex) {
       @Override
-      protected void initUI(Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
+      protected void initUI(Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         myList.addListSelectionListener(new ListSelectionListener() {
           @Override

@@ -2,32 +2,32 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
-import consulo.application.impl.internal.performance.PerformanceWatcher;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.ui.UISettings;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ui.ex.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
+import consulo.application.ui.UISettings;
+import consulo.application.util.Semaphore;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.Update;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -79,7 +79,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   @Override
-  protected void initUI(final Callback callback, final IdeaModalityState modalityState, boolean allowMultipleSelection) {
+  protected void initUI(final Callback callback, final ModalityState modalityState, boolean allowMultipleSelection) {
     super.initUI(callback, modalityState, allowMultipleSelection);
     if (myOldPopup != null) {
       myTextField.setCaretPosition(myOldPopup.myTextField.getCaretPosition());
@@ -452,7 +452,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   @Nonnull
   @TestOnly
   public List<Object> calcPopupElements(@Nonnull String text, boolean checkboxState) {
-    List<Object> elements = ContainerUtil.newArrayList("empty");
+    List<Object> elements = List.of("empty");
     Semaphore semaphore = new Semaphore(1);
     scheduleCalcElements(text, checkboxState, IdeaModalityState.NON_MODAL, SelectMostRelevant.INSTANCE, set -> {
       elements.clear();

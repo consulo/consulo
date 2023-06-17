@@ -28,9 +28,9 @@ import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBa
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.editor.ui.TreeChooser;
 import consulo.language.editor.ui.TreeClassInheritorsProvider;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.search.FindSymbolParameters;
@@ -39,6 +39,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -47,9 +48,9 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.tree.AlphaComparator;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,8 +64,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> extends DialogWrapper implements TreeChooser<T> {
@@ -245,7 +246,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
       }
 
       @Override
-      protected void initUI(ChooseByNamePopupComponent.Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
+      protected void initUI(ChooseByNamePopupComponent.Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         dummyPanel.add(myGotoByNamePanel.getPanel(), BorderLayout.CENTER);
         IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(IdeFocusTraversalPolicy.getPreferredFocusedComponent(myGotoByNamePanel.getPanel()));

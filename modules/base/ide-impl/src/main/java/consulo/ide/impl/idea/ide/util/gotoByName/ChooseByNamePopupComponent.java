@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ui.ModalityState;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * Date: Jan 26, 2005
  */
 public interface ChooseByNamePopupComponent {
-  void invoke(Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection);
+  void invoke(Callback callback, ModalityState modalityState, boolean allowMultipleSelection);
 
   Object getChosenElement();
 

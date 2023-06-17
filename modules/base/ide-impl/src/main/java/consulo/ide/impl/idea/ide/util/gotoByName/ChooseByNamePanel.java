@@ -16,10 +16,10 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
 import consulo.disposer.Disposable;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ModalityState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class ChooseByNamePanel extends ChooseByNameBase implements Disposable {
   }
 
   @Override
-  protected void initUI(ChooseByNamePopupComponent.Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
+  protected void initUI(ChooseByNamePopupComponent.Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
     super.initUI(callback, modalityState, allowMultipleSelection);
 
     //myTextFieldPanel.setBorder(new EmptyBorder(0,0,0,0));

@@ -1,35 +1,35 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.application.util.concurrent.JobLauncher;
-import consulo.language.editor.ui.navigation.NavigationItemListCellRenderer;
-import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.ide.navigation.ChooseByNameContributorEx;
-import consulo.navigation.NavigationItem;
-import consulo.application.util.ReadActionProcessor;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.ReadActionProcessor;
+import consulo.application.util.concurrent.JobLauncher;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
+import consulo.component.ProcessCanceledException;
+import consulo.component.util.PluginExceptionUtil;
+import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.ChooseByNameContributorEx;
+import consulo.language.editor.ui.navigation.NavigationItemListCellRenderer;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.util.function.Processor;
-import consulo.application.util.function.Processors;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
-import consulo.component.util.PluginExceptionUtil;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;

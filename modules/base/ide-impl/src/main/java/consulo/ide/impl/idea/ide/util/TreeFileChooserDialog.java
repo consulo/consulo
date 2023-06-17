@@ -28,7 +28,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
@@ -40,9 +39,11 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.search.FilenameIndex;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
@@ -54,9 +55,9 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.tree.AlphaComparator;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -239,7 +240,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
 
       @Override
       protected void initUI(final ChooseByNamePopupComponent.Callback callback,
-                            final IdeaModalityState modalityState,
+                            final ModalityState modalityState,
                             boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         dummyPanel.add(myGotoByNamePanel.getPanel(), BorderLayout.CENTER);

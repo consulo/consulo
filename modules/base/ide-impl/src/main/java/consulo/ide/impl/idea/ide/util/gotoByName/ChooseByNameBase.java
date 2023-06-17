@@ -4,24 +4,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
-import consulo.ide.impl.idea.ide.actions.GotoFileAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.ui.popup.PopupOwner;
-import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
-import consulo.ide.impl.idea.usages.UsageLimitUtil;
-import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -41,8 +24,24 @@ import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.*;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.actions.CopyReferenceAction;
+import consulo.ide.impl.idea.ide.actions.GotoFileAction;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.ide.impl.idea.ui.popup.PopupOwner;
+import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
+import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
+import consulo.ide.impl.idea.usages.UsageLimitUtil;
+import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.language.editor.CommonDataKeys;
@@ -56,14 +55,16 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -76,11 +77,12 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
@@ -244,7 +246,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     myFindUsagesTitle = findUsagesTitle;
   }
 
-  public void invoke(final ChooseByNamePopupComponent.Callback callback, final IdeaModalityState modalityState, boolean allowMultipleSelection) {
+  public void invoke(final ChooseByNamePopupComponent.Callback callback, final ModalityState modalityState, boolean allowMultipleSelection) {
     initUI(callback, modalityState, allowMultipleSelection);
   }
 
@@ -353,9 +355,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   }
 
   /**
-   * @param modalityState - if not null rebuilds list in given {@link IdeaModalityState}
+   * @param modalityState - if not null rebuilds list in given {@link ModalityState}
    */
-  protected void initUI(final ChooseByNamePopupComponent.Callback callback, final IdeaModalityState modalityState, final boolean allowMultipleSelection) {
+  protected void initUI(final ChooseByNamePopupComponent.Callback callback, final ModalityState modalityState, final boolean allowMultipleSelection) {
     myPreviouslyFocusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
 
     myActionListener = callback;
@@ -456,6 +458,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     if (checkBoxName != null) {
       if (myCheckBoxShortcut != null) {
         new DumbAwareAction("change goto check box", null, null) {
+          @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e) {
             myCheckBox.setSelected(!myCheckBox.isSelected());
@@ -861,7 +864,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     return layeredPane;
   }
 
-  void rebuildList(@Nonnull SelectionPolicy pos, final int delay, @Nonnull final IdeaModalityState modalityState, @Nullable final Runnable postRunnable) {
+  void rebuildList(@Nonnull SelectionPolicy pos, final int delay, @Nonnull final ModalityState modalityState, @Nullable final Runnable postRunnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!myInitialized) {
       return;
@@ -919,7 +922,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     }
   }
 
-  public void scheduleCalcElements(@Nonnull String text, boolean checkboxState, @Nonnull IdeaModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
+  public void scheduleCalcElements(@Nonnull String text, boolean checkboxState, @Nonnull ModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
     new CalcElementsThread(text, checkboxState, modalityState, policy, callback).scheduleThread();
   }
 
@@ -1277,13 +1280,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     private final boolean myCheckboxState;
     @Nonnull
     private final Consumer<? super Set<?>> myCallback;
-    private final IdeaModalityState myModalityState;
+    private final ModalityState myModalityState;
     @Nonnull
     private SelectionPolicy mySelectionPolicy;
 
     private final ProgressIndicator myProgress = new ProgressIndicatorBase();
 
-    CalcElementsThread(@Nonnull String pattern, boolean checkboxState, @Nonnull IdeaModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
+    CalcElementsThread(@Nonnull String pattern, boolean checkboxState, @Nonnull ModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
       myPattern = pattern;
       myCheckboxState = checkboxState;
       myCallback = callback;
@@ -1308,6 +1311,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       return DumbService.getInstance(myProject).runReadActionInSmartMode(() -> performInReadAction(indicator));
     }
 
+    @RequiredReadAction
     @Nullable
     @Override
     public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
@@ -1493,6 +1497,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       super(ACTION_NAME, ACTION_NAME, AllIcons.General.Pin_tab);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
       cancelListUpdater();
@@ -1542,11 +1547,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             });
           }
 
+          @RequiredUIAccess
           @Override
           public void onSuccess() {
             showUsageView(targets, usages, presentation);
           }
 
+          @RequiredUIAccess
           @Override
           public void onCancel() {
             myCalcUsagesThread.cancel();
@@ -1584,6 +1591,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       UsageViewManager.getInstance(myProject).showUsages(usageTargets, usages.toArray(Usage.EMPTY_ARRAY), presentation);
     }
 
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       if (myFindUsagesTitle == null || myProject == null) {
@@ -1640,11 +1648,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   }
 
   private class MyCopyReferenceAction extends DumbAwareAction {
+    @RequiredUIAccess
     @Override
     public void update(@Nonnull AnActionEvent e) {
       e.getPresentation().setEnabled(myTextField.getSelectedText() == null && getChosenElement() instanceof PsiElement);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       CopyReferenceAction.doCopy((PsiElement)getChosenElement(), myProject);
