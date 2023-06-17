@@ -1,35 +1,35 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
-import consulo.language.internal.custom.SyntaxTable;
-import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
-import consulo.language.Commenter;
-import consulo.ide.impl.idea.openapi.fileTypes.*;
-import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
+import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
+import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
+import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.file.FileTypeManager;
-import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
+import consulo.language.Commenter;
 import consulo.language.custom.CustomSyntaxTableFileType;
+import consulo.language.file.FileTypeManager;
+import consulo.language.internal.custom.SyntaxTable;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
-import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
-import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
-import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcher;
+import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
+import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -364,7 +364,7 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
       String ext = mapping.getAttributeValue(ATTRIBUTE_EXT);
       String pattern = mapping.getAttributeValue(ATTRIBUTE_PATTERN);
 
-      FileNameMatcher matcher = ext != null ? new ExtensionFileNameMatcher(ext) : FileTypeManager.parseFromString(pattern);
+      FileNameMatcher matcher = ext != null ? new ExtensionFileNameMatcherImpl(ext) : FileTypeManager.parseFromString(pattern);
       result.add(Pair.create(matcher, mapping.getAttributeValue(ATTRIBUTE_TYPE)));
     }
     return result;
@@ -373,8 +373,8 @@ public class AbstractFileType extends UserFileType<AbstractFileType> implements 
   @Nullable
   static Element writeMapping(String typeName, @Nonnull FileNameMatcher matcher, boolean specifyTypeName) {
     Element mapping = new Element(ELEMENT_MAPPING);
-    if (matcher instanceof ExtensionFileNameMatcher) {
-      mapping.setAttribute(ATTRIBUTE_EXT, ((ExtensionFileNameMatcher)matcher).getExtension());
+    if (matcher instanceof ExtensionFileNameMatcherImpl) {
+      mapping.setAttribute(ATTRIBUTE_EXT, ((ExtensionFileNameMatcherImpl)matcher).getExtension());
     }
     else if (writePattern(matcher, mapping)) {
       return null;

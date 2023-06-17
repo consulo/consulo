@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.language.file.FileTypeManager;
 import org.jdom.Element;
@@ -76,7 +76,7 @@ class RemovedMappingTracker {
     List<RemovedMapping> result = new ArrayList<>();
     for (Element mapping : children) {
       String ext = mapping.getAttributeValue(AbstractFileType.ATTRIBUTE_EXT);
-      FileNameMatcher matcher = ext == null ? FileTypeManager.parseFromString(mapping.getAttributeValue(AbstractFileType.ATTRIBUTE_PATTERN)) : new ExtensionFileNameMatcher(ext);
+      FileNameMatcher matcher = ext == null ? FileTypeManager.parseFromString(mapping.getAttributeValue(AbstractFileType.ATTRIBUTE_PATTERN)) : new ExtensionFileNameMatcherImpl(ext);
       boolean approved = Boolean.parseBoolean(mapping.getAttributeValue(ATTRIBUTE_APPROVED));
       String fileTypeName = mapping.getAttributeValue(ATTRIBUTE_TYPE);
       if (fileTypeName == null) continue;
@@ -152,8 +152,8 @@ class RemovedMappingTracker {
 
   private static Element writeRemovedMapping(@Nonnull String fileTypeName, @Nonnull FileNameMatcher matcher, boolean specifyTypeName, boolean approved) {
     Element mapping = new Element(ELEMENT_REMOVED_MAPPING);
-    if (matcher instanceof ExtensionFileNameMatcher) {
-      mapping.setAttribute(AbstractFileType.ATTRIBUTE_EXT, ((ExtensionFileNameMatcher)matcher).getExtension());
+    if (matcher instanceof ExtensionFileNameMatcherImpl) {
+      mapping.setAttribute(AbstractFileType.ATTRIBUTE_EXT, ((ExtensionFileNameMatcherImpl)matcher).getExtension());
     }
     else if (AbstractFileType.writePattern(matcher, mapping)) {
       return null;

@@ -58,8 +58,8 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.*;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
-import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
-import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcherImpl;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -1398,7 +1398,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Nonnull
   private static List<FileNameMatcher> parse(@Nullable String semicolonDelimited) {
-    return parse(semicolonDelimited, token -> new ExtensionFileNameMatcher(token));
+    return parse(semicolonDelimited, token -> new ExtensionFileNameMatcherImpl(token));
   }
 
   @Nonnull
@@ -1613,10 +1613,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     if (fileType == PlainTextFileType.INSTANCE) return;
     for (FileNameMatcher matcher : pair.matchers) {
       registerReDetectedMapping(fileType.getId(), matcher);
-      if (matcher instanceof ExtensionFileNameMatcher) {
+      if (matcher instanceof ExtensionFileNameMatcherImpl) {
         // also check exact file name matcher
-        ExtensionFileNameMatcher extMatcher = (ExtensionFileNameMatcher)matcher;
-        registerReDetectedMapping(fileType.getId(), new ExactFileNameMatcher("." + extMatcher.getExtension()));
+        ExtensionFileNameMatcherImpl extMatcher = (ExtensionFileNameMatcherImpl)matcher;
+        registerReDetectedMapping(fileType.getId(), new ExactFileNameMatcherImpl("." + extMatcher.getExtension()));
       }
     }
   }

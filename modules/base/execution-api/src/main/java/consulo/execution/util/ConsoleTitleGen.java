@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.execution.internal;
+package consulo.execution.util;
 
 import consulo.execution.ExecutionHelper;
 import consulo.process.ProcessHandler;

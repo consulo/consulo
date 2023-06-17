@@ -14,56 +14,65 @@
  * limitations under the License.
  */
 
+/*
+ * @author max
+ */
 package consulo.virtualFileSystem.internal.matcher;
 
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-
+import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
 import jakarta.annotation.Nonnull;
 
-/**
- * @author max
- */
-public class ExtensionFileNameMatcher implements FileNameMatcher {
-  private final String myExtension;
-  private final String myDotExtension;
+public class ExactFileNameMatcherImpl implements ExactFileNameMatcher {
+  private final String myFileName;
+  private final boolean myIgnoreCase;
 
-  public ExtensionFileNameMatcher(@Nonnull String extension) {
-    myExtension = StringUtil.toLowerCase(extension);
-    myDotExtension = "." + myExtension;
+  public ExactFileNameMatcherImpl(@Nonnull final String fileName) {
+    myFileName = fileName;
+    myIgnoreCase = false;
+  }
+
+  public ExactFileNameMatcherImpl(@Nonnull final String fileName, final boolean ignoreCase) {
+    myFileName = fileName;
+    myIgnoreCase = ignoreCase;
   }
 
   @Override
-  public boolean acceptsCharSequence(@Nonnull CharSequence fileName) {
-    return StringUtil.endsWithIgnoreCase(fileName, myDotExtension);
+  public boolean acceptsCharSequence(@Nonnull final CharSequence fileName) {
+    return StringUtil.equal(fileName, myFileName, !myIgnoreCase);
   }
 
   @Override
   @Nonnull
   public String getPresentableString() {
-    return "*." + myExtension;
+    return myFileName;
   }
 
-  public String getExtension() {
-    return myExtension;
+  @Override
+  public String getFileName() {
+    return myFileName;
   }
 
+  @Override
+  public boolean isIgnoreCase() {
+    return myIgnoreCase;
+  }
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final ExtensionFileNameMatcher that = (ExtensionFileNameMatcher)o;
+    final ExactFileNameMatcherImpl that = (ExactFileNameMatcherImpl)o;
 
-    if (!myExtension.equals(that.myExtension)) return false;
+    if (!myFileName.equals(that.myFileName)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    return myExtension.hashCode();
+    return myFileName.hashCode();
   }
 
   @Override

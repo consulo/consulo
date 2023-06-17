@@ -19,7 +19,7 @@ import consulo.execution.ExecutionManager;
 import consulo.execution.action.CloseAction;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
-import consulo.execution.internal.ConsoleTitleGen;
+import consulo.execution.util.ConsoleTitleGen;
 import consulo.execution.internal.action.ConsoleExecuteAction;
 import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.ui.RunContentDescriptor;

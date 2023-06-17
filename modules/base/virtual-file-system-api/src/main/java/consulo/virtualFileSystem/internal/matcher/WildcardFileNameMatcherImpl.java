@@ -18,16 +18,16 @@ package consulo.virtualFileSystem.internal.matcher;
 
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
+import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
 import jakarta.annotation.Nonnull;
+
 import java.util.regex.Matcher;
 
 /**
  * @author max
  */
-public class WildcardFileNameMatcher implements FileNameMatcher {
+public class WildcardFileNameMatcherImpl implements WildcardFileNameMatcher {
   private final String myPattern;
   private final MaskMatcher myMatcher;
 
@@ -93,7 +93,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
   /**
    * Use {@link FileNameMatcherFactory#createMatcher(String)} instead of direct call to constructor
    */
-  public WildcardFileNameMatcher(@Nonnull String pattern) {
+  public WildcardFileNameMatcherImpl(@Nonnull String pattern) {
     myPattern = pattern;
     myMatcher = createMatcher(pattern);
   }
@@ -125,17 +125,14 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
     return myPattern;
   }
 
-
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    final WildcardFileNameMatcher that = (WildcardFileNameMatcher)o;
+    final WildcardFileNameMatcherImpl that = (WildcardFileNameMatcherImpl)o;
 
-    if (!myPattern.equals(that.myPattern)) return false;
-
-    return true;
+    return myPattern.equals(that.myPattern);
   }
 
   @Override
@@ -143,6 +140,7 @@ public class WildcardFileNameMatcher implements FileNameMatcher {
     return myPattern.hashCode();
   }
 
+  @Override
   public String getPattern() {
     return myPattern;
   }

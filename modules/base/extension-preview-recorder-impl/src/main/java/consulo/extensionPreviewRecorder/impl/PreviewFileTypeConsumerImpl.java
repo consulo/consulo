@@ -21,12 +21,13 @@ import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import consulo.virtualFileSystem.internal.matcher.ExactFileNameMatcher;
-import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcher;
-import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcher;
-
+import consulo.virtualFileSystem.fileType.matcher.ExactFileNameMatcher;
+import consulo.virtualFileSystem.fileType.matcher.ExtensionFileNameMatcher;
+import consulo.virtualFileSystem.fileType.matcher.WildcardFileNameMatcher;
+import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -59,7 +60,7 @@ public class PreviewFileTypeConsumerImpl implements FileTypeConsumer {
 
     List<String> split = StringUtil.split(extensions, EXTENSION_DELIMITER);
     for (String ext : split) {
-      consume(fileType, new ExtensionFileNameMatcher(ext.toLowerCase(Locale.US)));
+      consume(fileType, new ExtensionFileNameMatcherImpl(ext.toLowerCase(Locale.US)));
     }
   }
 
