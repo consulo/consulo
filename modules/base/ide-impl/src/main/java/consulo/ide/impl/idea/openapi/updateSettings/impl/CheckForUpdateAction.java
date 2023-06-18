@@ -29,10 +29,9 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CheckForUpdate")
 public class CheckForUpdateAction extends DumbAwareAction {

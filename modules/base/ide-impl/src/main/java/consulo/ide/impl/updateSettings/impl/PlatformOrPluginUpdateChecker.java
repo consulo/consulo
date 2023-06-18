@@ -36,17 +36,17 @@ import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
+import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
@@ -64,7 +64,8 @@ import java.util.*;
 public class PlatformOrPluginUpdateChecker {
   private static final Logger LOG = Logger.getInstance(PlatformOrPluginUpdateChecker.class);
 
-  public static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
+  public static final NotificationGroup ourGroup =
+    new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
   // windows ids
   private static final PluginId ourWinNoJre = PluginId.getId("consulo.dist.windows.no.jre");
@@ -92,38 +93,38 @@ public class PlatformOrPluginUpdateChecker {
   private static final PluginId ourMacA64 = PluginId.getId("consulo.dist.macA64");
 
   private static final PluginId[] ourPlatformIds = {
-          // win no jre (tar)
-          ourWinNoJre,
-          // win x32 (tar)
-          ourWin,
-          // win x64 (tar)
-          ourWin64,
-          // win ARM64 (tar)
-          ourWinA64,
-          // linux no jre (tar)
-          ourLinuxNoJre,
-          // linux x32 (tar)
-          ourLinux,
-          // linux x64 (tar)
-          ourLinux64,
-          // mac x64 no jre (tar)
-          ourMac64NoJre,
-          // mac x64 with jre (tar)
-          ourMac64,
-          // win no jre (zip)
-          ourWinNoJreZip,
-          // win x32 (zip)
-          ourWinZip,
-          // win x64 (zip)
-          ourWin64Zip,
-          // win ARM64 (zip)
-          ourWinA64Zip,
-          // mac ARM64 no jre (tar)
-          ourMacA64NoJre,
-          // mac ARM64 with jre (tar)
-          ourMacA64,
-          // win 64 installer
-          ourWin64Installer
+    // win no jre (tar)
+    ourWinNoJre,
+    // win x32 (tar)
+    ourWin,
+    // win x64 (tar)
+    ourWin64,
+    // win ARM64 (tar)
+    ourWinA64,
+    // linux no jre (tar)
+    ourLinuxNoJre,
+    // linux x32 (tar)
+    ourLinux,
+    // linux x64 (tar)
+    ourLinux64,
+    // mac x64 no jre (tar)
+    ourMac64NoJre,
+    // mac x64 with jre (tar)
+    ourMac64,
+    // win no jre (zip)
+    ourWinNoJreZip,
+    // win x32 (zip)
+    ourWinZip,
+    // win x64 (zip)
+    ourWin64Zip,
+    // win ARM64 (zip)
+    ourWinA64Zip,
+    // mac ARM64 no jre (tar)
+    ourMacA64NoJre,
+    // mac ARM64 with jre (tar)
+    ourMacA64,
+    // win 64 installer
+    ourWin64Installer
   };
 
   private static final String ourForceJREBuild = "force.jre.build.on.update";
@@ -235,22 +236,30 @@ public class PlatformOrPluginUpdateChecker {
     return result;
   }
 
-  public static void showErrorMessage(boolean showErrorDialog, final String failedMessage) {
+  public static void showErrorMessage(boolean showErrorDialog, Throwable e, UIAccess uiAccess) {
+    LOG.warn(e);
+
     if (showErrorDialog) {
-      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(failedMessage, IdeBundle.message("title.connection.error")));
-    }
-    else {
-      LOG.info(failedMessage);
+      uiAccess.give(() -> {
+        LocalizeValue className = LocalizeValue.of(e.getClass().getSimpleName());
+        LocalizeValue message = LocalizeValue.of(e.getLocalizedMessage());
+        return Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), message)).showAsync();
+      });
     }
   }
 
   @RequiredUIAccess
-  private static void showUpdateResult(@Nullable Project project, final PlatformOrPluginUpdateResult targetsForUpdate, final boolean showResults) {
+  private static void showUpdateResult(@Nullable Project project,
+                                       final PlatformOrPluginUpdateResult targetsForUpdate,
+                                       final boolean showResults) {
     PlatformOrPluginUpdateResult.Type type = targetsForUpdate.getType();
     switch (type) {
       case NO_UPDATE:
         if (showResults) {
-          ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.there.are.no.updates"), NotificationType.INFORMATION, null).notify(project);
+          ourGroup.createNotification(IdeBundle.message("update.available.group"),
+                                      IdeBundle.message("update.there.are.no.updates"),
+                                      NotificationType.INFORMATION,
+                                      null).notify(project);
         }
         break;
       case RESTART_REQUIRED:
@@ -262,7 +271,10 @@ public class PlatformOrPluginUpdateChecker {
           new PlatformOrPluginDialog(project, targetsForUpdate, null, null).showAsync();
         }
         else {
-          Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"), IdeBundle.message("update.available"), NotificationType.INFORMATION, null);
+          Notification notification = ourGroup.createNotification(IdeBundle.message("update.available.group"),
+                                                                  IdeBundle.message("update.available"),
+                                                                  NotificationType.INFORMATION,
+                                                                  null);
           notification.addAction(new NotificationAction(IdeBundle.message("update.view.updates")) {
             @RequiredUIAccess
             @Override
@@ -295,7 +307,7 @@ public class PlatformOrPluginUpdateChecker {
 
     registerSettingsGroupUpdate(result);
 
-    PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator);
+    PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator, uiAccess);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       result.setDone(PlatformOrPluginUpdateResult.Type.CANCELED);
       return;
@@ -309,7 +321,9 @@ public class PlatformOrPluginUpdateChecker {
   }
 
   @Nonnull
-  private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults, @Nullable ProgressIndicator indicator) {
+  private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults,
+                                                              @Nullable ProgressIndicator indicator,
+                                                              @Nonnull UIAccess uiAccess) {
     PluginId platformPluginId = getPlatformPluginId();
 
     ApplicationInfo appInfo = ApplicationInfo.getInstance();
@@ -325,7 +339,8 @@ public class PlatformOrPluginUpdateChecker {
       return PlatformOrPluginUpdateResult.CANCELED;
     }
     catch (Exception e) {
-      LOG.info(e);
+      showErrorMessage(showResults, e, uiAccess);
+      return PlatformOrPluginUpdateResult.CANCELED;
     }
 
     boolean alreadyVisited = false;
@@ -419,7 +434,8 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        showErrorMessage(showResults, e.getMessage());
+        showErrorMessage(showResults, e, uiAccess);
+        return PlatformOrPluginUpdateResult.CANCELED;
       }
     }
 
@@ -430,10 +446,13 @@ public class PlatformOrPluginUpdateChecker {
     if (alreadyVisited && targets.isEmpty()) {
       return PlatformOrPluginUpdateResult.RESTART_REQUIRED;
     }
-    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE, targets);
+    return targets.isEmpty() ? PlatformOrPluginUpdateResult.NO_UPDATE : new PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResult.Type.PLUGIN_UPDATE,
+                                                                                                         targets);
   }
 
-  private static void processDependencies(@Nonnull PluginDescriptor target, List<PlatformOrPluginNode> targets, List<PluginDescriptor> remotePlugins) {
+  private static void processDependencies(@Nonnull PluginDescriptor target,
+                                          List<PlatformOrPluginNode> targets,
+                                          List<PluginDescriptor> remotePlugins) {
     PluginId[] dependentPluginIds = target.getDependentPluginIds();
     for (PluginId pluginId : dependentPluginIds) {
       PluginDescriptor depPlugin = PluginManager.findPlugin(pluginId);

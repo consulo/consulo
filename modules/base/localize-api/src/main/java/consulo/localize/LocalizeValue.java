@@ -35,6 +35,11 @@ public interface LocalizeValue extends Supplier<String>, Comparable<LocalizeValu
   }
 
   @Nonnull
+  static LocalizeValue colon() {
+    return SingleLocalizeValue.ourColon;
+  }
+
+  @Nonnull
   static LocalizeValue of() {
     return empty();
   }
