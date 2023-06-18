@@ -43,6 +43,7 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.project.Project;
 import consulo.project.ui.notification.*;
+import consulo.ui.Alert;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -236,14 +237,20 @@ public class PlatformOrPluginUpdateChecker {
     return result;
   }
 
-  public static void showErrorMessage(boolean showErrorDialog, Throwable e, UIAccess uiAccess) {
+  public static void showErrorMessage(boolean showErrorDialog, Throwable e, UIAccess uiAccess, @Nullable Project project) {
     LOG.warn(e);
 
     if (showErrorDialog) {
       uiAccess.give(() -> {
         LocalizeValue className = LocalizeValue.of(e.getClass().getSimpleName());
         LocalizeValue message = LocalizeValue.of(e.getLocalizedMessage());
-        return Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), message)).showAsync();
+        Alert<Object> alert = Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), message));
+        if (project != null) {
+          alert.showAsync(project);
+        }
+        else {
+          alert.showAsync();
+        }
       });
     }
   }
@@ -307,7 +314,7 @@ public class PlatformOrPluginUpdateChecker {
 
     registerSettingsGroupUpdate(result);
 
-    PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator, uiAccess);
+    PlatformOrPluginUpdateResult updateResult = checkForUpdates(showResults, indicator, uiAccess, project);
     if (updateResult == PlatformOrPluginUpdateResult.CANCELED) {
       result.setDone(PlatformOrPluginUpdateResult.Type.CANCELED);
       return;
@@ -323,7 +330,8 @@ public class PlatformOrPluginUpdateChecker {
   @Nonnull
   private static PlatformOrPluginUpdateResult checkForUpdates(final boolean showResults,
                                                               @Nullable ProgressIndicator indicator,
-                                                              @Nonnull UIAccess uiAccess) {
+                                                              @Nonnull UIAccess uiAccess,
+                                                              @Nullable Project project) {
     PluginId platformPluginId = getPlatformPluginId();
 
     ApplicationInfo appInfo = ApplicationInfo.getInstance();
@@ -339,7 +347,7 @@ public class PlatformOrPluginUpdateChecker {
       return PlatformOrPluginUpdateResult.CANCELED;
     }
     catch (Exception e) {
-      showErrorMessage(showResults, e, uiAccess);
+      showErrorMessage(showResults, e, uiAccess, project);
       return PlatformOrPluginUpdateResult.CANCELED;
     }
 
@@ -434,7 +442,7 @@ public class PlatformOrPluginUpdateChecker {
         return PlatformOrPluginUpdateResult.CANCELED;
       }
       catch (Exception e) {
-        showErrorMessage(showResults, e, uiAccess);
+        showErrorMessage(showResults, e, uiAccess, project);
         return PlatformOrPluginUpdateResult.CANCELED;
       }
     }

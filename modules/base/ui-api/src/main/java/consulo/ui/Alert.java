@@ -136,7 +136,7 @@ public interface Alert<V> {
   @RequiredUIAccess
   @Nonnull
   default AsyncResult<V> showAsync() {
-    return showAsync(null);
+    return showAsync((Window)null);
   }
 
   /**
@@ -145,4 +145,13 @@ public interface Alert<V> {
   @RequiredUIAccess
   @Nonnull
   AsyncResult<V> showAsync(@Nullable Window component);
+
+  /**
+   * Does not block UI thread
+   */
+  @RequiredUIAccess
+  @Nonnull
+  default AsyncResult<V> showAsync(@Nonnull WindowOwner component) {
+    return showAsync(component.getWindow());
+  }
 }

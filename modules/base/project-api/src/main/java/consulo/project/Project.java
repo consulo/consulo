@@ -17,18 +17,19 @@ package consulo.project;
 
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.ui.UIAccess;
+import consulo.ui.Window;
+import consulo.ui.WindowOwner;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * Project interface class.
  */
-public interface Project extends ComponentManager {
+public interface Project extends ComponentManager, WindowOwner {
   String DIRECTORY_STORE_FOLDER = ".consulo";
 
   Key<Project> KEY = Key.create(Project.class);
@@ -131,5 +132,14 @@ public interface Project extends ComponentManager {
 
   default boolean isDefault() {
     return false;
+  }
+
+  /**
+   * @return window which is associated with current project
+   */
+  @Nullable
+  @Override
+  default Window getWindow() {
+    return null;
   }
 }

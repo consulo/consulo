@@ -25,25 +25,24 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.ide.impl.project.ProjectOpenProcessors;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Alert;
 import consulo.ui.UIAccess;
-import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -111,11 +110,12 @@ public class ProjectUtil {
 
       AsyncResult<Integer> result = AsyncResult.undefined();
       uiAccess.give(() -> {
-        Window window = null;
         if (projectToClose != null) {
-          window = WindowManager.getInstance().getWindow(projectToClose);
+          return alert.showAsync(projectToClose).notify(result);
         }
-        return alert.showAsync(window).notify(result);
+        else {
+          return alert.showAsync().notify(result);
+        }
       });
       return result;
     }
@@ -142,7 +142,10 @@ public class ProjectUtil {
   @Nonnull
   @Deprecated
   @DeprecationInfo("use #openAsync() - just rename method reference")
-  public static AsyncResult<Project> openOrOpenAsync(@Nonnull final String path, final Project projectToClose, boolean forceOpenInNewFrame, UIAccess uiAccess) {
+  public static AsyncResult<Project> openOrOpenAsync(@Nonnull final String path,
+                                                     final Project projectToClose,
+                                                     boolean forceOpenInNewFrame,
+                                                     UIAccess uiAccess) {
     return openAsync(path, projectToClose, forceOpenInNewFrame, uiAccess);
   }
 
@@ -156,7 +159,10 @@ public class ProjectUtil {
   }
 
   @Nonnull
-  public static AsyncResult<Project> openAsync(@Nonnull String path, @Nullable final Project projectToCloseFinal, boolean forceOpenInNewFrame, @Nonnull UIAccess uiAccess) {
+  public static AsyncResult<Project> openAsync(@Nonnull String path,
+                                               @Nullable final Project projectToCloseFinal,
+                                               boolean forceOpenInNewFrame,
+                                               @Nonnull UIAccess uiAccess) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
 
     if (virtualFile == null) return AsyncResult.rejected("file path not find");

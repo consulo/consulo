@@ -41,6 +41,7 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
+import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -377,6 +378,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     super.dispose();
 
     TimedReference.disposeTimed();
+  }
+
+  @Nullable
+  @Override
+  public Window getWindow() {
+    return WindowManager.getInstance().getWindow(this);
   }
 
   @Override
