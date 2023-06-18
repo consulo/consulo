@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.console;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
-import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;

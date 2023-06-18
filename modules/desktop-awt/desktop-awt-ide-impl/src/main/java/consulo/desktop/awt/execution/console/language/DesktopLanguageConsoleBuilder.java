@@ -25,7 +25,7 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.document.event.DocumentEvent;
 import consulo.execution.internal.BaseLanguageConsoleBuilder;
-import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.language.BaseConsoleExecuteActionHandler;
 import consulo.execution.ui.console.language.BasicGutterContentProvider;
 import consulo.execution.ui.console.language.GutterContentProvider;

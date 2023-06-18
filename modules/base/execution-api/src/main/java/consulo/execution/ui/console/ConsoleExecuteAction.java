@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.internal.action;
+package consulo.execution.ui.console;
 
 import consulo.application.AllIcons;
 import consulo.codeEditor.EditorEx;
 import consulo.document.util.TextRange;
 import consulo.execution.internal.LanguageConsoleViewEx;
-import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.language.BaseConsoleExecuteActionHandler;
 import consulo.execution.ui.console.language.ConsoleExecuteActionHandler;
 import consulo.execution.ui.console.language.LanguageConsoleView;
@@ -34,9 +33,9 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Conditions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Predicate;
 
 public class ConsoleExecuteAction extends DumbAwareAction {

@@ -20,7 +20,7 @@ import consulo.execution.action.CloseAction;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
 import consulo.execution.util.ConsoleTitleGen;
-import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;

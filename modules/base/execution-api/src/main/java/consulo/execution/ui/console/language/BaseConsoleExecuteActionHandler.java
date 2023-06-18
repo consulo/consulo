@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.console.language;
 
-import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleExecuteAction;
 
 import jakarta.annotation.Nonnull;
 

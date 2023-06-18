@@ -23,7 +23,10 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
-import consulo.language.file.*;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.FileViewProviderFactory;
+import consulo.language.file.LanguageFileType;
+import consulo.language.file.LanguageFileViewProviderFactory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
@@ -43,14 +46,14 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.util.lang.LocalTimeCounter;
+import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
@@ -118,7 +121,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     LightVirtualFile virtualFile = new LightVirtualFile(name, language, text);
     virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
     if (noSizeLimit) {
-      SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
+      RawFileLoaderHelper.doNotCheckFileSizeLimit(virtualFile);
     }
     return trySetupPsiForFile(virtualFile, language, languageVersion, physical, markAsCopy);
   }
@@ -136,7 +139,7 @@ public class PsiFileFactoryImpl extends PsiFileFactory {
     if (original != null) virtualFile.setOriginalFile(original);
     virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
     if (noSizeLimit) {
-      SingleRootFileViewProvider.doNotCheckFileSizeLimit(virtualFile);
+      RawFileLoaderHelper.doNotCheckFileSizeLimit(virtualFile);
     }
     return trySetupPsiForFile(virtualFile, languageVersion.getLanguage(), languageVersion, physical, markAsCopy);
   }

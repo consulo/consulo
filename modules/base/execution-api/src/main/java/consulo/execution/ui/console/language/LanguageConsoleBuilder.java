@@ -18,7 +18,7 @@ package consulo.execution.ui.console.language;
 import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.EditorEx;
 import consulo.execution.internal.LanguageConsoleViewEx;
-import consulo.execution.internal.action.ConsoleExecuteAction;
+import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiFile;
