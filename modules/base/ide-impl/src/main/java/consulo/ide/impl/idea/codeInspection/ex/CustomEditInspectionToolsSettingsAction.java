@@ -1,18 +1,17 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
+import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
-public class CustomEditInspectionToolsSettingsAction implements IntentionAction, Iconable {
+public class CustomEditInspectionToolsSettingsAction implements SyntheticIntentionAction, Iconable {
   private final EditInspectionToolsSettingsAction myEditInspectionToolsSettingsAction;   // we delegate due to priority
   private final Computable<String> myText;
 
