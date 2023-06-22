@@ -25,19 +25,15 @@ import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.tree.CheckboxTree;
-import consulo.ui.ex.awt.tree.CheckedTreeNode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.impl.internal.template.TemplateEditorUtil;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
-import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.Variable;
 import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -45,6 +41,8 @@ import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.popup.JBPopup;
@@ -53,10 +51,12 @@ import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.update.Activatable;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -288,7 +288,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
   }
 
   private List<TemplateContextType> getApplicableContexts() {
-    ArrayList<TemplateContextType> result = new ArrayList<TemplateContextType>();
+    ArrayList<TemplateContextType> result = new ArrayList<>();
     for (TemplateContextType type : myContext.keySet()) {
       if (myContext.get(type).booleanValue()) {
         result.add(type);
@@ -378,10 +378,10 @@ public class LiveTemplateSettingsEditor extends JPanel {
   private JPanel createPopupContextPanel(final Runnable onChange) {
     JPanel panel = new JPanel(new BorderLayout());
 
-    MultiMap<TemplateContextType, TemplateContextType> hierarchy = new MultiMap<TemplateContextType, TemplateContextType>() {
+    MultiMap<TemplateContextType, TemplateContextType> hierarchy = new MultiMap<>() {
       @Override
       protected Map<TemplateContextType, Collection<TemplateContextType>> createMap() {
-        return new LinkedHashMap<TemplateContextType, Collection<TemplateContextType>>();
+        return new LinkedHashMap<>();
       }
     };
     for (TemplateContextType type : myContext.keySet()) {
@@ -542,7 +542,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
     ArrayList<Variable> parsedVariables = parseVariables(myTemplateEditor.getDocument().getCharsSequence());
 
-    Map<String, String> newVariableNames = new HashMap<String, String>();
+    Map<String, String> newVariableNames = new HashMap<>();
     for (Object parsedVariable : parsedVariables) {
       Variable newVariable = (Variable)parsedVariable;
       String name = newVariable.getName();
@@ -572,7 +572,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
   }
 
   private List<Variable> getCurrentVariables() {
-    List<Variable> myVariables = new ArrayList<Variable>();
+    List<Variable> myVariables = new ArrayList<>();
 
     for (int i = 0; i < myTemplate.getVariableCount(); i++) {
       myVariables.add(new Variable(myTemplate.getVariableNameAt(i), myTemplate.getExpressionStringAt(i), myTemplate.getDefaultValueStringAt(i), myTemplate.isAlwaysStopAt(i)));
@@ -608,7 +608,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
   }
 
   private static ArrayList<Variable> parseVariables(CharSequence text) {
-    ArrayList<Variable> variables = new ArrayList<Variable>();
+    ArrayList<Variable> variables = new ArrayList<>();
     TemplateImplUtil.parseVariables(text, variables, Template.INTERNAL_VARS_SET);
     return variables;
   }
