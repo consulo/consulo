@@ -24,6 +24,7 @@ import consulo.ide.impl.externalService.UpdateAvailableException;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalService.impl.WebServiceException;
+import consulo.logging.Logger;
 import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.project.Project;
 
@@ -37,6 +38,8 @@ import java.util.function.Consumer;
  * @since 8:57:19 PM May 22, 2003
  */
 public class ErrorReportSender {
+  private static final Logger LOG = Logger.getInstance(ErrorReportSender.class);
+
   private static enum ResultType {
     OK,
     PLATFORM_UPDATE_REQUIRED,
@@ -58,6 +61,8 @@ public class ErrorReportSender {
         callback.accept(id);
       }
       catch (Exception ex) {
+        LOG.warn(ex);
+        
         errback.accept(ex);
       }
     });

@@ -26,7 +26,7 @@ import java.util.Locale;
 public enum WebServiceApi {
   MAIN("https://consulo.io"),
   HELP("https://consulo.help/"),
-  ERROR_REPORTER_API("https://api.consulo/errorReporter/"),
+  ERROR_REPORTER_API("https://api.consulo.io/errorReporter/"),
   ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
   STATISTICS_API("https://api.consulo.io/statistics/"),
   DEVELOPER_API("https://api.consulo.io/developer/"),
