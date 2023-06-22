@@ -101,7 +101,9 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
   @Override
   public void dispose() {
-    myCurrentTemplateEditor.dispose();
+    if (myCurrentTemplateEditor != null) {
+      myCurrentTemplateEditor.dispose();
+    }
   }
 
   public void reset() {
