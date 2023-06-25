@@ -881,7 +881,7 @@
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <useIncrementalCompilation>false</useIncrementalCompilation>
+          <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->
         </configuration>
       </plugin>
       <plugin>
