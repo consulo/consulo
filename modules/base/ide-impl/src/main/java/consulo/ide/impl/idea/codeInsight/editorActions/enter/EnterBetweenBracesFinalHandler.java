@@ -24,7 +24,7 @@ import jakarta.annotation.Nullable;
  * Please, don't extend the class.
  * Use the {@code EnterBetweenBracesDelegate} language-specific implementation instead.
  */
-public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter {
+public abstract class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter {
   @Override
   public Result preprocessEnter(@Nonnull final PsiFile file,
                                 @Nonnull final Editor editor,
@@ -41,6 +41,7 @@ public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter 
     int caretOffset = caretOffsetRef.get().intValue();
 
     final EnterBetweenBracesDelegate helper = getLanguageImplementation(EnterHandler.getLanguage(dataContext));
+
     if (!isApplicable(file, editor, text, caretOffset, helper)) {
       return Result.Continue;
     }
@@ -63,13 +64,21 @@ public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter 
     return indentInsideJavadoc == null ? Result.Continue : Result.DefaultForceIndent;
   }
 
-  protected boolean isApplicable(@Nonnull PsiFile file, @Nonnull Editor editor, CharSequence documentText, int caretOffset, EnterBetweenBracesDelegate helper) {
+  protected boolean isApplicable(@Nonnull PsiFile file,
+                                 @Nonnull Editor editor,
+                                 CharSequence documentText,
+                                 int caretOffset,
+                                 EnterBetweenBracesDelegate helper) {
+    if (!helper.isApplicable(file, editor, documentText, caretOffset)) {
+      return false;
+    }
+
     int prevCharOffset = CharArrayUtil.shiftBackward(documentText, caretOffset - 1, " \t");
     int nextCharOffset = CharArrayUtil.shiftForward(documentText, caretOffset, " \t");
     return isValidOffset(prevCharOffset, documentText) &&
-           isValidOffset(nextCharOffset, documentText) &&
-           helper.isBracePair(documentText.charAt(prevCharOffset), documentText.charAt(nextCharOffset)) &&
-           !helper.bracesAreInTheSameElement(file, editor, prevCharOffset, nextCharOffset);
+      isValidOffset(nextCharOffset, documentText) &&
+      helper.isBracePair(documentText.charAt(prevCharOffset), documentText.charAt(nextCharOffset)) &&
+      !helper.bracesAreInTheSameElement(file, editor, prevCharOffset, nextCharOffset);
   }
 
   @Nonnull

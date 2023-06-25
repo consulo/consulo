@@ -17,7 +17,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,11 +29,19 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
   private static final Logger LOG = Logger.getInstance(EnterBetweenBracesDelegate.class);
-  private static final ExtensionPointCacheKey<EnterBetweenBracesDelegate, ByLanguageValue<EnterBetweenBracesDelegate>> KEY = ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());
+  private static final ExtensionPointCacheKey<EnterBetweenBracesDelegate, ByLanguageValue<EnterBetweenBracesDelegate>> KEY =
+    ExtensionPointCacheKey.create("EnterBetweenBracesDelegate", LanguageOneToOne.build());
 
   @Nullable
   public static EnterBetweenBracesDelegate forLanguage(@Nonnull Language language) {
     return Application.get().getExtensionPoint(EnterBetweenBracesDelegate.class).getOrBuildCache(KEY).get(language);
+  }
+
+  public boolean isApplicable(@Nonnull PsiFile file,
+                              @Nonnull Editor editor,
+                              CharSequence documentText,
+                              int caretOffset) {
+    return true;
   }
 
   /**
