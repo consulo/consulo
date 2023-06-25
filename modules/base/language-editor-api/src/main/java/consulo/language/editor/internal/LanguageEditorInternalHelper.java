@@ -85,4 +85,8 @@ public interface LanguageEditorInternalHelper {
   default List<Annotation> runAnnotator(Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
     return List.of();
   }
+
+  default int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+    return -1;
+  }
 }

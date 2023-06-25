@@ -1,5 +1,5 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.editorActions.enter;
+package consulo.language.editor.action;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -62,7 +62,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
    * @param file   The PSI file to reformat.
    * @param offset The offset the line at which should be reformatted.
    */
-  protected void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, @Nullable Language language) {
+  public void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, @Nullable Language language) {
     PsiDocumentManager.getInstance(file.getProject()).commitDocument(editor.getDocument());
     try {
       CodeStyleManager.getInstance(file.getProject()).adjustLineIndent(file, offset);
@@ -90,7 +90,7 @@ public abstract class EnterBetweenBracesDelegate implements LanguageExtension {
    * @param rBrace The right brace offset.
    * @return <code>true</code>, if braces are pair for handling.
    */
-  protected boolean isBracePair(char lBrace, char rBrace) {
+  public boolean isBracePair(char lBrace, char rBrace) {
     return (lBrace == '(' && rBrace == ')') || (lBrace == '{' && rBrace == '}');
   }
 }

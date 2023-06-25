@@ -1,13 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.editorActions.enter;
+package consulo.language.editor.action;
 
-import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.language.Language;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.language.psi.PsiFile;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
 public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBracesDelegate {
@@ -32,8 +32,8 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
   public abstract boolean isCommentType(IElementType type);
 
   @Override
-  protected void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, Language language) {
-    EnterHandler.adjustLineIndentNoCommit(language, editor.getDocument(), editor, offset);
+  public void formatAtOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int offset, Language language) {
+    LanguageEditorInternalHelper.getInstance().adjustLineIndentNoCommit(language, editor.getDocument(), editor, offset);
   }
 
   @Nonnull

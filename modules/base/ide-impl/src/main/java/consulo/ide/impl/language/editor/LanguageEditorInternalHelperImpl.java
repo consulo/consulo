@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -108,5 +109,10 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     AnnotationHolderImpl holder = new AnnotationHolderImpl(new AnnotationSession(file), batchMode);
     holder.runAnnotatorWithContext(context, annotator);
     return holder;
+  }
+
+  @Override
+  public int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+    return EnterHandler.adjustLineIndentNoCommit(language, document, editor, offset);
   }
 }

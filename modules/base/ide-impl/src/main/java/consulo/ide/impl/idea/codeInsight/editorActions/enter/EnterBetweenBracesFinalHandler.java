@@ -2,7 +2,6 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
-import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.action.CodeDocumentationUtil;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
@@ -11,6 +10,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.language.editor.action.EnterBetweenBracesDelegate;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
@@ -24,7 +24,6 @@ import jakarta.annotation.Nullable;
  * Please, don't extend the class.
  * Use the {@code EnterBetweenBracesDelegate} language-specific implementation instead.
  */
-@ExtensionImpl(id = "EnterBetweenBracesHandler", order = "after afterUnmatchedBrace")
 public class EnterBetweenBracesFinalHandler extends EnterHandlerDelegateAdapter {
   @Override
   public Result preprocessEnter(@Nonnull final PsiFile file,
