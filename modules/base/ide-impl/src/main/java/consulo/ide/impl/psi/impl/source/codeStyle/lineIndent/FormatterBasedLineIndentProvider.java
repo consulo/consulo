@@ -16,15 +16,15 @@
 package consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.codeStyle.FormattingMode;
-import consulo.language.Language;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.FormattingMode;
+import consulo.language.codeStyle.lineIndent.LineIndentProvider;
+import consulo.language.codeStyle.lineIndent.SemanticEditorPositionFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,8 +35,11 @@ import jakarta.annotation.Nullable;
 public class FormatterBasedLineIndentProvider implements LineIndentProvider {
   @Nullable
   @Override
-  public String getLineIndent(@Nonnull Project project, @Nonnull Editor editor, Language language, int offset) {
-    Document document = editor.getDocument();
+  public String getLineIndent(@Nonnull Project project,
+                              @Nonnull Document document,
+                              @Nonnull SemanticEditorPositionFactory factory,
+                              Language language,
+                              int offset) {
     final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
     documentManager.commitDocument(document);
     PsiFile file = documentManager.getPsiFile(document);

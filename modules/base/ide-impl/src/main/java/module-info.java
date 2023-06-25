@@ -910,7 +910,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.codeStyle;
   exports consulo.ide.impl.psi.codeStyle.arrangement.engine;
   exports consulo.ide.impl.psi.codeStyle.autodetect;
-  exports consulo.ide.impl.psi.codeStyle.lineIndent;
   exports consulo.ide.impl.psi.codeStyle.modifier;
   exports consulo.ide.impl.psi.codeStyle.statusbar;
   exports consulo.ide.impl.psi.file;

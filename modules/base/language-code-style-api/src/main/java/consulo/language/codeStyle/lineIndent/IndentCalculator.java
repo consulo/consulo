@@ -13,72 +13,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.codeStyle.lineIndent;
+package consulo.language.codeStyle.lineIndent;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.language.codeStyle.Indent;
-import consulo.language.codeStyle.internal.IndentImpl;
-import consulo.language.codeStyle.IndentInfo;
-import consulo.language.Language;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.IndentInfo;
+import consulo.language.codeStyle.internal.IndentImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.ide.impl.psi.impl.source.codeStyle.SemanticEditorPosition;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import static consulo.language.codeStyle.Indent.Type.*;
 
 public class IndentCalculator {
+  public interface BaseLineOffsetCalculator {
+    int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition position);
+  }
 
-  private
-  @Nonnull
-  final Project myProject;
-  private
-  @Nonnull
-  final Editor myEditor;
-  private
-  @Nonnull
-  final BaseLineOffsetCalculator myBaseLineOffsetCalculator;
-  private
-  @Nonnull
-  final Indent myIndent;
+  public static final BaseLineOffsetCalculator LINE_BEFORE =
+    currPosition -> CharArrayUtil.shiftBackward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
 
-  public IndentCalculator(@Nonnull Project project, @Nonnull Editor editor, @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator, @Nonnull Indent indent) {
+  public static final BaseLineOffsetCalculator LINE_AFTER =
+    currPosition -> CharArrayUtil.shiftForward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
+
+  @Nonnull
+  private final Project myProject;
+  @Nonnull
+  private final Document myDocument;
+  @Nonnull
+  private final BaseLineOffsetCalculator myBaseLineOffsetCalculator;
+  @Nonnull
+  private final Indent myIndent;
+
+  public IndentCalculator(@Nonnull Project project,
+                          @Nonnull Document document,
+                          @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator,
+                          @Nonnull Indent indent) {
     myProject = project;
-    myEditor = editor;
+    myDocument = document;
     myBaseLineOffsetCalculator = baseLineOffsetCalculator;
     myIndent = indent;
   }
 
-  public final static BaseLineOffsetCalculator LINE_BEFORE = new BaseLineOffsetCalculator() {
-    @Override
-    public int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition currPosition) {
-      return CharArrayUtil.shiftBackward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
-    }
-  };
-
-  public final static BaseLineOffsetCalculator LINE_AFTER = new BaseLineOffsetCalculator() {
-    @Override
-    public int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition currPosition) {
-      return CharArrayUtil.shiftForward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
-    }
-  };
-
   @Nullable
-  String getIndentString(@Nullable Language language, @Nonnull SemanticEditorPosition currPosition) {
+  public String getIndentString(@Nullable Language language, @Nonnull SemanticEditorPosition currPosition) {
     String baseIndent = getBaseIndent(currPosition);
-    Document document = myEditor.getDocument();
-    PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
+    PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     if (file != null) {
       CommonCodeStyleSettings.IndentOptions fileOptions = CodeStyle.getIndentOptions(file);
       CommonCodeStyleSettings.IndentOptions options =
-              !fileOptions.isOverrideLanguageOptions() && language != null && !(language.is(file.getLanguage()) || language.is(Language.ANY)) ? CodeStyle.getLanguageSettings(file, language)
-                      .getIndentOptions() : fileOptions;
+        !fileOptions.isOverrideLanguageOptions() && language != null && !(language.is(file.getLanguage()) || language.is(Language.ANY)) ? CodeStyle
+          .getLanguageSettings(file, language)
+          .getIndentOptions() : fileOptions;
       if (options != null) {
         return baseIndent + new IndentInfo(0, indentToSize(myIndent, options), 0, false).generateNewWhiteSpace(options);
       }
@@ -87,8 +79,8 @@ public class IndentCalculator {
   }
 
   @Nonnull
-  protected String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
-    CharSequence docChars = myEditor.getDocument().getCharsSequence();
+  public String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
+    CharSequence docChars = myDocument.getCharsSequence();
     int offset = currPosition.getStartOffset();
     if (offset > 0) {
       int indentLineOffset = myBaseLineOffsetCalculator.getOffsetInBaseIndentLine(currPosition);
@@ -116,10 +108,5 @@ public class IndentCalculator {
       return ((IndentImpl)indent).getSpaces();
     }
     return 0;
-  }
-
-
-  public interface BaseLineOffsetCalculator {
-    int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition position);
   }
 }

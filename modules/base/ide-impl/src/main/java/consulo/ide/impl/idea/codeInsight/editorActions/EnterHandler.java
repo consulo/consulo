@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
+import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;

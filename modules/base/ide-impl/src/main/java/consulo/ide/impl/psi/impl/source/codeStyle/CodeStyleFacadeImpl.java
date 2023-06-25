@@ -22,14 +22,13 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -63,7 +62,17 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   public String getLineIndent(@Nonnull Editor editor, @Nullable Language language, int offset, boolean allowDocCommit) {
     if (myProject == null) return null;
     LineIndentProvider lineIndentProvider = LineIndentProvider.findLineIndentProvider(language);
-    String indent = lineIndentProvider != null ? lineIndentProvider.getLineIndent(myProject, editor, language, offset) : null;
+    String indent;
+
+    if (lineIndentProvider != null) {
+      var factory = new SemanticEditorPositionFactoryImpl(editor);
+      Document document = editor.getDocument();
+      indent = lineIndentProvider.getLineIndent(myProject, document, factory, language, offset);
+    }
+    else {
+      indent = null;
+    }
+
     if (indent == LineIndentProvider.DO_NOT_ADJUST) {
       return allowDocCommit ? null : indent;
     }

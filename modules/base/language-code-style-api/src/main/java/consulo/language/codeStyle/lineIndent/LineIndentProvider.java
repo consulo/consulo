@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.codeStyle.lineIndent;
+package consulo.language.codeStyle.lineIndent;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
+import consulo.document.Document;
 import consulo.language.Language;
-import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -50,15 +50,20 @@ public interface LineIndentProvider {
    * document.
    *
    * @param project  The current project.
-   * @param editor   The current editor.
+   * @param document The current document.
    * @param language Context language to be used at the current offset.
+   * @param factory factory for {@link SemanticEditorPosition}
    * @param offset   The caret offset in the editor.
    * @return The indent string (possibly consisting of tabs and/or white spaces), {@code null} if LineIndentProvider can't calculate the
    * indent (in this case indent calculation is delegated to formatter if smart indent mode is used) or {@link #DO_NOT_ADJUST} constant to
    * leave the current caret position as is without any further formatter-based adjustment.
    */
   @Nullable
-  String getLineIndent(@Nonnull Project project, @Nonnull Editor editor, Language language, int offset);
+  String getLineIndent(@Nonnull Project project,
+                       @Nonnull Document document,
+                       @Nonnull SemanticEditorPositionFactory factory,
+                       Language language,
+                       int offset);
 
   boolean isSuitableFor(@Nullable Language language);
 }

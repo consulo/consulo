@@ -17,6 +17,7 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
+import consulo.language.codeStyle.lineIndent.SemanticEditorPosition;
 import consulo.language.editor.highlight.HighlighterIteratorWrapper;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
@@ -34,20 +35,17 @@ import static java.lang.Integer.min;
 /**
  * @author Rustam Vishnyakov
  */
-public class SemanticEditorPosition {
-  public interface SyntaxElement {
-  }
-
+public class SemanticEditorPositionImpl implements SemanticEditorPosition {
   private final EditorEx myEditor;
   private final HighlighterIterator myIterator;
   private final CharSequence myChars;
   private final Function<IElementType, SyntaxElement> myTypeMapper;
   private final BiFunction<EditorEx, Integer, HighlighterIterator> myCreateHighlighterIteratorAtOffset;
 
-  private SemanticEditorPosition(@Nonnull EditorEx editor,
-                                 int offset,
-                                 @Nonnull BiFunction<EditorEx, Integer, HighlighterIterator> createHighlighterIteratorAtOffset,
-                                 @Nonnull Function<IElementType, SyntaxElement> typeMapper) {
+  private SemanticEditorPositionImpl(@Nonnull EditorEx editor,
+                                     int offset,
+                                     @Nonnull BiFunction<EditorEx, Integer, HighlighterIterator> createHighlighterIteratorAtOffset,
+                                     @Nonnull Function<IElementType, SyntaxElement> typeMapper) {
     myCreateHighlighterIteratorAtOffset = createHighlighterIteratorAtOffset;
     myEditor = editor;
     myChars = myEditor.getDocument().getCharsSequence();
@@ -55,37 +53,43 @@ public class SemanticEditorPosition {
     myTypeMapper = typeMapper;
   }
 
+  @Override
   public void moveBeforeOptional(@Nonnull SyntaxElement syntaxElement) {
     if (!myIterator.atEnd()) {
       if (syntaxElement.equals(map((IElementType)myIterator.getTokenType()))) myIterator.retreat();
     }
   }
 
-  public SemanticEditorPosition beforeOptional(@Nonnull SyntaxElement syntaxElement) {
+  @Override
+  public SemanticEditorPositionImpl beforeOptional(@Nonnull SyntaxElement syntaxElement) {
     return copyAnd(position -> position.moveBeforeOptional(syntaxElement));
   }
 
+  @Override
   public void moveBeforeOptionalMix(@Nonnull SyntaxElement... elements) {
     while (isAtAnyOf(elements)) {
       myIterator.retreat();
     }
   }
 
-  public SemanticEditorPosition beforeOptionalMix(@Nonnull SyntaxElement... elements) {
+  @Override
+  public SemanticEditorPositionImpl beforeOptionalMix(@Nonnull SyntaxElement... elements) {
     return copyAnd(position -> position.moveBeforeOptionalMix(elements));
   }
 
+  @Override
   public void moveAfterOptionalMix(@Nonnull SyntaxElement... elements) {
     while (isAtAnyOf(elements)) {
       myIterator.advance();
     }
   }
 
-
-  public SemanticEditorPosition afterOptionalMix(@Nonnull SyntaxElement... elements) {
+  @Override
+  public SemanticEditorPositionImpl afterOptionalMix(@Nonnull SyntaxElement... elements) {
     return copyAnd(position -> position.moveAfterOptionalMix(elements));
   }
 
+  @Override
   public boolean isAtMultiline() {
     if (!myIterator.atEnd()) {
       return CharArrayUtil.containLineBreaks(myChars, myIterator.getStart(), myIterator.getEnd());
@@ -99,6 +103,7 @@ public class SemanticEditorPosition {
    * @param offset The offset to search line breaks after.
    * @return True if there are line breaks after the given offset.
    */
+  @Override
   public boolean hasLineBreaksAfter(int offset) {
     if (!myIterator.atEnd() && offset >= 0) {
       int offsetAfter = offset + 1;
@@ -109,40 +114,48 @@ public class SemanticEditorPosition {
     return false;
   }
 
+  @Override
   public boolean isAtMultiline(SyntaxElement... elements) {
     return isAtAnyOf(elements) && CharArrayUtil.containLineBreaks(myChars, myIterator.getStart(), myIterator.getEnd());
   }
 
+  @Override
   public void moveBefore() {
     if (!myIterator.atEnd()) {
       myIterator.retreat();
     }
   }
 
-  public SemanticEditorPosition before() {
-    return copyAnd(position -> position.moveBefore());
+  @Override
+  public SemanticEditorPositionImpl before() {
+    return copyAnd(SemanticEditorPosition::moveBefore);
   }
 
+  @Override
   public void moveAfterOptional(@Nonnull SyntaxElement syntaxElement) {
     if (!myIterator.atEnd()) {
       if (syntaxElement.equals(map((IElementType)myIterator.getTokenType()))) myIterator.advance();
     }
   }
 
-  public SemanticEditorPosition afterOptional(@Nonnull SyntaxElement syntaxElement) {
+  @Override
+  public SemanticEditorPositionImpl afterOptional(@Nonnull SyntaxElement syntaxElement) {
     return copyAnd(position -> position.moveAfterOptional(syntaxElement));
   }
 
+  @Override
   public void moveAfter() {
     if (!myIterator.atEnd()) {
       myIterator.advance();
     }
   }
 
-  public SemanticEditorPosition after() {
-    return copyAnd(position -> position.moveAfter());
+  @Override
+  public SemanticEditorPositionImpl after() {
+    return copyAnd(SemanticEditorPosition::moveAfter);
   }
 
+  @Override
   public void moveBeforeParentheses(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
     int parenLevel = 0;
     while (!myIterator.atEnd()) {
@@ -160,18 +173,22 @@ public class SemanticEditorPosition {
     }
   }
 
-  public SemanticEditorPosition beforeParentheses(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
+  @Override
+  public SemanticEditorPositionImpl beforeParentheses(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
     return copyAnd(position -> position.moveBeforeParentheses(leftParenthesis, rightParenthesis));
   }
 
+  @Override
   public void moveToLeftParenthesisBackwardsSkippingNested(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
     moveToLeftParenthesisBackwardsSkippingNestedWithPredicate(leftParenthesis, rightParenthesis, any -> false);
   }
 
-  public SemanticEditorPosition findLeftParenthesisBackwardsSkippingNested(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
+  @Override
+  public SemanticEditorPositionImpl findLeftParenthesisBackwardsSkippingNested(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis) {
     return copyAnd(position -> position.moveToLeftParenthesisBackwardsSkippingNested(leftParenthesis, rightParenthesis));
   }
 
+  @Override
   public void moveToLeftParenthesisBackwardsSkippingNestedWithPredicate(@Nonnull SyntaxElement leftParenthesis,
                                                                         @Nonnull SyntaxElement rightParenthesis,
                                                                         @Nonnull Predicate<SemanticEditorPosition> terminationCondition) {
@@ -190,16 +207,19 @@ public class SemanticEditorPosition {
     }
   }
 
-  public SemanticEditorPosition findLeftParenthesisBackwardsSkippingNestedWithPredicate(@Nonnull SyntaxElement leftParenthesis,
-                                                                                        @Nonnull SyntaxElement rightParenthesis,
-                                                                                        @Nonnull Predicate<SemanticEditorPosition> terminationCondition) {
+  @Override
+  public SemanticEditorPositionImpl findLeftParenthesisBackwardsSkippingNestedWithPredicate(@Nonnull SyntaxElement leftParenthesis,
+                                                                                            @Nonnull SyntaxElement rightParenthesis,
+                                                                                            @Nonnull Predicate<SemanticEditorPosition> terminationCondition) {
     return copyAnd(position -> position.moveToLeftParenthesisBackwardsSkippingNestedWithPredicate(leftParenthesis, rightParenthesis, terminationCondition));
   }
 
+  @Override
   public boolean isAfterOnSameLine(@Nonnull SyntaxElement... syntaxElements) {
     return elementAfterOnSameLine(syntaxElements) != null;
   }
 
+  @Override
   @Nullable
   public SyntaxElement elementAfterOnSameLine(@Nonnull SyntaxElement... syntaxElements) {
     myIterator.retreat();
@@ -213,22 +233,27 @@ public class SemanticEditorPosition {
     return null;
   }
 
+  @Override
   public boolean isAt(@Nonnull SyntaxElement syntaxElement) {
     return !myIterator.atEnd() && syntaxElement.equals(map((IElementType)myIterator.getTokenType()));
   }
 
+  @Override
   public boolean isAt(@Nonnull IElementType elementType) {
     return !myIterator.atEnd() && myIterator.getTokenType() == elementType;
   }
 
+  @Override
   public boolean isAtEnd() {
     return myIterator.atEnd();
   }
 
+  @Override
   public int getStartOffset() {
     return myIterator.getStart();
   }
 
+  @Override
   public boolean isAtAnyOf(@Nonnull SyntaxElement... syntaxElements) {
     if (!myIterator.atEnd()) {
       SyntaxElement currElement = map((IElementType)myIterator.getTokenType());
@@ -239,11 +264,12 @@ public class SemanticEditorPosition {
     return false;
   }
 
+  @Override
   public CharSequence getChars() {
     return myChars;
   }
 
-
+  @Override
   public int findStartOf(@Nonnull SyntaxElement element) {
     while (!myIterator.atEnd()) {
       if (element.equals(map((IElementType)myIterator.getTokenType()))) return myIterator.getStart();
@@ -252,6 +278,7 @@ public class SemanticEditorPosition {
     return -1;
   }
 
+  @Override
   public boolean hasEmptyLineAfter(int offset) {
     for (int i = offset + 1; i < myIterator.getEnd(); i++) {
       if (myChars.charAt(i) == '\n') return true;
@@ -263,11 +290,13 @@ public class SemanticEditorPosition {
     return myEditor;
   }
 
+  @Override
   @Nullable
   public Language getLanguage() {
     return !myIterator.atEnd() ? ((IElementType)myIterator.getTokenType()).getLanguage() : null;
   }
 
+  @Override
   public boolean isAtLanguage(@Nullable Language language) {
     if (language != null && !myIterator.atEnd()) {
       return language == Language.ANY || ((IElementType)myIterator.getTokenType()).getLanguage().is(language);
@@ -275,19 +304,18 @@ public class SemanticEditorPosition {
     return false;
   }
 
+  @Override
   @Nullable
   public SyntaxElement getCurrElement() {
     return !myIterator.atEnd() ? map((IElementType)myIterator.getTokenType()) : null;
   }
 
-  public boolean matchesRule(@Nonnull Rule rule) {
-    return rule.check(this);
+  @Override
+  public boolean matchesRule(@Nonnull Predicate<SemanticEditorPosition> rule) {
+    return rule.test(this);
   }
 
-  public interface Rule {
-    boolean check(SemanticEditorPosition position);
-  }
-
+  @Override
   public SyntaxElement map(@Nonnull IElementType elementType) {
     return myTypeMapper.apply(elementType);
   }
@@ -297,7 +325,8 @@ public class SemanticEditorPosition {
     return myIterator.atEnd() ? "atEnd" : myIterator.getTokenType().toString() + "=>" + getChars().subSequence(getStartOffset(), min(getStartOffset() + 255, getChars().length()));
   }
 
-  public SemanticEditorPosition copy() {
+  @Override
+  public SemanticEditorPositionImpl copy() {
     return createEditorPosition(myEditor, isAtEnd() ? -1 : myIterator.getStart(), (editor, offset) -> !isAtEnd()
                                                                                                       ? myCreateHighlighterIteratorAtOffset.apply(editor, offset)
                                                                                                       : new HighlighterIteratorWrapper(
@@ -314,17 +343,18 @@ public class SemanticEditorPosition {
                                                                                                       }, myTypeMapper);
   }
 
-  public SemanticEditorPosition copyAnd(@Nonnull Consumer<SemanticEditorPosition> modifier) {
-    SemanticEditorPosition position = copy();
+  @Override
+  public SemanticEditorPositionImpl copyAnd(@Nonnull Consumer<SemanticEditorPosition> modifier) {
+    SemanticEditorPositionImpl position = copy();
     modifier.accept(position);
     return position;
   }
 
   @Nonnull
-  public static SemanticEditorPosition createEditorPosition(@Nonnull EditorEx editor,
-                                                            int offset,
-                                                            @Nonnull BiFunction<EditorEx, Integer, HighlighterIterator> createHighlighterIteratorAtOffset,
-                                                            @Nonnull Function<IElementType, SyntaxElement> typeMapper) {
-    return new SemanticEditorPosition(editor, offset, createHighlighterIteratorAtOffset, typeMapper);
+  public static SemanticEditorPositionImpl createEditorPosition(@Nonnull EditorEx editor,
+                                                                int offset,
+                                                                @Nonnull BiFunction<EditorEx, Integer, HighlighterIterator> createHighlighterIteratorAtOffset,
+                                                                @Nonnull Function<IElementType, SyntaxElement> typeMapper) {
+    return new SemanticEditorPositionImpl(editor, offset, createHighlighterIteratorAtOffset, typeMapper);
   }
 }
