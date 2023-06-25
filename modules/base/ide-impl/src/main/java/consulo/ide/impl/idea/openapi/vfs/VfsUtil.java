@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
@@ -32,10 +31,10 @@ import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -462,14 +461,7 @@ public class VfsUtil extends VfsUtilCore {
 
   @Nonnull
   public static List<VirtualFile> getChildren(@Nonnull VirtualFile dir, @Nonnull VirtualFileFilter filter) {
-    List<VirtualFile> result = null;
-    for (VirtualFile child : dir.getChildren()) {
-      if (filter.accept(child)) {
-        if (result == null) result = ContainerUtil.newSmartList();
-        result.add(child);
-      }
-    }
-    return result != null ? result : ContainerUtil.<VirtualFile>emptyList();
+    return VirtualFileUtil.getChildren(dir, filter);
   }
 
   /**
