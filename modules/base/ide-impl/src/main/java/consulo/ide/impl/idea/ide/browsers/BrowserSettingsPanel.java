@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.ui.LocalPathCellEditor;
-import consulo.ide.impl.idea.util.ui.table.IconTableCellRenderer;
+import consulo.ui.ex.awt.table.IconTableCellRenderer;
 import consulo.ide.impl.idea.util.ui.table.TableModelEditor;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;

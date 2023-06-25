@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.util.ui.table;
+package consulo.ui.ex.awt.table;
 
 import consulo.component.util.Iconable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
