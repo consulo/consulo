@@ -16,9 +16,11 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.disposer.Disposable;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 public interface FindUI {
+  @RequiredUIAccess
   void showUI();
 
   String getStringToFind();

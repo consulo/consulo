@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
@@ -30,8 +30,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
@@ -43,7 +41,6 @@ import consulo.ide.impl.idea.usages.impl.UsagePreviewPanel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -60,6 +57,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Coordinate2D;
 import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -77,18 +75,17 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.MathUtil;
-import consulo.util.lang.Pair;
-import consulo.util.lang.PatternUtil;
+import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -128,7 +125,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   @Nonnull
   private final Project myProject;
   @Nonnull
-  private final consulo.disposer.Disposable myDisposable;
+  private final Disposable myDisposable;
   private final Alarm myPreviewUpdater;
   @Nonnull
   private final FindPopupScopeUI myScopeUI;
@@ -207,6 +204,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     //FindUtil.triggerUsedOptionsStats(FIND_TYPE, myHelper.getModel());
   }
 
+  @RequiredUIAccess
   @Override
   public void showUI() {
     if (myDialog != null && myDialog.isVisible()) {
@@ -250,7 +248,8 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
       };
       myDialog.setUndecorated(!Registry.is("ide.find.as.popup.decorated"));
-      ApplicationManager.getApplication().getMessageBus().connect(myDialog.getDisposable()).subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
+      Application application = Application.get();
+      application.getMessageBus().connect(myDialog.getDisposable()).subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
         @Override
         public void projectClosed(@Nonnull Project project) {
           closeImmediately();
@@ -283,7 +282,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
         showPoint = new RelativePoint(parent, new Point((parent.getSize().width - getPreferredSize().width) / 2, height));
       }
-      ApplicationManager.getApplication().invokeLater(() -> {
+      application.invokeLater(() -> {
         if (mySearchComponent.getCaret() != null) {
           mySearchComponent.selectAll();
         }
@@ -347,6 +346,9 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       w.addWindowListener(new WindowAdapter() {
         @Override
         public void windowOpened(WindowEvent e) {
+          // schedule first search session
+          scheduleResultsUpdate();
+
           w.addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowLostFocus(WindowEvent e) {
@@ -376,7 +378,6 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
           }
         });
       }
-      ApplicationManager.getApplication().invokeLater(this::scheduleResultsUpdate, IdeaModalityState.any());
     }
 
     myDialog.showAsync();
@@ -386,7 +387,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     if (myProject.isDisposed()) return true;
     if (!myCanClose.get()) return false;
     if (myIsPinned.get()) return false;
-    if (!ApplicationManager.getApplication().isActive()) return false;
+    if (!Application.get().isActive()) return false;
     if (KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow() == null) return false;
     if (myFileMaskField.isPopupVisible()) {
       myFileMaskField.setPopupVisible(false);
@@ -559,14 +560,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             ((DefaultTableModel)myResultsPreviewTable.getModel()).removeRow(entry.getKey());
           }
           catch (FindManager.MalformedReplacementStringException ex) {
-            if (!ApplicationManager.getApplication().isUnitTestMode()) {
+            if (!Application.get().isUnitTestMode()) {
               Messages.showErrorDialog(this, ex.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
             }
             break;
           }
         }
 
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           if (myResultsPreviewTable.getRowCount() > rowToSelect) {
             myResultsPreviewTable.getSelectionModel().setSelectionInterval(rowToSelect, rowToSelect);
           }
@@ -674,7 +675,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_HELP, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
     KeymapManager keymapManager = KeymapManager.getInstance();
-    Keymap activeKeymap = keymapManager != null ? keymapManager.getActiveKeymap() : null;
+    Keymap activeKeymap = keymapManager.getActiveKeymap();
     if (activeKeymap != null) {
       ShortcutSet findNextShortcutSet = new CustomShortcutSet(activeKeymap.getShortcuts("FindNext"));
       ShortcutSet findPreviousShortcutSet = new CustomShortcutSet(activeKeymap.getShortcuts("FindPrevious"));
@@ -749,7 +750,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
           if (myHelper.getModel().isRegularExpressions()) {
             myComponentValidator.updateInfo(getValidationInfo(myHelper.getModel()));
           }
-          ApplicationManager.getApplication().invokeLater(updatePreviewRunnable);
+          Application.get().invokeLater(updatePreviewRunnable);
         }
       }
     };
@@ -806,7 +807,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     add(myTitlePanel, "sx 2, growx, growx, growy");
     add(myCbFileFilter);
     add(myFileMaskField, "gapleft 4, gapright 16");
-    if (Registry.is("ide.find.as.popup.allow.pin") || ApplicationManager.getApplication().isInternal()) {
+    if (Registry.is("ide.find.as.popup.allow.pin") || Application.get().isInternal()) {
       myIsPinned.set(UISettings.getInstance().getPinFindInPath());
       JPanel twoButtons = new JPanel(new MigLayout("flowx, ins 0, gap 4, fillx, hidemode 3"));
       twoButtons.add(myFilterContextButton);
@@ -1022,7 +1023,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   @Override
   public void addNotify() {
     super.addNotify();
-    ApplicationManager.getApplication().invokeLater(() -> ScrollingUtil.ensureSelectionExists(myResultsPreviewTable), IdeaModalityState.any());
+    Application.get().invokeLater(() -> ScrollingUtil.ensureSelectionExists(myResultsPreviewTable), IdeaModalityState.any());
     myScopeSelectionToolbar.updateActionsImmediately();
   }
 
@@ -1099,7 +1100,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     if (myNavigationHintLabel.isVisible()) {
       myNavigationHintLabel.setText("");
       KeymapManager keymapManager = KeymapManager.getInstance();
-      Keymap activeKeymap = keymapManager != null ? keymapManager.getActiveKeymap() : null;
+      Keymap activeKeymap = keymapManager.getActiveKeymap();
       if (activeKeymap != null) {
         String findNextText = KeymapUtil.getFirstKeyboardShortcutText("FindNext");
         String findPreviousText = KeymapUtil.getFirstKeyboardShortcutText("FindPrevious");
@@ -1116,10 +1117,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     myScopeDetailsPanel.revalidate();
     myScopeDetailsPanel.repaint();
     if (firstFocusableComponent != null) {
-      ApplicationManager.getApplication().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(firstFocusableComponent, true));
+      Application.get().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(firstFocusableComponent, true));
     }
     if (firstFocusableComponent == null && !mySearchComponent.isFocusOwner() && !myReplaceComponent.isFocusOwner()) {
-      ApplicationManager.getApplication().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true));
+      Application.get().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true));
     }
   }
 
@@ -1160,7 +1161,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       public void stop() {
         super.stop();
         onStop(System.identityHashCode(this));
-        ApplicationManager.getApplication().invokeLater(() -> {
+        Application.get().invokeLater(() -> {
           if (myNeedReset.compareAndSet(true, false)) { //nothing is found, let's clear previous results
             reset();
           }
@@ -1236,7 +1237,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
             recentUsageRef.set(new WeakReference<>(usage));
           }
 
-          ApplicationManager.getApplication().invokeLater(() -> {
+          Application.get().invokeLater(() -> {
             if (isCancelled()) {
               onStop(hash);
               return;
