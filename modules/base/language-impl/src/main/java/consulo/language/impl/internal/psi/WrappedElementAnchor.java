@@ -15,11 +15,12 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.document.util.TextRange;
 import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerAnchorProvider;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,15 +50,17 @@ public class WrappedElementAnchor extends PsiAnchor {
   }
 
   @Override
+  @RequiredReadAction
   public int getStartOffset() {
     PsiElement element = retrieve();
-    return element == null || element.getTextRange() == null ? -1 : element.getTextRange().getStartOffset();
+    return element == null || element.getTextRange() == TextRange.EMPTY_RANGE ? -1 : element.getTextRange().getStartOffset();
   }
 
   @Override
+  @RequiredReadAction
   public int getEndOffset() {
     PsiElement element = retrieve();
-    return element == null || element.getTextRange() == null ? -1 : element.getTextRange().getEndOffset();
+    return element == null || element.getTextRange() == TextRange.EMPTY_RANGE ? -1 : element.getTextRange().getEndOffset();
   }
 
   @Override

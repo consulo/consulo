@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorProviderManager;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.ImplementationTextSelectioner;
@@ -47,11 +49,11 @@ import consulo.usage.UsageView;
 import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
@@ -420,6 +422,7 @@ public class ImplementationViewComponent extends JPanel {
 
 
   @Nullable
+  @RequiredReadAction
   public static String getNewText(PsiElement elt) {
     Project project = elt.getProject();
     PsiFile psiFile = getContainingFile(elt);
@@ -427,7 +430,7 @@ public class ImplementationViewComponent extends JPanel {
     final Document doc = PsiDocumentManager.getInstance(project).getDocument(psiFile);
     if (doc == null) return null;
 
-    if (elt.getTextRange() == null) {
+    if (elt.getTextRange() == TextRange.EMPTY_RANGE) {
       return null;
     }
 

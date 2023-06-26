@@ -16,12 +16,8 @@
 
 package consulo.ide.impl.psi.impl.search;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.StringSearcher;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
@@ -29,13 +25,14 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.ReadActionProcessor;
+import consulo.application.util.StringSearcher;
+import consulo.application.util.concurrent.JobLauncher;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
@@ -44,10 +41,13 @@ import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.language.cacheBuilder.CacheManager;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
-import consulo.language.psi.stub.IdIndexEntry;
-import consulo.language.psi.UseScopeEnlarger;
+import consulo.language.cacheBuilder.CacheManager;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
@@ -56,6 +56,7 @@ import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.language.psi.search.*;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IdIndexEntry;
 import consulo.language.util.CommentUtilCore;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
@@ -67,11 +68,11 @@ import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -219,6 +220,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
                                                        searchContext == UsageSearchContext.IN_STRINGS,
                                                        options.contains(Options.PROCESS_ONLY_JAVA_IDENTIFIERS_IF_POSSIBLE));
     ReadActionProcessor<PsiElement> localProcessor = new ReadActionProcessor<PsiElement>() {
+      @RequiredReadAction
       @Override
       public boolean processInReadAction(PsiElement scopeElement) {
         if (!scopeElement.isValid()) return true;
@@ -229,7 +231,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
           // can't scan text of the element
           return true;
         }
-        if (scopeElement.getTextRange() == null) {
+        if (scopeElement.getTextRange() == TextRange.EMPTY_RANGE) {
           // clients can put whatever they want to the LocalSearchScope. Skip what we can't process.
           LOG.debug("Element " + scopeElement + " of class " + scopeElement.getClass() + " has null range");
           return true;
