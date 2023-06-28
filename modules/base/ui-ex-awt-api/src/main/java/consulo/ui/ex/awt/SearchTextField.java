@@ -115,6 +115,7 @@ public class SearchTextField extends JPanel {
 
     if (isSearchControlUISupported()) {
       myTextField.putClientProperty("JTextField.variant", "search");
+      myTextField.putClientProperty("JTextField.Search.Gap", JBUIScale.scale(4));
       myTextField.putClientProperty("JTextField.Search.CancelAction", new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
