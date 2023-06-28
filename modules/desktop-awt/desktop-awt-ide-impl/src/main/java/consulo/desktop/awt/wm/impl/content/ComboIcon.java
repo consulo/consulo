@@ -25,7 +25,7 @@ public abstract class ComboIcon {
   private final Icon myImage;
 
   public ComboIcon() {
-    myImage = LafIconLookup.getIcon("treeExpanded", false, false, true);
+    myImage = LafIconLookup.INSTANCE.getIcon("treeExpanded", false, false, true);
   }
 
   public void paintIcon(final Component c, final Graphics g) {

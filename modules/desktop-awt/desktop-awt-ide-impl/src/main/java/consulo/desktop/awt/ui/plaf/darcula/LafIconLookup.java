@@ -15,11 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
+import consulo.desktop.awt.ui.IconLookup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Locale;
 import java.util.Map;
@@ -28,23 +29,24 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * from kotlin
  */
-public class LafIconLookup {
-  private static final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
+public class LafIconLookup implements IconLookup {
+  public static final LafIconLookup INSTANCE = new LafIconLookup();
 
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
-    return getIcon(name, selected, focused, enabled, false, false);
-  }
+  private final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
 
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable) {
-    return getIcon(name, selected, focused, enabled, editable, false);
-  }
-
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
+  @Override
+  public Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
     return findIcon(name, selected, focused, enabled, editable, pressed, true);
   }
 
   @Nonnull
-  public static Icon findIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed, boolean isThrowErrorIfNotFound) {
+  public Icon findIcon(@Nonnull String name,
+                       boolean selected,
+                       boolean focused,
+                       boolean enabled,
+                       boolean editable,
+                       boolean pressed,
+                       boolean isThrowErrorIfNotFound) {
     String key = name;
     if (editable) {
       key = name + "Editable";
@@ -66,6 +68,10 @@ public class LafIconLookup {
 
     String imageId = "components." + key.toLowerCase(Locale.ROOT);
 
-    return ourCache.computeIfAbsent(imageId, s -> TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup", imageId, Image.DEFAULT_ICON_SIZE, Image.DEFAULT_ICON_SIZE)));
+    return ourCache.computeIfAbsent(imageId,
+                                    s -> TargetAWT.to(ImageKey.of("consulo.platform.desktop.laf.LookAndFeelIconGroup",
+                                                                  imageId,
+                                                                  Image.DEFAULT_ICON_SIZE,
+                                                                  Image.DEFAULT_ICON_SIZE)));
   }
 }

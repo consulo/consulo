@@ -39,7 +39,7 @@ public class WinIntelliJRadioButtonUI extends DarculaRadioButtonUI {
     AbstractButton b = (AbstractButton)c;
     ButtonModel bm = b.getModel();
     boolean focused = c.hasFocus() || bm.isRollover();
-    Icon icon = WinIconLookup.getIcon("radio", bm.isSelected(), focused, bm.isEnabled(), false, bm.isPressed());
+    Icon icon = WinIconLookup.INSTANCE.getIcon("radio", bm.isSelected(), focused, bm.isEnabled(), false, bm.isPressed());
     icon.paintIcon(c, g, iconRect.x, iconRect.y);
   }
 

@@ -15,13 +15,14 @@
  */
 package consulo.desktop.awt.ui.plaf.windows;
 
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.desktop.awt.ui.IconLookup;
 import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
 import consulo.desktop.ui.laf.windows.icon.WindowsIconGroup;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.Locale;
 import java.util.Map;
@@ -32,23 +33,24 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @see LafIconLookup
  */
-public class WinIconLookup {
-  private static final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
+public class WinIconLookup implements IconLookup {
+  public static final WinIconLookup INSTANCE = new WinIconLookup();
 
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
-    return getIcon(name, selected, focused, enabled, false, false);
-  }
+  private final Map<String, Icon> ourCache = new ConcurrentHashMap<>();
 
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable) {
-    return getIcon(name, selected, focused, enabled, editable, false);
-  }
-
-  public static Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
+  @Override
+  public Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed) {
     return findIcon(name, selected, focused, enabled, editable, pressed, true);
   }
 
   @Nonnull
-  public static Icon findIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled, boolean editable, boolean pressed, boolean isThrowErrorIfNotFound) {
+  public Icon findIcon(@Nonnull String name,
+                       boolean selected,
+                       boolean focused,
+                       boolean enabled,
+                       boolean editable,
+                       boolean pressed,
+                       boolean isThrowErrorIfNotFound) {
     String key = name;
     if (editable) {
       key = name + "Editable";

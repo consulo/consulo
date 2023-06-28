@@ -393,6 +393,13 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     return icon;
   }
 
+  private static boolean isSelected(JMenuItem item) {
+    if (item == null) return false;
+    ButtonModel model = item.getModel();
+    if (model == null) return false;
+    return model.isArmed() || (item instanceof JMenu) && model.isSelected();
+  }
+
   @Override
   public Dimension getPreferredSize(JComponent comp) {
     JMenuItem jmenuitem = (JMenuItem)comp;
@@ -466,7 +473,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
   }
 
   private Icon getAllowedIcon() {
-    Icon icon = menuItem.isEnabled() ? menuItem.getIcon() : menuItem.getDisabledIcon();
+    Icon icon = !menuItem.isEnabled() ? menuItem.getDisabledIcon() : isSelected(menuItem) ? menuItem.getSelectedIcon() : menuItem.getIcon();
     if (icon != null && icon.getIconWidth() > myMaxGutterIconWidth) {
       icon = null;
     }

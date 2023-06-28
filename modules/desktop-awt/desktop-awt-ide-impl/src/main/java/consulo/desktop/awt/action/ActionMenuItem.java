@@ -15,14 +15,17 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
+import consulo.desktop.awt.ui.IconLookup;
+import consulo.desktop.awt.ui.JBCheckBoxMenuItem;
 import consulo.desktop.awt.ui.plaf.GtkMenuItemUI;
+import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
+import consulo.desktop.awt.ui.plaf.windows.WinIconLookup;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -33,7 +36,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -61,8 +63,8 @@ import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ActionMenuItem extends JCheckBoxMenuItem {
-  private static final int outIconSize = Image.DEFAULT_ICON_SIZE;
+public class ActionMenuItem extends JBCheckBoxMenuItem {
+  private static final Image ourDefaultIcon = Image.empty(Image.DEFAULT_ICON_SIZE);
 
   private final ActionRef<AnAction> myAction;
   private final Presentation myPresentation;
@@ -170,11 +172,11 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
 
   private void updateTextAndMnemonic(@Nullable LocalizeValue textValue) {
     // first initialization
-    if(myTextValue == null) {
+    if (myTextValue == null) {
       return;
     }
 
-    if(textValue != null) {
+    if (textValue != null) {
       myTextValue = textValue;
     }
 
@@ -254,8 +256,15 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
       fm.typeAheadUntil(typeAhead, getText());
       fm.runOnOwnContext(myContext, () -> {
         final AnActionEvent event =
-                new AnActionEvent(new MouseEvent(ActionMenuItem.this, MouseEvent.MOUSE_PRESSED, 0, e.getModifiers(), getWidth() / 2, getHeight() / 2, 1, false),
-                                  myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
+          new AnActionEvent(new MouseEvent(ActionMenuItem.this,
+                                           MouseEvent.MOUSE_PRESSED,
+                                           0,
+                                           e.getModifiers(),
+                                           getWidth() / 2,
+                                           getHeight() / 2,
+                                           1,
+                                           false),
+                            myContext, myPlace, myPresentation, ActionManager.getInstance(), e.getModifiers(), true, false);
         final AnAction menuItemAction = myAction.getAction();
         if (ActionUtil.lastUpdateAndCheckDumb(menuItemAction, event, false)) {
           ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
@@ -275,21 +284,25 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
     if (isToggleable() && (myPresentation.getIcon() == null || myInsideCheckedGroup)) {
       action.update(myEvent);
       myToggled = Boolean.TRUE.equals(myEvent.getPresentation().getClientProperty(Toggleable.SELECTED_PROPERTY));
-      if (ActionPlaces.MAIN_MENU.equals(myPlace) && TopApplicationMenuUtil.isMacSystemMenu ||
-          UIUtil.isUnderNimbusLookAndFeel() ||
-          UIUtil.isUnderWindowsLookAndFeel() && SystemInfo.isWin7OrNewer) {
+      if (ActionPlaces.MAIN_MENU.equals(myPlace) && TopApplicationMenuUtil.isMacSystemMenu) {
         setState(myToggled);
       }
-      else if (!(getUI() instanceof GtkMenuItemUI)) {
+      else {
         if (myToggled) {
-          Image icon = ImageEffects.resize(AllIcons.Actions.Checked, Image.DEFAULT_ICON_SIZE);
-          setIcon(TargetAWT.to(icon));
-          setDisabledIcon(TargetAWT.to(ImageEffects.grayed(icon)));
+          IconLookup lookup = SystemInfo.isWindows ? WinIconLookup.INSTANCE : LafIconLookup.INSTANCE;
+
+          Icon checkmark = lookup.getIcon("checkmark", false, false, true);
+          Icon selectedCheckmark = lookup.getIcon("checkmark", true, false, true);
+          Icon disabledCheckmark = lookup.getIcon("checkmark", false, false, false);
+
+          setIcon(checkmark);
+          setSelectedIcon(selectedCheckmark);
+          setDisabledIcon(disabledCheckmark);
         }
         else {
-          EmptyIcon emptyIcon = JBUI.emptyIcon(outIconSize);
-          setIcon(emptyIcon);
-          setDisabledIcon(emptyIcon);
+          setIcon(TargetAWT.to(ourDefaultIcon));
+          setSelectedIcon(TargetAWT.to(ourDefaultIcon));
+          setDisabledIcon(TargetAWT.to(ourDefaultIcon));
         }
       }
     }
@@ -298,7 +311,7 @@ public class ActionMenuItem extends JCheckBoxMenuItem {
         Image icon = myPresentation.getIcon();
         if (myUseDarkIcons) {
           Style currentStyle = StyleManager.get().getCurrentStyle();
-          if(icon != null && !currentStyle.isDark()) {
+          if (icon != null && !currentStyle.isDark()) {
             icon = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, icon);
           }
         }

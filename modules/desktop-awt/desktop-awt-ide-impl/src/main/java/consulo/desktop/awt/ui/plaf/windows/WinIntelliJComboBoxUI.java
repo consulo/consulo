@@ -293,7 +293,7 @@ public class WinIntelliJComboBoxUI extends DarculaComboBoxUI {
   }
 
   public static Icon getArrowIcon(@Nonnull JComponent c) {
-    return WinIconLookup.getIcon("comboDropTriangle", false, false, c.isEnabled());
+    return WinIconLookup.INSTANCE.getIcon("comboDropTriangle", false, false, c.isEnabled());
   }
 
   @Override

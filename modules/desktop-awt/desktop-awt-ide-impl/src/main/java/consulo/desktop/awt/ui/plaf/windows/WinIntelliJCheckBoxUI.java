@@ -49,7 +49,7 @@ public class WinIntelliJCheckBoxUI extends DarculaCheckBoxUI {
       Object op = b.getClientProperty("JComponent.outline");
       boolean focused = op == null && c.hasFocus() || bm.isRollover() || isCellRollover(b);
       boolean pressed = bm.isPressed() || isCellPressed(b);
-      Icon icon = WinIconLookup.getIcon(iconName, selected || isIndeterminate(b), focused, enabled, false, pressed);
+      Icon icon = WinIconLookup.INSTANCE.getIcon(iconName, selected || isIndeterminate(b), focused, enabled, false, pressed);
       icon.paintIcon(c, g, iconRect.x, iconRect.y);
 
       if (op != null) {

@@ -112,7 +112,7 @@ public class DarculaCheckBoxUI extends MetalCheckBoxUI {
 
       Object op = b.getClientProperty("JComponent.outline");
       boolean hasFocus = op == null && b.hasFocus();
-      Icon icon = LafIconLookup.getIcon(iconName, selected || isIndeterminate(b), hasFocus, b.isEnabled());
+      Icon icon = LafIconLookup.INSTANCE.getIcon(iconName, selected || isIndeterminate(b), hasFocus, b.isEnabled());
       icon.paintIcon(b, g2, iconRect.x, iconRect.y);
 
       if (op != null) {
