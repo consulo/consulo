@@ -320,6 +320,8 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
           icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }
         setIcon(TargetAWT.to(icon));
+        setSelectedIcon(TargetAWT.to(icon));
+        
         if (myPresentation.getDisabledIcon() != null) {
           setDisabledIcon(TargetAWT.to(myPresentation.getDisabledIcon()));
         }
