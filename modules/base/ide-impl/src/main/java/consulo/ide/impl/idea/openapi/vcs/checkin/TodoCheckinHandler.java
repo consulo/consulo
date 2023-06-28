@@ -15,48 +15,46 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
-import consulo.application.ui.util.TodoPanelSettings;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.todo.*;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.ui.util.TodoPanelSettings;
+import consulo.application.util.DateFormatUtil;
+import consulo.ide.IdeBundle;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.todo.*;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.function.PairConsumer;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitExecutor;
-import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentManager;
-import java.util.function.Consumer;
-import consulo.util.lang.function.PairConsumer;
-import consulo.application.util.DateFormatUtil;
 import consulo.versionControlSystem.checkin.CheckinHandler;
-
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import static consulo.application.CommonBundle.getCancelButtonText;
 import static consulo.ui.ex.awt.Messages.*;
@@ -102,7 +100,7 @@ public class TodoCheckinHandler extends CheckinHandler {
         linkLabel.setListener(new LinkListener() {
           @Override
           public void linkSelected(LinkLabel aSource, Object aLinkData) {
-            DefaultActionGroup group = SetTodoFilterAction.createPopupActionGroup(myProject, myConfiguration.myTodoPanelSettings, consumer);
+            SetTodoFilterAction group = new SetTodoFilterAction(myProject, myConfiguration.myTodoPanelSettings, consumer);
             ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.TODO_VIEW_TOOLBAR, group);
             popupMenu.getComponent().show(linkLabel, 0, linkLabel.getHeight());
           }

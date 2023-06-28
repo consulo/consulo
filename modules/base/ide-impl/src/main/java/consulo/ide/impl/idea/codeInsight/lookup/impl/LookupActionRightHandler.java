@@ -23,14 +23,14 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.CharFilter;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionRightHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(LookupImpl lookup, DataContext context, final Caret caret) {
+  protected void executeInLookup(LookupEx lookup, DataContext context, final Caret caret) {
     final Editor editor = lookup.getEditor();
     final int offset = editor.getCaretModel().getOffset();
     final CharSequence seq = editor.getDocument().getCharsSequence();

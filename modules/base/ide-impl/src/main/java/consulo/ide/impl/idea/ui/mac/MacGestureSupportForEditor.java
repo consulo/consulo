@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.mac;
 
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
@@ -78,7 +78,7 @@ public class MacGestureSupportForEditor {
   }
 
 
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
   private void fillActionsList(MouseShortcut mouseShortcut, boolean isModalContext) {
     myActions.clear();

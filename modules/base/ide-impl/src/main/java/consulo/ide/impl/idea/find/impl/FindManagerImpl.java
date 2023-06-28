@@ -18,13 +18,13 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.util.StringSearcher;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.messagebus.MessageBus;
 import consulo.content.scope.SearchScope;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
@@ -44,8 +44,6 @@ import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ReplacePromptDialog;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.application.util.StringSearcher;
-import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
@@ -57,6 +55,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.LanguageFileType;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.pattern.StringPattern;
@@ -78,11 +77,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -126,12 +125,9 @@ public class FindManagerImpl extends FindManager {
     myFindInProjectModel.setMultipleFiles(true);
 
     NotificationsConfigurationImpl.remove("FindInPath");
-    Disposer.register(project, new Disposable() {
-      @Override
-      public void dispose() {
-        if (myHelper != null) {
-          Disposer.dispose(myHelper);
-        }
+    Disposer.register(project, () -> {
+      if (myHelper != null) {
+        Disposer.dispose(myHelper);
       }
     });
   }
@@ -201,12 +197,7 @@ public class FindManagerImpl extends FindManager {
   public void showFindDialog(@Nonnull FindModel model, @Nonnull Runnable okHandler) {
     if (myHelper == null || Disposer.isDisposed(myHelper)) {
       myHelper = new FindUIHelper(myProject, model, okHandler);
-      Disposer.register(myHelper, new Disposable() {
-        @Override
-        public void dispose() {
-          myHelper = null;
-        }
-      });
+      Disposer.register(myHelper, () -> myHelper = null);
     }
     else {
       myHelper.setModel(model);

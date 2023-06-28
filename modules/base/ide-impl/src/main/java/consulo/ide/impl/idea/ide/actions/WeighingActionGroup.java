@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.Utils;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,8 +28,9 @@ import java.util.List;
  * @author peter
  */
 abstract class WeighingActionGroup extends ActionGroup {
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     getDelegate().update(e);
@@ -42,14 +41,12 @@ abstract class WeighingActionGroup extends ActionGroup {
   @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    ActionGroup delegate = getDelegate();
-    AnAction[] children = delegate.getChildren(e);
-    if (e == null) {
-      return children;
-    }
+    return getDelegate().getChildren(e);
+  }
 
-    List<AnAction> visibleActions = Utils.expandActionGroup(false, delegate, myPresentationFactory, e.getDataContext(), e.getPlace());
-
+  @Nonnull
+  @Override
+  public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
     LinkedHashSet<AnAction> heaviest = null;
     double maxWeight = Presentation.DEFAULT_WEIGHT;
     for (AnAction action : visibleActions) {
@@ -66,10 +63,10 @@ abstract class WeighingActionGroup extends ActionGroup {
     }
 
     if (heaviest == null) {
-      return children;
+      return visibleActions;
     }
 
-    final DefaultActionGroup chosen = new DefaultActionGroup();
+    final ActionGroup.Builder chosen = ActionGroup.newImmutableBuilder();
     boolean prevSeparator = true;
     for (AnAction action : visibleActions) {
       final boolean separator = action instanceof AnSeparator;
@@ -87,14 +84,13 @@ abstract class WeighingActionGroup extends ActionGroup {
       }
     }
 
-    ActionGroup other = new ExcludingActionGroup(delegate, heaviest);
+    ActionGroup other = new ExcludingActionGroup(getDelegate(), heaviest);
     other.setPopup(true);
     other.getTemplatePresentation().setText("Other...");
-    return new AnAction[]{chosen, new AnSeparator(), other};
+    return List.of(chosen.build(), new AnSeparator(), other);
   }
 
   protected boolean shouldBeChosenAnyway(AnAction action) {
     return false;
   }
-
 }

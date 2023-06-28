@@ -15,16 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
-
+import consulo.undoRedo.CommandProcessor;
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,11 +33,11 @@ import java.util.Collection;
  * @author peter
  */
 public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> implements ClosableByLeftArrow {
-  private final LookupImpl myLookup;
+  private final LookupEx myLookup;
   private final LookupElement myLookupElement;
   private final Image myEmptyIcon;
 
-  public LookupActionsStep(Collection<LookupElementAction> actions, LookupImpl lookup, LookupElement lookupElement) {
+  public LookupActionsStep(Collection<LookupElementAction> actions, LookupEx lookup, LookupElement lookupElement) {
     super(null, new ArrayList<>(actions));
     myLookup = lookup;
     myLookupElement = lookupElement;
@@ -70,7 +71,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
 
   @Override
   public Image getIconFor(LookupElementAction aValue) {
-    return LookupCellRenderer.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
+    return LookupIconUtil.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
   }
 
   @Nonnull

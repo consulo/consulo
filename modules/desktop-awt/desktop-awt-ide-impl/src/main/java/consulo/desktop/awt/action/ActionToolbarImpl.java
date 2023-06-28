@@ -14,7 +14,8 @@ import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.*;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdater;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -46,11 +47,11 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -87,7 +88,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
   @Nonnull
   private final String myPlace;
   List<? extends AnAction> myVisibleActions;
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final PresentationFactory myPresentationFactory = new BasePresentationFactory();
   private final boolean myDecorateButtons;
 
   private final ToolbarUpdater myUpdater;

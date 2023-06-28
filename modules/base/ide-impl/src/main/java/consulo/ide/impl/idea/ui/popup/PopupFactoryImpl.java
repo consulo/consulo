@@ -15,8 +15,8 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
@@ -25,7 +25,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -184,7 +183,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                             int maxRowCount,
                             Condition<? super AnAction> preselectActionCondition,
                             @Nullable final String actionPlace,
-                            @Nullable PresentationFactory presentationFactory,
+                            @Nullable BasePresentationFactory presentationFactory,
                             boolean autoSelection) {
       this(null, createStep(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, preselectActionCondition, actionPlace, presentationFactory,
                             autoSelection), disposeCallback, dataContext, actionPlace, maxRowCount);
@@ -214,7 +213,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
         final ActionItem actionItem = (ActionItem)list.getSelectedValue();
         if (actionItem == null) return;
         Presentation presentation = updateActionItem(actionItem);
-        ActionMenu.showDescriptionInStatusBar(true, myComponent, presentation.getDescription());
+        ActionMenuUtil.showDescriptionInStatusBar(true, myComponent, presentation.getDescription());
       });
     }
 
@@ -239,7 +238,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                                         boolean honorActionMnemonics,
                                                         Condition<? super AnAction> preselectActionCondition,
                                                         @Nullable String actionPlace,
-                                                        @Nullable PresentationFactory presentationFactory,
+                                                        @Nullable BasePresentationFactory presentationFactory,
                                                         boolean autoSelection) {
       final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
@@ -251,7 +250,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     }
 
     /**
-     * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, PresentationFactory)} instead.
+     * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, BasePresentationFactory)} instead.
      */
     @Deprecated
     @Nonnull
@@ -270,7 +269,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       if (myDisposeCallback != null) {
         myDisposeCallback.run();
       }
-      ActionMenu.showDescriptionInStatusBar(true, myComponent, null);
+      ActionMenuUtil.showDescriptionInStatusBar(true, myComponent, null);
       super.dispose();
     }
 

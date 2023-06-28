@@ -16,41 +16,37 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.completion.lookup.event.LookupAdapter;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.application.util.ClientId;
-import consulo.language.editor.template.*;
-import consulo.language.editor.template.context.TemplateActionContext;
-import consulo.language.util.AttachmentFactoryUtil;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.ClientId;
+import consulo.application.util.matcher.PlainPrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.application.util.matcher.PlainPrefixMatcher;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.lookup.LookupArranger;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.completion.lookup.*;
+import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -147,7 +143,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
                                           @Nonnull Map<Template, String> matchingTemplates,
                                           @Nonnull MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements) {
 
-    LookupImpl lookup = (LookupImpl)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new TemplatesArranger());
+    LookupEx lookup =
+      (LookupEx)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new TemplatesArranger());
     for (Map.Entry<Template, String> entry : matchingTemplates.entrySet()) {
       Template template = entry.getKey();
       lookup.addItem(createTemplateElement(template), new PlainPrefixMatcher(StringUtil.notNullize(entry.getValue())));
@@ -204,7 +201,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   }
 
   public static void showTemplatesLookup(final Project project, final Editor editor, Map<Template, String> template2Argument) {
-    final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "",
+    final LookupEx lookup = (LookupEx)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "",
                                                                                           new LookupArranger.DefaultArranger());
     for (Template template : template2Argument.keySet()) {
       String prefix = computePrefix(template, template2Argument.get(template));
@@ -214,7 +211,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     showLookup(lookup, template2Argument);
   }
 
-  private static void showLookup(LookupImpl lookup, @Nullable Map<Template, String> template2Argument) {
+  private static void showLookup(LookupEx lookup, @Nullable Map<Template, String> template2Argument) {
     Editor editor = lookup.getEditor();
     Project project = editor.getProject();
     lookup.addLookupListener(new MyLookupAdapter(project, editor, template2Argument));
@@ -222,7 +219,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     lookup.showLookup();
   }
 
-  private static void showLookup(LookupImpl lookup, @Nonnull PsiFile file) {
+  private static void showLookup(LookupEx lookup, @Nonnull PsiFile file) {
     Editor editor = lookup.getEditor();
     Project project = editor.getProject();
     lookup.addLookupListener(new MyLookupAdapter(project, editor, file));

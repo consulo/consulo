@@ -62,7 +62,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
   public static final Color GRAPHITE_COLOR = new Color(100, 100, 100, 230);
   private final RegistryValue myIsEnabled;
-  private final RegistryValue myHelpTooltip;
 
   private HelpTooltipManager myHelpTooltipManager;
   private boolean myHideHelpTooltip;
@@ -93,7 +92,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
   @Inject
   public IdeTooltipManagerImpl(Application application) {
     myIsEnabled = Registry.get("ide.tooltip.callout");
-    myHelpTooltip = Registry.get("ide.helptooltip.enabled");
 
     Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
@@ -589,12 +587,10 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
   private void processEnabled() {
     if (myIsEnabled.asBoolean()) {
       ToolTipManager.sharedInstance().setEnabled(false);
-      if (myHelpTooltip.asBoolean()) {
-        if (myHelpTooltipManager == null) {
-          myHelpTooltipManager = new HelpTooltipManager();
-        }
-        return;
+      if (myHelpTooltipManager == null) {
+        myHelpTooltipManager = new HelpTooltipManager();
       }
+      return;
     }
     else {
       ToolTipManager.sharedInstance().setEnabled(true);

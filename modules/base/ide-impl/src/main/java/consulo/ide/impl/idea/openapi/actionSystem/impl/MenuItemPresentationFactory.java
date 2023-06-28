@@ -21,7 +21,7 @@ import consulo.ui.ex.action.Presentation;
 /**
  * @author Roman.Chernyatchik
  */
-public class MenuItemPresentationFactory extends PresentationFactory {
+public class MenuItemPresentationFactory extends BasePresentationFactory {
   public static final String HIDE_ICON = "HIDE_ICON";
   private final boolean myForceHide;
 

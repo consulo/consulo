@@ -60,10 +60,10 @@ import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import org.jetbrains.annotations.PropertyKey;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.PropertyKey;
+
 import javax.swing.*;
 import java.util.*;
 import java.util.function.Function;
@@ -200,7 +200,8 @@ public class FindInProjectUtil {
 
     return new Condition<CharSequence>() {
       final Pattern regExp = Pattern.compile(finalPattern, Pattern.CASE_INSENSITIVE);
-      final Pattern negativeRegExp = StringUtil.isEmpty(finalNegativePattern) ? null : Pattern.compile(finalNegativePattern, Pattern.CASE_INSENSITIVE);
+      final Pattern negativeRegExp =
+        StringUtil.isEmpty(finalNegativePattern) ? null : Pattern.compile(finalNegativePattern, Pattern.CASE_INSENSITIVE);
 
       @Override
       public boolean value(CharSequence input) {
@@ -237,12 +238,16 @@ public class FindInProjectUtil {
     new FindInProjectTask(findModel, project, filesToStart).findUsages(processPresentation, consumer);
   }
 
-  static boolean processUsagesInFile(@Nonnull final PsiFile psiFile, @Nonnull final VirtualFile virtualFile, @Nonnull final FindModel findModel, @Nonnull final Processor<? super UsageInfo> consumer) {
+  static boolean processUsagesInFile(@Nonnull final PsiFile psiFile,
+                                     @Nonnull final VirtualFile virtualFile,
+                                     @Nonnull final FindModel findModel,
+                                     @Nonnull final Processor<? super UsageInfo> consumer) {
     if (findModel.getStringToFind().isEmpty()) {
       return ReadAction.compute(() -> consumer.process(new UsageInfo(psiFile)));
     }
     if (virtualFile.getFileType().isBinary()) return true; // do not decompile .class files
-    final Document document = ReadAction.compute(() -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null);
+    final Document document =
+      ReadAction.compute(() -> virtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(virtualFile) : null);
     if (document == null) return true;
     final int[] offsetRef = {0};
     ProgressIndicator current = ProgressManager.getInstance().getProgressIndicator();
@@ -253,7 +258,8 @@ public class FindInProjectUtil {
     do {
       tooManyUsagesStatus.pauseProcessingIfTooManyUsages(); // wait for user out of read action
       before = offsetRef[0];
-      boolean success = ReadAction.compute(() -> !psiFile.isValid() || processSomeOccurrencesInFile(document, findModel, psiFile, offsetRef, consumer));
+      boolean success =
+        ReadAction.compute(() -> !psiFile.isValid() || processSomeOccurrencesInFile(document, findModel, psiFile, offsetRef, consumer));
       if (!success) {
         return false;
       }
@@ -397,7 +403,9 @@ public class FindInProjectUtil {
   }
 
   @Nonnull
-  public static FindUsagesProcessPresentation setupProcessPresentation(@Nonnull final Project project, final boolean showPanelIfOnlyOneUsage, @Nonnull final UsageViewPresentation presentation) {
+  public static FindUsagesProcessPresentation setupProcessPresentation(@Nonnull final Project project,
+                                                                       final boolean showPanelIfOnlyOneUsage,
+                                                                       @Nonnull final UsageViewPresentation presentation) {
     FindUsagesProcessPresentation processPresentation = new FindUsagesProcessPresentation(presentation);
     processPresentation.setShowNotFoundMessage(true);
     processPresentation.setShowPanelIfOnlyOneUsage(showPanelIfOnlyOneUsage);
@@ -568,7 +576,9 @@ public class FindInProjectUtil {
     }
   }
 
-  private static void addSourceDirectoriesFromLibraries(@Nonnull Project project, @Nonnull VirtualFile directory, @Nonnull Collection<? super VirtualFile> outSourceRoots) {
+  private static void addSourceDirectoriesFromLibraries(@Nonnull Project project,
+                                                        @Nonnull VirtualFile directory,
+                                                        @Nonnull Collection<? super VirtualFile> outSourceRoots) {
     ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
     // if we already are in the sources, search just in this directory only
     if (!index.isInLibraryClasses(directory)) return;
@@ -609,17 +619,19 @@ public class FindInProjectUtil {
   }
 
   @Nonnull
-  static SearchScope getScopeFromModel(@Nonnull Project project, @Nonnull FindModel findModel) {
+  public static SearchScope getScopeFromModel(@Nonnull Project project, @Nonnull FindModel findModel) {
     SearchScope customScope = findModel.isCustomScope() ? findModel.getCustomScope() : null;
     VirtualFile directory = getDirectory(findModel);
-    Module module = findModel.getModuleName() == null ? null : ModuleManager.getInstance(project).findModuleByName(findModel.getModuleName());
+    Module module =
+      findModel.getModuleName() == null ? null : ModuleManager.getInstance(project).findModuleByName(findModel.getModuleName());
     // do not alter custom scope in any way, learn from history
     return customScope != null ? customScope :
-           // we don't have to check for myProjectFileIndex.isExcluded(file) here like FindInProjectTask.collectFilesInScope() does
-           // because all found usages are guaranteed to be not in excluded dir
-           directory != null
-           ? forDirectory(project, findModel.isWithSubdirectories(), directory)
-           : module != null ? GlobalSearchScope.moduleContentScope(module) : findModel.isProjectScope() ? ProjectScopes.getContentScope(project) : GlobalSearchScope.allScope(project);
+      // we don't have to check for myProjectFileIndex.isExcluded(file) here like FindInProjectTask.collectFilesInScope() does
+      // because all found usages are guaranteed to be not in excluded dir
+      directory != null
+        ? forDirectory(project, findModel.isWithSubdirectories(), directory)
+        : module != null ? GlobalSearchScope.moduleContentScope(module) : findModel.isProjectScope() ? ProjectScopes.getContentScope(project) : GlobalSearchScope
+        .allScope(project);
   }
 
   @Nonnull

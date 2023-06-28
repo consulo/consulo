@@ -15,24 +15,23 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.disposer.Disposer;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.ui.wm.IdeFocusManager;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.tree.TreePath;
@@ -235,7 +234,7 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
     if (editor == null) return;
 
     Project project = editor.getProject();
-    LookupImpl activeLookup = project != null ? (LookupImpl)LookupManager.getInstance(project).getActiveLookup() : null;
+    LookupEx activeLookup = project != null ? LookupManager.getInstance(project).getActiveLookup() : null;
     if (activeLookup != null){
       final Point lookupPoint = SwingUtilities.convertPoint(sourceComponent, originalPoint, activeLookup.getComponent());
       if (activeLookup.getComponent().getBounds().contains(lookupPoint)){

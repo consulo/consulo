@@ -16,15 +16,13 @@
 package consulo.desktop.awt.action;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ui.Size;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.ActionButtonFactory;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -37,5 +35,11 @@ public class DesktopAWTActionButtonFactory implements ActionButtonFactory {
   @Override
   public ActionButton create(@Nonnull AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize) {
     return new ActionButtonImpl(action, presentation, place, minimumSize);
+  }
+
+  @Nonnull
+  @Override
+  public ActionButton createWithText(AnAction action, Presentation presentation, String place, Size minimumSize) {
+    return new ActionButtonWithText(action, presentation, place, minimumSize);
   }
 }

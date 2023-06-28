@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
@@ -59,7 +59,7 @@ import static java.awt.event.MouseEvent.*;
  * @author Konstantin Bulenkov
  */
 public final class IdeMouseEventDispatcher {
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
   private final ArrayList<AnAction> myActions = new ArrayList<>(1);
   private final Map<Container, BlockState> myRootPane2BlockedId = new HashMap<>();
   private int myLastHorScrolledComponentHash;

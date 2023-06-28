@@ -15,40 +15,34 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
-import consulo.language.editor.DaemonBundle;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.language.editor.impl.internal.hint.TooltipGroup;
-import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
-import consulo.language.editor.impl.internal.hint.TooltipAction;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ui.ex.awt.HintHint;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.awt.GridBag;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UIFontManager;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
+import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.language.editor.DaemonBundle;
+import consulo.language.editor.impl.internal.hint.TooltipAction;
+import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-
+import consulo.ui.ex.popup.JBPopupFactory;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -406,7 +400,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
   private JComponent createSettingsComponent(HintHint hintHint, TooltipReloader reloader, boolean hasMore, boolean newLayout) {
     Presentation presentation = new Presentation();
     presentation.setIcon(AllIcons.Actions.More);
-    presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, true);
+    presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, true);
 
     List<AnAction> actions = new ArrayList<>();
     actions.add(new ShowActionsAction(reloader, tooltipAction != null));
@@ -415,7 +409,8 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     AnAction actionGroup = new SettingsActionGroup(actions);
     int buttonSize = newLayout ? 20 : 18;
 
-    ActionButtonImpl settingsButton = new ActionButtonImpl(actionGroup, presentation, ActionPlaces.UNKNOWN, new Dimension(buttonSize, buttonSize));
+    ActionButton settingsButton =
+      ActionButtonFactory.getInstance().create(actionGroup, presentation, ActionPlaces.UNKNOWN, new Size(buttonSize, buttonSize));
 
     settingsButton.setNoIconsInPopup(true);
     settingsButton.setBorder(JBUI.Borders.empty());
@@ -423,7 +418,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
     JPanel wrapper = new JPanel(new BorderLayout());
 
-    wrapper.add(settingsButton, BorderLayout.EAST);
+    wrapper.add(settingsButton.getComponent(), BorderLayout.EAST);
 
     wrapper.setBorder(JBUI.Borders.empty());
 

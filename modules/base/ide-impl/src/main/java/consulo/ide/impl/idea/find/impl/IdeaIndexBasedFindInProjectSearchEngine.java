@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.ngrams.TrigramIndex;
@@ -28,7 +27,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
 
-@ExtensionImpl
 public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSearchEngine {
   @Override
   public

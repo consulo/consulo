@@ -21,13 +21,12 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -45,7 +44,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     if (selectionModel.hasSelection()) {
       final TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
       if (state != null && editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null) {
-        final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+        final LookupEx lookup = LookupManager.getActiveLookup(editor);
         if (lookup != null) {
           selectionModel.removeSelection();
           lookup.hide();

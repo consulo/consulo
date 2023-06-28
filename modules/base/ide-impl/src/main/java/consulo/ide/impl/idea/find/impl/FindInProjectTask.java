@@ -112,7 +112,7 @@ class FindInProjectTask {
 
     TooManyUsagesStatus.createFor(myProgress);
 
-    mySearchers = ContainerUtil.mapNotNull(FindInProjectSearchEngine.EP_NAME.getExtensions(), se -> se.createSearcher(findModel, project));
+    mySearchers = ContainerUtil.mapNotNull(FindInProjectSearchEngine.getExtensions(), se -> se.createSearcher(findModel, project));
   }
 
   void findUsages(@Nonnull FindUsagesProcessPresentation processPresentation, @Nonnull Predicate<? super UsageInfo> consumer) {

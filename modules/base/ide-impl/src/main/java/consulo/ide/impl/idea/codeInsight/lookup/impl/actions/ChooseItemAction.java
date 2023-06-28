@@ -4,13 +4,12 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl.actions;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyAwareEditorAction;
@@ -19,6 +18,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.template.LiveTemplateLookupElement;
@@ -28,9 +28,9 @@ import consulo.language.editor.template.TemplateSettings;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 public abstract class ChooseItemAction extends EditorAction implements HintManagerImpl.ActionToIgnore, LatencyAwareEditorAction {
@@ -49,7 +49,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
 
     @Override
     public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+      final LookupEx lookup = LookupManager.getActiveLookup(editor);
       assert lookup != null;
 
       if ((finishingChar == Lookup.NORMAL_SELECT_CHAR || finishingChar == Lookup.REPLACE_SELECT_CHAR) && hasTemplatePrefix(lookup, finishingChar)) {
@@ -81,7 +81,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
 
     @Override
     public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+      LookupEx lookup = LookupManager.getActiveLookup(editor);
       if (lookup == null) return false;
       if (!lookup.isAvailableToUser()) return false;
       if (lookup.getCurrentItemOrEmpty() == null) return false;
@@ -94,7 +94,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
     }
   }
 
-  public static boolean hasTemplatePrefix(LookupImpl lookup, char shortcutChar) {
+  public static boolean hasTemplatePrefix(LookupEx lookup, char shortcutChar) {
     lookup.refreshUi(false, false); // to bring the list model up to date
 
     CompletionProcess completion = CompletionService.getCompletionService().getCurrentCompletion();

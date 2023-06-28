@@ -2,14 +2,13 @@
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
-import consulo.util.lang.ref.Ref;
 import consulo.application.util.Semaphore;
+import consulo.component.ProcessCanceledException;
+import consulo.util.lang.ref.Ref;
 
 import java.util.function.Supplier;
 
@@ -22,7 +21,7 @@ public class ActionUpdateEdtExecutor {
    * @see ReadAction#nonBlocking(Runnable)
    */
   public static <T> T computeOnEdt(Supplier<T> supplier) {
-    Application application = ApplicationManager.getApplication();
+    Application application = Application.get();
     if (application.isDispatchThread()) {
       return supplier.get();
     }
@@ -30,7 +29,7 @@ public class ActionUpdateEdtExecutor {
     Semaphore semaphore = new Semaphore(1);
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     Ref<T> result = Ref.create();
-    ApplicationManager.getApplication().invokeLater(() -> {
+    application.invokeLater(() -> {
       try {
         if (indicator == null || !indicator.isCanceled()) {
           result.set(supplier.get());

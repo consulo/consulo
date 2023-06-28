@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.action.CreateFileAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
 /**
@@ -39,6 +40,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     return true;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     super.update(e);

@@ -15,24 +15,22 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.HelpTooltip;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.util.MacKeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -49,23 +47,18 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
   @Nonnull
   @Override
-  public JComponent createCustomComponent(Presentation presentation, String place) {
-    return new ActionButtonImpl(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
-      @Override
-      public void updateToolTipText() {
-        String shortcutText = getShortcut();
+  public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    ActionButtonFactory buttonFactory = ActionButtonFactory.getInstance();
+    ActionButton button = buttonFactory.create(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+    button.setCustomTooltipBuilder((helpTooltip, p) -> {
+      String shortcutText = getShortcut();
 
-        if (Registry.is("ide.helptooltip.enabled")) {
-          HelpTooltip.dispose(this);
+      helpTooltip.setTitle(p.getText())
+                 .setShortcut(shortcutText)
+                 .setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings");
 
-          new HelpTooltip().setTitle(myPresentation.getText()).setShortcut(shortcutText).setDescription("Searches for:<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings")
-                  .installOn(this);
-        }
-        else {
-          setToolTipText("<html><body>Search Everywhere<br/>Press <b>" + shortcutText + "</b> to access<br/> - Classes<br/> - Files<br/> - Tool Windows<br/> - Actions<br/> - Settings</body></html>");
-        }
-      }
-    };
+    });
+    return button.getComponent();
   }
 
   private static String getShortcut() {
@@ -81,7 +74,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
     actionPerformed(e, null);
   }
 

@@ -2,24 +2,7 @@
 
 package consulo.ide.impl.idea.find;
 
-import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.find.editorHeaderActions.*;
-import consulo.ide.impl.idea.find.impl.HelpID;
-import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
-import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
-import consulo.find.FindBundle;
-import consulo.find.FindManager;
-import consulo.find.FindModel;
-import consulo.find.FindResult;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.application.ApplicationBundle;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Editor;
@@ -35,23 +18,37 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
+import consulo.execution.ui.console.ConsoleViewUtil;
+import consulo.find.FindBundle;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
+import consulo.ide.impl.idea.find.editorHeaderActions.*;
+import consulo.ide.impl.idea.find.impl.HelpID;
+import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
+import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.update.Activatable;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -109,7 +106,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
                     .withSecondarySearchActionsIsModifiedGetter(() -> myFindModel.getSearchContext() != FindModel.SearchContext.ANY).build();
 
     myComponent.addListener(this);
-    new UiNotifyConnector(myComponent, new Activatable() {
+    new UiNotifyConnector(myComponent.getComponent(), new Activatable() {
       @Override
       public void showNotify() {
         initLivePreview();
@@ -122,8 +119,8 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
       }
     });
 
-    new SwitchToFind(getComponent());
-    new SwitchToReplace(getComponent());
+    new SwitchToFind(getComponent().getComponent());
+    new SwitchToReplace(getComponent().getComponent());
 
     myFindModel.addObserver(new FindModel.FindModelObserver() {
       boolean myReentrantLock = false;
@@ -224,14 +221,14 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   @Nonnull
   public static EditorSearchSession start(@Nonnull Editor editor, @Nullable Project project) {
     EditorSearchSession session = new EditorSearchSession(editor, project);
-    editor.setHeaderComponent(session.getComponent());
+    editor.setHeaderComponent(session.getComponent().getComponent());
     return session;
   }
 
   @Nonnull
   public static EditorSearchSession start(@Nonnull Editor editor, @Nonnull FindModel findModel, @Nullable Project project) {
     EditorSearchSession session = new EditorSearchSession(editor, project, findModel);
-    editor.setHeaderComponent(session.getComponent());
+    editor.setHeaderComponent(session.getComponent().getComponent());
     return session;
   }
 
@@ -281,7 +278,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   @Override
   public void searchResultsUpdated(@Nonnull SearchResults sr) {
     if (sr.getFindModel() == null) return;
-    if (myComponent.getSearchTextComponent().getText().isEmpty()) {
+    if (myComponent.getSearchText().isEmpty()) {
       updateUIWithEmptyResults();
     }
     else {
@@ -319,20 +316,20 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   public void searchFieldDocumentChanged() {
     if (myEditor.isDisposed()) return;
     setMatchesLimit(LivePreviewController.MATCHES_LIMIT);
-    String text = myComponent.getSearchTextComponent().getText();
+    String text = myComponent.getSearchText();
     myFindModel.setStringToFind(text);
     updateResults(true);
     updateMultiLineStateIfNeeded();
   }
 
   private void updateMultiLineStateIfNeeded() {
-    myFindModel.setMultiline(myComponent.getSearchTextComponent().getText().contains("\n") || myComponent.getReplaceTextComponent().getText().contains("\n"));
+    myFindModel.setMultiline(myComponent.getSearchText().contains("\n") || myComponent.getReplaceText().contains("\n"));
   }
 
   @Override
   public void replaceFieldDocumentChanged() {
     setMatchesLimit(LivePreviewController.MATCHES_LIMIT);
-    myFindModel.setStringToReplace(myComponent.getReplaceTextComponent().getText());
+    myFindModel.setStringToReplace(myComponent.getReplaceText());
     updateMultiLineStateIfNeeded();
   }
 
@@ -360,13 +357,13 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   @Override
   public void searchForward() {
     moveCursor(SearchResults.Direction.DOWN);
-    addTextToRecent(myComponent.getSearchTextComponent());
+    addTextToRecent(myComponent.getSearchText(), true);
   }
 
   @Override
   public void searchBackward() {
     moveCursor(SearchResults.Direction.UP);
-    addTextToRecent(myComponent.getSearchTextComponent());
+    addTextToRecent(myComponent.getSearchText(), true);
   }
 
   private void updateUIWithFindModel() {
@@ -376,10 +373,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   }
 
   private void updateEmptyText() {
-    if (myComponent.getSearchTextComponent() instanceof ComponentWithEmptyText) {
-      String emptyText = getEmptyText();
-      ((ComponentWithEmptyText)myComponent.getSearchTextComponent()).getEmptyText().setText(emptyText);
-    }
+    myComponent.updateEmptyText(this::getEmptyText);
   }
 
   @Nonnull
@@ -411,13 +405,13 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
         myLivePreviewController.performReplace();
       }
       catch (FindManager.MalformedReplacementStringException e) {
-        Messages.showErrorDialog(myComponent, e.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
+        Messages.showErrorDialog(myComponent.getComponent(), e.getMessage(), FindBundle.message("find.replace.invalid.replacement.string.title"));
       }
     }
   }
 
-  public void addTextToRecent(JTextComponent textField) {
-    myComponent.addTextToRecent(textField);
+  public void addTextToRecent(String text, boolean search) {
+    myComponent.addTextToRecent(text, search);
   }
 
   @Override
@@ -503,7 +497,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   private void nothingToSearchFor(boolean allowedToChangedEditorSelection) {
     updateUIWithEmptyResults();
     mySearchResults.clear();
-    if (allowedToChangedEditorSelection && !UIUtil.isClientPropertyTrue(myComponent.getSearchTextComponent(), SearchTextArea.JUST_CLEARED_KEY)) {
+    if (allowedToChangedEditorSelection && !myComponent.isJustClearedSearch()) {
       restoreInitialCaretPositionAndSelection();
     }
   }
@@ -524,11 +518,11 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
   }
 
   public String getTextInField() {
-    return myComponent.getSearchTextComponent().getText();
+    return myComponent.getSearchText();
   }
 
   public void setTextInField(final String text) {
-    myComponent.getSearchTextComponent().setText(text);
+    myComponent.setSearchText(text);
     myFindModel.setStringToFind(text);
   }
 

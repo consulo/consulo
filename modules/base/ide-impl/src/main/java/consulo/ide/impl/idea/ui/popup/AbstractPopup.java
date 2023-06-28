@@ -23,7 +23,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.HelpTooltip;
+import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
@@ -465,7 +465,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Override
   public void showInCenterOf(@Nonnull Component aComponent) {
-    HelpTooltip.setMasterPopup(aComponent, this);
+    HelpTooltipImpl.setMasterPopup(aComponent, this);
     Point popupPoint = getCenterOf(aComponent, getPreferredContentSize());
     show(aComponent, popupPoint.x, popupPoint.y, false);
   }
@@ -479,7 +479,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Override
   public void show(@Nonnull RelativePoint aPoint) {
     if (UiInterceptors.tryIntercept(this)) return;
-    HelpTooltip.setMasterPopup(aPoint.getOriginalComponent(), this);
+    HelpTooltipImpl.setMasterPopup(aPoint.getOriginalComponent(), this);
     Point screenPoint = aPoint.getScreenPoint();
     show(aPoint.getComponent(), screenPoint.x, screenPoint.y, false);
   }

@@ -2,20 +2,20 @@
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.AutoPopupController;
+import consulo.application.AppUIExecutor;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.AutoPopupControllerImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
-import consulo.language.editor.action.TypedHandlerDelegate;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.application.AppUIExecutor;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,7 +29,7 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
   @Nonnull
   @Override
   public Result checkAutoPopup(char charTyped, @Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile file) {
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx lookup = LookupManager.getActiveLookup(editor);
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("checkAutoPopup: character=" + charTyped + ";");

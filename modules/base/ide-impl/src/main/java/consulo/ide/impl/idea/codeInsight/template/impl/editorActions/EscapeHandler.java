@@ -22,14 +22,13 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,7 +41,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
     TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       SelectionModel selectionModel = editor.getSelectionModel();
-      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+      LookupEx lookup = LookupManager.getActiveLookup(editor);
 
       // the idea behind lookup checking is that if there is a preselected value in lookup
       // then user might want just to close lookup but not finish a template.

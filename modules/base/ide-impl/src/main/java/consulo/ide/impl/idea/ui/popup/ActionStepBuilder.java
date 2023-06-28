@@ -2,29 +2,31 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.Utils;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 class ActionStepBuilder {
+
   private final List<PopupFactoryImpl.ActionItem> myListModel;
   private final DataContext myDataContext;
   private final boolean myShowNumbers;
   private final boolean myUseAlphaAsNumbers;
-  private final PresentationFactory myPresentationFactory;
+  private final BasePresentationFactory myPresentationFactory;
   private final boolean myShowDisabled;
   private int myCurrentNumber;
   private boolean myPrependWithSeparator;
@@ -41,10 +43,10 @@ class ActionStepBuilder {
                     boolean showDisabled,
                     boolean honorActionMnemonics,
                     @Nullable String actionPlace,
-                    @Nullable PresentationFactory presentationFactory) {
+                    @Nullable BasePresentationFactory presentationFactory) {
     myUseAlphaAsNumbers = useAlphaAsNumbers;
     if (presentationFactory == null) {
-      myPresentationFactory = new PresentationFactory();
+      myPresentationFactory = new BasePresentationFactory();
     }
     else {
       myPresentationFactory = ObjectUtil.notNull(presentationFactory);
@@ -72,12 +74,20 @@ class ActionStepBuilder {
     appendActionsFromGroup(actionGroup);
 
     if (myListModel.isEmpty()) {
-      myListModel.add(new PopupFactoryImpl.ActionItem(Utils.EMPTY_MENU_FILLER, Utils.NOTHING_HERE, null, false, null, null, false, null));
+      myListModel.add(new PopupFactoryImpl.ActionItem(NothingHereAction.INSTANCE,
+                                                      ApplicationLocalize.nothingHere(),
+                                                      null,
+                                                      false,
+                                                      null,
+                                                      null,
+                                                      false,
+                                                      null));
     }
   }
 
   private void calcMaxIconSize(final ActionGroup actionGroup) {
-    if (myPresentationFactory instanceof MenuItemPresentationFactory && ((MenuItemPresentationFactory)myPresentationFactory).shallHideIcons()) return;
+    if (myPresentationFactory instanceof MenuItemPresentationFactory && ((MenuItemPresentationFactory)myPresentationFactory).shallHideIcons())
+      return;
     AnAction[] actions = actionGroup.getChildren(createActionEvent(actionGroup));
     for (AnAction action : actions) {
       if (action == null) continue;
@@ -106,13 +116,15 @@ class ActionStepBuilder {
 
   @Nonnull
   private AnActionEvent createActionEvent(@Nonnull AnAction action) {
-    AnActionEvent actionEvent = AnActionEvent.createFromDataContext(myActionPlace, myPresentationFactory.getPresentation(action), myDataContext);
+    AnActionEvent actionEvent =
+      AnActionEvent.createFromDataContext(myActionPlace, myPresentationFactory.getPresentation(action), myDataContext);
     actionEvent.setInjectedContext(action.isInInjectedContext());
     return actionEvent;
   }
 
   private void appendActionsFromGroup(@Nonnull ActionGroup actionGroup) {
-    List<AnAction> newVisibleActions = Utils.expandActionGroup(false, actionGroup, myPresentationFactory, myDataContext, myActionPlace);
+    List<AnAction> newVisibleActions =
+      ActionGroupExpander.expandActionGroup(false, actionGroup, myPresentationFactory, myDataContext, myActionPlace);
     for (AnAction action : newVisibleActions) {
       if (action instanceof AnSeparator) {
         myPrependWithSeparator = true;
@@ -177,7 +189,13 @@ class ActionStepBuilder {
       if (icon == null) icon = selectedIcon != null ? selectedIcon : myEmptyIcon;
       boolean prependSeparator = (!myListModel.isEmpty() || mySeparatorText != null) && myPrependWithSeparator;
       assert textValue != LocalizeValue.empty() : action + " has no presentation";
-      myListModel.add(new PopupFactoryImpl.ActionItem(action, textValue, (String)presentation.getClientProperty(UIUtil.TOOL_TIP_TEXT_KEY), enabled, icon, selectedIcon, prependSeparator,
+      myListModel.add(new PopupFactoryImpl.ActionItem(action,
+                                                      textValue,
+                                                      (String)presentation.getClientProperty(UIUtil.TOOL_TIP_TEXT_KEY),
+                                                      enabled,
+                                                      icon,
+                                                      selectedIcon,
+                                                      prependSeparator,
                                                       mySeparatorText));
       myPrependWithSeparator = false;
       mySeparatorText = null;

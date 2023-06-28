@@ -226,7 +226,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
       mySuppressUpdate = false;
     }
     if (myComponent != null) {
-      myComponent.addTextToRecent(myComponent.getComponent().getReplaceTextComponent());
+      myComponent.addTextToRecent(myComponent.getComponent().getReplaceText(), false);
       myComponent.clearUndoInTextFields();
     }
   }

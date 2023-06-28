@@ -21,7 +21,6 @@ import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionAssertions.WatchingInsertionContext;
 import consulo.ide.impl.idea.codeInsight.completion.actions.BaseCodeCompletionAction;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
@@ -193,9 +192,9 @@ public class CodeCompletionHandlerBase {
   }
 
   @Nonnull
-  private LookupImpl obtainLookup(Editor editor, Project project) {
+  private LookupEx obtainLookup(Editor editor, Project project) {
     CompletionAssertions.checkEditorValid(editor);
-    LookupImpl existing = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx existing = LookupManager.getActiveLookup(editor);
     if (existing != null && existing.isCompletion()) {
       existing.markReused();
       if (!autopopup) {
@@ -204,7 +203,7 @@ public class CodeCompletionHandlerBase {
       return existing;
     }
 
-    LookupImpl lookup = (LookupImpl)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new LookupArranger.DefaultArranger());
+    LookupEx lookup = (LookupEx)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new LookupArranger.DefaultArranger());
     if (editor.isOneLineMode()) {
       lookup.setCancelOnClickOutside(true);
       lookup.setCancelOnOtherWindowOpen(true);
@@ -217,7 +216,7 @@ public class CodeCompletionHandlerBase {
     final Editor editor = initContext.getEditor();
     CompletionAssertions.checkEditorValid(editor);
 
-    LookupImpl lookup = obtainLookup(editor, initContext.getProject());
+    LookupEx lookup = obtainLookup(editor, initContext.getProject());
 
     CompletionPhase phase = CompletionServiceImpl.getCompletionPhase();
     if (phase instanceof CompletionPhase.CommittingDocuments) {

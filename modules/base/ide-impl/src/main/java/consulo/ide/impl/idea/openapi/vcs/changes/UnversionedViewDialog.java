@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.event.AnActionListener;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.Utils;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.project.Project;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class UnversionedViewDialog extends SpecificFilesViewDialog {
     List<AnAction> actions = registerUnversionedActionsShortcuts(actionToolbar.getToolbarDataContext(), myView);
     // special shortcut for deleting a file
     actions.add(myDeleteActionWithCustomShortcut =
-                        EmptyAction.registerWithShortcutSet("ChangesView.DeleteUnversioned.From.Dialog", CommonShortcuts.getDelete(), myView));
+                  EmptyAction.registerWithShortcutSet("ChangesView.DeleteUnversioned.From.Dialog", CommonShortcuts.getDelete(), myView));
 
     refreshViewAfterActionPerformed(actions);
     group.add(getUnversionedActionGroup());
@@ -77,7 +76,11 @@ public class UnversionedViewDialog extends SpecificFilesViewDialog {
 
   @Nonnull
   public static List<AnAction> registerUnversionedActionsShortcuts(@Nonnull DataContext dataContext, @Nonnull JComponent component) {
-    List<AnAction> actions = Utils.expandActionGroup(LaterInvocator.isInModalContext(), getUnversionedActionGroup(), new PresentationFactory(), dataContext, "");
+    List<AnAction> actions = ActionGroupExpander.expandActionGroup(LaterInvocator.isInModalContext(),
+                                                                   getUnversionedActionGroup(),
+                                                                   new BasePresentationFactory(),
+                                                                   dataContext,
+                                                                   "");
     for (AnAction action : actions) {
       action.registerCustomShortcutSet(action.getShortcutSet(), component);
     }

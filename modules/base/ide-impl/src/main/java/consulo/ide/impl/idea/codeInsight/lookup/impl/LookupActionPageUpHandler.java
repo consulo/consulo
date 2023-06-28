@@ -18,18 +18,17 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.ScrollingUtil;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionPageUpHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
+  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
     lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
-    ScrollingUtil.movePageUp(lookup.getList());
+    lookup.movePageUp();
   }
 
   @Nonnull

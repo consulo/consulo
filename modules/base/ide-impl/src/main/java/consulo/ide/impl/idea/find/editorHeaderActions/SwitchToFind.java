@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,8 +31,9 @@ public class SwitchToFind extends AnAction implements DumbAware {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@javax.annotation.Nonnull AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.
@@ -43,8 +45,9 @@ public class SwitchToFind extends AnAction implements DumbAware {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.
@@ -55,6 +58,6 @@ public class SwitchToFind extends AnAction implements DumbAware {
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     final FindModel findModel = search.getFindModel();
     FindUtil.configureFindModel(false, e.getDataContext().getData(EDITOR), findModel, false);
-    search.getComponent().getSearchTextComponent().selectAll();
+    search.getComponent().selectSearchAll();
   }
 }

@@ -2,20 +2,19 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionFeatures;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.ScrollingUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -37,7 +36,7 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
 
   @Override
   public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isAvailableToUser()) {
       Project project = editor.getProject();
       if (project != null && lookup != null) {
@@ -51,15 +50,15 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
     executeInLookup(lookup, dataContext, caret);
   }
 
-  protected abstract void executeInLookup(LookupImpl lookup, DataContext context, @Nullable Caret caret);
+  protected abstract void executeInLookup(LookupEx lookup, DataContext context, @Nullable Caret caret);
 
   @Override
   public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx lookup = LookupManager.getActiveLookup(editor);
     return lookup != null || myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
-  protected static void executeUpOrDown(LookupImpl lookup, boolean up) {
+  protected static void executeUpOrDown(LookupEx lookup, boolean up) {
     if (!lookup.isFocused()) {
       boolean semiFocused = lookup.getLookupFocusDegree() == LookupFocusDegree.SEMI_FOCUSED;
       lookup.setFocusDegree(LookupFocusDegree.FOCUSED);
@@ -68,10 +67,10 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
       }
     }
     if (up) {
-      ScrollingUtil.moveUp(lookup.getList(), 0);
+      lookup.moveUp();
     }
     else {
-      ScrollingUtil.moveDown(lookup.getList(), 0);
+      lookup.moveDown();
     }
     lookup.markSelectionTouched();
     lookup.refreshUi(false, true);
@@ -97,8 +96,8 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
     @Override
     protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS);
-      LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
-      assert lookup != null : LookupImpl.getLastLookupDisposeTrace();
+      LookupEx lookup = LookupManager.getActiveLookup(editor);
+      assert lookup != null : LookupDispose.getLastLookupDisposeTrace();
       lookup.hideLookup(true);
       EditorActionManager.getInstance().getActionHandler(myUp ? IdeActions.ACTION_EDITOR_MOVE_CARET_UP : IdeActions.ACTION_EDITOR_MOVE_CARET_DOWN).execute(editor, caret, dataContext);
     }

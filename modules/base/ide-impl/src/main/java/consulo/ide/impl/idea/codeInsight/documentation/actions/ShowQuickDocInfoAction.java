@@ -21,10 +21,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
@@ -34,7 +34,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 
 public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements HintManagerImpl.ActionToIgnore, DumbAware, PopupAction {
@@ -134,7 +133,7 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
     if (project != null && editor != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_FEATURE);
-      final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(project).getActiveLookup();
+      final LookupEx lookup = LookupManager.getInstance(project).getActiveLookup();
       if (lookup != null) {
         //dumpLookupElementWeights(lookup);
         FeatureUsageTracker.getInstance().triggerFeatureUsed(CODEASSISTS_QUICKJAVADOC_LOOKUP_FEATURE);

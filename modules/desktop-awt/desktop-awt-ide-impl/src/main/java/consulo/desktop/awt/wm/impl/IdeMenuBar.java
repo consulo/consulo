@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
+import consulo.desktop.awt.action.ActionMenu;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.application.ApplicationManager;

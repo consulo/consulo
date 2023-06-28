@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.codeInsight.lookup.impl;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
 
 import jakarta.annotation.Nonnull;
@@ -25,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionDownHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
+  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
     executeUpOrDown(lookup, false);
   }
 

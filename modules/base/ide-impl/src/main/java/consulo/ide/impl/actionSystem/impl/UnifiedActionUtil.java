@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.actionSystem.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;
 import consulo.ui.MenuSeparator;
@@ -32,7 +31,8 @@ import java.util.function.Consumer;
  * @since 17/08/2021
  */
 public class UnifiedActionUtil {
-  public static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager, PresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
+  public static void expandActionGroup(ActionGroup group, DataContext context, ActionManager actionManager,
+                                       PresentationFactory menuItemPresentationFactory, Consumer<MenuItem> actionAdded) {
     Map<AnAction, Presentation> actions = new LinkedHashMap<>();
 
     expandActionGroup0(group, context, actions, actionManager, menuItemPresentationFactory);

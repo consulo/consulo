@@ -22,10 +22,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.ScrollingUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,14 +34,14 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
 
   @Override
   public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isFocused()) {
       myOriginalHandler.execute(editor, caret, dataContext);
       return;
     }
 
     lookup.markSelectionTouched();
-    ScrollingUtil.moveEnd(lookup.getList());
+    lookup.moveEnd();
     lookup.refreshUi(false, true);
   }
 

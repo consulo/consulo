@@ -1,24 +1,26 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.find;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.find.FindModel;
+import consulo.ide.impl.idea.find.impl.IdeaIndexBasedFindInProjectSearchEngine;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Defines a search engine which will be used to find results in "Find in Path" and "Replace in Path" actions.
  * Several search engines can be used at the same moment to achieve best performance (time-to-result).
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
 public interface FindInProjectSearchEngine {
-  ExtensionPointName<FindInProjectSearchEngine> EP_NAME = ExtensionPointName.create(FindInProjectSearchEngine.class);
+  List<FindInProjectSearchEngine> IMPL = List.of(new IdeaIndexBasedFindInProjectSearchEngine());
+
+  static List<FindInProjectSearchEngine> getExtensions() {
+    return IMPL;
+  }
 
   /**
    * Constructs a searcher for a given {@param findModel} which serves as a input query.

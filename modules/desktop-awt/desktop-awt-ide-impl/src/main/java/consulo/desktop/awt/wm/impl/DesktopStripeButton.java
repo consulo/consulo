@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.HelpTooltip;
+import consulo.ide.impl.idea.ide.HelpTooltipImpl;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.action.ActionGroup;
@@ -106,9 +106,9 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
   private void updateHelpTooltip() {
     DesktopToolWindowImpl toolWindow = myDecorator.getToolWindow();
 
-    HelpTooltip.dispose(this);
+    HelpTooltipImpl.dispose(this);
 
-    HelpTooltip tooltip = new HelpTooltip();
+    HelpTooltipImpl tooltip = new HelpTooltipImpl();
     tooltip.setTitle(toolWindow.getDisplayName().getValue());
     String activateActionId = ActivateToolWindowAction.getActionIdForToolWindow(toolWindow.getId());
     tooltip.setShortcut(ActionManager.getInstance().getKeyboardShortcut(activateActionId));

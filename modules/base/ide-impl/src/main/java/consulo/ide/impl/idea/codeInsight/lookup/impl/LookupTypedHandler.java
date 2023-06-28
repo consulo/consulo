@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedAction
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiDocumentManager;
@@ -73,7 +74,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
   }
 
   private static boolean beforeCharTyped(final char charTyped, Project project, final Editor originalEditor, final Editor editor, PsiFile file) {
-    final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(originalEditor);
+    final LookupEx lookup = LookupManager.getActiveLookup(originalEditor);
     if (lookup == null) {
       return false;
     }
@@ -135,7 +136,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
     return false;
   }
 
-  private static boolean completeTillTypedCharOccurrence(char charTyped, LookupImpl lookup, LookupElement item) {
+  private static boolean completeTillTypedCharOccurrence(char charTyped, LookupEx lookup, LookupElement item) {
     PrefixMatcher matcher = lookup.itemMatcher(item);
     final String oldPrefix = matcher.getPrefix() + lookup.getAdditionalPrefix();
     PrefixMatcher expanded = matcher.cloneWithPrefix(oldPrefix + charTyped);
@@ -158,7 +159,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
     return false;
   }
 
-  static CharFilter.Result getLookupAction(final char charTyped, final LookupImpl lookup) {
+  static CharFilter.Result getLookupAction(final char charTyped, final LookupEx lookup) {
     CharFilter.Result filtersDecision = getFilterDecision(charTyped, lookup);
     if (filtersDecision != null) {
       return filtersDecision;
@@ -167,7 +168,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
   }
 
   @Nullable
-  private static CharFilter.Result getFilterDecision(char charTyped, LookupImpl lookup) {
+  private static CharFilter.Result getFilterDecision(char charTyped, LookupEx lookup) {
     lookup.checkValid();
     LookupElement item = lookup.getCurrentItem();
     int prefixLength = item == null ? lookup.getAdditionalPrefix().length() : lookup.itemPattern(item).length();

@@ -8,17 +8,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a group of actions.
@@ -270,6 +267,11 @@ public abstract class ActionGroup extends AnAction {
     }
 
     return myDumbAware;
+  }
+
+  @Nonnull
+  public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleChildren) {
+    return Collections.unmodifiableList(visibleChildren);
   }
 
   public boolean hideIfNoVisibleChildren() {

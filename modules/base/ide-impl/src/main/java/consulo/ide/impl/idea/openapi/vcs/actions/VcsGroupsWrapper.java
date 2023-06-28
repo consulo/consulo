@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -37,7 +37,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
 
   private static final Logger LOG = Logger.getInstance(VcsGroupsWrapper.class);
 
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
   private AnAction[] myChildren;
 
   public void update(AnActionEvent e) {

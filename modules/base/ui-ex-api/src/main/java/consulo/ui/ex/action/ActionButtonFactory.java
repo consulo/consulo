@@ -35,4 +35,7 @@ public interface ActionButtonFactory {
 
   @Nonnull
   ActionButton create(@Nonnull AnAction action, Presentation presentation, String place, @Nonnull Size minimumSize);
+
+  @Nonnull
+  ActionButton createWithText(final AnAction action, final Presentation presentation, final String place, final Size minimumSize);
 }

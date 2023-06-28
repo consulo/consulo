@@ -35,6 +35,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -131,8 +132,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private final Map<Object, String> myAction2Id = new HashMap<>();
   private final MultiMap<String, String> myId2GroupId = new MultiMap<>();
   private final List<String> myNotRegisteredInternalActionIds = new ArrayList<>();
-  private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final List<ActionPopupMenuListener> myActionPopupMenuListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<AnActionListener> myActionListeners = Lists.newLockFreeCopyOnWriteList();
+  private final List<ActionPopupMenuListener> myActionPopupMenuListeners = Lists.newLockFreeCopyOnWriteList();
   private final List<Object/*ActionPopupMenuImpl|JBPopup*/> myPopups = new ArrayList<>();
   private MyTimer myTimer;
   private int myRegisteredActionsCount;
@@ -143,11 +144,13 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private final Map<OverridingAction, AnAction> myBaseActions = new HashMap<>();
   private int myAnonymousGroupIdCounter;
 
-  private ActionToolbarFactory myToolbarFactory;
+  private final ActionToolbarFactory myToolbarFactory;
+  private final ActionPopupMenuFactory myPopupMenuFactory;
 
   @Inject
-  ActionManagerImpl(Application application, ActionToolbarFactory toolbarFactory) {
+  ActionManagerImpl(Application application, ActionToolbarFactory toolbarFactory, ActionPopupMenuFactory popupMenuFactory) {
     myToolbarFactory = toolbarFactory;
+    myPopupMenuFactory = popupMenuFactory;
 
     List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
 
@@ -501,7 +504,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   }
 
   private void _removeTimerListener(TimerListener listener, boolean transparent) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
     if (LOG.assertTrue(myTimer != null)) {
       myTimer.removeTimerListener(listener, transparent);
     }
@@ -509,10 +511,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   public ActionPopupMenu createActionPopupMenu(@Nonnull String place, @Nonnull ActionGroup group, @Nullable PresentationFactory presentationFactory) {
-    if (Application.get().isUnifiedApplication()) {
-      return new UnifiedActionPopupMenuImpl(place, group, this, presentationFactory);
-    }
-    return new DesktopActionPopupMenuImpl(place, group, this, presentationFactory);
+    return myPopupMenuFactory.createActionPopupMenu(this, place, group, presentationFactory);
   }
 
   @Nonnull
@@ -521,7 +520,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     if (Application.get().isUnifiedApplication()) {
       return new UnifiedActionPopupMenuImpl(place, group, this, null);
     }
-    return new DesktopActionPopupMenuImpl(place, group, this, null);
+    return myPopupMenuFactory.createActionPopupMenu(this, place, group);
   }
 
   @Nonnull
@@ -620,12 +619,6 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   @Override
   public boolean isGroup(@Nonnull String actionId) {
     return getActionImpl(actionId, true) instanceof ActionGroup;
-  }
-
-  @Nonnull
-  @Override
-  public JComponent createButtonToolbar(@Nonnull final String actionPlace, @Nonnull final ActionGroup messageActionGroup) {
-    return new ButtonToolbarImpl(actionPlace, messageActionGroup);
   }
 
   @Override
@@ -1190,7 +1183,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
   }
 
-  void removeActionPopup(@Nonnull Object menu) {
+  public void removeActionPopup(@Nonnull Object menu) {
     final boolean removed = myPopups.remove(menu);
     if (removed && menu instanceof ActionPopupMenu) {
       for (ActionPopupMenuListener listener : myActionPopupMenuListeners) {
@@ -1416,8 +1409,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
       fireBeforeActionPerformed(action, context, event);
 
-      consulo.disposer.Disposable eventListenerDisposable = consulo.disposer.Disposable.newDisposable("tryToExecuteNow");
-      result.doWhenProcessed(() -> consulo.disposer.Disposer.dispose(eventListenerDisposable));
+      Disposable eventListenerDisposable = Disposable.newDisposable("tryToExecuteNow");
+      result.doWhenProcessed(() -> Disposer.dispose(eventListenerDisposable));
 
       UIUtil.addAwtListener(event1 -> {
         if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {

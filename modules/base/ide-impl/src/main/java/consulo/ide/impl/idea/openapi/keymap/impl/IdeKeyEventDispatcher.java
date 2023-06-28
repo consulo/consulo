@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.keyGestures.KeyboardGestureProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
@@ -99,7 +99,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
   private boolean myPressedWasProcessed;
   private KeyState myState = KeyState.STATE_INIT;
 
-  private final PresentationFactory myPresentationFactory = new PresentationFactory();
+  private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
   private boolean myDisposed = false;
   private boolean myLeftCtrlPressed = false;
   private boolean myRightAltPressed = false;

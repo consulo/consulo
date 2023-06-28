@@ -10,9 +10,9 @@ import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -22,7 +22,7 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
 
   @Override
   public void doExecute(@Nonnull final Editor editor, Caret caret, final DataContext dataContext) {
-    LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
+    LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null) {
       myOriginalHandler.execute(editor, caret, dataContext);
       return;
@@ -37,7 +37,7 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
     truncatePrefix(dataContext, lookup, myOriginalHandler, hideOffset, caret);
   }
 
-  static void truncatePrefix(final DataContext dataContext, LookupImpl lookup, final EditorActionHandler handler, final int hideOffset, final Caret caret) {
+  static void truncatePrefix(final DataContext dataContext, LookupEx lookup, final EditorActionHandler handler, final int hideOffset, final Caret caret) {
     final Editor editor = lookup.getEditor();
     if (!lookup.performGuardedChange(() -> handler.execute(editor, caret, dataContext))) {
       return;

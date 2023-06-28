@@ -1,15 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -53,7 +54,8 @@ public class LookupOffsets implements DocumentListener {
   }
 
   private int getPivotOffset() {
-    return myEditor.getSelectionModel().hasSelection() ? myEditor.getSelectionModel().getSelectionStart() : myEditor.getCaretModel().getOffset();
+    return myEditor.getSelectionModel().hasSelection() ? myEditor.getSelectionModel().getSelectionStart() : myEditor.getCaretModel()
+                                                                                                                    .getOffset();
   }
 
   @Nonnull
@@ -75,11 +77,11 @@ public class LookupOffsets implements DocumentListener {
     return true;
   }
 
-  void destabilizeLookupStart() {
+  public void destabilizeLookupStart() {
     myStableStart = false;
   }
 
-  void checkMinPrefixLengthChanges(Collection<? extends LookupElement> items, LookupImpl lookup) {
+  public void checkMinPrefixLengthChanges(Collection<? extends LookupElement> items, LookupEx lookup) {
     if (myStableStart) return;
     if (!lookup.isCalculating() && !items.isEmpty()) {
       myStableStart = true;
@@ -103,44 +105,45 @@ public class LookupOffsets implements DocumentListener {
     myStartMarkerDisposeInfo = null;
   }
 
-  int getLookupStart(@Nullable Throwable disposeTrace) {
+  public int getLookupStart(@Nullable Throwable disposeTrace) {
     if (!myLookupStartMarker.isValid()) {
       throw new AssertionError("Invalid lookup start: " +
-                               myLookupStartMarker +
-                               ", " +
-                               myEditor +
-                               ", disposeTrace=" +
-                               (disposeTrace == null ? null : ExceptionUtil.getThrowableText(disposeTrace)) +
-                               "\n================\n start dispose trace=" +
-                               (myStartMarkerDisposeInfo == null ? null : myStartMarkerDisposeInfo.get()));
+                                 myLookupStartMarker +
+                                 ", " +
+                                 myEditor +
+                                 ", disposeTrace=" +
+                                 (disposeTrace == null ? null : ExceptionUtil.getThrowableText(disposeTrace)) +
+                                 "\n================\n start dispose trace=" +
+                                 (myStartMarkerDisposeInfo == null ? null : myStartMarkerDisposeInfo.get()));
     }
     return myLookupStartMarker.getStartOffset();
   }
 
-  int getLookupOriginalStart() {
+  public int getLookupOriginalStart() {
     return myLookupOriginalStartMarker.isValid() ? myLookupOriginalStartMarker.getStartOffset() : -1;
   }
 
-  boolean performGuardedChange(Runnable change) {
+  public boolean performGuardedChange(Runnable change) {
     if (!myLookupStartMarker.isValid()) {
-      throw new AssertionError("Invalid start: " + myEditor + ", trace=" + (myStartMarkerDisposeInfo == null ? null : myStartMarkerDisposeInfo.get()));
+      throw new AssertionError("Invalid start: " + myEditor + ", trace=" + (myStartMarkerDisposeInfo == null ? null : myStartMarkerDisposeInfo
+        .get()));
     }
     change.run();
     return myLookupStartMarker.isValid();
   }
 
-  void clearAdditionalPrefix() {
+  public void clearAdditionalPrefix() {
     myAdditionalPrefix = "";
     myRemovedPrefix = 0;
   }
 
-  void disposeMarkers() {
+  public void disposeMarkers() {
     myEditor.getDocument().removeDocumentListener(this);
     myLookupStartMarker.dispose();
     myLookupOriginalStartMarker.dispose();
   }
 
-  public int getPrefixLength(LookupElement item, LookupImpl lookup) {
+  public int getPrefixLength(LookupElement item, LookupEx lookup) {
     return lookup.itemPattern(item).length() - myRemovedPrefix;
   }
 }

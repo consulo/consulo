@@ -26,9 +26,9 @@ import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.psi.PsiFile;
@@ -39,7 +39,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 public class PsiAwareTextEditorImpl extends TextEditorImpl {
@@ -57,8 +56,8 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
     Document document = FileDocumentManager.getInstance().getDocument(myFile);
     CodeFoldingState foldingState = document != null && !myProject.isDefault()
-                                    ? CodeFoldingManager.getInstance(myProject).buildInitialFoldings(document)
-                                    : null;
+      ? CodeFoldingManager.getInstance(myProject).buildInitialFoldings(document)
+      : null;
     return () -> {
       baseAction.run();
       if (foldingState != null) {
@@ -93,9 +92,9 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(@Nonnull  Project project,
-                                        @Nonnull  VirtualFile file,
-                                        @Nonnull  TextEditorImpl textEditor,
+    private PsiAwareTextEditorComponent(@Nonnull Project project,
+                                        @Nonnull VirtualFile file,
+                                        @Nonnull TextEditorImpl textEditor,
                                         @Nonnull TextEditorComponentContainerFactory factory) {
       super(project, file, textEditor, factory);
       myProject = project;
@@ -114,7 +113,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     @Override
     public Object getData(@Nonnull final Key<?> dataId) {
       if (UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE == dataId) {
-        final LookupImpl lookup = (LookupImpl)LookupManager.getInstance(myProject).getActiveLookup();
+        final LookupEx lookup = LookupManager.getInstance(myProject).getActiveLookup();
         if (lookup != null && lookup.isVisible()) {
           return lookup.getBounds();
         }

@@ -1,22 +1,20 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.ide.impl.idea.ide.HelpTooltipManager;
-import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.ide.HelpTooltipManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
-import consulo.ui.ex.awt.ClickListener;
-import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.PopupState;
+import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
+import consulo.project.ui.wm.StatusBarWidget;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.ListPopup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -50,9 +48,7 @@ public interface StatusBarWidgetWrapper {
 
   default void setWidgetTooltip(JComponent widgetComponent, @Nullable String toolTipText, @Nullable String shortcutText) {
     widgetComponent.setToolTipText(toolTipText);
-    if (Registry.is("ide.helptooltip.enabled")) {
-      widgetComponent.putClientProperty(HelpTooltipManager.SHORTCUT_PROPERTY, shortcutText);
-    }
+    widgetComponent.putClientProperty(HelpTooltipManager.SHORTCUT_PROPERTY, shortcutText);
   }
 
   final class MultipleTextValues extends TextPanel.WithIconAndArrows implements StatusBarWidgetWrapper {

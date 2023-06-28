@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.documentation.actions.ShowQuickDocInfoAction;
 import consulo.ide.impl.idea.codeInsight.hint.actions.ShowImplementationsAction;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.editor.completion.AutoCompletionContext;
@@ -26,11 +25,11 @@ import consulo.language.editor.completion.AutoCompletionDecision;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -39,7 +38,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "default", order = "last")
 public class DefaultCompletionContributor extends CompletionContributor {
 
-  static void addDefaultAdvertisements(LookupImpl lookup, boolean includePsiFeatures) {
+  static void addDefaultAdvertisements(LookupEx lookup, boolean includePsiFeatures) {
     Project project = lookup.getProject();
     if (CompletionUtil.shouldShowFeature(project, CodeCompletionFeatures.EDITING_COMPLETION_FINISH_BY_DOT_ETC)) {
       lookup.addAdvertisement(LangBundle.message("completion.dot.etc.ad"), null);

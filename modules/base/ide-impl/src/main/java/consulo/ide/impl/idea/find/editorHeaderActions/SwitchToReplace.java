@@ -1,14 +1,15 @@
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
+import consulo.codeEditor.Editor;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.find.FindModel;
+import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.ide.impl.idea.find.FindUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.Editor;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class SwitchToReplace extends AnAction {
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
@@ -35,11 +37,12 @@ public class SwitchToReplace extends AnAction {
     e.getPresentation().setEnabled(editor != null && search != null && !ConsoleViewUtil.isConsoleViewEditor(editor));
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
     EditorSearchSession search = e.getRequiredData(EditorSearchSession.SESSION_KEY);
     FindModel findModel = search.getFindModel();
     FindUtil.configureFindModel(true, e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE), findModel, false);
-    search.getComponent().getSearchTextComponent().selectAll();
+    search.getComponent().selectSearchAll();
   }
 }

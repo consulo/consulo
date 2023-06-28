@@ -1,55 +1,49 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
-import consulo.language.editor.ui.PopupNavigationUtil;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.language.editor.QualifiedNameProviderUtil;
-import consulo.find.ui.ScopeChooserCombo;
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
 import consulo.content.scope.ScopeDescriptor;
-import consulo.language.editor.CommonDataKeys;
-import consulo.navigation.NavigationItem;
-import consulo.ui.ex.awt.MnemonicHelper;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.find.ui.ScopeChooserCombo;
+import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
+import consulo.ide.impl.idea.ide.util.gotoByName.*;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.QualifiedNameProviderUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FindSymbolParameters;
+import consulo.language.psi.util.EditSourceUtil;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.awt.TitledSeparator;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.search.FindSymbolParameters;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -445,7 +439,8 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     @Nonnull
     @Override
     public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-      JComponent component = new ActionButtonWithText(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+      ActionButtonFactory buttonFactory = ActionButtonFactory.getInstance();
+      JComponent component = buttonFactory.createWithText(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE).getComponent();
       UIUtil.putClientProperty(component, MnemonicHelper.MNEMONIC_CHECKER, keyCode -> KeyEvent.getExtendedKeyCodeForChar(TOGGLE) == keyCode || KeyEvent.getExtendedKeyCodeForChar(CHOOSE) == keyCode);
 
       MnemonicHelper.registerMnemonicAction(component, CHOOSE);

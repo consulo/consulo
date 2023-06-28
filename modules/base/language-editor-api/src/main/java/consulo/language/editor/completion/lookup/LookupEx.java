@@ -15,14 +15,22 @@
  */
 package consulo.language.editor.completion.lookup;
 
+import consulo.application.util.matcher.PrefixMatcher;
+import consulo.disposer.Disposable;
+import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author peter
  */
-public interface LookupEx extends Lookup {
+public interface LookupEx extends Lookup, Disposable {
   void setCurrentItem(LookupElement item);
 
   Component getComponent();
@@ -33,9 +41,93 @@ public interface LookupEx extends Lookup {
 
   void finishLookup(final char completionChar);
 
+  void finishLookup(char completionChar, @Nullable final LookupElement item);
+
   void setFocusDegree(LookupFocusDegree focusDegree);
 
   boolean performGuardedChange(Runnable change);
 
   LookupFocusDegree getLookupFocusDegree();
+
+  default void hide() {
+    hideLookup(true);
+  }
+
+  void setStartCompletionWhenNothingMatches(boolean startCompletionWhenNothingMatches);
+
+  void addAdvertisement(@Nonnull String text, @Nullable Image icon);
+
+  int getLookupOriginalStart();
+
+  void truncatePrefix(boolean preserveSelection, int hideOffset);
+
+  boolean isAvailableToUser();
+
+  void refreshUi(boolean mayCheckReused, boolean onExplicitAction);
+
+  LookupElement getCurrentItemOrEmpty();
+
+  void markReused();
+
+  void setCancelOnClickOutside(final boolean b);
+
+  void setCancelOnOtherWindowOpen(final boolean b);
+
+  boolean isLookupDisposed();
+
+  boolean isVisible();
+
+  void setCalculating(boolean calculating);
+
+  boolean isCalculating();
+
+  void markSelectionTouched();
+
+  void updateLookupWidth(LookupElement item);
+
+  void requestResize();
+
+  void fireBeforeAppendPrefix(char c);
+
+  void appendPrefix(char c);
+
+  String getAdditionalPrefix();
+
+  boolean addItem(LookupElement item, PrefixMatcher matcher);
+
+  void setArranger(LookupArranger arranger);
+
+  boolean isShown();
+
+  void ensureSelectionVisible(boolean forceTopSelection);
+
+  boolean showLookup();
+
+  boolean mayBeNoticed();
+
+  LookupAdvertiser getAdvertiser();
+
+  Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items, boolean hideSingleValued);
+
+  void moveUp();
+
+  void moveDown();
+
+  void movePageUp();
+
+  void movePageDown();
+
+  void moveHome();
+
+  void moveEnd();
+
+  void checkValid();
+
+  void replacePrefix(final String presentPrefix, final String newPrefix);
+
+  void finishLookupInWritableFile(char completionChar, @Nullable LookupElement item);
+
+  boolean isStartCompletionWhenNothingMatches();
+
+  int getSelectedIndex();
 }

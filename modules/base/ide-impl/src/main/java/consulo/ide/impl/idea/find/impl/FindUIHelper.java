@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.ide.impl.idea.find.*;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.find.FindBundle;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
+import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -40,7 +39,7 @@ public class FindUIHelper implements Disposable {
   private final Project myProject;
   @Nonnull
   private FindModel myModel;
-  FindModel myPreviousModel;
+  public FindModel myPreviousModel;
   @Nonnull
   private Runnable myOkHandler;
 
@@ -56,9 +55,10 @@ public class FindUIHelper implements Disposable {
 
   private FindUI getOrCreateUI() {
     if (myUI == null) {
-      JComponent component;
-      FindPopupPanel panel = new FindPopupPanel(this);
-      component = panel;
+      FindUIFactory uiFactory = myProject.getApplication().getInstance(FindUIFactory.class);
+
+      FindUI panel = uiFactory.create(this);
+      JComponent component = panel.getComponent();
       myUI = panel;
 
       registerAction("ReplaceInPath", true, component, myUI);
@@ -109,10 +109,9 @@ public class FindUIHelper implements Disposable {
   }
 
 
-  boolean canSearchThisString() {
+  public boolean canSearchThisString() {
     return myUI != null && (!StringUtil.isEmpty(myUI.getStringToFind()) || !myModel.isReplaceState() && !myModel.isFindAllEnabled() && myUI.getFileTypeMask() != null);
   }
-
 
   @Nonnull
   public Project getProject() {
@@ -146,7 +145,7 @@ public class FindUIHelper implements Disposable {
     myUI = null;
   }
 
-  void updateFindSettings() {
+  public void updateFindSettings() {
     ((FindManagerImpl)FindManager.getInstance(myProject)).changeGlobalSettings(myModel);
     FindSettings findSettings = FindSettings.getInstance();
     findSettings.setCaseSensitive(myModel.isCaseSensitive());
@@ -185,9 +184,10 @@ public class FindUIHelper implements Disposable {
     findSettings.setFileMask(myModel.getFileFilter());
   }
 
-  String getTitle() {
+  public String getTitle() {
     if (myModel.isReplaceState()) {
-      return myModel.isMultipleFiles() ? FindBundle.message("find.replace.in.project.dialog.title") : FindBundle.message("find.replace.text.dialog.title");
+      return myModel.isMultipleFiles() ? FindBundle.message("find.replace.in.project.dialog.title") : FindBundle.message(
+        "find.replace.text.dialog.title");
     }
     return myModel.isMultipleFiles() ? FindBundle.message("find.in.path.dialog.title") : FindBundle.message("find.text.dialog.title");
   }

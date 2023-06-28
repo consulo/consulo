@@ -39,7 +39,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -49,6 +48,7 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
@@ -173,7 +173,7 @@ public class TemplateStateImpl implements TemplateState {
       public void beforeCommandFinished(CommandEvent event) {
         if (started && !isDisposed()) {
           Runnable runnable = () -> afterChangedUpdate();
-          final LookupImpl lookup = myEditor != null ? (LookupImpl)LookupManager.getActiveLookup(myEditor) : null;
+          final LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
           if (lookup != null) {
             lookup.performGuardedChange(runnable);
           }
@@ -231,7 +231,7 @@ public class TemplateStateImpl implements TemplateState {
   @Override
   public synchronized void dispose() {
     if (myLookupListener != null) {
-      final LookupImpl lookup = myEditor != null ? (LookupImpl)LookupManager.getActiveLookup(myEditor) : null;
+      final LookupEx lookup = myEditor != null ? LookupManager.getActiveLookup(myEditor) : null;
       if (lookup != null) {
         lookup.removeLookupListener(myLookupListener);
       }
@@ -254,7 +254,7 @@ public class TemplateStateImpl implements TemplateState {
       return false;
     }
     if (ourLookupShown) {
-      final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(myEditor);
+      final LookupEx lookup = LookupManager.getActiveLookup(myEditor);
       if (lookup != null && !lookup.isFocused()) {
         return true;
       }
@@ -658,7 +658,7 @@ public class TemplateStateImpl implements TemplateState {
 
     final LookupManager lookupManager = LookupManager.getInstance(myProject);
 
-    final LookupImpl lookup = (LookupImpl)lookupManager.showLookup(myEditor, lookupItems.toArray(new LookupElement[lookupItems.size()]));
+    final LookupEx lookup = lookupManager.showLookup(myEditor, lookupItems.toArray(new LookupElement[lookupItems.size()]));
     if (lookup == null) return;
 
     if (CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && myEditor.getUserData(InplaceRefactoring.INPLACE_RENAMER) == null) {

@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 /**
  * @author Alexander Lobas
  */
-public class HelpTooltipManager extends HelpTooltip {
+public class HelpTooltipManager extends HelpTooltipImpl {
   public static final String SHORTCUT_PROPERTY = "helptooltip.shortcut";
 
   public HelpTooltipManager() {
@@ -17,7 +17,7 @@ public class HelpTooltipManager extends HelpTooltip {
   }
 
   public void showTooltip(@Nonnull JComponent component, @Nonnull MouseEvent event) {
-    initPopupBuilder(new HelpTooltip().setTitle(component.getToolTipText(event)).
+    initPopupBuilder(new HelpTooltipImpl().setTitle(component.getToolTipText(event)).
             setShortcut((String)component.getClientProperty(SHORTCUT_PROPERTY)));
 
     if (event.getID() == MouseEvent.MOUSE_ENTERED) {

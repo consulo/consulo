@@ -3,26 +3,24 @@ package consulo.ide.impl.idea.ide.actions.runAnything;
 
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
-import consulo.ui.ex.awt.action.CustomComponentAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.FontUtil;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,7 +36,7 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
   private boolean myIsDoubleCtrlRegistered;
 
   public RunAnythingAction(@Nonnull Application application) {
-    if(application.isSwingApplication()) {
+    if (application.isSwingApplication()) {
       IdeEventQueue.getInstance().addPostprocessor(event -> {
         if (event instanceof KeyEvent) {
           final int keyCode = ((KeyEvent)event).getKeyCode();
@@ -54,6 +52,7 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     if (Registry.is("ide.suppress.double.click.handler") && e.getInputEvent() instanceof KeyEvent) {
@@ -62,10 +61,11 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
       }
     }
 
-    if (e.getData(CommonDataKeys.PROJECT) != null) {
+    Project project = e.getData(Project.KEY);
+    if (project != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_RUN_ANYTHING);
 
-      RunAnythingManager runAnythingManager = RunAnythingManager.getInstance(e.getData(CommonDataKeys.PROJECT));
+      RunAnythingManager runAnythingManager = RunAnythingManager.getInstance(project);
       String text = GotoActionBase.getInitialTextForNavigation(e);
       runAnythingManager.show(text, e);
     }
@@ -92,23 +92,17 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
   @Nonnull
   @Override
   public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
-    return new ActionButtonImpl(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE) {
+    ActionButtonFactory factory = ActionButtonFactory.getInstance();
 
-      @Nullable
-      @Override
-      protected String getShortcutText() {
-        if (myIsDoubleCtrlRegistered) {
-          return IdeBundle.message("run.anything.double.ctrl.shortcut", SystemInfo.isMac ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl");
-        }
-        //keymap shortcut is added automatically
-        return null;
+    ActionButton button = factory.create(this, presentation, place, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+    button.setCustomShortcutBuilder(() -> {
+      if (myIsDoubleCtrlRegistered) {
+        return IdeBundle.message("run.anything.double.ctrl.shortcut",
+                                 SystemInfo.isMac ? FontUtil.thinSpace() + MacKeymapUtil.CONTROL : "Ctrl");
       }
-
-      @Override
-      public void setToolTipText(String s) {
-        String shortcutText = getShortcutText();
-        super.setToolTipText(StringUtil.isNotEmpty(shortcutText) ? (s + " (" + shortcutText + ")") : s);
-      }
-    };
+      //keymap shortcut is added automatically
+      return null;
+    });
+    return button.getComponent();
   }
 }

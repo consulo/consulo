@@ -16,17 +16,16 @@
 
 package consulo.ide.impl.idea.openapi.editor.actions;
 
-import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.find.FindManager;
-import consulo.find.FindModel;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.execution.ui.console.ConsoleViewUtil;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.ide.impl.idea.find.EditorSearchSession;
+import consulo.ide.impl.idea.find.FindUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
@@ -43,25 +42,27 @@ public class IncrementalFindAction extends EditorAction {
 
     @Override
     public void execute(final Editor editor, DataContext dataContext) {
-      final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+      final Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
       if (!editor.isOneLineMode()) {
         EditorSearchSession search = EditorSearchSession.get(editor);
         if (search != null) {
           search.getComponent().requestFocusInTheSearchFieldAndSelectContent(project);
           FindUtil.configureFindModel(myReplace, editor, search.getFindModel(), false);
-        } else {
+        }
+        else {
           FindManager findManager = FindManager.getInstance(project);
           FindModel model;
           if (myReplace) {
             model = findManager.createReplaceInFileModel();
-          } else {
+          }
+          else {
             model = new FindModel();
             model.copyFrom(findManager.getFindInFileModel());
           }
           boolean consoleViewEditor = ConsoleViewUtil.isConsoleViewEditor(editor);
           FindUtil.configureFindModel(myReplace, editor, model, consoleViewEditor);
           EditorSearchSession.start(editor, model, project).getComponent()
-                  .requestFocusInTheSearchFieldAndSelectContent(project);
+                             .requestFocusInTheSearchFieldAndSelectContent(project);
           if (!consoleViewEditor && editor.getSelectionModel().hasSelection()) {
             // selection is used as string to find without search model modification so save the pattern explicitly
             FindUtil.updateFindInFileModel(project, model, true);
@@ -73,13 +74,13 @@ public class IncrementalFindAction extends EditorAction {
     @Override
     public boolean isEnabled(Editor editor, DataContext dataContext) {
       if (myReplace && ConsoleViewUtil.isConsoleViewEditor(editor) &&
-          !ConsoleViewUtil.isReplaceActionEnabledForConsoleViewEditor(editor)) {
+        !ConsoleViewUtil.isReplaceActionEnabledForConsoleViewEditor(editor)) {
         return false;
       }
       if (SEARCH_DISABLED.get(editor, false)) {
         return false;
       }
-      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(CommonDataKeys.PROJECT);
+      Project project = DataManager.getInstance().getDataContext(editor.getComponent()).getData(Project.KEY);
       return project != null && !editor.isOneLineMode();
     }
   }

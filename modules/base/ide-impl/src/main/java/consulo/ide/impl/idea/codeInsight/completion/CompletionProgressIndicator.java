@@ -6,16 +6,12 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
 import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
+import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.language.editor.completion.*;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupFocusDegree;
-import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
@@ -88,7 +84,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
   private final CompletionType myCompletionType;
   private final int myInvocationCount;
   private OffsetsInFile myHostOffsets;
-  private final LookupImpl myLookup;
+  private final LookupEx myLookup;
   private final Alarm mySuppressTimeoutAlarm = new Alarm(this);
   private final MergingUpdateQueue myQueue;
   private final Update myUpdate = new Update("update") {
@@ -129,7 +125,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   CompletionProgressIndicator(Editor editor, @Nonnull Caret caret, int invocationCount,
                               CodeCompletionHandlerBase handler, @Nonnull OffsetMap offsetMap, @Nonnull OffsetsInFile hostOffsets,
-                              boolean hasModifiers, @Nonnull LookupImpl lookup) {
+                              boolean hasModifiers, @Nonnull LookupEx lookup) {
     myEditor = editor;
     myCaret = caret;
     myHandler = handler;
@@ -345,7 +341,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   @Override
   @Nonnull
-  public LookupImpl getLookup() {
+  public LookupEx getLookup() {
     return myLookup;
   }
 

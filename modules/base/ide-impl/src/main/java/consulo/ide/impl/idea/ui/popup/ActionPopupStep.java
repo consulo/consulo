@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui.popup;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.ui.popup.*;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
@@ -30,7 +30,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
   private final Supplier<? extends DataContext> myContext;
   private final String myActionPlace;
   private final boolean myEnableMnemonics;
-  private final PresentationFactory myPresentationFactory;
+  private final BasePresentationFactory myPresentationFactory;
   private final int myDefaultOptionIndex;
   private final boolean myAutoSelectionEnabled;
   private final boolean myShowDisabledActions;
@@ -45,7 +45,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
                          @Nullable Condition<? super AnAction> preselectActionCondition,
                          boolean autoSelection,
                          boolean showDisabledActions,
-                         @Nullable PresentationFactory presentationFactory) {
+                         @Nullable BasePresentationFactory presentationFactory) {
     myItems = items;
     myTitle = title;
     myContext = context;
@@ -85,7 +85,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
                                                                              @Nullable String actionPlace,
                                                                              Condition<? super AnAction> preselectCondition,
                                                                              int defaultOptionIndex,
-                                                                             @Nullable PresentationFactory presentationFactory) {
+                                                                             @Nullable BasePresentationFactory presentationFactory) {
     List<PopupFactoryImpl.ActionItem> items = createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
     boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0);
 
@@ -102,7 +102,7 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
                                                                     boolean showDisabledActions,
                                                                     boolean honorActionMnemonics,
                                                                     @Nullable String actionPlace,
-                                                                    @Nullable PresentationFactory presentationFactory) {
+                                                                    @Nullable BasePresentationFactory presentationFactory) {
     ActionStepBuilder builder = new ActionStepBuilder(dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
     builder.buildGroup(actionGroup);
     return builder.getItems();

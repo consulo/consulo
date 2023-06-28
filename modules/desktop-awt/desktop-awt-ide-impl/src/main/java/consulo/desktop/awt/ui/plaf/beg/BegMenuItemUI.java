@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuItem;
+import consulo.desktop.awt.action.ActionMenuItem;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.JBUI;

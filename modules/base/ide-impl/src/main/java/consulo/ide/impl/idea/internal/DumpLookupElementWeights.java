@@ -16,13 +16,13 @@
 
 package consulo.ide.impl.idea.internal;
 
-import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupImpl;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -31,8 +31,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    dumpLookupElementWeights((LookupImpl)LookupManager.getActiveLookup(editor));
+    dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
   }
 
   @RequiredUIAccess
@@ -58,7 +58,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
     presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);
   }
 
-  public static void dumpLookupElementWeights(final LookupImpl lookup) {
+  public static void dumpLookupElementWeights(final LookupEx lookup) {
     LookupElement selected = lookup.getCurrentItem();
     String sb = "selected: " + selected;
     if (selected != null) {
@@ -74,7 +74,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
     }
   }
 
-  public static List<String> getLookupElementWeights(LookupImpl lookup, boolean hideSingleValued) {
+  public static List<String> getLookupElementWeights(LookupEx lookup, boolean hideSingleValued) {
     final Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
     return ContainerUtil.map(weights.entrySet(), entry -> entry.getKey().getLookupString() + "\t" + StringUtil.join(entry.getValue(), pair -> pair.first + "=" + pair.second, ", "));
   }

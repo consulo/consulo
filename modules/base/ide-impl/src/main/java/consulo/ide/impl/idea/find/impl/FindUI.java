@@ -19,6 +19,8 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
+
 public interface FindUI {
   @RequiredUIAccess
   void showUI();
@@ -31,6 +33,8 @@ public interface FindUI {
 
   @Nonnull
   Disposable getDisposable();
+
+  JComponent getComponent();
 
   void saveSettings();
 }

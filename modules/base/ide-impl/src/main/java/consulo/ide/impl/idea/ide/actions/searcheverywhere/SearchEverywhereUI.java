@@ -27,10 +27,10 @@ import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
 import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
@@ -701,7 +701,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
       SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(index);
       Object data = contributor.getDataForItem(myListModel.getElementAt(index), SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION);
       if (data instanceof String) {
-        ActionMenu.showDescriptionInStatusBar(true, myResultsList, (String)data);
+        ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, (String)data);
       }
     }
   }
@@ -862,7 +862,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
   }
 
   private void closePopup() {
-    ActionMenu.showDescriptionInStatusBar(true, myResultsList, null);
+    ActionMenuUtil.showDescriptionInStatusBar(true, myResultsList, null);
     stopSearching();
     searchFinishedHandler.run();
   }

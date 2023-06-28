@@ -15,18 +15,31 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.ui.ex.internal.HelpTooltip;
 import consulo.ui.image.Image;
-
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import javax.swing.border.Border;
 import java.awt.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 22-Jul-22
  */
 public interface ActionButton extends AnActionHolder, ActionButtonComponent {
+  /**
+   * By default button representing popup action group displays 'dropdown' icon.
+   * This key allows to avoid 'dropdown' icon painting, just put it in ActionButtonImpl's presentation or template presentation of ActionGroup like this:
+   * <code>presentation.putClientProperty(ActionButtonImpl.HIDE_DROPDOWN_ICON, Boolean.TRUE)</code>
+   */
+
+  public static final Key<Boolean> HIDE_DROPDOWN_ICON = Key.create("HIDE_DROPDOWN_ICON");
+
   void setVisible(boolean visible);
 
   boolean isVisible();
@@ -38,5 +51,17 @@ public interface ActionButton extends AnActionHolder, ActionButtonComponent {
 
   void setIconOverrider(@Nullable Function<ActionButton, Image> imageCalculator);
 
+  void updateToolTipText();
+
   void click();
+
+  void setNoIconsInPopup(boolean value);
+
+  void setBorder(Border border);
+
+  void setOpaque(boolean value);
+
+  void setCustomTooltipBuilder(BiConsumer<HelpTooltip, Presentation> builder);
+
+  void setCustomShortcutBuilder(Supplier<String> shortcutBuilder);
 }

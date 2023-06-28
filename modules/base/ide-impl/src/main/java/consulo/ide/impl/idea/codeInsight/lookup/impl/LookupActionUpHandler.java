@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
 
 import jakarta.annotation.Nonnull;
@@ -26,8 +27,8 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupActionUpHandler extends LookupActionHandler {
   @Override
-  protected void executeInLookup(final LookupImpl lookup, DataContext context, Caret caret) {
-    if (!UISettings.getInstance().getCycleScrolling() && !lookup.isFocused() && lookup.getList().getSelectedIndex() == 0) {
+  protected void executeInLookup(final LookupEx lookup, DataContext context, Caret caret) {
+    if (!UISettings.getInstance().getCycleScrolling() && !lookup.isFocused() && lookup.getSelectedIndex() == 0) {
       myOriginalHandler.execute(lookup.getEditor(), caret, context);
       return;
     }

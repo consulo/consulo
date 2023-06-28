@@ -1366,3 +1366,5 @@ editorsearch.in.selection:
   text: Search in selection only
 editorsearch.in.selection.with.hint:
   text: Search in selection. {0} to search for selected text
+nothing.here:
+  text: Nothing Here
