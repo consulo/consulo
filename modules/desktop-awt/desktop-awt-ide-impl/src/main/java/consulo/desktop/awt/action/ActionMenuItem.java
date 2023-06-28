@@ -23,7 +23,6 @@ import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IconLookup;
 import consulo.desktop.awt.ui.JBCheckBoxMenuItem;
-import consulo.desktop.awt.ui.plaf.GtkMenuItemUI;
 import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
 import consulo.desktop.awt.ui.plaf.windows.WinIconLookup;
 import consulo.disposer.Disposable;
@@ -203,12 +202,6 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
 
   private static boolean isEnterKeyStroke(KeyStroke keyStroke) {
     return keyStroke.getKeyCode() == KeyEvent.VK_ENTER && keyStroke.getModifiers() == 0;
-  }
-
-  @Override
-  public void setUI(final MenuItemUI ui) {
-    final MenuItemUI newUi = UIUtil.isUnderGTKLookAndFeel() && GtkMenuItemUI.isUiAcceptable(ui) ? new GtkMenuItemUI(ui) : ui;
-    super.setUI(newUi);
   }
 
   /**

@@ -24,7 +24,6 @@ import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
-import consulo.ide.impl.idea.ui.plaf.gtk.GtkMenuUI;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.action.ActionGroup;
@@ -45,7 +44,6 @@ import kava.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
-import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -179,12 +177,6 @@ public final class ActionMenu extends JMenu {
     finally {
       myMnemonicUpdate = false;
     }
-  }
-
-  @Override
-  public void setUI(final MenuItemUI ui) {
-    final MenuItemUI newUi = !myTopLevel && UIUtil.isUnderGTKLookAndFeel() && GtkMenuUI.isUiAcceptable(ui) ? new GtkMenuUI(ui) : ui;
-    super.setUI(newUi);
   }
 
   private void init() {

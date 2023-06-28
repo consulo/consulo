@@ -769,7 +769,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.ui.mac.touchbar;
   exports consulo.ide.impl.idea.ui.navigation;
   exports consulo.ide.impl.idea.ui.paint;
-  exports consulo.ide.impl.idea.ui.plaf.gtk;
   exports consulo.ide.impl.idea.ui.popup;
   exports consulo.ide.impl.idea.ui.popup.async;
   exports consulo.ide.impl.idea.ui.popup.list;
