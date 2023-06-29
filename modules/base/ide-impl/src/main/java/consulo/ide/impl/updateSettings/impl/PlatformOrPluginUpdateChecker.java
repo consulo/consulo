@@ -244,7 +244,7 @@ public class PlatformOrPluginUpdateChecker {
       uiAccess.give(() -> {
         LocalizeValue className = LocalizeValue.of(e.getClass().getSimpleName());
         LocalizeValue message = LocalizeValue.of(e.getLocalizedMessage());
-        Alert<Object> alert = Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), message));
+        Alert<Object> alert = Alerts.okError(LocalizeValue.join(className, LocalizeValue.colon(), LocalizeValue.space(), message));
         if (project != null) {
           alert.showAsync(project);
         }
