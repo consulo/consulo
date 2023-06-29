@@ -61,9 +61,6 @@ public abstract class FontLayoutService {
   }
 
   private static class DefaultFontLayoutService extends FontLayoutService {
-    // this flag is supported by JetBrains Runtime
-    private static final int LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT = 8;
-
     private final BiFunction<FontMetrics, Integer, Float> myHandleCharWidthMethod;
     private final BiFunction<FontMetrics, Character, Float> myGetLatinCharWidthMethod;
 
@@ -81,8 +78,7 @@ public abstract class FontLayoutService {
     @Nonnull
     @Override
     public GlyphVector layoutGlyphVector(@Nonnull Font font, @Nonnull FontRenderContext fontRenderContext, @Nonnull char[] chars, int start, int end, boolean isRtl) {
-      return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT) | LAYOUT_NO_PAIRED_CHARS_AT_SCRIPT_SPLIT);
-    }
+      return font.layoutGlyphVector(fontRenderContext, chars, start, end, (isRtl ? Font.LAYOUT_RIGHT_TO_LEFT : Font.LAYOUT_LEFT_TO_RIGHT));    }
 
     @Override
     public int charWidth(@Nonnull FontMetrics fontMetrics, char c) {
