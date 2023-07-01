@@ -745,11 +745,6 @@
       </dependency>
       <dependency>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-lumo-theme</artifactId>
-        <version>${vaadin.flow.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.vaadin</groupId>
         <artifactId>vaadin-core-internal</artifactId>
         <version>${vaadin.flow.version}</version>
       </dependency>
