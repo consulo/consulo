@@ -25,5 +25,9 @@ public enum UpdateChannel {
   alpha,
   nightly,
   // consulo 3 branch
-  valhalla
+  valhalla;
+
+  public boolean isObsolete() {
+    return this == valhalla;
+  }
 }

@@ -118,5 +118,9 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
   @Override
   public void loadState(State state) {
     myState = state;
+    // switch to release if branch obsolete 
+    if (state.channel.isObsolete()) {
+      state.channel = UpdateChannel.release;
+    }
   }
 }

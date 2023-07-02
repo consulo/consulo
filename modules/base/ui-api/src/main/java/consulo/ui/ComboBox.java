@@ -82,11 +82,20 @@ public interface ComboBox<E> extends ValueComponent<E> {
 
     @Nonnull
     public Builder<K> fillByEnum(Class<? extends K> clazz, Function<K, String> presentation) {
+      return fillByEnum(clazz, k -> true, presentation);
+    }
+
+    @Nonnull
+    public Builder<K> fillByEnum(Class<? extends K> clazz, Predicate<K> tester, Function<K, String> presentation) {
       if (!clazz.isEnum()) {
         throw new IllegalArgumentException("Accepted only enum");
       }
       K[] enumConstants = clazz.getEnumConstants();
       for (K enumConstant : enumConstants) {
+        if (!tester.test(enumConstant)) {
+          continue;
+        }
+        
         add(enumConstant, presentation.apply(enumConstant));
       }
       return this;
