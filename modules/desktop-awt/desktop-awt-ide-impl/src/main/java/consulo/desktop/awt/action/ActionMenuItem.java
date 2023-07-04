@@ -19,12 +19,9 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.ui.IconLookup;
 import consulo.desktop.awt.ui.JBCheckBoxMenuItem;
-import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
-import consulo.desktop.awt.ui.plaf.windows.WinIconLookup;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
@@ -36,7 +33,6 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -53,7 +49,6 @@ import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.plaf.MenuItemUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -282,7 +277,7 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
       }
       else {
         if (myToggled) {
-          IconLookup lookup = SystemInfo.isWindows ? WinIconLookup.INSTANCE : LafIconLookup.INSTANCE;
+          IconLookup lookup = IconLookup.get();
 
           Icon checkmark = lookup.getIcon("checkmark", false, false, true);
           Icon selectedCheckmark = lookup.getIcon("checkmark", true, false, true);

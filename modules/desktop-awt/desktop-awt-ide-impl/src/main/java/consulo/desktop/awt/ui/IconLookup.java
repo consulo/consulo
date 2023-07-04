@@ -15,6 +15,9 @@
  */
 package consulo.desktop.awt.ui;
 
+import consulo.application.util.SystemInfo;
+import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
+import consulo.desktop.awt.ui.plaf.windows.WinIconLookup;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -24,6 +27,14 @@ import javax.swing.*;
  * @since 28/06/2023
  */
 public interface IconLookup {
+  static IconLookup get() {
+    if (SystemInfo.isWindows) {
+      return WinIconLookup.INSTANCE;
+    }
+    
+    return LafIconLookup.INSTANCE;
+  }
+
   default Icon getIcon(@Nonnull String name, boolean selected, boolean focused, boolean enabled) {
     return getIcon(name, selected, focused, enabled, false, false);
   }

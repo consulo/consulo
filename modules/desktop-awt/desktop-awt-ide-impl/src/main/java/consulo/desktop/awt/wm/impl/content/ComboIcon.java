@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.wm.impl.content;
 
+import consulo.desktop.awt.ui.IconLookup;
 import consulo.ui.ex.awt.JBUI;
-import consulo.desktop.awt.ui.plaf.darcula.LafIconLookup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,7 @@ public abstract class ComboIcon {
   private final Icon myImage;
 
   public ComboIcon() {
-    myImage = LafIconLookup.INSTANCE.getIcon("treeExpanded", false, false, true);
+    myImage = IconLookup.get().getIcon("treeExpanded", false, false, true);
   }
 
   public void paintIcon(final Component c, final Graphics g) {
