@@ -399,7 +399,6 @@ public class AllIcons {
     public static final Image CollapseComponentHover = PlatformIconGroup.generalCollapsecomponenthover();
     public static final Image CollapseAll = PlatformIconGroup.generalCollapseall(); // 11x16
     public static final Image Combo = PlatformIconGroup.generalCombo(); // 16x16
-    public static final Image Combo2 = PlatformIconGroup.generalCombo2(); // 16x16
     public static final Image Combo3 = PlatformIconGroup.generalCombo3(); // 16x16
     public static final Image ComboArrow = PlatformIconGroup.generalComboarrow(); // 16x16
     public static final Image ComboBoxButtonArrow = PlatformIconGroup.generalComboboxbuttonarrow(); // 8x8
@@ -436,7 +435,6 @@ public class AllIcons {
     public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
     public static final Image GetProjectfromVCS = PlatformIconGroup.generalGetprojectfromvcs(); // 32x32
     public static final Image Help = PlatformIconGroup.generalHelp(); // 10x10
-    public static final Image Help_small = PlatformIconGroup.generalHelp_small(); // 16x16
     public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16
     public static final Image HideWarnings = PlatformIconGroup.generalHidewarnings(); // 16x16
     public static final Image ImplementingMethod = PlatformIconGroup.generalImplementingmethod(); // 10x14

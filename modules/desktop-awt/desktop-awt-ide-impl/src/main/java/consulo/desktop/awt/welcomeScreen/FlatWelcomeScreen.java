@@ -125,9 +125,6 @@ public class FlatWelcomeScreen extends JPanel implements WelcomeScreenSlider {
         link.setNormalColor(WelcomeScreenConstants.getLinkNormalColor());
         FlatWelcomePanel.JActionLinkPanel button = new FlatWelcomePanel.JActionLinkPanel(link);
         button.setBorder(JBUI.Borders.empty(8, 20));
-        if (action instanceof WelcomePopupAction) {
-          button.add(FlatWelcomePanel.createArrow(link), BorderLayout.EAST);
-        }
         welcomePanel.installFocusable(button, action, KeyEvent.VK_UP, KeyEvent.VK_DOWN, true);
         actions.add(button);
       }

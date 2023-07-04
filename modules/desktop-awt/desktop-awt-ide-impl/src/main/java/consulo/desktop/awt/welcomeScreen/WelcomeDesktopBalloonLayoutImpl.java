@@ -16,22 +16,23 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
-import consulo.ui.ex.JBColor;
+import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.popup.Balloon;
-import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBUI;
-
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.popup.Balloon;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.BORDER_COLOR;
 import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.FILL_COLOR;
@@ -51,12 +53,12 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private static final String TYPE_KEY = "Type";
 
   private final Consumer<List<NotificationType>> myListener;
-  private final Computable<Point> myButtonLocation;
+  private final Supplier<Point> myButtonLocation;
   private BalloonImpl myPopupBalloon;
   private final BalloonPanel myBalloonPanel = new BalloonPanel();
   private boolean myVisible;
 
-  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent, @Nonnull Insets insets, @Nonnull Consumer<List<NotificationType>> listener, @Nonnull Computable<Point> buttonLocation) {
+  public WelcomeDesktopBalloonLayoutImpl(@Nonnull JRootPane parent, @Nonnull Insets insets, @Nonnull Consumer<List<NotificationType>> listener, @Nonnull Supplier<Point> buttonLocation) {
     super(parent, insets);
     myListener = listener;
     myButtonLocation = buttonLocation;
@@ -167,7 +169,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
   private void layoutPopup() {
     Dimension layeredSize = myLayeredPane.getSize();
     Dimension size = new Dimension(myPopupBalloon.getPreferredSize());
-    Point location = myButtonLocation.compute();
+    Point location = myButtonLocation.get();
     int x = layeredSize.width - size.width - 5;
     int fullHeight = location.y;
 

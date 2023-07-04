@@ -16,25 +16,24 @@
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.application.AllIcons;
+import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
+import consulo.project.ui.wm.WelcomeFrameManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
-import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
-import consulo.ui.ex.UIBundle;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetFromVcsAction extends WelcomePopupAction{
+public class GetFromVcsAction extends WelcomePopupAction {
 
   @Override
   protected void fillActions(DefaultActionGroup group) {
     final List<CheckoutProvider> providers = new ArrayList<>(CheckoutProvider.EXTENSION_POINT_NAME.getExtensionList());
-    ContainerUtil.sort(providers, new CheckoutProvider.CheckoutProviderComparator());
+    providers.sort(new CheckoutProvider.CheckoutProviderComparator());
     for (CheckoutProvider provider : providers) {
       group.add(new CheckoutAction(provider));
     }

@@ -16,38 +16,37 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
-import consulo.ui.ex.awt.ActionLink;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationProperties;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.function.Computable;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
+import consulo.externalService.statistic.UsageTrigger;
+import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
-import consulo.externalService.statistic.UsageTrigger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextDelegate;
-import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Konstantin Bulenkov
@@ -55,7 +54,7 @@ import java.util.function.Consumer;
 public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
   private FlatWelcomeFrame myFlatWelcomeFrame;
   public Consumer<List<NotificationType>> myEventListener;
-  public Computable<Point> myEventLocation;
+  public Supplier<Point> myEventLocation;
 
   @RequiredUIAccess
   public FlatWelcomePanel(FlatWelcomeFrame flatWelcomeFrame) {
@@ -106,8 +105,8 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
 
     toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.X_AXIS));
     toolbar.add(createEventsLink());
-    toolbar.add(createActionLink("Configure", IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE, AllIcons.General.GearPlain, true));
-    toolbar.add(createActionLink("Get Help", IdeActions.GROUP_WELCOME_SCREEN_DOC, null, false));
+    toolbar.add(createActionLink("Configure", IdeActions.GROUP_WELCOME_SCREEN_CONFIGURE, PlatformIconGroup.generalSettings(), true));
+    toolbar.add(createActionLink("Get Help", IdeActions.GROUP_WELCOME_SCREEN_DOC, PlatformIconGroup.actionsHelp(), false));
 
     panel.add(toolbar, BorderLayout.EAST);
 
@@ -178,7 +177,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     link.setNormalColor(WelcomeScreenConstants.getLinkNormalColor());
     JActionLinkPanel panel = new JActionLinkPanel(link);
     panel.setBorder(JBUI.Borders.empty(4, 6, 4, 6));
-    panel.add(createArrow(link), BorderLayout.EAST);
     return panel;
   }
 
@@ -220,21 +218,6 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
         return AccessibleRole.PUSH_BUTTON;
       }
     }
-  }
-
-  public static JLabel createArrow(final ActionLink link) {
-    JLabel arrow = new JBLabel(AllIcons.General.Combo3);
-    arrow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    arrow.setVerticalAlignment(SwingConstants.BOTTOM);
-    new ClickListener() {
-      @Override
-      public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
-        final MouseEvent newEvent = MouseEventAdapter.convert(e, link, e.getX(), e.getY());
-        link.doClick(newEvent);
-        return true;
-      }
-    }.installOn(arrow);
-    return arrow;
   }
 
   public void installFocusable(final JComponent comp, final AnAction action, final int prevKeyCode, final int nextKeyCode, final boolean focusListOnLeft) {
