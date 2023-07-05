@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
-import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -44,7 +44,8 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
   private final Consumer<TodoFilter> myTodoFilterConsumer;
 
   public SetTodoFilterAction(final Project project, final TodoPanelSettings toDoSettings, final Consumer<TodoFilter> todoFilterConsumer) {
-    super(IdeBundle.message("action.filter.todo.items"), null, AllIcons.General.Filter);
+    super(IdeBundle.message("action.filter.todo.items"), null, PlatformIconGroup.generalFilter());
+    setPopup(true);
     myProject = project;
     myToDoSettings = toDoSettings;
     myTodoFilterConsumer = todoFilterConsumer;
@@ -61,12 +62,12 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
       group.add(new TodoFilterApplier(filter.getName(), null, filter, myToDoSettings, myTodoFilterConsumer));
     }
     group.add(AnSeparator.create());
-    group.add(new AnAction(IdeBundle.message("action.todo.edit.filters"),
-                           IdeBundle.message("action.todo.edit.filters"),
-                           AllIcons.General.Settings) {
+    group.add(new DumbAwareAction(IdeBundle.message("action.todo.edit.filters"),
+                                  IdeBundle.message("action.todo.edit.filters"),
+                                  PlatformIconGroup.generalSettings()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(AnActionEvent e) {
+                public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
                   ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
                 }
               }
@@ -74,7 +75,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
     return group.toArray(AnAction[]::new);
   }
 
-  private static class TodoFilterApplier extends ToggleAction {
+  private static class TodoFilterApplier extends ToggleAction implements DumbAware {
     private final TodoFilter myFilter;
     private final TodoPanelSettings mySettings;
     private final Consumer<TodoFilter> myTodoFilterConsumer;
