@@ -435,7 +435,6 @@ public class AllIcons {
     public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
     public static final Image GetProjectfromVCS = PlatformIconGroup.generalGetprojectfromvcs(); // 32x32
     public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16
-    public static final Image HideWarnings = PlatformIconGroup.generalHidewarnings(); // 16x16
     public static final Image ImplementingMethod = PlatformIconGroup.generalImplementingmethod(); // 10x14
     public static final Image ImportProject = PlatformIconGroup.generalImportproject(); // 32x32
     public static final Image ImportSettings = PlatformIconGroup.generalImportsettings(); // 32x32
