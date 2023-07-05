@@ -15,43 +15,37 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.language.editor.ui.awt.HintUtil;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.compiler.artifact.element.*;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.compiler.CompilerBundle;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactType;
+import consulo.compiler.artifact.ArtifactUtil;
+import consulo.compiler.artifact.ModifiableArtifact;
+import consulo.compiler.artifact.element.*;
+import consulo.content.library.Library;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.awt.*;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.content.library.Library;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions.*;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.ModifiableArtifact;
-import consulo.compiler.artifact.ArtifactUtil;
-import consulo.compiler.artifact.element.ArchivePackagingElement;
-import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ui.ex.awt.ThreeStateCheckBox;
-
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -205,7 +199,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
     labelPanel.add(new JLabel("Available Elements "));
     final HyperlinkLabel link = new HyperlinkLabel("");
-    link.setIcon(AllIcons.General.Help);
+    link.setIcon(PlatformIconGroup.actionsHelp());
     link.setUseIconAsLink(true);
     link.addHyperlinkListener(new HyperlinkAdapter() {
       @Override
