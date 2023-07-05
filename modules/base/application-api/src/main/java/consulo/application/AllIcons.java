@@ -470,7 +470,6 @@ public class AllIcons {
     public static final Image OverridingMethod = PlatformIconGroup.generalOverridingmethod(); // 10x14
     public static final Image PathVariables = PlatformIconGroup.generalPathvariables(); // 32x32
     public static final Image Pin_tab = PlatformIconGroup.generalPin_tab(); // 16x16
-    public static final Image Progress = PlatformIconGroup.generalProgress(); // 8x10
     public static final Image ProjectConfigurable = PlatformIconGroup.generalProjectconfigurable(); // 9x9
     public static final Image ProjectSettings = PlatformIconGroup.generalProjectsettings(); // 16x16
     public static final Image ProjectStructure = PlatformIconGroup.generalProjectstructure(); // 16x16
@@ -698,7 +697,6 @@ public class AllIcons {
     public static final Image Class = PlatformIconGroup.nodesClass(); // 16x16
     public static final Image ClassInitializer = PlatformIconGroup.nodesClassinitializer(); // 16x16
     public static final Image ConfigFolder = PlatformIconGroup.nodesConfigfolder(); // 16x16
-    public static final Image CollapseNode = PlatformIconGroup.nodesCollapsenode(); // 9x9
     public static final Image CompiledClassesFolder = PlatformIconGroup.nodesCompiledclassesfolder(); // 16x16
     public static final Image CopyOfFolder = PlatformIconGroup.nodesCopyoffolder(); // 16x16
     public static final Image Cvs_global = PlatformIconGroup.nodesCvs_global(); // 16x16
@@ -721,11 +719,9 @@ public class AllIcons {
     public static final Image EmptyNode = PlatformIconGroup.nodesEmptynode(); // 18x18
     public static final Image EntryPoints = PlatformIconGroup.nodesEntrypoints(); // 16x16
     public static final Image Enum = PlatformIconGroup.nodesEnum();
-    public static final Image ErrorIntroduction = PlatformIconGroup.nodesErrorintroduction(); // 16x16
     public static final Image ErrorMark = PlatformIconGroup.nodesErrormark(); // 16x16
     public static final Image ExceptionClass = PlatformIconGroup.nodesExceptionclass(); // 16x16
     public static final Image ExcludedFromCompile = PlatformIconGroup.nodesExcludedfromcompile(); // 16x16
-    public static final Image ExpandNode = PlatformIconGroup.nodesExpandnode(); // 9x9
     public static final Image ExtractedFolder = PlatformIconGroup.nodesExtractedfolder(); // 16x16
     public static final Image Event = PlatformIconGroup.nodesEvent(); // 16x16
     public static final Image Field = PlatformIconGroup.nodesField(); // 16x16
@@ -802,7 +798,6 @@ public class AllIcons {
     public static final Image UpLevel = PlatformIconGroup.nodesUplevel(); // 16x16
     public static final Image Variable = PlatformIconGroup.nodesVariable(); // 16x16
     public static final Image Value = PlatformIconGroup.nodesValue(); // 16x16
-    public static final Image WarningIntroduction = PlatformIconGroup.nodesWarningintroduction(); // 16x16
     public static final Image WebFolder = PlatformIconGroup.nodesWebfolder(); // 16x16
     public static final Image Weblistener = PlatformIconGroup.nodesWeblistener(); // 16x16
     public static final Image Write_access = PlatformIconGroup.nodesWrite_access(); // 13x9
@@ -982,7 +977,6 @@ public class AllIcons {
     public static final Image Merge = PlatformIconGroup.vcsMerge(); // 12x12
     public static final Image MergeSourcesTree = PlatformIconGroup.vcsMergesourcestree(); // 16x16
     public static final Image Not_equal = PlatformIconGroup.vcsNot_equal(); // 16x16
-    public static final Image Remove = PlatformIconGroup.vcsRemove(); // 16x16
     public static final Image ResetStrip = PlatformIconGroup.vcsResetstrip(); // 16x16
     public static final Image StripDown = PlatformIconGroup.vcsStripdown(); // 16x16
     public static final Image StripNull = PlatformIconGroup.vcsStripnull(); // 16x16

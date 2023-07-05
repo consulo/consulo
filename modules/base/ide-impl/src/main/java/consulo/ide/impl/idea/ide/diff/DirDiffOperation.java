@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.diff;
 
 import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
@@ -35,7 +36,7 @@ public enum DirDiffOperation {
       case COPY_FROM: return AllIcons.Vcs.Arrow_left;
       case MERGE:     return AllIcons.Vcs.Not_equal;
       case EQUAL:     return AllIcons.Vcs.Equal;
-      case DELETE:    return AllIcons.Vcs.Remove;
+      case DELETE:    return PlatformIconGroup.generalRemove();
       case NONE:
     }
     return Image.empty(Image.DEFAULT_ICON_SIZE);

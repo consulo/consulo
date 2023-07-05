@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
-import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
@@ -59,7 +59,7 @@ public class GetFromVcsAction extends WelcomePopupAction {
   public void update(@Nonnull AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(CheckoutProvider.EXTENSION_POINT_NAME.hasAnyExtensions());
     if (WelcomeFrameManager.isFromWelcomeFrame(e)) {
-      e.getPresentation().setIcon(AllIcons.Welcome.FromVCS);
+      e.getPresentation().setIcon(PlatformIconGroup.welcomeFromvcs());
     }
   }
 }

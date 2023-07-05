@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.versionControlSystem.RepositoryLocation;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
  */
 public class ClearCommittedAction extends AnAction implements DumbAware {
   public ClearCommittedAction() {
-    super("Clear", "Clears cached revisions", AllIcons.Vcs.Remove);
+    super("Clear", "Clears cached revisions", PlatformIconGroup.generalRemove());
   }
 
   public void actionPerformed(AnActionEvent e) {

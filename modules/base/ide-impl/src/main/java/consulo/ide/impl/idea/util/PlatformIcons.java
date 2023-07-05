@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.application.AllIcons;
 import consulo.annotation.DeprecationInfo;
+import consulo.platform.base.icon.PlatformIconGroup;
 
 import javax.swing.*;
 
@@ -63,8 +64,8 @@ public interface PlatformIcons {
   Icon PROPERTY_ICON = (Icon)AllIcons.Nodes.Property;
   Icon ASPECT_ICON = (Icon)AllIcons.Nodes.Aspect;
   Icon ADVICE_ICON = (Icon)AllIcons.Nodes.Advice;
-  Icon ERROR_INTRODUCTION_ICON = (Icon)AllIcons.Nodes.ErrorIntroduction;
-  Icon WARNING_INTRODUCTION_ICON = (Icon)AllIcons.Nodes.WarningIntroduction;
+  Icon ERROR_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalError();
+  Icon WARNING_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalWarning();
   Icon EXCLUDED_FROM_COMPILE_ICON = (Icon)AllIcons.Nodes.ExcludedFromCompile;
   Icon PROJECT_ICON = (Icon)AllIcons.Icon16;
   Icon UI_FORM_ICON = (Icon)AllIcons.FileTypes.UiForm;

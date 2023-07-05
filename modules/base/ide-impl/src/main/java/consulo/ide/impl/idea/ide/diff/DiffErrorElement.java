@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.diff;
 
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DiffContent;
-import consulo.application.AllIcons;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 /**
@@ -84,7 +84,7 @@ public class DiffErrorElement extends DiffElement {
 
   @Override
   public Image getIcon() {
-    return AllIcons.Nodes.ErrorIntroduction;
+    return PlatformIconGroup.generalError();
   }
 
   @Nonnull
