@@ -29,7 +29,7 @@ import consulo.http.impl.internal.proxy.HttpProxyManagerImpl;
 import consulo.http.impl.internal.proxy.HttpProxyManagerState;
 import consulo.http.impl.internal.proxy.JavaProxyProperty;
 import consulo.ide.impl.idea.ui.PortField;
-import consulo.ide.impl.idea.ui.RelativeFont;
+import consulo.ui.ex.awt.RelativeFont;
 import consulo.ui.ex.awt.JBRadioButton;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

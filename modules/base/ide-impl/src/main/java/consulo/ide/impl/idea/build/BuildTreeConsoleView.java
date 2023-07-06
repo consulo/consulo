@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.ui.RelativeFont;
+import consulo.ui.ex.awt.RelativeFont;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.util.lang.ObjectUtil;

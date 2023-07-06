@@ -1,30 +1,15 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.test.sm.ui;
 
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.SMTestProxy;
-import consulo.execution.test.ui.TestTreeView;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.RelativeFont;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ui.ex.awt.util.UISettingsUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -33,23 +18,34 @@ import java.awt.*;
  * @author Roman Chernyatchik
  */
 public class TestTreeRenderer extends ColoredTreeCellRenderer {
-  @NonNls
   private static final String SPACE_STRING = " ";
 
   private final TestConsoleProperties myConsoleProperties;
   private SMRootTestProxyFormatter myAdditionalRootFormatter;
-  private int myDurationWidth = -1;
-  private int myRow;
+  private String myDurationText;
+  private Color myDurationColor;
+  private int myDurationWidth;
+  private int myDurationLeftInset;
+  private int myDurationRightInset;
 
   public TestTreeRenderer(final TestConsoleProperties consoleProperties) {
     myConsoleProperties = consoleProperties;
   }
 
-  @RequiredUIAccess
   @Override
-  public void customizeCellRenderer(final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
-    myRow = row;
-    myDurationWidth = -1;
+  public void customizeCellRenderer(@Nonnull final JTree tree,
+                                    final Object value,
+                                    final boolean selected,
+                                    final boolean expanded,
+                                    final boolean leaf,
+                                    final int row,
+                                    final boolean hasFocus) {
+    myDurationText = null;
+    myDurationColor = null;
+    myDurationWidth = 0;
+    myDurationLeftInset = 0;
+    myDurationRightInset = 0;
+
     final DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
     final Object userObj = node.getUserObject();
     if (userObj instanceof SMTRunnerNodeDescriptor) {
@@ -58,7 +54,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
 
       if (testProxy instanceof SMTestProxy.SMRootTestProxy) {
         SMTestProxy.SMRootTestProxy rootTestProxy = (SMTestProxy.SMRootTestProxy)testProxy;
-        if (node.isLeaf()) {
+        if (rootTestProxy.isLeaf()) {
           TestsPresentationUtil.formatRootNodeWithoutChildren(rootTestProxy, this);
         }
         else {
@@ -73,13 +69,13 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
       }
 
       if (TestConsoleProperties.SHOW_INLINE_STATISTICS.value(myConsoleProperties)) {
-        String durationString = testProxy.getDurationString(myConsoleProperties);
-        if (durationString != null) {
-          durationString = "  " + durationString;
-          myDurationWidth = getFontMetrics(getFont()).stringWidth(durationString);
-          if (((TestTreeView)myTree).isExpandableHandlerVisibleForCurrentRow(myRow)) {
-            append(durationString);
-          }
+        myDurationText = testProxy.getDurationString(myConsoleProperties);
+        if (myDurationText != null) {
+          FontMetrics metrics = getFontMetrics(RelativeFont.SMALL.derive(getFont()));
+          myDurationWidth = metrics.stringWidth(myDurationText);
+          myDurationLeftInset = metrics.getHeight() / 4;
+          myDurationRightInset = myDurationLeftInset;
+          myDurationColor = selected ? UIUtil.getTreeSelectionForeground(hasFocus) : SimpleTextAttributes.GRAYED_ATTRIBUTES.getFgColor();
         }
       }
       //Done
@@ -95,8 +91,11 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
   @Nonnull
   @Override
   public Dimension getPreferredSize() {
-    final Dimension preferredSize = super.getPreferredSize();
-    return myDurationWidth < 0 || ((TestTreeView)myTree).isExpandableHandlerVisibleForCurrentRow(myRow) ? preferredSize : JBUI.size(preferredSize.width + myDurationWidth, preferredSize.height);
+    Dimension preferredSize = super.getPreferredSize();
+    if (myDurationWidth > 0) {
+      preferredSize.width += myDurationWidth + myDurationLeftInset + myDurationRightInset;
+    }
+    return preferredSize;
   }
 
   public TestConsoleProperties getConsoleProperties() {
@@ -111,4 +110,29 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
     myAdditionalRootFormatter = null;
   }
 
+  @Override
+  protected void paintComponent(Graphics g) {
+    UISettingsUtil.setupAntialiasing(g);
+    Shape clip = null;
+    int width = getWidth();
+    int height = getHeight();
+    if (isOpaque()) {
+      // paint background for expanded row
+      g.setColor(getBackground());
+      g.fillRect(0, 0, width, height);
+    }
+    if (myDurationWidth > 0) {
+      width -= myDurationWidth + myDurationLeftInset + myDurationRightInset;
+      if (width > 0 && height > 0) {
+        g.setColor(myDurationColor);
+        g.setFont(RelativeFont.SMALL.derive(getFont()));
+        g.drawString(myDurationText, width + myDurationLeftInset, getTextBaseLine(g.getFontMetrics(), height));
+        clip = g.getClip();
+        g.clipRect(0, 0, width, height);
+      }
+    }
+    super.paintComponent(g);
+    // restore clip area if needed
+    if (clip != null) g.setClip(clip);
+  }
 }

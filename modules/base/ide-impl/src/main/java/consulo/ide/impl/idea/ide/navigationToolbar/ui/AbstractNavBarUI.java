@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-import static consulo.ide.impl.idea.ui.RelativeFont.SMALL;
+import static consulo.ui.ex.awt.RelativeFont.SMALL;
 
 /**
  * @author Konstantin Bulenkov

@@ -22,32 +22,29 @@ package consulo.execution.test.ui;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.test.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
-import javax.swing.plaf.TreeUI;
+import jakarta.annotation.Nullable;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +63,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     return myModel;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public AbstractTestProxy getSelectedTest() {
     TreePath[] paths = getSelectionPaths();
     if (paths != null && paths.length > 1) return null;
@@ -79,24 +76,15 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     getSelectionModel().setSelectionMode(model.getProperties().getSelectionMode());
     myModel = model;
     Disposer.register(myModel, myModel.getRoot());
-    Disposer.register(myModel, new Disposable() {
-      public void dispose() {
-        setModel(null);
-        myModel = null;
-      }
+    Disposer.register(myModel, () -> {
+      setModel(null);
+      myModel = null;
     });
     installHandlers();
     setCellRenderer(getRenderer(myModel.getProperties()));
   }
 
-  public void setUI(final TreeUI ui) {
-    super.setUI(ui);
-    final int fontHeight = getFontMetrics(getFont()).getHeight();
-    final int iconHeight = PoolOfTestIcons.PASSED_ICON.getHeight();
-    setRowHeight(Math.max(fontHeight, iconHeight) + 2);
-    setLargeModel(true);
-  }
-
+  @Override
   public Object getData(@Nonnull final Key<?> dataId) {
     if (CopyProvider.KEY == dataId) {
       return this;
@@ -110,7 +98,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
           if (isPathSelected(path.getParentPath())) continue;
           AbstractTestProxy test = getSelectedTest(path);
           if (test != null) {
-            final PsiElement psiElement = TestsUIUtil.getData(test, CommonDataKeys.PSI_ELEMENT, myModel);
+            final PsiElement psiElement = TestsUIUtil.getData(test, PsiElement.KEY, myModel);
             if (psiElement != null) {
               els.add(psiElement);
             }
@@ -151,7 +139,7 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
 
   @Override
   public void performCopy(@Nonnull DataContext dataContext) {
-    final PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    final PsiElement element = dataContext.getData(PsiElement.KEY);
     final String fqn;
     if (element != null) {
       fqn = QualifiedNameProviderUtil.elementToFqn(element, null);
@@ -192,70 +180,5 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     final ExpandableItemsHandler<Integer> handler = getExpandableItemsHandler();
     final Collection<Integer> items = handler.getExpandedItems();
     return items.size() == 1 && row == items.iterator().next();
-  }
-
-  @Override
-  public void paint(Graphics g) {
-    super.paint(g);
-    final TestFrameworkRunningModel model = myModel;
-    if (model == null) return;
-    final TestConsoleProperties properties = model.getProperties();
-    if (TestConsoleProperties.SHOW_INLINE_STATISTICS.value(properties)) {
-      Rectangle visibleRect = getVisibleRect();
-      Rectangle clip = g.getClipBounds();
-      final int visibleRowCount = TreeUtil.getVisibleRowCountForFixedRowHeight(this);
-      final int firstRow = getClosestRowForLocation(0, visibleRect.y);
-      for (int row = firstRow; row < Math.min(firstRow + visibleRowCount + 1, getRowCount()); row++) {
-        if (isExpandableHandlerVisibleForCurrentRow(row)) {
-          continue;
-        }
-        Object node = getPathForRow(row).getLastPathComponent();
-        if (node instanceof DefaultMutableTreeNode) {
-          Object data = ((DefaultMutableTreeNode)node).getUserObject();
-          if (data instanceof BaseTestProxyNodeDescriptor) {
-            final AbstractTestProxy testProxy = ((BaseTestProxyNodeDescriptor)data).getElement();
-            final String durationString = testProxy.getDurationString(properties);
-            if (durationString != null) {
-              Rectangle rowBounds = getRowBounds(row);
-              rowBounds.x = 0;
-              rowBounds.width = Integer.MAX_VALUE;
-
-              if (rowBounds.intersects(clip)) {
-                final Rectangle fullRowRect = new Rectangle(visibleRect.x, rowBounds.y, visibleRect.width, rowBounds.height);
-                final boolean rowSelected = isRowSelected(row);
-                final boolean hasTreeFocus = hasFocus();
-                paintRowData(this, durationString, fullRowRect, (Graphics2D)g, rowSelected, hasTreeFocus);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  private static void paintRowData(Tree tree, String duration, Rectangle bounds, Graphics2D g, boolean isSelected, boolean hasFocus) {
-    final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
-    g.setFont(tree.getFont().deriveFont(Font.PLAIN, UIUtil.getFontSize(UIUtil.FontSize.SMALL)));
-    final FontMetrics metrics = tree.getFontMetrics(g.getFont());
-    int totalWidth = metrics.stringWidth(duration) + 2;
-    int x = bounds.x + bounds.width - totalWidth;
-    g.setColor(isSelected ? UIUtil.getTreeSelectionBackground(hasFocus) : UIUtil.getTreeBackground());
-    final int leftOffset = 5;
-    g.fillRect(x - leftOffset, bounds.y, totalWidth + leftOffset, bounds.height);
-    g.translate(0, bounds.y - 1);
-    if (isSelected) {
-      if (!hasFocus && UIUtil.isUnderAquaBasedLookAndFeel()) {
-        g.setColor(UIUtil.getTreeForeground());
-      }
-      else {
-        g.setColor(UIUtil.getTreeSelectionForeground());
-      }
-    }
-    else {
-      g.setColor(new JBColor(0x808080, 0x808080));
-    }
-    g.drawString(duration, x, SimpleColoredComponent.getTextBaseLine(tree.getFontMetrics(tree.getFont()), bounds.height) + 1);
-    g.translate(0, -bounds.y + 1);
-    config.restore();
   }
 }

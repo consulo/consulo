@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ui.breadcrumbs;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.util.concurrent.NonUrgentExecutor;
 import consulo.application.util.registry.Registry;
@@ -52,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static consulo.ide.impl.idea.ui.RelativeFont.SMALL;
+import static consulo.ui.ex.awt.RelativeFont.SMALL;
 import static consulo.ui.ex.awt.UIUtil.getLabelFont;
 
 /**
