@@ -204,11 +204,6 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
-    return null;
-  }
-
-  @Override
   public Image _Image_lazy(Supplier<Image> imageSupplier) {
     return imageSupplier.get();
   }

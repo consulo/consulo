@@ -35,13 +35,11 @@ import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -187,11 +185,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
 
   @Override
   public ColorBox _Components_colorBox(@Nullable ColorValue colorValue) {
-    return null;
-  }
-
-  @Override
-  public Image _Image_fromUrl(URL url) throws IOException {
     return null;
   }
 

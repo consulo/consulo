@@ -15,16 +15,19 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.disposer.Disposable;
-import consulo.ui.event.ModalityStateListener;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.ui.ex.awt.internal.EDT;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGUniverse;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
+import consulo.desktop.awt.ui.impl.image.*;
+import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopAWTImageImpl;
+import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
+import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
+import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopSvgImageImpl;
+import consulo.desktop.awt.ui.impl.layout.*;
+import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
+import consulo.desktop.awt.ui.impl.textBox.*;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.Component;
@@ -37,15 +40,11 @@ import consulo.ui.Window;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
-import consulo.desktop.awt.ui.impl.image.*;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopAWTImageImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopSvgImageImpl;
-import consulo.desktop.awt.ui.impl.layout.*;
-import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
-import consulo.desktop.awt.ui.impl.textBox.*;
+import consulo.ui.event.ModalityStateListener;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.internal.EDT;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
@@ -60,9 +59,9 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +89,6 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _Image_fromUrl(URL url) throws IOException {
-
     if (url.toString().endsWith(".svg")) {
       SVGUniverse svgUniverse = new SVGUniverse();
 
@@ -113,12 +111,12 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
+  public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
     switch (imageType) {
       case SVG:
         SVGUniverse svgUniverse = new SVGUniverse();
 
-        URI uri = svgUniverse.loadSVG(new UnsyncByteArrayInputStream(bytes), "dummy" + System.currentTimeMillis() + ".svg");
+        URI uri = svgUniverse.loadSVG(stream, "dummy" + System.currentTimeMillis() + ".svg");
 
         SVGDiagram diagram = svgUniverse.getDiagram(uri, false);
 
@@ -126,11 +124,18 @@ public class DesktopUIInternalImpl extends UIInternal {
           throw new IOException("Wrong svg bytes");
         }
 
-        // dirty hack due we can't set different scale for width + height
-        float scale = (float)(height / diagram.getViewRect().getHeight());
-        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getViewRect().getWidth(), (int)diagram.getViewRect().getHeight(), scale, null, null, null);
+        return new DesktopSvgImageImpl(diagram,
+                                       null,
+                                       (int)diagram.getViewRect().getWidth(),
+                                       (int)diagram.getViewRect().getHeight(),
+                                       1f,
+                                       null,
+                                       null,
+                                       null);
       default:
-        BufferedImage image = ImageIO.read(new UnsyncByteArrayInputStream(bytes));
+        BufferedImage image = ImageIO.read(stream);
+        int width = image.getWidth(null);
+        int height = image.getHeight(null);
         return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
     }
   }
@@ -423,7 +428,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage, String dialogTitle, Function<String, List<String>> parser, Function<List<String>, String> joiner) {
+  public TextBoxWithExpandAction _Components_textBoxWithExpandAction(Image editButtonImage,
+                                                                     String dialogTitle,
+                                                                     Function<String, List<String>> parser,
+                                                                     Function<List<String>, String> joiner) {
     return DesktopTextBoxWithExpandAction.create(editButtonImage, dialogTitle, parser, joiner);
   }
 

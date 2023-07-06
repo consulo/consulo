@@ -33,10 +33,11 @@ import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -127,9 +128,19 @@ public abstract class UIInternal {
     throw new UnsupportedOperationException();
   }
 
-  public abstract Image _Image_fromUrl(URL url) throws IOException;
+  public Image _Image_fromUrl(URL url) throws IOException {
+    Image.ImageType imageType = Image.ImageType.PNG;
+    String urlString = url.toString();
+    if (urlString.endsWith(".svg")) {
+      imageType = Image.ImageType.SVG;
+    }
 
-  public Image _Image_fromBytes(Image.ImageType imageType, byte[] bytes, int width, int height) throws IOException {
+    try (InputStream stream = url.openStream()) {
+      return _Image_fromStream(imageType, stream);
+    }
+  }
+
+  public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
     throw new UnsupportedOperationException();
   }
 

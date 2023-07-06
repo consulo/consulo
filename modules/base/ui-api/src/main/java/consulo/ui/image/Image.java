@@ -15,10 +15,14 @@
  */
 package consulo.ui.image;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -54,12 +58,24 @@ public interface Image {
   @Nonnull
   @Deprecated
   static Image fromBytes(@Nonnull byte[] bytes, int width, int height) throws IOException {
-    return fromBytes(ImageType.PNG, bytes, width, height);
+    return fromBytes(ImageType.PNG, bytes);
   }
 
   @Nonnull
+  @Deprecated
+  @DeprecationInfo("Image#fromBytes(imageType, bytes) - width&height ignored")
   static Image fromBytes(@Nonnull ImageType imageType, @Nonnull byte[] bytes, int width, int height) throws IOException {
-    return UIInternal.get()._Image_fromBytes(imageType, bytes, width, height);
+    return fromBytes(imageType, bytes);
+  }
+
+  @Nonnull
+  static Image fromBytes(@Nonnull ImageType imageType, @Nonnull byte[] bytes) throws IOException {
+    return fromStream(imageType, new ByteArrayInputStream(bytes));
+  }
+
+  @Nonnull
+  static Image fromStream(@Nonnull ImageType imageType, @Nonnull InputStream stream) throws IOException {
+    return UIInternal.get()._Image_fromStream(imageType, stream);
   }
 
   @Nonnull
