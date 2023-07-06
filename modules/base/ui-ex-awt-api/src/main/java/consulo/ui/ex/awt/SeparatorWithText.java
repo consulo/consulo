@@ -16,11 +16,12 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.UISettingsUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,6 +38,11 @@ public class SeparatorWithText extends JComponent implements Accessible {
   private Color myTextForeground;
 
   public SeparatorWithText() {
+    this(null);
+  }
+
+  public SeparatorWithText(@Nullable String caption) {
+    myCaption = caption;
     setBorder(BorderFactory.createEmptyBorder(getVgap(), 0, getVgap(), 0));
     setFont(UIUtil.getLabelFont());
     setFont(getFont().deriveFont(Font.BOLD));

@@ -38,8 +38,9 @@ import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
+
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -89,6 +90,18 @@ public class ExternalStoragePluginManager implements PluginActionListener {
     }
   }
 
+  @Nonnull
+  public static StoragePlugin[] list() {
+    StoragePlugin[] beans = new StoragePlugin[0];
+    try {
+      beans = WebServiceApiSender.doGet(WebServiceApi.STORAGE_API, "/plugins/list", StoragePlugin[].class);
+    }
+    catch (IOException e) {
+      LOG.warn(e);
+    }
+    return beans;
+  }
+  
   private void sendAction(String action, PluginId pluginId, StoragePluginState state) {
     try {
       if (myExternalServiceConfiguration.getState(ExternalService.STORAGE) != ThreeState.YES) {

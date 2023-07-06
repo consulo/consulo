@@ -15,20 +15,22 @@
  */
 package consulo.application.progress;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.EdtReplacementThread;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.util.function.Consumer;
 
@@ -61,7 +63,10 @@ public abstract class Task implements TaskInfo, Progressive {
   private String myCancelText = CommonBundle.getCancelButtonText();
   private String myCancelTooltipText = CommonBundle.getCancelButtonText();
 
-  public Task(@Nullable ComponentManager project, @Nullable JComponent parentComponent, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
+  public Task(@Nullable ComponentManager project,
+              @Nullable JComponent parentComponent,
+              @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+              boolean canBeCancelled) {
     myProject = project;
     myParentComponent = parentComponent;
     myTitle = title;
@@ -211,14 +216,71 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
 
-    public static void queue(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nonnull Consumer<ProgressIndicator> consumer) {
+    public static void queue(@Nullable ComponentManager project,
+                             @Nonnull LocalizeValue titleValue,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, titleValue, true, null, consumer);
+    }
+
+    public static void queue(@Nullable ComponentManager project,
+                             @Nonnull LocalizeValue titleValue,
+                             boolean canBeCancelled,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, titleValue, canBeCancelled, null, consumer);
+    }
+
+    public static void queue(@Nullable ComponentManager project,
+                             @Nonnull LocalizeValue title,
+                             boolean canBeCancelled,
+                             @Nullable PerformInBackgroundOption backgroundOption,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      new Backgroundable(project, title.get(), canBeCancelled, backgroundOption) {
+        @Override
+        public void run(@Nonnull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+      }.queue();
+    }
+
+    public static void queue(@Nullable ComponentManager project,
+                             @Nonnull LocalizeValue title,
+                             boolean canBeCancelled,
+                             @Nullable PerformInBackgroundOption backgroundOption,
+                             @Nonnull Consumer<ProgressIndicator> consumer,
+                             @Nonnull Runnable onSuccess) {
+      new Backgroundable(project, title.get(), canBeCancelled, backgroundOption) {
+        @Override
+        public void run(@Nonnull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void onSuccess() {
+          onSuccess.run();
+        }
+      }.queue();
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    public static void queue(@Nullable ComponentManager project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, true, consumer);
     }
 
-    public static void queue(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled, @Nonnull Consumer<ProgressIndicator> consumer) {
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
+    public static void queue(@Nullable ComponentManager project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             boolean canBeCancelled,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
       queue(project, title, canBeCancelled, null, consumer);
     }
 
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
     public static void queue(@Nullable ComponentManager project,
                              @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                              boolean canBeCancelled,
@@ -232,6 +294,8 @@ public abstract class Task implements TaskInfo, Progressive {
       }.queue();
     }
 
+    @Deprecated
+    @DeprecationInfo("Use with LocalizeValue parameter")
     public static void queue(@Nullable ComponentManager project,
                              @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
                              boolean canBeCancelled,
@@ -258,7 +322,9 @@ public abstract class Task implements TaskInfo, Progressive {
       this(project, title, true);
     }
 
-    public Backgroundable(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
+    public Backgroundable(@Nullable ComponentManager project,
+                          @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                          boolean canBeCancelled) {
       this(project, title, canBeCancelled, null);
     }
 
@@ -305,11 +371,42 @@ public abstract class Task implements TaskInfo, Progressive {
   }
 
   public abstract static class Modal extends Task {
-    public Modal(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
+    public static void queue(@Nullable ComponentManager project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull LocalizeValue titleValue,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, titleValue.get(), true, consumer);
+    }
+
+    @Deprecated
+    public static void queue(@Nullable ComponentManager project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      queue(project, title, true, consumer);
+    }
+
+    @Deprecated
+    public static void queue(@Nullable ComponentManager project,
+                             @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                             boolean canBeCancelled,
+                             @Nonnull Consumer<ProgressIndicator> consumer) {
+      new Modal(project, title, canBeCancelled) {
+        @Override
+        public void run(@Nonnull ProgressIndicator indicator) {
+          consumer.accept(indicator);
+        }
+      }.queue();
+    }
+
+    public Modal(@Nullable ComponentManager project,
+                 @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                 boolean canBeCancelled) {
       super(project, null, title, canBeCancelled);
     }
 
-    public Modal(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, @Nullable JComponent parentComponent, boolean canBeCancelled) {
+    public Modal(@Nullable ComponentManager project,
+                 @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                 @Nullable JComponent parentComponent,
+                 boolean canBeCancelled) {
       super(project, parentComponent, title, canBeCancelled);
     }
 
@@ -339,11 +436,16 @@ public abstract class Task implements TaskInfo, Progressive {
     private final String myNotificationText;
     private final boolean myShowWhenFocused;
 
-    public NotificationInfo(@Nonnull final String notificationName, @Nonnull final String notificationTitle, @Nonnull final String notificationText) {
+    public NotificationInfo(@Nonnull final String notificationName,
+                            @Nonnull final String notificationTitle,
+                            @Nonnull final String notificationText) {
       this(notificationName, notificationTitle, notificationText, false);
     }
 
-    public NotificationInfo(@Nonnull final String notificationName, @Nonnull final String notificationTitle, @Nonnull final String notificationText, final boolean showWhenFocused) {
+    public NotificationInfo(@Nonnull final String notificationName,
+                            @Nonnull final String notificationTitle,
+                            @Nonnull final String notificationText,
+                            final boolean showWhenFocused) {
       myNotificationName = notificationName;
       myNotificationTitle = notificationTitle;
       myNotificationText = notificationText;
@@ -374,7 +476,9 @@ public abstract class Task implements TaskInfo, Progressive {
     private final SimpleReference<T> myResult = SimpleReference.create();
     private final SimpleReference<Throwable> myError = SimpleReference.create();
 
-    public WithResult(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title, boolean canBeCancelled) {
+    public WithResult(@Nullable ComponentManager project,
+                      @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+                      boolean canBeCancelled) {
       super(project, title, canBeCancelled);
     }
 

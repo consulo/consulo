@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.desktop.awt.startup.customizeNew.CustomizeIDEWizardDialog;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaLaf;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.externalService.update.UpdateSettings;

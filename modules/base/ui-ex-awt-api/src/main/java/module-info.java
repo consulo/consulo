@@ -42,6 +42,7 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.speedSearch;
   exports consulo.ui.ex.awt.valueEditor;
   exports consulo.ui.ex.awt.popup;
+  exports consulo.ui.ex.awt.wizard;
 
   exports consulo.ui.ex.awt.internal to
           consulo.ide.impl,

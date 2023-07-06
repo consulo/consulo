@@ -36,6 +36,8 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.language.editor.impl;
   requires consulo.code.editor.impl;
 
+  requires org.apache.commons.lang3;
+
   // TODO remove
   requires gnu.trove;
 
