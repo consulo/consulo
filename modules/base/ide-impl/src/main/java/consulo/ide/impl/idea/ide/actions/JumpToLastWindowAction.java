@@ -21,13 +21,16 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 public class JumpToLastWindowAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
+  @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -39,9 +42,11 @@ public class JumpToLastWindowAction extends AnAction implements DumbAware {
     manager.getToolWindow(id).activate(null);
   }
 
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

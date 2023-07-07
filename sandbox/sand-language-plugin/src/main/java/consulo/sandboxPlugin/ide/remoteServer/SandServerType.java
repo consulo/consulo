@@ -21,8 +21,10 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
@@ -50,21 +52,8 @@ import java.util.stream.Collectors;
 @ExtensionImpl
 public class SandServerType extends ServerType<SandServerConfiguration> {
   public SandServerType() {
-    super("sand");
+    super("sand", LocalizeValue.localizeTODO("Sand"), PlatformIconGroup.actionsHelp());
   }
-
-  @Nonnull
-  @Override
-  public String getPresentableName() {
-    return "Sand";
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return AllIcons.Actions.Help;
-  }
-
   @Nonnull
   @Override
   public SandServerConfiguration createDefaultConfiguration() {

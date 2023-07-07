@@ -21,6 +21,6 @@ public class RunAnythingRunConfigurationItem extends RunAnythingItemBase {
   @Override
   public String getDescription() {
     ConfigurationType type = myWrapper.getType();
-    return type == null ? null : type.getConfigurationTypeDescription();
+    return type == null ? null : type.getConfigurationTypeDescription().get();
   }
 }

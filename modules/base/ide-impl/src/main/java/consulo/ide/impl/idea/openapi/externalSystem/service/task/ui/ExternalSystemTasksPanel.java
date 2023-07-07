@@ -34,7 +34,6 @@ import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskLocation;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
@@ -48,10 +47,11 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

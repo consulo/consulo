@@ -1,9 +1,11 @@
 package consulo.externalSystem.model;
 
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * The general idea of 'external system' integration is to provide management facilities for the project structure defined in
@@ -19,25 +21,41 @@ public class ProjectSystemId implements Serializable {
   private static final long serialVersionUID = 1L;
   
   @Nonnull
-  public static final ProjectSystemId IDE = new ProjectSystemId("IDE");
+  public static final ProjectSystemId IDE = new ProjectSystemId("IDE", LocalizeValue.localizeTODO("IDE"));
 
   @Nonnull
   private final String myId;
   @Nonnull
-  private final String myReadableName;
+  private final LocalizeValue myReadableName;
 
+  @Deprecated
   public ProjectSystemId(@Nonnull String id) {
-    this(id, StringUtil.capitalize(id.toLowerCase()));
+    this(id, LocalizeValue.of(StringUtil.capitalize(id.toLowerCase(Locale.ROOT))));
   }
 
-  public ProjectSystemId(@Nonnull String id, @Nonnull String readableName) {
+  public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue readableName) {
     myId = id;
     myReadableName = readableName;
   }
 
+  @Nonnull
+  public String getId() {
+    return myId;
+  }
+
+  @Nonnull
+  public LocalizeValue getReadableName() {
+    return myReadableName;
+  }
+
+  @Nonnull
+  public String getToolWindowId() {
+    return myId;
+  }
+
   @Override
-  public int hashCode() {
-    return myId.hashCode();
+  public String toString() {
+    return myId;
   }
 
   @Override
@@ -50,18 +68,8 @@ public class ProjectSystemId implements Serializable {
     return myId.equals(owner.myId);
   }
 
-  @Nonnull
-  public String getId() {
-    return myId;
-  }
-
-  @Nonnull
-  public String getReadableName() {
-    return myReadableName;
-  }
-  
   @Override
-  public String toString() {
-    return myId;
+  public int hashCode() {
+    return myId.hashCode();
   }
 }

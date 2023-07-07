@@ -16,6 +16,7 @@ module consulo.project.api {
   exports consulo.project.startup;
   exports consulo.project.util;
   exports consulo.project.util.query;
+  exports consulo.project.localize;
 
   exports consulo.project.internal to consulo.ide.impl,
                                       consulo.desktop.awt.ide.impl,

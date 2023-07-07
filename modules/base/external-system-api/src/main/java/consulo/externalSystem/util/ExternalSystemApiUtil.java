@@ -403,7 +403,7 @@ public class ExternalSystemApiUtil {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) return null;
 
-    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
+    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getToolWindowId());
     if (toolWindow == null) return null;
 
     // call content manager - initialize it

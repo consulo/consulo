@@ -17,9 +17,8 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.FileTypeLocalize;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
 
 public class UnknownFileType implements FileType {

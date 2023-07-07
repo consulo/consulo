@@ -136,14 +136,14 @@ public class ExternalSystemUtil {
       return;
     }
     ToolWindowManagerEx managerEx = (ToolWindowManagerEx)manager;
-    String id = externalSystemId.getReadableName();
-    ToolWindow window = manager.getToolWindow(id);
+    String toolWindowId = externalSystemId.getToolWindowId();
+    ToolWindow window = manager.getToolWindow(toolWindowId);
     if (window != null) {
       return;
     }
 
     for (ToolWindowFactory toolWindowFactory : project.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
-      if (id.equals(toolWindowFactory.getId())) {
+      if (toolWindowId.equals(toolWindowFactory.getId())) {
         managerEx.initToolWindow(toolWindowFactory);
       }
     }

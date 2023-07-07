@@ -4,22 +4,24 @@ import consulo.application.util.NotNullLazyValue;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.ui.ExternalSystemUiAware;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
+import consulo.externalSystem.ui.ExternalSystemUiAware;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,13 +86,15 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   }
 
   @Override
-  public String getDisplayName() {
+  @Nonnull
+  public LocalizeValue getDisplayName() {
     return myExternalSystemId.getReadableName();
   }
 
   @Override
-  public String getConfigurationTypeDescription() {
-    return ExternalSystemBundle.message("run.configuration.description", myExternalSystemId.getReadableName());
+  @Nonnull
+  public LocalizeValue getConfigurationTypeDescription() {
+    return ExternalSystemLocalize.runConfigurationDescription(myExternalSystemId.getReadableName());
   }
 
   @Override
@@ -122,7 +126,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   @Nonnull
   public static String generateName(@Nonnull Project project,
                                     @Nonnull ProjectSystemId externalSystemId,
-                                    @jakarta.annotation.Nullable String externalProjectPath,
+                                    @Nullable String externalProjectPath,
                                     @Nonnull List<String> taskNames)
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);

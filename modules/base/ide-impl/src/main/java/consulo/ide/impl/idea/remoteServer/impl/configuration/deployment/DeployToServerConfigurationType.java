@@ -15,21 +15,23 @@
  */
 package consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
 
+import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.ide.impl.idea.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.remoteServer.runtime.local.LocalRunner;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.localServer.LocalServerRunConfiguration;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.project.Project;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -39,7 +41,8 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
   private final ServerType<?> myServerType;
 
   public DeployToServerConfigurationType(ServerType<?> serverType) {
-    super(serverType.getId() + "-deploy", serverType.getPresentableName() + " Deployment", "Deploy to " + serverType.getPresentableName() + " run configuration", serverType.getIcon());
+    super(serverType.getId() + "-deploy", RemoteServerLocalize.deployToServerDisplayName(serverType.getPresentableName()), RemoteServerLocalize.deployToServerDisplayDescription(
+      serverType.getPresentableName()), serverType.getIcon());
     addFactory(new DeployToServerConfigurationFactory());
     LocalRunner localRunner = serverType.getLocalRunner();
     if (localRunner != null) {
@@ -54,8 +57,9 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
-    public String getName() {
-      return "Remote";
+    @Nonnull
+    public LocalizeValue getName() {
+      return RemoteServerLocalize.deployToServerFactoryRemote();
     }
 
     @Override
@@ -100,8 +104,9 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
     }
 
     @Override
-    public String getName() {
-      return "Local";
+    @Nonnull
+    public LocalizeValue getName() {
+      return RemoteServerLocalize.deployToServerFactoryLocal();
     }
 
     @Override

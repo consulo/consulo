@@ -2,21 +2,21 @@ package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.application.dumb.DumbAware;
 import consulo.document.FileDocumentManager;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.ide.ServiceManager;
-import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +47,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
       return;
     }
 
-    final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName(), ",");
+    final String name = StringUtil.join(systemIds, projectSystemId -> projectSystemId.getReadableName().get(), ",");
     e.getPresentation().setText(ExternalSystemBundle.message("action.refresh.all.projects.text", name));
     e.getPresentation().setDescription(ExternalSystemBundle.message("action.refresh.all.projects.description", name));
 
@@ -78,7 +78,7 @@ public class RefreshAllExternalProjectsAction extends AnAction implements DumbAw
   }
 
   private static List<ProjectSystemId> getSystemIds(AnActionEvent e) {
-    final List<ProjectSystemId> systemIds = ContainerUtil.newArrayList();
+    final List<ProjectSystemId> systemIds = new ArrayList<>();
 
     final ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId != null) {

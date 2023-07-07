@@ -1,0 +1,8 @@
+deploy.to.server.display.name:
+  text: "{0} Deployment"
+deploy.to.server.display.description:
+  text: "Deploy to {0} run configuration"
+deploy.to.server.factory.local:
+  text: Local
+deploy.to.server.factory.remote:
+  text: Remote

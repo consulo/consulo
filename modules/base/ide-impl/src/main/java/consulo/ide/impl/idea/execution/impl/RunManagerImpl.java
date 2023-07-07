@@ -904,7 +904,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.class, typeName);
     }
     if (factoryName == null) {
-      factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;
+      factoryName = type != null ? type.getConfigurationFactories()[0].getName().get() : null;
     }
     return typeCache().findFactoryOfTypeNameByName(typeName, factoryName);
   }

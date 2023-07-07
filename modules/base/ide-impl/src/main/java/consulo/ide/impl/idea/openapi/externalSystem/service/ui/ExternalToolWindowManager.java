@@ -3,14 +3,15 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.ui;
 import consulo.externalSystem.ExternalSystemManager;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
-import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListenerAdapter;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.wm.impl.ToolWindowBase;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -61,13 +62,13 @@ public class ExternalToolWindowManager {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static ToolWindow getToolWindow(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) {
       return null;
     }
-    ToolWindow result = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
+    ToolWindow result = toolWindowManager.getToolWindow(externalSystemId.getToolWindowId());
     if (result instanceof ToolWindowBase) {
       ((ToolWindowBase)result).ensureContentInitialized();
     }

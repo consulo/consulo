@@ -15,13 +15,12 @@
  */
 package consulo.language.plain;
 
-import consulo.application.AllIcons;
 import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.FileTypeLocalize;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
-
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
 
 public class PlainTextFileType extends LanguageFileType implements PlainTextLikeFileType {
@@ -52,6 +51,6 @@ public class PlainTextFileType extends LanguageFileType implements PlainTextLike
   @Nonnull
   @Override
   public Image getIcon() {
-    return AllIcons.FileTypes.Text;
+    return PlatformIconGroup.filetypesText();
   }
 }

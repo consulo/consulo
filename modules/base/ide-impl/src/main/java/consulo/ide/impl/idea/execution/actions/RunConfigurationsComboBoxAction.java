@@ -16,34 +16,30 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.execution.internal.RunManagerEx;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.dataContext.DataManager;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
-import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
-import consulo.execution.ExecutionUtil;
+import consulo.execution.internal.RunManagerEx;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.application.dumb.IndexNotReadyException;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.action.ComboBoxButton;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ExecutionLocalize;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;

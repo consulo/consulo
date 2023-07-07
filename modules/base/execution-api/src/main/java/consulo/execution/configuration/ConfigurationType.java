@@ -18,6 +18,7 @@ package consulo.execution.configuration;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;
@@ -38,14 +39,18 @@ public interface ConfigurationType {
    *
    * @return the display name of the configuration type.
    */
-  String getDisplayName();
+  @Nonnull
+  LocalizeValue getDisplayName();
 
   /**
    * Returns the description of the configuration type. You may return the same text as the display name of the configuration type.
    *
    * @return the description of the configuration type.
    */
-  String getConfigurationTypeDescription();
+  @Nonnull
+  default LocalizeValue getConfigurationTypeDescription() {
+    return getDisplayName();
+  }
 
   /**
    * Returns the 16x16 icon used to represent the configuration type.
