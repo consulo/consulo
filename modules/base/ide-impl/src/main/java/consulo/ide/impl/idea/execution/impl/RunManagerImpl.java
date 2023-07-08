@@ -29,11 +29,10 @@ import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.executor.Executor;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.impl.execution.ConfigurationTypeCache;
-import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.ide.impl.execution.ConfigurationTypeCache;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -52,13 +51,14 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -75,7 +75,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private final Project myProject;
 
-  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
+  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new ConcurrentSkipListMap<>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
   private final Map<String, Boolean> mySharedConfigurations = new HashMap<>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createWeakMap();
