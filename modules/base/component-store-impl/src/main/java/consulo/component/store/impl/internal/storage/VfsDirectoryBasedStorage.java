@@ -162,7 +162,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         data.setState(name, file.getName(), state);
       }
       catch (IOException | JDOMException e) {
-        LOG.info("Unable to load state", e);
+        LOG.info("Unable to load state: " + file.getPath(), e);
       }
     }
   }
