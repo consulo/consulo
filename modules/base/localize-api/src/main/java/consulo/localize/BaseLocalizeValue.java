@@ -99,4 +99,9 @@ abstract class BaseLocalizeValue implements LocalizeValue {
   public int compareTo(@Nonnull LocalizeValue o) {
     return getValue().compareTo(o.getValue());
   }
+
+  @Override
+  public String toString() {
+    return getValue();
+  }
 }
