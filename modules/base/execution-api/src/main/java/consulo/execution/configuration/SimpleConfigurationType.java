@@ -71,7 +71,7 @@ public abstract class SimpleConfigurationType extends ConfigurationFactory imple
 
   @Nonnull
   @Override
-  public String getId() {
+  public final String getId() {
     return myId;
   }
 
