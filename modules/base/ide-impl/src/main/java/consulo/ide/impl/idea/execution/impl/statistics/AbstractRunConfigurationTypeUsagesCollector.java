@@ -21,12 +21,12 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.externalService.statistic.AbstractApplicationUsagesCollector;
 import consulo.externalService.statistic.UsageDescriptor;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashSet;
+import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,7 +52,7 @@ public abstract class AbstractRunConfigurationTypeUsagesCollector extends Abstra
             final StringBuilder keyBuilder = new StringBuilder();
             keyBuilder.append(configurationType.getId());
             if (configurationType.getConfigurationFactories().length > 1) {
-              keyBuilder.append(".").append(configurationFactory.getName());
+              keyBuilder.append(".").append(configurationFactory.getIcon());
             }
             runConfigurationTypes.add(keyBuilder.toString());
           }

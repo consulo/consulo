@@ -56,9 +56,15 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
       super(DeployToServerConfigurationType.this);
     }
 
+    @Nonnull
+    @Override
+    public String getId() {
+      return getType() + "#remote";
+    }
+
     @Override
     @Nonnull
-    public LocalizeValue getName() {
+    public LocalizeValue getDisplayName() {
       return RemoteServerLocalize.deployToServerFactoryRemote();
     }
 
@@ -103,9 +109,15 @@ public class DeployToServerConfigurationType extends ConfigurationTypeBase {
       myLocalRunner = localRunner;
     }
 
+    @Nonnull
+    @Override
+    public String getId() {
+      return getType().getId() + "#local";
+    }
+
     @Override
     @Nonnull
-    public LocalizeValue getName() {
+    public LocalizeValue getDisplayName() {
       return RemoteServerLocalize.deployToServerFactoryLocal();
     }
 

@@ -16,9 +16,8 @@
 package consulo.sandboxPlugin.ide.run;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.SimpleConfigurationType;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -31,19 +30,18 @@ import jakarta.annotation.Nonnull;
  * @since 04.06.14
  */
 @ExtensionImpl
-public class SandConfigurationType extends ConfigurationTypeBase {
+public class SandConfigurationType extends SimpleConfigurationType {
   public SandConfigurationType() {
     super("#SandConfigurationType", LocalizeValue.localizeTODO("Sand Test"), PlatformIconGroup.nodesStatic());
-    addFactory(new ConfigurationFactory(this) {
-      @Override
-      public RunConfiguration createTemplateConfiguration(Project project) {
-        return new SandConfiguration(project, this, "Unnamed");
-      }
+  }
 
-      @Override
-      public boolean isApplicable(@Nonnull Project project) {
-        return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
-      }
-    });
+  @Override
+  public RunConfiguration createTemplateConfiguration(Project project) {
+    return new SandConfiguration(project, this, "Unnamed");
+  }
+
+  @Override
+  public boolean isApplicable(@Nonnull Project project) {
+    return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
   }
 }

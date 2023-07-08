@@ -223,7 +223,7 @@ public class RunConfigurable extends BaseConfigurable {
             setIcon(AllIcons.Nodes.Folder);
           }
           else if (userObject instanceof ConfigurationFactory) {
-            append(((ConfigurationFactory)userObject).getName().get());
+            append(((ConfigurationFactory)userObject).getDisplayName().get());
             setIcon(((ConfigurationFactory)userObject).getIcon());
           }
           else {
@@ -1235,13 +1235,13 @@ public class RunConfigurable extends BaseConfigurable {
 
         private ListPopupStep getSupStep(final ConfigurationType type) {
           final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          Arrays.sort(factories, (factory1, factory2) -> factory1.getName().compareIgnoreCase(factory2.getName()));
+          Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
           return new BaseListPopupStep<ConfigurationFactory>(ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
 
             @Override
             @Nonnull
             public String getTextFor(final ConfigurationFactory value) {
-              return value.getName().get();
+              return value.getDisplayName().get();
             }
 
             @Override

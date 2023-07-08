@@ -33,6 +33,13 @@ import jakarta.annotation.Nullable;
 public abstract class ConfigurationFactory {
   private final ConfigurationType myType;
 
+  /**
+   * Used only buy SimpleConfigurationType
+   */
+  protected ConfigurationFactory() {
+    myType = (ConfigurationType)this;
+  }
+
   protected ConfigurationFactory(@Nonnull final ConfigurationType type) {
     myType = type;
   }
@@ -72,12 +79,20 @@ public abstract class ConfigurationFactory {
   }
 
   /**
+   * @return id for factory
+   */
+  @Nonnull
+  public String getId() {
+    return myType.getId();
+  }
+
+  /**
    * Returns the name of the run configuration variant created by this factory.
    *
    * @return the name of the run configuration variant created by this factory
    */
   @Nonnull
-  public LocalizeValue getName() {
+  public LocalizeValue getDisplayName() {
     return myType.getDisplayName();
   }
 
