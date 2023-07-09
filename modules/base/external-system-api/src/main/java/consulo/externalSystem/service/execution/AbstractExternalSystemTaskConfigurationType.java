@@ -88,13 +88,13 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   @Override
   @Nonnull
   public LocalizeValue getDisplayName() {
-    return myExternalSystemId.getReadableName();
+    return myExternalSystemId.getDisplayName();
   }
 
   @Override
   @Nonnull
   public LocalizeValue getConfigurationTypeDescription() {
-    return ExternalSystemLocalize.runConfigurationDescription(myExternalSystemId.getReadableName());
+    return ExternalSystemLocalize.runConfigurationDescription(myExternalSystemId.getDisplayName());
   }
 
   @Override
@@ -105,7 +105,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   @Nonnull
   @Override
   public String getId() {
-    return myExternalSystemId.getReadableName() + "RunConfiguration";
+    return myExternalSystemId.getRunConfigurationId();
   }
 
   @Override

@@ -27,7 +27,7 @@ public class LibraryData extends AbstractNamedData implements Named {
   }
 
   public LibraryData(@Nonnull ProjectSystemId owner, @Nonnull String name, boolean unresolved) {
-    super(owner, name, String.format("%s: %s", owner.getReadableName(), name));
+    super(owner, name, String.format("%s: %s", owner.getLibraryPrefix(), name));
     myUnresolved = unresolved;
   }
 

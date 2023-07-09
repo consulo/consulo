@@ -159,7 +159,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
           final Runnable resolveDependenciesTask = new Runnable() {
             @Override
             public void run() {
-              LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getReadableName());
+              LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
               ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
                 @Override
                 public void run(@Nonnull final ProgressIndicator indicator) {

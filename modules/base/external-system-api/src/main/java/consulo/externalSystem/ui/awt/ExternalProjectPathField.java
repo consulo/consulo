@@ -132,7 +132,7 @@ public class ExternalProjectPathField extends ComponentWithBrowseButton<External
         ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
         JBPopup popup = helper.createPopupBuilder(tree)
           .setItemChoosenCallback(treeSelectionCallback)
-          .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getReadableName()))
+          .setTitle(ExternalSystemBundle.message("run.configuration.title.choose.registered.project", externalSystemId.getDisplayName()))
           .setResizable(true)
           .setAutoselectOnMouseMove(true)
           .setCloseOnEnter(false)

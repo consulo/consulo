@@ -25,17 +25,22 @@ public class ProjectSystemId implements Serializable {
 
   @Nonnull
   private final String myId;
+
   @Nonnull
-  private final LocalizeValue myReadableName;
+  private final String myCaptalizeId;
+
+  @Nonnull
+  private final LocalizeValue myDisplayName;
 
   @Deprecated
   public ProjectSystemId(@Nonnull String id) {
     this(id, LocalizeValue.of(StringUtil.capitalize(id.toLowerCase(Locale.ROOT))));
   }
 
-  public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue readableName) {
+  public ProjectSystemId(@Nonnull String id, @Nonnull LocalizeValue displayName) {
     myId = id;
-    myReadableName = readableName;
+    myCaptalizeId = StringUtil.capitalize(id.toLowerCase(Locale.ROOT));
+    myDisplayName = displayName;
   }
 
   @Nonnull
@@ -44,13 +49,29 @@ public class ProjectSystemId implements Serializable {
   }
 
   @Nonnull
+  @Deprecated
   public LocalizeValue getReadableName() {
-    return myReadableName;
+    return getDisplayName();
+  }
+
+  @Nonnull
+  public LocalizeValue getDisplayName() {
+    return myDisplayName;
   }
 
   @Nonnull
   public String getToolWindowId() {
     return myId;
+  }
+
+  @Nonnull
+  public String getLibraryPrefix() {
+    return myCaptalizeId;
+  }
+
+  @Nonnull
+  public String getRunConfigurationId() {
+    return myCaptalizeId + "RunConfiguration";
   }
 
   @Override

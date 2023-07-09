@@ -46,7 +46,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
   protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
     myExternalSystemId = id;
     myNotificationGroup = NotificationGroup.toolWindowGroup("notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
-                                                            myExternalSystemId.getReadableName(),
+                                                            myExternalSystemId.getDisplayName(),
                                                             myExternalSystemId.getToolWindowId(),
                                                             true);
   }
@@ -60,7 +60,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
   @Nonnull
   @Override
   public final LocalizeValue getDisplayName() {
-    return myExternalSystemId.getReadableName();
+    return myExternalSystemId.getDisplayName();
   }
 
   @RequiredUIAccess
