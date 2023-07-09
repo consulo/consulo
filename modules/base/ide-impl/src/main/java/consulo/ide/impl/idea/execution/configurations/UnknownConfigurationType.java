@@ -20,9 +20,9 @@ import consulo.application.AllIcons;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,13 +35,13 @@ public class UnknownConfigurationType implements ConfigurationType {
   public static final String NAME = "Unknown";
 
   @Override
-  public String getDisplayName() {
-    return getId();
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(NAME);
   }
 
   @Override
-  public String getConfigurationTypeDescription() {
-    return "Configuration which cannot be loaded due to some reasons";
+  public LocalizeValue getConfigurationTypeDescription() {
+    return LocalizeValue.localizeTODO("Configuration which cannot be loaded due to some reasons");
   }
 
   @Override
@@ -57,7 +57,7 @@ public class UnknownConfigurationType implements ConfigurationType {
 
   @Override
   public ConfigurationFactory[] getConfigurationFactories() {
-    return new ConfigurationFactory[] {new ConfigurationFactory(new UnknownConfigurationType()) {
+    return new ConfigurationFactory[]{new ConfigurationFactory(new UnknownConfigurationType()) {
       @Override
       public RunConfiguration createTemplateConfiguration(final Project project) {
         return new UnknownRunConfiguration(this, project);

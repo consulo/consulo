@@ -1,0 +1,117 @@
+import.title:
+  text: Import {0} Projects
+module.type.title:
+  text: '{0} Module'
+module.type.description:
+  text: '{0} modules are used for developing <b>JVM-based</b> applications with dependencies managed by <b>{0}</b>'
+orphan.modules.text:
+  text: '<html>The modules below are not backed by {0} anymore.<br/>Check those to be removed from the ide project too:'
+setting.type.location.deduced:
+  text: '{0} location is deduced'
+setting.type.location.unknown:
+  text: '{0} location is unknown'
+setting.type.location.explicit.correct:
+  text: '{0} location is defined'
+setting.type.location.explicit.incorrect:
+  text: '{0} location is incorrect'
+settings.label.select.project:
+  text: '{0} project:'
+settings.label.project.format:
+  text: 'Project format:'
+settings.label.use.auto.import:
+  text: Use auto-import
+settings.label.create.empty.content.root.directories:
+  text: Create directories for empty content roots automatically
+settings.title.linked.projects:
+  text: Linked {0} projects
+settings.title.project.settings:
+  text: Project-level settings
+settings.title.system.settings:
+  text: Global {0} settings
+progress.import.text:
+  text: Building ''{0}'' {1} project info
+progress.refresh.text:
+  text: Refreshing ''{0}'' {1} project
+progress.resolve.libraries:
+  text: Resolving {0} libraries
+progress.update.text:
+  text: '{0}: {1}'
+error.project.undefined:
+  text: No external project config file is defined
+error.project.already.registered:
+  text: The project is already registered
+error.cannot.parse.project:
+  text: Can not parse {0} project
+error.resolve.with.reason:
+  text: |-
+    {0}
+
+    Consult IDE log for more details (Help | Show Log)
+error.resolve.generic:
+  text: Resolve error
+error.resolve.already.running:
+  text: 'Another ''refresh project'' task is currently running for the project:  {0}'
+action.refresh.all.projects.text:
+  text: Refresh all {0} projects
+action.refresh.all.projects.description:
+  text: Force refresh all linked {0} projects
+action.refresh.project.text:
+  text: Refresh {0} project
+action.refresh.project.description:
+  text: Force refresh selected linked {0} project
+action.attach.external.project.text:
+  text: Attach {0} project
+action.attach.external.project.description:
+  text: Attach {0} project to the current ide project
+action.detach.external.project.text:
+  text: Detach {0} project
+action.detach.external.project.description:
+  text: Detach selected external project
+action.open.config.text:
+  text: Open {0} config
+action.open.config.description:
+  text: Allows to open project file of the linked {0} project at the editor
+notification.project.refresh.fail.title:
+  text: '{0} ''''{1}'''' project refresh failed'
+notification.messages.project.sync.tab.name:
+  text: '{0} Sync'
+tasks.recent.title:
+  text: Recent tasks
+tasks.all.title:
+  text: All tasks
+run.configuration.description:
+  text: '{0} build'
+run.configuration.tooltip.choose.registered.project:
+  text: Choose one of registered {0} projects
+run.configuration.title.choose.registered.project:
+  text: Choose {0} project
+run.configuration.settings.label.project:
+  text: '{0} project:'
+run.configuration.settings.label.tasks:
+  text: 'Tasks:'
+run.configuration.settings.label.vmoptions:
+  text: 'VM options:'
+run.configuration.settings.label.script.parameters:
+  text: 'Script parameters:'
+run.text.starting.multiple.task:
+  text: |
+    {0}: Executing external tasks ''{1}''...
+run.text.starting.single.task:
+  text: |
+    {0}: Executing external task ''{1}''...
+run.text.ended.multiple.task:
+  text: |
+    {0}: External tasks execution finished ''{1}''.
+run.text.ended.single.task:
+  text: |
+    {0}: External task execution finished ''{1}''.
+run.error.undefined.task:
+  text: No task to execute is specified
+tasks.select.task.title:
+  text: Select {0} task
+tasks.edit.task.title:
+  text: Edit {0} Task
+tasks.before.run.empty:
+  text: Run {0} task
+tasks.before.run:
+  text: Run {0} task ''{1}''

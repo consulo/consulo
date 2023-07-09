@@ -76,7 +76,7 @@ public class ProjectRunConfigurationManager implements PersistentStateComponent<
       myUnloadedElements.clear();
     }
 
-    Set<String> existing = new HashSet<String>();
+    Set<String> existing = new HashSet<>();
     for (Iterator<Element> iterator = state.getChildren().iterator(); iterator.hasNext(); ) {
       Element child = iterator.next();
       RunnerAndConfigurationSettings configuration = myManager.loadConfiguration(child, true);

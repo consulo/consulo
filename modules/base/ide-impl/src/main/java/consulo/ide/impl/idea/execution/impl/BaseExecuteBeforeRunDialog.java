@@ -330,7 +330,7 @@ public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extend
       if (descriptor instanceof ConfigurationTypeDescriptor) {
         ConfigurationTypeDescriptor configurationTypeDescriptor = (ConfigurationTypeDescriptor)descriptor;
         myLabel.setFont(tree.getFont());
-        myLabel.setText(configurationTypeDescriptor.getConfigurationType().getDisplayName());
+        myLabel.setText(configurationTypeDescriptor.getConfigurationType().getDisplayName().get());
         myLabel.setIcon(configurationTypeDescriptor.getIcon());
       }
       else if (descriptor instanceof ConfigurationDescriptor) {

@@ -57,7 +57,7 @@ public enum LocationSettingType {
    * @return human-readable description of the current setting type
    */
   public String getDescription(@Nonnull ProjectSystemId externalSystemId) {
-    return ExternalSystemBundle.message(myDescriptionKey, externalSystemId.getReadableName());
+    return ExternalSystemBundle.message(myDescriptionKey, externalSystemId.getDisplayName().get());
   }
 
   @Nonnull

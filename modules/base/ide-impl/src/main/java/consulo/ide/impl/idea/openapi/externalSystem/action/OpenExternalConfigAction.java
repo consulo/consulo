@@ -1,22 +1,21 @@
 package consulo.ide.impl.idea.openapi.externalSystem.action;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,8 +47,9 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
   }
 
   @Override
+  @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       return;
     }

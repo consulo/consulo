@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class ConfigurationTypeCache {
   private List<ConfigurationType> myTypes;
-  private final Map<String, ConfigurationType> myTypesByName = new LinkedHashMap<>();
+  private final Map<String, ConfigurationType> myTypesById = new LinkedHashMap<>();
 
   public ConfigurationTypeCache(@Nonnull final List<ConfigurationType> factories) {
     final ArrayList<ConfigurationType> types = new ArrayList<>(factories);
@@ -40,11 +40,11 @@ public class ConfigurationTypeCache {
     myTypes = types;
 
     for (final ConfigurationType type : factories) {
-      myTypesByName.put(type.getId(), type);
+      myTypesById.put(type.getId(), type);
     }
 
     final UnknownConfigurationType broken = UnknownConfigurationType.INSTANCE;
-    myTypesByName.put(broken.getId(), broken);
+    myTypesById.put(broken.getId(), broken);
   }
 
   @Nonnull
@@ -54,22 +54,22 @@ public class ConfigurationTypeCache {
 
   @Nullable
   public ConfigurationType getConfigurationType(final String typeName) {
-    return myTypesByName.get(typeName);
+    return myTypesById.get(typeName);
   }
 
   @Nullable
-  public ConfigurationFactory findFactoryOfTypeNameByName(final String typeName, final String factoryName) {
-    ConfigurationType type = myTypesByName.get(typeName);
+  public ConfigurationFactory findFactoryOfTypeNameId(final String typeId, final String factoryName) {
+    ConfigurationType type = myTypesById.get(typeId);
     if (type == null) {
-      type = myTypesByName.get(UnknownConfigurationType.NAME);
+      type = myTypesById.get(UnknownConfigurationType.NAME);
     }
 
-    return findFactoryOfTypeByName(type, factoryName);
+    return findFactoryOfTypeById(type, factoryName);
   }
 
   @Nullable
-  private static ConfigurationFactory findFactoryOfTypeByName(final ConfigurationType type, final String factoryName) {
-    if (factoryName == null) return null;
+  private static ConfigurationFactory findFactoryOfTypeById(final ConfigurationType type, final String facotryId) {
+    if (facotryId == null) return null;
 
     if (type instanceof UnknownConfigurationType) {
       return type.getConfigurationFactories()[0];
@@ -77,7 +77,7 @@ public class ConfigurationTypeCache {
 
     final ConfigurationFactory[] factories = type.getConfigurationFactories();
     for (final ConfigurationFactory factory : factories) {
-      if (factoryName.equals(factory.getName())) return factory;
+      if (facotryId.equals(factory.getId())) return factory;
     }
 
     return null;

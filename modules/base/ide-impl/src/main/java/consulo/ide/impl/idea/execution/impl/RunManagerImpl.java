@@ -29,11 +29,10 @@ import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.executor.Executor;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.impl.execution.ConfigurationTypeCache;
-import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.ide.impl.execution.ConfigurationTypeCache;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -52,13 +51,14 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -75,7 +75,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
   private final Project myProject;
 
-  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new TreeMap<>();
+  private final Map<String, RunnerAndConfigurationSettings> myTemplateConfigurationsMap = new ConcurrentSkipListMap<>();
   private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>(); // template configurations are not included here
   private final Map<String, Boolean> mySharedConfigurations = new HashMap<>();
   private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createWeakMap();
@@ -313,14 +313,14 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
   @Override
   @Nonnull
   public RunnerAndConfigurationSettings getConfigurationTemplate(@Nonnull ConfigurationFactory factory) {
-    RunnerAndConfigurationSettings template = myTemplateConfigurationsMap.get(factory.getType().getId() + "." + factory.getName());
+    RunnerAndConfigurationSettings template = myTemplateConfigurationsMap.get(factory.getType().getId() + "." + factory.getId());
     if (template == null) {
       template = new RunnerAndConfigurationSettingsImpl(this, factory.createTemplateConfiguration(myProject, this), true);
       template.setSingleton(factory.isConfigurationSingletonByDefault());
       if (template.getConfiguration() instanceof UnknownRunConfiguration) {
         ((UnknownRunConfiguration)template.getConfiguration()).setDoNotStore(true);
       }
-      myTemplateConfigurationsMap.put(factory.getType().getId() + "." + factory.getName(), template);
+      myTemplateConfigurationsMap.put(factory.getType().getId() + "." + factory.getId(), template);
     }
     return template;
   }
@@ -861,7 +861,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
 
     List<BeforeRunTask> tasks = readStepsBeforeRun(element.getChild(METHOD), settings);
     if (settings.isTemplate()) {
-      myTemplateConfigurationsMap.put(factory.getType().getId() + "." + factory.getName(), settings);
+      myTemplateConfigurationsMap.put(factory.getType().getId() + "." + factory.getId(), settings);
       setBeforeRunTasks(settings.getConfiguration(), tasks, true);
     }
     else {
@@ -904,9 +904,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
       UnknownFeaturesCollector.getInstance(myProject).registerUnknownFeature(ConfigurationType.class, typeName);
     }
     if (factoryName == null) {
-      factoryName = type != null ? type.getConfigurationFactories()[0].getName() : null;
+      factoryName = type != null ? type.getConfigurationFactories()[0].getId() : null;
     }
-    return typeCache().findFactoryOfTypeNameByName(typeName, factoryName);
+    return typeCache().findFactoryOfTypeNameId(typeName, factoryName);
   }
 
   @Override

@@ -82,8 +82,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   @Override
   public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull final PaintAwarePanel canvas, int indentLevel) {
     myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
-      "run.configuration.settings.label.project", myExternalSystemId.getReadableName()
-    ));
+      "run.configuration.settings.label.project", myExternalSystemId.getDisplayName().get()));
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     FileChooserDescriptor projectPathChooserDescriptor = null;
     if (manager instanceof ExternalSystemUiAware) {
@@ -92,7 +91,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
     if (projectPathChooserDescriptor == null) {
       projectPathChooserDescriptor = FileChooserDescriptorFactory.createSingleLocalFileDescriptor();
     }
-    String title = ExternalSystemBundle.message("settings.label.select.project", myExternalSystemId.getReadableName());
+    String title = ExternalSystemBundle.message("settings.label.select.project", myExternalSystemId.getDisplayName().get());
     myProjectPathField = new ExternalProjectPathField(myProject, myExternalSystemId, projectPathChooserDescriptor, title) {
       @Override
       public Dimension getPreferredSize() {

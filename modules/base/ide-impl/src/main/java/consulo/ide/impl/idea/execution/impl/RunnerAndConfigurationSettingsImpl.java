@@ -301,7 +301,7 @@ public class RunnerAndConfigurationSettingsImpl implements JDOMExternalizable, C
         element.setAttribute(NAME_ATTR, myConfiguration.getName());
       }
       element.setAttribute(CONFIGURATION_TYPE_ATTRIBUTE, factory.getType().getId());
-      element.setAttribute(FACTORY_NAME_ATTRIBUTE, factory.getName());
+      element.setAttribute(FACTORY_NAME_ATTRIBUTE, factory.getId());
       if (myFolderName != null) {
         element.setAttribute(FOLDER_NAME, myFolderName);
       }

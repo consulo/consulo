@@ -37,6 +37,7 @@ module consulo.external.system.api {
   exports consulo.externalSystem.service.module.extension;
   exports consulo.externalSystem.ui;
   exports consulo.externalSystem.util;
+  exports consulo.externalSystem.localize;
 
   // TODO remove this dependency in future
   requires java.desktop;

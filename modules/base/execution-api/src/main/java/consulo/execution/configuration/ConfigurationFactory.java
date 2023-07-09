@@ -17,10 +17,10 @@ package consulo.execution.configuration;
 
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunManager;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,6 +32,13 @@ import jakarta.annotation.Nullable;
  */
 public abstract class ConfigurationFactory {
   private final ConfigurationType myType;
+
+  /**
+   * Used only buy SimpleConfigurationType
+   */
+  protected ConfigurationFactory() {
+    myType = (ConfigurationType)this;
+  }
 
   protected ConfigurationFactory(@Nonnull final ConfigurationType type) {
     myType = type;
@@ -72,11 +79,20 @@ public abstract class ConfigurationFactory {
   }
 
   /**
+   * @return id for factory
+   */
+  @Nonnull
+  public String getId() {
+    return myType.getId();
+  }
+
+  /**
    * Returns the name of the run configuration variant created by this factory.
    *
    * @return the name of the run configuration variant created by this factory
    */
-  public String getName() {
+  @Nonnull
+  public LocalizeValue getDisplayName() {
     return myType.getDisplayName();
   }
 

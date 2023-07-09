@@ -16,13 +16,15 @@
 package consulo.ide.impl.idea.execution.compound;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.AllIcons;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.ImageEffects;
+import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class CompoundRunConfigurationType extends ConfigurationTypeBase {
@@ -30,16 +32,20 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
   public static CompoundRunConfigurationType getInstance() {
     return ConfigurationTypeUtil.findConfigurationType(CompoundRunConfigurationType.class);
   }
+
   public CompoundRunConfigurationType() {
-    super("CompoundRunConfigurationType", "Compound", "It runs batch of run configurations at once", ImageEffects.layered(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
+    super("CompoundRunConfigurationType", LocalizeValue.localizeTODO("Compound"), LocalizeValue.localizeTODO(
+      "It runs batch of run configurations at once"), ImageEffects.layered(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
     addFactory(new ConfigurationFactory(this) {
       @Override
       public RunConfiguration createTemplateConfiguration(Project project) {
         return new CompoundRunConfiguration(project, CompoundRunConfigurationType.this, "Compound Run Configuration");
       }
 
+      @Nonnull
       @Override
-      public String getName() {
+      public String getId() {
+        // this is hardcode string as id - never localize it
         return "Compound Run Configuration";
       }
 

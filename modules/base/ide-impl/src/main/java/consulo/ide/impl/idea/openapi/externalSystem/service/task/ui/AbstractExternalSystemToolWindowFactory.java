@@ -15,20 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.externalSystem.ExternalSystemManager;
-import consulo.externalSystem.model.ProjectSystemId;
-import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.application.dumb.DumbAware;
+import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
+import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
+import consulo.externalSystem.util.ExternalSystemApiUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
+
+import java.util.Locale;
 
 /**
  * @author Denis Zhdanov
@@ -37,26 +41,53 @@ import jakarta.annotation.Nonnull;
 public abstract class AbstractExternalSystemToolWindowFactory implements ToolWindowFactory, DumbAware {
 
   @Nonnull
-  private final ProjectSystemId   myExternalSystemId;
+  private final ProjectSystemId myExternalSystemId;
   @Nonnull
   private final NotificationGroup myNotificationGroup;
 
   protected AbstractExternalSystemToolWindowFactory(@Nonnull ProjectSystemId id) {
     myExternalSystemId = id;
-    myNotificationGroup = NotificationGroup.toolWindowGroup("notification.group.id." + id.toString().toLowerCase(),
-                                                            myExternalSystemId.getReadableName(),
+    myNotificationGroup = NotificationGroup.toolWindowGroup("notification.group.id." + id.toString().toLowerCase(Locale.ROOT),
+                                                            myExternalSystemId.getDisplayName(),
+                                                            myExternalSystemId.getToolWindowId(),
                                                             true);
+  }
+
+  @Nonnull
+  @Override
+  public final String getId() {
+    return myExternalSystemId.getToolWindowId();
+  }
+
+  @Nonnull
+  @Override
+  public final LocalizeValue getDisplayName() {
+    return myExternalSystemId.getDisplayName();
   }
 
   @RequiredUIAccess
   @Override
-  public void createToolWindowContent(final Project project, final ToolWindow toolWindow) {
-    toolWindow.setTitle(myExternalSystemId.getReadableName());
+  public void createToolWindowContent(@javax.annotation.Nonnull final Project project, final ToolWindow toolWindow) {
     ContentManager contentManager = toolWindow.getContentManager();
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;
     ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
     Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
     contentManager.addContent(tasksContent);
+  }
+
+  @Override
+  public boolean validate(@Nonnull Project project) {
+    if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) == Boolean.TRUE) {
+      return true;
+    }
+
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+    if (manager == null) {
+      return false;
+    }
+
+    AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
+    return settings != null && !settings.getLinkedProjectsSettings().isEmpty();
   }
 }

@@ -40,8 +40,16 @@ close.tab.action.name:
   text: Close
 run.configuration.show.command.line.action.name:
   text: Show command line
+multiple.specified:
+  text: Multiple specified
+node.default:
+  text: <default>
 searching.test.progress.title:
   text: Searching For Tests...
+diff.content.expected.title.with.file.url:
+  text: Expected ({0})
+diff.content.actual.title.with.file.url:
+  text: Actual ({0})
 create.run.configuration.action.name:
   text: Create Run Configuration
 create.run.configuration.for.item.action.name:
@@ -86,6 +94,8 @@ remove.run.configuration.action.name:
   text: Remove Configuration
 no.parameters:
   text: No parameters
+tool.window.name.run:
+  text: Run
 run.configuration.edit.default.configuration.settings.text:
   text: Edit Defaults
 run.configuration.edit.default.configuration.settings.description:
@@ -122,6 +132,8 @@ template.settings.configurable.display.name:
   text: Template Settings
 default.run.configuration.name:
   text: <unnamed>
+title.cannot.open.file:
+  text: Cannot Open File
 process.is.running.dialog.title:
   text: Process ''{0}'' Is Running
 button.disconnect:
@@ -560,7 +572,7 @@ show.swing.inspector:
 show.swing.inspector.disabled:
   text: '&Enable capturing form snapshots (requires JRE 5.0 or higher)'
 before.run.property.make:
-  text: Make
+  text: Build
 run.configuration.store.place.option:
   text: '&Share'
 run.configuration.singleton:
@@ -608,9 +620,9 @@ configuration.action.chooser.title:
 env.vars.checkbox.title:
   text: '&Include parent environment variables'
 before.launch.compile.step:
-  text: Make
+  text: Build
 before.launch.compile.step.no.error.check:
-  text: Make, no error check
+  text: Build, no error check
 execute.before.run.debug.dialog.title:
   text: Execute {0} Before Run/Debug
 export.test.results.filename:
@@ -723,5 +735,75 @@ run.dashboard.stopped.group.name:
   text: Stopped
 run.dashboard.failed.group.name:
   text: Failed
+confirm.process.stop:
+  text: Confirm process stop
+stop.process:
+  text: Stop process
+action.terminating.process.progress.kill.description:
+  text: Kill process
+confirm.background.process.stop:
+  text: Confirm background process stop
+stop.background.process:
+  text: Stop background process
+message.cannot.find.file.0:
+  text: Cannot find file {0}
+popup.title.choose.target.file:
+  text: Choose Target File
+log.console.filter.show.errors:
+  text: errors
+log.console.filter.show.errors.and.warnings:
+  text: warnings
+log.console.filter.show.all:
+  text: all
+log.console.filter.show.errors.warnings.and.infos:
+  text: infos
+junit.running.info.failed.to.start.error.message:
+  text: Failed to Start
+junit.running.info.tests.failed.label:
+  text: Tests Failed
+junit.running.info.tests.failed.with.test.name.label:
+  text: Tests Failed {0}
+junit.running.info.tests.passed.label:
+  text: Tests Passed
+junit.running.info.tests.passed.with.test.name.label:
+  text: Tests Passed {0}
+junit.runing.info.sort.group.name:
+  text: Sorting Options
+junit.runing.info.sort.by.statistics.action.name:
+  text: Sort By Duration
+junit.runing.info.sort.by.statistics.action.description:
+  text: Sort tests or suites by duration
+junit.runing.info.folders.on.top.action.name:
+  text: Suites Always on Top
+junit.runing.info.folders.on.top.action.description:
+  text: Sort suites on top
+junit.runing.info.test.runner.options.group.name:
+  text: Test Runner Options
+junit.runing.info.hide.successful.config.action.name:
+  text: Hide Successful setUp/tearDown
+log.monitor.no.files:
+  text: No log files attached
+log.monitor.remove.button:
+  text: '&Remove'
+log.monitor.add.button:
+  text: A&dd
+log.monitor.group:
+  text: Log files to be shown in console
+log.monitor.log.file.column:
+  text: Log File Entry
+log.monitor.is.active.column:
+  text: Is Active
+log.monitor.is.skipped.column:
+  text: Skip Content
+log.monitor.edit.aliases.title:
+  text: Edit Log Files Aliases
+log.monitor.edit.aliases.name:
+  text: '&Alias:'
+log.monitor.edit.aliases.location:
+  text: '&Log File Location:'
+log.monitor.edit.aliases.show.all.checkbox.title:
+  text: '&Show all files coverable by pattern'
+title.submitting.error.report:
+  text: Submitting Error Report
 run.combo.box.add.configuration:
   text: Add Configuration...

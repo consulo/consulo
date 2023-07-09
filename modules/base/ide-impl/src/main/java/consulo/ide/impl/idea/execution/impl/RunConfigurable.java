@@ -21,6 +21,7 @@ import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
 import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.BaseListPopupStep;
@@ -95,13 +96,8 @@ import static consulo.ui.ex.awt.dnd.RowsDnDSupport.RefinedDropSupport.Position.*
 public class RunConfigurable extends BaseConfigurable {
   private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {
     @Override
-    public String getDisplayName() {
-      return "";
-    }
-
-    @Override
-    public String getConfigurationTypeDescription() {
-      return "";
+    public LocalizeValue getDisplayName() {
+      return LocalizeValue.of();
     }
 
     @Override
@@ -194,7 +190,7 @@ public class RunConfigurable extends BaseConfigurable {
         }
         else {
           if (userObject instanceof ConfigurationType) {
-            return ((ConfigurationType)userObject).getDisplayName();
+            return ((ConfigurationType)userObject).getDisplayName().get();
           }
           else if (userObject instanceof String) {
             return (String)userObject;
@@ -215,7 +211,7 @@ public class RunConfigurable extends BaseConfigurable {
           Boolean shared = null;
           if (userObject instanceof ConfigurationType) {
             final ConfigurationType configurationType = (ConfigurationType)userObject;
-            append(configurationType.getDisplayName(), parent.isRoot() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+            append(configurationType.getDisplayName().get(), parent.isRoot() ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
             setIcon(configurationType.getIcon());
           }
           else if (userObject == DEFAULTS) {
@@ -227,7 +223,7 @@ public class RunConfigurable extends BaseConfigurable {
             setIcon(AllIcons.Nodes.Folder);
           }
           else if (userObject instanceof ConfigurationFactory) {
-            append(((ConfigurationFactory)userObject).getName());
+            append(((ConfigurationFactory)userObject).getDisplayName().get());
             setIcon(((ConfigurationFactory)userObject).getIcon());
           }
           else {
@@ -559,7 +555,7 @@ public class RunConfigurable extends BaseConfigurable {
     panel.add(addIcon);
 
     final String configurationTypeDescription = configurationType != null
-                                                ? configurationType.getConfigurationTypeDescription()
+                                                ? configurationType.getConfigurationTypeDescription().get()
                                                 : ExecutionBundle.message("run.configuration.default.type.description");
     panel.add(new JLabel(ExecutionBundle.message("empty.run.configuration.panel.text.label3", configurationTypeDescription)));
     JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(panel, true);
@@ -1182,12 +1178,7 @@ public class RunConfigurable extends BaseConfigurable {
     private void showAddPopup(final boolean showApplicableTypesOnly) {
       List<ConfigurationType> allTypes = getRunManager().getConfigurationFactories(false);
       final List<ConfigurationType> configurationTypes = getTypesToShow(showApplicableTypesOnly, allTypes);
-      Collections.sort(configurationTypes, new Comparator<ConfigurationType>() {
-        @Override
-        public int compare(final ConfigurationType type1, final ConfigurationType type2) {
-          return type1.getDisplayName().compareToIgnoreCase(type2.getDisplayName());
-        }
-      });
+      Collections.sort(configurationTypes, (type1, type2) -> type1.getDisplayName().compareIgnoreCase(type2.getDisplayName()));
       final int hiddenCount = allTypes.size() - configurationTypes.size();
       if (hiddenCount > 0) {
         configurationTypes.add(HIDDEN_ITEMS_STUB);
@@ -1202,7 +1193,7 @@ public class RunConfigurable extends BaseConfigurable {
           if(type == HIDDEN_ITEMS_STUB) {
             return hiddenCount + " items more (irrelevant)...";
           }
-          return type.getDisplayName();
+          return type.getDisplayName().get();
         }
 
         @Override
@@ -1244,13 +1235,13 @@ public class RunConfigurable extends BaseConfigurable {
 
         private ListPopupStep getSupStep(final ConfigurationType type) {
           final ConfigurationFactory[] factories = type.getConfigurationFactories();
-          Arrays.sort(factories, (factory1, factory2) -> factory1.getName().compareToIgnoreCase(factory2.getName()));
+          Arrays.sort(factories, (factory1, factory2) -> factory1.getDisplayName().compareIgnoreCase(factory2.getDisplayName()));
           return new BaseListPopupStep<ConfigurationFactory>(ExecutionBundle.message("add.new.run.configuration.action.name", type.getDisplayName()), factories) {
 
             @Override
             @Nonnull
             public String getTextFor(final ConfigurationFactory value) {
-              return value.getName();
+              return value.getDisplayName().get();
             }
 
             @Override

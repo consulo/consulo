@@ -115,6 +115,7 @@ public abstract class ToolWindowManager {
    * @return registered tool window with specified <code>id</code>. If there is no registered
    * tool window with specified <code>id</code> then the method returns <code>null</code>.
    */
+  @Nullable
   public abstract ToolWindow getToolWindow(String id);
 
   /**

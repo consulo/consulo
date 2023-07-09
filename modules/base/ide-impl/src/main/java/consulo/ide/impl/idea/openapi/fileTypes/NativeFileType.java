@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes;
 
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.FileTypeLocalize;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
-
+import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 

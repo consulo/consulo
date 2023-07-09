@@ -16,15 +16,13 @@
 package consulo.sandboxPlugin.ide.run;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.application.AllIcons;
-import consulo.project.Project;
+import consulo.execution.configuration.SimpleConfigurationType;
+import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
-import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -32,46 +30,18 @@ import jakarta.annotation.Nonnull;
  * @since 04.06.14
  */
 @ExtensionImpl
-public class SandConfigurationType implements ConfigurationType {
-  private final ConfigurationFactory myConfigurationFactory;
-
+public class SandConfigurationType extends SimpleConfigurationType {
   public SandConfigurationType() {
-    myConfigurationFactory = new ConfigurationFactory(this) {
-      @Override
-      public RunConfiguration createTemplateConfiguration(Project project) {
-        return new SandConfiguration(project, this, "Unnamed");
-      }
-
-      @Override
-      public boolean isApplicable(@Nonnull Project project) {
-        return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
-      }
-    };
+    super("#SandConfigurationType", LocalizeValue.localizeTODO("Sand Test"), PlatformIconGroup.nodesStatic());
   }
 
   @Override
-  public String getDisplayName() {
-    return "Sand Test";
+  public RunConfiguration createTemplateConfiguration(Project project) {
+    return new SandConfiguration(project, this, "Unnamed");
   }
 
   @Override
-  public String getConfigurationTypeDescription() {
-    return getDisplayName();
-  }
-
-  @Override
-  public Image getIcon() {
-    return AllIcons.Nodes.Static;
-  }
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "#SandConfigurationType";
-  }
-
-  @Override
-  public ConfigurationFactory[] getConfigurationFactories() {
-    return new ConfigurationFactory[] {myConfigurationFactory};
+  public boolean isApplicable(@Nonnull Project project) {
+    return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
   }
 }

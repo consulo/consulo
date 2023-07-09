@@ -1,0 +1,78 @@
+url.parse.unhandled.exception:
+  text: Can not parse URL, unhandled exception thrown
+url.parse.error:
+  text: Can not parse URL {0}
+file.create.already.exists.error:
+  text: Cannot create file {0}/{1}. File already exists.
+file.read.error:
+  text: Cannot read from file {0}.
+file.write.error:
+  text: Cannot write to file {0}.
+file.delete.root.error:
+  text: Cannot delete root file {0}.
+jar.copy.progress:
+  text: Copying {0}...
+jar.copy.error.message:
+  text: |-
+    Cannot copy ''{0}'' to ''{1}''.
+    Reason: {2}.
+jar.copy.error.title:
+  text: Error Copying File
+jar.modification.not.supported.error:
+  text: Cannot modify archive file {0}
+file.synchronize.progress:
+  text: Synchronizing files...
+cannot.load.remote.file:
+  text: 'Cannot load ''''{0}'''': {1}'
+cannot.create.local.file:
+  text: 'Cannot create local file: {0}'
+download.progress.connecting:
+  text: Connecting to ''{0}''...
+download.progress.downloading:
+  text: Downloading ''{0}''...
+vfs.file.not.exist.error:
+  text: '''''{0}'''' does not exist in VFS'
+vfs.target.already.exists.error:
+  text: '''''{0}'''' already exists in VFS'
+vfs.target.not.directory.error:
+  text: '''''{0}'''' is not a directory in VFS'
+file.not.exist.error:
+  text: '''''{0}'''' does not exist'
+target.already.exists.error:
+  text: '''''{0}'''' already exists'
+target.not.directory.error:
+  text: '''''{0}'''' is not a directory'
+file.invalid.name.error:
+  text: 'Invalid file name: ''''{0}'''''
+directory.invalid.name.error:
+  text: 'Invalid directory name: ''''{0}'''''
+rename.failed.error:
+  text: Cannot rename ''{0}'' to ''{1}''
+move.failed.error:
+  text: Cannot move ''{0}'' to ''{1}''
+delete.failed.error:
+  text: Cannot delete ''{0}''
+new.file.failed.error:
+  text: Cannot create file ''{0}''
+new.directory.failed.error:
+  text: Cannot create directory ''{0}''
+directory.create.wrong.parent.error:
+  text: Not a directory. Cannot create new directory in.
+file.create.wrong.parent.error:
+  text: Not a directory. Cannot create new file in.
+file.already.exists.error:
+  text: Cannot create file ''{0}''. File already exists.
+dir.already.exists.error:
+  text: Cannot create directory ''{0}''. Directory already exists.
+invalid.directory.create.files:
+  text: Invalid directory. Cannot create files.
+file.move.error:
+  text: Cannot move file to {0}
+file.copy.error:
+  text: Cannot copy file to {0}
+file.copy.target.must.be.directory:
+  text: Cannot copy, target must be directory.
+cannot.rename.root.directory:
+  text: Cannot rename root directory ''{0}''
+cannot.delete.root.directory:
+  text: Cannot delete root directory ''{0}''

@@ -91,7 +91,7 @@ public abstract class AbstractExternalSystemConfigurable<ProjectSettings extends
   @Nls
   @Override
   public String getDisplayName() {
-    return myExternalSystemId.getReadableName();
+    return myExternalSystemId.getReadableName().get();
   }
 
   @RequiredUIAccess

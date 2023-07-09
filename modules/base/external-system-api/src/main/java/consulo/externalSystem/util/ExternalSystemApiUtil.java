@@ -403,7 +403,7 @@ public class ExternalSystemApiUtil {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
     if (toolWindowManager == null) return null;
 
-    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getReadableName());
+    final ToolWindow toolWindow = toolWindowManager.getToolWindow(externalSystemId.getToolWindowId());
     if (toolWindow == null) return null;
 
     // call content manager - initialize it
@@ -460,7 +460,7 @@ public class ExternalSystemApiUtil {
   }
 
   public static boolean isExternalSystemLibrary(@Nonnull Library library, @Nonnull ProjectSystemId externalSystemId) {
-    return library.getName() != null && StringUtil.startsWith(library.getName(), externalSystemId.getReadableName() + ": ");
+    return library.getName() != null && StringUtil.startsWith(library.getName(), externalSystemId.getLibraryPrefix() + ": ");
   }
 
   @Nullable
@@ -737,7 +737,7 @@ public class ExternalSystemApiUtil {
 
   public static void storeLastUsedExternalProjectPath(@Nullable String path, @Nonnull ProjectSystemId externalSystemId) {
     if (path != null) {
-      ApplicationPropertiesComponent.getInstance().setValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getReadableName(), path);
+      ApplicationPropertiesComponent.getInstance().setValue(LAST_USED_PROJECT_PATH_PREFIX + externalSystemId.getId(), path);
     }
   }
 
@@ -820,7 +820,7 @@ public class ExternalSystemApiUtil {
   public static AbstractExternalSystemSettings getSettings(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
-      throw new IllegalArgumentException(String.format("Can't retrieve external system settings for id '%s'. Reason: no such external system is registered", externalSystemId.getReadableName()));
+      throw new IllegalArgumentException(String.format("Can't retrieve external system settings for id '%s'. Reason: no such external system is registered", externalSystemId.getDisplayName()));
     }
     return manager.getSettingsProvider().apply(project);
   }
@@ -829,7 +829,7 @@ public class ExternalSystemApiUtil {
   public static <S extends AbstractExternalSystemLocalSettings> S getLocalSettings(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) throws IllegalArgumentException {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
-      throw new IllegalArgumentException(String.format("Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered", externalSystemId.getReadableName()));
+      throw new IllegalArgumentException(String.format("Can't retrieve local external system settings for id '%s'. Reason: no such external system is registered", externalSystemId.getDisplayName()));
     }
     return (S)manager.getLocalSettingsProvider().apply(project);
   }
@@ -840,7 +840,7 @@ public class ExternalSystemApiUtil {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
     if (manager == null) {
       throw new IllegalArgumentException(
-              String.format("Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered", externalSystemId.getReadableName()));
+              String.format("Can't retrieve external system execution settings for id '%s'. Reason: no such external system is registered", externalSystemId.getDisplayName()));
     }
     return (S)manager.getExecutionSettingsProvider().apply(Pair.create(project, linkedProjectPath));
   }

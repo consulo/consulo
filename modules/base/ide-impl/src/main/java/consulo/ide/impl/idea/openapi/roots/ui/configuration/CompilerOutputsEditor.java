@@ -16,32 +16,32 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.setting.module.ModuleConfigurationState;
-import consulo.module.Module;
-import consulo.project.ProjectBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.FileChooserTextBoxBuilder;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ProjectLocalize;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
-
+import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;

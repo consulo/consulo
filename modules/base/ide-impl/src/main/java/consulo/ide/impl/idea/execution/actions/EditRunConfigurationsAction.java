@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.idea.execution.actions;
 
-import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
+import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.ide.impl.execution.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
 import consulo.ide.impl.execution.editor.RunConfigurationVirtualFile;
-import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
+import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ExecutionLocalize;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 
 public class EditRunConfigurationsAction extends DumbAwareAction {
   @RequiredUIAccess

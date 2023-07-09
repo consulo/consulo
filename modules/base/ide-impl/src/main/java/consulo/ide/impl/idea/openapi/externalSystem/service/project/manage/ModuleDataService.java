@@ -1,20 +1,29 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.project.manage;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
-import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.model.ProjectKeys;
-import consulo.externalSystem.rt.model.ExternalSystemSourceType;
 import consulo.externalSystem.model.project.ModuleData;
+import consulo.externalSystem.rt.model.ExternalSystemSourceType;
+import consulo.externalSystem.service.module.extension.ExternalSystemMutableModuleExtension;
 import consulo.externalSystem.service.project.ProjectData;
-import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
+import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
+import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -24,18 +33,9 @@ import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.externalSystem.service.module.extension.ExternalSystemMutableModuleExtension;
-import consulo.language.content.ProductionContentFolderTypeProvider;
-import consulo.language.content.TestContentFolderTypeProvider;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -243,7 +243,7 @@ public class ModuleDataService implements ProjectDataService<ModuleData, Module>
 
   @RequiredUIAccess
   private static void setModuleOptions(@Nonnull final Module module,
-                                       @jakarta.annotation.Nullable final ModifiableRootModel originalModel,
+                                       @Nullable final ModifiableRootModel originalModel,
                                        @Nonnull final DataNode<ModuleData> moduleDataNode) {
 
     ModuleData moduleData = moduleDataNode.getData();

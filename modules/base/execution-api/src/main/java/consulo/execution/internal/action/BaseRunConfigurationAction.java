@@ -29,6 +29,7 @@ import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
@@ -81,16 +82,17 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
         for (final ConfigurationFromContext fromContext : producers) {
           final ConfigurationType configurationType = fromContext.getConfigurationType();
           final RunConfiguration configuration = fromContext.getConfiguration();
-          final String actionName = configuration instanceof LocatableConfiguration
-                                    ? StringUtil.unquoteString(suggestRunActionName((LocatableConfiguration)configuration))
+          final LocalizeValue actionName = configuration instanceof LocatableConfiguration
+                                    ? LocalizeValue.of(StringUtil.unquoteString(suggestRunActionName((LocatableConfiguration)configuration)))
                                     : configurationType.getDisplayName();
           final AnAction anAction = new AnAction(actionName, configurationType.getDisplayName(), configurationType.getIcon()) {
+            @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
               perform(fromContext, context);
             }
           };
-          anAction.getTemplatePresentation().setText(actionName, false);
+          anAction.getTemplatePresentation().setTextValue(actionName.map(Presentation.NO_MNEMONIC));
           children[chldIdx++] = anAction;
         }
         return children;
@@ -130,6 +132,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
     return true;
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
@@ -146,7 +149,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
                   @Override
                   @Nonnull
                   public String getTextFor(final ConfigurationFromContext producer) {
-                    return producer.getConfigurationType().getDisplayName();
+                    return producer.getConfigurationType().getDisplayName().get();
                   }
 
                   @Override
@@ -193,6 +196,7 @@ public abstract class BaseRunConfigurationAction extends ActionGroup {
 
   protected abstract void perform(ConfigurationContext context);
 
+  @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
     final ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());

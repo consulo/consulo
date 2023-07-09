@@ -19,24 +19,25 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.compiler.CompilerConfiguration;
-import consulo.configurable.*;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.NonDefaultProjectConfigurable;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.ProjectLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.internal.ProjectEx;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
@@ -44,9 +45,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -180,7 +183,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
         configuration.setCompilerOutputUrl(null);
       }
       if (myProjectName != null) {
-        ((ProjectEx)myProject).setProjectName(consulo.util.lang.StringUtil.notNullize(myProjectName.getValue()));
+        ((ProjectEx)myProject).setProjectName(StringUtil.notNullize(myProjectName.getValue()));
       }
     });
   }

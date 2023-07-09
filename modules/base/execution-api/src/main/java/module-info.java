@@ -33,6 +33,7 @@ module consulo.execution.api {
   exports consulo.execution.executor;
   exports consulo.execution.lineMarker;
   exports consulo.execution.runner;
+  exports consulo.execution.localize;
   exports consulo.execution.process;
   exports consulo.execution.ui;
   exports consulo.execution.ui.awt;

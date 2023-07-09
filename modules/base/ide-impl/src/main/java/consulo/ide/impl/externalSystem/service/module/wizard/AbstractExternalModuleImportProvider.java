@@ -16,6 +16,7 @@
 package consulo.ide.impl.externalSystem.service.module.wizard;
 
 import consulo.component.persist.PersistentStateComponent;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
@@ -32,6 +33,7 @@ import consulo.externalSystem.util.DisposeAwareProjectChange;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
+import consulo.localize.LocalizeValue;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
@@ -157,8 +159,8 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
           final Runnable resolveDependenciesTask = new Runnable() {
             @Override
             public void run() {
-              String progressText = ExternalSystemBundle.message("progress.resolve.libraries", myExternalSystemId.getReadableName());
-              ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText, false) {
+              LocalizeValue progressText = ExternalSystemLocalize.progressResolveLibraries(myExternalSystemId.getDisplayName());
+              ProgressManager.getInstance().run(new Task.Backgroundable(project, progressText.get(), false) {
                 @Override
                 public void run(@Nonnull final ProgressIndicator indicator) {
                   if (project.isDisposed()) return;
@@ -193,7 +195,7 @@ public abstract class AbstractExternalModuleImportProvider<C extends AbstractImp
    */
   @SuppressWarnings("unchecked")
   public void ensureProjectIsDefined(@Nonnull ExternalModuleImportContext<C> context) throws WizardStepValidationException {
-    final String externalSystemName = myExternalSystemId.getReadableName();
+    final String externalSystemName = myExternalSystemId.getReadableName().get();
     File projectFile = getProjectFile();
     if (projectFile == null) {
       throw new WizardStepValidationException(ExternalSystemBundle.message("error.project.undefined"));

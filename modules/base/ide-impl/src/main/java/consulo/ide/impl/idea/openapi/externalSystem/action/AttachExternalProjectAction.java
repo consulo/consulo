@@ -16,19 +16,19 @@
 package consulo.ide.impl.idea.openapi.externalSystem.action;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.actions.ImportModuleAction;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
+import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import consulo.externalSystem.ExternalSystemBundle;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.ide.actions.ImportModuleAction;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -47,9 +47,9 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent e) {
     ProjectSystemId externalSystemId = e.getDataContext().getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
     if (externalSystemId != null) {
-      String name = externalSystemId.getReadableName();
-      e.getPresentation().setText(ExternalSystemBundle.message("action.attach.external.project.text", name));
-      e.getPresentation().setDescription(ExternalSystemBundle.message("action.attach.external.project.description", name));
+      LocalizeValue readableName = externalSystemId.getDisplayName();
+      e.getPresentation().setTextValue(ExternalSystemLocalize.actionAttachExternalProjectText(readableName));
+      e.getPresentation().setDescriptionValue(ExternalSystemLocalize.actionAttachExternalProjectDescription(readableName));
     }
 
     e.getPresentation().setIcon(AllIcons.General.Add);
@@ -68,7 +68,7 @@ public class AttachExternalProjectAction extends AnAction implements DumbAware {
       return;
     }
 
-    Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = e.getDataContext().getData(Project.KEY);
     if (project == null) {
       return;
     }
