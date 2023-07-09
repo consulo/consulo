@@ -17,7 +17,9 @@ package consulo.ide.impl.idea.openapi.externalSystem.service.task.ui;
 
 import consulo.application.dumb.DumbAware;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.model.ExternalSystemDataKeys;
 import consulo.externalSystem.model.ProjectSystemId;
+import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -72,5 +74,20 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
     ExternalSystemTasksPanel panel = new ExternalSystemTasksPanel(project, myExternalSystemId, myNotificationGroup);
     Content tasksContent = ContentFactory.getInstance().createContent(panel, "", true);
     contentManager.addContent(tasksContent);
+  }
+
+  @Override
+  public boolean validate(@Nonnull Project project) {
+    if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) == Boolean.TRUE) {
+      return true;
+    }
+
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
+    if (manager == null) {
+      return false;
+    }
+
+    AbstractExternalSystemSettings<?, ?, ?> settings = manager.getSettingsProvider().apply(project);
+    return settings != null && !settings.getLinkedProjectsSettings().isEmpty();
   }
 }
