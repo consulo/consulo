@@ -22,9 +22,9 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -34,16 +34,18 @@ import java.awt.event.WindowEvent;
  * @since 22/09/2021
  */
 public abstract class WizardBasedDialog<C> extends DialogWrapper {
+  private final boolean myEnableCancel;
   protected WizardSession<C> myWizardSession;
   protected C myWizardContext;
 
   private Runnable myNextRunnable;
   private Runnable myBackRunnable;
 
-  protected WizardBasedDialog(@Nullable Project project) {
+  protected WizardBasedDialog(@Nullable Project project, boolean enableCancel) {
     super(project);
 
     // in child myWizardSession and myWizardContext but be initialized
+    myEnableCancel = enableCancel;
   }
 
   @Nonnull
@@ -139,9 +141,7 @@ public abstract class WizardBasedDialog<C> extends DialogWrapper {
   }
 
   private void updateButtonPresentation(JPanel contentPanel) {
-    boolean hasNext = myWizardSession.hasNext();
-
-    if (hasNext) {
+    if (myWizardSession.hasNext()) {
       setOKButtonText(CommonBundle.getNextButtonText());
       myNextRunnable = () -> gotoStep(contentPanel, myWizardSession.next());
     }
@@ -150,15 +150,21 @@ public abstract class WizardBasedDialog<C> extends DialogWrapper {
       myNextRunnable = null;
     }
 
-    int currentStepIndex = myWizardSession.getCurrentStepIndex();
-    if (currentStepIndex != 0) {
+    boolean hasPrev = myWizardSession.hasPrev();
+    myCancelAction.setEnabled(hasPrev);
+    if (hasPrev) {
       myBackRunnable = () -> gotoStep(contentPanel, myWizardSession.prev());
-
       setCancelButtonText(CommonBundle.message("button.back"));
     }
     else {
       myBackRunnable = null;
-      setCancelButtonText(CommonBundle.message("button.cancel"));
+
+      if (myEnableCancel) {
+        myCancelAction.setEnabled(true);
+        setCancelButtonText(CommonBundle.getCancelButtonText());
+      } else {
+        setCancelButtonText(CommonBundle.message("button.back"));
+      }
     }
   }
 

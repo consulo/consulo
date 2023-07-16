@@ -39,6 +39,7 @@ import java.util.List;
  */
 @SuppressWarnings("MigratedExtensionsTo")
 @MigratedExtensionsTo(consulo.util.jdom.JDOMUtil.class)
+@Deprecated
 public class JDOMUtil {
   private static final String X = "x";
   private static final String Y = "y";
@@ -182,6 +183,7 @@ public class JDOMUtil {
   public static Document loadDocument(byte[] bytes) throws IOException, JDOMException {
     return consulo.util.jdom.JDOMUtil.loadDocument(bytes);
   }
+
   @Nonnull
   public static Document loadDocument(@Nonnull CharSequence seq) throws IOException, JDOMException {
     return consulo.util.jdom.JDOMUtil.loadDocument(seq);
@@ -400,7 +402,10 @@ public class JDOMUtil {
     return info;
   }
 
-  public static void updateFileSet(@Nonnull File[] oldFiles, @Nonnull String[] newFilePaths, @Nonnull Document[] newFileDocuments, String lineSeparator) throws IOException {
+  public static void updateFileSet(@Nonnull File[] oldFiles,
+                                   @Nonnull String[] newFilePaths,
+                                   @Nonnull Document[] newFileDocuments,
+                                   String lineSeparator) throws IOException {
     consulo.util.jdom.JDOMUtil.updateFileSet(oldFiles, newFilePaths, newFileDocuments, lineSeparator);
   }
 
@@ -562,7 +567,11 @@ public class JDOMUtil {
   }
 
   @Nullable
-  public static Rectangle getBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height) {
+  public static Rectangle getBounds(@Nonnull Element element,
+                                    @Nonnull String x,
+                                    @Nonnull String y,
+                                    @Nonnull String width,
+                                    @Nonnull String height) {
     String sX = element.getAttributeValue(x);
     if (sX == null) return null;
     String sY = element.getAttributeValue(y);
@@ -589,8 +598,15 @@ public class JDOMUtil {
   }
 
   @Nonnull
-  public static Element setBounds(@Nonnull Element element, @Nonnull String x, @Nonnull String y, @Nonnull String width, @Nonnull String height, @Nonnull Rectangle bounds) {
-    return element.setAttribute(x, Integer.toString(bounds.x)).setAttribute(y, Integer.toString(bounds.y)).setAttribute(width, Integer.toString(bounds.width))
-            .setAttribute(height, Integer.toString(bounds.height));
+  public static Element setBounds(@Nonnull Element element,
+                                  @Nonnull String x,
+                                  @Nonnull String y,
+                                  @Nonnull String width,
+                                  @Nonnull String height,
+                                  @Nonnull Rectangle bounds) {
+    return element.setAttribute(x, Integer.toString(bounds.x))
+                  .setAttribute(y, Integer.toString(bounds.y))
+                  .setAttribute(width, Integer.toString(bounds.width))
+                  .setAttribute(height, Integer.toString(bounds.height));
   }
 }

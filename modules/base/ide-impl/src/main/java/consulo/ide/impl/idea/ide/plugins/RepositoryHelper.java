@@ -49,6 +49,16 @@ import java.util.zip.GZIPInputStream;
  */
 public class RepositoryHelper {
   @Nonnull
+  public static String selectUrlChannel(@Nonnull String platformId, @Nonnull String platformVersion) {
+    return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("selectChannel"))
+                              .append("?platformVersion=")
+                              .append(platformVersion)
+                              .append("&platformId=")
+                              .append(platformVersion)
+                              .toString();
+  }
+
+  @Nonnull
   public static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion) {
     return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
                               .append("?platformVersion=")

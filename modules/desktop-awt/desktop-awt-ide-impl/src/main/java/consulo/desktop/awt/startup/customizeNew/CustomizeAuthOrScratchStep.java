@@ -18,10 +18,12 @@ package consulo.desktop.awt.startup.customizeNew;
 import consulo.application.Application;
 import consulo.application.progress.Task;
 import consulo.container.plugin.PluginId;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.externalService.impl.HubAuthorizationService;
 import consulo.ide.impl.externalStorage.ExternalStoragePluginManager;
 import consulo.ide.impl.externalStorage.plugin.StoragePlugin;
 import consulo.ide.impl.externalStorage.plugin.StoragePluginState;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Alerts;
 import consulo.ui.ModalityState;
@@ -30,22 +32,29 @@ import consulo.ui.Window;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.*;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author VISTALL
  * @since 18/09/2021
  */
 public class CustomizeAuthOrScratchStep extends AbstractCustomizeWizardStep {
+  @Nonnull
+  private final Runnable myNextAction;
   private String myAuthorizeEmail;
 
-  public CustomizeAuthOrScratchStep(@Nonnull Runnable nextAction, CustomizeWizardContext context) {
-    setLayout(new BorderLayout(10, 10));
+  public CustomizeAuthOrScratchStep(@Nonnull Runnable nextAction) {
+    myNextAction = nextAction;
+  }
+
+  @Nonnull
+  @Override
+  public JPanel createComponnent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
+    JPanel panel = new JPanel(new BorderLayout(10, 10));
 
     JPanel verticalGroup = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.MIDDLE, 10, 25, true, false));
 
@@ -67,14 +76,14 @@ public class CustomizeAuthOrScratchStep extends AbstractCustomizeWizardStep {
     loginButton.addActionListener(e -> {
       AsyncResult<Void> result = hubAuthorizationService.openLinkSite(true);
       result.doWhenDone(() -> {
-        Window activeWindow = Window.getActiveWindow();
+        Window activeWindow = consulo.ui.Window.getActiveWindow();
         if (activeWindow != null) {
           AppIcon.getInstance().requestFocus(activeWindow);
         }
 
         myAuthorizeEmail = hubAuthorizationService.getEmail();
 
-        fetchExternalStorage(nextAction, context);
+        fetchExternalStorage(myNextAction, context);
       });
 
       result.doWhenRejected(() -> {
@@ -86,7 +95,8 @@ public class CustomizeAuthOrScratchStep extends AbstractCustomizeWizardStep {
     hubPanel.add(loginButton, HorizontalLayout.CENTER);
     verticalGroup.add(hubPanel);
 
-    add(verticalGroup, BorderLayout.CENTER);
+    panel.add(verticalGroup, BorderLayout.CENTER);
+    return panel;
   }
 
   private void fetchExternalStorage(Runnable nextAction, CustomizeWizardContext context) {
@@ -98,15 +108,14 @@ public class CustomizeAuthOrScratchStep extends AbstractCustomizeWizardStep {
         Task.Modal.queue(null, LocalizeValue.localizeTODO("Fetching external storage..."), indicator -> {
           StoragePlugin[] list = ExternalStoragePluginManager.list();
 
-          Set<PluginId> pluginsForDownload = new TreeSet<>(context.getPluginsForDownload());
-
+          Set<PluginId> toDownload = context.getPluginsForDownload();
+          toDownload.clear();
+          
           for (StoragePlugin storagePlugin : list) {
             if (storagePlugin.state == StoragePluginState.ENABLED) {
-              pluginsForDownload.add(PluginId.getId(storagePlugin.id));
+              toDownload.add(PluginId.getId(storagePlugin.id));
             }
           }
-
-          context.setPluginsForDownload(pluginsForDownload);
 
           nextAction.run();
         });
@@ -120,17 +129,12 @@ public class CustomizeAuthOrScratchStep extends AbstractCustomizeWizardStep {
   }
 
   @Override
-  protected String getTitle() {
-    return "Welcome";
-  }
-
-  @Override
   protected String getHTMLHeader() {
-    return "<html><body><h2>Welcome</h2>&nbsp;</body></html>";
+    return "<html><body><h2>Hub</h2></body></html>";
   }
 
   @Override
-  protected String getHTMLFooter() {
-    return null;
+  public boolean isVisible(@Nonnull CustomizeWizardContext context) {
+    return false; // FIXME [VISTALL] not supported for now
   }
 }

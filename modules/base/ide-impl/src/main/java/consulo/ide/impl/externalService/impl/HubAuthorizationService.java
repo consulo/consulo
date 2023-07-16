@@ -38,8 +38,8 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URLEncoder;

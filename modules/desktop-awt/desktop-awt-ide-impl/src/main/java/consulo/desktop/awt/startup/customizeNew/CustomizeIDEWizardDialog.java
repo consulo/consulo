@@ -17,22 +17,20 @@ package consulo.desktop.awt.startup.customizeNew;
 
 import consulo.application.Application;
 import consulo.application.util.SystemInfo;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.desktop.awt.startup.customize.PluginTemplate;
+import consulo.externalService.update.UpdateChannel;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.wizard.WizardBasedDialog;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
-import consulo.util.collection.MultiMap;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author VISTALL
@@ -40,22 +38,22 @@ import java.util.Map;
  */
 public class CustomizeIDEWizardDialog extends WizardBasedDialog<CustomizeWizardContext> {
 
-  public CustomizeIDEWizardDialog(boolean isDark,
-                                  MultiMap<String, PluginDescriptor> pluginDescriptors,
-                                  Map<String, PluginTemplate> predefinedTemplateSets) {
-    super(null);
+  public CustomizeIDEWizardDialog(boolean isDark, @Nullable UpdateChannel updateChannel) {
+    super(null, false);
 
-    myWizardContext = new CustomizeWizardContext(pluginDescriptors, predefinedTemplateSets);
+    myWizardContext = new CustomizeWizardContext(isDark, updateChannel);
 
     List<WizardStep<CustomizeWizardContext>> steps = new ArrayList<>();
-    steps.add(new CustomizeAuthOrScratchStep(this::doOKAction, myWizardContext));
+    steps.add(new CustomizePreparingDataStep(this::doOKAction));
+    steps.add(new CustomizeAuthOrScratchStep(this::doOKAction));
     steps.add(new CustomizeUIThemeStepPanel());
 
     if (SystemInfo.isMac) {
-      steps.add(new CustomizeKeyboardSchemeStepPanel());
+      steps.add(new CustomizeKeyboardSchemeStep());
     }
 
-    steps.add(new CustomizePluginTemplatesStepPanel(myWizardContext));
+    steps.add(new CustomizePluginTemplatesStep());
+    steps.add(new CustomizePluginsStepPanel());
     steps.add(new CustomizeDownloadStep(this::doOKAction));
     steps.add(new CustomizeFinishedLastStep(this::doOKAction));
 

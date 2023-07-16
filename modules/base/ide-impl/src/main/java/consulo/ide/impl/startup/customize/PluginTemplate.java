@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.customize;
+package consulo.ide.impl.startup.customize;
 
 import consulo.ui.image.Image;
 

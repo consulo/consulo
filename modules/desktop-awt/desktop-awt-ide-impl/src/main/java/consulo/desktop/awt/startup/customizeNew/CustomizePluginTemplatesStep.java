@@ -15,7 +15,10 @@
  */
 package consulo.desktop.awt.startup.customizeNew;
 
-import consulo.desktop.awt.startup.customize.PluginTemplate;
+import consulo.container.plugin.PluginId;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
+import consulo.ide.impl.startup.customize.PluginTemplate;
+import consulo.disposer.Disposable;
 import consulo.ui.ImageBox;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
@@ -26,7 +29,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -38,12 +41,17 @@ import java.util.Set;
  * @author VISTALL
  * @since 29.11.14
  */
-public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardStep {
+public class CustomizePluginTemplatesStep extends AbstractCustomizeWizardStep {
   @Nonnull
   private Map<String, JCheckBox> mySetBoxes = new HashMap<>();
 
-  public CustomizePluginTemplatesStepPanel(CustomizeWizardContext context) {
-    setLayout(new BorderLayout());
+  public CustomizePluginTemplatesStep() {
+  }
+
+  @Nonnull
+  @Override
+  public JPanel createComponnent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
+    JPanel root = new JPanel(new BorderLayout());
 
     JPanel panel = new JPanel(new GridBagLayout());
 
@@ -88,9 +96,10 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
       panel.add(buttonPanel, buttonConstraints);
     }
 
-    JScrollPane pane = ScrollPaneFactory.createScrollPane(panel);
+    JScrollPane pane = ScrollPaneFactory.createScrollPane(panel, true);
     pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-    add(pane, BorderLayout.CENTER);
+    root.add(pane, BorderLayout.CENTER);
+    return root;
   }
 
   @Override
@@ -108,9 +117,24 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
     Set<String> enabledPluginsSet = new HashSet<>();
     for (Map.Entry<String, JCheckBox> entry : mySetBoxes.entrySet()) {
       if (entry.getValue().isSelected()) {
-        PluginTemplate template = context.getPredefinedTemplateSets().get(entry.getKey());
-
         enabledPluginsSet.add(entry.getKey());
+      }
+    }
+
+    Map<String, PluginTemplate> templates = context.getPredefinedTemplateSets();
+
+    Set<PluginId> pluginsForDownload = context.getPluginsForDownload();
+    pluginsForDownload.clear();
+
+    for (String enabledTemplate : enabledPluginsSet) {
+      PluginTemplate pluginTemplate = templates.get(enabledTemplate);
+      if (pluginTemplate == null) {
+        // must be always not null
+        continue;
+      }
+
+      for (String pluginId : pluginTemplate.getPluginIds()) {
+        pluginsForDownload.add(PluginId.getId(pluginId));
       }
     }
 
@@ -125,11 +149,6 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
     }
 
     return context.getEmail() == null;
-  }
-
-  @Override
-  protected String getTitle() {
-    return "Predefined Plugin Sets";
   }
 
   @Override

@@ -20,13 +20,15 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 import consulo.desktop.awt.ui.util.AWTIconLoader;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -39,11 +41,16 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   private boolean myColumnMode;
 
   public CustomizeUIThemeStepPanel() {
-    boolean darkTheme = false; // TODO !
+  }
 
-    setLayout(new BorderLayout(10, 10));
+  @Nonnull
+  @Override
+  public JPanel createComponnent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
+    boolean darkTheme = context.isInitialDarkTheme();
 
-    Map<String, Image> lafNames = new LinkedHashMap<>();
+    JPanel root = new JPanel(new BorderLayout(10, 10));
+
+    Map<String, consulo.ui.image.Image> lafNames = new LinkedHashMap<>();
     lafNames.put(LIGHT,
                  AWTIconLoader.INSTANCE.getIcon("/ICON-LIB/light/consulo.platform.base.PlatformIconGroup/lafs/LightPreview.png",
                                                 PlatformIconGroup.class));
@@ -57,14 +64,14 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
     ButtonGroup group = new ButtonGroup();
     String defaultLafName = darkTheme ? DARK : LIGHT;
 
-    for (Map.Entry<String, Image> entry : lafNames.entrySet()) {
+    for (Map.Entry<String, consulo.ui.image.Image> entry : lafNames.entrySet()) {
       final String lafName = entry.getKey();
       Image icon = entry.getValue();
       final JRadioButton radioButton = new JRadioButton(lafName, defaultLafName.equals(lafName));
       radioButton.setOpaque(false);
 
       final JPanel panel =
-        createBigButtonPanel(new BorderLayout(10, 10), radioButton, () -> applyLaf(lafName, CustomizeUIThemeStepPanel.this));
+        createBigButtonPanel(new BorderLayout(10, 10), radioButton, () -> applyLaf(lafName, root));
       panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
       panel.add(radioButton, BorderLayout.NORTH);
       final JLabel label = new JLabel(TargetAWT.to(icon)) {
@@ -81,7 +88,9 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
       group.add(radioButton);
       buttonsPanel.add(panel);
     }
-    add(buttonsPanel, BorderLayout.CENTER);
+    root.add(buttonsPanel, BorderLayout.CENTER);
+
+    return root;
   }
 
   @Override

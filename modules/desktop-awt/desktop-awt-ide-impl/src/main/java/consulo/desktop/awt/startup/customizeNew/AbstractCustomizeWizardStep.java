@@ -16,23 +16,27 @@
 package consulo.desktop.awt.startup.customizeNew;
 
 import consulo.disposer.Disposable;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.wizard.WizardStep;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 
-public abstract class AbstractCustomizeWizardStep extends JPanel implements WizardStep<CustomizeWizardContext> {
+public abstract class AbstractCustomizeWizardStep implements WizardStep<CustomizeWizardContext> {
   protected static final int GAP = 20;
 
-  protected abstract String getTitle();
+  @Deprecated
+  protected String getTitle() {
+    return null;
+  }
 
   protected abstract String getHTMLHeader();
 
@@ -91,14 +95,6 @@ public abstract class AbstractCustomizeWizardStep extends JPanel implements Wiza
     return panel;
   }
 
-  Component getDefaultFocusedComponent() {
-    return null;
-  }
-
-  public boolean beforeShown(boolean forward) {
-    return false;
-  }
-
   @RequiredUIAccess
   @Nonnull
   @Override
@@ -111,8 +107,14 @@ public abstract class AbstractCustomizeWizardStep extends JPanel implements Wiza
   @Override
   public Component getSwingComponent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
     JPanel panel = new JPanel(new BorderLayout());
-    panel.add(new JLabel(getHTMLHeader()), BorderLayout.NORTH);
-    panel.add(this, BorderLayout.CENTER);
+    String htmlHeader = getHTMLHeader();
+    if (htmlHeader != null) {
+      panel.add(new JLabel(htmlHeader), BorderLayout.NORTH);
+    }
+    panel.add(createComponnent(context, uiDisposable), BorderLayout.CENTER);
     return panel;
   }
+
+  @Nonnull
+  public abstract JPanel createComponnent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable);
 }

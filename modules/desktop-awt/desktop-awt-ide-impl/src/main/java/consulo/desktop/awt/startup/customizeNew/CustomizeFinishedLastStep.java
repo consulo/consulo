@@ -16,12 +16,13 @@
 package consulo.desktop.awt.startup.customizeNew;
 
 import consulo.disposer.Disposable;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.wizard.WizardStep;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -46,7 +47,7 @@ public class CustomizeFinishedLastStep implements WizardStep<CustomizeWizardCont
   @Nonnull
   @Override
   public java.awt.Component getSwingComponent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
-    JLabel label = new JLabel("All up. Press Start for using Consulo");
+    JLabel label = new JLabel("All up. Press 'Start' for using Consulo");
     // TODO change button to Start
     return new BorderLayoutPanel().addToCenter(label);
   }

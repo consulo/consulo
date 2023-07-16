@@ -18,7 +18,7 @@ package consulo.ui.ex.wizard;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +45,10 @@ public final class WizardSession<CONTEXT> {
 
   public boolean hasNext() {
     return findNextStepIndex() != -1;
+  }
+
+  public boolean hasPrev() {
+    return myPreviusStepIndex != -1;
   }
 
   @Nonnull
@@ -79,7 +83,7 @@ public final class WizardSession<CONTEXT> {
     WizardStep<CONTEXT> step = mySteps.get(nextStepIndex);
 
     myCurrentStepIndex = nextStepIndex;
-    myPreviusStepIndex = oldIndex;
+    myPreviusStepIndex = findPrevStepIndex(myCurrentStepIndex - 1);
 
     return step;
   }
@@ -102,7 +106,7 @@ public final class WizardSession<CONTEXT> {
 
     WizardStep<CONTEXT> step = mySteps.get(myPreviusStepIndex);
 
-    myPreviusStepIndex = findPrevStepIndex();
+    myPreviusStepIndex = findPrevStepIndex(myPreviusStepIndex - 1);
 
     return step;
   }
@@ -142,8 +146,7 @@ public final class WizardSession<CONTEXT> {
     return -1;
   }
 
-  private int findPrevStepIndex() {
-    int from = myPreviusStepIndex - 1;
+  private int findPrevStepIndex(int from) {
     for (int i = from; i != -1; i--) {
       WizardStep<CONTEXT> step = mySteps.get(i);
       if (step.isVisible(myContext)) {

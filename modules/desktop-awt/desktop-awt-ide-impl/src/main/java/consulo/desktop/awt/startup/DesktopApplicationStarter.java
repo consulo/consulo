@@ -191,7 +191,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     }
 
     if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
-      SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme()));
+      SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme(), null));
     }
     else {
       SystemDock.getInstance().updateMenu();

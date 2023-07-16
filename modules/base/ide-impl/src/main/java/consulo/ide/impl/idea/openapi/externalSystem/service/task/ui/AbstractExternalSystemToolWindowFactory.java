@@ -67,7 +67,7 @@ public abstract class AbstractExternalSystemToolWindowFactory implements ToolWin
 
   @RequiredUIAccess
   @Override
-  public void createToolWindowContent(@javax.annotation.Nonnull final Project project, final ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull final Project project, final ToolWindow toolWindow) {
     ContentManager contentManager = toolWindow.getContentManager();
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
     assert manager != null;

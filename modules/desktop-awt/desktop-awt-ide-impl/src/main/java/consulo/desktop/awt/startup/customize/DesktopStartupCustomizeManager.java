@@ -16,9 +16,11 @@
 package consulo.desktop.awt.startup.customize;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -28,9 +30,17 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl
 public class DesktopStartupCustomizeManager implements StartupCustomizeManager {
+  private final UpdateSettings myUpdateSettings;
+
+  @Inject
+  public DesktopStartupCustomizeManager(UpdateSettings updateSettings) {
+    myUpdateSettings = updateSettings;
+  }
+
   @RequiredUIAccess
   @Override
   public void showAsync(boolean firstShow) {
-    FirstStartCustomizeUtil.showDialog(firstShow, StyleManager.get().getCurrentStyle().isDark());
+    // myUpdateSettings.getChannel()
+    FirstStartCustomizeUtil.showDialog(firstShow, StyleManager.get().getCurrentStyle().isDark(), null);
   }
 }

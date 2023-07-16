@@ -13,42 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.startup.customizeNew;
+package consulo.ide.impl.startup.customize;
 
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.desktop.awt.startup.customize.PluginTemplate;
-import consulo.util.collection.MultiMap;
+import consulo.externalService.update.UpdateChannel;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nonnull;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author VISTALL
  * @since 22/09/2021
  */
 public class CustomizeWizardContext {
-  private final Map<PluginId, PluginDescriptor> myPluginDescriptors;
-  private final Map<String, PluginTemplate> myPredefinedTemplateSets;
+  private final Map<String, Collection<PluginDescriptor>> myPluginDescriptorsByTag = new TreeMap<>();
+  private final Map<PluginId, PluginDescriptor> myPluginDescriptors = new LinkedHashMap<>();
+  private final Map<String, PluginTemplate> myPredefinedTemplateSets = new LinkedHashMap<>();
+  private final boolean myIsInitialDarkTheme;
+  @Nullable
+  private final UpdateChannel myUpdateChannel;
 
   private String myEmail;
 
   private Set<String> myEnabledPluginSets = Set.of();
-  private Set<PluginId> myPluginsForDownload = Set.of();
+  private final Set<PluginId> myPluginsForDownload = new LinkedHashSet<>();
 
-  public CustomizeWizardContext(MultiMap<String, PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
-    myPluginDescriptors = new LinkedHashMap<>();
-    for (PluginDescriptor pluginDescriptor : pluginDescriptors.values()) {
-      myPluginDescriptors.put(pluginDescriptor.getPluginId(), pluginDescriptor);
-    }
-    myPredefinedTemplateSets = predefinedTemplateSets;
+  public CustomizeWizardContext(boolean isInitialDarkTheme, @Nullable UpdateChannel updateChannel) {
+    myIsInitialDarkTheme = isInitialDarkTheme;
+    myUpdateChannel = updateChannel;
   }
 
   @Nonnull
   public Map<PluginId, PluginDescriptor> getPluginDescriptors() {
     return myPluginDescriptors;
+  }
+
+  @Nonnull
+  public Map<String, Collection<PluginDescriptor>> getPluginDescriptorsByTag() {
+    return myPluginDescriptorsByTag;
   }
 
   @Nonnull
@@ -78,7 +82,22 @@ public class CustomizeWizardContext {
     return myPluginsForDownload;
   }
 
-  public void setPluginsForDownload(@Nonnull Set<PluginId> pluginsForDownload) {
-    myPluginsForDownload = pluginsForDownload;
+  public boolean isInitialDarkTheme() {
+    return myIsInitialDarkTheme;
+  }
+
+  @Nullable
+  public UpdateChannel getUpdateChannel() {
+    return myUpdateChannel;
+  }
+
+  public void addPluginDescriptor(PluginDescriptor plugin) {
+    myPluginDescriptors.put(plugin.getPluginId(), plugin);
+    Set<String> tags = plugin.getTags();
+
+    for (String tag : tags) {
+      Collection<PluginDescriptor> list = myPluginDescriptorsByTag.computeIfAbsent(tag, s -> new ArrayList<>());
+      list.add(plugin);
+    }
   }
 }

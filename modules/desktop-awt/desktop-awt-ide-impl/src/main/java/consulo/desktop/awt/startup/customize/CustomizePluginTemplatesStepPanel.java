@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import consulo.ide.impl.startup.customize.PluginTemplate;
 import consulo.ui.ex.awt.MultiLineLabel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollPaneFactory;

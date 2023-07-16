@@ -17,22 +17,29 @@ package consulo.desktop.awt.startup.customizeNew;
 
 import consulo.application.CommonBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import jakarta.annotation.Nonnull;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardStep {
+public class CustomizeKeyboardSchemeStep extends AbstractCustomizeWizardStep {
   private boolean myInitial = true;
 
-  public CustomizeKeyboardSchemeStepPanel() {
-    setLayout(new GridLayout(1, 2, GAP, GAP));
+  public CustomizeKeyboardSchemeStep() {
+  }
+
+  @Nonnull
+  @Override
+  public JPanel createComponnent(CustomizeWizardContext context, @Nonnull Disposable uiDisposable) {
+    JPanel panel = new JPanel(new GridLayout(1, 2, GAP, GAP));
     final JRadioButton macRadioButton =
       new JRadioButton("I've never used " + ApplicationNamesInfo.getInstance().getProductName());
     macRadioButton.setOpaque(false);
@@ -55,7 +62,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
                               "<tr><td style=\"text-align:right;\">&#8984;&#9003;</td><td style=\"text-align:left;\">Delete line</td></tr>" +
                               "</table></body></html>"));
 
-    add(macPanel);
+    panel.add(macPanel);
     final JRadioButton defaultRadioButton =
       new JRadioButton("I used " + ApplicationNamesInfo.getInstance().getProductName() + " before");
     defaultRadioButton.setOpaque(false);
@@ -73,13 +80,14 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
                                   "<tr><td style=\"text-align:right;\">&#8984;Y</td><td style=\"text-align:left;\">Delete line</td></tr>" +
                                   "</table></body></html>"));
 
-    add(macPanel);
-    add(defaultPanel);
+    panel.add(macPanel);
+    panel.add(defaultPanel);
     ButtonGroup group = new ButtonGroup();
     group.add(macRadioButton);
     group.add(defaultRadioButton);
     defaultRadioButton.setSelected(true);
     myInitial = false;
+    return panel;
   }
 
   private void applyKeymap(@Nonnull String keymapName) {

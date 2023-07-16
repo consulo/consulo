@@ -18,7 +18,7 @@ package consulo.desktop.awt.startup.customizeNew;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import consulo.desktop.awt.startup.customize.PluginTemplate;
+import consulo.ide.impl.startup.customize.CustomizeWizardContext;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;
@@ -37,11 +37,9 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.VerticalLayout;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author VISTALL
@@ -58,11 +56,7 @@ public class CustomizeDownloadStep implements WizardStep<CustomizeWizardContext>
 
   @Override
   public boolean isVisible(@Nonnull CustomizeWizardContext context) {
-    if (!context.getPluginsForDownload().isEmpty() || !context.getEnabledPluginSets().isEmpty()) {
-      return true;
-    }
-
-    return false;
+    return !context.getPluginsForDownload().isEmpty();
   }
 
   @RequiredUIAccess
@@ -77,18 +71,7 @@ public class CustomizeDownloadStep implements WizardStep<CustomizeWizardContext>
   public void onStepEnter(@Nonnull CustomizeWizardContext context) {
     myPluginsList.removeAll();
 
-    Set<PluginId> pluginIds = new TreeSet<>();
-    pluginIds.addAll(context.getPluginsForDownload());
-    for (String templateName : context.getEnabledPluginSets()) {
-      PluginTemplate template = context.getPredefinedTemplateSets().get(templateName);
-      if (template != null) {
-        for (String templatePluginId : template.getPluginIds()) {
-          pluginIds.add(PluginId.getId(templatePluginId));
-        }
-      }
-    }
-
-    for (PluginId pluginId : pluginIds) {
+    for (PluginId pluginId : context.getPluginsForDownload()) {
       PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
       if (plugin != null) {
         continue;

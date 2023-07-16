@@ -33,7 +33,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
 
   @RequiredUIAccess
   @Override
-  public void update(@javax.annotation.Nonnull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.
@@ -47,7 +47,7 @@ public class SwitchToFind extends AnAction implements DumbAware {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     if (KeymapUtil.isEmacsKeymap()) {
       // Emacs users are accustomed to the editor that executes 'find next' on subsequent pressing of shortcut that
       // activates 'incremental search'. Hence, we do the similar hack here for them.
