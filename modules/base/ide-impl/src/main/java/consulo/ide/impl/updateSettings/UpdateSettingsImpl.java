@@ -16,20 +16,16 @@
 package consulo.ide.impl.updateSettings;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationProperties;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.container.boot.ContainerPathManager;
 import consulo.externalService.update.UpdateChannel;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.util.lang.ObjectUtil;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
-import java.io.File;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -53,28 +49,12 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
 
   private State myState = new State();
 
-  @Nonnull
-  private static UpdateChannel findDefaultChannel() {
-    if (ApplicationProperties.isInSandbox()) {
-      return UpdateChannel.nightly;
-    }
-
-    File file = ContainerPathManager.get().getAppHomeDirectory();
-    for (UpdateChannel channel : UpdateChannel.values()) {
-      if (new File(file, "." + channel.name()).exists()) {
-        return channel;
-      }
-    }
-
-    return UpdateChannel.release;
-  }
-
   @Override
   @Nonnull
   public UpdateChannel getChannel() {
     UpdateChannel channel = myState.channel;
     if (channel == null) {
-      myState.channel = channel = findDefaultChannel();
+      return UpdateChannel.release;
     }
     return channel;
   }
@@ -119,7 +99,7 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
   public void loadState(State state) {
     myState = state;
     // switch to release if branch obsolete 
-    if (state.channel.isObsolete()) {
+    if (state.channel != null && state.channel.isObsolete()) {
       state.channel = UpdateChannel.release;
     }
   }
