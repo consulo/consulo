@@ -47,7 +47,7 @@ public abstract class WritingAccessProvider {
     return project == null ? List.of() : EP_NAME.getExtensionList(project);
   }
 
-  public static boolean isPotentiallyWritable(VirtualFile file, ComponentManager project) {
+  public static boolean isPotentiallyWritable(@Nonnull VirtualFile file, @Nullable ComponentManager project) {
     List<WritingAccessProvider> providers = getProvidersForProject(project);
     for (WritingAccessProvider provider : providers) {
       if (!provider.isPotentiallyWritable(file)) {
