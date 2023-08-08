@@ -195,13 +195,13 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     protected void setTextToEditor(String text) {
       myEditor.getMarkupModel().removeAllHighlighters();
       myEditor.getDocument().setText(text);
-      ((EditorEx)myEditor).resetSizes();
+      myEditor.resetSizes();
       myEditor.getHighlighter().setText(text);
       if (myTextAttributes != null) {
         myEditor.getMarkupModel().addRangeHighlighter(0, myEditor.getDocument().getTextLength(), HighlighterLayer.ADDITIONAL_SYNTAX, myTextAttributes, HighlighterTargetArea.EXACT_RANGE);
       }
 
-      ((EditorEx)myEditor).setPaintSelection(mySelected);
+      myEditor.setPaintSelection(mySelected);
       SelectionModel selectionModel = myEditor.getSelectionModel();
       selectionModel.setSelection(0, mySelected ? myEditor.getDocument().getTextLength() : 0);
     }

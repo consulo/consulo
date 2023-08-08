@@ -16,16 +16,15 @@
 
 package consulo.language.editor.action;
 
-import consulo.language.editor.highlight.BraceMatcher;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.BraceMatcher;
+import consulo.language.psi.PsiElement;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,11 +42,11 @@ public abstract class BraceMatcherBasedSelectioner extends ExtendWordSelectionHa
     if (fileType == null) return super.select(e, editorText, cursorOffset, editor);
     final int textLength = editorText.length();
     final TextRange totalRange = e.getTextRange();
-    final HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(totalRange.getStartOffset());
+    final HighlighterIterator iterator = editor.getHighlighter().createIterator(totalRange.getStartOffset());
     final BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
 
-    final ArrayList<TextRange> result = new ArrayList<TextRange>();
-    final LinkedList<Trinity<Integer, Integer, IElementType>> stack = new LinkedList<Trinity<Integer, Integer, IElementType>>();
+    final ArrayList<TextRange> result = new ArrayList<>();
+    final LinkedList<Trinity<Integer, Integer, IElementType>> stack = new LinkedList<>();
     while (!iterator.atEnd() && iterator.getStart() < totalRange.getEndOffset()) {
       final Trinity<Integer, Integer, IElementType> last;
       if (braceMatcher.isLBraceToken(iterator, editorText, fileType)) {

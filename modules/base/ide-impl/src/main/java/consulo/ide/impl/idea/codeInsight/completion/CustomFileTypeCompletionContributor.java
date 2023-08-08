@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.language.Language;
-import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.language.internal.custom.SyntaxTable;
-import consulo.codeEditor.EditorEx;
-import consulo.language.custom.CustomSyntaxTableFileType;
-import consulo.language.internal.custom.CustomHighlighterTokenType;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.completion.*;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.language.Language;
 import consulo.language.ast.IElementType;
+import consulo.language.custom.CustomSyntaxTableFileType;
+import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.internal.custom.CustomHighlighterTokenType;
+import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -73,7 +72,7 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
   }
 
   private static boolean inCommentOrLiteral(CompletionParameters parameters) {
-    HighlighterIterator iterator = ((EditorEx)parameters.getEditor()).getHighlighter().createIterator(parameters.getOffset());
+    HighlighterIterator iterator = parameters.getEditor().getHighlighter().createIterator(parameters.getOffset());
     IElementType elementType = (IElementType)iterator.getTokenType();
     if (elementType == CustomHighlighterTokenType.WHITESPACE) {
       iterator.retreat();

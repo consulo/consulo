@@ -26,6 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsConfigurable;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
@@ -184,5 +185,11 @@ public class LanguageCodeEditorInternalHelper implements CodeEditorInternalHelpe
   @Override
   public LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
     return LanguageLineWrapPositionStrategy.forEditor(editor);
+  }
+
+  @Nonnull
+  @Override
+  public EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+    return EditorUtil.createEmptyHighlighter(project, document);
   }
 }

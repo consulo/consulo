@@ -225,7 +225,7 @@ public class EditorActionUtil {
   public static boolean isLexemeBoundary(@Nonnull Editor editor, int offset) {
     if (!(editor instanceof EditorEx) || offset <= 0 || offset >= editor.getDocument().getTextLength()) return false;
     if (CharArrayUtil.isEmptyOrSpaces(editor.getDocument().getImmutableCharSequence(), offset - 1, offset + 1)) return false;
-    EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
+    EditorHighlighter highlighter = editor.getHighlighter();
     HighlighterIterator it = highlighter.createIterator(offset);
     if (it.getStart() != offset) {
       return false;
@@ -1047,8 +1047,8 @@ public class EditorActionUtil {
     }
   }
 
-  @Nullable
+  @Nonnull
   private static HighlighterIterator createHighlighterIteratorAtOffset(@Nonnull Editor editor, int offset) {
-    return ((EditorEx)editor).getHighlighter().createIterator(offset);
+    return editor.getHighlighter().createIterator(offset);
   }
 }

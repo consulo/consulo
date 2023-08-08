@@ -126,4 +126,9 @@ public interface CodeEditorInternalHelper {
   default LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
     return new DefaultLineWrapPositionStrategy();
   }
+
+  @Nonnull
+  default EditorHighlighter createEmptyHighlighter(Project project, Document document) {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -17,32 +17,31 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.editorActions.EnterHandler;
+import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.StringEscapesTokenTypes;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.editor.action.EnterHandlerDelegateAdapter;
 import consulo.language.editor.action.JavaLikeQuoteHandler;
 import consulo.language.editor.action.LanguageQuoteHandler;
 import consulo.language.editor.action.QuoteHandler;
-import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.language.ast.IElementType;
 import consulo.language.lexer.StringLiteralLexer;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.ast.StringEscapesTokenTypes;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "inStringLiteral", order = "first")
@@ -120,7 +119,7 @@ public class EnterInStringLiteralHandler extends EnterHandlerDelegateAdapter {
         quoteHandler = fileType != null ? TypedHandler.getQuoteHandlerForType(fileType) : null;
       }
       if (quoteHandler != null) {
-        EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
+        EditorHighlighter highlighter = editor.getHighlighter();
         HighlighterIterator iterator = highlighter.createIterator(offset - 1);
         return StringEscapesTokenTypes.STRING_LITERAL_ESCAPES.contains((IElementType)iterator.getTokenType()) || quoteHandler.isInsideLiteral(iterator);
       }

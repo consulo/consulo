@@ -16,20 +16,18 @@
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.language.editor.internal.EditorFoldingInfoImpl;
 import consulo.language.psi.PsiDocCommentBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -79,7 +77,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
     if (element == null) return false;
     final Commenter commenter = Commenter.forLanguage(element.getLanguage());
     if (!(commenter instanceof CodeDocumentationAwareCommenter)) return false;
-    final HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(region.getStartOffset());
+    final HighlighterIterator iterator = editor.getHighlighter().createIterator(region.getStartOffset());
     if (iterator.atEnd()) return false;
     return ((CodeDocumentationAwareCommenter)commenter).getDocumentationCommentTokenType() == iterator.getTokenType();
   }

@@ -17,7 +17,6 @@
 package consulo.language.editor.action;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
@@ -33,10 +32,9 @@ import consulo.language.psi.PsiFile;
 import consulo.util.collection.Stack;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 public class BraceMatchingUtil {
   public static final int UNDEFINED_TOKEN_GROUP = -1;
@@ -60,7 +58,7 @@ public class BraceMatchingUtil {
   public static int getMatchedBraceOffset(@Nonnull Editor editor, boolean forward, @Nonnull PsiFile file) {
     Document document = editor.getDocument();
     int offset = editor.getCaretModel().getOffset();
-    EditorHighlighter editorHighlighter = ((EditorEx)editor).getHighlighter();
+    EditorHighlighter editorHighlighter = editor.getHighlighter();
     HighlighterIterator iterator = editorHighlighter.createIterator(offset);
     boolean matched = matchBrace(document.getCharsSequence(), file.getFileType(), iterator, forward);
     assert matched;

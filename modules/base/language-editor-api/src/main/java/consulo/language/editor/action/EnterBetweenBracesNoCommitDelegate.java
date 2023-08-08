@@ -2,7 +2,6 @@
 package consulo.language.editor.action;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
@@ -38,6 +37,6 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
 
   @Nonnull
   public static HighlighterIterator createBeforeIterator(@Nonnull Editor editor, int caretOffset) {
-    return ((EditorEx)editor).getHighlighter().createIterator(caretOffset == 0 ? 0 : caretOffset - 1);
+    return editor.getHighlighter().createIterator(caretOffset == 0 ? 0 : caretOffset - 1);
   }
 }

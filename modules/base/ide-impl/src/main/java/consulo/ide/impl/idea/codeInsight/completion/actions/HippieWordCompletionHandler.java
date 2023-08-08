@@ -277,7 +277,7 @@ public class HippieWordCompletionHandler implements CodeInsightActionHandler {
 
   private static void processWords(Editor editor, int startOffset, TokenProcessor processor) {
     CharSequence chars = editor.getDocument().getCharsSequence();
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(startOffset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(startOffset);
     while (!iterator.atEnd()) {
       int start = iterator.getStart();
       int end = iterator.getEnd();

@@ -94,7 +94,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
     FileType fileType = file.getFileType();
     final QuoteHandler quoteHandler = TypedHandler.getQuoteHandler(file, editor);
 
-    HighlighterIterator hiterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator hiterator = editor.getHighlighter().createIterator(offset);
     boolean wasClosingQuote = quoteHandler != null && quoteHandler.isClosingQuote(hiterator, offset);
 
     myOriginalHandler.execute(originalEditor, caret, dataContext);
@@ -114,7 +114,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
       char c1 = chars.charAt(offset);
       if (c1 != EditorBackspaceUtil.getRightChar(c)) return true;
 
-      HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+      HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
       BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
       if (!braceMatcher.isLBraceToken(iterator, chars, fileType) && !braceMatcher.isRBraceToken(iterator, chars, fileType)) {
         return true;
@@ -122,7 +122,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
 
       int rparenOffset = BraceMatchingUtil.findRightmostRParen(iterator, (IElementType)iterator.getTokenType(), chars, fileType);
       if (rparenOffset >= 0) {
-        iterator = ((EditorEx)editor).getHighlighter().createIterator(rparenOffset);
+        iterator = editor.getHighlighter().createIterator(rparenOffset);
         boolean matched = BraceMatchingUtil.matchBrace(chars, fileType, iterator, false);
         if (matched) return true;
       }
@@ -134,7 +134,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
       if (c1 != c) return true;
       if (wasClosingQuote) return true;
 
-      HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+      HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
       if (quoteHandler == null || !quoteHandler.isOpeningQuote(iterator, offset)) return true;
 
       editor.getDocument().deleteString(offset, offset + 1);

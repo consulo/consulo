@@ -24,12 +24,11 @@ import consulo.execution.ui.console.ConsoleViewUtil;
 import consulo.execution.ui.console.language.LanguageConsoleBuilder;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.language.Language;
 import consulo.language.editor.highlight.HighlighterFactory;
@@ -51,11 +50,12 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -273,6 +273,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return addToHistoryInner(textRange, editor, false, preserveMarkup);
   }
 
+  @Override
   @Nonnull
   public String prepareExecuteAction(boolean addToHistory, boolean preserveMarkup, boolean clearInput) {
     EditorEx editor = getCurrentEditor();
@@ -317,7 +318,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     }
     else {
       text = inputEditor.getDocument().getText(textRange);
-      highlighter = ((EditorEx)inputEditor).getHighlighter();
+      highlighter = inputEditor.getHighlighter();
     }
     SyntaxHighlighter syntax = highlighter instanceof LexerEditorHighlighter ? ((LexerEditorHighlighter)highlighter).getSyntaxHighlighter() : null;
     LanguageConsoleImpl consoleImpl = (LanguageConsoleImpl)console;
@@ -337,6 +338,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     return text;
   }
 
+  @Override
   @Nonnull
   public String addTextRangeToHistory(@Nonnull TextRange textRange, @Nonnull EditorEx inputEditor, boolean preserveMarkup) {
     return printWithHighlighting(this, inputEditor, textRange);
@@ -349,6 +351,7 @@ public class LanguageConsoleImpl extends ConsoleViewImpl implements LanguageCons
     //}
   }
 
+  @Override
   public void doAddPromptToHistory() {
     String prompt = myConsoleExecutionEditor.getPrompt();
     if (prompt != null) {

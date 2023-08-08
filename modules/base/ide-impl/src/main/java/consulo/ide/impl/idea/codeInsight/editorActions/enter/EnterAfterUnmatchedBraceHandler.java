@@ -17,35 +17,34 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.enter;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.action.EnterHandlerDelegateAdapter;
-import consulo.language.editor.highlight.BraceMatcher;
-import consulo.language.editor.action.BraceMatchingUtil;
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.BraceMatchingUtil;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.language.editor.highlight.BraceMatcher;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.ast.TokenType;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "afterUnmatchedBrace", order = "after inLineComment")
@@ -338,7 +337,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
       return -1;
     }
 
-    EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
+    EditorHighlighter highlighter = editor.getHighlighter();
     HighlighterIterator iterator = highlighter.createIterator(offset - 1);
     BraceMatcher braceMatcher = BraceMatchingUtil.getBraceMatcher(fileType, iterator);
 

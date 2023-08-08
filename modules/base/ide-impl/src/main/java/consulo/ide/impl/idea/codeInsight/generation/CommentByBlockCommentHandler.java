@@ -432,7 +432,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
   private boolean breaksExistingComment(int offset, boolean includingAfterLineComment) {
     if (!(myCommenter instanceof CodeDocumentationAwareCommenter) || !(myEditor instanceof EditorEx) || offset == 0) return false;
     CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)myCommenter;
-    HighlighterIterator it = ((EditorEx)myEditor).getHighlighter().createIterator(offset - 1);
+    HighlighterIterator it = myEditor.getHighlighter().createIterator(offset - 1);
     IElementType tokenType = (IElementType)it.getTokenType();
     return (tokenType != null &&
             (it.getEnd() > offset &&
@@ -447,7 +447,7 @@ public class CommentByBlockCommentHandler extends MultiCaretCodeInsightActionHan
   // should be called only if 'canDetectBlockComments' returns 'true'
   private TextRange getBlockCommentAt(int offset) {
     CodeDocumentationAwareCommenter commenter = (CodeDocumentationAwareCommenter)myCommenter;
-    HighlighterIterator it = ((EditorEx)myEditor).getHighlighter().createIterator(offset);
+    HighlighterIterator it = myEditor.getHighlighter().createIterator(offset);
     if (it.getTokenType() == commenter.getBlockCommentTokenType()) {
       return new TextRange(it.getStart(), it.getEnd());
     }

@@ -89,14 +89,7 @@ public class ToggleCaseAction extends TextComponentEditorAction {
 
     private static String toCase(Editor editor, int startOffset, int endOffset, final boolean lower) {
       CharSequence text = editor.getDocument().getImmutableCharSequence();
-      EditorHighlighter highlighter;
-      if (editor instanceof EditorEx) {
-        highlighter = ((EditorEx)editor).getHighlighter();
-      }
-      else {
-        highlighter = new EmptyEditorHighlighter(null);
-        highlighter.setText(text);
-      }
+      EditorHighlighter highlighter = editor.getHighlighter();
       HighlighterIterator iterator = highlighter.createIterator(startOffset);
       StringBuilder builder = new StringBuilder(endOffset - startOffset);
       while (!iterator.atEnd()) {

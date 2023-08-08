@@ -131,7 +131,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
 
     final int lineStartOffset = document.getLineStartOffset(lineNumber);
     final int previousLineStartOffset = lineNumber > 0 ? document.getLineStartOffset(lineNumber - 1) : lineStartOffset;
-    final EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
+    final EditorHighlighter highlighter = editor.getHighlighter();
     final HighlighterIterator iterator = highlighter.createIterator(caret - 1);
     final IElementType type = getNonWhitespaceElementType(iterator, lineStartOffset, previousLineStartOffset);
 

@@ -331,7 +331,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
   private static void handleAfterLParen(@Nonnull Editor editor, @Nonnull FileType fileType, char lparenChar) {
     int offset = editor.getCaretModel().getOffset();
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     boolean atEndOfDocument = offset == editor.getDocument().getTextLength();
 
     if (!atEndOfDocument) iterator.retreat();
@@ -355,7 +355,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
     int lparenOffset = BraceMatchingUtil.findLeftmostLParen(iterator, braceTokenType, fileText, fileType);
     if (lparenOffset < 0) lparenOffset = 0;
 
-    iterator = ((EditorEx)editor).getHighlighter().createIterator(lparenOffset);
+    iterator = editor.getHighlighter().createIterator(lparenOffset);
     boolean matched = BraceMatchingUtil.matchBrace(fileText, fileType, iterator, true, true);
 
     if (!matched) {
@@ -387,7 +387,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
     if (offset == editor.getDocument().getTextLength()) return false;
 
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) return false;
 
     if (iterator.getEnd() - iterator.getStart() != 1 || editor.getDocument().getCharsSequence().charAt(iterator.getStart()) != charTyped) {
@@ -418,7 +418,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
       if (lparenthOffset < 0) return false;
     }
 
-    iterator = ((EditorEx)editor).getHighlighter().createIterator(lparenthOffset);
+    iterator = editor.getHighlighter().createIterator(lparenthOffset);
     boolean matched = BraceMatchingUtil.matchBrace(text, fileType, iterator, true, true);
 
     if (!matched) return false;
@@ -446,7 +446,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
       }
     }
 
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
 
     if (!iterator.atEnd()) {
       IElementType tokenType = (IElementType)iterator.getTokenType();
@@ -484,7 +484,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
   }
 
   private static boolean isClosingQuote(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
       return false;
@@ -495,7 +495,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
 
   @Nullable
   private static CharSequence getClosingQuote(@Nonnull Editor editor, @Nonnull MultiCharQuoteHandler quoteHandler, int offset) {
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
       return null;
@@ -505,7 +505,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
   }
 
   private static boolean isOpeningQuote(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
       return false;
@@ -515,7 +515,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
   }
 
   private static boolean hasNonClosedLiterals(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
       return false;
@@ -535,7 +535,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
   private static boolean isInsideLiteral(@Nonnull Editor editor, @Nonnull QuoteHandler quoteHandler, int offset) {
     if (offset == 0) return false;
 
-    HighlighterIterator iterator = ((EditorEx)editor).getHighlighter().createIterator(offset - 1);
+    HighlighterIterator iterator = editor.getHighlighter().createIterator(offset - 1);
     if (iterator.atEnd()) {
       LOG.assertTrue(false);
       return false;
@@ -576,7 +576,7 @@ public class TypedHandler extends TypedActionHandlerBase implements ExtensionTyp
       PsiElement element = file.findElementAt(offset);
       if (element == null) return;
 
-      EditorHighlighter highlighter = ((EditorEx)editor).getHighlighter();
+      EditorHighlighter highlighter = editor.getHighlighter();
       HighlighterIterator iterator = highlighter.createIterator(offset);
 
       final FileType fileType = file.getFileType();

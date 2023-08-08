@@ -18,6 +18,7 @@ package consulo.codeEditor;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
+import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
@@ -31,9 +32,9 @@ import consulo.ui.Component;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -544,4 +545,9 @@ public interface Editor extends UserDataHolder {
 
   @Nonnull
   DataContext getDataContext();
+
+  @Nonnull
+  default EditorHighlighter getHighlighter() {
+    return CodeEditorInternalHelper.getInstance().createEmptyHighlighter(getProject(), getDocument());
+  }
 }

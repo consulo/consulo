@@ -209,7 +209,7 @@ public class BraceHighlightingHandler {
   @Nonnull
   static EditorHighlighter getLazyParsableHighlighterIfAny(Project project, Editor editor, PsiFile psiFile) {
     if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
-      return ((EditorEx)editor).getHighlighter();
+      return editor.getHighlighter();
     }
     PsiElement elementAt = psiFile.findElementAt(editor.getCaretModel().getOffset());
     for (PsiElement e : SyntaxTraverser.psiApi().parents(elementAt).takeWhile(Conditions.notEqualTo(psiFile))) {
@@ -240,7 +240,7 @@ public class BraceHighlightingHandler {
       highlighter.setText(editor.getDocument().getText(range));
       return highlighter;
     }
-    return ((EditorEx)editor).getHighlighter();
+    return editor.getHighlighter();
   }
 
   void updateBraces() {
