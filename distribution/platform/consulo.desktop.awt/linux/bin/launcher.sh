@@ -110,7 +110,7 @@ fi
 # Collect JVM options and properties.
 # ---------------------------------------------------------------------
 
-MAIN_CLASS_NAME="-m consulo.desktop.bootstrap/consulo.desktop.boot.main.Main"
+MAIN_CLASS_NAME="-m consulo.desktop.awt.bootstrap/consulo.desktop.awt.boot.main.Main"
 
 VM_OPTIONS_FILE="$ROOT_DIR/consulo$BITS.vmoptions"
 
