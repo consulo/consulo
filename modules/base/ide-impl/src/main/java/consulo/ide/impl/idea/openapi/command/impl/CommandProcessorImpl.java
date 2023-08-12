@@ -2,24 +2,32 @@
 package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.command.CommandToken;
-import consulo.undoRedo.UndoManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.util.ExceptionUtil;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
+import consulo.application.Application;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
+import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
+import consulo.util.lang.ExceptionUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
 public class CommandProcessorImpl extends CoreCommandProcessor {
+  @Inject
+  public CommandProcessorImpl(@Nonnull Application application) {
+    super(application);
+  }
+
+  @RequiredUIAccess
   @Override
   public void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {
     if (myCurrentCommand != command) return;

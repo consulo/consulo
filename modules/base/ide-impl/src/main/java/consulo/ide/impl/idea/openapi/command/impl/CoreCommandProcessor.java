@@ -2,12 +2,12 @@
 package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
@@ -15,10 +15,10 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.List;
 import java.util.Stack;
 
@@ -61,6 +61,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
   }
 
+  @Nonnull
+  private final Application myApplication;
+
   protected CommandDescriptor myCurrentCommand;
   private final Stack<CommandDescriptor> myInterruptedCommands = new Stack<>();
   private final List<CommandListener> myListeners = Lists.newLockFreeCopyOnWriteList();
@@ -68,8 +71,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   private final CommandListener eventPublisher;
 
-  public CoreCommandProcessor() {
-    MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+  public CoreCommandProcessor(@Nonnull Application application) {
+    myApplication = application;
+    MessageBus messageBus = application.getMessageBus();
     messageBus.connect().subscribe(CommandListener.class, new CommandListener() {
       @Override
       public void commandStarted(@Nonnull CommandEvent event) {
@@ -183,6 +187,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     executeCommand(project, command, name, groupId, confirmationPolicy, shouldRecordCommandForActiveDocument, null);
   }
 
+  @RequiredUIAccess
   private void executeCommand(@Nullable Project project,
                               @Nonnull Runnable command,
                               @Nullable String name,
@@ -190,8 +195,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                               @Nonnull UndoConfirmationPolicy confirmationPolicy,
                               boolean shouldRecordCommandForActiveDocument,
                               @Nullable Document document) {
-    Application application = ApplicationManager.getApplication();
-    application.assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     if (project != null && project.isDisposed()) {
       CommandLog.LOG.error("Project " + project + " already disposed");
       return;
@@ -223,8 +227,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   @Override
   @Nullable
+  @RequiredUIAccess
   public CommandToken startCommand(@Nullable final Project project, @Nls final String name, @Nullable final Object groupId, @Nonnull final UndoConfirmationPolicy undoConfirmationPolicy) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     if (project != null && project.isDisposed()) return null;
 
     if (CommandLog.LOG.isDebugEnabled()) {
@@ -242,14 +247,16 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
+  @RequiredUIAccess
   public void finishCommand(@Nonnull final CommandToken command, @Nullable Throwable throwable) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
     fireCommandFinished();
   }
 
+  @RequiredUIAccess
   protected void fireCommandFinished() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
@@ -264,8 +271,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
+  @RequiredUIAccess
   public void enterModal() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     myInterruptedCommands.push(currentCommand);
     if (currentCommand != null) {
@@ -274,8 +282,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
+  @RequiredUIAccess
   public void leaveModal() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandLog.LOG.assertTrue(myCurrentCommand == null, "Command must not run: " + myCurrentCommand);
 
     myCurrentCommand = myInterruptedCommands.pop();
@@ -285,16 +294,18 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   }
 
   @Override
+  @RequiredUIAccess
   public void setCurrentCommandName(String name) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandLog.LOG.assertTrue(currentCommand != null);
     currentCommand.myName = name;
   }
 
   @Override
+  @RequiredUIAccess
   public void setCurrentCommandGroupId(Object groupId) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandLog.LOG.assertTrue(currentCommand != null);
     currentCommand.myGroupId = groupId;
@@ -378,8 +389,9 @@ public class CoreCommandProcessor extends CommandProcessorEx {
   public void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files) {
   }
 
+  @RequiredUIAccess
   private void fireCommandStarted() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    myApplication.assertIsDispatchThread();
     CommandDescriptor currentCommand = myCurrentCommand;
     CommandEvent event = new CommandEvent(this, currentCommand.myCommand, currentCommand.myName, currentCommand.myGroupId, currentCommand.myProject, currentCommand.myUndoConfirmationPolicy,
                                           currentCommand.myShouldRecordActionForActiveDocument, currentCommand.myDocument);
