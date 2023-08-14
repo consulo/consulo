@@ -1,28 +1,28 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
+import com.sun.jna.IntegerType;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.Patches;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
+import consulo.application.util.Patches;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
+import consulo.application.util.registry.Registry;
+import consulo.awt.hacking.DataTransfererHacking;
+import consulo.awt.hacking.XClipboardHacking;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
-import com.sun.jna.IntegerType;
+import consulo.logging.Logger;
 import consulo.util.lang.Pair;
-import jakarta.inject.Singleton;
-import sun.awt.datatransfer.DataTransferer;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -337,7 +336,6 @@ public class ClipboardSynchronizer implements Disposable {
     }
   }
 
-
   private static class XWinClipboardHandler extends ClipboardHandler {
     private static final String DATA_TRANSFER_TIMEOUT_PROPERTY = "sun.awt.datatransfer.timeout";
     private static final String LONG_TIMEOUT = "2000";
@@ -424,40 +422,26 @@ public class ClipboardSynchronizer implements Disposable {
     @Nullable
     private static Collection<DataFlavor> checkContentsQuick() {
       final Clipboard clipboard = getClipboard();
-      if (clipboard == null) return null;
-      final Class<? extends Clipboard> aClass = clipboard.getClass();
-      if (!"sun.awt.X11.XClipboard".equals(aClass.getName())) return null;
-
-      final Method getClipboardFormats = ReflectionUtil.getDeclaredMethod(aClass, "getClipboardFormats");
-      if (getClipboardFormats == null) return null;
+      if (clipboard == null || !XClipboardHacking.isAvailable()) return null;
 
       final String timeout = System.getProperty(DATA_TRANSFER_TIMEOUT_PROPERTY);
       System.setProperty(DATA_TRANSFER_TIMEOUT_PROPERTY, SHORT_TIMEOUT);
 
       try {
-        final long[] formats = (long[])getClipboardFormats.invoke(clipboard);
+        final long[] formats = XClipboardHacking.getClipboardFormats(clipboard);
         if (formats == null || formats.length == 0) {
           return Collections.emptySet();
         }
-        @SuppressWarnings({"unchecked"}) final Set<DataFlavor> set = DataTransferer.getInstance().getFlavorsForFormats(formats, FLAVOR_MAP).keySet();
-        return set;
+        return DataTransfererHacking.getFlavorsForFormats(formats, FLAVOR_MAP);
       }
-      catch (IllegalAccessException | IllegalArgumentException ignore) {
-      }
-      catch (InvocationTargetException e) {
-        final Throwable cause = e.getCause();
-        if (cause instanceof IllegalStateException) {
-          throw (IllegalStateException)cause;
-        }
+      catch (IllegalArgumentException ignore) {
       }
       finally {
         System.setProperty(DATA_TRANSFER_TIMEOUT_PROPERTY, timeout);
       }
-
       return null;
     }
   }
-
 
   private static class HeadlessClipboardHandler extends ClipboardHandler {
     private volatile Transferable myContent = null;
@@ -489,7 +473,6 @@ public class ClipboardSynchronizer implements Disposable {
       myContent = null;
     }
   }
-
 
   private static boolean areDataFlavorsAvailable(Transferable contents, DataFlavor... flavors) {
     for (DataFlavor flavor : flavors) {

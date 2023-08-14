@@ -36,6 +36,7 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     toOpenMap.add(new Opens("java.desktop", "sun.awt.image", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "sun.java2d", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "sun.font", "consulo.desktop.awt.hacking"));
+    toOpenMap.add(new Opens("java.desktop", "sun.awt.datatransfer", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "java.awt", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "javax.swing", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "javax.swing.plaf.basic", "consulo.desktop.awt.hacking"));
@@ -43,11 +44,17 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
 
+    boolean isWindows = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("windows");
     boolean isMac = System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("mac");
     if (isMac) {
       toOpenMap.add(new Opens("java.desktop", "com.apple.laf", "consulo.desktop.awt.hacking"));
       toOpenMap.add(new Opens("java.desktop", "com.apple.eawt", "consulo.desktop.awt.eawt.wrapper"));
       toOpenMap.add(new Opens("java.desktop", "com.apple.eawt.event", "consulo.desktop.awt.eawt.wrapper"));
+    }
+
+    // linux
+    if (!isWindows && !isMac) {
+      toOpenMap.add(new Opens("java.desktop", "sun.awt.X11", "consulo.desktop.awt.hacking"));
     }
   }
 
