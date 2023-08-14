@@ -272,7 +272,7 @@ public class CacheUpdateRunner {
 
     private static void handleIndexingException(@Nonnull VirtualFile file, @Nonnull Throwable e) {
       file.putUserData(FAILED_TO_INDEX, Boolean.TRUE);
-      LOG.error("Error while indexing " + file.getPresentableUrl() + "\n" + "To reindex this file IDEA has to be restarted", e);
+      LOG.error("Error while indexing " + file.getPresentableUrl() + "\n" + "To reindex this file IDE has to be restarted", e);
     }
   }
 }

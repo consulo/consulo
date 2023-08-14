@@ -22,7 +22,7 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.annotation.Nullable;
 
 /**
- * Every component which would like to persist its state across IDEA restarts
+ * Every component which would like to persist its state across IDE restarts
  * should implement this interface.
  * <p>
  * See <a href="http://confluence.jetbrains.net/display/IDEADEV/Persisting+State+of+Components">JetBrains WIKI</a>
