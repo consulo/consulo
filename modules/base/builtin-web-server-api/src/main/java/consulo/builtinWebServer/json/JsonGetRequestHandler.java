@@ -18,6 +18,7 @@ package consulo.builtinWebServer.json;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.http.HTTPMethod;
+import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
 
 import jakarta.annotation.Nonnull;
@@ -28,6 +29,7 @@ import java.io.IOException;
  * @since 27.10.2015
  */
 public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
+  private static final Logger LOG = Logger.getInstance(JsonGetRequestHandler.class);
 
   protected JsonGetRequestHandler(@Nonnull String apiUrl) {
     super(apiUrl);
@@ -50,6 +52,8 @@ public abstract class JsonGetRequestHandler extends JsonBaseRequestHandler {
       handle = handle();
     }
     catch (Exception e) {
+      LOG.error(e);
+      
       handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
     }
     return writeResponse(handle, request);

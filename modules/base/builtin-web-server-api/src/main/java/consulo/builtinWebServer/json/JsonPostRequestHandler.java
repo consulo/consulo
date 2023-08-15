@@ -15,13 +15,14 @@
  */
 package consulo.builtinWebServer.json;
 
-import consulo.builtinWebServer.http.HttpRequest;
 import consulo.application.json.JsonService;
+import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
 import consulo.http.HTTPMethod;
+import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -30,6 +31,8 @@ import java.nio.charset.StandardCharsets;
  * @since 27.10.2015
  */
 public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHandler {
+  private static final Logger LOG = Logger.getInstance(JsonPostRequestHandler.class);
+
   private Class<Request> myRequestClass;
 
   protected JsonPostRequestHandler(@Nonnull String apiUrl, @Nonnull Class<Request> requestClass) {
@@ -63,6 +66,8 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
       handle = handle(body);
     }
     catch (Exception e) {
+      LOG.error(e);
+      
       handle = JsonResponse.asError(ExceptionUtil.getThrowableText(e));
     }
     return writeResponse(handle, request);

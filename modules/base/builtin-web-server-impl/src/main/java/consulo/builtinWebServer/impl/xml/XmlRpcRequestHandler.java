@@ -25,7 +25,7 @@ import consulo.http.HTTPMethod;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public final class XmlRpcRequestHandler extends HttpRequestHandler {
   @Override
   public boolean isSupported(@Nonnull HttpRequest request) {
