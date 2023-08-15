@@ -25,5 +25,6 @@ module consulo.builtin.web.server.impl {
   exports consulo.builtinWebServer.impl to consulo.ide.impl;
   exports consulo.builtinWebServer.impl.http to consulo.desktop.ide.impl;
 
+  opens consulo.builtinWebServer.impl.json to com.google.gson;
   opens consulo.builtinWebServer.impl to consulo.util.xml.serializer;
 }

@@ -29,10 +29,10 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class AboutRestHandler extends JsonGetRequestHandler {
-  private static class AboutInfo {
-    String name;
-    int build;
-    UpdateChannel channel;
+  public static class AboutInfo {
+    public String name;
+    public int build;
+    public UpdateChannel channel;
   }
 
   public AboutRestHandler() {
