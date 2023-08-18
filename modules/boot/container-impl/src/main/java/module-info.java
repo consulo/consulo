@@ -13,7 +13,15 @@ module consulo.container.impl {
   // required consulo-util-lang
   requires transitive jdk.unsupported;
 
-  exports consulo.container.impl to consulo.ide.impl, consulo.application.impl, consulo.component.impl, consulo.proxy, consulo.desktop.awt.bootstrap, consulo.desktop.swt.bootstrap;
+  exports consulo.container.impl to consulo.ide.impl,
+    consulo.application.impl,
+    consulo.component.impl,
+    consulo.desktop.awt.ide.impl,
+    consulo.desktop.swt.ide.impl,
+    consulo.proxy,
+    consulo.logging.log4j2.impl,
+    consulo.desktop.awt.bootstrap,
+    consulo.desktop.swt.bootstrap;
   exports consulo.container.impl.classloader to consulo.ide.impl, consulo.application.impl, consulo.desktop.awt.bootstrap, consulo.desktop.swt.bootstrap;
   exports consulo.container.impl.classloader.proxy to consulo.proxy;
   exports consulo.container.impl.parser to consulo.ide.impl, consulo.application.impl, consulo.component.impl;

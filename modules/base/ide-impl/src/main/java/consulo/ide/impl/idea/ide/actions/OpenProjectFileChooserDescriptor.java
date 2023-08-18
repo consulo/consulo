@@ -21,9 +21,9 @@ import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.project.ProjectOpenProcessors;
+import consulo.project.internal.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nullable;

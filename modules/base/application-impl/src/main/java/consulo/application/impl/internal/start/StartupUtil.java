@@ -20,7 +20,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.SystemInfo;
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.internal.ShowError;
+import consulo.container.impl.ShowErrorCaller;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
@@ -32,9 +32,9 @@ import consulo.process.local.EnvironmentUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -130,7 +130,7 @@ public class StartupUtil {
       status = ourFolderLocker.lock(args);
     }
     catch (Exception e) {
-      ShowError.showErrorDialog("Cannot Lock System Folders", e.getMessage(), e);
+      ShowErrorCaller.showErrorDialog("Cannot Lock System Folders", e.getMessage(), e);
       return ActivationResult.FAILED;
     }
 
@@ -151,7 +151,7 @@ public class StartupUtil {
     }
     else if (status == ImportantFolderLocker.ActivateStatus.CANNOT_ACTIVATE) {
       String message = "Only one instance of IDE can be run at a time.";
-      ShowError.showErrorDialog("Too Many Instances", message, null);
+      ShowErrorCaller.showErrorDialog("Too Many Instances", message, null);
     }
 
     return ActivationResult.FAILED;
@@ -230,7 +230,7 @@ public class StartupUtil {
       message.append("\n\n");
       t.printStackTrace(new PrintWriter(message));
 
-      ShowError.showErrorDialog("Plugin Error", message.toString(), null);
+      ShowErrorCaller.showErrorDialog("Plugin Error", message.toString(), null);
 
       throw new StartupAbortedException(t).exitCode(ExitCodes.PLUGIN_ERROR).logError(false);
     }

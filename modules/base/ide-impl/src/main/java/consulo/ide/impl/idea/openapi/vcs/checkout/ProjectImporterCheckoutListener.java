@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.vcs.checkout;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.ide.impl.project.ProjectOpenProcessors;
+import consulo.project.internal.ProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.Messages;

@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.application.Application;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.container.impl.ShowErrorCaller;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.module.content.ProjectRootManager;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.project.internal.ProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessors;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.ide.impl.project.ProjectOpenProcessors;
-import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -46,7 +46,8 @@ public class CommandLineProcessor {
   }
 
   @Nonnull
-  public static AsyncResult<Project> processExternalCommandLine(@Nonnull CommandLineArgs commandLineArgs, @Nullable String currentDirectory) {
+  public static AsyncResult<Project> processExternalCommandLine(@Nonnull CommandLineArgs commandLineArgs,
+                                                                @Nullable String currentDirectory) {
     String file = commandLineArgs.getFile();
     if (file == null) {
       return AsyncResult.rejected();
@@ -79,7 +80,7 @@ public class CommandLineProcessor {
     else {
       final VirtualFile targetVFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(targetFile);
       if (targetVFile == null) {
-        Messages.showErrorDialog("Cannot find file '" + file + "'", "Cannot find file");
+        ShowErrorCaller.showErrorDialog("Cannot find file", "Cannot find file '" + file + "'", null);
         return AsyncResult.rejected();
       }
 
@@ -93,12 +94,12 @@ public class CommandLineProcessor {
 
   private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
     uiAccess.give(() -> {
-      if (line == -1) {
-        new OpenFileDescriptorImpl(project, virtualFile).navigate(true);
+      OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(project).newBuilder(virtualFile);
+      if (line != -1) {
+        builder = builder.line(line - 1);
       }
-      else {
-        new OpenFileDescriptorImpl(project, virtualFile, line - 1, 0).navigate(true);
-      }
+
+      builder.build().navigate(true);
     });
   }
 

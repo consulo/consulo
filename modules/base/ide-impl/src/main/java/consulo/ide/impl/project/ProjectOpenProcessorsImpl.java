@@ -16,9 +16,10 @@
 package consulo.ide.impl.project;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.platform.DefaultProjectOpenProcessor;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
+import consulo.project.impl.internal.DefaultProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ide.impl.moduleImport.ImportProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessors;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;

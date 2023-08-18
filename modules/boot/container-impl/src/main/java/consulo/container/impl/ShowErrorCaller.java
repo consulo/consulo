@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.container.internal;
+package consulo.container.impl;
+
+import consulo.container.StartupError;
+import consulo.container.internal.ShowError;
 
 /**
  * @author VISTALL
- * @since 16-Jul-22
+ * @since 18/08/2023
  */
-public abstract class ShowError {
-  public static ShowError INSTANCE = new ShowError() {
-    @Override
-    public void showErrorDialogImpl(String title, String message, Throwable t) {
+public class ShowErrorCaller {
+  public static void showErrorDialog(String title, String message, Throwable t) {
+    StartupError.hasStartupError = true;
 
+    System.out.println(title + ": " + message);
+    if (t != null) {
+      t.printStackTrace();
     }
-  };
 
-  public abstract void showErrorDialogImpl(String title, String message, Throwable t);
+    ShowError.INSTANCE.showErrorDialogImpl(title, message, t);
+  }
 }

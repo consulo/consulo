@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.project;
+package consulo.project.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

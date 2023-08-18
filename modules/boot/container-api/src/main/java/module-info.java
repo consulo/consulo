@@ -8,7 +8,13 @@ module consulo.container.api {
   exports consulo.container.plugin.util;
   exports consulo.container.util;
 
-  exports consulo.container.internal to consulo.container.impl, consulo.application.impl, consulo.desktop.awt.bootstrap, consulo.desktop.swt.bootstrap, consulo.desktop.swt.ide.impl, consulo.logging.log4j2.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.container.internal to consulo.container.impl,
+    consulo.application.impl,
+    consulo.desktop.awt.bootstrap,
+    consulo.desktop.swt.bootstrap,
+    consulo.desktop.swt.ide.impl,
+    consulo.logging.log4j2.impl,
+    consulo.desktop.awt.ide.impl;
 
   uses consulo.container.boot.ContainerStartup;
   uses consulo.container.internal.PluginManagerInternal;

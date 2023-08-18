@@ -17,6 +17,7 @@ package consulo.desktop.swt.boot.main;
 
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerStartup;
+import consulo.container.impl.ShowErrorCaller;
 import consulo.container.impl.SystemContainerLogger;
 import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
 import consulo.container.internal.ShowError;
@@ -47,7 +48,7 @@ public class Main {
 
     String javaRuntimeError = ExitCodes.validateJavaRuntime();
     if (javaRuntimeError != null) {
-      ShowError.showErrorDialog("Unsupported Java Version", javaRuntimeError, null);
+      ShowErrorCaller.showErrorDialog("Unsupported Java Version", javaRuntimeError, null);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }
 
@@ -55,7 +56,7 @@ public class Main {
       initAndCallStartup(args);
     }
     catch (Throwable t) {
-      ShowError.showErrorDialog("Start Failed", t.getMessage(), t);
+      ShowErrorCaller.showErrorDialog("Start Failed", t.getMessage(), t);
       System.exit(ExitCodes.STARTUP_EXCEPTION);
     }
   }

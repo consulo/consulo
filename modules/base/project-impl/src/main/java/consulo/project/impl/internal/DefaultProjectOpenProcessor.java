@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.platform;
+package consulo.project.impl.internal;
 
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;

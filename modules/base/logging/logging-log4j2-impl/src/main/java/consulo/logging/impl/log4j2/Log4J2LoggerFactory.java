@@ -16,18 +16,18 @@
 package consulo.logging.impl.log4j2;
 
 import consulo.container.boot.ContainerPathManager;
-import consulo.container.internal.ShowError;
+import consulo.container.impl.ShowErrorCaller;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.util.ShutdownCallbackRegistry;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -91,8 +91,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
       return Configurator.initialize(Log4J2LoggerFactory.class.getClassLoader(), source);
     }
     catch (Exception e) {
-      e.printStackTrace();
-      ShowError.showErrorDialog("Consulo", e.getMessage(), e);
+      ShowErrorCaller.showErrorDialog("Consulo", e.getMessage(), e);
       return null;
     }
   }

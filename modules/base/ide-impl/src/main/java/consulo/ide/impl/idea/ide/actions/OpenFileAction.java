@@ -31,8 +31,8 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccess
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.ide.impl.project.ProjectOpenProcessors;
+import consulo.project.internal.ProjectOpenProcessor;
+import consulo.project.internal.ProjectOpenProcessors;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.UIAccess;

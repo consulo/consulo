@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.URLUtil;
 import jakarta.annotation.Nonnull;
 
 import java.net.URI;

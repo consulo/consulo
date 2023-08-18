@@ -74,6 +74,13 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-container-impl</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-logging-api</artifactId>
       <version>${project.version}</version>
     </dependency>

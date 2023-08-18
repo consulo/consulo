@@ -709,7 +709,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.profile.codeInspection.ui.header;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
   exports consulo.ide.impl.idea.profile.codeInspection.ui.table;
-  exports consulo.ide.impl.idea.projectImport;
   exports consulo.ide.impl.idea.refactoring;
   exports consulo.ide.impl.idea.refactoring.actions;
   exports consulo.ide.impl.idea.refactoring.changeSignature;

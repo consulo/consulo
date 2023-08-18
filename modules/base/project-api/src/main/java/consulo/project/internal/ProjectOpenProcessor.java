@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.projectImport;
+package consulo.project.internal;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

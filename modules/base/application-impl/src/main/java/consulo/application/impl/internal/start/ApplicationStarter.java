@@ -27,8 +27,8 @@ import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
+import consulo.container.impl.ShowErrorCaller;
 import consulo.container.impl.classloader.PluginLoadStatistics;
-import consulo.container.internal.ShowError;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -43,9 +43,9 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -222,7 +222,7 @@ public abstract class ApplicationStarter {
         catch (Throwable ignore) {
         }
 
-        ShowError.showErrorDialog("Start Failed", t.getMessage(), t);
+        ShowErrorCaller.showErrorDialog("Start Failed", t.getMessage(), t);
       }
 
       System.exit(se.exitCode());

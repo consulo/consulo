@@ -5,7 +5,7 @@
 module consulo.logging.log4j2.impl {
   requires consulo.ide.impl;
   requires consulo.logging.api;
-  requires consulo.container.api;
+  requires consulo.container.impl;
 
   requires org.apache.logging.log4j;
   requires org.apache.logging.log4j.core;

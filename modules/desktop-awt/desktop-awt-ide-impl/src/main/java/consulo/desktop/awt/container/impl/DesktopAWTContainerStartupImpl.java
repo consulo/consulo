@@ -22,7 +22,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;
-import consulo.container.internal.ShowError;
+import consulo.container.impl.ShowErrorCaller;
 import consulo.container.util.StatCollector;
 import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
@@ -30,8 +30,8 @@ import consulo.desktop.startup.DesktopImportantFolderLocker;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -100,7 +100,7 @@ public class DesktopAWTContainerStartupImpl implements ContainerStartup {
     catch (IOException e) {
       Logger.getInstance(DesktopAWTContainerStartupImpl.class).error(e);
 
-      ShowError.showErrorDialog("Plugin Installation Error", e.getMessage(), e);
+      ShowErrorCaller.showErrorDialog("Plugin Installation Error", e.getMessage(), e);
       return;
     }
 
