@@ -18,12 +18,12 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
@@ -42,9 +42,9 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -149,7 +149,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
       throw new RuntimeException(ApplicationBundle.message("desktop.entry.script.missing", distributionDirectory.getPath()));
     }
 
-    final String wmClass = AppUIUtil.getFrameClass();
+    final String wmClass = ApplicationStarter.getFrameClass();
 
     final String content = ExecUtil.loadTemplate(CreateDesktopEntryAction.class.getClassLoader(), "entry.desktop", ContainerUtil
       .newHashMap(Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"), Arrays.asList(name, execPath.getPath(), iconPath, wmClass)));

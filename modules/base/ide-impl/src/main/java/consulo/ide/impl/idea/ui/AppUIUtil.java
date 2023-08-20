@@ -16,15 +16,13 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.Application;
-import consulo.application.ApplicationProperties;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.popup.Balloon;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.function.BooleanSupplier;
 
@@ -58,15 +56,6 @@ public class AppUIUtil {
     else {
       application.invokeLater(runnable, condition);
     }
-  }
-
-  public static String getFrameClass() {
-    String name = Application.get().getName().toLowerCase().get();
-    String wmClass = StringUtil.replaceChar(name, ' ', '-');
-    if (ApplicationProperties.isInSandbox()) {
-      wmClass += "-sandbox";
-    }
-    return wmClass;
   }
 
   public static void hideToolWindowBalloon(@Nonnull final String id, @Nonnull final Project project) {

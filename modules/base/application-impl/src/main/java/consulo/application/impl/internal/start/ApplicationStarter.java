@@ -16,12 +16,14 @@
 package consulo.application.impl.internal.start;
 
 import consulo.application.Application;
+import consulo.application.ApplicationProperties;
 import consulo.application.TransactionGuard;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.impl.internal.plugin.ConsuloSecurityManagerEnabler;
 import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
@@ -42,6 +44,7 @@ import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -231,5 +234,15 @@ public abstract class ApplicationStarter {
     if (!(t instanceof ControlFlowException)) {
       logger.get().error(t);
     }
+  }
+
+  @Nonnull
+  public static String getFrameClass() {
+    String name = ApplicationInfo.getInstance().getName();
+    String wmClass = StringUtil.replaceChar(name, ' ', '-');
+    if (ApplicationProperties.isInSandbox()) {
+      wmClass += "-sandbox";
+    }
+    return wmClass;
   }
 }

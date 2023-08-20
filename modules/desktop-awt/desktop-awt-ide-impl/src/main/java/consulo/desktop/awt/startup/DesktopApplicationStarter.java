@@ -49,7 +49,6 @@ import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
-import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
@@ -137,7 +136,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     SwingUtilities.invokeLater(() -> {
       if (myPlatform.os().isXWindow()) {
-        X11Hacking.updateFrameClass(AppUIUtil.getFrameClass());
+        X11Hacking.updateFrameClass(ApplicationStarter.getFrameClass());
       }
     });
 
