@@ -120,9 +120,9 @@ public class WindowsDefenderChecker {
     if (ideStarter.exists()) {
       result.add(ideStarter);
     }
-    File fsNotifier = NativeFileWatcherImpl.getExecutable();
+    Path fsNotifier = NativeFileWatcherImpl.getExecutablePathImpl();
     if (fsNotifier != null) {
-      result.add(fsNotifier);
+      result.add(fsNotifier.toFile());
     }
     return result;
   }

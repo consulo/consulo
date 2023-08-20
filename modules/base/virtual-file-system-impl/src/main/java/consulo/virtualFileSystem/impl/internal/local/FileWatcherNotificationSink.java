@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.local;
+package consulo.virtualFileSystem.impl.internal.local;
 
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author dslomov
@@ -41,5 +40,5 @@ public interface FileWatcherNotificationSink {
 
   void notifyReset(@Nullable String path);
 
-  void notifyUserOnFailure(@Nonnull String cause, @Nullable NotificationListener listener);
+  void notifyUserOnFailure(@Nonnull String cause);
 }

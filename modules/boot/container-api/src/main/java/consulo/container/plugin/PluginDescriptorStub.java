@@ -5,6 +5,7 @@ import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,11 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
 
   @Override
   public File getPath() {
+    return null;
+  }
+
+  @Override
+  public Path getNioPath() {
     return null;
   }
 

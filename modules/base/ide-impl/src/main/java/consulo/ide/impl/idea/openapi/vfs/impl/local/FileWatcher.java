@@ -1,28 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
+import consulo.application.Application;
 import consulo.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.registry.Registry;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.logging.Logger;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.local.FileWatcherNotificationSink;
-import consulo.ide.impl.idea.openapi.vfs.local.PluggableFileWatcher;
 import consulo.virtualFileSystem.ManagingFS;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.logging.Logger;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.impl.internal.local.FileWatcherNotificationSink;
+import consulo.virtualFileSystem.impl.internal.local.PluggableFileWatcher;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +35,8 @@ import java.util.function.Consumer;
 public class FileWatcher {
   private static final Logger LOG = Logger.getInstance(FileWatcher.class);
 
-  public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup NOTIFICATION_GROUP =
+    new NotificationGroup("File Watcher Messages", NotificationDisplayType.STICKY_BALLOON, true);
 
   static class DirtyPaths {
     final Set<String> dirtyPaths = new HashSet<>();
@@ -63,16 +61,11 @@ public class FileWatcher {
     }
   }
 
-  private static ExecutorService executor() {
-    boolean async = Registry.is("vfs.filewatcher.works.in.async.way");
-    return async ? AppExecutorUtil.createBoundedApplicationPoolExecutor("File Watcher", 1) : ConcurrencyUtil.newSameThreadExecutorService();
-  }
-
   private final ManagingFS myManagingFS;
   private final MyFileWatcherNotificationSink myNotificationSink;
   private final PluggableFileWatcher[] myWatchers;
   private final AtomicBoolean myFailureShown = new AtomicBoolean(false);
-  private final ExecutorService myFileWatcherExecutor = executor();
+  private final ExecutorService myFileWatcherExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("File Watcher", 1);
   private final AtomicReference<Future<?>> myLastTask = new AtomicReference<>(null);
 
   private volatile CanonicalPathMap myPathMap = new CanonicalPathMap();
@@ -81,7 +74,8 @@ public class FileWatcher {
   FileWatcher(@Nonnull ManagingFS managingFS) {
     myManagingFS = managingFS;
     myNotificationSink = new MyFileWatcherNotificationSink();
-    myWatchers = new PluggableFileWatcher[] {new NativeFileWatcherImpl()}; //FIXME [VISTALL] this is dirty hack, due we don't allow change file watcher
+    myWatchers =
+      new PluggableFileWatcher[]{new NativeFileWatcherImpl()}; //FIXME [VISTALL] this is dirty hack, due we don't allow change file watcher
 
     myFileWatcherExecutor.execute(() -> {
       try {
@@ -164,7 +158,7 @@ public class FileWatcher {
         CanonicalPathMap pathMap = new CanonicalPathMap(recursive, flat);
 
         myPathMap = pathMap;
-        myManualWatchRoots = ContainerUtil.createLockFreeCopyOnWriteList();
+        myManualWatchRoots = Lists.newLockFreeCopyOnWriteList();
 
         for (PluggableFileWatcher watcher : myWatchers) {
           watcher.setWatchRoots(pathMap.getCanonicalRecursiveWatchRoots(), pathMap.getCanonicalFlatWatchRoots());
@@ -179,12 +173,18 @@ public class FileWatcher {
     }
   }
 
-  public void notifyOnFailure(@Nonnull String cause, @Nullable NotificationListener listener) {
+  public void notifyOnFailure(@Nonnull String cause) {
     LOG.warn(cause);
 
     if (myFailureShown.compareAndSet(false, true)) {
       String title = ApplicationBundle.message("watcher.slow.sync");
-      ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(NOTIFICATION_GROUP.createNotification(title, cause, NotificationType.WARNING, listener)), IdeaModalityState.NON_MODAL);
+      Application application = Application.get();
+      application.invokeLater(() -> {
+        Notifications.Bus.notify(NOTIFICATION_GROUP.createNotification(title,
+                                                                       cause,
+                                                                       NotificationType.WARNING,
+                                                                       NotificationListener.URL_OPENING_LISTENER));
+      }, application.getNoneModalityState());
     }
   }
 
@@ -297,8 +297,8 @@ public class FileWatcher {
     }
 
     @Override
-    public void notifyUserOnFailure(@Nonnull String cause, @Nullable NotificationListener listener) {
-      notifyOnFailure(cause, listener);
+    public void notifyUserOnFailure(@Nonnull String cause) {
+      notifyOnFailure(cause);
     }
   }
 

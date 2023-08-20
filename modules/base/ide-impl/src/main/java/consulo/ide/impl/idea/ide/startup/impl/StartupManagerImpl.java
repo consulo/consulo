@@ -363,7 +363,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         }
         if (!nonWatched.isEmpty()) {
           String message = ApplicationBundle.message("watcher.non.watchable.project");
-          watcher.notifyOnFailure(message, null);
+          watcher.notifyOnFailure(message);
           LOG.info("unwatched roots: " + nonWatched);
           LOG.info("manual watches: " + manualWatchRoots);
           pctNonWatched = (int)(100.0 * nonWatched.size() / roots.length);

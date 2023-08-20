@@ -27,6 +27,7 @@ import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -81,6 +82,11 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
   @Override
   public File getPath() {
     return myPath;
+  }
+
+  @Override
+  public Path getNioPath() {
+    return myPath.toPath();
   }
 
   public void readExternal(InputStream stream, ContainerLogger log) throws SimpleXmlParsingException {

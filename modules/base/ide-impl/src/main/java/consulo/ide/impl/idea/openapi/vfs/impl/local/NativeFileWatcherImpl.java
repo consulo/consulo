@@ -1,39 +1,39 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
-import consulo.application.ApplicationBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.local.FileWatcherNotificationSink;
-import consulo.ide.impl.idea.openapi.vfs.local.PluggableFileWatcher;
-import consulo.platform.PlatformOperatingSystem;
-import consulo.virtualFileSystem.ManagingFS;
-import com.sun.jna.Platform;
 import consulo.application.Application;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.component.util.NativeFileLoader;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
 import consulo.process.ProcessOutputTypes;
+import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseOutputReader;
-import consulo.process.internal.OSProcessHandler;
-import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.TimeoutUtil;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.virtualFileSystem.ManagingFS;
+import consulo.virtualFileSystem.impl.internal.local.FileWatcherNotificationSink;
+import consulo.virtualFileSystem.impl.internal.local.PluggableFileWatcher;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,13 +46,13 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
 
   private static final String PROPERTY_WATCHER_DISABLED = "consulo.filewatcher.disabled";
   private static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "consulo.filewatcher.executable.path";
-  private static final File PLATFORM_NOT_SUPPORTED = new File("(platform not supported)");
+  private static final Path PLATFORM_NOT_SUPPORTED = Path.of("(platform not supported)");
   private static final String ROOTS_COMMAND = "ROOTS";
   private static final String EXIT_COMMAND = "EXIT";
   private static final int MAX_PROCESS_LAUNCH_ATTEMPT_COUNT = 10;
 
   private FileWatcherNotificationSink myNotificationSink;
-  private File myExecutable;
+  private Path myExecutable;
 
   private volatile MyProcessHandler myProcessHandler;
   private final AtomicInteger myStartAttemptCount = new AtomicInteger(0);
@@ -68,20 +68,20 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     myNotificationSink = notificationSink;
 
     boolean disabled = isDisabled();
-    myExecutable = getExecutable();
+    myExecutable = getExecutablePath();
 
     if (disabled) {
       LOG.info("Native file watcher is disabled");
     }
-    else if (myExecutable == null) {
-      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.found"), null);
-    }
     else if (myExecutable == PLATFORM_NOT_SUPPORTED) {
-      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.exists"), null);
+      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.exists"));
     }
-    else if (!myExecutable.canExecute()) {
+    else if (!Files.exists(myExecutable)) {
+      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.found"));
+    }
+    else if (!Files.isExecutable(myExecutable)) {
       String message = ApplicationBundle.message("watcher.exe.not.exe", myExecutable);
-      notifyOnFailure(message, (notification, event) -> ShowFilePathAction.openFile(myExecutable));
+      notifyOnFailure(message);
     }
     else {
       try {
@@ -90,7 +90,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       }
       catch (IOException e) {
         LOG.warn(e.getMessage());
-        notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"), null);
+        notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"));
       }
     }
   }
@@ -129,11 +129,20 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
    * Subclasses should override this method to provide a custom binary to run.
    */
   @Nonnull
-  public static File getExecutable() {
-    String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
-    if (execPath != null) return new File(execPath);
+  public static Path getExecutablePath() {
+    Path path = getExecutablePathImpl();
+    if (path == null) {
+      return PLATFORM_NOT_SUPPORTED;
+    }
+    return path.toAbsolutePath();
+  }
 
-    consulo.platform.Platform platform = consulo.platform.Platform.current();
+  @Nullable
+  public static Path getExecutablePathImpl() {
+    String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
+    if (execPath != null) return Path.of(execPath);
+
+    Platform platform = Platform.current();
     PlatformOperatingSystem os = platform.os();
 
     String fileName = null;
@@ -144,23 +153,17 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       fileName = "fsnotifier";
     }
     else if (os.isLinux()) {
-      if ("linux-x86".equals(Platform.RESOURCE_PREFIX)) {
-        fileName = "fsnotifier";
-      }
-      else if ("linux-x86-64".equals(Platform.RESOURCE_PREFIX)) {
-        fileName = "fsnotifier64";
-      }
-      else if ("linux-arm".equals(Platform.RESOURCE_PREFIX)) fileName = "fsnotifier-arm";
+      fileName = platform.mapExecutableName("fsnotifier");
     }
-    if (fileName == null) return PLATFORM_NOT_SUPPORTED;
+    if (fileName == null) return null;
 
-    return NativeFileLoader.findExecutable(fileName);
+    return NativeFileLoader.findExecutablePath(fileName);
   }
 
   /* internal stuff */
 
-  private void notifyOnFailure(String cause, @Nullable NotificationListener listener) {
-    myNotificationSink.notifyUserOnFailure(cause, listener);
+  private void notifyOnFailure(String cause) {
+    myNotificationSink.notifyUserOnFailure(cause);
   }
 
   private void startupProcess(boolean restart) throws IOException {
@@ -173,7 +176,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     if (myStartAttemptCount.incrementAndGet() > MAX_PROCESS_LAUNCH_ATTEMPT_COUNT) {
-      notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"), null);
+      notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"));
       return;
     }
 
@@ -182,9 +185,9 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     LOG.info("Starting file watcher: " + myExecutable);
-    ProcessBuilder processBuilder = new ProcessBuilder(myExecutable.getAbsolutePath());
+    ProcessBuilder processBuilder = new ProcessBuilder(myExecutable.toString());
     Process process = processBuilder.start();
-    myProcessHandler = new MyProcessHandler(process, myExecutable.getName());
+    myProcessHandler = new MyProcessHandler(process, myExecutable.getFileName().toString());
     myProcessHandler.startNotify();
 
     if (restart) {
@@ -265,7 +268,8 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
   }
 
-  private static final Charset CHARSET = SystemInfo.isWindows || SystemInfo.isMac ? StandardCharsets.UTF_8 : CharsetToolkit.getPlatformCharset();
+  private static final Charset CHARSET =
+    SystemInfo.isWindows || SystemInfo.isMac ? StandardCharsets.UTF_8 : CharsetToolkit.getPlatformCharset();
 
   private static final BaseOutputReader.Options READER_OPTIONS = new BaseOutputReader.Options() {
     @Override
@@ -367,7 +371,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         }
 
         if (watcherOp == WatcherOp.GIVEUP) {
-          notifyOnFailure(ApplicationBundle.message("watcher.gave.up"), null);
+          notifyOnFailure(ApplicationBundle.message("watcher.gave.up"));
           myIsShuttingDown = true;
         }
         else if (watcherOp == WatcherOp.RESET) {
@@ -379,7 +383,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       }
       else if (myLastOp == WatcherOp.MESSAGE) {
         LOG.warn(line);
-        notifyOnFailure(line, NotificationListener.URL_OPENING_LISTENER);
+        notifyOnFailure(line);
         myLastOp = null;
       }
       else if (myLastOp == WatcherOp.REMAP || myLastOp == WatcherOp.UNWATCHEABLE) {

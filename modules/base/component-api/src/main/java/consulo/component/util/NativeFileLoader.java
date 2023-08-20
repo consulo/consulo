@@ -8,6 +8,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 
 import jakarta.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -53,5 +54,17 @@ public final class NativeFileLoader {
     File nativePluginDirectory = new File(plugin.getPath(), "native");
 
     return new File(nativePluginDirectory, fileName);
+  }
+
+  @Nonnull
+  public static Path findExecutablePath(@Nonnull String fileName) {
+    Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
+
+    PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
+    if (plugin == null) {
+      throw new IllegalArgumentException("Can't find plugin for class " + callerClass);
+    }
+
+    return plugin.getNioPath().resolve("native").resolve(fileName);
   }
 }

@@ -18,6 +18,7 @@ package consulo.container.plugin;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,8 @@ public interface PluginDescriptor {
   ClassLoader getPluginClassLoader();
 
   File getPath();
+
+  Path getNioPath();
 
   String getDescription();
 

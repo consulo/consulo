@@ -10,5 +10,6 @@ module consulo.virtual.file.system.impl {
   requires static consulo.util.jna;
 
   exports consulo.virtualFileSystem.impl.internal.mediator to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.virtualFileSystem.impl.internal.local to consulo.ide.impl;
   exports consulo.virtualFileSystem.impl.internal to consulo.ide.impl, consulo.application.content.impl;
 }
