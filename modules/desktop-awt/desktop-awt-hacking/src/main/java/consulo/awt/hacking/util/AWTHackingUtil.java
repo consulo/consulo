@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.awt.hacking;
+package consulo.awt.hacking.util;
 
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 
 /**
@@ -26,8 +27,6 @@ import java.lang.reflect.Method;
  * @since 2019-11-21
  */
 public class AWTHackingUtil {
-  private static final Class<?> java_lang_reflect_InaccessibleObjectException = ReflectionUtil.findClassOrNull("java.lang.reflect.InaccessibleObjectException", AWTHackingUtil.class.getClassLoader());
-
   @Nonnull
   public static Method findMethodWithRuntimeException(Class<?> clazz, String name, Class... params) {
     try {
@@ -48,8 +47,8 @@ public class AWTHackingUtil {
       return declaredMethod;
     }
     catch (Throwable e) {
-      if(java_lang_reflect_InaccessibleObjectException != null && java_lang_reflect_InaccessibleObjectException.isInstance(e)) {
-        throw (RuntimeException) e;
+      if(e instanceof InaccessibleObjectException i) {
+        throw i;
       }
       return null;
     }

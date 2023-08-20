@@ -758,7 +758,6 @@
       </group>
 
       <group id="WindowMenu" popup="true">
-        <action id="MinimizeCurrentWindow" class="consulo.ide.impl.idea.ide.actions.MinimizeCurrentWindowAction"/>
         <action id="StoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.StoreDefaultLayoutAction"/>
         <action id="RestoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.RestoreDefaultLayoutAction"/>
         <separator/>

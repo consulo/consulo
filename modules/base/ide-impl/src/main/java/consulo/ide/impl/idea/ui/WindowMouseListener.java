@@ -2,18 +2,13 @@
 
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.progress.util.PotemkinProgress;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.util.FieldAccessor;
-import consulo.ide.impl.idea.util.MethodInvocator;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.awt.hacking.AWTAccessorHacking;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nullable;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static java.awt.Cursor.*;
 
@@ -211,118 +206,4 @@ abstract class WindowMouseListener extends MouseAdapter implements MouseInputLis
   protected void notifyResized() {
   }
 
-  /**
-   * @author tav
-   */
-  //@ApiStatus.Experimental
-  public static class ToolkitListenerHelper {
-    private final WindowMouseListener myListener;
-
-    private Class classWComponentPeer;
-    private MethodInvocator reshapeInvocator;
-    private FieldAccessor<Component, Integer> xAccessor;
-    private FieldAccessor<Component, Integer> yAccessor;
-    private FieldAccessor<Component, Integer> widthAccessor;
-    private FieldAccessor<Component, Integer> heightAccessor;
-    private MethodInvocator addMouseListenerMethod;
-    private MethodInvocator addMouseMotionListenerMethod;
-    private MethodInvocator removeMouseListenerMethod;
-    private MethodInvocator removeMouseMotionListenerMethod;
-
-    private ComponentAdapter pendingListener;
-
-
-    public ToolkitListenerHelper(WindowMouseListener l) {
-      myListener = l;
-      if (SystemInfo.isWindows) {
-        try {
-          classWComponentPeer = Class.forName("sun.awt.windows.WComponentPeer");
-          reshapeInvocator = new MethodInvocator(classWComponentPeer, "reshapeNoCheck", int.class, int.class, int.class, int.class);
-
-          xAccessor = new FieldAccessor<>(Component.class, "x", Integer.TYPE);
-          yAccessor = new FieldAccessor<>(Component.class, "y", Integer.TYPE);
-          widthAccessor = new FieldAccessor<>(Component.class, "width", Integer.TYPE);
-          heightAccessor = new FieldAccessor<>(Component.class, "height", Integer.TYPE);
-
-          Class<?> peerClass = Class.forName("sun.awt.windows.WWindowPeer");
-          addMouseListenerMethod = new MethodInvocator(peerClass, "addMouseListener", MouseListener.class);
-          addMouseMotionListenerMethod = new MethodInvocator(peerClass, "addMouseMotionListener", MouseMotionListener.class);
-          removeMouseListenerMethod = new MethodInvocator(peerClass, "removeMouseListener", MouseListener.class);
-          removeMouseMotionListenerMethod = new MethodInvocator(peerClass, "removeMouseMotionListener", MouseMotionListener.class);
-        }
-        catch (ClassNotFoundException ignored) {
-        }
-      }
-    }
-
-    public void setCursor(Component content, @SuppressWarnings("unused") Cursor cursor, Runnable defaultAction) {
-      PotemkinProgress.invokeLaterNotBlocking(content, defaultAction);
-    }
-
-    public void setBounds(Component comp, Rectangle bounds, Runnable defaultAction) {
-      if (classWComponentPeer != null && classWComponentPeer.isInstance(getPeer(comp))) {
-        // emulate native awt move/resize
-        reshapeInvocator.invoke(getPeer(comp), bounds.x, bounds.y, bounds.width, bounds.height);
-        xAccessor.set(comp, bounds.x);
-        yAccessor.set(comp, bounds.y);
-        widthAccessor.set(comp, bounds.width);
-        heightAccessor.set(comp, bounds.height);
-      }
-      else {
-        PotemkinProgress.invokeLaterNotBlocking(comp, defaultAction);
-      }
-    }
-
-    public void addTo(Component comp) {
-      if (methodsNotAvailable()) return;
-
-      final Window window = UIUtil.getWindow(comp);
-      if (window == null) return;
-
-      final boolean wasShown = getPeer(window) != null;
-      if (wasShown) addToImpl(window);
-
-      window.removeComponentListener(pendingListener);
-      window.addComponentListener(pendingListener = new ComponentAdapter() {
-        @Override
-        public void componentShown(ComponentEvent event) {
-          if (!wasShown) addToImpl(window);
-        }
-
-        @Override
-        public void componentHidden(ComponentEvent e) {
-          window.removeComponentListener(this);
-          removeFrom(window);
-        }
-      });
-    }
-
-    public void removeFrom(Component comp) {
-      if (methodsNotAvailable()) return;
-
-      comp = UIUtil.getWindow(comp);
-      if (getPeer(comp) != null) {
-        removeMouseListenerMethod.invoke(getPeer(comp), myListener);
-        removeMouseMotionListenerMethod.invoke(getPeer(comp), myListener);
-      }
-      if (comp != null) comp.removeComponentListener(pendingListener);
-    }
-
-    private void addToImpl(Component comp) {
-      if (methodsNotAvailable()) return;
-
-      addMouseListenerMethod.invoke(getPeer(comp), myListener);
-      addMouseMotionListenerMethod.invoke(getPeer(comp), myListener);
-    }
-
-    private boolean methodsNotAvailable() {
-      return removeMouseListenerMethod == null || removeMouseMotionListenerMethod == null;
-    }
-
-    @Nullable
-    public static Object getPeer(@Nullable Component comp) {
-      if (comp == null) return null;
-      return AWTAccessorHacking.getPeer(comp);
-    }
-  }
 }

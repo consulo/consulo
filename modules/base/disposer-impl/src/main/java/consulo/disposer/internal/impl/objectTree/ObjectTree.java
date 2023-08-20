@@ -8,9 +8,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ControlFlowException;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;

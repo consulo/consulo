@@ -46,18 +46,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerArgs>
-            <compilerArg>--add-exports=java.desktop/sun.font=consulo.ide.impl</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt=consulo.ide.impl</compilerArg>
-            <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=consulo.ide.impl</compilerArg>
-            <compilerArg>--add-exports=java.desktop/java.awt.peer=consulo.ide.impl</compilerArg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 

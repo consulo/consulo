@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.Application;
+import consulo.application.ApplicationProperties;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -62,8 +63,8 @@ public class AppUIUtil {
   public static String getFrameClass() {
     String name = Application.get().getName().toLowerCase().get();
     String wmClass = StringUtil.replaceChar(name, ' ', '-');
-    if ("true".equals(System.getProperty("idea.debug.mode"))) {
-      wmClass += "-debug";
+    if (ApplicationProperties.isInSandbox()) {
+      wmClass += "-sandbox";
     }
     return wmClass;
   }

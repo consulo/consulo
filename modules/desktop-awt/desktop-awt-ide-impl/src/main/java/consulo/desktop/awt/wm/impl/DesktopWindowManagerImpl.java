@@ -15,49 +15,47 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import com.sun.jna.platform.WindowUtils;
 import consulo.annotation.component.ServiceImpl;
-import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.application.util.SystemInfo;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
-import consulo.project.ui.internal.ToolWindowLayout;
-import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import com.sun.jna.platform.WindowUtils;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.project.ui.wm.WelcomeFrameManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.JBPopup;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -78,19 +76,12 @@ import java.util.Set;
 public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DesktopWindowManagerImpl.class);
 
-  @NonNls
   private static final String FOCUSED_WINDOW_PROPERTY_NAME = "focusedWindow";
-  @NonNls
   private static final String X_ATTR = "x";
-  @NonNls
   private static final String FRAME_ELEMENT = "frame";
-  @NonNls
   private static final String Y_ATTR = "y";
-  @NonNls
   private static final String WIDTH_ATTR = "width";
-  @NonNls
   private static final String HEIGHT_ATTR = "height";
-  @NonNls
   private static final String EXTENDED_STATE_ATTR = "extended-state";
 
   static {

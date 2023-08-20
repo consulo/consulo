@@ -25,6 +25,11 @@ import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
+import consulo.awt.hacking.X11Hacking;
+import consulo.builtinWebServer.http.HttpRequestHandler;
+import consulo.builtinWebServer.json.JsonBaseRequestHandler;
+import consulo.builtinWebServer.json.JsonGetRequestHandler;
+import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -38,43 +43,37 @@ import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
-import consulo.builtinWebServer.http.HttpRequestHandler;
-import consulo.builtinWebServer.json.JsonBaseRequestHandler;
-import consulo.builtinWebServer.json.JsonGetRequestHandler;
-import consulo.builtinWebServer.json.JsonPostRequestHandler;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
-import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.plugins.PluginsConfigurable;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -136,33 +135,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     // execute it in parallel
     ForkJoinPool.commonPool().execute(DesktopAppUIUtil::registerBundledFonts);
 
-    invokeAtUIAndWait(() -> {
+    SwingUtilities.invokeLater(() -> {
       if (myPlatform.os().isXWindow()) {
-        updateFrameClass();
-
-        String wmName = X11UiUtil.getWmName();
-        LOG.info("WM detected: " + wmName);
-        if (wmName != null) {
-          X11UiUtil.patchDetectedWm(wmName);
-        }
+        X11Hacking.updateFrameClass(AppUIUtil.getFrameClass());
       }
     });
 
     super.initApplication(isHeadlessMode, args, stat);
-  }
-
-  public static void updateFrameClass() {
-    try {
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      final Class<? extends Toolkit> aClass = toolkit.getClass();
-      if ("sun.awt.X11.XToolkit".equals(aClass.getName())) {
-        final Field awtAppClassName = aClass.getDeclaredField("awtAppClassName");
-        awtAppClassName.setAccessible(true);
-        awtAppClassName.set(toolkit, AppUIUtil.getFrameClass());
-      }
-    }
-    catch (Exception ignore) {
-    }
   }
 
   @Override

@@ -28,9 +28,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.Arrays;
@@ -58,8 +57,8 @@ public class EditorImplUtil {
    * @return EXCLUSIVE intervals [startY, endY)
    * @see #yToLogicalLineRange(Editor, int)
    */
-  @NotNull
-  public static Pair<Interval, Interval> logicalLineToYRange(@NotNull Editor editor, int logicalLine) {
+  @Nonnull
+  public static Pair<Interval, Interval> logicalLineToYRange(@Nonnull Editor editor, int logicalLine) {
     if (logicalLine < 0) throw new IllegalArgumentException("Logical line is negative: " + logicalLine);
     Document document = editor.getDocument();
     int startVisualLine;
@@ -94,7 +93,7 @@ public class EditorImplUtil {
     return Pair.create(new TextRangeInterval(startY, endY), startYEx < endYEx ? new TextRangeInterval(startYEx, endYEx) : null);
   }
 
-  public static int logicalToVisualLine(@NotNull Editor editor, int logicalLine) {
+  public static int logicalToVisualLine(@Nonnull Editor editor, int logicalLine) {
     LogicalPosition logicalPosition = new LogicalPosition(logicalLine, 0);
     VisualPosition visualPosition = editor.logicalToVisualPosition(logicalPosition);
     return visualPosition.line;

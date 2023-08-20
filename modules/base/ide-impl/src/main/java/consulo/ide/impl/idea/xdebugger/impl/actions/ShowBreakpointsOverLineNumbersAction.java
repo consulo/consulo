@@ -7,14 +7,14 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implements DumbAware {
   @Override
-  public boolean isSelected(@NotNull AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     return isSelected();
   }
 
@@ -24,13 +24,13 @@ public class ShowBreakpointsOverLineNumbersAction extends ToggleAction implement
   }
 
   @Override
-  public void setSelected(@NotNull AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     UISettings.getInstance().setShowBreakpointsOverLineNumbers(state);
     EditorFactory.getInstance().refreshAllEditors();
   }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabledAndVisible(true);
     if (!EditorSettingsExternalizable.getInstance().isLineNumbersShown()) {

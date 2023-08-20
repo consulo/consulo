@@ -32,9 +32,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -299,7 +298,7 @@ public class BuildViewServiceImpl implements BuildViewService {
     return null;
   }
 
-  @NotNull
+  @Nonnull
   private static List<AnAction> getContextActions() {
     List<AnAction> contextActions = new ArrayList<>();
     ActionGroup compilerErrorsViewPopupGroup = (ActionGroup)ActionManager.getInstance().getAction(IdeActions.GROUP_COMPILER_ERROR_VIEW_POPUP);

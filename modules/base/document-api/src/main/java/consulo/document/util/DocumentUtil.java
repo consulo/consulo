@@ -17,8 +17,6 @@ package consulo.document.util;
 
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
 
 /**

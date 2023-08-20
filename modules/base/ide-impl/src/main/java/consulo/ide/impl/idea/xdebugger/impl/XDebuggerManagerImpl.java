@@ -65,9 +65,8 @@ import consulo.util.xml.serializer.annotation.Property;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +97,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
     }
 
     @Override
-    public void mouseMoved(@NotNull EditorMouseEvent e) {
+    public void mouseMoved(@Nonnull EditorMouseEvent e) {
       if (!ShowBreakpointsOverLineNumbersAction.isSelected()) return;
       Editor editor = e.getEditor();
       if (editor.getProject() != myProject || editor.getEditorKind() != EditorKind.MAIN_EDITOR) return;
@@ -133,7 +132,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
       myLastIcon = null;
     }
 
-    private static void updateActiveLineNumberIcon(@NotNull EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
+    private static void updateActiveLineNumberIcon(@Nonnull EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
       JComponent component = gutter.getComponent();
 
       if (component.getClientProperty("editor.gutter.context.menu") != null) return;

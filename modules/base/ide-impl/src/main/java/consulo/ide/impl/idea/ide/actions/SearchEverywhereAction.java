@@ -74,7 +74,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   @Override
-  public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     actionPerformed(e, null);
   }
 

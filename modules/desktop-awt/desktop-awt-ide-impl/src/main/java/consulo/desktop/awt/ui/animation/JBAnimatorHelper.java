@@ -7,8 +7,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,8 +19,10 @@ public final class JBAnimatorHelper {
   private static final boolean DEFAULT_VALUE = ApplicationManager.getApplication().isInternal() && SystemInfo.isWindows;
   private static final int PERIOD = 1;
 
-  private final @NotNull Set<JBAnimator> requestors;
-  private final @NotNull WinMM lib;
+  private final @Nonnull
+  Set<JBAnimator> requestors;
+  private final @Nonnull
+  WinMM lib;
 
   private static
   @Nullable
@@ -33,7 +35,7 @@ public final class JBAnimatorHelper {
   /**
    * Used internally only, do not call it until it's really necessary.
    */
-  public static void requestHighPrecisionTimer(@NotNull JBAnimator requestor) {
+  public static void requestHighPrecisionTimer(@Nonnull JBAnimator requestor) {
     if (isAvailable()) {
       var helper = getInstance();
       if (helper.requestors.add(requestor)) {
@@ -45,7 +47,7 @@ public final class JBAnimatorHelper {
   /**
    * Used internally only, do not call it until it's really necessary.
    */
-  public static void cancelHighPrecisionTimer(@NotNull JBAnimator requestor) {
+  public static void cancelHighPrecisionTimer(@Nonnull JBAnimator requestor) {
     if (isAvailable()) {
       var helper = getInstance();
       if (helper.requestors.remove(requestor)) {

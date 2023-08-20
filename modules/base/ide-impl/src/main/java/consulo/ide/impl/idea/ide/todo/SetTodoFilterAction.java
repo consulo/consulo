@@ -67,7 +67,7 @@ public class SetTodoFilterAction extends ActionGroup implements DumbAware {
                                   PlatformIconGroup.generalSettings()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@javax.annotation.Nonnull AnActionEvent e) {
+                public void actionPerformed(@Nonnull AnActionEvent e) {
                   ShowSettingsUtil.getInstance().showAndSelect(myProject, TodoConfigurable.class);
                 }
               }

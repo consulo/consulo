@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.actions;
+package consulo.desktop.awt.wm.impl.action;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.desktop.awt.wm.impl.MacMainFrameDecorator;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +37,7 @@ import java.awt.*;
 /**
  * User: spLeaner
  */
+@ActionImpl(id = "MinimizeCurrentWindow", parents = @ActionParentRef(value = @ActionRef(id = "WindowMenu"), anchor = ActionRefAnchor.FIRST))
 public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
 
   @Override

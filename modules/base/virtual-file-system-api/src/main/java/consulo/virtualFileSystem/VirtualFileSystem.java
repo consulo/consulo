@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;

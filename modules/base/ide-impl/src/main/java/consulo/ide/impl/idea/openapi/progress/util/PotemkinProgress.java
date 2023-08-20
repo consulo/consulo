@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.progress.util;
 
+import consulo.awt.hacking.PotemkinEvents;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -48,24 +49,12 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
         myInputEvents.offer((InputEvent)event);
         return true;
       }
-      if (event instanceof InvocationEvent && isUrgentInvocationEvent(event)) {
+      if (event instanceof InvocationEvent && PotemkinEvents.isUrgentInvocationEvent(event)) {
         myInvocationEvents.offer((InvocationEvent)event);
         return true;
       }
       return false;
     }, this);
-  }
-
-  private static boolean isUrgentInvocationEvent(AWTEvent event) {
-    // LWCToolkit does 'invokeAndWait', which blocks native event processing until finished. The OS considers that blockage to be
-    // app freeze, stops rendering UI and shows beach-ball cursor. We want the UI to act (almost) normally in write-action progresses,
-    // so we let these specific events to be dispatched, hoping they wouldn't access project/code model.
-
-    // problem (IDEA-192282): LWCToolkit event might be posted before PotemkinProgress appears,
-    // and it then just sits in the queue blocking the whole UI until the progress is finished.
-
-    //noinspection SpellCheckingInspection
-    return event.toString().contains(",runnable=sun.lwawt.macosx.LWCToolkit") || event instanceof MyInvocationEvent;
   }
 
   @Nonnull
@@ -229,12 +218,6 @@ public class PotemkinProgress extends ProgressWindow implements PingProgress {
   }
 
   public static void invokeLaterNotBlocking(Object source, Runnable runnable) {
-    Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new MyInvocationEvent(source, runnable));
-  }
-
-  private static class MyInvocationEvent extends InvocationEvent {
-    MyInvocationEvent(Object source, Runnable runnable) {
-      super(source, runnable);
-    }
+    PotemkinEvents.invokeLaterNotBlocking(source, runnable);
   }
 }

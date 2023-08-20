@@ -15,11 +15,11 @@
  */
 package consulo.util.lang.reflect.unsafe;
 
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
@@ -98,6 +98,38 @@ public class UnsafeDelegate {
       LOG.error(e.getMessage(), e);
       return false;
     }
+  }
+
+  public void freeMemory(long address) {
+    myUnsafe.freeMemory(address);
+  }
+
+  public long allocateMemory(long bytes) {
+    return myUnsafe.allocateMemory(bytes);
+  }
+
+  public void putInt(long address, int x) {
+    myUnsafe.putInt(address, x);
+  }
+
+  public void putLong(long address, long x) {
+    myUnsafe.putLong(address, x);
+  }
+
+  public byte getByte(long address) {
+    return myUnsafe.getByte(address);
+  }
+  
+  public int getInt(long address) {
+    return myUnsafe.getInt(address);
+  }
+
+  public void setMemory(long address, long bytes, byte value) {
+    myUnsafe.setMemory(address, bytes, value);
+  }
+
+  public long getLong(long address) {
+    return myUnsafe.getLong(address);
   }
 
   public boolean invokeCleaner(@Nonnull ByteBuffer buffer) {

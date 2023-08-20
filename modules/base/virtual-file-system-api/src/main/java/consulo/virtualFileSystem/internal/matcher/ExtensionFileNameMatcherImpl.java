@@ -43,7 +43,7 @@ public class ExtensionFileNameMatcherImpl implements ExtensionFileNameMatcher {
     return "*." + myExtension;
   }
 
-  @javax.annotation.Nonnull
+  @Nonnull
   @Override
   public String getExtension() {
     return myExtension;

@@ -19,8 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -42,7 +40,7 @@ public class HighlightTypeUtil {
 
   @Nonnull
   @SuppressWarnings("deprecation")
-  public static ProblemHighlightType convertSeverityToProblemHighlight(@NotNull HighlightSeverity severity) {
+  public static ProblemHighlightType convertSeverityToProblemHighlight(@Nonnull HighlightSeverity severity) {
     if (severity == HighlightSeverity.ERROR) return ProblemHighlightType.ERROR;
     else if (severity == HighlightSeverity.WARNING) return ProblemHighlightType.WARNING;
     else if (severity == HighlightSeverity.INFO) return ProblemHighlightType.INFO;

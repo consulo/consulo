@@ -38,9 +38,8 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-
 import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,15 +130,15 @@ public class XBreakpointUtil {
   }
 
   @RequiredReadAction
-  public static List<XLineBreakpointType> getAvailableLineBreakpointTypes(@NotNull Project project,
-                                                                          @NotNull XSourcePosition position,
+  public static List<XLineBreakpointType> getAvailableLineBreakpointTypes(@Nonnull Project project,
+                                                                          @Nonnull XSourcePosition position,
                                                                           @Nullable Editor editor) {
     return getAvailableLineBreakpointInfo(project, position, editor).first;
   }
 
   @RequiredReadAction
-  private static Pair<List<XLineBreakpointType>, Integer> getAvailableLineBreakpointInfo(@NotNull Project project,
-                                                                                         @NotNull XSourcePosition position,
+  private static Pair<List<XLineBreakpointType>, Integer> getAvailableLineBreakpointInfo(@Nonnull Project project,
+                                                                                         @Nonnull XSourcePosition position,
                                                                                          @Nullable Editor editor) {
     int lineStart = position.getLine();
     VirtualFile file = position.getFile();

@@ -16,7 +16,6 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.markup.*;
-import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
@@ -64,7 +63,6 @@ import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
-import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
@@ -81,11 +79,11 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-import jakarta.annotation.Nonnull;
+
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -94,7 +92,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -132,7 +129,7 @@ import java.util.concurrent.atomic.AtomicReference;
 class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
   private static final HoverStateListener HOVER_STATE_LISTENER = new HoverStateListener() {
     @Override
-    protected void hoverChanged(@NotNull Component component, boolean hovered) {
+    protected void hoverChanged(@Nonnull Component component, boolean hovered) {
       if (component instanceof EditorGutterComponentImpl gutter && ExperimentalUI.isNewUI()) {
         gutter.myAlphaContext.setVisible(hovered);
       }
@@ -1201,12 +1198,12 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     return (int)(getEditorScaleFactor() * width);
   }
 
-  void processIconsRow(int line, @NotNull List<? extends GutterMark> row, @NotNull LineGutterIconRendererProcessor processor) {
+  void processIconsRow(int line, @Nonnull List<? extends GutterMark> row, @Nonnull LineGutterIconRendererProcessor processor) {
     processIconsRowForY(myEditor.visualLineToY(line), row, processor);
   }
 
   // y should be equal to visualLineToY(visualLine)
-  private void processIconsRowForY(int y, @NotNull List<? extends GutterMark> row, @NotNull LineGutterIconRendererProcessor processor) {
+  private void processIconsRowForY(int y, @Nonnull List<? extends GutterMark> row, @Nonnull LineGutterIconRendererProcessor processor) {
     if (row.isEmpty()) return;
     int middleCount = 0;
     int middleSize = 0;
@@ -2228,7 +2225,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
   }
 
   @Override
-  public boolean isInsideMarkerArea(@NotNull MouseEvent e) {
+  public boolean isInsideMarkerArea(@Nonnull MouseEvent e) {
     if (ExperimentalUI.isNewUI()) {
       int x = e.getX();
       int offset = getLineMarkerFreePaintersAreaOffset();

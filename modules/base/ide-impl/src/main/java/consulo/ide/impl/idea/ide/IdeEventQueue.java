@@ -46,11 +46,11 @@ import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.util.DisposerUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.JBPopupMenu;
@@ -60,14 +60,13 @@ import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.EmptyRunnable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Queue;
@@ -853,48 +852,11 @@ public class IdeEventQueue extends EventQueue {
   private void defaultDispatchEvent(@Nonnull AWTEvent e) {
     try {
       maybeReady();
-      fixStickyAlt(e);
+      
       super.dispatchEvent(e);
     }
     catch (Throwable t) {
       processException(t);
-    }
-  }
-
-  private static class FieldHolder {
-    private static final Field ourStickyAltField;
-
-    static {
-      Field field;
-      try {
-        Class<?> aClass = Class.forName("com.sun.java.swing.plaf.windows.WindowsRootPaneUI$AltProcessor");
-        field = ReflectionUtil.getDeclaredField(aClass, "menuCanceledOnPress");
-      }
-      catch (Exception e) {
-        field = null;
-      }
-      ourStickyAltField = field;
-    }
-  }
-
-  private static void fixStickyAlt(@Nonnull AWTEvent e) {
-    if (Registry.is("actionSystem.win.suppressAlt.new")) {
-      if (UIUtil.isUnderWindowsLookAndFeel() &&
-          e instanceof InputEvent &&
-          (((InputEvent)e).getModifiers() & (InputEvent.ALT_MASK | InputEvent.ALT_DOWN_MASK)) != 0 &&
-          !(e instanceof KeyEvent && ((KeyEvent)e).getKeyCode() == KeyEvent.VK_ALT)) {
-        try {
-          if (FieldHolder.ourStickyAltField != null) {
-            FieldHolder.ourStickyAltField.set(null, true);
-          }
-        }
-        catch (Exception exception) {
-          LOG.error(exception);
-        }
-      }
-    }
-    else if (SystemInfo.isWinXpOrNewer && !SystemInfo.isWinVistaOrNewer && e instanceof KeyEvent && ((KeyEvent)e).getKeyCode() == KeyEvent.VK_ALT) {
-      ((KeyEvent)e).consume();  // IDEA-17359
     }
   }
 

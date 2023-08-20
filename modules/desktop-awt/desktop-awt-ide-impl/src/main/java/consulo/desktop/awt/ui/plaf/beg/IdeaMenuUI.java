@@ -5,7 +5,7 @@ import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeFrameDecorator;
+import consulo.desktop.awt.wm.impl.IdeFrameDecorator;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.util.GraphicsUtil;

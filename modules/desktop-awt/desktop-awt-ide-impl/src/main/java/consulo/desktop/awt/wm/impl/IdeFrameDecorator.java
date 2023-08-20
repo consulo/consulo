@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl;
+package consulo.desktop.awt.wm.impl;
 
+import consulo.awt.hacking.X11Hacking;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
 import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
@@ -42,24 +42,15 @@ public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
   @ReviewAfterMigrationToJRE(9)
   public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
-    // we can't use internal api for fullscreen
-    if (SystemInfo.isJavaVersionAtLeast(9)) {
-      return new AWTFrameDecorator(frame);
+    if (SystemInfo.isXWindow && X11UiUtil.isFullScreenSupported()) {
+      return new EWMHFrameDecorator(frame);
     }
 
     if (SystemInfo.isMac) {
       return new MacMainFrameDecorator(frame, false);
     }
-    else if (SystemInfo.isWindows) {
-      return new AWTFrameDecorator(frame);
-    }
-    else if (SystemInfo.isXWindow) {
-      if (X11UiUtil.isFullScreenSupported()) {
-        return new EWMHFrameDecorator(frame);
-      }
-    }
 
-    return null;
+    return new AWTFrameDecorator(frame);
   }
 
   protected IdeFrameEx myIdeFrame;
@@ -175,7 +166,7 @@ public abstract class IdeFrameDecorator implements Disposable {
     @Override
     public boolean isInFullScreen() {
       JFrame jFrame = getJFrame();
-      return jFrame != null && X11UiUtil.isInFullScreenMode(jFrame);
+      return jFrame != null && X11Hacking.isInFullScreenMode(jFrame);
     }
 
     @Nonnull
@@ -184,7 +175,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       JFrame jFrame = getJFrame();
       if (jFrame != null) {
         myRequestedState = state;
-        X11UiUtil.toggleFullScreenMode(jFrame);
+        X11Hacking.toggleFullScreenMode(jFrame);
       }
       return ActionCallback.DONE;
     }

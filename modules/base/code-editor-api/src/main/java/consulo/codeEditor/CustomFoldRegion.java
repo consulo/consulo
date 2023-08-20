@@ -2,8 +2,8 @@
 package consulo.codeEditor;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.awt.*;
 
@@ -17,7 +17,8 @@ public interface CustomFoldRegion extends FoldRegion {
   /**
    * Renderer for this fold region (specified at creation time).
    */
-  @NotNull CustomFoldRegionRenderer getRenderer();
+  @Nonnull
+  CustomFoldRegionRenderer getRenderer();
 
   /**
    * Current width of fold region placeholder in editor. Width is defined at fold region's creation using information provided by region's

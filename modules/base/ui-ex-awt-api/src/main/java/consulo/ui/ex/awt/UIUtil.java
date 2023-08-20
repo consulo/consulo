@@ -57,7 +57,6 @@ import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.Timer;
@@ -2565,7 +2564,7 @@ public class UIUtil {
   }
 
   @Nonnull
-  public static Font getFontWithFallbackIfNeeded(@NotNull Font font, @NotNull String text) {
+  public static Font getFontWithFallbackIfNeeded(@Nonnull Font font, @Nonnull String text) {
     if (!SystemInfo.isMac /* 'getFontWithFallback' does nothing on macOS */ && font.canDisplayUpTo(text) != -1) {
       return getFontWithFallback(font);
     }

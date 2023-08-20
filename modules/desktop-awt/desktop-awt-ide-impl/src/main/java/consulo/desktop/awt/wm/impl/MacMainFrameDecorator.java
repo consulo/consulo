@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ui.mac;
+package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.component.util.BuildNumber;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeFrameDecorator;
 import consulo.ide.impl.idea.ui.CustomProtocolHandler;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;

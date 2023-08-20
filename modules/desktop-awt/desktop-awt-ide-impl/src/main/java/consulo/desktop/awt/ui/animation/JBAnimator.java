@@ -10,8 +10,8 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.lang.MathUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,16 +64,20 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class JBAnimator implements Disposable {
 
   private int myPeriod = 16;
-  private @NotNull Type myType = Type.IN_TIME;
+  private @Nonnull
+  Type myType = Type.IN_TIME;
   private boolean myCyclic = false;
   private boolean myIgnorePowerSaveMode = false;
   private
   @Nullable
   String myName = null;
 
-  private final @NotNull ScheduledExecutorService myService;
-  private final @NotNull AtomicLong myRunning = new AtomicLong();
-  private final @NotNull AtomicBoolean myDisposed = new AtomicBoolean();
+  private final @Nonnull
+  ScheduledExecutorService myService;
+  private final @Nonnull
+  AtomicLong myRunning = new AtomicLong();
+  private final @Nonnull
+  AtomicBoolean myDisposed = new AtomicBoolean();
 
   private static final Logger LOG = Logger.getInstance(JBAnimator.class);
   private
@@ -85,11 +89,11 @@ public final class JBAnimator implements Disposable {
   }
 
   @SuppressWarnings("unused")
-  public JBAnimator(@NotNull Disposable parentDisposable) {
+  public JBAnimator(@Nonnull Disposable parentDisposable) {
     this(Thread.SWING_THREAD, parentDisposable);
   }
 
-  public JBAnimator(@NotNull Thread threadToUse, @Nullable Disposable parentDisposable) {
+  public JBAnimator(@Nonnull Thread threadToUse, @Nullable Disposable parentDisposable) {
     myService = threadToUse == Thread.SWING_THREAD ?
       EdtExecutorService.getScheduledExecutorInstance() :
       AppExecutorUtil.createBoundedScheduledExecutorService("Animator Pool", 1);
@@ -107,7 +111,7 @@ public final class JBAnimator implements Disposable {
   /**
    * @see #animate(Collection)
    */
-  public long animate(Animation @NotNull ... animations) {
+  public long animate(@Nonnull  Animation... animations) {
     return animate(Arrays.asList(animations));
   }
 
@@ -120,7 +124,7 @@ public final class JBAnimator implements Disposable {
    * @param animations Collection of animations to be scheduled for running.
    * @return task ID or {@link Long#MAX_VALUE} if animator is disposed
    */
-  public long animate(@NotNull Collection<@NotNull Animation> animations) {
+  public long animate(@Nonnull Collection< Animation> animations) {
     if (myDisposed.get()) {
       LOG.warn("Animator is already disposed");
       return Long.MAX_VALUE;
@@ -178,7 +182,8 @@ public final class JBAnimator implements Disposable {
       final boolean cycle = myCyclic;
       @Nullable
       FrameCounter frameCounter;
-      @NotNull LinkedHashSet<Animation> scheduledAnimations = new LinkedHashSet<>();
+      @Nonnull
+      LinkedHashSet<Animation> scheduledAnimations = new LinkedHashSet<>();
       //private final long animationStarted = System.nanoTime();
       private long nextScheduleTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(delay); // ns
 
@@ -299,7 +304,8 @@ public final class JBAnimator implements Disposable {
     return myPeriod;
   }
 
-  public @NotNull JBAnimator setPeriod(int period) {
+  public @Nonnull
+  JBAnimator setPeriod(int period) {
     myPeriod = Math.max(period, 1);
     return this;
   }
@@ -315,21 +321,25 @@ public final class JBAnimator implements Disposable {
    * so a cyclic animation can be start, e.g. icon animation. For 8 icons
    * there are 8 values will be submitted: 0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875.
    */
-  public @NotNull JBAnimator setCyclic(boolean cyclic) {
+  public @Nonnull
+  JBAnimator setCyclic(boolean cyclic) {
     myCyclic = cyclic;
     return this;
   }
 
-  public @NotNull JBAnimator ignorePowerSaveMode() {
+  public @Nonnull
+  JBAnimator ignorePowerSaveMode() {
     myIgnorePowerSaveMode = true;
     return this;
   }
 
-  public @NotNull Type getType() {
+  public @Nonnull
+  Type getType() {
     return myType;
   }
 
-  public @NotNull JBAnimator setType(Type type) {
+  public @Nonnull
+  JBAnimator setType(Type type) {
     myType = type;
     return this;
   }
@@ -343,7 +353,8 @@ public final class JBAnimator implements Disposable {
   /**
    * Set an optional name to identify the animator.
    */
-  public @NotNull JBAnimator setName(@Nullable String name) {
+  public @Nonnull
+  JBAnimator setName(@Nullable String name) {
     myName = name;
     return this;
   }
@@ -413,9 +424,9 @@ public final class JBAnimator implements Disposable {
     long getDelay(long currentFrame);
   }
 
-  private static FrameCounter create(@NotNull Type type, int period, int duration) {
+  private static FrameCounter create(@Nonnull Type type, int period, int duration) {
     return switch(type){
-      case EACH_FRAME ->new FrameCounter() {
+      case EACH_FRAME -> new FrameCounter() {
 
         final long frames = duration / period + ((duration % period == 0) ? 0 : 1);
         long frame = 0;
@@ -441,7 +452,7 @@ public final class JBAnimator implements Disposable {
           return period;
         }
       };
-      case IN_TIME ->new FrameCounter() {
+      case IN_TIME -> new FrameCounter() {
 
         final long startTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
 

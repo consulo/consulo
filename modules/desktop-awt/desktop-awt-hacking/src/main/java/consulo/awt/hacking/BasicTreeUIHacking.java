@@ -15,6 +15,7 @@
  */
 package consulo.awt.hacking;
 
+import consulo.awt.hacking.util.AWTHackingUtil;
 import consulo.awt.hacking.util.FieldAccessor;
 
 import javax.swing.plaf.TreeUI;
