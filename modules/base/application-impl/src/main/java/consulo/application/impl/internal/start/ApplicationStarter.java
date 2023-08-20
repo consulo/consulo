@@ -238,7 +238,7 @@ public abstract class ApplicationStarter {
 
   @Nonnull
   public static String getFrameClass() {
-    String name = ApplicationInfo.getInstance().getName();
+    String name = ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT);
     String wmClass = StringUtil.replaceChar(name, ' ', '-');
     if (ApplicationProperties.isInSandbox()) {
       wmClass += "-sandbox";
