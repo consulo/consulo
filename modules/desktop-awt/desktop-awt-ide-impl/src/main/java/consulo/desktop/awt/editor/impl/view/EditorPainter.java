@@ -17,7 +17,6 @@ import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.impl.ClipDetector;
-import consulo.ide.impl.idea.ui.CachingPainter;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.ide.impl.idea.util.containers.PeekableIteratorWrapper;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
