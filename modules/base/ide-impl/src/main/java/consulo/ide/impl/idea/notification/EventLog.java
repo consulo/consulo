@@ -31,11 +31,11 @@ import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.BalloonLayoutData;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.event.NotificationServiceListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -48,14 +48,15 @@ import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.*;
@@ -91,16 +92,18 @@ public class EventLog {
   public EventLog(Application application) {
     myModel = new LogModel(null, application);
 
-    application.getMessageBus().connect().subscribe(Notifications.class, new Notifications() {
-      @Override
-      public void notify(@Nonnull Notification notification) {
-        final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-        if (openProjects.length == 0) {
-          myModel.addNotification(notification);
-        }
-        for (Project p : openProjects) {
-          NotificationProjectTracker.getInstance(p).printNotification(notification);
-        }
+    application.getMessageBus().connect().subscribe(NotificationServiceListener.class, (notification, project) -> {
+      if (project != null) {
+        // see NotificationProjectTrackerTopicListener
+        return;
+      }
+      
+      final Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+      if (openProjects.length == 0) {
+        myModel.addNotification(notification);
+      }
+      for (Project p : openProjects) {
+        NotificationProjectTracker.getInstance(p).printNotification(notification);
       }
     });
   }

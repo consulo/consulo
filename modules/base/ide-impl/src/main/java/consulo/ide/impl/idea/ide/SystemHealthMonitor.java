@@ -40,7 +40,6 @@ import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
 import consulo.ide.impl.idea.notification.NotificationsConfiguration;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
@@ -54,13 +53,14 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.jna.JnaLoader;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.TimeoutUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.io.File;
@@ -105,7 +105,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
     }
 
     StringBuilder builder = new StringBuilder();
-    builder.append(StringUtil.join(plugins, (it) -> it.getName(), ", "));
+    builder.append(StringUtil.join(plugins, PluginDescriptor::getName, ", "));
     if (plugins.size() == 1) {
       builder.append(" is ");
     }

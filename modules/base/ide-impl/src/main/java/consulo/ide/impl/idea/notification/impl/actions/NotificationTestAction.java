@@ -160,7 +160,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
       ApplicationManager.getApplication().executeOnPooledThread(() -> {
         for (NotificationInfo info : notifications) {
-          myMessageBus.syncPublisher(Notifications.class).notify(info.getNotification());
+          Application.get().getInstance(NotificationService.class).notify(info.getNotification());
         }
       });
     }

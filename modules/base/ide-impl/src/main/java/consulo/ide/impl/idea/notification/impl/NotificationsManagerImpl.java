@@ -20,31 +20,28 @@ import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.ApplicationEx;
+import consulo.application.ui.FrameStateManager;
 import consulo.application.util.SystemInfo;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.notification.EventLog;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
-import consulo.project.ui.notification.*;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.*;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -59,13 +56,15 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
@@ -80,6 +79,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -92,16 +92,19 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
   public static final Color FILL_COLOR = JBColor.namedColor("VcsBranchMappingChangedNotification.background", new JBColor(Gray._242, new Color(0x4E5052)));
-  public static final Color BORDER_COLOR = JBColor.namedColor("VcsBranchMappingChangedNotification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
+  public static final Color BORDER_COLOR =
+    JBColor.namedColor("VcsBranchMappingChangedNotification.borderColor", new JBColor(0xCDB2B2B2, 0xCD565A5C));
+
+  private final Application myApplication;
 
   @Inject
   public NotificationsManagerImpl(Application application) {
-    application.getMessageBus().connect().subscribe(Notifications.class, new MyNotificationListener(null));
+    myApplication = application;
   }
 
   @Override
   public void expire(@Nonnull final Notification notification) {
-    UIUtil.invokeLaterIfNeeded(() -> EventLog.expireNotification(notification));
+    myApplication.getLastUIAccess().give(() -> EventLog.expireNotification(notification));
   }
 
   @Override
@@ -119,7 +122,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
     return ArrayUtil.toObjectArray(result, klass);
   }
 
-  static void doNotify(@Nonnull final Notification notification, @Nullable final Project project) {
+  public static void doNotify(@Nonnull final Notification notification, @Nullable final Project project) {
     final NotificationsConfigurationImpl configuration = NotificationsConfigurationImpl.getInstanceImpl();
     if (!configuration.isRegistered(notification.getGroupId())) {
       LOG.error("NotificationGroup: " + notification.getGroupId() + " is not registered. Please use NotificationGroupContributor");
@@ -147,9 +150,12 @@ public class NotificationsManagerImpl extends NotificationsManager {
 
   @RequiredUIAccess
   private static void showNotification(@Nonnull final Notification notification, @Nullable final Project project) {
-    Application application = ApplicationManager.getApplication();
-    if (application instanceof ApplicationEx && !((ApplicationEx)application).isLoaded()) {
-      application.invokeLater(() -> showNotification(notification, project), IdeaModalityState.current());
+    Window window = findWindowForBalloon(project);
+    if (window == null) {
+      UIAccess uiAccess = UIAccess.current();
+      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+        uiAccess.give(() -> showNotification(notification, project));
+      }, 1L, TimeUnit.SECONDS);
       return;
     }
 
@@ -989,23 +995,6 @@ public class NotificationsManagerImpl extends NotificationsManager {
   private static void showPopup(@Nonnull LinkLabel link, @Nonnull DefaultActionGroup group) {
     ActionPopupMenu menu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.UNKNOWN, group);
     menu.getComponent().show(link, JBUI.scale(-10), link.getHeight() + JBUI.scale(2));
-  }
-
-  private static class MyNotificationListener implements Notifications {
-    private final Project myProject;
-
-    private MyNotificationListener(@Nullable Project project) {
-      myProject = project;
-    }
-
-    @Override
-    public void notify(@Nonnull Notification notification) {
-      if (!Application.get().isSwingApplication()) {
-        return;
-      }
-
-      doNotify(notification, myProject);
-    }
   }
 
   @Nullable

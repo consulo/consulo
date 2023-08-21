@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.notification;
+package consulo.project.ui.notification;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicImpl;
+import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationServiceListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 08-Aug-22
+ * @since 21/08/2023
  */
-@TopicImpl(ComponentScope.PROJECT)
-public class NotificationProjectTrackerTopicListener implements NotificationServiceListener {
-  @Override
-  public void notify(@Nonnull Notification notification, @Nullable Project project) {
-    if (project != null) {
-      NotificationProjectTracker.getInstance(project).printNotification(notification);
-    }
+@ServiceAPI(ComponentScope.APPLICATION)
+public interface NotificationService {
+  default void notify(@Nonnull Notification notification) {
+    notify(notification, null);
   }
+
+  void notify(@Nonnull Notification notification, @Nullable Project project);
 }

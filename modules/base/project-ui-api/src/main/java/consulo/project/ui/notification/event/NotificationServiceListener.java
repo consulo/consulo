@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.notification.impl;
+package consulo.project.ui.notification.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicImpl;
+import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.Notifications;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.util.EventListener;
 
 /**
  * @author VISTALL
- * @since 06-Jul-22
+ * @since 21/08/2023
  */
-@TopicImpl(ComponentScope.PROJECT)
-public class ProjectNotificationsListenerImpl implements Notifications {
-  private final Project myProject;
-
-  @Inject
-  public ProjectNotificationsListenerImpl(Project project) {
-    myProject = project;
-  }
-
-  @Override
-  public void notify(@Nonnull Notification notification) {
-    if (!myProject.getApplication().isSwingApplication()) {
-      return;
-    }
-
-    NotificationsManagerImpl.doNotify(notification, myProject);
-  }
+@TopicAPI(ComponentScope.APPLICATION)
+public interface NotificationServiceListener extends EventListener {
+  void notify(@Nonnull Notification notification, @Nullable Project project);
 }

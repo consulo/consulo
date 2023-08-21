@@ -15,26 +15,19 @@
  */
 package consulo.project.ui.notification;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.TopicAPI;
-import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author spleaner
  */
-// FIXME [VISTALL] this topic is App&Project level
-@TopicAPI(value = ComponentScope.APPLICATION, direction = TopicBroadcastDirection.NONE)
 public interface Notifications {
   NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
-
-  void notify(@Nonnull Notification notification);
 
   class Bus {
     public static void notify(@Nonnull final Notification notification) {
@@ -42,19 +35,7 @@ public interface Notifications {
     }
 
     public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
-      Application.get().getLastUIAccess().giveIfNeed(() -> doNotify(notification, project));
-    }
-
-    private static void doNotify(Notification notification, @Nullable Project project) {
-      if (project != null && !project.isDisposed()) {
-        project.getMessageBus().syncPublisher(Notifications.class).notify(notification);
-      }
-      else {
-        Application app = Application.get();
-        if (!app.isDisposed()) {
-          app.getMessageBus().syncPublisher(Notifications.class).notify(notification);
-        }
-      }
+      Application.get().getInstance(NotificationService.class).notify(notification, project);
     }
 
     public static void notifyAndHide(@Nonnull final Notification notification) {

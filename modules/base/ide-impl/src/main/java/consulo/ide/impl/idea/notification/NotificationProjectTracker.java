@@ -31,11 +31,11 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ShutDownTracker;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
