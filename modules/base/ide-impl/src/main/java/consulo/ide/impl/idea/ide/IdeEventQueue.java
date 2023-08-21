@@ -59,6 +59,7 @@ import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -102,8 +103,8 @@ public class IdeEventQueue extends EventQueue {
    */
   private final Object myLock = new Object();
 
-  private final List<Runnable> myIdleListeners = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final List<Runnable> myActivityListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<Runnable> myIdleListeners = Lists.newLockFreeCopyOnWriteList();
+  private final List<Runnable> myActivityListeners = Lists.newLockFreeCopyOnWriteList();
   private final Alarm myIdleRequestsAlarm = new Alarm();
   private final Alarm myIdleTimeCounterAlarm = new Alarm();
   private long myIdleTime;
@@ -112,7 +113,6 @@ public class IdeEventQueue extends EventQueue {
   private final IdeKeyEventDispatcher myKeyEventDispatcher = new IdeKeyEventDispatcher(this);
   private final IdeMouseEventDispatcher myMouseEventDispatcher = new IdeMouseEventDispatcher();
   private final IdePopupManager myPopupManager = new IdePopupManager();
-  private final ToolkitBugsProcessor myToolkitBugsProcessor = new ToolkitBugsProcessor();
 
   /**
    * Counter of processed events. It is used to assert that data context lives only inside single
@@ -130,10 +130,10 @@ public class IdeEventQueue extends EventQueue {
   private long myLastActiveTime;
   private long myLastEventTime = System.currentTimeMillis();
   private WindowManagerEx myWindowManager;
-  private final List<EventDispatcher> myDispatchers = ContainerUtil.createLockFreeCopyOnWriteList();
-  private final List<EventDispatcher> myPostProcessors = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<EventDispatcher> myDispatchers = Lists.newLockFreeCopyOnWriteList();
+  private final List<EventDispatcher> myPostProcessors = Lists.newLockFreeCopyOnWriteList();
   private final HoverService myHoverService = new HoverService();
-  private final Set<Runnable> myReady = ContainerUtil.newHashSet();
+  private final Set<Runnable> myReady = new HashSet<>();
   private boolean myKeyboardBusy;
   private boolean myWinMetaPressed;
   private int myInputMethodLock;
@@ -541,9 +541,7 @@ public class IdeEventQueue extends EventQueue {
   }
 
   private void processException(@Nonnull Throwable t) {
-    if (!myToolkitBugsProcessor.process(t)) {
-      ApplicationStarter.processException(() -> LOG, t);
-    }
+    ApplicationStarter.processException(() -> LOG, t);
   }
 
   @Nonnull
