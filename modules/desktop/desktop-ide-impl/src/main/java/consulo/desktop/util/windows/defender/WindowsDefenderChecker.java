@@ -4,19 +4,21 @@ package consulo.desktop.util.windows.defender;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.internal.ApplicationInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -72,7 +74,9 @@ public class WindowsDefenderChecker {
   }
 
   public boolean isVirusCheckIgnored(Project project) {
-    return PropertiesComponent.getInstance().isTrueValue(IGNORE_VIRUS_CHECK) || PropertiesComponent.getInstance(project).isTrueValue(IGNORE_VIRUS_CHECK);
+    return ApplicationPropertiesComponent.getInstance().isTrueValue(IGNORE_VIRUS_CHECK) || ProjectPropertiesComponent.getInstance(project)
+                                                                                                                     .isTrueValue(
+                                                                                                                       IGNORE_VIRUS_CHECK);
   }
 
   public CheckResult checkWindowsDefender(@Nonnull Project project) {
@@ -86,7 +90,10 @@ public class WindowsDefenderChecker {
     if (scanningStatus == RealtimeScanningStatus.SCANNING_ENABLED) {
       final Collection<String> excludedProcesses = getExcludedProcesses();
       final List<File> processesToCheck = getProcessesToCheck();
-      if (excludedProcesses != null && ContainerUtil.all(processesToCheck, (exe) -> excludedProcesses.contains(exe.getName().toLowerCase(Locale.ENGLISH))) && excludedProcesses.contains("java.exe")) {
+      if (excludedProcesses != null && ContainerUtil.all(processesToCheck,
+                                                         (exe) -> excludedProcesses.contains(exe.getName()
+                                                                                                .toLowerCase(Locale.ENGLISH))) && excludedProcesses
+        .contains("java.exe")) {
         LOG.info("Windows Defender status: all relevant processes excluded from real-time scanning");
         return new CheckResult(RealtimeScanningStatus.SCANNING_DISABLED, Collections.emptyMap());
       }
@@ -132,17 +139,24 @@ public class WindowsDefenderChecker {
    */
   @Nonnull
   private static String getExecutableOnWindows() {
-    return Platform.current().mapWindowsExecutable(Application.get().getName().toLowerCase().get(), "exe");
+    return Platform.current().mapWindowsExecutable(ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT), "exe");
   }
 
   private static Boolean isWindowsDefenderActive() {
     try {
-      ProcessOutput output = ExecUtil.execAndGetOutput(new GeneralCommandLine("wmic", "/Namespace:\\\\root\\SecurityCenter2", "Path", "AntivirusProduct", "Get", "displayName,productState"), WMIC_COMMAND_TIMEOUT_MS);
+      ProcessOutput output = ExecUtil.execAndGetOutput(new GeneralCommandLine("wmic",
+                                                                              "/Namespace:\\\\root\\SecurityCenter2",
+                                                                              "Path",
+                                                                              "AntivirusProduct",
+                                                                              "Get",
+                                                                              "displayName,productState"), WMIC_COMMAND_TIMEOUT_MS);
       if (output.getExitCode() == 0) {
         return parseWindowsDefenderProductState(output);
       }
       else {
-        LOG.warn("wmic Windows Defender check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(), MAX_POWERSHELL_STDERR_LENGTH, false));
+        LOG.warn("wmic Windows Defender check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(),
+                                                                                                                    MAX_POWERSHELL_STDERR_LENGTH,
+                                                                                                                    false));
       }
     }
     catch (ExecutionException e) {
@@ -206,13 +220,19 @@ public class WindowsDefenderChecker {
   @Nullable
   private static Collection<String> getWindowsDefenderProperty(final String propertyName) {
     try {
-      ProcessOutput output = ExecUtil.execAndGetOutput(new GeneralCommandLine("powershell", "-inputformat", "none", "-outputformat", "text", "-NonInteractive", "-Command",
-                                                                              "Get-MpPreference | select -ExpandProperty \"" + propertyName + "\""), POWERSHELL_COMMAND_TIMEOUT_MS);
+      GeneralCommandLine cmd = new GeneralCommandLine();
+      cmd.setExePath("powershell");
+      cmd.addParameters("-inputformat", "none", "-outputformat", "text", "-NonInteractive", "-Command");
+      cmd.addParameter("Get-MpPreference | select -ExpandProperty '" + propertyName + "'");
+
+      ProcessOutput output = CapturingProcessUtil.execAndGetOutput(cmd, POWERSHELL_COMMAND_TIMEOUT_MS);
       if (output.getExitCode() == 0) {
         return output.getStdoutLines();
       }
       else {
-        LOG.warn("Windows Defender " + propertyName + " check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(), MAX_POWERSHELL_STDERR_LENGTH, false));
+        LOG.warn("Windows Defender " + propertyName + " check exited with status " + output.getExitCode() + ": " + StringUtil.first(output.getStderr(),
+                                                                                                                                    MAX_POWERSHELL_STDERR_LENGTH,
+                                                                                                                                    false));
       }
     }
     catch (ExecutionException e) {
@@ -287,7 +307,8 @@ public class WindowsDefenderChecker {
     }
     sb.append(Pattern.quote(path.substring(previousWildcardEnd)));
     sb.append(".*"); // technically this should only be appended if the path refers to a directory, not a file. This is difficult to determine.
-    return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE); // CASE_INSENSITIVE is overly permissive. Being precise with this is more work than it's worth.
+    return Pattern.compile(sb.toString(),
+                           Pattern.CASE_INSENSITIVE); // CASE_INSENSITIVE is overly permissive. Being precise with this is more work than it's worth.
   }
 
   /**
@@ -328,14 +349,14 @@ public class WindowsDefenderChecker {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
         notification.expire();
-        PropertiesComponent.getInstance().setValue(IGNORE_VIRUS_CHECK, "true");
+        ApplicationPropertiesComponent.getInstance().setValue(IGNORE_VIRUS_CHECK, "true");
       }
     });
     notification.addAction(new NotificationAction(DiagnosticBundle.message("virus.scanning.dont.show.again.this.project")) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
         notification.expire();
-        PropertiesComponent.getInstance(project).setValue(IGNORE_VIRUS_CHECK, "true");
+        ProjectPropertiesComponent.getInstance(project).setValue(IGNORE_VIRUS_CHECK, "true");
       }
     });
 
@@ -348,11 +369,17 @@ public class WindowsDefenderChecker {
   public boolean runExcludePathsCommand(Project project, Collection<Path> paths) {
     try {
       final ProcessOutput output = ExecUtil.sudoAndGetOutput(
-              new GeneralCommandLine("powershell", "-Command", "Add-MpPreference", "-ExclusionPath", StringUtil.join(paths, (path) -> StringUtil.wrapWithDoubleQuote(path.toString()), ",")), "");
+        new GeneralCommandLine("powershell",
+                               "-Command",
+                               "Add-MpPreference",
+                               "-ExclusionPath",
+                               StringUtil.join(paths, (path) -> StringUtil.wrapWithDoubleQuote(path.toString()), ",")), "");
       return output.getExitCode() == 0;
     }
     catch (IOException | ExecutionException e) {
-      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(project, DiagnosticBundle.message("virus.scanning.fix.failed", e.getMessage()), DiagnosticBundle.message("virus.scanning.fix.title")));
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(project,
+                                                                DiagnosticBundle.message("virus.scanning.fix.failed", e.getMessage()),
+                                                                DiagnosticBundle.message("virus.scanning.fix.title")));
     }
     return false;
   }
