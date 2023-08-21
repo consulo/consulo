@@ -242,6 +242,15 @@ public interface Platform extends UserDataHolder {
   }
 
   @Nonnull
+  default String mapAnyExecutableName(@Nonnull String baseName) {
+    if (os().isWindows()) {
+      return mapWindowsExecutable(baseName, "exe");
+    }
+
+    return mapExecutableName(baseName);
+  }
+
+  @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {
     if (!os().isWindows()) {
       throw new IllegalArgumentException("Must be Windows");

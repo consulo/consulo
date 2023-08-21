@@ -9,7 +9,6 @@ import consulo.component.util.NativeFileLoader;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import consulo.platform.PlatformOperatingSystem;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;
@@ -143,21 +142,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     if (execPath != null) return Path.of(execPath);
 
     Platform platform = Platform.current();
-    PlatformOperatingSystem os = platform.os();
-
-    String fileName = null;
-    if (os.isWindows()) {
-      fileName = platform.mapWindowsExecutable("fsnotifier", "exe");
-    }
-    else if (os.isMac()) {
-      fileName = "fsnotifier";
-    }
-    else if (os.isLinux()) {
-      fileName = platform.mapExecutableName("fsnotifier");
-    }
-    if (fileName == null) return null;
-
-    return NativeFileLoader.findExecutablePath(fileName);
+    return NativeFileLoader.findExecutablePath(platform.mapAnyExecutableName("fsnotifier"));
   }
 
   /* internal stuff */
