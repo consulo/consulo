@@ -89,26 +89,33 @@ public class JBColor extends Color {
     return null;
   }
 
-  private final Color darkColor;
+  private final Supplier<Color> darkColorGetter;
   private final Supplier<Color> func;
 
   public JBColor(int rgb, int darkRGB) {
-    this(new Color(rgb), new Color(darkRGB));
+    this(new Color(rgb), () -> new Color(darkRGB));
   }
 
   public JBColor(Color regular, Color dark) {
     super(regular.getRGB(), regular.getAlpha() != 255);
-    darkColor = dark;
+    darkColorGetter = () -> dark;
+    func = null;
+  }
+
+  public JBColor(Color regular, Supplier<Color> dark) {
+    super(regular.getRGB(), regular.getAlpha() != 255);
+    darkColorGetter = dark;
     func = null;
   }
 
   public JBColor(Supplier<Color> function) {
     super(0);
-    darkColor = null;
+    darkColorGetter = null;
     func = function;
   }
+
   Color getDarkVariant() {
-    return darkColor;
+    return darkColorGetter.get();
   }
 
   Color getColor() {
@@ -244,7 +251,7 @@ public class JBColor extends Color {
   public static final JBColor blue = new JBColor(Color.blue, DarculaColors.BLUE);
   public static final JBColor BLUE = blue;
 
-  public static final JBColor white = new JBColor(Color.white, LafProperty.getListBackground()) {
+  public static final JBColor white = new JBColor(Color.white, LafProperty::getListBackground) {
     @Override
     Color getDarkVariant() {
       return LafProperty.getListBackground();
@@ -252,12 +259,13 @@ public class JBColor extends Color {
   };
   public static final JBColor WHITE = white;
 
-  public static final JBColor black = new JBColor(Color.black, LafProperty.getListForeground()) {
+  public static final JBColor black = new JBColor(Color.black, LafProperty::getListForeground) {
     @Override
     Color getDarkVariant() {
       return LafProperty.getListForeground();
     }
   };
+  
   public static final JBColor BLACK = black;
 
   public static final JBColor gray = new JBColor(Gray._128, Gray._128);
