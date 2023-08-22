@@ -21,10 +21,9 @@ import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -48,6 +47,12 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     myFileType = fileType;
   }
 
+  @Nonnull
+  @Override
+  public FileType getFileType() {
+    return myFileType;
+  }
+
   public VirtualFile getOriginalFile() {
     return myOriginalFile;
   }
@@ -57,7 +62,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
   }
 
   private static class MyVirtualFileSystem extends BaseVirtualFileSystem implements NonPhysicalFileSystem {
-    @NonNls private static final String PROTOCOL = "mock";
+    private static final String PROTOCOL = "mock";
 
     private MyVirtualFileSystem() {
       startEventPropagation();
@@ -90,8 +95,11 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile virtualFile, @Nonnull VirtualFile newParent, @Nonnull String copyName)
-            throws IOException {
+    public VirtualFile copyFile(Object requestor,
+                                @Nonnull VirtualFile virtualFile,
+                                @Nonnull VirtualFile newParent,
+                                @Nonnull String copyName)
+      throws IOException {
       return null;
     }
 
