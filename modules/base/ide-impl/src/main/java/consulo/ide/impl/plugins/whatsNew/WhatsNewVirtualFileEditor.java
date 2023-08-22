@@ -28,6 +28,8 @@ import consulo.container.plugin.PluginManager;
 import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryEntry;
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryManager;
+import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryRequest;
+import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryResponse;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.ide.impl.plugins.PluginIconHolder;
@@ -80,12 +82,6 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
   public JComponent getComponent() {
     myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
 
-    UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
-      myLoadingPanel.setLoadingText("Fetching change list...");
-      myLoadingPanel.startLoading();
-      fetchData();
-    });
-
     myEditorPanel = new JEditorPane("text/html", "");
     myEditorPanel.setFont(EditorUtil.getEditorFont());
     JBHtmlEditorKit kit = JBHtmlEditorKit.create();
@@ -106,6 +102,14 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
     myEditorPanel.setEditable(false);
     myEditorPanel.addHyperlinkListener(BrowserHyperlinkListener.INSTANCE);
 
+    myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
+
+    UiNotifyConnector.doWhenFirstShown(myLoadingPanel, () -> {
+      myLoadingPanel.setLoadingText("Fetching change list...");
+      myLoadingPanel.startLoading();
+      fetchData();
+    });
+
     return myLoadingPanel;
   }
 
@@ -117,12 +121,9 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
       PluginId platformPluginId = PlatformOrPluginUpdateChecker.getPlatformPluginId();
       String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
 
-      PluginHistoryEntry[] pluginHistoryEntries = PluginHistoryManager.fetchHistory(platformPluginId.getIdString(), myUpdateHistory.getHistoryVersion(platformPluginId, platformBuild), platformBuild);
+      List<PluginHistoryRequest.PluginInfo> infos = new ArrayList<>(plugins.size() + 1);
 
-      for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
-        entries.putValue(platformPluginId, pluginHistoryEntry);
-      }
-
+      addPlugin(infos, platformPluginId, platformBuild);
       for (PluginDescriptor plugin : plugins) {
         if (myLoadingFuture.isCancelled()) {
           return;
@@ -137,20 +138,38 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
           continue;
         }
 
-        pluginHistoryEntries = PluginHistoryManager.fetchHistory(plugin.getPluginId().getIdString(), myUpdateHistory.getHistoryVersion(plugin.getPluginId(), version), version);
+        addPlugin(infos, plugin.getPluginId(), version);
+      }
 
-        for (PluginHistoryEntry pluginHistoryEntry : pluginHistoryEntries) {
-          entries.putValue(plugin.getPluginId(), pluginHistoryEntry);
+
+      PluginHistoryResponse response = PluginHistoryManager.fetchBatchHistory(new PluginHistoryRequest(infos));
+
+      for (PluginHistoryResponse.PluginHistory entry : response.entries) {
+        if (myLoadingFuture.isCancelled()) {
+          return;
         }
+
+        entries.putValue(PluginId.getId(entry.id), entry);
       }
 
       SwingUtilities.invokeLater(() -> {
         setHtmlFromEntries(entries);
 
-        myLoadingPanel.add(ScrollPaneFactory.createScrollPane(myEditorPanel, true), BorderLayout.CENTER);
+        myLoadingPanel.invalidate();
+        
         myLoadingPanel.stopLoading();
       });
     });
+  }
+
+  private void addPlugin(List<PluginHistoryRequest.PluginInfo> result, PluginId pluginId, String version) {
+    String oldVersion = myUpdateHistory.getHistoryVersion(pluginId, version);
+
+    if (Objects.equals(oldVersion, version)) {
+      result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), version));
+    } else {
+      result.add(new PluginHistoryRequest.PluginInfo(pluginId.getIdString(), oldVersion, version, true));
+    }
   }
 
   private void setHtmlFromEntries(MultiMap<PluginId, PluginHistoryEntry> map) {
