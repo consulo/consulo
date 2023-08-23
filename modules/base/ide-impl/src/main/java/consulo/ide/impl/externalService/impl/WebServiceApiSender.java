@@ -16,13 +16,17 @@
 package consulo.ide.impl.externalService.impl;
 
 import com.google.gson.Gson;
+import consulo.application.Application;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.externalService.*;
+import consulo.ide.impl.externalService.AuthorizationFailedException;
+import consulo.ide.impl.externalService.NoContentException;
+import consulo.ide.impl.externalService.NotFoundException;
+import consulo.ide.impl.externalService.NotModifiedException;
 import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
+import jakarta.annotation.Nullable;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -32,7 +36,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -139,7 +142,8 @@ public class WebServiceApiSender {
       return null;
     }
 
-    ExternalServiceConfigurationImpl externalServiceConfiguration = (ExternalServiceConfigurationImpl)ServiceManager.getService(ExternalServiceConfiguration.class);
+    ExternalServiceConfigurationImpl externalServiceConfiguration =
+      (ExternalServiceConfigurationImpl)Application.get().getInstance(ExternalServiceConfiguration.class);
 
     ThreeState state = externalServiceConfiguration.getState(service);
     switch (state) {
