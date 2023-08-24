@@ -110,6 +110,10 @@ public class StatusBarProgress extends ProgressIndicatorBase {
 
   private String updateRestoreText(StatusBar statusBar) {
     Pair<String, String> textsPair = myStatusBar2SavedText.get(statusBar);
+    if (textsPair == null) {
+      return "";
+    }
+
     // if current status bar info doesn't match the value, that we set, use this value as a restore value
     String info = ObjectUtil.notNull(statusBar.getInfo(), "");
     if (!textsPair.getSecond().equals(info)) {
