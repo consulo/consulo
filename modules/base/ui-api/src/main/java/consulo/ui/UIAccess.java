@@ -20,15 +20,17 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 11-Jun-16
  */
-public interface UIAccess {
+public interface UIAccess extends Executor {
   /**
    * @return if current thread can access to ui write mode
    */
@@ -73,7 +75,7 @@ public interface UIAccess {
   static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     UIInternal.get().addModalityStateListener(listener, parentDisposable);
   }
-  
+
   @RequiredUIAccess
   default int getEventCount() {
     assertIsUIThread();
@@ -100,8 +102,14 @@ public interface UIAccess {
     });
   }
 
+  /**
+   * prefer {@link #giveAsync(Supplier)}
+   */
   @Nonnull
   <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
+
+  @Nonnull
+  <T> CompletableFuture<T> giveAsync(@RequiredUIAccess @Nonnull Supplier<T> supplier);
 
   default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
     give(runnable).getResultSync();
@@ -138,5 +146,10 @@ public interface UIAccess {
 
   default boolean isInModalContext() {
     return false;
+  }
+
+  @Override
+  default void execute(@RequiredUIAccess @Nonnull Runnable command) {
+    give(command);
   }
 }

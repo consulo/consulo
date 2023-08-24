@@ -259,7 +259,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
   public void showNotify() {
     if (!myWasEverShown) {
       myWasEverShown = true;
-      getSplitters().openFiles(UIAccess.current());
+      getSplitters().openFilesAsync(UIAccess.current());
     }
   }
 

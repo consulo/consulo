@@ -15,39 +15,40 @@
  */
 package consulo.ide.impl.fileEditor;
 
-import consulo.application.ui.event.UISettingsListener;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.ui.event.UISettingsListener;
+import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.FileEditorsSplitters;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import org.jdom.Element;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
+ * This is base class extracted from IDEA AWT/Swing code, unified, and removed awt/swing parts
+ *
  * @author VISTALL
  * @since 2018-05-11
  */
@@ -70,7 +71,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     myManager = manager;
 
     project.getApplication().getMessageBus().connect(this).subscribe(UISettingsListener.class, source -> {
-      if (!myManager.getProject().isOpen()) {
+      if (!project.isOpen()) {
         return;
       }
 
@@ -89,7 +90,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected abstract void createCurrentWindow();
 
   @Nonnull
-  protected abstract IdeaModalityState getComponentModality();
+  protected abstract ModalityState getComponentModality();
 
   protected void stopListeningFocus() {
   }
@@ -109,7 +110,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
       for (final W window : windows) {
         LOG.assertTrue(window.getSelectedEditor() != null);
         window.closeFile(file, false, moveFocus);
-        if (window.getTabCount() == 0 && nextFile != null && myManager.getProject().isOpen()) {
+        if (window.getTabCount() == 0 && nextFile != null && myProject.isOpen()) {
           FileEditorWithProviderComposite newComposite = myManager.newEditorComposite(nextFile);
           window.setEditor(newComposite, moveFocus); // newComposite can be null
         }
@@ -179,7 +180,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     myFilesToUpdateIconsFor.add(file);
     myIconUpdaterAlarm.cancelAllRequests();
     myIconUpdaterAlarm.addRequest(() -> {
-      if (myManager.getProject().isDisposed()) return;
+      if (myProject.isDisposed()) return;
       for (VirtualFile file1 : myFilesToUpdateIconsFor) {
         updateFileIconImmediately(file1);
       }
@@ -325,7 +326,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
       }
     }
 
-    Project project = myManager.getProject();
+    Project project = myProject;
 
     final IdeFrame frame = getFrame(project);
     if (frame != null) {
@@ -344,7 +345,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   @Override
   @Nonnull
   public VirtualFile[] getOpenFiles() {
-    final Set<VirtualFile> files = new ArrayListSet<>();
+    final Set<VirtualFile> files = new LinkedHashSet<>();
     for (final W myWindow : myWindows) {
       final FileEditorWithProviderComposite[] editors = myWindow.getEditors();
       for (final FileEditorWithProviderComposite editor : editors) {
@@ -362,7 +363,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   @Override
   @Nonnull
   public VirtualFile[] getSelectedFiles() {
-    final Set<VirtualFile> files = new ArrayListSet<>();
+    final Set<VirtualFile> files = new LinkedHashSet<>();
     for (final W window : myWindows) {
       final VirtualFile file = window.getSelectedFile();
       if (file != null) {

@@ -21,6 +21,8 @@ import consulo.util.concurrent.AsyncResult;
 import org.eclipse.swt.widgets.Display;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Supplier;
 
@@ -81,6 +83,22 @@ public class DesktopSwtUIAccess implements UIAccess {
   @Override
   public boolean isValid() {
     return !myDisplay.isDisposed();
+  }
+
+  @Nonnull
+  @Override
+  public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
+    CompletableFuture<T> result = new CompletableFuture<>();
+    myDisplay.asyncExec(() -> {
+      try {
+        result.complete(supplier.get());
+      }
+      catch (Throwable e) {
+        LOG.error(e);
+        result.completeExceptionally(e);
+      }
+    });
+    return result;
   }
 
   @Nonnull

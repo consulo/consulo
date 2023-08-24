@@ -18,16 +18,15 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -121,7 +120,7 @@ public abstract class ToolWindowManager {
   /**
    * Puts specified runnable to the tail of current command queue.
    */
-  public abstract void invokeLater(@Nonnull Runnable runnable);
+  public abstract void invokeLater(@RequiredUIAccess @Nonnull Runnable runnable);
 
   /**
    * Utility method for quick access to the focus manager

@@ -15,12 +15,8 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.ui.UISettings;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
@@ -28,12 +24,16 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.impl.internal.AsyncConfigTreeReader;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.diagnostic.Activity;
 import consulo.ide.impl.idea.diagnostic.ActivityCategory;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.*;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorHistoryUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorOpenOptions;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.HistoryEntry;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
@@ -45,6 +45,7 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.dock.DockManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -57,7 +58,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.Couple;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -71,12 +72,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ContainerEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<DesktopFileEditorWindow> {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorsSplitters.class);
-
-  private static final String PINNED = "pinned";
-  private static final String CURRENT_IN_TAB = "current-in-tab";
 
   private static final Key<Object> DUMMY_KEY = Key.create("EditorsSplitters.dummy.key");
 
@@ -85,7 +84,10 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
   private final IdePanePanel myComponent;
 
-  public DesktopFileEditorsSplitters(Project project, FileEditorManagerImpl manager, DockManager dockManager, boolean createOwnDockableContainer) {
+  public DesktopFileEditorsSplitters(Project project,
+                                     FileEditorManagerImpl manager,
+                                     DockManager dockManager,
+                                     boolean createOwnDockableContainer) {
     super(project, manager);
 
     myComponent = new IdePanePanel(new BorderLayout()) {
@@ -129,7 +131,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
   @Nonnull
   @Override
-  protected IdeaModalityState getComponentModality() {
+  protected ModalityState getComponentModality() {
     return IdeaModalityState.stateForComponent(myComponent);
   }
 
@@ -233,23 +235,26 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
   }
 
   @Nonnull
-  private Element writeComposite(VirtualFile file, FileEditorWithProviderComposite composite, boolean pinned, DesktopFileEditorWithProviderComposite selectedEditor) {
+  private Element writeComposite(VirtualFile file,
+                                 FileEditorWithProviderComposite composite,
+                                 boolean pinned,
+                                 FileEditorWithProviderComposite selectedEditor) {
     Element fileElement = new Element("file");
     fileElement.setAttribute("leaf-file-name", file.getName()); // TODO: all files
     FileEditorHistoryUtil.currentStateAsHistoryEntry(composite).writeExternal(fileElement, myProject);
-    fileElement.setAttribute(PINNED, Boolean.toString(pinned));
-    fileElement.setAttribute(CURRENT_IN_TAB, Boolean.toString(composite.equals(selectedEditor)));
+    fileElement.setAttribute(AsyncConfigTreeReader.PINNED, Boolean.toString(pinned));
+    fileElement.setAttribute(AsyncConfigTreeReader.CURRENT_IN_TAB, Boolean.toString(composite.equals(selectedEditor)));
     return fileElement;
   }
 
+  @Nonnull
   @Override
-  public void openFiles(@Nonnull UIAccess uiAccess) {
+  public CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess) {
     if (mySplittersElement == null) {
-      return;
+      return CompletableFuture.completedFuture(null);
     }
 
-    final JPanel comp = myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess);
-    uiAccess.giveAndWaitIfNeed(() -> {
+    return myUIBuilder.process(mySplittersElement, getTopPanel(), uiAccess).whenCompleteAsync((comp, throwable) -> {
       if (comp != null) {
         myComponent.removeAll();
         myComponent.add(comp, BorderLayout.CENTER);
@@ -263,41 +268,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
           }
         }
       }
-    });
-  }
-
-  public int getEditorsCount() {
-    return mySplittersElement == null ? 0 : countFiles(mySplittersElement, UIAccess.get());
-  }
-
-  private double myProgressStep;
-
-  public void setProgressStep(double step) {
-    myProgressStep = step;
-  }
-
-  private void updateProgress() {
-    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-    if (indicator != null) {
-      indicator.setFraction(indicator.getFraction() + myProgressStep);
-    }
-  }
-
-  private static int countFiles(Element element, UIAccess uiAccess) {
-    Integer value = new ConfigTreeReader<Integer>() {
-      @Override
-      protected Integer processFiles(@Nonnull List<Element> fileElements, @Nullable Integer context, Element parent, UIAccess uiAccess) {
-        return fileElements.size();
-      }
-
-      @Override
-      protected Integer processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable Integer context, UIAccess uiAccess) {
-        Integer first = process(firstChild, null, uiAccess);
-        Integer second = process(secondChild, null, uiAccess);
-        return (first == null ? 0 : first) + (second == null ? 0 : second);
-      }
-    }.process(element, null, uiAccess);
-    return value == null ? 0 : value;
+    }, uiAccess);
   }
 
   @Override
@@ -504,62 +475,30 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     }
   }
 
-  private abstract static class ConfigTreeReader<T> {
-    @Nullable
-    public T process(@Nullable Element element, @Nullable T context, UIAccess uiAccess) {
-      if (element == null) {
-        return null;
-      }
-      final Element splitterElement = element.getChild("splitter");
-      if (splitterElement != null) {
-        final Element first = splitterElement.getChild("split-first");
-        final Element second = splitterElement.getChild("split-second");
-        return processSplitter(splitterElement, first, second, context, uiAccess);
-      }
 
-      final Element leaf = element.getChild("leaf");
-      if (leaf == null) {
-        return null;
-      }
-
-      List<Element> fileElements = leaf.getChildren("file");
-      final List<Element> children = new ArrayList<>(fileElements.size());
-
-      // trim to EDITOR_TAB_LIMIT, ignoring CLOSE_NON_MODIFIED_FILES_FIRST policy
-      int toRemove = fileElements.size() - UISettings.getInstance().EDITOR_TAB_LIMIT;
-      for (Element fileElement : fileElements) {
-        if (toRemove <= 0 || Boolean.valueOf(fileElement.getAttributeValue(PINNED)).booleanValue()) {
-          children.add(fileElement);
-        }
-        else {
-          toRemove--;
-        }
-      }
-
-      return processFiles(children, context, leaf, uiAccess);
+  private class UIBuilder extends AsyncConfigTreeReader<JPanel> {
+    @Nonnull
+    @Override
+    protected CompletableFuture<JPanel> processFiles(@Nonnull List<Element> fileElements,
+                                                     final JPanel context,
+                                                     Element parent,
+                                                     UIAccess uiAccess) {
+      return uiAccess.giveAsync(() -> createEditorWindow(context, parent))
+                     .thenApplyAsync((window) -> processFilesImpl(fileElements, uiAccess, window));
     }
 
-    @Nullable
-    protected abstract T processFiles(@Nonnull List<Element> fileElements, @Nullable T context, Element parent, UIAccess uiAccess);
+    private DesktopFileEditorWindow createEditorWindow(JPanel context, Element parent) {
+      DesktopFileEditorWindow editorWindow =
+        context == null ? DesktopFileEditorsSplitters.this.createEditorWindow() : findWindowWith(context);
+      if (editorWindow != null) {
+        updateTabSizeLimit(editorWindow, parent.getAttributeValue(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString()));
+      }
+      return editorWindow;
+    }
 
-    @Nullable
-    protected abstract T processSplitter(@Nonnull Element element, @Nullable Element firstChild, @Nullable Element secondChild, @Nullable T context, @Nonnull UIAccess uiAccess);
-  }
-
-  private class UIBuilder extends ConfigTreeReader<JPanel> {
-
-    @Override
-    protected JPanel processFiles(@Nonnull List<Element> fileElements, final JPanel context, Element parent, UIAccess uiAccess) {
-      final Ref<DesktopFileEditorWindow> windowRef = new Ref<>();
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
-        DesktopFileEditorWindow editorWindow = context == null ? createEditorWindow() : findWindowWith(context);
-        windowRef.set(editorWindow);
-        if (editorWindow != null) {
-          updateTabSizeLimit(editorWindow, parent.getAttributeValue(JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY.toString()));
-        }
-      });
-
-      final DesktopFileEditorWindow window = windowRef.get();
+    private JPanel processFilesImpl(@Nonnull List<Element> fileElements,
+                                    UIAccess uiAccess,
+                                    DesktopFileEditorWindow window) {
       LOG.assertTrue(window != null);
       VirtualFile focusedFile = null;
 
@@ -576,10 +515,13 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
           if (virtualFile == null) throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());
           virtualFile.putUserData(OPENED_IN_BULK, Boolean.TRUE);
           VirtualFile finalVirtualFile = virtualFile;
-          Document document = ReadAction.compute(() -> finalVirtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(finalVirtualFile) : null);
+          Document document =
+            ReadAction.compute(() -> finalVirtualFile.isValid() ? FileDocumentManager.getInstance().getDocument(finalVirtualFile) : null);
 
-          boolean isCurrentTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB)).booleanValue();
-          FileEditorOpenOptions openOptions = new FileEditorOpenOptions().withPin(Boolean.valueOf(file.getAttributeValue(PINNED))).withIndex(i).withReopeningEditorsOnStartup();
+          boolean isCurrentTab = Boolean.valueOf(file.getAttributeValue(CURRENT_IN_TAB));
+          FileEditorOpenOptions openOptions = new FileEditorOpenOptions().withPin(Boolean.valueOf(file.getAttributeValue(PINNED)))
+                                                                         .withIndex(i)
+                                                                         .withReopeningEditorsOnStartup();
 
           fileEditorManager.openFileImpl4(uiAccess, window, virtualFile, entry, openOptions);
           if (isCurrentTab) {
@@ -591,12 +533,9 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
             // and that document will be created only once during file opening
             document.putUserData(DUMMY_KEY, null);
           }
-          updateProgress();
         }
         catch (InvalidDataException e) {
-          if (ApplicationManager.getApplication().isUnitTestMode()) {
-            LOG.error(e);
-          }
+          LOG.warn(e);
         }
         finally {
           if (virtualFile != null) virtualFile.putUserData(OPENED_IN_BULK, null);
@@ -606,7 +545,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
       if (focusedFile != null) {
         getManager().addSelectionRecord(focusedFile, window);
         VirtualFile finalFocusedFile = focusedFile;
-        uiAccess.giveAndWaitIfNeed(() -> {
+        uiAccess.execute(() -> {
           FileEditorWithProviderComposite editor = window.findFileComposite(finalFocusedFile);
           if (editor != null) {
             window.setEditor(editor, true, true);
@@ -615,7 +554,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
       }
       else {
         ToolWindowManager manager = ToolWindowManager.getInstance(getManager().getProject());
-        manager.invokeLater(() -> {
+        uiAccess.execute(() -> {
           if (null == manager.getActiveToolWindowId()) {
             ToolWindow toolWindow = manager.getToolWindow(ToolWindowId.PROJECT_VIEW);
             if (toolWindow != null) toolWindow.activate(null);
@@ -625,54 +564,68 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
       return window.myPanel;
     }
 
+
+    @Nonnull
     @Override
-    protected JPanel processSplitter(@Nonnull Element splitterElement, Element firstChild, Element secondChild, final JPanel context, UIAccess uiAccess) {
+    protected CompletableFuture<JPanel> processSplitter(@Nonnull Element splitterElement,
+                                                        Element firstChild,
+                                                        Element secondChild,
+                                                        final JPanel context,
+                                                        @Nonnull UIAccess uiAccess) {
+      return processSplitterImpl(splitterElement, firstChild, secondChild, context, uiAccess);
+    }
+
+
+    protected CompletableFuture<JPanel> processSplitterImpl(@Nonnull Element splitterElement,
+                                                            Element firstChild,
+                                                            Element secondChild,
+                                                            final JPanel context,
+                                                            UIAccess uiAccess) {
       if (context == null) {
         final boolean orientation = "vertical".equals(splitterElement.getAttributeValue("split-orientation"));
-        final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion")).floatValue();
-        final JPanel firstComponent = process(firstChild, null, uiAccess);
-        final JPanel secondComponent = process(secondChild, null, uiAccess);
-        final Ref<JPanel> panelRef = new Ref<>();
-        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> {
+        final float proportion = Float.valueOf(splitterElement.getAttributeValue("split-proportion"));
+        final CompletableFuture<JPanel> firstComponent = process(firstChild, null, uiAccess);
+        final CompletableFuture<JPanel> secondComponent = process(secondChild, null, uiAccess);
+
+        return firstComponent.thenCombineAsync(secondComponent, (p1, p2) -> {
           JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
           Splitter splitter = new OnePixelSplitter(orientation, proportion, 0.1f, 0.9f);
           panel.add(splitter, BorderLayout.CENTER);
-          splitter.setFirstComponent(firstComponent);
-          splitter.setSecondComponent(secondComponent);
-          panelRef.set(panel);
-        });
-        return panelRef.get();
+          splitter.setFirstComponent(p1);
+          splitter.setSecondComponent(p2);
+          return panel;
+        }, uiAccess);
       }
-      final Ref<JPanel> firstComponent = new Ref<>();
-      final Ref<JPanel> secondComponent = new Ref<>();
-      uiAccess.giveAndWaitIfNeed(() -> {
-        if (context.getComponent(0) instanceof Splitter) {
-          Splitter splitter = (Splitter)context.getComponent(0);
-          firstComponent.set((JPanel)splitter.getFirstComponent());
-          secondComponent.set((JPanel)splitter.getSecondComponent());
-        }
-        else {
-          firstComponent.set(context);
-          secondComponent.set(context);
-        }
-      });
-      process(firstChild, firstComponent.get(), uiAccess);
-      process(secondChild, secondComponent.get(), uiAccess);
-      return context;
+      else {
+        return uiAccess.giveAsync(() -> {
+          if (context.getComponent(0) instanceof Splitter) {
+            Splitter splitter = (Splitter)context.getComponent(0);
+            return Couple.of((JPanel)splitter.getFirstComponent(), (JPanel)splitter.getSecondComponent());
+          }
+          else {
+            return Couple.create(context, context);
+          }
+        }).thenCompose(couple -> {
+          CompletableFuture<JPanel> f1 = process(firstChild, couple.getFirst(), uiAccess);
+          CompletableFuture<JPanel> f2 = process(firstChild, couple.getSecond(), uiAccess);
+
+          return f1.thenCombineAsync(f2, (jPanel, jPanel2) -> context, uiAccess);
+        });
+      }
     }
   }
 
   private static void updateTabSizeLimit(DesktopFileEditorWindow editorWindow, String tabSizeLimit) {
     DesktopAWTEditorTabbedContainer tabbedPane = editorWindow.getTabbedPane();
-    if (tabbedPane != null) {
-      if (tabSizeLimit != null) {
-        try {
-          int limit = Integer.parseInt(tabSizeLimit);
-          UIUtil.invokeAndWaitIfNeeded((Runnable)() -> UIUtil.putClientProperty(tabbedPane.getComponent(), JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY, limit));
-        }
-        catch (NumberFormatException ignored) {
-        }
+    if (tabSizeLimit != null) {
+      try {
+        int limit = Integer.parseInt(tabSizeLimit);
+        UIUtil.invokeAndWaitIfNeeded((Runnable)() -> UIUtil.putClientProperty(tabbedPane.getComponent(),
+                                                                              JBTabsImpl.SIDE_TABS_SIZE_LIMIT_KEY,
+                                                                              limit));
+      }
+      catch (NumberFormatException ignored) {
       }
     }
   }

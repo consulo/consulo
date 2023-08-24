@@ -16,19 +16,18 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ModalityStateListener;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -38,6 +37,11 @@ import java.util.function.Supplier;
 public class AWTUIAccessImpl implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
   private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
+
+  @Override
+  public void execute(@Nonnull Runnable command) {
+    SwingUtilities.invokeLater(command);
+  }
 
   @Override
   public boolean isValid() {
@@ -66,6 +70,23 @@ public class AWTUIAccessImpl implements UIAccess {
   public Runnable markEventCount() {
     int eventCount = getEventCount();
     return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
+  }
+
+  @Nonnull
+  @Override
+  public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
+    CompletableFuture<T> future = new CompletableFuture<>();
+    SwingUtilities.invokeLater(() -> {
+      try {
+        T result = supplier.get();
+        future.complete(result);
+      }
+      catch (Throwable e) {
+        LOGGER.error(e);
+        future.completeExceptionally(e);
+      }
+    });
+    return future;
   }
 
   @Nonnull

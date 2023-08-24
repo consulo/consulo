@@ -22,6 +22,7 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -40,6 +41,27 @@ public class WebUIAccessImpl implements UIAccess {
   @Override
   public boolean isValid() {
     return myUI.isAttached() && myUI.getSession() != null;
+  }
+
+  @Nonnull
+  @Override
+  public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
+    CompletableFuture<T> result = new CompletableFuture<>();
+    if (isValid()) {
+      myUI.access(() -> {
+        try {
+          result.complete(supplier.get());
+        }
+        catch (Throwable e) {
+          LOG.error(e);
+          result.completeExceptionally(e);
+        }
+      });
+    }
+    else {
+      result.completeExceptionally(new Exception("ui detached"));
+    }
+    return result;
   }
 
   @Nonnull

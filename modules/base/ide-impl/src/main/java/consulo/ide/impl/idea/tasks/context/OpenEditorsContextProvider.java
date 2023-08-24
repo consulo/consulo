@@ -30,6 +30,8 @@ import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author Dmitry Avdeev
  */
@@ -66,15 +68,20 @@ public class OpenEditorsContextProvider extends WorkingContextProvider {
 
   @Override
   public void loadContext(Element element) {
+    CompletableFuture<?> future = CompletableFuture.completedFuture(null);
     if (myFileEditorManager != null) {
       myFileEditorManager.loadState(element);
-      myFileEditorManager.getMainSplitters().openFiles(UIAccess.current());
+      future = myFileEditorManager.getMainSplitters().openFilesAsync(UIAccess.current());
     }
-    Element dockState = element.getChild("DockManager");
-    if (dockState != null) {
-      myDockManager.loadState(dockState);
-      myDockManager.readState();
-    }
+
+    future.whenComplete((o, throwable) -> {
+
+      Element dockState = element.getChild("DockManager");
+      if (dockState != null) {
+        myDockManager.loadState(dockState);
+        myDockManager.readState();
+      }
+    });
   }
 
   @Override

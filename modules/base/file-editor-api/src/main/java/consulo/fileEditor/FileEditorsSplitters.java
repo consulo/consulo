@@ -29,6 +29,7 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -46,7 +47,8 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   void writeExternal(Element element);
 
-  void openFiles(@Nonnull UIAccess uiAccess);
+  @Nonnull
+  CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess);
 
   int getSplitCount();
 

@@ -23,6 +23,7 @@ import consulo.project.ui.wm.dock.DockManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.Component;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.ui.docking.impl.UnifiedDockableEditorTabbedContainer;
@@ -30,6 +31,8 @@ import consulo.ui.layout.WrappedLayout;
 import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -73,8 +76,9 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
   }
 
   @Override
-  public void openFiles(@Nonnull UIAccess uiAccess) {
-
+  @Nonnull
+  public CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess) {
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override
@@ -108,7 +112,7 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
 
   @Nonnull
   @Override
-  protected IdeaModalityState getComponentModality() {
+  protected ModalityState getComponentModality() {
     return IdeaModalityState.any();
   }
 
