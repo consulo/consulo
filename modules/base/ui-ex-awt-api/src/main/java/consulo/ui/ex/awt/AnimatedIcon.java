@@ -76,7 +76,7 @@ public class AnimatedIcon implements Icon, Image {
     public static final List<Icon> ICONS = immutableList(AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4);
   }
 
-  //@ApiStatus.Internal
+  @Deprecated
   public static class FS extends AnimatedIcon {
     public FS() {
       super(DELAY, ICONS.toArray(new Icon[0]));

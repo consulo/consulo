@@ -6,9 +6,10 @@ import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.application.util.NotNullLazyValue;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
@@ -23,7 +24,6 @@ import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
@@ -55,13 +55,15 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiValuesMap;
+import consulo.util.collection.Sets;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -114,13 +116,13 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
 
   private boolean myShouldClosePopupAndOnProcessFinish;
 
-  private final JLabel myRefreshIcon = new JLabel(new AnimatedIcon.FS());
+  private final JLabel myRefreshIcon = new JLabel(new AnimatedIcon.Default());
 
   private String myCurrentRequestor;
   private boolean myDisposed;
   private WeakReference<Balloon> myLastShownBalloon;
 
-  private final Set<InlineProgressIndicator> myDirtyIndicators = ContainerUtil.newIdentityTroveSet();
+  private final Set<InlineProgressIndicator> myDirtyIndicators = Sets.newHashSet(HashingStrategy.identity());
   private final Update myUpdateIndicators = new Update("UpdateIndicators", false, 1) {
     @Override
     public void run() {
