@@ -144,7 +144,11 @@ open module consulo.ide.impl {
   requires transitive kava.beans;
   requires transitive org.slf4j;
 
-  provides consulo.ui.image.IconLibraryDescriptor with consulo.ide.impl.ui.impl.LightIconLibraryDescriptor, consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor;
+  provides consulo.ui.image.IconLibraryDescriptor with
+    consulo.ide.impl.ui.impl.LightIconLibraryDescriptor,
+    consulo.ide.impl.ui.impl.LightMonoIconLibraryDescriptor,
+    consulo.ide.impl.ui.impl.DarkIconLibraryDescriptor,
+    consulo.ide.impl.ui.impl.DarkMonoIconLibraryDescriptor;
 
   exports consulo.ide.impl.dataContext to consulo.desktop.awt.ide.impl;
 
