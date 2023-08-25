@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.component.util.PluginExceptionUtil;
@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -52,8 +51,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -135,13 +134,14 @@ public class ITNReporter extends ErrorReportSubmitter {
       errorBean.setAttachments(((LogMessageEx)data).getAttachments());
     }
 
+    Application application = Application.get();
     ErrorReportSender.sendReport(project, errorBean, assignUserId, id -> {
       ourPreviousErrorReporterId = id;
       String shortId = id.substring(0, 8);
       final SubmittedReportInfo reportInfo = new SubmittedReportInfo(WebServiceApi.ERROR_REPORT.buildUrl(id), shortId, SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
       callback.accept(reportInfo);
 
-      ApplicationManager.getApplication().invokeLater(() -> {
+      application.invokeLater(() -> {
         StringBuilder text = new StringBuilder();
         final String url = IdeErrorsDialog.getUrl(reportInfo);
 
@@ -158,7 +158,7 @@ public class ITNReporter extends ErrorReportSubmitter {
         ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, XmlStringUtil.wrapInHtml(text), type, listener).setImportant(false)
                 .notify(project);
       });
-    }, e -> ApplicationManager.getApplication().invokeLater(() -> {
+    }, e -> application.invokeLater(() -> {
       String msg;
       if (e instanceof AuthorizationFailedException) {
         msg = DiagnosticBundle.message("error.report.authentication.failed");
@@ -180,7 +180,7 @@ public class ITNReporter extends ErrorReportSubmitter {
           @RequiredUIAccess
           @Override
           public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-            CheckForUpdateAction.actionPerformed(e.getData(CommonDataKeys.PROJECT), UpdateSettings.getInstance(), UIAccess.current());
+            CheckForUpdateAction.actionPerformed(e.getData(Project.KEY), UpdateSettings.getInstance(), UIAccess.current());
           }
         });
         notification.notify(project);
@@ -192,19 +192,10 @@ public class ITNReporter extends ErrorReportSubmitter {
         if (e instanceof AuthorizationFailedException) {
           // TODO [VISTALL]
         }
-        ApplicationManager.getApplication().invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
+        application.invokeLater(() -> doSubmit(event, parentComponent, callback, errorBean, description));
       }
     }));
     return true;
-  }
-
-  private static void showMessageDialog(Component parentComponent, Project project, String message, String title, Image icon) {
-    if (parentComponent.isShowing()) {
-      Messages.showMessageDialog(parentComponent, message, title, icon);
-    }
-    else {
-      Messages.showMessageDialog(project, message, title, icon);
-    }
   }
 
   private static int showYesNoDialog(Component parentComponent, Project project, String message, String title, Image icon) {
