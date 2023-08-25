@@ -1,12 +1,12 @@
 package consulo.task;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.CommonBundle;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
 import org.apache.http.HttpStatus;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.util.ResourceBundle;
 
@@ -16,6 +16,8 @@ import java.util.ResourceBundle;
  *
  * @author Mikhail Golubev
  */
+@Deprecated
+@DeprecationInfo("Use TaskLocalize")
 public class TaskBundle {
 
   private static Reference<ResourceBundle> ourBundle;

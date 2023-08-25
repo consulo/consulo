@@ -7,5 +7,4 @@ module consulo.base.icon.library {
 
   exports consulo.platform.base.icon;
   exports consulo.platform.base.tips.icon;
-  exports consulo.task.impl.icon;
 }

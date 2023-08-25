@@ -6,7 +6,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.task.impl.icon.TaskImplIconGroup;
+import consulo.task.icon.TaskIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -14,7 +14,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -48,7 +47,7 @@ public class TasksToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override
   public Image getIcon() {
-    return TaskImplIconGroup.clock();
+    return TaskIconGroup.clock();
   }
 
   @Nonnull

@@ -56,15 +56,16 @@ public class TaskSearchSupport {
     return ContainerUtil.mapNotNull(tasks, task -> matcher.matches(task.getId()) || matcher.matches(task.getSummary()) ? task : null);
   }
 
-  public static List<Task> getRepositoriesTasks(final TaskManager myManager,
+  @Nonnull
+  public static List<Task> getRepositoriesTasks(final TaskManager manager,
                                                 String pattern,
                                                 int max,
                                                 int since,
                                                 boolean forceRequest,
                                                 final boolean withClosed,
                                                 @Nonnull final ProgressIndicator cancelled) {
-    List<Task> tasks = myManager.getIssues(pattern, since, max, withClosed, cancelled, forceRequest);
-    ContainerUtil.sort(tasks, TaskManagerImpl.TASK_UPDATE_COMPARATOR);
+    List<Task> tasks = new ArrayList<>(manager.getIssues(pattern, since, max, withClosed, cancelled, forceRequest));
+    tasks.sort(TaskManagerImpl.TASK_UPDATE_COMPARATOR);
     return tasks;
   }
 

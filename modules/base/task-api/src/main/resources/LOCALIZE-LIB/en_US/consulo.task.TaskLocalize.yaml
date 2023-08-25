@@ -1,0 +1,28 @@
+failure.login:
+  text: Login failed. Check your credentials.
+failure.permissions:
+  text: Request failed. Check your permissions.
+failure.server.message:
+  text: 'Request failed. Reason: {0}'
+failure.http.error:
+  text: 'Request failed with HTTP error: {0,number} {1}.'
+failure.configuration:
+  text: Not configured.
+jira.default.query:
+  text: assignee = currentUser() and resolution = Unresolved order by updated
+jira.failure.no.REST:
+  text: JIRA below 4.2.0 doesn't have REST API and is no longer supported.
+jira.failure.no.JQL:
+  text: JQL search cannot be used in JIRA versions prior 4.2.
+jira.failure.no.state.update:
+  text: Task state cannot be updated in JIRA versions prior 4.2.
+jira.failure.no.time.spent:
+  text: Time spent cannot be updated in JIRA versions prior 5.0.
+jira.failure.captcha:
+  text: Login failed. Enter captcha in web-interface.
+youtrack.default.query:
+  text: 'for: me sort by: updated #Unresolved'
+bugzilla.failure.malformed.response:
+  text: Cannot decode server response. Check that XML-RPC plugin is enabled.
+bugzilla.failure.no.version:
+  text: Cannot find Bugzilla version. Check that URL ends with "xmlrpc.cgi".

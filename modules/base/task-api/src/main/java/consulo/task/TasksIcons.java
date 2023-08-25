@@ -15,18 +15,21 @@
  */
 package consulo.task;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
-import consulo.task.impl.icon.TaskImplIconGroup;
+import consulo.task.icon.TaskIconGroup;
 import consulo.ui.image.Image;
 
+@Deprecated
+@DeprecationInfo("Use TaskIconGroup")
 public class TasksIcons {
-  public static final Image Bug = TaskImplIconGroup.bug();
-  public static final Image Clock = TaskImplIconGroup.clock();
-  public static final Image Exception = TaskImplIconGroup.exception();
+  public static final Image Bug = TaskIconGroup.bug();
+  public static final Image Clock = TaskIconGroup.clock();
+  public static final Image Exception = TaskIconGroup.exception();
   @Deprecated
-  public static final Image SavedContext = TaskImplIconGroup.savedcontext();
-  public static final Image StartTimer = TaskImplIconGroup.starttimer();
-  public static final Image StopTimer = TaskImplIconGroup.stoptimer();
+  public static final Image SavedContext = TaskIconGroup.savedcontext();
+  public static final Image StartTimer = TaskIconGroup.starttimer();
+  public static final Image StopTimer = TaskIconGroup.stoptimer();
   @Deprecated
   public static final Image Unknown = AllIcons.FileTypes.Unknown;
 }
