@@ -15,16 +15,14 @@
  */
 package consulo.project.internal;
 
+import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.disposer.Disposable;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -39,29 +37,9 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @Nullable
   public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
 
-  @RequiredUIAccess
-  public boolean openProject(Project project) {
-    return openProject(project, UIAccess.current());
-  }
-
-  public abstract boolean openProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
-
-  public abstract boolean isProjectOpened(Project project);
-
-  public abstract void saveChangedProjectFile(@Nonnull VirtualFile file, @Nonnull Project project);
-
   public abstract void blockReloadingProjectOnExternalChanges();
 
   public abstract void unblockReloadingProjectOnExternalChanges();
-
-  @TestOnly
-  @RequiredUIAccess
-  public abstract void openTestProject(@Nonnull Project project);
-
-  @TestOnly
-  // returns remaining open test projects
-  @RequiredUIAccess
-  public abstract Collection<Project> closeTestProject(@Nonnull Project project);
 
   // returns true on success
   @RequiredUIAccess

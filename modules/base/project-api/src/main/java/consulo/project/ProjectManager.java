@@ -57,6 +57,8 @@ public abstract class ProjectManager {
     return closeAndDisposeAsync(project, uiAccess, true, true, true);
   }
 
+  public abstract boolean isProjectOpened(Project project);
+
   @Nonnull
   public abstract AsyncResult<Void> closeAndDisposeAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess, boolean checkCanClose, boolean save, boolean dispose);
 

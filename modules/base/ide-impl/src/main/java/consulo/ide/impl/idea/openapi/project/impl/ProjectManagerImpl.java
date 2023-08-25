@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.NonCancelableSection;
@@ -31,16 +30,17 @@ import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
-import consulo.component.store.impl.internal.storage.*;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.storage.StateStorageBase;
+import consulo.component.store.impl.internal.storage.StateStorageListener;
+import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
 import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
@@ -61,26 +61,21 @@ import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectManagerEx;
-import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
-import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.util.SingleAlarm;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import consulo.util.lang.Couple;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
@@ -92,10 +87,8 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -110,7 +103,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private Project[] myOpenProjects = {}; // guarded by lock
   private final Object lock = new Object();
 
-  private final List<Predicate<Project>> myCloseProjectVetos = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
   private final MultiMap<Project, StateStorage> myChangedProjectFiles = MultiMap.createSet();
   private final SingleAlarm myChangedFilesAlarm;
@@ -189,7 +182,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       public void afterRefreshFinish(boolean asynchronous) {
         unblockReloadingProjectOnExternalChanges();
       }
-    });
+    }, this);
     myChangedFilesAlarm = new SingleAlarm(restartApplicationOrReloadProjectTask, 300);
   }
 
@@ -331,78 +324,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
   }
 
-  @Override
-  @RequiredUIAccess
-  public boolean openProject(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
-    if (isLight(project)) {
-      ((ProjectImpl)project).setTemporarilyDisposed(false);
-      boolean isInitialized = StartupManagerEx.getInstanceEx(project).startupActivityPassed();
-      if (isInitialized) {
-        addToOpened(project);
-        // events already fired
-        return true;
-      }
-    }
-
-    for (Project p : getOpenProjects()) {
-      if (consulo.project.util.ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
-        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), IdeaModalityState.NON_MODAL);
-        return false;
-      }
-    }
-
-    if (!addToOpened(project)) {
-      return false;
-    }
-
-    Runnable process = () -> {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess));
-
-      final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
-      startupManager.runStartupActivities(uiAccess);
-      startupManager.runPostStartupActivitiesFromExtensions(uiAccess);
-
-      GuiUtils.invokeLaterIfNeeded(() -> {
-        if (!project.isDisposed()) {
-          startupManager.runPostStartupActivities(uiAccess);
-
-
-          if (!myApplication.isHeadlessEnvironment() && !myApplication.isUnitTestMode()) {
-            final TrackingPathMacroSubstitutor macroSubstitutor = project.getInstance(IProjectStore.class).getStateStorageManager().getMacroSubstitutor();
-            if (macroSubstitutor != null) {
-              StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
-            }
-          }
-
-          if (myApplication.isActive()) {
-            Window projectFrame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
-            if (projectFrame != null) {
-              ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
-            }
-          }
-
-          logStart(project);
-        }
-      }, IdeaModalityState.NON_MODAL);
-    };
-
-    ProgressIndicator indicator = myProgressManager.getProgressIndicator();
-    if (indicator != null) {
-      indicator.setText("Preparing workspace...");
-      process.run();
-      return true;
-    }
-
-    boolean ok = myProgressManager.runProcessWithProgressSynchronously(process, "Preparing workspace...", canCancelProjectLoading(), project);
-    if (!ok) {
-      closeProject(project, false, false, true);
-      notifyProjectOpenFailed();
-      return false;
-    }
-
-    return true;
-  }
-
   private void logStart(Project project) {
     long currentTime = System.nanoTime();
     Long startTime = project.getUserData(ProjectImpl.CREATION_TIME);
@@ -436,12 +357,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static boolean canCancelProjectLoading() {
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     return !(indicator instanceof NonCancelableSection);
-  }
-
-  private void notifyProjectOpenFailed() {
-    myApplication.getMessageBus().syncPublisher(AppLifecycleListener.class).projectOpenFailed();
-
-    WelcomeFrameManager.getInstance().showIfNoProjectOpened();
   }
 
   private void askToReloadProjectIfConfigFilesChangedExternally() {
@@ -523,35 +438,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       LOG.debug("[RELOAD] myReloadBlockCount = " + count);
     }
     return count == 0;
-  }
-
-  @Override
-  @RequiredUIAccess
-  public void openTestProject(@Nonnull final Project project) {
-    assert myApplication.isUnitTestMode();
-    openProject(project);
-    UIUtil.dispatchAllInvocationEvents(); // post init activities are invokeLatered
-  }
-
-  @Override
-  @RequiredUIAccess
-  public Collection<Project> closeTestProject(@Nonnull Project project) {
-    assert myApplication.isUnitTestMode();
-    closeProject(project, false, false, false);
-    Project[] projects = getOpenProjects();
-    return projects.length == 0 ? Collections.<Project>emptyList() : Arrays.asList(projects);
-  }
-
-  @Override
-  public void saveChangedProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    StateStorageManager storageManager = project.getInstance(IProjectStore.class).getStateStorageManager();
-    String fileSpec = storageManager.collapseMacros(file.getPath());
-    Couple<Collection<VfsFileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
-    VfsFileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
-    // if empty, so, storage is not yet loaded, so, we don't have to reload
-    if (storage != null) {
-      registerProjectToReload(project, file, storage);
-    }
   }
 
   private void registerProjectToReload(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull StateStorage storage) {
@@ -712,7 +598,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     final String fileNames = StringUtil.join(notifications[0].getFileNames(), "\n");
 
-    final String msg = String.format("%s was unable to save some project files,\nare you sure you want to close this project anyway?", ApplicationNamesInfo.getInstance().getProductName());
+    final String msg = String.format("%s was unable to save some project files,\nare you sure you want to close this project anyway?", Application.get().getName().getValue());
     return Messages.showDialog(project, msg, "Unsaved Project", "Read-only files:\n\n" + fileNames, new String[]{"Yes", "No"}, 0, 1, Messages.getWarningIcon()) == 0;
   }
 
