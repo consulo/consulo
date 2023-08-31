@@ -16,16 +16,16 @@
 package consulo.language.psi;
 
 import consulo.application.Application;
-import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.IElementType;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
+ * TODO rewrite using ExtensionCacheKey
+ *
  * @author VISTALL
  * @since 1:53/02.04.13
  */
@@ -35,10 +35,10 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
     return new ElementTypeEntryExtensionCollector<>(clazz);
   }
 
-  private ExtensionList<E, Application> myExtensionPointName;
+  private final Class<E> myExtensionClass;
 
   private ElementTypeEntryExtensionCollector(@Nonnull Class<E> clazz) {
-    myExtensionPointName = ExtensionList.of(clazz);
+    myExtensionClass = clazz;
   }
 
   private final Map<IElementType, E> myMap = new ConcurrentHashMap<>();
@@ -46,22 +46,11 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
   @Nonnull
   public E getValue(@Nonnull IElementType elementType) {
     return myMap.computeIfAbsent(elementType, it -> {
-      E factory = null;
-      for (E e : myExtensionPointName.getExtensionList(Application.get())) {
-        if (e.test(it)) {
-          factory = e;
-          break;
-        }
-      }
+      E factory = Application.get().getExtensionPoint(myExtensionClass).findFirstSafe(e -> e.test(elementType));
       if (factory == null) {
-        throw new IllegalArgumentException("ElementType " + it + " is not handled in " + myExtensionPointName);
+        throw new IllegalArgumentException("ElementType " + it + " is not handled in " + myExtensionClass);
       }
       return factory;
     });
-  }
-
-  @Nonnull
-  public ExtensionPointName<E> getExtensionPointName() {
-    throw new UnsupportedOperationException();
   }
 }
