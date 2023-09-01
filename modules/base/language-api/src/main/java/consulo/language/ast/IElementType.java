@@ -107,7 +107,7 @@ public class IElementType {
    * @return the associated language.
    */
   @Nonnull
-  public Language getLanguage() {
+  public final Language getLanguage() {
     return myLanguage;
   }
 
