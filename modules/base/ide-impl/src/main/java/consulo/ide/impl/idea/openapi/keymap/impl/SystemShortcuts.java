@@ -5,7 +5,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
@@ -14,6 +13,7 @@ import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
@@ -23,9 +23,9 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -265,7 +265,7 @@ public final class SystemShortcuts {
                   new GeneralCommandLine("osascript", "-e", "tell application \"System Preferences\"", "-e", "set the current pane to pane id \"com.apple.preference.keyboard\"", "-e",
                                          "reveal anchor \"shortcutsTab\" of pane id \"com.apple.preference.keyboard\"", "-e", "activate", "-e", "end tell");
           try {
-            ExecUtil.execAndGetOutput(cmdLine);
+            CapturingProcessUtil.execAndGetOutput(cmdLine);
             // NOTE: we can't detect OS-settings changes
             // but we can try to schedule check conflicts (and expire notification if necessary)
           }

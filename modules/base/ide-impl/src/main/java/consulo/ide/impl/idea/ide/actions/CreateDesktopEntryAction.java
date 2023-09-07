@@ -30,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -172,7 +173,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
         "exit $RV\n");
       script.deleteOnExit();
       String prompt = ApplicationBundle.message("desktop.entry.sudo.prompt");
-      int result = ExecUtil.sudoAndGetOutput(new GeneralCommandLine(script.getPath()), prompt).getExitCode();
+      int result = CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(script.getPath()).withSudo(prompt)).getExitCode();
       if (result != 0) throw new RuntimeException("'" + script.getAbsolutePath() + "' : " + result);
     }
     else {

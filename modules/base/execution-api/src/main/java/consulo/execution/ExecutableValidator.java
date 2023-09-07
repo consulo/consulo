@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.execution.internal.ExecutionNotificationGroupHolder;
 import consulo.logging.Logger;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -106,7 +106,7 @@ public abstract class ExecutableValidator {
       commandLine.setExePath(executable);
       commandLine.addParameters(processParameters);
       commandLine.setCharset(CharsetToolkit.getDefaultSystemCharset());
-      ProcessOutput result = ExecUtil.execAndGetOutput(commandLine, TIMEOUT_MS);
+      ProcessOutput result = CapturingProcessUtil.execAndGetOutput(commandLine, TIMEOUT_MS);
       boolean timeout = result.isTimeout();
       int exitCode = result.getExitCode();
       String stderr = result.getStderr();

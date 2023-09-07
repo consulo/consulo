@@ -21,7 +21,6 @@ import consulo.process.ExecutionException;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.LocalProcessHandler;
-import consulo.process.internal.OldCapturingProcessHandler;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
@@ -34,10 +33,13 @@ import java.util.Map;
 @Deprecated
 @DeprecationInfo("Use CapturingProcessUtil, or GeneralCommandLine#withSudo etc")
 public class ExecUtil {
-  private ExecUtil() { }
+  private ExecUtil() {
+  }
 
   @Nonnull
-  public static String loadTemplate(@Nonnull ClassLoader loader, @Nonnull String templateName, @Nullable Map<String, String> variables) throws IOException {
+  public static String loadTemplate(@Nonnull ClassLoader loader,
+                                    @Nonnull String templateName,
+                                    @Nullable Map<String, String> variables) throws IOException {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStream stream = loader.getResourceAsStream(templateName);
     if (stream == null) {
       throw new IOException("Template '" + templateName + "' not found by " + loader);
@@ -60,7 +62,9 @@ public class ExecUtil {
   }
 
   @Nonnull
-  public static File createTempExecutableScript(@Nonnull String prefix, @Nonnull String suffix, @Nonnull String content) throws IOException, ExecutionException {
+  public static File createTempExecutableScript(@Nonnull String prefix,
+                                                @Nonnull String suffix,
+                                                @Nonnull String content) throws IOException, ExecutionException {
     File tempDir = new File(ContainerPathManager.get().getTempPath());
     File tempFile = FileUtil.createTempFile(tempDir, prefix, suffix, true, true);
     FileUtil.writeToFile(tempFile, content.getBytes(CharsetToolkit.UTF8));
@@ -79,12 +83,6 @@ public class ExecUtil {
   @Nonnull
   public static String getWindowsShellName() {
     return "cmd.exe";
-  }
-
-  @Nonnull
-  @Deprecated
-  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new OldCapturingProcessHandler(commandLine).runProcess();
   }
 
   @Nullable
@@ -115,22 +113,5 @@ public class ExecUtil {
   public static Process sudo(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
     LocalProcessHandler handler = (LocalProcessHandler)ProcessHandlerBuilder.create(commandLine.withSudo(prompt)).build();
     return handler.getProcess();
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use GeneralCommandLine#withSudo()")
-  private static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
-    return commandLine.withSudo(prompt);
-  }
-
-  @Nonnull
-  public static ProcessOutput sudoAndGetOutput(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws IOException, ExecutionException {
-    return execAndGetOutput(sudoCommand(commandLine, prompt));
-  }
-
-  @Nonnull
-  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
-    return new OldCapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
   }
 }

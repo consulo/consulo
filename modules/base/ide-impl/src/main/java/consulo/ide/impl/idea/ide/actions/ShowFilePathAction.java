@@ -25,7 +25,6 @@ import consulo.application.util.*;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.PlatformFileSystem;
@@ -33,6 +32,7 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
 import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -55,9 +55,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -320,7 +320,7 @@ public class ShowFilePathAction extends AnAction {
     PooledThreadExecutor.INSTANCE.submit(() -> {
       try {
         LOG.debug(cmd.toString());
-        ExecUtil.execAndGetOutput(cmd).checkSuccess(LOG);
+        CapturingProcessUtil.execAndGetOutput(cmd).checkSuccess(LOG);
       }
       catch (Exception e) {
         LOG.warn(e);
@@ -330,7 +330,7 @@ public class ShowFilePathAction extends AnAction {
 
   @Nullable
   private static VirtualFile getFile(final AnActionEvent e) {
-    return e.getData(CommonDataKeys.VIRTUAL_FILE);
+    return e.getData(VirtualFile.KEY);
   }
 
   public static Boolean showDialog(Project project, String message, String title, File file) {

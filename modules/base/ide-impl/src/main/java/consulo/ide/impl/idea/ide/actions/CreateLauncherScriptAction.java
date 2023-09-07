@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
@@ -121,7 +122,7 @@ public class CreateLauncherScriptAction extends DumbAwareAction {
                 "install -g 0 -o 0 \"" + scriptFile.getCanonicalPath() + "\" \"" + pathName + "\"";
         File installationScript = ExecUtil.createTempExecutableScript("launcher_installer", ".sh", installationScriptSrc);
         String prompt = ApplicationBundle.message("launcher.script.sudo.prompt", scriptTargetDirPath);
-        ExecUtil.sudoAndGetOutput(new GeneralCommandLine(installationScript.getPath()), prompt);
+        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine(installationScript.getPath()).withSudo(prompt));
       }
     }
     catch (Exception e) {

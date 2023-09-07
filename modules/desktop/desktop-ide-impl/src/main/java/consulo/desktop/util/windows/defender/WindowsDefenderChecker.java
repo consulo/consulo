@@ -14,7 +14,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ExecUtil;
 import consulo.process.util.CapturingProcessUtil;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
@@ -144,12 +143,13 @@ public class WindowsDefenderChecker {
 
   private static Boolean isWindowsDefenderActive() {
     try {
-      ProcessOutput output = ExecUtil.execAndGetOutput(new GeneralCommandLine("wmic",
-                                                                              "/Namespace:\\\\root\\SecurityCenter2",
-                                                                              "Path",
-                                                                              "AntivirusProduct",
-                                                                              "Get",
-                                                                              "displayName,productState"), WMIC_COMMAND_TIMEOUT_MS);
+      ProcessOutput output = CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine("wmic",
+                                                                                          "/Namespace:\\\\root\\SecurityCenter2",
+                                                                                          "Path",
+                                                                                          "AntivirusProduct",
+                                                                                          "Get",
+                                                                                          "displayName,productState"),
+                                                                   WMIC_COMMAND_TIMEOUT_MS);
       if (output.getExitCode() == 0) {
         return parseWindowsDefenderProductState(output);
       }
@@ -368,15 +368,15 @@ public class WindowsDefenderChecker {
 
   public boolean runExcludePathsCommand(Project project, Collection<Path> paths) {
     try {
-      final ProcessOutput output = ExecUtil.sudoAndGetOutput(
+      final ProcessOutput output = CapturingProcessUtil.execAndGetOutput(
         new GeneralCommandLine("powershell",
                                "-Command",
                                "Add-MpPreference",
                                "-ExclusionPath",
-                               StringUtil.join(paths, (path) -> StringUtil.wrapWithDoubleQuote(path.toString()), ",")), "");
+                               StringUtil.join(paths, (path) -> StringUtil.wrapWithDoubleQuote(path.toString()), ",")).withSudo(""));
       return output.getExitCode() == 0;
     }
-    catch (IOException | ExecutionException e) {
+    catch (ExecutionException e) {
       UIUtil.invokeLaterIfNeeded(() -> Messages.showErrorDialog(project,
                                                                 DiagnosticBundle.message("virus.scanning.fix.failed", e.getMessage()),
                                                                 DiagnosticBundle.message("virus.scanning.fix.title")));
