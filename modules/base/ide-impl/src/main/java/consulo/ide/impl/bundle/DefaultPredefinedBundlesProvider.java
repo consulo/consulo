@@ -18,13 +18,13 @@ package consulo.ide.impl.bundle;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.content.bundle.*;
 import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,6 +33,12 @@ import java.util.List;
  */
 @ExtensionImpl(id = "default", order = "first")
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
+  private record LegacySDKPath(String path, String envVarName) {
+  }
+
+  private record BundlePath(Path path, String envVarName) {
+  }
+
   @Override
   public void createBundles(@Nonnull Context context) {
     Platform platform = Platform.current();
@@ -42,7 +48,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         createBundles(context, bundleType, platform);
       }
       else {
-        createLegacySdks(context, sdkType);
+        createLegacySdks(context, sdkType, platform);
       }
     });
   }
@@ -52,11 +58,17 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
       return;
     }
 
-    List<Path> paths = new ArrayList<>();
-    sdkType.collectHomePaths(platform, paths::add);
+    List<BundlePath> paths = new ArrayList<>();
+    sdkType.collectHomePaths(platform, path -> paths.add(new BundlePath(path, null)));
+    for (String envVar : sdkType.getEnviromentVariables(platform)) {
+      String varValue = platform.os().getEnvironmentVariable(envVar);
+      if (!StringUtil.isEmptyOrSpaces(varValue)) {
+        paths.add(new BundlePath(platform.fs().getPath(varValue), envVar));
+      }
+    }
 
-    for (Path path : paths) {
-      path = sdkType.adjustSelectedSdkHome(platform, path);
+    for (BundlePath bundlePath : paths) {
+      Path path = sdkType.adjustSelectedSdkHome(platform, bundlePath.path());
 
       if (sdkType.isValidSdkHome(platform, path)) {
         VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
@@ -66,7 +78,14 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
 
         String versionString = sdkType.getVersionString(platform, path);
 
-        Sdk sdk = context.createSdk(platform, sdkType, path);
+        Sdk sdk;
+        if (bundlePath.envVarName() != null) {
+          sdk = context.createSdkWithName(sdkType, path, bundlePath.envVarName());
+        }
+        else {
+          sdk = context.createSdk(platform, sdkType, path);
+        }
+
         SdkModificator sdkModificator = sdk.getSdkModificator();
         sdkModificator.setVersionString(versionString);
         sdkModificator.commitChanges();
@@ -76,15 +95,25 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
     }
   }
 
-  private void createLegacySdks(@Nonnull Context context, SdkType sdkType) {
+  private void createLegacySdks(@Nonnull Context context, SdkType sdkType, Platform platform) {
     if (!sdkType.canCreatePredefinedSdks()) {
       return;
     }
 
-    Collection<String> paths = sdkType.suggestHomePaths();
+    List<LegacySDKPath> paths = new ArrayList<>();
+    for (String path : sdkType.suggestHomePaths()) {
+      paths.add(new LegacySDKPath(path, null));
+    }
 
-    for (String path : paths) {
-      path = sdkType.adjustSelectedSdkHome(path);
+    for (String envVar : sdkType.getEnviromentVariables(platform)) {
+      String varValue = platform.os().getEnvironmentVariable(envVar);
+      if (!StringUtil.isEmptyOrSpaces(varValue)) {
+        paths.add(new LegacySDKPath(varValue, envVar));
+      }
+    }
+
+    for (LegacySDKPath legacySDKPath : paths) {
+      String path = sdkType.adjustSelectedSdkHome(legacySDKPath.path());
 
       if (sdkType.isValidSdkHome(path)) {
         VirtualFile dirPath = LocalFileSystem.getInstance().findFileByPath(path);
@@ -94,7 +123,14 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
 
         String sdkPath = sdkType.sdkPath(dirPath);
 
-        Sdk sdk = context.createSdk(sdkType, sdkPath);
+        Sdk sdk;
+        if (legacySDKPath.envVarName() != null) {
+          sdk = context.createSdkWithName(sdkType, legacySDKPath.envVarName());
+        }
+        else {
+          sdk = context.createSdk(sdkType, sdkPath);
+        }
+
         SdkModificator sdkModificator = sdk.getSdkModificator();
         sdkModificator.setHomePath(sdkPath);
         sdkModificator.setVersionString(sdkType.getVersionString(sdkPath));

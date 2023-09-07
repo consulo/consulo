@@ -28,6 +28,7 @@ import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -41,6 +42,17 @@ public class SandBundleType extends BundleType {
 
   public SandBundleType() {
     super("SAND_BUNDLE");
+  }
+
+  @Override
+  public boolean canCreatePredefinedSdks(@Nonnull Platform platform) {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+    return Set.of("TEMP");
   }
 
   @Override

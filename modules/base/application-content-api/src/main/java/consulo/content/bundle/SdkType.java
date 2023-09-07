@@ -20,16 +20,18 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.platform.Platform;
 import consulo.project.ProjectBundle;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
@@ -51,6 +53,14 @@ public abstract class SdkType implements SdkTypeId {
 
   public boolean canCreatePredefinedSdks() {
     return false;
+  }
+
+  /**
+   * @return env variables which will be checked while creating predefined sdks
+   */
+  @Nonnull
+  public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+    return Set.of();
   }
 
   /**
