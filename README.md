@@ -18,6 +18,7 @@ If you can't describe issue, you can use our [forum](https://discuss.consulo.io/
 | Java 18       | ![jdk18](https://github.com/consulo/consulo/workflows/jdk18/badge.svg) |
 | Java 19       | ![jdk19](https://github.com/consulo/consulo/workflows/jdk19/badge.svg) |
 | Java 20       | ![jdk20](https://github.com/consulo/consulo/workflows/jdk20/badge.svg) |
+| Java 21       | ![jdk21](https://github.com/consulo/consulo/workflows/jdk21/badge.svg) |
 
 First of all, you need those tools:
 
