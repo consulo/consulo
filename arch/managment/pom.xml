@@ -60,7 +60,7 @@
     <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
     <maven.source.plugin>3.2.1</maven.source.plugin>
 
-    <java.level>17</java.level>
+    <default.java.level>17</default.java.level>
 
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
@@ -818,18 +818,6 @@
         <dev.mode>false</dev.mode>
       </properties>
     </profile>
-    <profile>
-      <id>java-level-default-set</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>!java.level</name>
-        </property>
-      </activation>
-      <properties>
-        <java.level>17</java.level>
-      </properties>
-    </profile>
   </profiles>
 
   <repositories>
@@ -872,8 +860,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compiler.plugin}</version>
         <configuration>
-          <source>${java.level}</source>
-          <target>${java.level}</target>
+          <release>${default.java.level}</release>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <!--<useIncrementalCompilation>false</useIncrementalCompilation>-->

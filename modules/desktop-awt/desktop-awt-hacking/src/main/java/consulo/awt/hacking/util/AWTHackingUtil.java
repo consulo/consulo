@@ -15,7 +15,6 @@
  */
 package consulo.awt.hacking.util;
 
-import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -47,8 +46,8 @@ public class AWTHackingUtil {
       return declaredMethod;
     }
     catch (Throwable e) {
-      if(e instanceof InaccessibleObjectException i) {
-        throw i;
+      if(e instanceof InaccessibleObjectException) {
+        throw (InaccessibleObjectException) e;
       }
       return null;
     }

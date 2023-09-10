@@ -17,46 +17,46 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <groupId>consulo</groupId>
-    <artifactId>arch.managment-low-java</artifactId>
-    <version>3-SNAPSHOT</version>
-    <relativePath>../../../arch/managment-low-java/pom.xml</relativePath>
-  </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>consulo-external-system-rt</artifactId>
+  <parent>
+    <groupId>consulo</groupId>
+    <artifactId>arch.managment</artifactId>
+    <version>3-SNAPSHOT</version>
+    <relativePath>../managment/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>arch.managment-low-java</artifactId>
   <version>3-SNAPSHOT</version>
 
-  <packaging>jar</packaging>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.6</java.level>
-  </properties>
-
+  <packaging>pom</packaging>
+  
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin}</version>
         <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>consulo.external.system.rt</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
+          <source>${java.level}</source>
+          <target>${java.level}</target>
+          <release combine.self="override"></release>
+          <compilerId>eclipse</compilerId>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>ecj</artifactId>
+            <version>3.34.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-eclipse</artifactId>
+            <version>2.13.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>jsr305</artifactId>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
 </project>

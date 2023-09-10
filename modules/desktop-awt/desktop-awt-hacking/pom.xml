@@ -19,9 +19,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>consulo</groupId>
-    <artifactId>arch.managment</artifactId>
+    <artifactId>arch.managment-low-java</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../../../arch/managment/pom.xml</relativePath>
+    <relativePath>../../../arch/managment-low-java/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -33,28 +33,25 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>1.8</java.level>
   </properties>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>17</source>
-          <target>17</target>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <compilerArgs>
-            <args>--add-exports=java.desktop/sun.awt=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.swing=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.awt.image=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.java2d=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.awt.datatransfer=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/sun.font=consulo.desktop.awt.hacking</args>
-            <args>--add-exports=java.desktop/java.awt.peer=consulo.desktop.awt.hacking</args>
-          </compilerArgs>
-        </configuration>
+        <groupId>consulo.maven</groupId>
+        <artifactId>java9-maven-plugin</artifactId>
+        <version>1.1-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>gen</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>generate-binary-module-info-nocheck</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

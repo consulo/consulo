@@ -25,7 +25,9 @@ import java.util.zip.ZipFile;
  * @since 05/02/2023
  */
 public class JarFileFactory {
+  private static final Runtime.Version VERSION = Runtime.version();
+
   public static JarFile create(File file) throws IOException {
-    return new JarFile(file, true, ZipFile.OPEN_READ);
+    return new JarFile(file, true, ZipFile.OPEN_READ, VERSION);
   }
 }
