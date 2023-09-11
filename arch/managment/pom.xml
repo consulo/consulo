@@ -47,7 +47,7 @@
     <jetty.version>11.0.15</jetty.version>
     <swt.version>3.120.0</swt.version>
 
-    <vaadin.flow.version>24.0.5</vaadin.flow.version>
+    <vaadin.flow.version>24.1.8</vaadin.flow.version>
 
     <jackson.version>2.14.2</jackson.version>
 
