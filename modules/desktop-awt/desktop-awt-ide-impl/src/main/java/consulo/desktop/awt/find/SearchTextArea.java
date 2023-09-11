@@ -14,7 +14,7 @@ import consulo.find.FindInProjectSettings;
 import consulo.ide.impl.idea.find.editorHeaderActions.Utils;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -293,10 +293,6 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     }
   }
 
-  @Deprecated
-  public void setInfoText(String info) {
-  }
-
   private class ShowHistoryAction extends DumbAwareAction {
 
     ShowHistoryAction() {
@@ -309,7 +305,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed("find.recent.search");
-      FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getData(CommonDataKeys.PROJECT));
+      FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(e.getData(Project.KEY));
       String[] recent = mySearchMode ? findInProjectSettings.getRecentFindStrings() : findInProjectSettings.getRecentReplaceStrings();
       JBList<String> historyList = new JBList<>(ArrayUtil.reverseArray(recent));
       Utils.showCompletionPopup(SearchTextArea.this, historyList, null, myTextArea, null);
