@@ -13,21 +13,24 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.TargetAwareRunProfile;
 import consulo.execution.event.ExecutionTargetListener;
 import consulo.execution.event.RunManagerListener;
+import consulo.execution.event.RunManagerListenerEvent;
 import consulo.ide.impl.idea.execution.compound.CompoundRunConfiguration;
 import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 
+@Singleton
 @State(name = "ExecutionTargetManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public final class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
@@ -71,15 +74,17 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
 
     project.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
-      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-        if (settings == getRunManager().getSelectedConfiguration()) {
-          updateActiveTarget(settings);
+      public void runConfigurationChanged(@Nonnull RunManagerListenerEvent event) {
+        RunnerAndConfigurationSettings settings = event.getSettings();
+
+        if (settings == event.getSource().getSelectedConfiguration()) {
+          updateActiveTarget(event.getSource(), settings);
         }
       }
 
       @Override
-      public void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {
-        updateActiveTarget(settings);
+      public void runConfigurationSelected(@Nonnull RunManagerListenerEvent event) {
+        updateActiveTarget(event.getSource(), event.getSettings());
       }
     });
   }
@@ -125,9 +130,10 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   @Nonnull
   @Override
   public ExecutionTarget getActiveTarget() {
+    RunManagerImpl runManager = getRunManager();
     synchronized (myActiveTargetLock) {
       if (myActiveTarget == null) {
-        updateActiveTarget();
+        updateActiveTarget(runManager);
       }
       return myActiveTarget;
     }
@@ -136,21 +142,25 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   @Override
   public void setActiveTarget(@Nonnull ExecutionTarget target) {
     ApplicationManager.getApplication().assertIsDispatchThread();
+    RunManagerImpl runManager = getRunManager();
     synchronized (myActiveTargetLock) {
-      updateActiveTarget(getRunManager().getSelectedConfiguration(), target);
+      updateActiveTarget(runManager, runManager.getSelectedConfiguration(), target);
     }
   }
 
-  private void updateActiveTarget() {
-    updateActiveTarget(getRunManager().getSelectedConfiguration());
+  private void updateActiveTarget(@Nonnull RunManager runManager) {
+    updateActiveTarget(runManager, runManager.getSelectedConfiguration());
   }
 
-  private void updateActiveTarget(@Nullable RunnerAndConfigurationSettings settings) {
-    updateActiveTarget(settings, null);
+  private void updateActiveTarget(@Nonnull RunManager runManager, @Nullable RunnerAndConfigurationSettings settings) {
+    updateActiveTarget(runManager, settings, null);
   }
 
-  private void updateActiveTarget(@Nullable RunnerAndConfigurationSettings settings, @Nullable ExecutionTarget toSelect) {
-    List<ExecutionTarget> suitable = settings == null ? Collections.singletonList(DefaultExecutionTarget.INSTANCE) : getTargetsFor(settings.getConfiguration());
+  private void updateActiveTarget(@Nonnull RunManager runManager,
+                                  @Nullable RunnerAndConfigurationSettings settings,
+                                  @Nullable ExecutionTarget toSelect) {
+    List<ExecutionTarget> suitable =
+      settings == null ? List.of(DefaultExecutionTarget.INSTANCE) : getTargetsForImpl(runManager, settings.getConfiguration());
     ExecutionTarget toNotify;
     synchronized (myActiveTargetLock) {
       if (toSelect == null && !DefaultExecutionTarget.INSTANCE.equals(myActiveTarget)) {
@@ -186,7 +196,8 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     // connected / no devices left connected. In this case we should not select the target that is ready, cause most probably user still
     // needs some device to be selected (or at least the device placeholder). As all the devices and device placeholders are always shown
     // at the beginning of the list, selecting the first item works in this case.
-    ExecutionTarget result = mySavedActiveTargetId == null ? ContainerUtil.find(suitable, ExecutionTarget::isReady) : ContainerUtil.getFirstItem(suitable);
+    ExecutionTarget result =
+      mySavedActiveTargetId == null ? ContainerUtil.find(suitable, ExecutionTarget::isReady) : ContainerUtil.getFirstItem(suitable);
     return result != null ? result : DefaultExecutionTarget.INSTANCE;
   }
 
@@ -206,6 +217,10 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
 
   @Override
   public boolean doCanRun(@Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target) {
+    return doCanRunImpl(getRunManager(), configuration, target);
+  }
+
+  private boolean doCanRunImpl(@Nonnull RunManager runManager, @Nullable RunConfiguration configuration, @Nonnull ExecutionTarget target) {
     if (configuration == null) {
       return false;
     }
@@ -218,28 +233,34 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
     ExecutionTarget defaultTarget = DefaultExecutionTarget.INSTANCE;
     boolean checkFallbackToDefault = isCompound && !target.equals(defaultTarget);
 
-    return doWithEachNonCompoundWithSpecifiedTarget(configuration, (subConfiguration, executionTarget) -> {
+    return doWithEachNonCompoundWithSpecifiedTarget(runManager, configuration, (subConfiguration, executionTarget) -> {
       if (!(subConfiguration instanceof TargetAwareRunProfile)) {
         return true;
       }
 
       TargetAwareRunProfile targetAwareProfile = (TargetAwareRunProfile)subConfiguration;
-      return target.canRun(subConfiguration) && targetAwareProfile.canRunOn(target) || (checkFallbackToDefault && defaultTarget.canRun(subConfiguration) && targetAwareProfile.canRunOn(defaultTarget));
+      return target.canRun(subConfiguration) && targetAwareProfile.canRunOn(target) || (checkFallbackToDefault && defaultTarget.canRun(
+        subConfiguration) && targetAwareProfile.canRunOn(defaultTarget));
     });
   }
 
   @Nonnull
   @Override
   public List<ExecutionTarget> getTargetsFor(@Nullable RunConfiguration configuration) {
+    return getTargetsForImpl(getRunManager(), configuration);
+  }
+
+  @Nonnull
+  private List<ExecutionTarget> getTargetsForImpl(@Nonnull RunManager runManager, @Nullable RunConfiguration configuration) {
     if (configuration == null) {
-      return Collections.emptyList();
+      return List.of();
     }
 
     List<ExecutionTargetProvider> providers = ExecutionTargetProvider.EXTENSION_NAME.getExtensionList();
     LinkedHashSet<ExecutionTarget> result = new LinkedHashSet<>();
 
     Set<ExecutionTarget> specifiedTargets = new HashSet<>();
-    doWithEachNonCompoundWithSpecifiedTarget(configuration, (subConfiguration, executionTarget) -> {
+    doWithEachNonCompoundWithSpecifiedTarget(runManager, configuration, (subConfiguration, executionTarget) -> {
       for (ExecutionTargetProvider eachTargetProvider : providers) {
         List<ExecutionTarget> supportedTargets = eachTargetProvider.getTargets(myProject, subConfiguration);
         if (executionTarget == null) {
@@ -260,10 +281,12 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
         result.add(MULTIPLE_TARGETS);
       }
     }
-    return Collections.unmodifiableList(ContainerUtil.filter(result, it -> doCanRun(configuration, it)));
+    return Collections.unmodifiableList(ContainerUtil.filter(result, it -> doCanRunImpl(runManager, configuration, it)));
   }
 
-  private boolean doWithEachNonCompoundWithSpecifiedTarget(@Nonnull RunConfiguration configuration, @Nonnull BiPredicate<? super RunConfiguration, ? super ExecutionTarget> action) {
+  private boolean doWithEachNonCompoundWithSpecifiedTarget(@Nonnull RunManager runManager,
+                                                           @Nonnull RunConfiguration configuration,
+                                                           @Nonnull BiPredicate<? super RunConfiguration, ? super ExecutionTarget> action) {
     Set<RunConfiguration> recursionGuard = new HashSet<>();
     LinkedList<Pair<RunConfiguration, ExecutionTarget>> toProcess = new LinkedList<>();
     toProcess.add(Pair.create(configuration, null));
@@ -277,7 +300,8 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
 
       RunConfiguration eachConfiguration = eachWithTarget.first;
       if (eachConfiguration instanceof CompoundRunConfiguration) {
-        for (Map.Entry<RunConfiguration, ExecutionTarget> subConfigWithTarget : ((CompoundRunConfiguration)eachConfiguration).getConfigurationsWithTargets(getRunManager()).entrySet()) {
+        for (Map.Entry<RunConfiguration, ExecutionTarget> subConfigWithTarget : ((CompoundRunConfiguration)eachConfiguration).getConfigurationsWithTargets(
+          runManager).entrySet()) {
           toProcess.add(Pair.create(subConfigWithTarget.getKey(), subConfigWithTarget.getValue()));
         }
       }
@@ -301,7 +325,7 @@ public final class ExecutionTargetManagerImpl extends ExecutionTargetManager imp
   @Override
   public void update() {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    updateActiveTarget();
+    updateActiveTarget(getRunManager());
   }
 
   @TestOnly

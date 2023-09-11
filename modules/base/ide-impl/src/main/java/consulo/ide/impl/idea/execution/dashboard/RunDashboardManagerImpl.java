@@ -29,6 +29,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.event.RunManagerListener;
+import consulo.execution.event.RunManagerListenerEvent;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
@@ -95,18 +96,18 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
   private void initToolWindowListeners() {
     myProject.getMessageBus().connect().subscribe(RunManagerListener.class, new RunManagerListener() {
       @Override
-      public void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
-        updateDashboardIfNeeded(settings);
+      public void runConfigurationAdded(@Nonnull RunManagerListenerEvent event) {
+        updateDashboardIfNeeded(event.getSettings());
       }
 
       @Override
-      public void runConfigurationRemoved(@Nonnull RunnerAndConfigurationSettings settings) {
-        updateDashboardIfNeeded(settings);
+      public void runConfigurationRemoved(@Nonnull RunManagerListenerEvent event) {
+        updateDashboardIfNeeded(event.getSettings());
       }
 
       @Override
-      public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-        updateDashboardIfNeeded(settings);
+      public void runConfigurationChanged(@Nonnull RunManagerListenerEvent event) {
+        updateDashboardIfNeeded(event.getSettings());
       }
     });
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);

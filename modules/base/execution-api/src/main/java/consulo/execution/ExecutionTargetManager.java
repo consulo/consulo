@@ -76,15 +76,6 @@ public abstract class ExecutionTargetManager {
   @Nonnull
   public abstract List<ExecutionTarget> getTargetsFor(@Nullable RunConfiguration configuration);
 
-  /**
-   * @deprecated Use {@link #getTargetsFor(RunConfiguration)}
-   */
-  @Nonnull
-  @Deprecated(forRemoval = true)
-  public List<ExecutionTarget> getTargetsFor(@Nullable RunnerAndConfigurationSettings settings) {
-    return getTargetsFor(settings == null ? null : settings.getConfiguration());
-  }
-
   public abstract void update();
 
   public ExecutionTarget findTarget(RunConfiguration configuration) {

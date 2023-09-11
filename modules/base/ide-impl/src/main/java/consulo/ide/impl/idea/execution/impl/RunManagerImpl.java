@@ -28,6 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
+import consulo.execution.event.RunManagerListenerEvent;
 import consulo.execution.executor.Executor;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
@@ -350,11 +351,12 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     mySharedConfigurations.put(newId, shared);
     setBeforeRunTasks(configuration, tasks, addEnabledTemplateTasksIfAbsent);
 
+    RunManagerListenerEvent event = new RunManagerListenerEvent(this, settings, existingId);
     if (existingSettings == settings) {
-      getEventPublisher().runConfigurationChanged(settings, existingId);
+      getEventPublisher().runConfigurationChanged(event);
     }
     else {
-      getEventPublisher().runConfigurationAdded(settings);
+      getEventPublisher().runConfigurationAdded(event);
     }
   }
 
@@ -434,7 +436,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         mySharedConfigurations.remove(settings.getUniqueID());
         myConfigurationToBeforeTasksMap.remove(settings.getConfiguration());
         myRecentlyUsedTemporaries.remove(settings.getConfiguration());
-        getEventPublisher().runConfigurationRemoved(configuration);
+        getEventPublisher().runConfigurationRemoved(new RunManagerListenerEvent(this, configuration, null));
         break;
       }
     }
@@ -445,7 +447,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
           iterator.remove();
           RunnerAndConfigurationSettings changedSettings = getSettings(entry.getKey());
           if (changedSettings != null) {
-            getEventPublisher().runConfigurationChanged(changedSettings, null);
+            getEventPublisher().runConfigurationChanged(new RunManagerListenerEvent(this, changedSettings, null));
           }
         }
       }
@@ -1221,33 +1223,25 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     fireRunConfigurationsRemoved(removed);
   }
 
-  public void fireBeginUpdate() {
-    getEventPublisher().beginUpdate();
-  }
-
-  public void fireEndUpdate() {
-    getEventPublisher().endUpdate();
-  }
-
   public void fireRunConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-    getEventPublisher().runConfigurationChanged(settings, null);
+    getEventPublisher().runConfigurationChanged(new RunManagerListenerEvent(this, settings, null));
   }
 
   private void fireRunConfigurationsRemoved(@Nullable List<RunnerAndConfigurationSettings> removed) {
     if (!ContainerUtil.isEmpty(removed)) {
       myRecentlyUsedTemporaries.removeAll(removed);
       for (RunnerAndConfigurationSettings settings : removed) {
-        getEventPublisher().runConfigurationRemoved(settings);
+        getEventPublisher().runConfigurationRemoved(new RunManagerListenerEvent(this, settings, null));
       }
     }
   }
 
   private void fireRunConfigurationSelected() {
-    getEventPublisher().runConfigurationSelected(getSelectedConfiguration());
+    getEventPublisher().runConfigurationSelected(new RunManagerListenerEvent(this, getSelectedConfiguration(), null));
   }
 
   public void fireBeforeRunTasksUpdated() {
-    getEventPublisher().beforeRunTasksChanged();
+    getEventPublisher().beforeRunTasksChanged(new RunManagerListenerEvent(this, getSelectedConfiguration(), null));
   }
 
   private Map<Key<? extends BeforeRunTask>, BeforeRunTaskProvider> myBeforeStepsMap;

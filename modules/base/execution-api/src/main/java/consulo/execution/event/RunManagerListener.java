@@ -17,45 +17,57 @@ package consulo.execution.event;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import consulo.annotation.DeprecationInfo;
 import consulo.execution.RunnerAndConfigurationSettings;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.EventListener;
 
 @TopicAPI(ComponentScope.PROJECT)
+@SuppressWarnings("deprecation")
 public interface RunManagerListener extends EventListener {
-  @SuppressWarnings("deprecation")
+  default void runConfigurationAdded(@Nonnull RunManagerListenerEvent event) {
+    runConfigurationAdded(event.getSettings());
+  }
+
+  default void runConfigurationChanged(@Nonnull RunManagerListenerEvent event) {
+    runConfigurationChanged(event.getSettings(), event.getExistingId());
+  }
+
+  default void runConfigurationRemoved(@Nonnull RunManagerListenerEvent event) {
+    runConfigurationRemoved(event.getSettings());
+  }
+
+  default void runConfigurationSelected(@Nonnull RunManagerListenerEvent event) {
+    runConfigurationSelected(event.getSettings());
+  }
+
+  default void beforeRunTasksChanged(@Nonnull RunManagerListenerEvent event) {
+  }
+
+  @Deprecated
   default void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {
     runConfigurationSelected();
   }
 
   @Deprecated
-  @DeprecationInfo("Use #runConfigurationSelected(RunnerAndConfigurationSettings)")
   default void runConfigurationSelected() {
   }
 
-  default void beforeRunTasksChanged() {
-  }
-
+  @Deprecated
   default void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
   }
 
+  @Deprecated
   default void runConfigurationRemoved(@Nonnull RunnerAndConfigurationSettings settings) {
   }
 
+  @Deprecated
   default void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings, String existingId) {
     runConfigurationChanged(settings);
   }
 
+  @Deprecated
   default void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
-  }
-
-  default void beginUpdate() {
-  }
-
-  default void endUpdate() {
   }
 }
