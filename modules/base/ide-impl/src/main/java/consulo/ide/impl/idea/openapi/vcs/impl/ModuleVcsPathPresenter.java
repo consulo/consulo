@@ -17,25 +17,24 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.application.util.function.Computable;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.ContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.versionControlSystem.internal.VcsPathPresenter;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsPathPresenter;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-
 import java.io.File;
+import java.util.function.Supplier;
 
 /**
  * @author yole
@@ -44,17 +43,20 @@ import java.io.File;
 @ServiceImpl
 public class ModuleVcsPathPresenter extends VcsPathPresenter {
   private final Project myProject;
+  private final Provider<ProjectFileIndex> myFileIndex;
 
   @Inject
-  public ModuleVcsPathPresenter(final Project project) {
+  public ModuleVcsPathPresenter(final Project project, Provider<ProjectFileIndex> fileIndex) {
     myProject = project;
+    myFileIndex = fileIndex;
   }
 
+  @Nonnull
   @Override
   public String getPresentableRelativePathFor(final VirtualFile file) {
     if (file == null) return "";
-    return ApplicationManager.getApplication().runReadAction((Computable<String>)() -> {
-      ProjectFileIndex fileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
+    return myProject.getApplication().runReadAction((Supplier<String>)() -> {
+      ProjectFileIndex fileIndex = myFileIndex.get();
       Module module = fileIndex.getModuleForFile(file, false);
       VirtualFile contentRoot = fileIndex.getContentRootForFile(file, false);
       if (module == null || contentRoot == null) return file.getPresentableUrl();
@@ -72,6 +74,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
     });
   }
 
+  @Nullable
   @Override
   public String getPresentableRelativePath(@Nonnull final ContentRevision fromRevision, @Nonnull final ContentRevision toRevision) {
     // need to use parent path because the old file is already not there
@@ -97,5 +100,4 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
     final String result = calculator.getResult();
     return (result == null) ? null : result.replace("/", File.separator);
   }
-
 }

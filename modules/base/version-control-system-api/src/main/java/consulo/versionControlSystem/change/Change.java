@@ -22,7 +22,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.internal.VcsPathPresenter;
+import consulo.versionControlSystem.VcsPathPresenter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.NonNls;
