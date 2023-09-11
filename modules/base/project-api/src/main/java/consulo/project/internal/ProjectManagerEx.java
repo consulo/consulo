@@ -21,9 +21,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.TestOnly;
 
-import java.util.Collection;
 import java.util.function.Predicate;
 
 public abstract class ProjectManagerEx extends ProjectManager {
@@ -36,10 +34,6 @@ public abstract class ProjectManagerEx extends ProjectManager {
    */
   @Nullable
   public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
-
-  public abstract void blockReloadingProjectOnExternalChanges();
-
-  public abstract void unblockReloadingProjectOnExternalChanges();
 
   // returns true on success
   @RequiredUIAccess

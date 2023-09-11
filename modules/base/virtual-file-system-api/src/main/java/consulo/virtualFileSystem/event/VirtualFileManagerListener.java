@@ -18,7 +18,9 @@ package consulo.virtualFileSystem.event;
 import java.util.EventListener;
 
 public interface VirtualFileManagerListener extends EventListener {
-  void beforeRefreshStart(boolean asynchronous);
+  default void beforeRefreshStart(boolean asynchronous) {
+  }
 
-  void afterRefreshFinish(boolean asynchronous);
+  default void afterRefreshFinish(boolean asynchronous) {
+  }
 }

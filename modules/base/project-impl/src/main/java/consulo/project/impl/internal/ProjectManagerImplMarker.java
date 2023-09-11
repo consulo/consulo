@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vcs.update;
+package consulo.project.impl.internal;
 
-import consulo.project.internal.ProjectManagerEx;
-
-public class BlockReloadingUtil {
-  private BlockReloadingUtil() {
-  }
-
-  public static void block() {
-    ProjectManagerEx.getInstanceEx().blockReloadingProjectOnExternalChanges();
-  }
-
-  public static void unblock() {
-    ProjectManagerEx.getInstanceEx().unblockReloadingProjectOnExternalChanges();
-  }
+/**
+ * TODO [VISTALL] remove after migration ProjectManagerImpl to this module
+ *
+ * @author VISTALL
+ * @since 11/09/2023
+ */
+public interface ProjectManagerImplMarker {
 }

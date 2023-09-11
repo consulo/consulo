@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.internal.ProjectManagerEx;
+import consulo.project.StoreReloadManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
@@ -46,10 +46,10 @@ import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.merge.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -78,9 +78,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   private final ListTableModel<VirtualFile> myModel;
   @Nullable
   private final Project myProject;
-  private final ProjectManagerEx myProjectManager;
-  private final List<VirtualFile> myProcessedFiles = new SmartList<VirtualFile>();
-  private final Set<VirtualFile> myBinaryFiles = new HashSet<VirtualFile>();
+  private final StoreReloadManager myStoreReloadManager;
+  private final List<VirtualFile> myProcessedFiles = new SmartList<>();
+  private final Set<VirtualFile> myBinaryFiles = new HashSet<>();
   private final MergeDialogCustomizer myMergeDialogCustomizer;
 
   private final VirtualFileRenderer myVirtualFileRenderer = new VirtualFileRenderer();
@@ -90,9 +90,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     super(project);
 
     myProject = project;
-    myProjectManager = ProjectManagerEx.getInstanceEx();
-    myProjectManager.blockReloadingProjectOnExternalChanges();
-    myFiles = new ArrayList<VirtualFile>(files);
+    myStoreReloadManager = StoreReloadManager.getInstance(Objects.requireNonNull(project));
+    myStoreReloadManager.blockReloadingProjectOnExternalChanges();
+    myFiles = new ArrayList<>(files);
     myProvider = provider;
     myMergeDialogCustomizer = mergeDialogCustomizer;
 
@@ -101,7 +101,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       myDescriptionLabel.setText(description);
     }
 
-    List<ColumnInfo> columns = new ArrayList<ColumnInfo>();
+    List<ColumnInfo> columns = new ArrayList<>();
     columns.add(new ColumnInfo<VirtualFile, VirtualFile>(VcsBundle.message("multiple.file.merge.column.name")) {
       @Override
       public VirtualFile valueOf(final VirtualFile virtualFile) {
@@ -138,7 +138,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     else {
       myMergeSession = null;
     }
-    myModel = new ListTableModel<VirtualFile>(columns.toArray(new ColumnInfo[columns.size()]));
+    myModel = new ListTableModel<>(columns.toArray(new ColumnInfo[columns.size()]));
     myModel.setItems(files);
     myTable.setModelAndUpdateColumns(myModel);
     myVirtualFileRenderer.setFont(UIUtil.getListFont());
@@ -210,7 +210,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
   @Override
   protected void dispose() {
-    myProjectManager.unblockReloadingProjectOnExternalChanges();
+    myStoreReloadManager.unblockReloadingProjectOnExternalChanges();
     super.dispose();
   }
 
@@ -232,7 +232,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
 
     for (final VirtualFile file : files) {
-      final Ref<Exception> ex = new Ref<Exception>();
+      final Ref<Exception> ex = new Ref<>();
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
@@ -329,7 +329,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       final List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
       List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
 
-      Consumer<MergeResult> callback = new Consumer<MergeResult>() {
+      Consumer<MergeResult> callback = new Consumer<>() {
         @Override
         public void accept(final MergeResult result) {
           Document document = FileDocumentManager.getInstance().getCachedDocument(file);

@@ -20,10 +20,8 @@ import consulo.application.SaveAndSyncHandler;
 import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
+import consulo.project.StoreReloadManager;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -42,16 +40,16 @@ public class VcsFreezingProcess {
   @Nonnull
   private final ChangeListManagerEx myChangeListManager;
   @Nonnull
-  private final ProjectManagerEx myProjectManager;
-  @Nonnull
   private final SaveAndSyncHandler mySaveAndSyncHandler;
+  @Nonnull
+  private final StoreReloadManager myStoreReloadManager;
 
   public VcsFreezingProcess(@Nonnull Project project, @Nonnull String operationTitle, @Nonnull Runnable runnable) {
     myReason = operationTitle;
     myRunnable = runnable;
 
+    myStoreReloadManager = StoreReloadManager.getInstance(project);
     myChangeListManager = (ChangeListManagerEx)ChangeListManager.getInstance(project);
-    myProjectManager = (ProjectManagerEx)ProjectManager.getInstance();
     mySaveAndSyncHandler = SaveAndSyncHandler.getInstance();
   }
 
@@ -81,7 +79,7 @@ public class VcsFreezingProcess {
 
   private void saveAndBlockInAwt() {
     ApplicationManager.getApplication().invokeAndWait(() -> {
-      myProjectManager.blockReloadingProjectOnExternalChanges();
+      myStoreReloadManager.blockReloadingProjectOnExternalChanges();
       FileDocumentManager.getInstance().saveAllDocuments();
       mySaveAndSyncHandler.blockSaveOnFrameDeactivation();
       mySaveAndSyncHandler.blockSyncOnFrameActivation();
@@ -90,7 +88,7 @@ public class VcsFreezingProcess {
 
   private void unblockInAwt() {
     ApplicationManager.getApplication().invokeAndWait(() -> {
-      myProjectManager.unblockReloadingProjectOnExternalChanges();
+      myStoreReloadManager.unblockReloadingProjectOnExternalChanges();
       mySaveAndSyncHandler.unblockSaveOnFrameDeactivation();
       mySaveAndSyncHandler.unblockSyncOnFrameActivation();
     });

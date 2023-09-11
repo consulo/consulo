@@ -31,9 +31,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
-import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.storage.StateStorageBase;
-import consulo.component.store.impl.internal.storage.StateStorageListener;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.disposer.Disposable;
@@ -46,7 +43,6 @@ import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
 import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -58,6 +54,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImpl;
+import consulo.project.impl.internal.ProjectManagerImplMarker;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.internal.ProjectManagerEx;
@@ -68,11 +65,8 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
-import consulo.util.collection.MultiMap;
-import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -81,7 +75,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -90,12 +83,11 @@ import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
-public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
+public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, ProjectManagerImplMarker {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 
   private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");
@@ -105,21 +97,11 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
-  private final MultiMap<Project, StateStorage> myChangedProjectFiles = MultiMap.createSet();
-  private final SingleAlarm myChangedFilesAlarm;
-  private final AtomicInteger myReloadBlockCount = new AtomicInteger(0);
-
   @Nonnull
   private final Application myApplication;
   private final ProgressManager myProgressManager;
 
   private final EventDispatcher<ProjectManagerListener> myDeprecatedListenerDispatcher = EventDispatcher.create(ProjectManagerListener.class);
-
-  private final Runnable restartApplicationOrReloadProjectTask = () -> {
-    if (isReloadUnblocked()) {
-      askToReloadProjectIfConfigFilesChangedExternally();
-    }
-  };
 
   @Nonnull
   private static List<ProjectManagerListener> getListeners(Project project) {
@@ -142,8 +124,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        project.getMessageBus().connect(project).subscribe(StateStorageListener.class, (event, storage) -> projectStorageFileChanged(event, storage, project));
-
         myDeprecatedListenerDispatcher.getMulticaster().projectOpened(project, uiAccess);
 
         for (ProjectManagerListener listener : getListeners(project)) {
@@ -172,32 +152,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         }
       }
     });
-    virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerAdapter() {
-      @Override
-      public void beforeRefreshStart(boolean asynchronous) {
-        blockReloadingProjectOnExternalChanges();
-      }
-
-      @Override
-      public void afterRefreshFinish(boolean asynchronous) {
-        unblockReloadingProjectOnExternalChanges();
-      }
-    }, this);
-    myChangedFilesAlarm = new SingleAlarm(restartApplicationOrReloadProjectTask, 300);
-  }
-
-  private void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
-    VirtualFile file = event.getFile();
-    if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManagerImpl)) {
-      registerProjectToReload(project, file, storage);
-    }
   }
 
   @Override
   @RequiredWriteAction
   public void dispose() {
     myApplication.assertWriteAccessAllowed();
-    Disposer.dispose(myChangedFilesAlarm);
   }
 
   private static final boolean LOG_PROJECT_LEAKAGE_IN_TESTS = Boolean.getBoolean("LOG_PROJECT_LEAKAGE_IN_TESTS");
@@ -359,110 +319,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     return !(indicator instanceof NonCancelableSection);
   }
 
-  private void askToReloadProjectIfConfigFilesChangedExternally() {
-    Set<Project> projects;
-    synchronized (myChangedProjectFiles) {
-      if (myChangedProjectFiles.isEmpty()) {
-        return;
-      }
-      projects = new HashSet<>(myChangedProjectFiles.keySet());
-    }
-
-    List<Project> projectsToReload = new SmartList<>();
-    for (Project project : projects) {
-      if (shouldReloadProject(project)) {
-        projectsToReload.add(project);
-      }
-    }
-
-    UIAccess uiAccess = myApplication.getLastUIAccess();
-
-    for (Project project : projectsToReload) {
-      doReloadProjectAsync(project, uiAccess);
-    }
-  }
-
-  private boolean shouldReloadProject(@Nonnull Project project) {
-    if (project.isDisposed()) {
-      return false;
-    }
-
-    Collection<StateStorage> causes = new SmartList<>();
-    Collection<StateStorage> changes;
-    synchronized (myChangedProjectFiles) {
-      changes = myChangedProjectFiles.remove(project);
-      if (!ContainerUtil.isEmpty(changes)) {
-        for (StateStorage change : changes) {
-          causes.add(change);
-        }
-      }
-    }
-    return !causes.isEmpty() && askToRestart(causes);
-  }
-
-  private static boolean askToRestart(@Nullable Collection<? extends StateStorage> changedStorages) {
-    StringBuilder message = new StringBuilder();
-    message.append("Project components were changed externally and cannot be reloaded");
-
-    message.append("\nWould you like to ");
-    message.append("reload project?");
-
-    if (Messages.showYesNoDialog(message.toString(), "Project Files Changed", Messages.getQuestionIcon()) == Messages.YES) {
-      if (changedStorages != null) {
-        for (StateStorage storage : changedStorages) {
-          if (storage instanceof StateStorageBase) {
-            ((StateStorageBase)storage).disableSaving();
-          }
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public void blockReloadingProjectOnExternalChanges() {
-    myReloadBlockCount.incrementAndGet();
-  }
-
-  @Override
-  public void unblockReloadingProjectOnExternalChanges() {
-    if (myReloadBlockCount.decrementAndGet() == 0 && myChangedFilesAlarm.isEmpty()) {
-      myApplication.invokeLater(restartApplicationOrReloadProjectTask, IdeaModalityState.NON_MODAL);
-    }
-  }
-
-  private boolean isReloadUnblocked() {
-    int count = myReloadBlockCount.get();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("[RELOAD] myReloadBlockCount = " + count);
-    }
-    return count == 0;
-  }
-
-  private void registerProjectToReload(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull StateStorage storage) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("[RELOAD] Registering project to reload: " + file, new Exception());
-    }
-
-    myChangedProjectFiles.putValue(project, storage);
-
-    if (storage instanceof StateStorageBase) {
-      ((StateStorageBase)storage).disableSaving();
-    }
-
-    if (isReloadUnblocked()) {
-      myChangedFilesAlarm.cancelAndRequest();
-    }
-  }
-
   @Override
   public void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    myChangedProjectFiles.remove(project);
     doReloadProjectAsync(project, uiAccess);
   }
 
-  private void doReloadProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void doReloadProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
 
     if(project.isDisposed()) {

@@ -142,4 +142,9 @@ public interface Project extends ComponentManager, WindowOwner {
   default Window getWindow() {
     return null;
   }
+
+  @Nonnull
+  default UIAccess getUIAccess() {
+    return getApplication().getLastUIAccess();
+  }
 }

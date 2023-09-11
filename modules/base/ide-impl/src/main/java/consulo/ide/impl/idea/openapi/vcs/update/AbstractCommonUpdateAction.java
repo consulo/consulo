@@ -15,52 +15,55 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.localHistory.Label;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.ui.ex.errorTreeView.HotfixData;
-import consulo.application.progress.*;
-import consulo.component.ProcessCanceledException;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.UpdateInBackground;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.component.ProcessCanceledException;
 import consulo.configurable.Configurable;
-import consulo.project.Project;
-import consulo.project.internal.ProjectManagerEx;
-import consulo.util.lang.ref.Ref;
+import consulo.content.scope.NamedScope;
 import consulo.ide.impl.idea.openapi.vcs.actions.AbstractVcsAction;
 import consulo.ide.impl.idea.openapi.vcs.actions.DescindingFilesFilter;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.action.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
-import consulo.versionControlSystem.change.VcsAnnotationRefresher;
-import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
+import consulo.localHistory.Label;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.StoreReloadManager;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.UpdateInBackground;
+import consulo.ui.ex.awt.OptionsDialog;
+import consulo.ui.ex.errorTreeView.HotfixData;
+import consulo.util.collection.MultiMap;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.change.VcsAnnotationRefresher;
+import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog;
 import consulo.versionControlSystem.update.*;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.content.scope.NamedScope;
-import consulo.project.util.WaitForProgressToShow;
-import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.OptionsDialog;
-import consulo.ide.impl.idea.vcs.ViewUpdateInfoNotification;
-import consulo.versionControlSystem.util.VcsUtil;
-import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.notNullize;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.pluralize;
-import static consulo.versionControlSystem.VcsNotifier.STANDARD_NOTIFICATION;
 import static consulo.util.lang.ObjectUtil.notNull;
+import static consulo.versionControlSystem.VcsNotifier.STANDARD_NOTIFICATION;
 
 public abstract class AbstractCommonUpdateAction extends AbstractVcsAction implements UpdateInBackground {
   private final boolean myAlwaysVisible;
@@ -338,7 +341,9 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     private void runImpl() {
-      ProjectManagerEx.getInstanceEx().blockReloadingProjectOnExternalChanges();
+      StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project)getProject());
+
+      storeReloadManager.blockReloadingProjectOnExternalChanges();
       myProjectLevelVcsManager.startBackgroundVcsOperation();
 
       myBefore = LocalHistory.getInstance().putSystemLabel(myProject, "Before update");
@@ -472,8 +477,9 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     private void onSuccessImpl(final boolean wasCanceled) {
+      StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project)getProject());
       if (!myProject.isOpen() || myProject.isDisposed()) {
-        ProjectManagerEx.getInstanceEx().unblockReloadingProjectOnExternalChanges();
+        storeReloadManager.unblockReloadingProjectOnExternalChanges();
         LocalHistory.getInstance().putSystemLabel(myProject, LOCAL_HISTORY_ACTION); // TODO check why this label is needed
         return;
       }
@@ -515,7 +521,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
 
       WaitForProgressToShow.runOrInvokeLaterAboveProgress(() -> {
         if (myProject.isDisposed()) {
-          ProjectManagerEx.getInstanceEx().unblockReloadingProjectOnExternalChanges();
+          storeReloadManager.unblockReloadingProjectOnExternalChanges();
           return;
         }
 
@@ -557,7 +563,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           VcsNotifier.getInstance(myProject).notify(notification);
         }
 
-        ProjectManagerEx.getInstanceEx().unblockReloadingProjectOnExternalChanges();
+        storeReloadManager.unblockReloadingProjectOnExternalChanges();
 
         if (continueChainFinal && updateSuccess) {
           if (!noMerged) {

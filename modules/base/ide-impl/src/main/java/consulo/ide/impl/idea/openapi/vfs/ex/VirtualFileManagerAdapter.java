@@ -18,12 +18,6 @@ package consulo.ide.impl.idea.openapi.vfs.ex;
 
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 
+@Deprecated
 public abstract class VirtualFileManagerAdapter implements VirtualFileManagerListener {
-  @Override
-  public void beforeRefreshStart(boolean asynchronous) {
-  }
-
-  @Override
-  public void afterRefreshFinish(boolean asynchronous) {
-  }
 }
