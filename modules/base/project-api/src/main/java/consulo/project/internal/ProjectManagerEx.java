@@ -33,7 +33,7 @@ public abstract class ProjectManagerEx extends ProjectManager {
    * @param dirPath path to directory where .consulo directory is located
    */
   @Nullable
-  public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings, boolean isDummy);
+  public abstract Project newProject(final String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings);
 
   // returns true on success
   @RequiredUIAccess
@@ -42,7 +42,7 @@ public abstract class ProjectManagerEx extends ProjectManager {
   @Nullable
   @Override
   public Project createProject(String name, String path) {
-    return newProject(name, path, true, false);
+    return newProject(name, path, true);
   }
 
   public abstract boolean canClose(Project project);

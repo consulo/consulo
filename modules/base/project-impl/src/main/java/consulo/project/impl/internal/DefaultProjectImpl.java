@@ -32,7 +32,7 @@ public class DefaultProjectImpl extends ProjectImpl {
   private boolean myInitialized;
 
   DefaultProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(application, manager, filePath, optimiseTestLoadSpeed, TEMPLATE_PROJECT_NAME, false);
+    super(application, manager, filePath, TEMPLATE_PROJECT_NAME, false);
   }
 
   @Nullable

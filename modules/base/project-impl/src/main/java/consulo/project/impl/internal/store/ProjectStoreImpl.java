@@ -72,11 +72,6 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected boolean optimizeTestLoading() {
-    return myProject.isOptimiseTestLoadSpeed();
-  }
-
-  @Override
   protected Project getProject() {
     return myProject;
   }

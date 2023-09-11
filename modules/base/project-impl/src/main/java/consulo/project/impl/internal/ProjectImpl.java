@@ -72,8 +72,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
 
-  public boolean myOptimiseTestLoadSpeed;
-
   private String myName;
 
   public static Key<Long> CREATION_TIME = Key.create("ProjectImpl.CREATION_TIME");
@@ -82,7 +80,11 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   private Supplier<StartupManager> myStartupManagerProvider = LazyValue.notNull(() -> getInstance(StartupManager.class));
   private Supplier<ModuleManager> myModuleManagerProvider = LazyValue.notNull(() -> getInstance(ModuleManager.class));
 
-  public ProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String dirPath, boolean isOptimiseTestLoadSpeed, String projectName, boolean noUIThread) {
+  public ProjectImpl(@Nonnull Application application,
+                     @Nonnull ProjectManager manager,
+                     @Nonnull String dirPath,
+                     String projectName,
+                     boolean noUIThread) {
     super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT);
     myDirPath = dirPath;
 
@@ -100,8 +102,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         getStateStore().setProjectFilePath(dirPath);
       }
     }
-
-    myOptimiseTestLoadSpeed = isOptimiseTestLoadSpeed;
 
     myManager = (ProjectManagerEx)manager;
 
@@ -247,17 +247,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   public VirtualFile getWorkspaceFile() {
     return getStateStore().getWorkspaceFile();
   }
-
-  @Override
-  public boolean isOptimiseTestLoadSpeed() {
-    return myOptimiseTestLoadSpeed;
-  }
-
-  @Override
-  public void setOptimiseTestLoadSpeed(final boolean optimiseTestLoadSpeed) {
-    myOptimiseTestLoadSpeed = optimiseTestLoadSpeed;
-  }
-
   @Override
   public void initNotLazyServices() {
     long start = System.currentTimeMillis();

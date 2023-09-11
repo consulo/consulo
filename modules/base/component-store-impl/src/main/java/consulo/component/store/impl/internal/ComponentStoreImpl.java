@@ -230,10 +230,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       doAddComponent(name, componentInfo);
     }
 
-    if (optimizeTestLoading()) {
-      return;
-    }
-
     Class<T> stateClass = ComponentSerializationUtil.getStateClass(component.getClass());
     T state = null;
 
@@ -346,10 +342,6 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       return w1 - w2;
     });
     return sorted;
-  }
-
-  protected boolean optimizeTestLoading() {
-    return false;
   }
 
   @Override
