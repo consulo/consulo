@@ -28,7 +28,6 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.internal.CurrentRevisionProvider;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import org.jetbrains.annotations.Contract;

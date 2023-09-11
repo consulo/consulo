@@ -23,7 +23,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.change.ContentRevisionCache;
-import consulo.versionControlSystem.internal.CurrentRevisionProvider;
+import consulo.versionControlSystem.change.CurrentRevisionProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
