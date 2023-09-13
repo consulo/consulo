@@ -27,8 +27,8 @@ import java.beans.PropertyChangeListener;
  * @author VISTALL
  * @since 2020-11-21
  */
-public class DesktopFocusManager implements FocusManager {
-  public static final DesktopFocusManager ourInstance = new DesktopFocusManager();
+public class DesktopAWTFocusManager implements FocusManager {
+  public static final DesktopAWTFocusManager ourInstance = new DesktopAWTFocusManager();
 
   @Nonnull
   @Override

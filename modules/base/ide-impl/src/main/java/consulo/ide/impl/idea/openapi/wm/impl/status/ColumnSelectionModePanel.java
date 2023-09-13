@@ -2,26 +2,25 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorEventMulticaster;
-import consulo.fileEditor.statusBar.EditorBasedWidget;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.codeEditor.EditorEx;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
-import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.FocusUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * @author cdr
@@ -59,10 +58,8 @@ public class ColumnSelectionModePanel extends EditorBasedWidget implements Statu
   @Override
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
-    KeyboardFocusManager.getCurrentKeyboardFocusManager()
-            .addPropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, evt -> propertyChange(new PropertyChangeEvent(evt.getSource(), evt.getPropertyName(), evt.getOldValue(), evt.getNewValue())));
-    Disposer.register(this, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager()
-            .removePropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, evt -> propertyChange(new PropertyChangeEvent(evt.getSource(), evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()))));
+
+    FocusUtil.addFocusOwnerListener(this, evt -> updateStatus());
     EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
     if (multicaster instanceof EditorEventMulticasterEx) {
       ((EditorEventMulticasterEx)multicaster).addPropertyChangeListener(this, this);
@@ -96,7 +93,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget implements Statu
   @Override
   public void propertyChange(@Nonnull PropertyChangeEvent evt) {
     String propertyName = evt.getPropertyName();
-    if (EditorEx.PROP_INSERT_MODE.equals(propertyName) || EditorEx.PROP_COLUMN_MODE.equals(propertyName) || SWING_FOCUS_OWNER_PROPERTY.equals(propertyName)) {
+    if (EditorEx.PROP_INSERT_MODE.equals(propertyName) || EditorEx.PROP_COLUMN_MODE.equals(propertyName)) {
       updateStatus();
     }
   }

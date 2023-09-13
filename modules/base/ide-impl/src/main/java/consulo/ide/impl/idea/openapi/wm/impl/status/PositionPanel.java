@@ -1,39 +1,37 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.fileEditor.statusBar.EditorBasedWidget;
-import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
-import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
 import consulo.application.Application;
-import consulo.undoRedo.CommandProcessor;
-import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.event.*;
+import consulo.document.Document;
+import consulo.document.event.BulkAwareDocumentListener;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
+import consulo.ide.impl.idea.ide.util.EditorGotoLineNumberDialog;
+import consulo.ide.impl.idea.ide.util.GotoLineNumberDialog;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.document.event.BulkAwareDocumentListener;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.function.Consumer;
 
 public final class PositionPanel extends EditorBasedWidget
-        implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple, PropertyChangeListener {
+        implements StatusBarWidget.Multiframe, StatusBarWidget.TextPresentation, CaretListener, SelectionListener, BulkAwareDocumentListener.Simple {
 
   public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 
@@ -116,8 +114,8 @@ public final class PositionPanel extends EditorBasedWidget
     multicaster.addCaretListener(this, this);
     multicaster.addSelectionListener(this, this);
     multicaster.addDocumentListener(this, this);
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, this);
-    Disposer.register(this, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(SWING_FOCUS_OWNER_PROPERTY, this));
+
+    FocusUtil.addFocusOwnerListener(this, evt -> updatePosition(getFocusedEditor()));
   }
 
   @Override
@@ -229,11 +227,6 @@ public final class PositionPanel extends EditorBasedWidget
     else {
       return "";
     }
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent e) {
-    updatePosition(getFocusedEditor());
   }
 
   private class CodePointCountTask implements Runnable {

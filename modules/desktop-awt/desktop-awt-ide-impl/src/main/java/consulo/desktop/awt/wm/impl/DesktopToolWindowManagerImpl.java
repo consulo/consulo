@@ -67,6 +67,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.UIUtil;
@@ -253,14 +254,10 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       }
     });
 
-    PropertyChangeListener focusListener = it -> {
-      if ("focusOwner".equals(it.getPropertyName())) {
-        myUpdateHeadersAlarm.cancelAllRequests();
-        myUpdateHeadersAlarm.addRequest(this::updateToolWindowHeaders, 50);
-      }
-    };
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(focusListener);
-    Disposer.register(this, () -> KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(focusListener));
+    FocusUtil.addFocusOwnerListener(this, evt -> {
+      myUpdateHeadersAlarm.cancelAllRequests();
+      myUpdateHeadersAlarm.addRequest(this::updateToolWindowHeaders, 50);
+    });
   }
 
 

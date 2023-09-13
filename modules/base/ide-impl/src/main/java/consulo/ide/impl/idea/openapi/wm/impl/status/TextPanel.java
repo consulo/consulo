@@ -54,13 +54,6 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
     myPrefHeight = label.getPreferredSize().height;
   }
 
-  /**
-   * @deprecated no effect
-   */
-  @Deprecated
-  public void resetColor() {
-  }
-
   @Override
   protected void paintComponent(final Graphics g) {
     @Nls String s = getText();
@@ -184,14 +177,6 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
       if (icon != null) {
         icon.paintIcon(this, g, getIconX(g), getHeight() / 2 - icon.getIconHeight() / 2);
       }
-    }
-
-    /**
-     * @deprecated arrows are not painted anymore
-     */
-    @Deprecated
-    protected boolean shouldPaintArrows() {
-      return false;
     }
 
     @Override

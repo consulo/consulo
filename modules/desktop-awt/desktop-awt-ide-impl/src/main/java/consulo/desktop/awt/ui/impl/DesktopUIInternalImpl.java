@@ -475,7 +475,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public FocusManager _FocusManager_get() {
-    return DesktopFocusManager.ourInstance;
+    return DesktopAWTFocusManager.ourInstance;
   }
 
   @Override
