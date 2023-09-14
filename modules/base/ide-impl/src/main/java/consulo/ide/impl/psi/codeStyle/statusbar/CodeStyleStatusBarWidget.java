@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.NonUrgentExecutor;
+import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -24,9 +24,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,7 +89,9 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
     return null;
   }
 
-  private static WidgetState createWidgetState(@Nonnull PsiFile psiFile, @Nonnull final IndentOptions indentOptions, @Nullable CodeStyleStatusBarUIContributor uiContributor) {
+  private static WidgetState createWidgetState(@Nonnull PsiFile psiFile,
+                                               @Nonnull final IndentOptions indentOptions,
+                                               @Nullable CodeStyleStatusBarUIContributor uiContributor) {
     if (uiContributor != null) {
       return new MyWidgetState(uiContributor.getTooltip(), uiContributor.getStatusText(psiFile), psiFile, indentOptions, uiContributor);
     }
@@ -122,18 +124,22 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
       ActionGroup actionGroup = new ActionGroup() {
         @Override
         @Nonnull
-        public AnAction  [] getChildren(@Nullable AnActionEvent e) {
+        public AnAction[] getChildren(@Nullable AnActionEvent e) {
           return actions;
         }
       };
       return JBPopupFactory.getInstance()
-              .createActionGroupPopup(uiContributor != null ? uiContributor.getActionGroupTitle() : null, actionGroup, context, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
+                           .createActionGroupPopup(uiContributor != null ? uiContributor.getActionGroupTitle() : null,
+                                                   actionGroup,
+                                                   context,
+                                                   JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                   false);
     }
     return null;
   }
 
   @Nonnull
-  private static AnAction [] getActions(@Nullable final CodeStyleStatusBarUIContributor uiContributor, @Nonnull PsiFile psiFile) {
+  private static AnAction[] getActions(@Nullable final CodeStyleStatusBarUIContributor uiContributor, @Nonnull PsiFile psiFile) {
     List<AnAction> allActions = new ArrayList<>();
     if (uiContributor != null) {
       AnAction[] actions = uiContributor.getActions(psiFile);
@@ -160,9 +166,12 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   @Override
   protected void registerCustomListeners() {
     Project project = getProject();
-    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(Application::getAnyModalityState, manager -> {
-      manager.addListener(this, this);
-    }).submit(NonUrgentExecutor.getInstance());
+    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project))
+              .expireWith(project)
+              .finishOnUiThread(Application::getAnyModalityState, manager -> {
+                manager.addListener(this, this);
+              })
+              .submit(NonUrgentExecutor.getInstance());
   }
 
   @Override

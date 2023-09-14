@@ -18,8 +18,8 @@ package consulo.ui.ex.awt;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.disposer.Disposable;
+import consulo.ui.UIAccessScheduler;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -137,7 +137,8 @@ public abstract class Animator implements Disposable {
       animationDone();
     }
     else if (myTicker == null) {
-      myTicker = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(new Runnable() {
+      UIAccessScheduler scheduler = Application.get().getLastUIAccess().getScheduler();
+      myTicker = scheduler.scheduleWithFixedDelay(new Runnable() {
         @Override
         public void run() {
           onTick();

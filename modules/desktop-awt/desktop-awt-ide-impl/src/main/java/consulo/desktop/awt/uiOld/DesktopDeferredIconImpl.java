@@ -20,31 +20,30 @@
 package consulo.desktop.awt.uiOld;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.registry.Registry;
+import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.PaintingParent;
 import consulo.ide.impl.idea.ui.RetrievableIcon;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
-import consulo.util.lang.ObjectUtil;
-import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.registry.Registry;
-import consulo.desktop.awt.ui.impl.image.DesktopImage;
-import consulo.logging.Logger;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -236,7 +235,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
       final boolean shouldRevalidate = Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
 
-      EdtExecutorService.getInstance().execute(() -> {
+      SwingUtilities.invokeLater(() -> {
         setDone(result);
 
         Component actualTarget = target;

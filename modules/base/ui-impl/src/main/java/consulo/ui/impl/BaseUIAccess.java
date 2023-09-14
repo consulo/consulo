@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.ui.impl;
 
-import consulo.ui.internal.UIInternal;
-import consulo.util.dataholder.Key;
+import consulo.ui.UIAccess;
+import consulo.ui.UIAccessScheduler;
 import jakarta.annotation.Nonnull;
+
+import java.util.Objects;
 
 /**
  * @author VISTALL
- * @since 29/12/2021
+ * @since 14/09/2023
  */
-public interface ModalityState {
-  @Nonnull
-  static ModalityState any() {
-    return UIInternal.get()._ModalityState_any();
-  }
+public abstract class BaseUIAccess implements UIAccess {
+  protected SingleUIAccessScheduler myUIAccessScheduler;
 
   @Nonnull
-  static ModalityState nonModal() {
-    return UIInternal.get()._ModalityState_nonModal();
+  protected abstract SingleUIAccessScheduler createScheduler();
+
+  @Nonnull
+  @Override
+  public UIAccessScheduler getScheduler() {
+    if (myUIAccessScheduler == null) {
+      myUIAccessScheduler = createScheduler();
+    }
+
+    return Objects.requireNonNull(myUIAccessScheduler);
   }
-
-  Key<ModalityState> KEY = Key.create(ModalityState.class);
-
-  boolean dominates(@Nonnull ModalityState anotherState);
 }

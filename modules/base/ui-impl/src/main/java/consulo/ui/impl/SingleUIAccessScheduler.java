@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.util;
+package consulo.ui.impl;
 
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
 
-public abstract class EdtRunnable implements ExpirableRunnable {
+import java.util.concurrent.ScheduledExecutorService;
 
-  private boolean myExpired;
+/**
+ * @author VISTALL
+ * @since 14/09/2023
+ */
+public abstract class SingleUIAccessScheduler extends BaseUIAccessScheduler {
+  private final UIAccess myUiAccess;
 
-  public final void run() {
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (!isExpired()) {
-        runEdt();
-      }
-    });
+  public SingleUIAccessScheduler(UIAccess uiAccess, ScheduledExecutorService scheduledExecutorService) {
+    super(scheduledExecutorService);
+    myUiAccess = uiAccess;
   }
 
-  public void expire() {
-    myExpired = true;
-  }
-
+  @Nonnull
   @Override
-  public boolean isExpired() {
-    return myExpired;
+  protected UIAccess uiAccess() {
+    return myUiAccess;
   }
-
-  public abstract void runEdt();
 }

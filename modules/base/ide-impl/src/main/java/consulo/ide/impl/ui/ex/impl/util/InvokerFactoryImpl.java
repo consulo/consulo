@@ -16,13 +16,13 @@
 package consulo.ide.impl.ui.ex.impl.util;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -33,8 +33,8 @@ import jakarta.annotation.Nonnull;
 public class InvokerFactoryImpl implements InvokerFactory {
   @Nonnull
   @Override
-  public Invoker forEventDispatchThread(@Nonnull Disposable parent) {
-    return InvokerImpl.forEventDispatchThread(parent);
+  public Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+    return InvokerImpl.forEventDispatchThread(uiAccess, parent);
   }
 
   @Nonnull

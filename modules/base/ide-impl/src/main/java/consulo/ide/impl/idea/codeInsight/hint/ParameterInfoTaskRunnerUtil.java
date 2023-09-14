@@ -2,33 +2,31 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.LoadingDecorator;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
-import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.RealEditor;
+import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -70,8 +68,10 @@ class ParameterInfoTaskRunnerUtil {
   }
 
   @Nonnull
-  private static Consumer<Boolean> startProgressAndCreateStopAction(Project project, String progressTitle, AtomicReference<CancellablePromise<?>> promiseRef, Editor editor) {
+  private static Consumer<Boolean> startProgressAndCreateStopAction(@Nonnull Project project, String progressTitle, AtomicReference<CancellablePromise<?>> promiseRef, Editor editor) {
     AtomicReference<Consumer<Boolean>> stopActionRef = new AtomicReference<>();
+
+    UIAccess uiAccess = project.getUIAccess();
 
     Consumer<Boolean> originalStopAction = (cancel) -> {
       stopActionRef.set(null);
@@ -112,13 +112,13 @@ class ParameterInfoTaskRunnerUtil {
       });
       JBPopup popup = builder.createPopup();
       Disposer.register(disposable, popup);
-      ScheduledFuture<?> showPopupFuture = EdtScheduledExecutorService.getInstance().schedule(() -> {
+      ScheduledFuture<?> showPopupFuture = uiAccess.getScheduler().schedule(() -> {
         if (!popup.isDisposed() && !popup.isVisible() && !editor.isDisposed()) {
           RelativePoint popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
           loadingPanel.startLoading();
           popup.show(popupPosition);
         }
-      }, IdeaModalityState.defaultModalityState(), DEFAULT_PROGRESS_POPUP_DELAY_MS, TimeUnit.MILLISECONDS);
+      }, project.getApplication().getDefaultModalityState(), DEFAULT_PROGRESS_POPUP_DELAY_MS, TimeUnit.MILLISECONDS);
 
       stopActionRef.set((cancel) -> {
         try {
@@ -127,7 +127,7 @@ class ParameterInfoTaskRunnerUtil {
         }
         finally {
           showPopupFuture.cancel(false);
-          UIUtil.invokeLaterIfNeeded(() -> {
+          uiAccess.giveIfNeed(() -> {
             if (popup.isVisible()) {
               popup.setUiVisible(false);
             }

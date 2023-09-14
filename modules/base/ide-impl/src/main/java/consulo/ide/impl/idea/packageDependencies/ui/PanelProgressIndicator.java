@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.UIAccessScheduler;
 
 import javax.swing.*;
 import java.util.concurrent.CompletableFuture;
@@ -35,11 +35,13 @@ import java.util.function.Consumer;
  */
 public class PanelProgressIndicator extends ProgressIndicatorBase {
   private final MyProgressPanel myProgressPanel;
+  private final UIAccessScheduler myUiAccessScheduler;
   private boolean myPaintInQueue;
   private final Consumer<JComponent> myComponentUpdater;
   private Future<?> myAlarm = CompletableFuture.completedFuture(null);
 
-  public PanelProgressIndicator(Consumer<JComponent> componentUpdater) {
+  public PanelProgressIndicator(UIAccessScheduler uiAccessScheduler, Consumer<JComponent> componentUpdater) {
+    myUiAccessScheduler = uiAccessScheduler;
     myProgressPanel = new MyProgressPanel();
     myProgressPanel.myFractionProgress.setMaximum(100);
     myComponentUpdater = componentUpdater;
@@ -87,7 +89,7 @@ public class PanelProgressIndicator extends ProgressIndicatorBase {
     checkCanceled();
     myPaintInQueue = true;
     myAlarm.cancel(false);
-    myAlarm = EdtExecutorService.getScheduledExecutorInstance().schedule(() -> {
+    myAlarm = myUiAccessScheduler.schedule(() -> {
       myPaintInQueue = false;
       myProgressPanel.myTextLabel.setText(scanningPackagesMessage);
       int fraction = (int)(ffraction * 99 + 0.5);

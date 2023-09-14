@@ -273,7 +273,7 @@ public class ShowFilePathAction extends AnAction {
     if (SystemInfo.isWindows) {
       String cmd = toSelect != null ? "explorer /select,\"" + shortPath(toSelect) + '"' : "explorer /root,\"" + shortPath(dir) + '"';
       LOG.debug(cmd);
-      PooledThreadExecutor.INSTANCE.execute(() -> {
+      PooledThreadExecutor.getInstance().execute(() -> {
         try {
           Process process = new ProcessBuilder(cmd).start();  // no advanced quoting/escaping is needed
           new CapturingProcessHandler(process, null, cmd).runProcess().checkSuccess(LOG);
@@ -317,7 +317,7 @@ public class ShowFilePathAction extends AnAction {
   }
 
   private static void schedule(GeneralCommandLine cmd) {
-    PooledThreadExecutor.INSTANCE.submit(() -> {
+    PooledThreadExecutor.getInstance().submit(() -> {
       try {
         LOG.debug(cmd.toString());
         CapturingProcessUtil.execAndGetOutput(cmd).checkSuccess(LOG);

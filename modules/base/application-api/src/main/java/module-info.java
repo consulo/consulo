@@ -23,6 +23,7 @@ module consulo.application.api {
   requires static com.sun.jna.platform;
 
   exports consulo.application;
+  exports consulo.application.concurrent;
   exports consulo.application.dumb;
   exports consulo.application.eap;
   exports consulo.application.event;

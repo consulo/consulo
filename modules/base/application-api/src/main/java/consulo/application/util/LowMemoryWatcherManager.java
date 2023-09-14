@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
-import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
+
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
 import javax.management.NotificationListener;
@@ -43,11 +43,11 @@ public final class LowMemoryWatcherManager implements Disposable {
     }
   };
 
-  public LowMemoryWatcherManager(@Nonnull ExecutorService backendExecutorService) {
+  public LowMemoryWatcherManager(@Nonnull ExecutorService backendExecutorService, ApplicationConcurrency applicationConcurrency) {
     // whether LowMemoryWatcher runnables should be executed on the same thread that the low memory events come
     myExecutorService = Boolean.getBoolean("low.memory.watcher.sync")
                         ? ConcurrencyUtil.newSameThreadExecutorService()
-                        : SequentialTaskExecutor.createSequentialApplicationPoolExecutor("LowMemoryWatcherManager", backendExecutorService);
+                        : applicationConcurrency.createBoundedApplicationPoolExecutor("LowMemoryWatcherManager", backendExecutorService, 1);
 
     myMemoryPoolMXBeansFuture = initializeMXBeanListenersLater(backendExecutorService);
   }

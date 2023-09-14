@@ -18,6 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -35,16 +36,11 @@ import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
-import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.util.EdtRunnable;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.project.ui.internal.ToolWindowLayout;
-import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
@@ -53,6 +49,9 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -88,14 +87,14 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -1086,13 +1085,12 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       //getFocusManagerImpl(myProject)..cancelAllRequests();
 
       if (!info.isActive()) {
-        getFocusManagerImpl(myProject).doWhenFocusSettlesDown(new EdtRunnable() {
-          @Override
-          public void runEdt() {
+        getFocusManagerImpl(myProject).doWhenFocusSettlesDown(() -> {
+          SwingUtilities.invokeLater(() -> {
             WindowInfoImpl windowInfo = myLayout.getInfo(myId, true);
             if (windowInfo == null || !windowInfo.isVisible()) return;
             activateToolWindow(myId, false, false);
-          }
+          });
         });
       }
     }

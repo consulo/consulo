@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui;
+package consulo.application.impl.internal;
 
-import consulo.ui.internal.UIInternal;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 29/12/2021
+ * @since 14/09/2023
  */
-public interface ModalityState {
-  @Nonnull
-  static ModalityState any() {
-    return UIInternal.get()._ModalityState_any();
-  }
+public class ModalityStateImpl {
+  public static final IdeaModalityState ANY = new IdeaModalityState() {
+    @Override
+    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
+      return false;
+    }
 
-  @Nonnull
-  static ModalityState nonModal() {
-    return UIInternal.get()._ModalityState_nonModal();
-  }
+    @Override
+    public String toString() {
+      return "ANY";
+    }
+  };
 
-  Key<ModalityState> KEY = Key.create(ModalityState.class);
-
-  boolean dominates(@Nonnull ModalityState anotherState);
+  public static final IdeaModalityState NON_MODAL = new IdeaModalityStateEx() {
+    @Override
+    public String toString() {
+      return "NON_MODAL";
+    }
+  };
 }

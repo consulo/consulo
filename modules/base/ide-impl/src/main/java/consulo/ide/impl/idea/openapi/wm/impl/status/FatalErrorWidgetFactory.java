@@ -2,17 +2,17 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diagnostic.IdeMessagePanel;
 import consulo.ide.impl.idea.diagnostic.MessagePool;
 import consulo.project.Project;
-import consulo.disposer.Disposer;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.UIBundle;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "fatalErrorWidget", order = "after notificationsWidget")
 public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
@@ -37,10 +37,9 @@ public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
   }
 
   @Override
-  public
   @Nonnull
-  StatusBarWidget createWidget(@Nonnull Project project) {
-    return new IdeMessagePanel(WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
+  public StatusBarWidget createWidget(@Nonnull Project project) {
+    return new IdeMessagePanel(project, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
   }
 
   @Override

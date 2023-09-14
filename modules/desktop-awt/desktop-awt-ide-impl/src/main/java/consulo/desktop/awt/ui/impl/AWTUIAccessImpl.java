@@ -15,12 +15,17 @@
  */
 package consulo.desktop.awt.ui.impl;
 
+import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.impl.BaseUIAccess;
+import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 
@@ -34,18 +39,13 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 11-Jun-16
  */
-public class AWTUIAccessImpl implements UIAccess {
+public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
   private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
 
   @Override
   public void execute(@Nonnull Runnable command) {
     SwingUtilities.invokeLater(command);
-  }
-
-  @Override
-  public boolean isValid() {
-    return true;
   }
 
   @Override
@@ -115,5 +115,18 @@ public class AWTUIAccessImpl implements UIAccess {
     catch (InterruptedException | InvocationTargetException e) {
       //
     }
+  }
+
+  @Nonnull
+  @Override
+  protected SingleUIAccessScheduler createScheduler() {
+    Application application = Application.get();
+    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+      @Override
+      public void runWithModalityState(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+        Application.get().invokeLater(runnable, modalityState);
+      }
+    };
   }
 }

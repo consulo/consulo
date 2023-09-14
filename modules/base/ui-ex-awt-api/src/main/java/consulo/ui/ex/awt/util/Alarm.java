@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -10,15 +11,15 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.update.Activatable;
+import consulo.ui.UIAccess;
+import consulo.ui.UIAccessScheduler;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
+import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ import java.util.concurrent.*;
  * Two requests scheduled with the same delay are executed sequentially, one after the other.
  * {@link #cancelAllRequests()} and {@link #cancelRequest(Runnable)} allow to cancel already scheduled requests.
  */
+@Deprecated
+@DeprecationInfo("Use UIAccessScheduler")
 public class Alarm implements Disposable {
   private static final Logger LOG = Logger.getInstance(Alarm.class);
 
@@ -53,7 +56,7 @@ public class Alarm implements Disposable {
       myDisposed = true;
       cancelAllRequests();
 
-      if (myExecutorService != EdtExecutorService.getScheduledExecutorInstance()) {
+      if (!(myExecutorService instanceof UIAccessScheduler)) {
         myExecutorService.shutdownNow();
       }
     }
@@ -108,7 +111,7 @@ public class Alarm implements Disposable {
 
     myExecutorService = threadToUse == ThreadToUse.SWING_THREAD ?
                         // pass straight to EDT
-                        EdtExecutorService.getScheduledExecutorInstance() :
+                        Application.get().getLastUIAccess().getScheduler() :
 
                         // or pass to app pooled thread.
                         // have to restrict the number of running tasks because otherwise the (implicit) contract of
@@ -363,7 +366,8 @@ public class Alarm implements Disposable {
         myFuture = myExecutorService.schedule(this, myDelayMillis, TimeUnit.MILLISECONDS);
       }
       else {
-        myFuture = EdtScheduledExecutorService.getInstance().schedule(this, myModalityState, myDelayMillis, TimeUnit.MILLISECONDS);
+        UIAccess uiAccess = Application.get().getLastUIAccess();
+        myFuture = uiAccess.getScheduler().schedule(this, myModalityState, myDelayMillis, TimeUnit.MILLISECONDS);
       }
     }
 

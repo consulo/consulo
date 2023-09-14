@@ -21,15 +21,15 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.ClassLoaderUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringHash;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -40,7 +40,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 @Singleton
@@ -48,17 +47,14 @@ import java.util.concurrent.Future;
 public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
   private static final Logger LOG = Logger.getInstance(IdeScriptEngineManager.class);
 
-  private final Future<ScriptEngineManager> myManagerFuture = PooledThreadExecutor.INSTANCE.submit(new Callable<ScriptEngineManager>() {
-    @Override
-    public ScriptEngineManager call() {
-      long start = System.currentTimeMillis();
-      try {
-        return new ScriptEngineManager();
-      }
-      finally {
-        long end = System.currentTimeMillis();
-        LOG.info(ScriptEngineManager.class.getName() + " initialized in " + (end - start) + " ms");
-      }
+  private final Future<ScriptEngineManager> myManagerFuture = PooledThreadExecutor.getInstance().submit(() -> {
+    long start = System.currentTimeMillis();
+    try {
+      return new ScriptEngineManager();
+    }
+    finally {
+      long end = System.currentTimeMillis();
+      LOG.info(ScriptEngineManager.class.getName() + " initialized in " + (end - start) + " ms");
     }
   });
 

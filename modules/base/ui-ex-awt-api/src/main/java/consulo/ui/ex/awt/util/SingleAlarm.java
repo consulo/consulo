@@ -1,13 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+@Deprecated
+@DeprecationInfo("Use UIAccessScheduler")
 public final class SingleAlarm extends Alarm {
   private final Runnable task;
   private final int delay;

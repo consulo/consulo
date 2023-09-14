@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.application;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -40,6 +41,7 @@ import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author peter
@@ -49,7 +51,7 @@ import java.util.concurrent.Executor;
 @ServiceImpl
 public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance(Preloader.class);
-  private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Preloader pool");
+  private final ExecutorService myExecutor;
   private final ProgressIndicator myIndicator = new ProgressIndicatorBase();
   private final ProgressIndicator myWrappingIndicator = new AbstractProgressIndicatorBase() {
     @Override
@@ -71,10 +73,8 @@ public class Preloader implements Disposable {
   }
 
   @Inject
-  public Preloader(@Nonnull Application application, @Nonnull ProgressManager progressManager) {
-    if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-      return;
-    }
+  public Preloader(@Nonnull ApplicationConcurrency applicationConcurrency, @Nonnull ProgressManager progressManager) {
+    myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("Preloader pool");
 
     StatCollector collector = new StatCollector();
 
@@ -113,6 +113,7 @@ public class Preloader implements Disposable {
 
   @Override
   public void dispose() {
+    myExecutor.shutdown();
     myIndicator.cancel();
   }
 }

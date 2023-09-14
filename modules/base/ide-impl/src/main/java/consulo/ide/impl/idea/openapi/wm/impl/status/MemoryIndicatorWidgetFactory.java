@@ -40,7 +40,7 @@ public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {
   @Override
   @Nonnull
   public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new MemoryUsagePanel();
+    return new MemoryUsagePanel(project);
   }
 
   @Override

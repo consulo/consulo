@@ -39,7 +39,7 @@ import java.awt.*;
 public abstract class UsagesPanel extends JPanel implements Disposable, DataProvider {
   protected static final Logger LOG = Logger.getInstance(UsagesPanel.class);
 
-  private final Project myProject;
+  protected final Project myProject;
   protected ProgressIndicator myCurrentProgress;
   private JComponent myCurrentComponent;
   private UsageView myCurrentUsageView;

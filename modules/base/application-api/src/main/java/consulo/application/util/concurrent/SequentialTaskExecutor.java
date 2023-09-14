@@ -16,10 +16,13 @@
 
 package consulo.application.util.concurrent;
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
+@Deprecated
+@DeprecationInfo("Use ApplicationConcurrency")
 public class SequentialTaskExecutor {
   private SequentialTaskExecutor() {
   }

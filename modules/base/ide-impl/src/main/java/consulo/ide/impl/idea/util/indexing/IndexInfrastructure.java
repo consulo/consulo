@@ -7,23 +7,23 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.index.io.ID;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.language.psi.stub.StubIndexKey;
-import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
-import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
+import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
+import consulo.index.io.ID;
+import consulo.language.psi.stub.StubIndexKey;
 import consulo.logging.Logger;
-import consulo.application.util.concurrent.PooledThreadExecutor;
-
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,12 @@ import java.util.concurrent.Future;
 public class IndexInfrastructure {
   private static final String STUB_VERSIONS = ".versions";
   private static final String PERSISTENT_INDEX_DIRECTORY_NAME = ".persistent";
-  private static final boolean ourDoParallelIndicesInitialization = SystemProperties.getBooleanProperty("idea.parallel.indices.initialization", false);
-  public static final boolean ourDoAsyncIndicesInitialization = SystemProperties.getBooleanProperty("idea.async.indices.initialization", true);
-  private static final ExecutorService ourGenesisExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("IndexInfrastructure Pool");
+  private static final boolean ourDoParallelIndicesInitialization =
+    SystemProperties.getBooleanProperty("idea.parallel.indices.initialization", false);
+  public static final boolean ourDoAsyncIndicesInitialization =
+    SystemProperties.getBooleanProperty("idea.async.indices.initialization", true);
+  private static final ExecutorService ourGenesisExecutor =
+    SequentialTaskExecutor.createSequentialApplicationPoolExecutor("IndexInfrastructure Pool");
 
   private IndexInfrastructure() {
   }
@@ -149,7 +152,8 @@ public class IndexInfrastructure {
 
       if (ourDoParallelIndicesInitialization) {
         ExecutorService taskExecutor = AppExecutorUtil
-                .createBoundedApplicationPoolExecutor("IndexInfrastructure.DataInitialization.RunParallelNestedInitializationTasks", PooledThreadExecutor.INSTANCE, CacheUpdateRunner.indexingThreadCount());
+          .createBoundedApplicationPoolExecutor("IndexInfrastructure.DataInitialization.RunParallelNestedInitializationTasks",
+                                                PooledThreadExecutor.getInstance(), CacheUpdateRunner.indexingThreadCount());
 
         for (ThrowableRunnable<?> callable : myNestedInitializationTasks) {
           taskExecutor.execute(() -> executeNestedInitializationTask(callable, proceedLatch));

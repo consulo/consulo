@@ -54,10 +54,10 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+  protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     System.setProperty("swt.autoScale", "exact");
 
-    super.initApplication(isHeadlessMode, args, stat);
+    super.initializeEnviroment(isHeadlessMode, args, stat);
   }
 
   @Override

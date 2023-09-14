@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -20,7 +21,6 @@ import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.*;
 import consulo.codeEditor.internal.EditorActionPlan;
-import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
@@ -29,6 +29,8 @@ import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.view.EditorView;
+import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
+import consulo.desktop.awt.language.editor.StatusComponentContainer;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
@@ -41,7 +43,6 @@ import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
-import consulo.desktop.awt.language.editor.StatusComponentContainer;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -51,7 +52,6 @@ import consulo.ide.impl.idea.openapi.editor.actionSystem.LatencyListener;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
-import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
@@ -85,7 +85,6 @@ import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -96,14 +95,14 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -128,7 +127,6 @@ import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -141,7 +139,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
   private static final Key<JComponent> PERMANENT_HEADER = Key.create("PERMANENT_HEADER");
 
-  private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK = Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
+  private static final boolean HONOR_CAMEL_HUMPS_ON_TRIPLE_CLICK =
+    Boolean.parseBoolean(System.getProperty("idea.honor.camel.humps.on.triple.click"));
   private static final Key<BufferedImage> BUFFER = Key.create("buffer");
 
   private final JPanel myPanel;
@@ -165,7 +164,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     Cursor emptyCursor = null;
     if (!GraphicsEnvironment.isHeadless()) {
       try {
-        emptyCursor = Toolkit.getDefaultToolkit().createCustomCursor(ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), "Empty cursor");
+        emptyCursor = Toolkit.getDefaultToolkit()
+                             .createCustomCursor(ImageUtil.createImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), "Empty cursor");
       }
       catch (Exception e) {
         LOG.warn("Couldn't create an empty cursor", e);
@@ -178,7 +178,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   private final MyVerticalScrollBar myVerticalScrollBar;
 
   @Nonnull
-  private final CaretCursor myCaretCursor;
+  protected final CaretCursor myCaretCursor;
   private final ScrollingTimer myScrollingTimer = new ScrollingTimer();
 
   @SuppressWarnings("RedundantStringConstructorCall")
@@ -270,7 +270,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   private DesktopCaretImpl myPrimaryCaret;
 
   public final boolean myDisableRtl = Registry.is("editor.disable.rtl");
-  public final Object myFractionalMetricsHintValue = Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
+  public final Object myFractionalMetricsHintValue =
+    Registry.is("editor.text.fractional.metrics") ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
   public final EditorView myView;
 
   private boolean myCharKeyPressed;
@@ -282,10 +283,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
   private final ImmediatePainter myImmediatePainter;
 
-  static {
-    ourCaretBlinkingCommand.start();
-  }
-
   private boolean myBackgroundImageSet;
 
   private boolean myScrollingToCaret;
@@ -294,7 +291,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
   public DesktopEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     super(document, viewer, project, kind);
-    
+
+    ourCaretBlinkingCommand.start();
+
     myScrollPane = new MyScrollPane(); // create UI after scheme initialization
 
     getScrollingModel().registerListeners();
@@ -329,7 +328,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             final Rectangle visibleArea = getScrollingModel().getVisibleArea();
             final int endLine = newGuide.startLine;
             if (logicalLineToY(endLine) < visibleArea.y) {
-              int startLine = Math.max(newGuide.codeConstructStartLine, endLine - EditorFragmentComponent.getAvailableVisualLinesAboveEditor(DesktopEditorImpl.this) + 1);
+              int startLine = Math.max(newGuide.codeConstructStartLine,
+                                       endLine - EditorFragmentComponent.getAvailableVisualLinesAboveEditor(DesktopEditorImpl.this) + 1);
               TextRange textRange = new TextRange(myDocument.getLineStartOffset(startLine), myDocument.getLineEndOffset(endLine));
               myCurrentHint = EditorFragmentComponent.showEditorFragmentHint(DesktopEditorImpl.this, textRange, false, false);
             }
@@ -383,7 +383,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     myPanel = new JPanel(new BorderLayout());
 
     getMarkupModel().updateUI();
-    
+
     UIUtil.putClientProperty(myPanel, UIUtil.NOT_IN_HIERARCHY_COMPONENTS, (Iterable<JComponent>)() -> {
       JComponent component = getPermanentHeaderComponent();
       if (component != null && component.getParent() == null) {
@@ -416,7 +416,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     updateCaretCursor();
 
-    if (SystemInfo.isMac && SystemInfo.isJetBrainsJvm ) {
+    if (SystemInfo.isMac && SystemInfo.isJetBrainsJvm) {
       new MacGestureSupportForEditor(getComponent());
     }
 
@@ -505,11 +505,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     if (lineMarkerRenderer == null) return false;
     LineMarkerRendererEx.Position position = EditorGutterComponentImpl.getLineMarkerPosition(lineMarkerRenderer);
     return position == LineMarkerRendererEx.Position.LEFT && !myGutterComponent.myForceLeftFreePaintersAreaShown ||
-           position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
+      position == LineMarkerRendererEx.Position.RIGHT && !myGutterComponent.myForceRightFreePaintersAreaShown;
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter,
+                                      boolean canImpactGutterSize,
+                                      boolean fontStyleOrColorChanged,
+                                      boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     if (canImpactGutterSize) {
@@ -695,7 +698,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   private void reinitSettings(boolean updateGutterSize) {
     assertIsDispatchThread();
 
-    for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme; scheme = ((DelegateColorScheme)scheme).getDelegate()) {
+    for (EditorColorsScheme scheme = myScheme; scheme instanceof DelegateColorScheme;
+         scheme = ((DelegateColorScheme)scheme).getDelegate()) {
       if (scheme instanceof MyColorSchemeDelegate) {
         ((MyColorSchemeDelegate)scheme).updateGlobalScheme();
         break;
@@ -813,7 +817,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     DesktopEditorLayeredPanel layeredPanel = new DesktopEditorLayeredPanel(this);
     layeredPanel.setMainPanel(myScrollPane);
-    if(mayShowToolbar()) {
+    if (mayShowToolbar()) {
       layeredPanel.addLayerPanel(new ContextMenuImpl(myScrollPane, this));
     }
     layeredPanel.addLayerPanel(myStatusComponentContainer.getPanel());
@@ -957,7 +961,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     Point shiftedZoomCenterAbsolute = logicalPositionToXY(zoomCenterLogical);
     myScrollingModel.disableAnimation();
     try {
-      myScrollingModel.scroll(visibleArea.x == 0 ? 0 : shiftedZoomCenterAbsolute.x - zoomCenterRelative.x, // stick to left border if it's visible
+      myScrollingModel.scroll(visibleArea.x == 0 ? 0 : shiftedZoomCenterAbsolute.x - zoomCenterRelative.x,
+                              // stick to left border if it's visible
                               shiftedZoomCenterAbsolute.y - zoomCenterRelative.y + (intraLineOffset * getLineHeight() + oldLineHeight / 2) / oldLineHeight);
     }
     finally {
@@ -1126,7 +1131,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   private int logicalToVisualLine(int logicalLine) {
-    return logicalLine < myDocument.getLineCount() ? offsetToVisualLine(myDocument.getLineStartOffset(logicalLine)) : logicalToVisualPosition(new LogicalPosition(logicalLine, 0)).line;
+    return logicalLine < myDocument.getLineCount() ? offsetToVisualLine(myDocument.getLineStartOffset(logicalLine)) : logicalToVisualPosition(
+      new LogicalPosition(logicalLine, 0)).line;
   }
 
   private int logicalLineToY(int line) {
@@ -1225,7 +1231,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     if (!isGutterShowing()) return;
 
     int startVisualLine = logicalToVisualLine(startLine);
-    int endVisualLine = myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1, endLine)));
+    int endVisualLine =
+      myDocument.getTextLength() <= 0 ? 0 : offsetToVisualLine(myDocument.getLineEndOffset(Math.min(myDocument.getLineCount() - 1,
+                                                                                                    endLine)));
     doRepaint(startVisualLine, endVisualLine);
   }
 
@@ -1327,9 +1335,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   @Nonnull
   public String dumpState() {
     return super.dumpState() +
-           "\ninsets: " +
-           myEditorComponent.getInsets() +
-           (myView == null ? "" : "\nview: " + myView.dumpState());
+      "\ninsets: " +
+      myEditorComponent.getInsets() +
+      (myView == null ? "" : "\nview: " + myView.dumpState());
   }
 
   @Override
@@ -1641,7 +1649,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   public Dimension getPreferredSize() {
-    return isReleased ? new Dimension() : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars") ? new Dimension(getPreferredWidthOfVisibleLines(), myView.getPreferredHeight()) : myView.getPreferredSize();
+    return isReleased ? new Dimension() : Registry.is("idea.true.smooth.scrolling.dynamic.scrollbars") ? new Dimension(
+      getPreferredWidthOfVisibleLines(),
+      myView.getPreferredHeight()) : myView.getPreferredSize();
   }
 
   /* When idea.true.smooth.scrolling=true, this method is used to compute width of currently visible line range
@@ -1802,7 +1812,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       return false;
     }
 
-    if (myInitialMouseEvent != null && (e.getComponent() != myInitialMouseEvent.getComponent() || !e.getPoint().equals(myInitialMouseEvent.getPoint()))) {
+    if (myInitialMouseEvent != null && (e.getComponent() != myInitialMouseEvent.getComponent() || !e.getPoint()
+                                                                                                    .equals(myInitialMouseEvent.getPoint()))) {
       myIgnoreMouseEventsConsecutiveToInitial = false;
       myInitialMouseEvent = null;
       return false;
@@ -1839,13 +1850,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     // and, in the case of the positive answer, clear selection. Please note that there is a possible case that mouse click
     // is performed inside selection but it triggers context menu. We don't want to drop the selection then.
     if (myMousePressedEvent != null &&
-        myMousePressedEvent.getClickCount() == 1 &&
-        myKeepSelectionOnMousePress &&
-        !myDragStarted &&
-        !myMousePressedEvent.isShiftDown() &&
-        !myMousePressedEvent.isPopupTrigger() &&
-        !isToggleCaretEvent(myMousePressedEvent) &&
-        !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
+      myMousePressedEvent.getClickCount() == 1 &&
+      myKeepSelectionOnMousePress &&
+      !myDragStarted &&
+      !myMousePressedEvent.isShiftDown() &&
+      !myMousePressedEvent.isPopupTrigger() &&
+      !isToggleCaretEvent(myMousePressedEvent) &&
+      !isCreateRectangularSelectionEvent(myMousePressedEvent)) {
       getSelectionModel().removeSelection();
     }
   }
@@ -1887,9 +1898,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     if (customCursor == null && myCursorSetExternally && myEditorComponent.isCursorSet()) {
       Cursor cursor = myEditorComponent.getCursor();
       if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) &&
-          cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) &&
-          cursor != EMPTY_CURSOR &&
-          (!SystemInfo.isMac || cursor != MacUIUtil.getInvertedTextCursor())) {
+        cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) &&
+        cursor != EMPTY_CURSOR &&
+        (!SystemInfo.isMac || cursor != MacUIUtil.getInvertedTextCursor())) {
         // someone else has set cursor, don't touch it
         return;
       }
@@ -1913,24 +1924,32 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     if (myCommandProcessor == null || myMousePressedEvent != null && myMousePressedEvent.isConsumed()) {
       return;
     }
-    myCommandProcessor.executeCommand(myProject, () -> processMouseDragged(e), "", MOUSE_DRAGGED_GROUP, UndoConfirmationPolicy.DEFAULT, getDocument());
+    myCommandProcessor.executeCommand(myProject,
+                                      () -> processMouseDragged(e),
+                                      "",
+                                      MOUSE_DRAGGED_GROUP,
+                                      UndoConfirmationPolicy.DEFAULT,
+                                      getDocument());
   }
 
   private void processMouseDragged(@Nonnull MouseEvent e) {
-    if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e) || (Registry.is("editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
+    if (!SwingUtilities.isLeftMouseButton(e) && !SwingUtilities.isMiddleMouseButton(e) || (Registry.is(
+      "editor.disable.drag.with.right.button") && SwingUtilities.isRightMouseButton(e))) {
       return;
     }
 
     EditorMouseEventArea eventArea = getMouseEventArea(e);
     if (eventArea == EditorMouseEventArea.ANNOTATIONS_AREA) return;
-    if (eventArea == EditorMouseEventArea.LINE_MARKERS_AREA || eventArea == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
+    if (eventArea == EditorMouseEventArea.LINE_MARKERS_AREA || eventArea == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(
+      e)) {
       // The general idea is that we don't want to change caret position on gutter marker area click (e.g. on setting a breakpoint)
       // but do want to allow bulk selection on gutter marker mouse drag. However, when a drag is performed, the first event is
       // a 'mouse pressed' event, that's why we remember target line on 'mouse pressed' processing and use that information on
       // further dragging (if any).
       if (myDragOnGutterSelectionStartLine >= 0) {
         mySelectionModel.removeSelection();
-        myCaretModel.moveToOffset(myDragOnGutterSelectionStartLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(myDragOnGutterSelectionStartLine) : myDocument.getTextLength());
+        myCaretModel.moveToOffset(myDragOnGutterSelectionStartLine < myDocument.getLineCount() ? myDocument.getLineStartOffset(
+          myDragOnGutterSelectionStartLine) : myDocument.getTextLength());
       }
       myDragOnGutterSelectionStartLine = -1;
     }
@@ -1996,7 +2015,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       int caretShift = newCaretOffset - mySavedSelectionStart;
 
       if (myMousePressedEvent != null && getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.EDITING_AREA &&
-          getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.LINE_NUMBERS_AREA) {
+        getMouseEventArea(myMousePressedEvent) != EditorMouseEventArea.LINE_NUMBERS_AREA) {
         selectionModel.setSelection(oldSelectionStart, newCaretOffset);
       }
       else {
@@ -2015,7 +2034,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
               }
               else {
                 if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                  newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line, 0)));
+                  newSelection =
+                    logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line, 0)));
                 }
               }
               if (newSelection < 0) newSelection = newCaretOffset;
@@ -2029,7 +2049,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
               }
               else {
                 if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                  newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line + 1, 0)));
+                  newSelection =
+                    logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line + 1, 0)));
                 }
               }
               if (newSelection < 0) newSelection = newCaretOffset;
@@ -2045,7 +2066,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             // E.g. consider situation when user selects the whole line by clicking at 'line numbers' area. 'Line end' is considered
             // to be lead selection point then. However, when mouse is dragged down we want to consider 'line start' to be
             // lead selection point.
-            if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA) && selectionModel.hasSelection()) {
+            if ((myMousePressArea == EditorMouseEventArea.LINE_NUMBERS_AREA || myMousePressArea == EditorMouseEventArea.LINE_MARKERS_AREA) && selectionModel
+              .hasSelection()) {
               if (newCaretOffset >= selectionModel.getSelectionEnd()) {
                 oldSelectionStart = selectionModel.getSelectionStart();
                 oldVisLeadSelectionStart = selectionModel.getSelectionStartPosition();
@@ -2071,7 +2093,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
                     myDragStarted = true;
                     boolean isCopy = UIUtil.isControlKeyDown(e) || isViewer() || !getDocument().isWritable();
                     mySavedCaretOffsetForDNDUndoHack = oldCaretOffset;
-                    getContentComponent().getTransferHandler().exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
+                    getContentComponent().getTransferHandler()
+                                         .exportAsDrag(getContentComponent(), e, isCopy ? TransferHandler.COPY : TransferHandler.MOVE);
                   }
                 }
                 else {
@@ -2146,14 +2169,20 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
   }
 
-  private void setSelectionAndBlockActions(@Nonnull MouseEvent mouseDragEvent, VisualPosition startPosition, int startOffset, VisualPosition endPosition, int endOffset) {
+  private void setSelectionAndBlockActions(@Nonnull MouseEvent mouseDragEvent,
+                                           VisualPosition startPosition,
+                                           int startOffset,
+                                           VisualPosition endPosition,
+                                           int endOffset) {
     mySelectionModel.setSelection(startPosition, startOffset, endPosition, endOffset);
     if (myCurrentDragIsSubstantial || startOffset != endOffset || !Comparing.equal(startPosition, endPosition)) {
       onSubstantialDrag(mouseDragEvent);
     }
   }
 
-  private void blockActionsIfNeeded(@Nonnull MouseEvent mouseDragEvent, @Nonnull LogicalPosition startPosition, @Nonnull LogicalPosition endPosition) {
+  private void blockActionsIfNeeded(@Nonnull MouseEvent mouseDragEvent,
+                                    @Nonnull LogicalPosition startPosition,
+                                    @Nonnull LogicalPosition endPosition) {
     if (myCurrentDragIsSubstantial || !startPosition.equals(endPosition)) {
       onSubstantialDrag(mouseDragEvent);
     }
@@ -2162,55 +2191,6 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   private void onSubstantialDrag(@Nonnull MouseEvent mouseDragEvent) {
     IdeEventQueue.getInstance().blockNextEvents(mouseDragEvent, IdeEventQueue.BlockMode.ACTIONS);
     myCurrentDragIsSubstantial = true;
-  }
-
-  private static class RepaintCursorCommand implements Runnable {
-    private long mySleepTime = 500;
-    private boolean myIsBlinkCaret = true;
-    @Nullable
-    private DesktopEditorImpl myEditor;
-    private ScheduledFuture<?> mySchedulerHandle;
-
-    public void start() {
-      if (mySchedulerHandle != null) {
-        mySchedulerHandle.cancel(false);
-      }
-      mySchedulerHandle = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(this, mySleepTime, mySleepTime, TimeUnit.MILLISECONDS);
-    }
-
-    private void setBlinkPeriod(int blinkPeriod) {
-      mySleepTime = Math.max(blinkPeriod, 10);
-      start();
-    }
-
-    private void setBlinkCaret(boolean value) {
-      myIsBlinkCaret = value;
-    }
-
-    @Override
-    public void run() {
-      if (myEditor != null) {
-        CaretCursor activeCursor = myEditor.myCaretCursor;
-
-        long time = System.currentTimeMillis();
-        time -= activeCursor.myStartTime;
-
-        if (time > mySleepTime) {
-          boolean toRepaint = true;
-          if (myIsBlinkCaret) {
-            activeCursor.myIsShown = !activeCursor.myIsShown;
-          }
-          else {
-            toRepaint = !activeCursor.myIsShown;
-            activeCursor.myIsShown = true;
-          }
-
-          if (toRepaint) {
-            activeCursor.repaint();
-          }
-        }
-      }
-    }
   }
 
   public void updateCaretCursor() {
@@ -2240,7 +2220,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       boolean isRtl = caret.isAtRtlLocation();
       VisualPosition caretPosition = caret.getVisualPosition();
       Point2D pos1 = visualPositionToPoint2D(caretPosition.leanRight(!isRtl));
-      Point2D pos2 = visualPositionToPoint2D(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
+      Point2D pos2 =
+        visualPositionToPoint2D(new VisualPosition(caretPosition.line, Math.max(0, caretPosition.column + (isRtl ? -1 : 1)), isRtl));
       float width = (float)Math.abs(pos2.getX() - pos1.getX());
       if (!isRtl && myInlayModel.hasInlineElementAt(caretPosition)) {
         width = Math.min(width, (float)Math.ceil(myView.getPlainSpaceWidth()));
@@ -2303,8 +2284,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     private boolean myEnabled;
 
     @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")
-    private boolean myIsShown;
-    private long myStartTime;
+    protected boolean myIsShown;
+    protected long myStartTime;
 
     private CaretCursor() {
       myLocations = new CaretRectangle[]{new CaretRectangle(new Point(0, 0), 0, null, false)};
@@ -2347,7 +2328,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       myLocations = locations;
     }
 
-    private void repaint() {
+    protected void repaint() {
       myView.repaintCarets();
     }
 
@@ -2404,79 +2385,89 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
           stop();
           return;
         }
-        myCommandProcessor.executeCommand(myProject, new DocumentRunnable(myDocument, myProject) {
-          @Override
-          public void run() {
-            int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
-            VisualPosition caretPosition = myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
-            int column = caretPosition.column;
-            xPassedCycles++;
-            if (xPassedCycles >= myXCycles) {
-              xPassedCycles = 0;
-              column += myDx;
-            }
+        myCommandProcessor.executeCommand(myProject,
+                                          new DocumentRunnable(myDocument, myProject) {
+                                            @Override
+                                            public void run() {
+                                              int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
+                                              VisualPosition caretPosition =
+                                                myMultiSelectionInProgress ? myTargetMultiSelectionPosition : getCaretModel().getVisualPosition();
+                                              int column = caretPosition.column;
+                                              xPassedCycles++;
+                                              if (xPassedCycles >= myXCycles) {
+                                                xPassedCycles = 0;
+                                                column += myDx;
+                                              }
 
-            int line = caretPosition.line;
-            yPassedCycles++;
-            if (yPassedCycles >= myYCycles) {
-              yPassedCycles = 0;
-              line += myDy;
-            }
+                                              int line = caretPosition.line;
+                                              yPassedCycles++;
+                                              if (yPassedCycles >= myYCycles) {
+                                                yPassedCycles = 0;
+                                                line += myDy;
+                                              }
 
-            line = Math.max(0, line);
-            column = Math.max(0, column);
-            VisualPosition pos = new VisualPosition(line, column);
-            if (!myMultiSelectionInProgress) {
-              getCaretModel().moveToVisualPosition(pos);
-              getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-            }
+                                              line = Math.max(0, line);
+                                              column = Math.max(0, column);
+                                              VisualPosition pos = new VisualPosition(line, column);
+                                              if (!myMultiSelectionInProgress) {
+                                                getCaretModel().moveToVisualPosition(pos);
+                                                getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                                              }
 
-            int newCaretOffset = getCaretModel().getOffset();
-            int caretShift = newCaretOffset - mySavedSelectionStart;
+                                              int newCaretOffset = getCaretModel().getOffset();
+                                              int caretShift = newCaretOffset - mySavedSelectionStart;
 
-            if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
-              if (caretShift < 0) {
-                int newSelection = newCaretOffset;
-                if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                  newSelection = myCaretModel.getWordAtCaretStart();
-                }
-                else {
-                  if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                    newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line, 0)));
-                  }
-                }
-                if (newSelection < 0) newSelection = newCaretOffset;
-                mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
-                getCaretModel().moveToOffset(newSelection);
-              }
-              else {
-                int newSelection = newCaretOffset;
-                if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
-                  newSelection = myCaretModel.getWordAtCaretEnd();
-                }
-                else {
-                  if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
-                    newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(getCaretModel().getVisualPosition().line + 1, 0)));
-                  }
-                }
-                if (newSelection < 0) newSelection = newCaretOffset;
-                mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
-                getCaretModel().moveToOffset(newSelection);
-              }
-              return;
-            }
+                                              if (getMouseSelectionState() != MOUSE_SELECTION_STATE_NONE) {
+                                                if (caretShift < 0) {
+                                                  int newSelection = newCaretOffset;
+                                                  if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                                    newSelection = myCaretModel.getWordAtCaretStart();
+                                                  }
+                                                  else {
+                                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                                      newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                                                        getCaretModel().getVisualPosition().line,
+                                                        0)));
+                                                    }
+                                                  }
+                                                  if (newSelection < 0) newSelection = newCaretOffset;
+                                                  mySelectionModel.setSelection(validateOffset(mySavedSelectionEnd), newSelection);
+                                                  getCaretModel().moveToOffset(newSelection);
+                                                }
+                                                else {
+                                                  int newSelection = newCaretOffset;
+                                                  if (getMouseSelectionState() == MOUSE_SELECTION_STATE_WORD_SELECTED) {
+                                                    newSelection = myCaretModel.getWordAtCaretEnd();
+                                                  }
+                                                  else {
+                                                    if (getMouseSelectionState() == MOUSE_SELECTION_STATE_LINE_SELECTED) {
+                                                      newSelection = logicalPositionToOffset(visualToLogicalPosition(new VisualPosition(
+                                                        getCaretModel().getVisualPosition().line + 1,
+                                                        0)));
+                                                    }
+                                                  }
+                                                  if (newSelection < 0) newSelection = newCaretOffset;
+                                                  mySelectionModel.setSelection(validateOffset(mySavedSelectionStart), newSelection);
+                                                  getCaretModel().moveToOffset(newSelection);
+                                                }
+                                                return;
+                                              }
 
-            if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
-              myTargetMultiSelectionPosition = pos;
-              LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
-              getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
-              createSelectionTill(newLogicalPosition);
-            }
-            else {
-              mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
-            }
-          }
-        }, EditorBundle.message("move.cursor.command.name"), DocCommandGroupId.noneGroupId(getDocument()), UndoConfirmationPolicy.DEFAULT, getDocument());
+                                              if (myMultiSelectionInProgress && myLastMousePressedLocation != null) {
+                                                myTargetMultiSelectionPosition = pos;
+                                                LogicalPosition newLogicalPosition = visualToLogicalPosition(pos);
+                                                getScrollingModel().scrollTo(newLogicalPosition, ScrollType.RELATIVE);
+                                                createSelectionTill(newLogicalPosition);
+                                              }
+                                              else {
+                                                mySelectionModel.setSelection(oldSelectionStart, getCaretModel().getOffset());
+                                              }
+                                            }
+                                          },
+                                          EditorBundle.message("move.cursor.command.name"),
+                                          DocCommandGroupId.noneGroupId(getDocument()),
+                                          UndoConfirmationPolicy.DEFAULT,
+                                          getDocument());
       });
       myTimer.start();
     }
@@ -2601,7 +2592,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       if (myMouseSelectionStateResetRunnable == null) {
         myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null);
       }
-      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable, Registry.intValue("editor.mouseSelectionStateResetTimeout"), IdeaModalityState.stateForComponent(myEditorComponent));
+      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable,
+                                            Registry.intValue("editor.mouseSelectionStateResetTimeout"),
+                                            IdeaModalityState.stateForComponent(myEditorComponent));
     }
   }
 
@@ -2708,7 +2701,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     @Nonnull
     @Override
-    public AttributedCharacterIterator getCommittedText(final int beginIndex, final int endIndex, final AttributedCharacterIterator.Attribute[] attributes) {
+    public AttributedCharacterIterator getCommittedText(final int beginIndex,
+                                                        final int endIndex,
+                                                        final AttributedCharacterIterator.Attribute[] attributes) {
       return execute(() -> myDelegate.getCommittedText(beginIndex, endIndex, attributes));
     }
 
@@ -2888,7 +2883,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     private void runUndoTransparent(@Nonnull final Runnable runnable) {
       CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance()
-              .executeCommand(myProject, () -> ApplicationManager.getApplication().runWriteAction(runnable), "", getDocument(), UndoConfirmationPolicy.DEFAULT, getDocument()));
+                                                                                    .executeCommand(myProject,
+                                                                                                    () -> ApplicationManager.getApplication()
+                                                                                                                            .runWriteAction(
+                                                                                                                              runnable),
+                                                                                                    "",
+                                                                                                    getDocument(),
+                                                                                                    UndoConfirmationPolicy.DEFAULT,
+                                                                                                    getDocument()));
     }
 
     private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
@@ -2899,7 +2901,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     private void replaceInputMethodText(@Nonnull InputMethodEvent e) {
       if (myNeedToSelectPreviousChar && SystemInfo.isMac &&
-          (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(e) || e.getCaret() == null))) {
+        (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(
+          e) || e.getCaret() == null))) {
         // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
         // JDK currently properly supports this functionality only for TextComponent/JTextComponent descendants.
         // For our editor component we need this workaround.
@@ -2972,8 +2975,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       myLastMousePressedLocation = null;
       runMouseReleasedCommand(e);
       if (!e.isConsumed() && myMousePressedEvent != null && !myMousePressedEvent.isConsumed() &&
-          Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this) &&
-          Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
+        Math.abs(e.getX() - myMousePressedEvent.getX()) < EditorUtil.getSpaceWidth(Font.PLAIN, DesktopEditorImpl.this) &&
+        Math.abs(e.getY() - myMousePressedEvent.getY()) < getLineHeight()) {
         runMouseClickedCommand(e);
       }
     }
@@ -3020,7 +3023,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         myExpectedCaretOffset = -1;
       }
 
-      if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(e)) {
+      if (event.getArea() == EditorMouseEventArea.LINE_MARKERS_AREA || event.getArea() == EditorMouseEventArea.FOLDING_OUTLINE_AREA && !isInsideGutterWhitespaceArea(
+        e)) {
         myDragOnGutterSelectionStartLine = EditorUtil.yPositionToLogicalLine(DesktopEditorImpl.this, e);
       }
 
@@ -3032,7 +3036,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
             IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
           }
         };
-        myCommandProcessor.executeCommand(myProject, runnable, "", DocCommandGroupId.noneGroupId(getDocument()), UndoConfirmationPolicy.DEFAULT, getDocument());
+        myCommandProcessor.executeCommand(myProject,
+                                          runnable,
+                                          "",
+                                          DocCommandGroupId.noneGroupId(getDocument()),
+                                          UndoConfirmationPolicy.DEFAULT,
+                                          getDocument());
       }
       else {
         processMousePressed(e);
@@ -3077,7 +3086,12 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
       if (myCommandProcessor != null) {
         Runnable runnable = () -> processMouseReleased(e);
-        myCommandProcessor.executeCommand(myProject, runnable, "", DocCommandGroupId.noneGroupId(getDocument()), UndoConfirmationPolicy.DEFAULT, getDocument());
+        myCommandProcessor.executeCommand(myProject,
+                                          runnable,
+                                          "",
+                                          DocCommandGroupId.noneGroupId(getDocument()),
+                                          UndoConfirmationPolicy.DEFAULT,
+                                          getDocument());
       }
       else {
         processMouseReleased(e);
@@ -3111,7 +3125,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     private boolean processMousePressed(@Nonnull final MouseEvent e) {
       myInitialMouseEvent = e;
 
-      if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue("editor.mouseSelectionStateResetTimeout")) {
+      if (myMouseSelectionState != MOUSE_SELECTION_STATE_NONE && System.currentTimeMillis() - myMouseSelectionChangeTimestamp > Registry.intValue(
+        "editor.mouseSelectionStateResetTimeout")) {
         resetMouseSelectionState(e);
       }
 
@@ -3173,7 +3188,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       // Don't move caret on mouse press above gutter line markers area (a place where break points, 'override', 'implements' etc icons
       // are drawn) and annotations area. E.g. we don't want to change caret position if a user sets new break point (clicks
       // at 'line markers' area).
-      boolean insideEditorRelatedAreas = eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA || eventArea == EditorMouseEventArea.EDITING_AREA || isInsideGutterWhitespaceArea(e);
+      boolean insideEditorRelatedAreas =
+        eventArea == EditorMouseEventArea.LINE_NUMBERS_AREA || eventArea == EditorMouseEventArea.EDITING_AREA || isInsideGutterWhitespaceArea(
+          e);
       if (insideEditorRelatedAreas) {
         VisualPosition visualPosition = getTargetPosition(x, y, true);
         LogicalPosition pos = visualToLogicalPosition(visualPosition);
@@ -3193,7 +3210,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         }
         else if (e.getSource() != myGutterComponent && isCreateRectangularSelectionEvent(e)) {
           CaretState anchorCaretState = myCaretModel.getCaretsAndSelections().get(0);
-          LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(), anchorCaretState.getSelectionStart()) ? anchorCaretState.getSelectionEnd() : anchorCaretState.getSelectionStart();
+          LogicalPosition anchor = Objects.equals(anchorCaretState.getCaretPosition(),
+                                                  anchorCaretState.getSelectionStart()) ? anchorCaretState.getSelectionEnd() : anchorCaretState
+            .getSelectionStart();
           if (anchor == null) anchor = myCaretModel.getLogicalPosition();
           mySelectionModel.setBlockSelection(anchor, pos);
         }
@@ -3214,9 +3233,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
       myMouseSelectedRegion = myFoldingModel.getFoldingPlaceholderAt(new Point(x, y));
       myKeepSelectionOnMousePress = mySelectionModel.hasSelection() &&
-                                    caretOffset >= mySelectionModel.getSelectionStart() &&
-                                    caretOffset <= mySelectionModel.getSelectionEnd() &&
-                                    (SwingUtilities.isLeftMouseButton(e) && mySettings.isDndEnabled() || SwingUtilities.isRightMouseButton(e));
+        caretOffset >= mySelectionModel.getSelectionStart() &&
+        caretOffset <= mySelectionModel.getSelectionEnd() &&
+        (SwingUtilities.isLeftMouseButton(e) && mySettings.isDndEnabled() || SwingUtilities.isRightMouseButton(e));
 
       boolean isNavigation = oldStart == oldEnd && newStart == newEnd && oldStart != newStart;
       if (getMouseEventArea(e) == EditorMouseEventArea.LINE_NUMBERS_AREA && e.getClickCount() == 1) {
@@ -3309,7 +3328,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     for (String mappedActionId : mappedActions) {
       if (actionId.equals(mappedActionId)) continue;
       AnAction action = actionManager.getAction(mappedActionId);
-      AnActionEvent actionEvent = AnActionEvent.createFromAnAction(action, e, ActionPlaces.MAIN_MENU, DataManager.getInstance().getDataContext(e.getComponent()));
+      AnActionEvent actionEvent =
+        AnActionEvent.createFromAnAction(action, e, ActionPlaces.MAIN_MENU, DataManager.getInstance().getDataContext(e.getComponent()));
       if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) return false;
     }
     return true;
@@ -3406,7 +3426,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   private class MyMouseMotionListener implements MouseMotionListener {
     @Override
     public void mouseDragged(@Nonnull MouseEvent e) {
-      if (myDraggedRange != null || myGutterComponent.myDnDInProgress) return; // on Mac we receive events even if drag-n-drop is in progress
+      if (myDraggedRange != null || myGutterComponent.myDnDInProgress)
+        return; // on Mac we receive events even if drag-n-drop is in progress
       validateMousePointer(e);
       ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> runMouseDraggedCommand(e));
       EditorMouseEvent event = new EditorMouseEvent(DesktopEditorImpl.this, e, getMouseEventArea(e));
@@ -3489,9 +3510,13 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       int x = myExplosionLocation.x - scaledImage.getWidth(null) / 2;
       int y = myExplosionLocation.y - scaledImage.getHeight(null) / 2;
 
+      Application application = Application.get();
       if (currentTimeMillis - lastRepaintTime < TIME_PER_FRAME) {
         UIUtil.drawImage(g, scaledImage, x, y, null);
-        EdtExecutorService.getScheduledExecutorInstance().schedule(() -> component.repaint(x, y, myWidth, myHeight), TIME_PER_FRAME, TimeUnit.MILLISECONDS);
+        application
+          .getLastUIAccess()
+          .getScheduler()
+          .schedule(() -> component.repaint(x, y, myWidth, myHeight), TIME_PER_FRAME, TimeUnit.MILLISECONDS);
         return;
       }
       lastRepaintTime = currentTimeMillis;
@@ -3499,7 +3524,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       UIUtil.drawImage(g, scaledImage, x, y, null);
       if (frameIndex == TOTAL_FRAMES) {
         nrp.set(false);
-        ApplicationManager.getApplication().invokeLater(() -> Disposer.dispose(myPainterListenersDisposable));
+        application.invokeLater(() -> Disposer.dispose(myPainterListenersDisposable));
         component.repaint(x, y, myWidth, myHeight);
       }
       component.repaint(x, y, myWidth, myHeight);
@@ -3528,8 +3553,11 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
               Point editorComponentLocationOnScreen = editorComponent.getLocationOnScreen();
               Disposable painterListenersDisposable = Disposable.newDisposable("PainterListenersDisposable");
               Disposer.register(editor.getDisposable(), painterListenersDisposable);
-              ExplosionPainter painter = new ExplosionPainter(new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x, mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
-                                                              editor.getGutterComponentEx().getDragImage((GutterIconRenderer)attachedObject), painterListenersDisposable);
+              ExplosionPainter painter = new ExplosionPainter(new Point(mouseLocationOnScreen.x - editorComponentLocationOnScreen.x,
+                                                                        mouseLocationOnScreen.y - editorComponentLocationOnScreen.y),
+                                                              editor.getGutterComponentEx()
+                                                                    .getDragImage((GutterIconRenderer)attachedObject),
+                                                              painterListenersDisposable);
               IdeGlassPaneUtil.installPainter(editorComponent, painter, painterListenersDisposable);
               return true;
             }
@@ -3805,7 +3833,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, FileEditorsSplitters.class);
 
       boolean thereIsSomethingAbove =
-              !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance().getShowNavigationBar() || toolWindowIsNotEmpty();
+        !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance()
+                                                                                        .getShowNavigationBar() || toolWindowIsNotEmpty();
       //noinspection ConstantConditions
       Component header = myHeaderPanel == null ? null : ArrayUtil.getFirstElement(myHeaderPanel.getComponents());
       boolean paintTop = thereIsSomethingAbove && header == null && UISettings.getInstance().getEditorTabPlacement() != SwingConstants.TOP;

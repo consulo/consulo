@@ -1,35 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
-import consulo.dataContext.DataSink;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.project.event.DumbModeListener;
-import consulo.ui.ex.OccurenceNavigator;
-import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.ui.SmartExpander;
-import consulo.ui.ex.awt.tree.TreeUIHelper;
-import consulo.ui.ex.awt.JBPanelWithEmptyText;
-import consulo.ui.ex.awt.JBTabbedPane;
-import consulo.usage.UsageContextPanel;
-import consulo.ide.impl.idea.usages.UsageDataUtil;
-import consulo.usage.UsageInfo2UsageAdapter;
-import consulo.usage.UsageViewSettings;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
@@ -40,9 +16,23 @@ import consulo.awt.hacking.BasicTreeUIHacking;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
+import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
+import consulo.ide.impl.idea.ide.TextCopyProvider;
+import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ide.impl.idea.usages.UsageDataUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -50,34 +40,37 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeModelAdapter;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
 import consulo.usage.internal.UsageViewEx;
 import consulo.usage.rule.*;
 import consulo.util.collection.LinkedMultiMap;
+import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.TreeUI;
@@ -174,12 +167,18 @@ public class UsageViewImpl implements UsageViewEx {
   @Nullable
   private Action myRerunAction;
   private boolean myDisposeSmartPointersOnClose = true;
-  private final ExecutorService updateRequests = AppExecutorUtil.createBoundedApplicationPoolExecutor("Usage View Update Requests", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
-  private final List<ExcludeListener> myExcludeListeners = ContainerUtil.createConcurrentList();
+  private final ExecutorService updateRequests = AppExecutorUtil.createBoundedApplicationPoolExecutor("Usage View Update Requests",
+                                                                                                      PooledThreadExecutor.getInstance(),
+                                                                                                      JobSchedulerImpl.getJobPoolParallelism(),
+                                                                                                      this);
+  private final List<ExcludeListener> myExcludeListeners = Lists.newLockFreeCopyOnWriteList();
 
-  public UsageViewImpl(@Nonnull final Project project, @Nonnull UsageViewPresentation presentation, @Nonnull UsageTarget[] targets, Supplier<UsageSearcher> usageSearcherFactory) {
+  public UsageViewImpl(@Nonnull final Project project,
+                       @Nonnull UsageViewPresentation presentation,
+                       @Nonnull UsageTarget[] targets,
+                       Supplier<UsageSearcher> usageSearcherFactory) {
     // fire events every 50 ms, not more often to batch requests
-    myFireEventsFuture = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
+    myFireEventsFuture = project.getUIAccess().getScheduler().scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
     Disposer.register(this, () -> myFireEventsFuture.cancel(false));
 
     myPresentation = presentation;
@@ -195,7 +194,11 @@ public class UsageViewImpl implements UsageViewEx {
     UsageModelTracker myModelTracker = new UsageModelTracker(project);
     Disposer.register(this, myModelTracker);
 
-    myBuilder = new UsageNodeTreeBuilder(myTargets, getActiveGroupingRules(project, getUsageViewSettings()), getActiveFilteringRules(project), myRoot, myProject);
+    myBuilder = new UsageNodeTreeBuilder(myTargets,
+                                         getActiveGroupingRules(project, getUsageViewSettings()),
+                                         getActiveFilteringRules(project),
+                                         myRoot,
+                                         myProject);
 
     final MessageBusConnection messageBusConnection = myProject.getMessageBus().connect(this);
     messageBusConnection.subscribe(UsageFilteringRuleListener.class, this::rulesChanged);
@@ -333,7 +336,9 @@ public class UsageViewImpl implements UsageViewEx {
       }
 
       // include the parent if its all children (except the "node" itself) excluded flags are "almostAllChildrenExcluded"
-      private void collectParentNodes(@Nonnull DefaultMutableTreeNode node, boolean almostAllChildrenExcluded, @Nonnull Set<? super Node> nodes) {
+      private void collectParentNodes(@Nonnull DefaultMutableTreeNode node,
+                                      boolean almostAllChildrenExcluded,
+                                      @Nonnull Set<? super Node> nodes) {
         TreeNode parent = node.getParent();
         if (parent == myRoot || !(parent instanceof GroupNode)) return;
         GroupNode parentNode = (GroupNode)parent;
@@ -463,7 +468,10 @@ public class UsageViewImpl implements UsageViewEx {
         }
       }
 
-      myModel.fireTreeNodesInserted(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toArray(), nodesToFire.toArray(new Node[0]));
+      myModel.fireTreeNodesInserted(parentNode,
+                                    myModel.getPathToRoot(parentNode),
+                                    indicesToFire.toArray(),
+                                    nodesToFire.toArray(new Node[0]));
       nodesToFire.clear();
       indicesToFire.clear();
     }
@@ -486,7 +494,10 @@ public class UsageViewImpl implements UsageViewEx {
         }
       }
 
-      myModel.fireTreeNodesChanged(parentNode, myModel.getPathToRoot(parentNode), indicesToFire.toArray(), nodesToFire.toArray(new Node[0]));
+      myModel.fireTreeNodesChanged(parentNode,
+                                   myModel.getPathToRoot(parentNode),
+                                   indicesToFire.toArray(),
+                                   nodesToFire.toArray(new Node[0]));
       nodesToFire.clear();
       indicesToFire.clear();
     }
@@ -860,9 +871,11 @@ public class UsageViewImpl implements UsageViewEx {
     DefaultActionGroup filteringSubgroup = new DefaultActionGroup();
     addFilteringFromExtensionPoints(filteringSubgroup);
 
-    return new AnAction[]{ActionManager.getInstance().getAction("UsageView.Rerun"), actionsManager.createPrevOccurenceAction(myRootPanel), actionsManager.createNextOccurenceAction(myRootPanel),
-            new AnSeparator(), group, filteringSubgroup, expandAllAction, collapseAllAction, new AnSeparator(), isPreviewUsageActionEnabled() ? new PreviewUsageAction(this) : null, new AnSeparator(),
-            canShowSettings() ? new ShowSettings() : null,};
+    return new AnAction[]{ActionManager.getInstance().getAction("UsageView.Rerun"), actionsManager.createPrevOccurenceAction(myRootPanel), actionsManager.createNextOccurenceAction(
+      myRootPanel),
+      new AnSeparator(), group, filteringSubgroup, expandAllAction, collapseAllAction, new AnSeparator(), isPreviewUsageActionEnabled() ? new PreviewUsageAction(
+      this) : null, new AnSeparator(),
+      canShowSettings() ? new ShowSettings() : null,};
   }
 
   private boolean canShowSettings() {
@@ -1067,7 +1080,8 @@ public class UsageViewImpl implements UsageViewEx {
         description = "Show find usages settings dialog";
       }
       getTemplatePresentation().setDescription(description);
-      KeyboardShortcut shortcut = configurableUsageTarget == null ? getShowUsagesWithSettingsShortcut() : configurableUsageTarget.getShortcut();
+      KeyboardShortcut shortcut =
+        configurableUsageTarget == null ? getShowUsagesWithSettingsShortcut() : configurableUsageTarget.getShortcut();
       if (shortcut != null) {
         registerCustomShortcutSet(new CustomShortcutSet(shortcut), getComponent());
       }
@@ -1104,7 +1118,7 @@ public class UsageViewImpl implements UsageViewEx {
       UsageViewPresentation rerunPresentation = myPresentation.copy();
       rerunPresentation.setOpenInNewTab(false);
       return UsageViewManager.getInstance(getProject()).
-              searchAndShowUsages(myTargets, myUsageSearcherFactory, true, false, rerunPresentation, null);
+        searchAndShowUsages(myTargets, myUsageSearcherFactory, true, false, rerunPresentation, null);
     }
     myRerunAction.actionPerformed(null);
     return this;
@@ -1213,10 +1227,13 @@ public class UsageViewImpl implements UsageViewEx {
     Set<UsageNode> nodes = usagesToNodes(usages.stream()).collect(Collectors.toSet());
     usages.forEach(myUsageNodes::remove);
     if (!myUsageNodes.isEmpty()) {
-      Set<UsageInfo> mergedInfos = usages.stream().filter(usage -> usage instanceof UsageInfo2UsageAdapter && ((UsageInfo2UsageAdapter)usage).getMergedInfos().length > 1)
-              .flatMap(usage -> Arrays.stream(((UsageInfo2UsageAdapter)usage).getMergedInfos())).collect(Collectors.toSet());
+      Set<UsageInfo> mergedInfos = usages.stream()
+                                         .filter(usage -> usage instanceof UsageInfo2UsageAdapter && ((UsageInfo2UsageAdapter)usage).getMergedInfos().length > 1)
+                                         .flatMap(usage -> Arrays.stream(((UsageInfo2UsageAdapter)usage).getMergedInfos()))
+                                         .collect(Collectors.toSet());
       if (!mergedInfos.isEmpty()) {
-        myUsageNodes.keySet().removeIf(usage -> usage instanceof UsageInfo2UsageAdapter && mergedInfos.contains(((UsageInfo2UsageAdapter)usage).getUsageInfo()));
+        myUsageNodes.keySet()
+                    .removeIf(usage -> usage instanceof UsageInfo2UsageAdapter && mergedInfos.contains(((UsageInfo2UsageAdapter)usage).getUsageInfo()));
       }
     }
 
@@ -1378,7 +1395,9 @@ public class UsageViewImpl implements UsageViewEx {
       shouldCheckChildren = false;
       // optimization: do not call expensive update() on invisible node
     }
-    UsageViewTreeCellRenderer.RowLocation isVisible = myUsageViewTreeCellRenderer.isRowVisible(myTree.getRowForPath(new TreePath(((DefaultMutableTreeNode)node).getPath())), myTree.getVisibleRect());
+    UsageViewTreeCellRenderer.RowLocation isVisible =
+      myUsageViewTreeCellRenderer.isRowVisible(myTree.getRowForPath(new TreePath(((DefaultMutableTreeNode)node).getPath())),
+                                               myTree.getVisibleRect());
 
     // if row is below visible rectangle, no sense to update it or any children
     if (shouldCheckChildren && isVisible != UsageViewTreeCellRenderer.RowLocation.AFTER_VISIBLE_RECT) {
@@ -1536,12 +1555,19 @@ public class UsageViewImpl implements UsageViewEx {
   }
 
   @Override
-  public void addPerformOperationAction(@Nonnull final Runnable processRunnable, @Nonnull final String commandName, final String cannotMakeString, @Nonnull String shortDescription) {
+  public void addPerformOperationAction(@Nonnull final Runnable processRunnable,
+                                        @Nonnull final String commandName,
+                                        final String cannotMakeString,
+                                        @Nonnull String shortDescription) {
     addPerformOperationAction(processRunnable, commandName, cannotMakeString, shortDescription, true);
   }
 
   @Override
-  public void addPerformOperationAction(@Nonnull Runnable processRunnable, @Nonnull String commandName, String cannotMakeString, @Nonnull String shortDescription, boolean checkReadOnlyStatus) {
+  public void addPerformOperationAction(@Nonnull Runnable processRunnable,
+                                        @Nonnull String commandName,
+                                        String cannotMakeString,
+                                        @Nonnull String shortDescription,
+                                        boolean checkReadOnlyStatus) {
     Runnable runnable = new MyPerformOperationRunnable(processRunnable, commandName, cannotMakeString, checkReadOnlyStatus);
     addButtonToLowerPane(runnable, shortDescription);
   }
@@ -1925,8 +1951,12 @@ public class UsageViewImpl implements UsageViewEx {
       }
       else if (key == LangDataKeys.PSI_ELEMENT_ARRAY) {
         if (ApplicationManager.getApplication().isDispatchThread()) {
-          sink.put(LangDataKeys.PSI_ELEMENT_ARRAY, getSelectedUsages().stream().filter(u -> u instanceof PsiElementUsage).map(u -> ((PsiElementUsage)u).getElement()).filter(Objects::nonNull)
-                  .toArray(PsiElement.ARRAY_FACTORY::create));
+          sink.put(LangDataKeys.PSI_ELEMENT_ARRAY,
+                   getSelectedUsages().stream()
+                                      .filter(u -> u instanceof PsiElementUsage)
+                                      .map(u -> ((PsiElementUsage)u).getElement())
+                                      .filter(Objects::nonNull)
+                                      .toArray(PsiElement.ARRAY_FACTORY::create));
         }
       }
       else {
@@ -2050,7 +2080,10 @@ public class UsageViewImpl implements UsageViewEx {
     private final String myCommandName;
     private final boolean myCheckReadOnlyStatus;
 
-    private MyPerformOperationRunnable(@Nonnull Runnable processRunnable, @Nonnull String commandName, final String cannotMakeString, boolean checkReadOnlyStatus) {
+    private MyPerformOperationRunnable(@Nonnull Runnable processRunnable,
+                                       @Nonnull String commandName,
+                                       final String cannotMakeString,
+                                       boolean checkReadOnlyStatus) {
       myCannotMakeString = cannotMakeString;
       myProcessRunnable = processRunnable;
       myCommandName = commandName;
@@ -2127,7 +2160,10 @@ public class UsageViewImpl implements UsageViewEx {
    * true if the {@param usage} points to the element the "find usages" action was invoked on
    */
   public boolean isOriginUsage(@Nonnull Usage usage) {
-    return myOriginUsage instanceof UsageInfo2UsageAdapter && usage instanceof UsageInfo2UsageAdapter && ((UsageInfo2UsageAdapter)usage).getUsageInfo().equals(((UsageInfo2UsageAdapter)myOriginUsage).getUsageInfo());
+    return myOriginUsage instanceof UsageInfo2UsageAdapter && usage instanceof UsageInfo2UsageAdapter && ((UsageInfo2UsageAdapter)usage).getUsageInfo()
+                                                                                                                                        .equals(
+                                                                                                                                          ((UsageInfo2UsageAdapter)myOriginUsage)
+                                                                                                                                            .getUsageInfo());
   }
 
   private boolean isFilterDuplicateLines() {

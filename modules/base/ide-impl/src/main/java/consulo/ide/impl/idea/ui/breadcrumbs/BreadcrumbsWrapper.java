@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
-import consulo.application.util.concurrent.NonUrgentExecutor;
+import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;

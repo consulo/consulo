@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.LowMemoryWatcherManager;
+import consulo.application.util.concurrent.ThreadDumper;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AppDelayQueue;
 import consulo.util.concurrent.CountingThreadFactory;
-import consulo.util.concurrent.SchedulingWrapper;
 import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.TestOnly;
 
@@ -30,15 +30,6 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
   private final String myName;
   private final LowMemoryWatcherManager myLowMemoryWatcherManager;
   private final MyThreadFactory myCountingThreadFactory;
-
-  private static class Holder {
-    private static final AppScheduledExecutorService INSTANCE = new AppScheduledExecutorService("Global instance");
-  }
-
-  @Nonnull
-  static ScheduledExecutorService getInstance() {
-    return Holder.INSTANCE;
-  }
 
   private static class MyThreadFactory extends CountingThreadFactory {
     private Consumer<? super Thread> newThreadListener;
@@ -63,11 +54,11 @@ public final class AppScheduledExecutorService extends SchedulingWrapper {
     }
   }
 
-  AppScheduledExecutorService(@Nonnull final String name) {
+  AppScheduledExecutorService(@Nonnull final String name, ApplicationConcurrency applicationConcurrency) {
     super(new BackendThreadPoolExecutor(new MyThreadFactory()), new AppDelayQueue());
     myName = name;
     myCountingThreadFactory = (MyThreadFactory)((BackendThreadPoolExecutor)backendExecutorService).getThreadFactory();
-    myLowMemoryWatcherManager = new LowMemoryWatcherManager(this);
+    myLowMemoryWatcherManager = new LowMemoryWatcherManager(this, applicationConcurrency);
   }
 
   public void setNewThreadListener(@Nonnull Consumer<? super Thread> threadListener) {

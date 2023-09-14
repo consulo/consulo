@@ -87,6 +87,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
   @Override
   public void dispose() {
     stopAnimation();
+    myLabel.dispose();
     super.dispose();
   }
 

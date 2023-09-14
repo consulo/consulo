@@ -169,13 +169,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     return myManager;
   }
 
-  private void updateFileIconImmediately(final VirtualFile file) {
-    final Collection<W> windows = findWindows(file);
-    for (W window : windows) {
-      window.updateFileIcon(file);
-    }
-  }
-
   private void updateFileIconLater(VirtualFile file) {
     myFilesToUpdateIconsFor.add(file);
     myIconUpdaterAlarm.cancelAllRequests();
@@ -186,6 +179,13 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
       }
       myFilesToUpdateIconsFor.clear();
     }, 200, getComponentModality());
+  }
+
+  private void updateFileIconImmediately(final VirtualFile file) {
+    final Collection<W> windows = findWindows(file);
+    for (W window : windows) {
+      window.updateFileIcon(file);
+    }
   }
 
   protected boolean showEmptyText() {

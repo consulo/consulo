@@ -25,7 +25,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.project.Project;
-import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 
 import java.util.ArrayList;
@@ -74,7 +74,8 @@ public class RangeBlinker {
 
   public void startBlinking() {
     Project project = myEditor.getProject();
-    if (Application.get().isDisposed() || myEditor.isDisposed() || project != null && project.isDisposed()) {
+    Application application = Application.get();
+    if (application.isDisposed() || myEditor.isDisposed() || project != null && project.isDisposed()) {
       return;
     }
 
@@ -92,7 +93,9 @@ public class RangeBlinker {
     }
     stopBlinking();
 
-    myBlinkingFuture = EdtScheduledExecutorService.getInstance().schedule(() -> {
+    UIAccess uiAccess = application.getLastUIAccess();
+
+    myBlinkingFuture = uiAccess.getScheduler().schedule(() -> {
       if (myTimeToLive > 0 || show) {
         myTimeToLive--;
         show = !show;

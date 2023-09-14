@@ -1,49 +1,47 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.build.ui.BuildDescriptor;
-import consulo.build.ui.DefaultBuildDescriptor;
-import consulo.build.ui.progress.BuildProgressListener;
 import consulo.build.ui.BuildViewSettingsProvider;
+import consulo.build.ui.DefaultBuildDescriptor;
 import consulo.build.ui.ViewManager;
 import consulo.build.ui.event.BuildEvent;
 import consulo.build.ui.event.OutputBuildEvent;
 import consulo.build.ui.event.StartBuildEvent;
-import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
 import consulo.build.ui.process.BuildProcessHandler;
-import consulo.ide.impl.idea.execution.actions.StopAction;
-import consulo.ide.impl.idea.execution.actions.StopProcessAction;
-import consulo.execution.ui.console.*;
-import consulo.execution.ui.ExecutionConsole;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.process.ProcessHandler;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.ide.IdeBundle;
-import consulo.process.event.ProcessEvent;
-import consulo.ui.ex.OccurenceNavigator;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.build.ui.progress.BuildProgressListener;
 import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-
-import java.util.function.*;
-
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ExecutionDataKeys;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.*;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
+import consulo.ide.impl.idea.execution.actions.StopAction;
+import consulo.ide.impl.idea.execution.actions.StopProcessAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
+import consulo.project.Project;
+import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.*;
 
 /**
  * @author Vladislav.Soroka
@@ -117,7 +115,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     else {
       BuildTreeConsoleView eventView = getEventView();
       if (eventView != null) {
-        EdtExecutorService.getInstance().execute(() -> eventView.onEvent(buildId, event));
+        SwingUtilities.invokeLater(() -> eventView.onEvent(buildId, event));
       }
     }
   }

@@ -36,7 +36,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.AppScheduledExecutorService;
+import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
@@ -174,8 +174,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   protected final Disposable myLastDisposable = Disposable.newDisposable(); // will be disposed last
   private final EventDispatcher<ApplicationListener> myDispatcher = EventDispatcher.create(ApplicationListener.class);
-
-  private final ExecutorService myThreadExecutorsService = PooledThreadExecutor.INSTANCE;
 
   // FIXME [VISTALL] we need this?
   protected final Stack<Class> myWriteActionsStack = new Stack<>();
@@ -374,13 +372,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    return myThreadExecutorsService.submit(new RunnableAsCallable(action));
+    return PooledThreadExecutor.getInstance().submit(new RunnableAsCallable(action));
   }
 
   @Nonnull
   @Override
   public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-    return myThreadExecutorsService.submit(new Callable<T>() {
+    return PooledThreadExecutor.getInstance().submit(new Callable<T>() {
       @Override
       public T call() {
         try {

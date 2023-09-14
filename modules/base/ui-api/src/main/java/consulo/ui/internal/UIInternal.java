@@ -289,4 +289,14 @@ public abstract class UIInternal {
   public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
     throw new UnsupportedOperationException();
   }
+
+  @Nonnull
+  public ModalityState _ModalityState_any() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Nonnull
+  public ModalityState _ModalityState_nonModal() {
+    throw new UnsupportedOperationException();
+  }
 }

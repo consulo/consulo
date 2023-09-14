@@ -17,15 +17,14 @@ package consulo.language.editor.impl.internal.highlight;
 
 import consulo.application.util.Semaphore;
 import consulo.application.util.function.Processor;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Queue;
 import consulo.util.lang.function.Condition;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;

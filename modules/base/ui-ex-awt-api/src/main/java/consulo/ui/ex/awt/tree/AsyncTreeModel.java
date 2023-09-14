@@ -5,6 +5,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.util.Command;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;
@@ -99,7 +100,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     if (model instanceof Disposable) {
       Disposer.register(this, (Disposable)model);
     }
-    Invoker foreground = InvokerFactory.getInstance().forEventDispatchThread(this);
+    Invoker foreground = InvokerFactory.getInstance().forEventDispatchThread(UIAccess.current(), this);
     Invoker background = foreground;
     if (model instanceof InvokerSupplier) {
       InvokerSupplier supplier = (InvokerSupplier)model;
@@ -115,7 +116,7 @@ public final class AsyncTreeModel extends AbstractTreeModel implements Identifia
     this(model, true, parent);
   }
 
-  public AsyncTreeModel(@Nonnull TreeModel model, boolean showLoadingNode, @Nonnull Disposable parent) {
+  public AsyncTreeModel( @Nonnull TreeModel model, boolean showLoadingNode, @Nonnull Disposable parent) {
     this(model, showLoadingNode);
     Disposer.register(parent, this);
   }

@@ -16,9 +16,14 @@
 package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.UI;
+import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.impl.BaseUIAccess;
+import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 
@@ -29,7 +34,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 16-Jun-16
  */
-public class WebUIAccessImpl implements UIAccess {
+public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
   private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
 
   private final UI myUI;
@@ -96,5 +101,18 @@ public class WebUIAccessImpl implements UIAccess {
 
   public UI getUI() {
     return myUI;
+  }
+
+  @Nonnull
+  @Override
+  protected SingleUIAccessScheduler createScheduler() {
+    Application application = Application.get();
+    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+      @Override
+      public void runWithModalityState(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+        Application.get().invokeLater(runnable, modalityState);
+      }
+    };
   }
 }

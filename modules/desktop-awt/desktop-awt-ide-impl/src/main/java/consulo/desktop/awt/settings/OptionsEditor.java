@@ -35,7 +35,6 @@ import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ide.impl.idea.openapi.util.EdtRunnable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -68,10 +67,10 @@ import consulo.util.concurrent.Promises;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Conditions;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -763,9 +762,8 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     }
     else {
-      getUiFor(configurable).doWhenDone(new EdtRunnable() {
-        @Override
-        public void runEdt() {
+      getUiFor(configurable).doWhenDone(() -> {
+        SwingUtilities.invokeLater(() -> {
           if (myDisposed) return;
 
           final Configurable current = getContext().getCurrentConfigurable();
@@ -802,7 +800,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
           else {
             result.setDone();
           }
-        }
+        });
       });
     }
 

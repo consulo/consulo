@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
+import consulo.ui.UIAccessScheduler;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import consulo.content.scope.*;
@@ -613,7 +614,7 @@ public class ScopeEditorPanel {
   }
 
   protected PanelProgressIndicator createProgressIndicator(final boolean requestFocus) {
-    return new MyPanelProgressIndicator(requestFocus);
+    return new MyPanelProgressIndicator(myProject.getUIAccess().getScheduler(), requestFocus);
   }
 
   public void cancelCurrentProgress(){
@@ -639,18 +640,13 @@ public class ScopeEditorPanel {
     rebuild(false, runnable, false, 0);
   }
 
-  private void setToComponent(final JComponent cmp, final boolean requestFocus) {
+  private void setToComponent(JComponent cmp, final boolean requestFocus) {
     myMatchingCountPanel.removeAll();
     myMatchingCountPanel.add(cmp, BorderLayout.CENTER);
     myMatchingCountPanel.revalidate();
     myMatchingCountPanel.repaint();
     if (requestFocus) {
-      SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          myPatternField.getTextField().requestFocusInWindow();
-        }
-      });
+      SwingUtilities.invokeLater(() -> myPatternField.getTextField().requestFocusInWindow());
     }
   }
 
@@ -751,8 +747,8 @@ public class ScopeEditorPanel {
   protected class MyPanelProgressIndicator extends PanelProgressIndicator {
     private final boolean myRequestFocus;
 
-    public MyPanelProgressIndicator(final boolean requestFocus) {
-      super(component -> setToComponent(component, requestFocus));
+    public MyPanelProgressIndicator(UIAccessScheduler uiAccessScheduler, boolean requestFocus) {
+      super(uiAccessScheduler, component -> setToComponent(component, requestFocus));
       myRequestFocus = requestFocus;
     }
 

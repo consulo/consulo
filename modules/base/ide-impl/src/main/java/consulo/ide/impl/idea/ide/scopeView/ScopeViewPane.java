@@ -23,36 +23,36 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.project.ui.view.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ShowModulesAction;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
@@ -94,7 +94,8 @@ public class ScopeViewPane extends AbstractProjectViewPane {
         }
 
         long count = counter.incrementAndGet();
-        EdtExecutorService.getScheduledExecutorInstance().schedule(() -> {
+        UIAccess uiAccess = project.getUIAccess();
+        uiAccess.getScheduler().schedule(() -> {
           // is this request still actual after 10 ms?
           if (count != counter.get()) {
             return;

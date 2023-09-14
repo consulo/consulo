@@ -25,11 +25,11 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +46,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   private static final Logger LOG = Logger.getInstance(RefreshQueueImpl.class);
 
-  private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("RefreshQueue Pool", PooledThreadExecutor.INSTANCE, 1, this);
-  private final Executor myEventProcessingQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("Async Refresh Event Processing", PooledThreadExecutor.INSTANCE, 1, this);
+  private final Executor myQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("RefreshQueue Pool",
+                                                                                        PooledThreadExecutor.getInstance(), 1, this);
+  private final Executor myEventProcessingQueue = AppExecutorUtil.createBoundedApplicationPoolExecutor("Async Refresh Event Processing",
+                                                                                                       PooledThreadExecutor.getInstance(),
+                                                                                                       1,
+                                                                                                       this);
 
   private final ProgressIndicator myRefreshIndicator = RefreshProgress.create(VfsBundle.message("file.synchronize.progress"));
 
@@ -95,7 +99,9 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     myQueue.execute(() -> {
       startRefreshActivity();
       try {
-        HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing, "Doing file refresh. " + session, () -> doScan(session));
+        HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing,
+                                                    "Doing file refresh. " + session,
+                                                    () -> doScan(session));
       }
       finally {
         finishRefreshActivity();
@@ -114,8 +120,10 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
     try {
       myEventProcessingQueue.execute(() -> {
         startRefreshActivity();
-        try  {
-          HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing, "Processing VFS events. " + session , () -> processAndFireEvents(session, transaction));
+        try {
+          HeavyProcessLatch.INSTANCE.performOperation(HeavyProcessLatch.Type.Syncing,
+                                                      "Processing VFS events. " + session,
+                                                      () -> processAndFireEvents(session, transaction));
         }
         finally {
           finishRefreshActivity();

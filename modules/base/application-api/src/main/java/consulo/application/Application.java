@@ -365,7 +365,9 @@ public interface Application extends ComponentManager {
    * @return the modality state for no modal dialogs.
    */
   @Nonnull
-  ModalityState getNoneModalityState();
+  default ModalityState getNoneModalityState() {
+    return ModalityState.nonModal();
+  }
 
   /**
    * Returns modality state which is active anytime
@@ -373,7 +375,9 @@ public interface Application extends ComponentManager {
    * @return modality state
    */
   @Nonnull
-  ModalityState getAnyModalityState();
+  default ModalityState getAnyModalityState() {
+    return ModalityState.any();
+  }
 
   /**
    * Returns the time of IDE start, in milliseconds since midnight, January 1, 1970 UTC.

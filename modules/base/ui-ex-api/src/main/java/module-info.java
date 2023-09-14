@@ -30,7 +30,6 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.tree;
   exports consulo.ui.ex.util;
   exports consulo.ui.ex.event;
-  exports consulo.ui.ex.concurrent;
   exports consulo.ui.ex.awtUnsafe;
   exports consulo.ui.ex.keymap;
   exports consulo.ui.ex.keymap.event;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
@@ -28,12 +29,11 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.dataholder.Key;
 import gnu.trove.TObjectIntHashMap;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -173,7 +173,7 @@ public class XFramesView extends XDebugView {
   public void selectFrame(XExecutionStack stack, XStackFrame frame) {
     myThreadComboBox.setSelectedItem(stack);
 
-    EdtExecutorService.getInstance().execute(() -> myFramesList.setSelectedValue(frame, true));
+    Application.get().invokeLater(() -> myFramesList.setSelectedValue(frame, true));
   }
 
   private ActionToolbar createToolbar() {
@@ -217,7 +217,7 @@ public class XFramesView extends XDebugView {
       return;
     }
 
-    EdtExecutorService.getInstance().execute(() -> {
+    Application.get().invokeLater(() -> {
       if (event != SessionEvent.SETTINGS_CHANGED) {
         mySelectedFrameIndex = 0;
         mySelectedStack = null;
@@ -343,7 +343,7 @@ public class XFramesView extends XDebugView {
     @Override
     public void addStackFrames(@Nonnull final List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, final boolean last) {
       if (isObsolete()) return;
-      EdtExecutorService.getInstance().execute(() -> {
+      Application.get().invokeLater(() -> {
         if (isObsolete()) return;
         myStackFrames.addAll(stackFrames);
         addFrameListElements(stackFrames, last);
@@ -370,7 +370,7 @@ public class XFramesView extends XDebugView {
     @Override
     public void errorOccurred(@Nonnull final String errorMessage) {
       if (isObsolete()) return;
-      EdtExecutorService.getInstance().execute(() -> {
+      Application.get().invokeLater(() -> {
         if (isObsolete()) return;
         if (myErrorMessage == null) {
           myErrorMessage = errorMessage;

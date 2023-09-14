@@ -1,7 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;

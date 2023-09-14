@@ -17,15 +17,14 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ReadTask;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.EditorNotificationBuilderFactory;
@@ -42,10 +41,11 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +56,14 @@ import java.util.concurrent.ExecutorService;
 /**
  * @author peter
  */
+@Singleton
 @ServiceImpl
 public class EditorNotificationsImpl extends EditorNotifications {
   private record NotificationInfo(EditorNotificationBuilder builder, Disposable disposer) {
   }
 
   private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
-  private static final ExecutorService ourExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
+  private final ExecutorService myExecutor;
 
   private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
@@ -72,8 +73,12 @@ public class EditorNotificationsImpl extends EditorNotifications {
   private final Map<String, Key<NotificationInfo>> myKeyStore = new ConcurrentHashMap<>();
 
   @Inject
-  public EditorNotificationsImpl(Project project, FileEditorManager fileEditorManager, EditorNotificationBuilderFactory notificationBuilderFactory) {
+  public EditorNotificationsImpl(ApplicationConcurrency applicationConcurrency,
+                                 Project project,
+                                 FileEditorManager fileEditorManager,
+                                 EditorNotificationBuilderFactory notificationBuilderFactory) {
     myProject = project;
+    myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
     myEditorNotificationBuilderFactory = notificationBuilderFactory;
     myFileEditorManager = fileEditorManager;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);
@@ -122,14 +127,15 @@ public class EditorNotificationsImpl extends EditorNotifications {
 
       file.putUserData(CURRENT_UPDATES, new WeakReference<>(indicator));
 
-      ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, ourExecutor, task);
+      ProgressIndicatorUtils.scheduleWithWriteActionPriority(indicator, myExecutor, task);
     });
   }
 
   @Nullable
   private ReadTask createTask(@Nonnull final ProgressIndicator indicator, @Nonnull final VirtualFile file) {
     List<FileEditor> editors =
-            ContainerUtil.filter(myFileEditorManager.getAllEditors(file), editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
+      ContainerUtil.filter(myFileEditorManager.getAllEditors(file),
+                           editor -> !(editor instanceof TextEditor) || AsyncEditorLoader.isEditorLoaded(((TextEditor)editor).getEditor()));
 
     if (editors.isEmpty()) return null;
 
@@ -154,12 +160,14 @@ public class EditorNotificationsImpl extends EditorNotifications {
       public Continuation performInReadAction(@Nonnull ProgressIndicator indicator) throws ProcessCanceledException {
         if (isOutdated()) return null;
 
-        final List<EditorNotificationProvider> providers = DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
+        final List<EditorNotificationProvider> providers =
+          DumbService.getInstance(myProject).filterByDumbAwareness(myProject.getExtensionList(EditorNotificationProvider.class));
 
         final List<Runnable> updates = new ArrayList<>();
         for (final FileEditor editor : editors) {
           for (final EditorNotificationProvider provider : providers) {
-            final EditorNotificationBuilder builder = provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
+            final EditorNotificationBuilder builder =
+              provider.buildNotification(file, editor, myEditorNotificationBuilderFactory::newBuilder);
             updates.add(() -> updateNotification(editor, provider.getId(), (EditorNotificationBuilderEx)builder));
           }
         }
@@ -187,7 +195,9 @@ public class EditorNotificationsImpl extends EditorNotifications {
     return SoftReference.dereference(file.getUserData(CURRENT_UPDATES));
   }
 
-  private void updateNotification(@Nonnull FileEditor editor, @Nonnull String notificationId, @Nullable EditorNotificationBuilderEx builder) {
+  private void updateNotification(@Nonnull FileEditor editor,
+                                  @Nonnull String notificationId,
+                                  @Nullable EditorNotificationBuilderEx builder) {
     Key<NotificationInfo> key = myKeyStore.computeIfAbsent(notificationId, Key::create);
 
     NotificationInfo oldData = editor.getUserData(key);

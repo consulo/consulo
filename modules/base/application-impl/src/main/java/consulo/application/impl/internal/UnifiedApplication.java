@@ -150,12 +150,6 @@ public abstract class UnifiedApplication extends BaseApplication {
     return IdeaModalityState.NON_MODAL;
   }
 
-  @Nonnull
-  @Override
-  public IdeaModalityState getAnyModalityState() {
-    return IdeaModalityState.NON_MODAL;
-  }
-
   @RequiredUIAccess
   @Override
   public long getIdleTime() {

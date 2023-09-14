@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
+import consulo.ui.UIAccessScheduler;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.ide.impl.idea.util.NotNullProducer;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -40,7 +40,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class FileRefresher implements Disposable {
   private static final Logger LOG = Logger.getInstance(FileRefresher.class);
-  private final ScheduledExecutorService executor = EdtExecutorService.getScheduledExecutorInstance();
   private final boolean recursive;
   private final long delay;
   private final NotNullProducer<? extends IdeaModalityState> producer;
@@ -144,7 +143,8 @@ public class FileRefresher implements Disposable {
       if (session != null || files.isEmpty()) return;
     }
     LOG.debug("scheduled for ", delay, " seconds");
-    executor.schedule(this::launch, delay, SECONDS);
+    UIAccessScheduler scheduler = Application.get().getLastUIAccess().getScheduler();
+    scheduler.schedule(this::launch, delay, SECONDS);
   }
 
   private void launch() {

@@ -24,7 +24,7 @@ import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.AppScheduledExecutorService;
+import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.ThreadDump;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.registry.Registry;

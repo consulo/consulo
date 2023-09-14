@@ -3,11 +3,6 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.openapi.util.EdtRunnable;
-import consulo.ide.impl.idea.openapi.util.TimedOutCallback;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationManagerEx;
@@ -17,11 +12,15 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.openapi.util.TimedOutCallback;
+import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.UiActivityMonitor;
@@ -29,15 +28,14 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -45,7 +43,6 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
@@ -56,9 +53,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   private final List<FocusRequestInfo> myRequests = new LinkedList<>();
 
   private final IdeEventQueue myQueue;
-
-  private final EdtAlarm myFocusedComponentAlarm;
-  private final EdtAlarm myForcedFocusRequestsAlarm;
 
   private final Set<FurtherRequestor> myValidFurtherRequestors = new HashSet<>();
 
@@ -77,9 +71,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     UiActivityMonitor.getInstance();
 
     myQueue = IdeEventQueue.getInstance();
-
-    myFocusedComponentAlarm = new EdtAlarm();
-    myForcedFocusRequestsAlarm = new EdtAlarm();
 
     final AppListener listener = new AppListener();
     application.getMessageBus().connect().subscribe(ApplicationActivationListener.class, listener);
@@ -174,8 +165,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   @Override
   public void dispose() {
-    myForcedFocusRequestsAlarm.cancelAllRequests();
-    myFocusedComponentAlarm.cancelAllRequests();
     for (FurtherRequestor requestor : myValidFurtherRequestors) {
       Disposer.dispose(requestor);
     }
@@ -370,22 +359,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     @Override
     public void dispose() {
       myDisposed = true;
-    }
-  }
-
-  final static class EdtAlarm {
-    private final Set<EdtRunnable> myRequests = new HashSet<>();
-
-    public void cancelAllRequests() {
-      for (EdtRunnable each : myRequests) {
-        each.expire();
-      }
-      myRequests.clear();
-    }
-
-    public void addRequest(@Nonnull EdtRunnable runnable, int delay) {
-      myRequests.add(runnable);
-      EdtExecutorService.getScheduledExecutorInstance().schedule(runnable, delay, TimeUnit.MILLISECONDS);
     }
   }
 

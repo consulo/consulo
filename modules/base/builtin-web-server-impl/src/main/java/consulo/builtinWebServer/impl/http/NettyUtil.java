@@ -84,7 +84,7 @@ public final class NettyUtil {
   }
 
   public static Bootstrap nioClientBootstrap() {
-    return nioClientBootstrap(new NioEventLoopGroup(1, PooledThreadExecutor.INSTANCE));
+    return nioClientBootstrap(new NioEventLoopGroup(1, PooledThreadExecutor.getInstance()));
   }
 
   public static Bootstrap nioClientBootstrap(@Nonnull EventLoopGroup eventLoopGroup) {

@@ -52,7 +52,7 @@ import java.awt.*;
 @DeprecationInfo("Use Application methods")
 public abstract class IdeaModalityState implements consulo.ui.ModalityState {
   @Nonnull
-  public static final IdeaModalityState NON_MODAL = new IdeaModalityStateEx();
+  public static final IdeaModalityState NON_MODAL = ModalityStateImpl.NON_MODAL;
 
   @Nonnull
   public static IdeaModalityState current() {

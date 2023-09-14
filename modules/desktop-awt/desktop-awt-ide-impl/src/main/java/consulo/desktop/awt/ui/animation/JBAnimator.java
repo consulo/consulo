@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.animation;
 
+import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -8,7 +9,7 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.UIAccessScheduler;
 import consulo.util.lang.MathUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -95,7 +96,7 @@ public final class JBAnimator implements Disposable {
 
   public JBAnimator(@Nonnull Thread threadToUse, @Nullable Disposable parentDisposable) {
     myService = threadToUse == Thread.SWING_THREAD ?
-      EdtExecutorService.getScheduledExecutorInstance() :
+      Application.get().getLastUIAccess().getScheduler() :
       AppExecutorUtil.createBoundedScheduledExecutorService("Animator Pool", 1);
     if (parentDisposable == null) {
       if (threadToUse != Thread.SWING_THREAD) {
@@ -372,7 +373,7 @@ public final class JBAnimator implements Disposable {
   public void dispose() {
     stop();
 
-    if (!myDisposed.getAndSet(true) && myService != EdtExecutorService.getScheduledExecutorInstance()) {
+    if (!myDisposed.getAndSet(true) && !(myService instanceof UIAccessScheduler)) {
       myService.shutdownNow();
       JBAnimatorHelper.cancelHighPrecisionTimer(this);
     }

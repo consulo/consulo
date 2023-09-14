@@ -1,43 +1,37 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.application.Application;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.BuildDescriptor;
 import consulo.build.ui.event.*;
 import consulo.build.ui.progress.BuildProgressListener;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.execution.process.AnsiEscapeDecoder;
-import consulo.process.ProcessOutputTypes;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.process.ProcessOutputTypes;
+import consulo.project.Project;
 import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.project.Project;
-import consulo.ui.ex.awt.OnePixelDivider;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.collection.SmartList;
-import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -237,7 +231,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
     if (myContent == null) {
       myPostponedRunnables.addAll(runOnEdt);
       if (isInitializeStarted.compareAndSet(false, true)) {
-        EdtExecutorService.getInstance().execute(() -> {
+        Application.get().invokeLater(() -> {
           if (myDisposed) return;
           myBuildsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
           myBuildsList.addListSelectionListener(new ListSelectionListener() {
@@ -297,7 +291,7 @@ public class MultipleBuildsView implements BuildProgressListener, Disposable {
       }
     }
     else {
-      EdtExecutorService.getInstance().execute(() -> {
+      Application.get().invokeLater(() -> {
         if (myDisposed) return;
         for (Runnable runnable : runOnEdt) {
           runnable.run();

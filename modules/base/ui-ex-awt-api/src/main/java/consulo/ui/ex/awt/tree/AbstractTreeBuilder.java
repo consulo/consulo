@@ -7,11 +7,10 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import consulo.disposer.Disposable;
-import consulo.ui.ex.tree.AbstractTreeStructure;
-import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
@@ -19,10 +18,10 @@ import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SoftReference;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -349,7 +348,7 @@ public class AbstractTreeBuilder implements Disposable {
       onDone.run();
     }
     else {
-      EdtExecutorService.getInstance().execute(() -> {
+      SwingUtilities.invokeLater(() -> {
         if (!isDisposed()) onDone.run();
       });
     }
@@ -363,7 +362,7 @@ public class AbstractTreeBuilder implements Disposable {
       runnable.run();
     }
     else {
-      EdtExecutorService.getInstance().execute(() -> {
+      SwingUtilities.invokeLater(() -> {
         if (!isDisposed()) runnable.run();
       });
     }

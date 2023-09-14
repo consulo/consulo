@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
 import consulo.application.ReadAction;
-
+import consulo.application.util.concurrent.AppExecutorUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
@@ -27,7 +27,7 @@ public final class NonUrgentExecutor implements Executor {
   private final Executor myBackend;
 
   private NonUrgentExecutor() {
-    myBackend = AppExecutorUtil.createBoundedApplicationPoolExecutor("NonUrgentExecutor", 2, false);
+    myBackend = new BoundedTaskExecutor("NonUrgentExecutor", AppExecutorUtil.getAppExecutorService(), 2, false);
   }
 
   @Override

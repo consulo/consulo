@@ -27,7 +27,7 @@ import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
-import consulo.util.concurrent.BoundedTaskExecutor;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.xml.serializer.annotation.Attribute;

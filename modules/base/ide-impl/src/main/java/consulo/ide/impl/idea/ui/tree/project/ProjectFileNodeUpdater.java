@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.tree.project;
 
+import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiWhiteSpace;
@@ -12,15 +12,14 @@ import consulo.logging.Logger;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.Project;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.util.Invoker;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Set;
 
@@ -151,7 +150,7 @@ public abstract class ProjectFileNodeUpdater {
    * Usually, it is needed to find an added file in a tree right after adding.
    */
   public void updateImmediately(@Nonnull Runnable onDone) {
-    invoker.runOrInvokeLater(() -> onInvokerThread(true)).onProcessed(o -> EdtExecutorService.getInstance().execute(onDone));
+    invoker.runOrInvokeLater(() -> onInvokerThread(true)).onProcessed(o -> Application.get().invokeLater(onDone));
   }
 
   /**

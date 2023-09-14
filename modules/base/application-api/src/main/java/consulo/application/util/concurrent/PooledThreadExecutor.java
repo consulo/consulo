@@ -15,8 +15,8 @@
  */
 package consulo.application.util.concurrent;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 
 import java.util.concurrent.ExecutorService;
 
@@ -27,8 +27,13 @@ import java.util.concurrent.ExecutorService;
  * <li>Application-wide, always active, non-shutdownable singleton.</li>
  * </ul>
  * You can use this pool for long-running and/or IO-bound tasks.
+ *
  * @see Application#executeOnPooledThread(Runnable)
  */
+@Deprecated
 public final class PooledThreadExecutor {
-  public static final ExecutorService INSTANCE = AppExecutorUtil.getAppExecutorService();
+  public static ExecutorService getInstance() {
+    ApplicationConcurrency concurrency = Application.get().getInstance(ApplicationConcurrency.class);
+    return concurrency.getExecutorService();
+  }
 }

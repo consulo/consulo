@@ -2,15 +2,16 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -212,13 +213,13 @@ public class AnimatedIcon implements Icon, Image {
     return index;
   }
 
-  private void requestRefresh(@Nullable Component c) {
+  private void requestRefresh(@Nullable Component c, @Nonnull UIAccess uiAccess) {
     if (c != null && !requested.contains(c) && canRefresh(c)) {
       Frame frame = frames[index];
       int delay = frame.getDelay();
       if (delay > 0) {
         requested.add(c);
-        EdtScheduledExecutorService.getInstance().schedule(() -> {
+        uiAccess.getScheduler().schedule(() -> {
           requested.remove(c);
           if (canRefresh(c)) {
             doRefresh(c);
@@ -232,10 +233,13 @@ public class AnimatedIcon implements Icon, Image {
   }
 
   @Override
+  @RequiredUIAccess
   public final void paintIcon(Component c, Graphics g, int x, int y) {
+    UIAccess uiAccess = UIAccess.current();
+
     Icon icon = getUpdatedIcon();
-    CellRendererPane pane = ComponentUtil.getParentOfType((Class<? extends CellRendererPane>)CellRendererPane.class, c);
-    requestRefresh(pane == null ? c : getRendererOwner(pane.getParent()));
+    CellRendererPane pane = ComponentUtil.getParentOfType(CellRendererPane.class, c);
+    requestRefresh(pane == null ? c : getRendererOwner(pane.getParent()), uiAccess);
     icon.paintIcon(c, g, x, y);
   }
 

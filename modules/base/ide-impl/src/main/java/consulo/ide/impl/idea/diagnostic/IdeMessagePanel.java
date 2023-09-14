@@ -2,29 +2,29 @@
 package consulo.ide.impl.idea.diagnostic;
 
 import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.popup.Balloon;
-import consulo.util.lang.ref.Ref;
+import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.ui.UIAccessScheduler;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposer;
-
+import consulo.ui.ex.popup.Balloon;
+import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -36,14 +36,16 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
   private final IdeErrorsIcon myIcon;
   private final IdeFrame myFrame;
   private final MessagePool myMessagePool;
+  private final Project myProject;
 
   private Balloon myBalloon;
   private IdeErrorsDialog myDialog;
   private boolean myOpeningInProgress;
   private boolean myNotificationPopupAlreadyShown;
 
-  public IdeMessagePanel(@Nullable IdeFrame frame, @Nonnull MessagePool messagePool) {
+  public IdeMessagePanel(Project project, @Nullable IdeFrame frame, @Nonnull MessagePool messagePool) {
     super(new BorderLayout());
+    myProject = project;
 
     myIcon = new IdeErrorsIcon(frame != null);
     myIcon.setVerticalAlignment(SwingConstants.CENTER);
@@ -90,15 +92,6 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     return this;
   }
 
-  /**
-   * @deprecated use {@link #openErrorsDialog(LogMessage)}
-   */
-  @Deprecated
-  @SuppressWarnings("SpellCheckingInspection")
-  public void openFatals(@Nullable LogMessage message) {
-    openErrorsDialog(message);
-  }
-
   public void openErrorsDialog(@Nullable LogMessage message) {
     if (myDialog != null) return;
     if (myOpeningInProgress) return;
@@ -116,7 +109,8 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
           }
         }
         else if (myDialog == null) {
-          EdtExecutorService.getScheduledExecutorInstance().schedule(this, 300L, TimeUnit.MILLISECONDS);
+          UIAccessScheduler scheduler = myProject.getUIAccess().getScheduler();
+          scheduler.schedule(this, 300L, TimeUnit.MILLISECONDS);
         }
       }
     }.run();

@@ -9,7 +9,7 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.ConcurrentFactoryMap;
-import consulo.application.util.concurrent.NonUrgentExecutor;
+import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

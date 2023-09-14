@@ -915,7 +915,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
   public static ModalityState getCurrentThreadProgressModality() {
     ProgressIndicator indicator = threadTopLevelIndicators.get(Thread.currentThread().getId());
     ModalityState modality = indicator == null ? null : indicator.getModalityState();
-    return modality != null ? modality : IdeaModalityState.NON_MODAL;
+    return modality != null ? modality : ModalityState.nonModal();
   }
 
   private static void setCurrentIndicator(long threadId, ProgressIndicator indicator) {

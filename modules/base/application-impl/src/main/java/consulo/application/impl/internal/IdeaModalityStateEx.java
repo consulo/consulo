@@ -2,22 +2,22 @@
 package consulo.application.impl.internal;
 
 import consulo.application.progress.ProgressIndicator;
+import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.collection.WeakList;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
-public final class IdeaModalityStateEx extends IdeaModalityState {
+public class IdeaModalityStateEx extends IdeaModalityState {
   private final WeakList<Object> myModalEntities = new WeakList<>();
   private static final Set<Object> ourTransparentEntities = Collections.newSetFromMap(Maps.newConcurrentWeakHashMap());
 
-  @SuppressWarnings("unused")
   public IdeaModalityStateEx() {
-  } // used by reflection to initialize NON_MODAL
+  }
 
   IdeaModalityStateEx(@Nonnull Collection<Object> modalEntities) {
     myModalEntities.addAll(modalEntities);
@@ -29,7 +29,7 @@ public final class IdeaModalityStateEx extends IdeaModalityState {
   }
 
   @Nonnull
-  public IdeaModalityState appendProgress(@Nonnull ProgressIndicator progress) {
+  public ModalityState appendProgress(@Nonnull ProgressIndicator progress) {
     return appendEntity(progress);
   }
 
@@ -49,19 +49,22 @@ public final class IdeaModalityStateEx extends IdeaModalityState {
 
   @Override
   public boolean dominates(@Nonnull IdeaModalityState anotherState) {
-    if (anotherState == IdeaModalityState.any()) return false;
+    if (anotherState == ModalityState.any()) return false;
     if (myModalEntities.isEmpty()) return false;
 
     List<Object> otherEntities = ((IdeaModalityStateEx)anotherState).getModalEntities();
     for (Object entity : getModalEntities()) {
-      if (!otherEntities.contains(entity) && !ourTransparentEntities.contains(entity)) return true; // I have entity which is absent in anotherState
+      if (!otherEntities.contains(entity) && !ourTransparentEntities.contains(entity))
+        return true; // I have entity which is absent in anotherState
     }
     return false;
   }
 
   @NonNls
   public String toString() {
-    return this == NON_MODAL ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(), it -> "[" + it + "]", ", ") + "}";
+    return this == NON_MODAL ? "ModalityState.NON_MODAL" : "ModalityState:{" + StringUtil.join(getModalEntities(),
+                                                                                               it -> "[" + it + "]",
+                                                                                               ", ") + "}";
   }
 
   void removeModality(Object modalEntity) {

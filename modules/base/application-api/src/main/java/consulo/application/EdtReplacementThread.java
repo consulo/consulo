@@ -13,8 +13,8 @@ package consulo.application;
  * This enum represents this classification and aids in preserving compatibility with the code designed with
  * the old threading model in mind.
  *
- * @see consulo.ide.impl.idea.openapi.application.ex.ApplicationUtil#invokeLaterSomewhere
- * @see consulo.ide.impl.idea.openapi.application.ex.ApplicationUtil#invokeAndWaitSomewhere
+ * @see consulo.application.util.ApplicationUtil#invokeLaterSomewhere
+ * @see consulo.application.util.ApplicationUtil#invokeAndWaitSomewhere
  */
 public enum EdtReplacementThread {
   /**

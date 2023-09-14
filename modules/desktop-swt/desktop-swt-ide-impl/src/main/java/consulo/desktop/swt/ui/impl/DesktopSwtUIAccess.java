@@ -15,12 +15,16 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.logging.Logger;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.impl.BaseUIAccess;
+import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
-import org.eclipse.swt.widgets.Display;
-
 import jakarta.annotation.Nonnull;
+import org.eclipse.swt.widgets.Display;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -30,7 +34,7 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 29/04/2021
  */
-public class DesktopSwtUIAccess implements UIAccess {
+public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
   public static final DesktopSwtUIAccess INSTANCE = new DesktopSwtUIAccess();
 
   private static final Logger LOG = Logger.getInstance(DesktopSwtUIAccess.class);
@@ -78,11 +82,6 @@ public class DesktopSwtUIAccess implements UIAccess {
 
   public Display getDisplay() {
     return myDisplay;
-  }
-
-  @Override
-  public boolean isValid() {
-    return !myDisplay.isDisposed();
   }
 
   @Nonnull
@@ -144,5 +143,18 @@ public class DesktopSwtUIAccess implements UIAccess {
         LOG.error(e);
       }
     });
+  }
+
+  @Nonnull
+  @Override
+  protected SingleUIAccessScheduler createScheduler() {
+    Application application = Application.get();
+    ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
+    return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
+      @Override
+      public void runWithModalityState(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+        Application.get().invokeLater(runnable, modalityState);
+      }
+    };
   }
 }

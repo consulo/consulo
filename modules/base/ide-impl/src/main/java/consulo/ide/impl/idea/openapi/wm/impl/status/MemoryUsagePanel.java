@@ -3,20 +3,20 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,13 +36,15 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
   private static final Color UNUSED_COLOR = JBColor.namedColor("MemoryIndicator.allocatedBackground", new JBColor(Gray._215, Gray._90));
 
   private final String mySample;
+  private final Project myProject;
   private long myLastAllocated = -1;
   private long myLastUsed = -1;
   private BufferedImage myBufferedImage;
   private boolean myWasPressed;
   private ScheduledFuture<?> myFuture;
 
-  public MemoryUsagePanel() {
+  public MemoryUsagePanel(Project project) {
+    myProject = project;
     long max = Math.min(Runtime.getRuntime().maxMemory() / MEGABYTE, 9999);
     mySample = UIBundle.message("memory.usage.panel.message.text", max, max);
 
@@ -63,7 +65,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
   @Override
   public void showNotify() {
-    myFuture = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(this::updateState, 1, 5, TimeUnit.SECONDS);
+    myFuture = myProject.getUIAccess().getScheduler().scheduleWithFixedDelay(this::updateState, 1, 5, TimeUnit.SECONDS);
   }
 
   @Override

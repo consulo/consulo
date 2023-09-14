@@ -97,7 +97,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
-import consulo.util.concurrent.BoundedTaskExecutor;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.SystemProperties;

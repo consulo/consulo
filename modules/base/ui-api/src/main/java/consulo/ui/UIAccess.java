@@ -92,7 +92,9 @@ public interface UIAccess extends Executor {
     };
   }
 
-  boolean isValid();
+  default boolean isValid() {
+    return true;
+  }
 
   @Nonnull
   default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
@@ -152,4 +154,7 @@ public interface UIAccess extends Executor {
   default void execute(@RequiredUIAccess @Nonnull Runnable command) {
     give(command);
   }
+
+  @Nonnull
+  UIAccessScheduler getScheduler();
 }

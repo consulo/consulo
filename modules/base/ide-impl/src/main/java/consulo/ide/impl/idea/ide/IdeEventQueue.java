@@ -36,6 +36,7 @@ import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.disposer.util.DisposerUtil;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
 import consulo.ide.impl.idea.openapi.application.impl.InvocationUtil2;
@@ -44,7 +45,6 @@ import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
-import consulo.ide.impl.idea.openapi.util.DisposerUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -98,18 +98,8 @@ public class IdeEventQueue extends EventQueue {
   private static TransactionGuardEx ourTransactionGuard;
   private static ProgressManager ourProgressManager;
 
-  /**
-   * Adding/Removing of "idle" listeners should be thread safe.
-   */
-  private final Object myLock = new Object();
-
-  private final List<Runnable> myIdleListeners = Lists.newLockFreeCopyOnWriteList();
   private final List<Runnable> myActivityListeners = Lists.newLockFreeCopyOnWriteList();
-  private final Alarm myIdleRequestsAlarm = new Alarm();
-  private final Alarm myIdleTimeCounterAlarm = new Alarm();
-  private long myIdleTime;
-  private final Map<Runnable, MyFireIdleRequest> myListener2Request = new HashMap<>();
-  // IdleListener -> MyFireIdleRequest
+
   private final IdeKeyEventDispatcher myKeyEventDispatcher = new IdeKeyEventDispatcher(this);
   private final IdeMouseEventDispatcher myMouseEventDispatcher = new IdeMouseEventDispatcher();
   private final IdePopupManager myPopupManager = new IdePopupManager();
@@ -127,7 +117,8 @@ public class IdeEventQueue extends EventQueue {
   @Nullable
   private AWTEvent myCurrentSequencedEvent;
 
-  private long myLastActiveTime;
+  private final AWTIdleHolder myIdleHolder = new AWTIdleHolder();
+
   private long myLastEventTime = System.currentTimeMillis();
   private WindowManagerEx myWindowManager;
   private final List<EventDispatcher> myDispatchers = Lists.newLockFreeCopyOnWriteList();
@@ -216,7 +207,6 @@ public class IdeEventQueue extends EventQueue {
     EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
     assert !(systemEventQueue instanceof IdeEventQueue) : systemEventQueue;
     systemEventQueue.push(this);
-    addIdleTimeCounterRequest();
 
     EDT.updateEdt();
 
@@ -236,6 +226,10 @@ public class IdeEventQueue extends EventQueue {
     abracadabraDaberBoreh();
   }
 
+  public void addIdleTimeCounterRequest() {
+    myIdleHolder.addIdleTimeCounterRequest();
+  }
+
   private void abracadabraDaberBoreh() {
     // we need to track if there are KeyBoardEvents in IdeEventQueue
     // so we want to intercept all events posted to IdeEventQueue and increment counters
@@ -253,71 +247,20 @@ public class IdeEventQueue extends EventQueue {
     myWindowManager = windowManager;
   }
 
-
-  private void addIdleTimeCounterRequest() {
-    if (isTestMode()) return;
-
-    myIdleTimeCounterAlarm.cancelAllRequests();
-    myLastActiveTime = System.currentTimeMillis();
-    myIdleTimeCounterAlarm.addRequest(() -> {
-      myIdleTime += System.currentTimeMillis() - myLastActiveTime;
-      addIdleTimeCounterRequest();
-    }, 20000, IdeaModalityState.NON_MODAL);
-  }
-
-  /**
-   * This class performs special processing in order to have {@link #getIdleTime()} return more or less up-to-date data.
-   * <p/>
-   * This method allows to stop that processing (convenient in non-intellij environment like upsource).
-   */
-  @SuppressWarnings("unused") // Used in upsource.
-  public void stopIdleTimeCalculation() {
-    myIdleTimeCounterAlarm.cancelAllRequests();
-  }
-
   public void addIdleListener(@Nonnull final Runnable runnable, final int timeoutMillis) {
-    if (timeoutMillis <= 0 || TimeUnit.MILLISECONDS.toHours(timeoutMillis) >= 24) {
-      throw new IllegalArgumentException("This timeout value is unsupported: " + timeoutMillis);
-    }
-    synchronized (myLock) {
-      myIdleListeners.add(runnable);
-      final MyFireIdleRequest request = new MyFireIdleRequest(runnable, timeoutMillis);
-      myListener2Request.put(runnable, request);
-      UIUtil.invokeLaterIfNeeded(() -> myIdleRequestsAlarm.addRequest(request, timeoutMillis));
-    }
+    myIdleHolder.addIdleListener(runnable, timeoutMillis);
   }
 
   public void removeIdleListener(@Nonnull final Runnable runnable) {
-    synchronized (myLock) {
-      final boolean wasRemoved = myIdleListeners.remove(runnable);
-      if (!wasRemoved) {
-        LOG.error("unknown runnable: " + runnable);
-      }
-      final MyFireIdleRequest request = myListener2Request.remove(runnable);
-      LOG.assertTrue(request != null);
-      myIdleRequestsAlarm.cancelRequest(request);
-    }
-  }
-
-  /**
-   * @deprecated use {@link #addActivityListener(Runnable, Disposable)} (to be removed in IDEA 17)
-   */
-  public void addActivityListener(@Nonnull final Runnable runnable) {
-    synchronized (myLock) {
-      myActivityListeners.add(runnable);
-    }
+    myIdleHolder.removeIdleListener(runnable);
   }
 
   public void addActivityListener(@Nonnull final Runnable runnable, Disposable parentDisposable) {
-    synchronized (myLock) {
-      DisposerUtil.add(runnable, myActivityListeners, parentDisposable);
-    }
+    DisposerUtil.add(runnable, myActivityListeners, parentDisposable);
   }
 
   public void removeActivityListener(@Nonnull final Runnable runnable) {
-    synchronized (myLock) {
-      myActivityListeners.remove(runnable);
-    }
+    myActivityListeners.remove(runnable);
   }
 
   public void addDispatcher(@Nonnull EventDispatcher dispatcher, Disposable parent) {
@@ -686,32 +629,14 @@ public class IdeEventQueue extends EventQueue {
       }
     }
 
-
     // Process "idle" and "activity" listeners
     if (e instanceof WindowEvent || e instanceof FocusEvent || e instanceof InputEvent) {
       ActivityTracker.getInstance().inc();
 
-      synchronized (myLock) {
-        myIdleRequestsAlarm.cancelAllRequests();
-        for (Runnable idleListener : myIdleListeners) {
-          final MyFireIdleRequest request = myListener2Request.get(idleListener);
-          if (request == null) {
-            LOG.error("There is no request for " + idleListener);
-          }
-          else {
-            myIdleRequestsAlarm.addRequest(request, request.getTimeout(), IdeaModalityState.NON_MODAL);
-          }
-        }
-        if (KeyEvent.KEY_PRESSED == e.getID() ||
-            KeyEvent.KEY_TYPED == e.getID() ||
-            MouseEvent.MOUSE_PRESSED == e.getID() ||
-            MouseEvent.MOUSE_RELEASED == e.getID() ||
-            MouseEvent.MOUSE_CLICKED == e.getID()) {
-          addIdleTimeCounterRequest();
-          for (Runnable activityListener : myActivityListeners) {
-            activityListener.run();
-          }
-        }
+      myIdleHolder.resetIdle(e);
+
+      for (Runnable activityListener : myActivityListeners) {
+        activityListener.run();
       }
     }
 
@@ -850,7 +775,7 @@ public class IdeEventQueue extends EventQueue {
   private void defaultDispatchEvent(@Nonnull AWTEvent e) {
     try {
       maybeReady();
-      
+
       super.dispatchEvent(e);
     }
     catch (Throwable t) {
@@ -923,42 +848,9 @@ public class IdeEventQueue extends EventQueue {
     boolean dispatch(@Nonnull AWTEvent e);
   }
 
-  private final class MyFireIdleRequest implements Runnable {
-    private final Runnable myRunnable;
-    private final int myTimeout;
-
-
-    MyFireIdleRequest(@Nonnull Runnable runnable, final int timeout) {
-      myTimeout = timeout;
-      myRunnable = runnable;
-    }
-
-
-    @Override
-    public void run() {
-      myRunnable.run();
-      synchronized (myLock) {
-        if (myIdleListeners.contains(myRunnable)) // do not reschedule if not interested anymore
-        {
-          myIdleRequestsAlarm.addRequest(this, myTimeout, IdeaModalityState.NON_MODAL);
-        }
-      }
-    }
-
-    public int getTimeout() {
-      return myTimeout;
-    }
-
-    @Override
-    public String toString() {
-      return "Fire idle request. delay: " + getTimeout() + "; runnable: " + myRunnable;
-    }
-  }
-
   public long getIdleTime() {
-    return myIdleTime;
+    return myIdleHolder.getIdleTime();
   }
-
 
   @Nonnull
   public IdePopupManager getPopupManager() {
@@ -1185,24 +1077,10 @@ public class IdeEventQueue extends EventQueue {
     if (event != null) {
       return event;
     }
-    if (isTestMode() && LaterInvocator.ensureFlushRequested()) {
+    if (LaterInvocator.ensureFlushRequested()) {
       return super.peekEvent();
     }
     return null;
-  }
-
-  private Boolean myTestMode;
-
-  private boolean isTestMode() {
-    Boolean testMode = myTestMode;
-    if (testMode != null) return testMode;
-
-    Application application = ApplicationManager.getApplication();
-    if (application == null) return false;
-
-    testMode = application.isUnitTestMode();
-    myTestMode = testMode;
-    return testMode;
   }
 
   /**

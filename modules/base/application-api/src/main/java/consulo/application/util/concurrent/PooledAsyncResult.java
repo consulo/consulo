@@ -15,6 +15,7 @@
  */
 package consulo.application.util.concurrent;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 
 import jakarta.annotation.Nonnull;
@@ -25,6 +26,8 @@ import java.util.function.Supplier;
  * @author VISTALL
  * @since 2019-01-12
  */
+@Deprecated
+@DeprecationInfo("Use CompletableFuture")
 public class PooledAsyncResult {
   @Nonnull
   public static <V> AsyncResult<V> create(@Nonnull Supplier<AsyncResult<V>> callable) {

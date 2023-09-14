@@ -18,6 +18,7 @@ package consulo.desktop.awt.ui.impl;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGUniverse;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
 import consulo.desktop.awt.ui.impl.image.*;
 import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopAWTImageImpl;
@@ -522,5 +523,17 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public <L extends Layout> LoadingLayout<L> _Layouts_LoadingLayout(@Nonnull L innerLayout, @Nonnull Disposable parent) {
     return new DesktopAWTLoadingLayout<>(innerLayout, parent);
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState _ModalityState_any() {
+    return ModalityStateImpl.ANY;
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState _ModalityState_nonModal() {
+    return ModalityStateImpl.NON_MODAL;
   }
 }

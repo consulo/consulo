@@ -9,11 +9,11 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.ui.UIAccess;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.util.Invoker;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
@@ -370,15 +370,17 @@ public abstract class InvokerImpl implements Disposable, Invoker {
    * which is the only one valid thread for this invoker.
    */
   public static final class EDT extends InvokerImpl {
+    @Nonnull
+    private final UIAccess myUiAccess;
+
     /**
      * Creates the invoker of user tasks on the event dispatch thread.
      *
      * @param parent a disposable parent object
-     * @deprecated use {@link #forEventDispatchThread} instead
      */
-    @Deprecated
-    public EDT(@Nonnull Disposable parent) {
-      super("EDT", parent, ThreeState.UNSURE);
+    public EDT(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+      super("UI", parent, ThreeState.UNSURE);
+      myUiAccess = uiAccess;
     }
 
     @Override
@@ -389,10 +391,10 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     @Override
     void offer(@Nonnull Runnable runnable, int delay) {
       if (delay > 0) {
-        EdtExecutorService.getScheduledExecutorInstance().schedule(runnable, delay, MILLISECONDS);
+        myUiAccess.getScheduler().schedule(runnable, delay, MILLISECONDS);
       }
       else {
-        EdtExecutorService.getInstance().execute(runnable);
+        myUiAccess.execute(runnable);
       }
     }
   }
@@ -556,8 +558,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
 
 
   @Nonnull
-  public static InvokerImpl forEventDispatchThread(@Nonnull Disposable parent) {
-    return new EDT(parent);
+  public static InvokerImpl forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+    return new EDT(uiAccess, parent);
   }
 
   @Nonnull

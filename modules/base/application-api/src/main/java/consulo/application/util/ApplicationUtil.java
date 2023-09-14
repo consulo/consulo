@@ -61,7 +61,7 @@ public class ApplicationUtil {
     final Ref<T> result = Ref.create();
     final Ref<Throwable> error = Ref.create();
 
-    Future<?> future = PooledThreadExecutor.INSTANCE.submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
+    Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(() -> {
       try {
         result.set(callable.call());
       }

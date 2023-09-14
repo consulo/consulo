@@ -1,5 +1,5 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
 import consulo.util.collection.ContainerUtil;
 import org.slf4j.Logger;
@@ -218,7 +218,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     @Override
     public void run() {
       if (LOG.isTraceEnabled()) {
-        LOG.trace("Executing " + BoundedTaskExecutor.info(this));
+        LOG.trace("Executing " + AppDelayQueue.info(this));
       }
       boolean periodic = isPeriodic();
       if (!periodic) {
@@ -232,7 +232,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
 
     @Override
     public String toString() {
-      Object info = BoundedTaskExecutor.info(this);
+      Object info = AppDelayQueue.info(this);
       return "Delay: " + getDelay(TimeUnit.MILLISECONDS) + "ms; " + (info == this ? super.toString() : info) + " backendExecutorService: " + backendExecutorService;
     }
 
@@ -298,7 +298,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
   @Nonnull
   public <T> MyScheduledFutureTask<T> delayedExecute(@Nonnull MyScheduledFutureTask<T> t) {
     if (LOG.isTraceEnabled()) {
-      LOG.trace("Submit at delay " + t.getDelay(TimeUnit.MILLISECONDS) + "ms " + BoundedTaskExecutor.info(t));
+      LOG.trace("Submit at delay " + t.getDelay(TimeUnit.MILLISECONDS) + "ms " + AppDelayQueue.info(t));
     }
     if (isShutdown()) {
       throw new RejectedExecutionException("Already shutdown");
@@ -306,7 +306,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     delayQueue.add(t);
     if (t.getDelay(TimeUnit.DAYS) > 31 && !t.isPeriodic()) {
       // guard against inadvertent queue overflow
-      throw new IllegalArgumentException("Unsupported crazy delay " + t.getDelay(TimeUnit.DAYS) + " days: " + BoundedTaskExecutor.info(t));
+      throw new IllegalArgumentException("Unsupported crazy delay " + t.getDelay(TimeUnit.DAYS) + " days: " + AppDelayQueue.info(t));
     }
     return t;
   }

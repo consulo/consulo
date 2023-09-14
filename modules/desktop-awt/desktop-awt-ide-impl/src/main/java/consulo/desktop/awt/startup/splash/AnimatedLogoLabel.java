@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.startup.splash;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -25,7 +25,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -117,9 +119,13 @@ public class AnimatedLogoLabel extends JComponent {
 
   private final Object lock = new Object();
 
+  @Nullable
+  private ScheduledExecutorService myExecutorService;
+
   public AnimatedLogoLabel(int letterHeightInPixels, boolean animated, boolean unstableScaling) {
     myLetterHeight = letterHeightInPixels;
     myAnimated = animated;
+    myExecutorService = animated ? Executors.newSingleThreadScheduledExecutor() : null;
 
     Random random = new Random();
     Map<Character, AlphabetDraw> characterDraws = Alphabet.validCharacters;
@@ -203,8 +209,8 @@ public class AnimatedLogoLabel extends JComponent {
   }
 
   public void start() {
-    if (myAnimated) {
-      myFuture = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(myTask, 50, 20, TimeUnit.MILLISECONDS);
+    if (myExecutorService != null && myAnimated) {
+      myFuture = myExecutorService.scheduleWithFixedDelay(myTask, 50, 20, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -233,6 +239,12 @@ public class AnimatedLogoLabel extends JComponent {
   public void setValue(int value) {
     synchronized (lock) {
       myValue = value;
+    }
+  }
+
+  public void dispose() {
+    if (myExecutorService != null) {
+      myExecutorService.shutdown();
     }
   }
 

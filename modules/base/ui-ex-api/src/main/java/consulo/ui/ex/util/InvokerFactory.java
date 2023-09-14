@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
-
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,7 +34,7 @@ public interface InvokerFactory {
   }
 
   @Nonnull
-  Invoker forEventDispatchThread(@Nonnull Disposable parent);
+  Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent);
 
   @Nonnull
   Invoker forBackgroundPoolWithReadAction(@Nonnull Disposable parent);

@@ -1,11 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.application.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.BoundedTaskExecutor;
-import consulo.util.concurrent.SchedulingWrapper;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -17,8 +15,11 @@ import java.util.concurrent.TimeUnit;
  * and execute them in parallel in the {@code backendExecutor} with not more than at {@code maxSimultaneousTasks} at a time.
  */
 class BoundedScheduledExecutorService extends SchedulingWrapper {
-  BoundedScheduledExecutorService(@Nonnull String name, @Nonnull ExecutorService backendExecutor, int maxThreads) {
-    super(new BoundedTaskExecutor(name, backendExecutor, maxThreads, true), ((AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService()).getDelayQueue());
+  BoundedScheduledExecutorService(@Nonnull String name,
+                                  @Nonnull ExecutorService backendExecutor,
+                                  int maxThreads,
+                                  AppDelayQueue appDelayQueue) {
+    super(new BoundedTaskExecutor(name, backendExecutor, maxThreads, true), appDelayQueue);
     assert !(backendExecutor instanceof ScheduledExecutorService) : "backendExecutor is already ScheduledExecutorService: " + backendExecutor;
   }
 

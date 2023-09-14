@@ -48,6 +48,7 @@ module consulo.application.impl {
           consulo.builtin.web.server.impl;
   exports consulo.application.impl.internal.store to consulo.ide.impl;
   exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl;
+  exports consulo.application.impl.internal.concurent to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 
   opens consulo.application.impl.internal.start to args4j;
   

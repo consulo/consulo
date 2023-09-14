@@ -2,8 +2,6 @@
 
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -37,17 +35,16 @@ import consulo.language.psi.search.TodoItem;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.Stack;
 import consulo.util.collection.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -402,9 +399,8 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   private static void cancelAndRestartDaemonLater(@Nonnull ProgressIndicator progress, @Nonnull final Project project) throws ProcessCanceledException {
     RESTART_REQUESTS.incrementAndGet();
     progress.cancel();
-    Application application = ApplicationManager.getApplication();
-    int delay = application.isUnitTestMode() ? 0 : RESTART_DAEMON_RANDOM.nextInt(100);
-    EdtExecutorService.getScheduledExecutorInstance().schedule(() -> {
+    int delay = RESTART_DAEMON_RANDOM.nextInt(100);
+    project.getUIAccess().getScheduler().schedule(() -> {
       RESTART_REQUESTS.decrementAndGet();
       if (!project.isDisposed()) {
         DaemonCodeAnalyzer.getInstance(project).restart();

@@ -22,17 +22,6 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
 
   private WebSession myCurrentSession;
-  private static final IdeaModalityState ANY = new IdeaModalityState() {
-    @Override
-    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
-      return false;
-    }
-
-    @Override
-    public String toString() {
-      return "ANY";
-    }
-  };
 
   public WebApplicationImpl(@Nonnull SimpleReference<? extends StartupProgress> splash) {
     super(splash);
@@ -41,12 +30,6 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   @Nullable
   public WebStartupProgressImpl getSplash() {
     return (WebStartupProgressImpl)mySplashRef.get();
-  }
-
-  @Override
-  @Nonnull
-  public IdeaModalityState getAnyModalityState() {
-    return ANY;
   }
 
   @Override
@@ -82,24 +65,18 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   @Nonnull
   @Override
   public IdeaModalityState getCurrentModalityState() {
-    return getNoneModalityState();
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
   public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return getNoneModalityState();
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
   public IdeaModalityState getDefaultModalityState() {
-    return getNoneModalityState();
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getNoneModalityState() {
     return IdeaModalityState.NON_MODAL;
   }
 

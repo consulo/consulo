@@ -63,7 +63,7 @@ public class ProgressIndicatorUtils {
 
   @Nonnull
   public static CompletableFuture<?> scheduleWithWriteActionPriority(@Nonnull ProgressIndicator progressIndicator, @Nonnull ReadTask readTask) {
-    return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.INSTANCE, readTask);
+    return scheduleWithWriteActionPriority(progressIndicator, PooledThreadExecutor.getInstance(), readTask);
   }
 
   /**

@@ -15,6 +15,7 @@
  */
 package consulo.util.concurrent;
 
+import consulo.util.concurrent.internal.SameThreadExecutorService;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;

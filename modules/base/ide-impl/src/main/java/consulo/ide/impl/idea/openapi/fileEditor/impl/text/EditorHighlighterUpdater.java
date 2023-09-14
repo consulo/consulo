@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.util.concurrent.NonUrgentExecutor;
+import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterColors;

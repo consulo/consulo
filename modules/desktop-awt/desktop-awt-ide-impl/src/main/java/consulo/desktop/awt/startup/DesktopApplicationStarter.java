@@ -122,7 +122,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+  protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     invokeAtUIAndWait(() -> {
       System.setProperty("sun.awt.noerasebackground", "true");
 
@@ -140,11 +140,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       }
     });
 
-    super.initApplication(isHeadlessMode, args, stat);
+    super.initializeEnviroment(isHeadlessMode, args, stat);
   }
 
   @Override
   public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+    IdeEventQueue.getInstance().addIdleTimeCounterRequest();
+    
     appInitializeMark.run();
 
     stat.dump("Startup statistics", LOG::info);

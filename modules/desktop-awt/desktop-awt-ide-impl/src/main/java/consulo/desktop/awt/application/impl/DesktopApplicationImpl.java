@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.*;
 import consulo.application.impl.internal.*;
+import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
@@ -29,7 +30,6 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
@@ -55,6 +55,7 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
@@ -92,18 +93,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   private DesktopTransactionGuardImpl myTransactionGuardImpl;
 
   private volatile boolean myDisposeInProgress;
-
-  private static final IdeaModalityState ANY = new IdeaModalityState() {
-    @Override
-    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
-      return false;
-    }
-
-    @Override
-    public String toString() {
-      return "ANY";
-    }
-  };
 
   public DesktopApplicationImpl(boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(splashRef);
@@ -323,13 +312,13 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   @Nonnull
-  public IdeaModalityState getCurrentModalityState() {
+  public ModalityState getCurrentModalityState() {
     return LaterInvocator.getCurrentModalityState();
   }
 
   @Override
   @Nonnull
-  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
     if (!isDispatchThread()) LOG.debug("please, use application dispatch thread to get a modality state");
     Window window = UIUtil.getWindow(c);
     if (window == null) return getNoneModalityState();
@@ -338,20 +327,8 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   @Nonnull
-  public IdeaModalityState getAnyModalityState() {
-    return ANY;
-  }
-
-  @Override
-  @Nonnull
-  public IdeaModalityState getDefaultModalityState() {
-    return isDispatchThread() ? getCurrentModalityState() : (IdeaModalityState)CoreProgressManager.getCurrentThreadProgressModality();
-  }
-
-  @Override
-  @Nonnull
-  public IdeaModalityState getNoneModalityState() {
-    return IdeaModalityState.NON_MODAL;
+  public ModalityState getDefaultModalityState() {
+    return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
   }
 
   @RequiredUIAccess

@@ -16,17 +16,16 @@
 
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.FindDependencyUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
 import consulo.usage.UsageInfo;
 
 import java.util.HashSet;
@@ -56,16 +55,16 @@ public class DependenciesUsagesPanel extends UsagesPanel {
     cancelCurrentFindRequest();
 
     myAlarm.cancelAllRequests();
-    myAlarm.addRequest(() -> ApplicationManager.getApplication().executeOnPooledThread(() -> {
-      final ProgressIndicator progress = new PanelProgressIndicator(this::setToComponent);
+    myAlarm.addRequest(() -> myProject.getApplication().executeOnPooledThread(() -> {
+      final ProgressIndicator progress = new PanelProgressIndicator(myProject.getUIAccess().getScheduler(), this::setToComponent);
       myCurrentProgress = progress;
       ProgressManager.getInstance().runProcess(() -> {
-        ApplicationManager.getApplication().runReadAction(() -> {
+        myProject.getApplication().runReadAction(() -> {
           UsageInfo[] usages = UsageInfo.EMPTY_ARRAY;
           Set<PsiFile> elementsToSearch = null;
 
           try {
-            if (myBuilders.get(0).isBackward()){
+            if (myBuilders.get(0).isBackward()) {
               elementsToSearch = searchIn;
               usages = FindDependencyUtil.findBackwardDependencies(myBuilders, searchFor, searchIn);
             }
@@ -84,9 +83,9 @@ public class DependenciesUsagesPanel extends UsagesPanel {
           if (!progress.isCanceled()) {
             final UsageInfo[] finalUsages = usages;
             final PsiElement[] _elementsToSearch =
-                    elementsToSearch != null ? PsiUtilCore.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
-            ApplicationManager.getApplication().invokeLater(() -> showUsages(_elementsToSearch, finalUsages), IdeaModalityState.stateForComponent(
-                    this));
+              elementsToSearch != null ? PsiUtilCore.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
+            myProject.getApplication()
+                     .invokeLater(() -> showUsages(_elementsToSearch, finalUsages), IdeaModalityState.stateForComponent(this));
           }
         });
         myCurrentProgress = null;

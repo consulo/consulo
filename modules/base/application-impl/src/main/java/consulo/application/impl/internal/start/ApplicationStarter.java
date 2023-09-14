@@ -85,7 +85,7 @@ public abstract class ApplicationStarter {
 
     myPlatform = Platform.current();
 
-    initApplication(false, args, stat);
+    initializeEnviroment(false, args, stat);
   }
 
   @Nonnull
@@ -100,7 +100,7 @@ public abstract class ApplicationStarter {
   @Nullable
   public abstract StartupProgress createSplash(CommandLineArgs args);
 
-  protected void initApplication(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
+  protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     StartupProgress splash = createSplash(args);
     if (splash != null) {
       mySplashRef.set(splash);

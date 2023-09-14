@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,17 @@
  */
 package consulo.ui;
 
-import consulo.ui.internal.UIInternal;
-import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
- * @since 29/12/2021
+ * @since 14/09/2023
  */
-public interface ModalityState {
+public interface UIAccessScheduler extends ScheduledExecutorService {
   @Nonnull
-  static ModalityState any() {
-    return UIInternal.get()._ModalityState_any();
-  }
-
-  @Nonnull
-  static ModalityState nonModal() {
-    return UIInternal.get()._ModalityState_nonModal();
-  }
-
-  Key<ModalityState> KEY = Key.create(ModalityState.class);
-
-  boolean dominates(@Nonnull ModalityState anotherState);
+  ScheduledFuture<?> schedule(@Nonnull Runnable command, @Nonnull ModalityState modalityState, long delay, TimeUnit unit);
 }

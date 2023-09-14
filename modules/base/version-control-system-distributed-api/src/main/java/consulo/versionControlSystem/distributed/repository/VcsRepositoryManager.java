@@ -33,11 +33,11 @@ import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -102,7 +102,7 @@ public class VcsRepositoryManager implements Disposable {
       return;
     }
 
-    myUpdateFuture = PooledThreadExecutor.INSTANCE.submit(() -> checkAndUpdateRepositoriesCollection(null));
+    myUpdateFuture = PooledThreadExecutor.getInstance().submit(() -> checkAndUpdateRepositoriesCollection(null));
   }
 
   @Nullable
@@ -307,7 +307,8 @@ public class VcsRepositoryManager implements Disposable {
   @Nullable
   private VcsRepositoryCreator getRepositoryCreator(@Nullable final AbstractVcs vcs) {
     if (vcs == null) return null;
-    return ContainerUtil.find(myProject.getExtensionList(VcsRepositoryCreator.class), creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));
+    return ContainerUtil.find(myProject.getExtensionList(VcsRepositoryCreator.class),
+                              creator -> creator.getVcsKey().equals(vcs.getKeyInstanceMethod()));
   }
 
   @Override

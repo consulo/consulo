@@ -8,6 +8,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.messagebus.MessageBus;
@@ -40,10 +41,8 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
-import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.ByteSequence;
@@ -361,7 +360,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     LOG.debug(message + " - " + Thread.currentThread());
   }
 
-  private final Executor reDetectExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("FileTypeManager Redetect Pool", PooledThreadExecutor.INSTANCE, 1, this);
+  private final Executor reDetectExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("FileTypeManager Redetect Pool",
+                                                                                                 PooledThreadExecutor.getInstance(), 1, this);
   private final HashSetQueue<VirtualFile> filesToRedetect = new HashSetQueue<>();
 
   private static final int CHUNK_SIZE = 10;
@@ -479,12 +479,14 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         }
       }
     }
+
+    Application application = Application.get();
     if (!changed.isEmpty()) {
-      ApplicationManager.getApplication().invokeLater(() -> FileContentUtilCore.reparseFiles(changed), ApplicationManager.getApplication().getDisposed());
+      application.invokeLater(() -> FileContentUtilCore.reparseFiles(changed), application.getDisposed());
     }
     if (!crashed.isEmpty()) {
       // do not re-scan locked or invalid files too often to avoid constant disk thrashing if that condition is permanent
-      EdtExecutorService.getScheduledExecutorInstance().schedule(() -> FileContentUtilCore.reparseFiles(crashed), 10, TimeUnit.SECONDS);
+      application.getLastUIAccess().getScheduler().schedule(() -> FileContentUtilCore.reparseFiles(crashed), 10, TimeUnit.SECONDS);
     }
   }
 

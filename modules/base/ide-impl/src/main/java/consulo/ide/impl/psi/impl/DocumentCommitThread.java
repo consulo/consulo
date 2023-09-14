@@ -43,7 +43,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
-import consulo.util.concurrent.BoundedTaskExecutor;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -70,7 +70,8 @@ public final class DocumentCommitThread implements Runnable, Disposable, Documen
   private static final Logger LOG = Logger.getInstance(DocumentCommitThread.class);
   private static final String SYNC_COMMIT_REASON = "Sync commit";
 
-  private final ExecutorService executor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Document Committing Pool", PooledThreadExecutor.INSTANCE, 1, this);
+  private final ExecutorService executor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Document Committing Pool",
+                                                                                                PooledThreadExecutor.getInstance(), 1, this);
   private final Object lock = new Object();
   private final HashSetQueue<CommitTask> documentsToCommit = new HashSetQueue<>();      // guarded by lock
   private final HashSetQueue<CommitTask> documentsToApplyInEDT = new HashSetQueue<>();  // guarded by lock

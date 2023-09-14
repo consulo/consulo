@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.concurrent;
+package consulo.application.impl.internal.concurent;
 
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.reflect.ReflectionUtil;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
+import java.util.concurrent.Callable;
 import java.util.concurrent.DelayQueue;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -40,7 +44,7 @@ public class AppDelayQueue extends DelayQueue<SchedulingWrapper.MyScheduledFutur
         try {
           final SchedulingWrapper.MyScheduledFutureTask task = take();
           if (LOG.isTraceEnabled()) {
-            LOG.trace("Took " + BoundedTaskExecutor.info(task));
+            LOG.trace("Took " + info(task));
           }
           if (!task.isDone()) {  // can be cancelled already
             try {
@@ -66,6 +70,20 @@ public class AppDelayQueue extends DelayQueue<SchedulingWrapper.MyScheduledFutur
     }, "Periodic tasks thread");
     scheduledToPooledTransferrer.setDaemon(true); // mark as daemon to not prevent JVM to exit (needed for Kotlin CLI compiler)
     scheduledToPooledTransferrer.start();
+  }
+
+  // for diagnostics
+  public static Object info(Runnable info) {
+    Object task = info;
+    String extra = null;
+    if (task instanceof FutureTask) {
+      extra = ((FutureTask<?>)task).isCancelled() ? " (future cancelled)" : ((FutureTask<?>)task).isDone() ? " (future done)" : null;
+      task = ObjectUtil.chooseNotNull(ReflectionUtil.getField(task.getClass(), task, Callable.class, "callable"), task);
+    }
+    if (task instanceof Callable && task.getClass().getName().equals("java.util.concurrent.Executors$RunnableAdapter")) {
+      task = ObjectUtil.chooseNotNull(ReflectionUtil.getField(task.getClass(), task, Runnable.class, "task"), task);
+    }
+    return extra == null ? task : task.getClass() + extra;
   }
 
   public void shutdown() {
