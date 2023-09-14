@@ -16,6 +16,7 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.ReadAction;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
@@ -85,10 +86,11 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
   private final IdePanePanel myComponent;
 
   public DesktopFileEditorsSplitters(Project project,
+                                     ApplicationConcurrency applicationConcurrency,
                                      FileEditorManagerImpl manager,
                                      DockManager dockManager,
                                      boolean createOwnDockableContainer) {
-    super(project, manager);
+    super(applicationConcurrency, project, manager);
 
     myComponent = new IdePanePanel(new BorderLayout()) {
       @Override

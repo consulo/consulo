@@ -17,6 +17,7 @@ package consulo.ide.impl.fileEditor;
 
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
@@ -34,8 +35,8 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -44,7 +45,11 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * This is base class extracted from IDEA AWT/Swing code, unified, and removed awt/swing parts
@@ -53,8 +58,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @since 2018-05-11
  */
 public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> implements FileEditorsSplitters, Disposable {
+  private record WindowIconUpdateData<WW extends FileEditorWindowBase>(WW window, VirtualFile file, Image icon) {
+  }
+
   private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
+  private final ApplicationConcurrency myApplicationConcurrency;
   @Nonnull
   protected final Project myProject;
   protected final FileEditorManagerImpl myManager;
@@ -63,10 +72,11 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected W myCurrentWindow;
   protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
   protected Element mySplittersElement;  // temporarily used during initialization
-  private final Alarm myIconUpdaterAlarm = new Alarm();
+  private Future<?> myIconUpdaterFuture = CompletableFuture.completedFuture(null);
   private final Set<VirtualFile> myFilesToUpdateIconsFor = new HashSet<>();
 
-  protected FileEditorsSplittersBase(Project project, FileEditorManagerImpl manager) {
+  protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency, Project project, FileEditorManagerImpl manager) {
+    myApplicationConcurrency = applicationConcurrency;
     myProject = project;
     myManager = manager;
 
@@ -171,20 +181,37 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   private void updateFileIconLater(VirtualFile file) {
     myFilesToUpdateIconsFor.add(file);
-    myIconUpdaterAlarm.cancelAllRequests();
-    myIconUpdaterAlarm.addRequest(() -> {
+    myIconUpdaterFuture.cancel(false);
+
+    ModalityState modality = getComponentModality();
+    myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
       if (myProject.isDisposed()) return;
+
+      List<WindowIconUpdateData<W>> windowIcons = new ArrayList<>(myFilesToUpdateIconsFor.size());
       for (VirtualFile file1 : myFilesToUpdateIconsFor) {
-        updateFileIconImmediately(file1);
+        collectFileIcons(file1, windowIcons);
       }
+
       myFilesToUpdateIconsFor.clear();
-    }, 200, getComponentModality());
+
+      if (windowIcons.isEmpty()) {
+        return;
+      }
+
+      myProject.getApplication().invokeLater(() -> {
+        for (WindowIconUpdateData data : windowIcons) {
+          data.window().updateFileIcon(file, data.icon());
+        }
+      }, modality);
+    }, 200, TimeUnit.MILLISECONDS);
   }
 
-  private void updateFileIconImmediately(final VirtualFile file) {
+  private void collectFileIcons(final VirtualFile file, List<WindowIconUpdateData<W>> windowIcons) {
     final Collection<W> windows = findWindows(file);
     for (W window : windows) {
-      window.updateFileIcon(file);
+      Image fileIcon = myProject.getApplication().runReadAction((Supplier<Image>)() -> window.getFileIcon(file));
+
+      windowIcons.add(new WindowIconUpdateData<>(window, file, fileIcon));
     }
   }
 
@@ -465,7 +492,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   @Override
   public void dispose() {
-    myIconUpdaterAlarm.cancelAllRequests();
+    myIconUpdaterFuture.cancel(false);
+    
     stopListeningFocus();
   }
 

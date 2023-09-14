@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -42,11 +43,9 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Provider;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Provider;
 
 /**
  * @author yole
@@ -54,6 +53,7 @@ import jakarta.annotation.Nonnull;
 public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
   private static final Logger LOG = Logger.getInstance(PsiAwareFileEditorManagerImpl.class);
 
+  protected final ApplicationConcurrency myApplicationConcurrency;
   private final PsiManager myPsiManager;
   private final Provider<WolfTheProblemSolver> myProblemSolver;
 
@@ -64,11 +64,13 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final ProblemListener myProblemListener;
 
   public PsiAwareFileEditorManagerImpl(Application application,
+                                       ApplicationConcurrency applicationConcurrency,
                                        Project project,
                                        PsiManager psiManager,
                                        Provider<WolfTheProblemSolver> problemSolver,
                                        DockManager dockManager) {
     super(application, project, dockManager);
+    myApplicationConcurrency = applicationConcurrency;
 
     myPsiManager = psiManager;
     myProblemSolver = problemSolver;
@@ -81,7 +83,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     project.getMessageBus().connect().subscribe(PowerSaveModeListener.class, new PowerSaveModeListener() {
       @Override
       public void powerSaveStateChanged() {
-        UIUtil.invokeLaterIfNeeded(() -> {
+        project.getUIAccess().giveIfNeed(() -> {
           for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
             ((EditorEx)editor).reinitSettings();
           }

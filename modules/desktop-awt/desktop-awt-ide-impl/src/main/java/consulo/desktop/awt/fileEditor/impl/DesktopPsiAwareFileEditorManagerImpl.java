@@ -17,6 +17,7 @@ package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
@@ -50,10 +51,11 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
 
   @Inject
   public DesktopPsiAwareFileEditorManagerImpl(Application application,
+                                              ApplicationConcurrency applicationConcurrency,
                                               Project project,
                                               PsiManager psiManager,
                                               Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
-    super(application, project, psiManager, problemSolver, dockManager);
+    super(application, applicationConcurrency, project, psiManager, problemSolver, dockManager);
   }
 
 
@@ -69,7 +71,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   @Nonnull
   @Override
   protected DockableEditorContainerFactory createDockContainerFactory() {
-    return new DesktopAWTDockableEditorContainerFactory(myProject, this, myDockManager);
+    return new DesktopAWTDockableEditorContainerFactory(myApplicationConcurrency, myProject, this, myDockManager);
   }
 
   @Nonnull
@@ -87,7 +89,8 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
           final JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
           panel.setBorder(JBUI.Borders.empty());
-          DesktopFileEditorsSplitters splitters = new DesktopFileEditorsSplitters(myProject, this, myDockManager, true);
+          DesktopFileEditorsSplitters splitters =
+            new DesktopFileEditorsSplitters(myProject, myApplicationConcurrency, this, myDockManager, true);
           mySplitters = splitters;
           Disposer.register(myProject, splitters);
           panel.add(splitters.getComponent(), BorderLayout.CENTER);

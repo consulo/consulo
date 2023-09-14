@@ -15,22 +15,22 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorWindow;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.ui.docking.impl.UnifiedDockableEditorTabbedContainer;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.ui.docking.impl.UnifiedDockableEditorTabbedContainer;
 import consulo.ui.layout.WrappedLayout;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -40,13 +40,17 @@ import java.util.concurrent.CompletableFuture;
  */
 public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<UnifiedFileEditorWindow> {
   private static final Logger LOG = Logger.getInstance(UnifiedFileEditorsSplitters.class);
-  
+
   private final Project myProject;
 
   private WrappedLayout myLayout;
 
-  public UnifiedFileEditorsSplitters(Project project, FileEditorManagerImpl editorManager, DockManager dockManager, boolean createOwnDockableContainer) {
-    super(project, editorManager);
+  public UnifiedFileEditorsSplitters(ApplicationConcurrency applicationConcurrency,
+                                     Project project,
+                                     FileEditorManagerImpl editorManager,
+                                     DockManager dockManager,
+                                     boolean createOwnDockableContainer) {
+    super(applicationConcurrency, project, editorManager);
     myProject = project;
 
     myLayout = WrappedLayout.create();

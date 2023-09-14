@@ -18,6 +18,7 @@ package consulo.ide.impl.fileEditor;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
@@ -30,11 +31,10 @@ import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,16 +45,17 @@ import jakarta.annotation.Nonnull;
 public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   @Inject
   public UnifiedPsiAwareFileEditorManagerImpl(Application application,
+                                              ApplicationConcurrency applicationConcurrency,
                                               Project project,
                                               PsiManager psiManager,
                                               Provider<WolfTheProblemSolver> problemSolver, DockManager dockManager) {
-    super(application, project, psiManager, problemSolver, dockManager);
+    super(application, applicationConcurrency, project, psiManager, problemSolver, dockManager);
   }
 
   @Override
   protected void initUI() {
     if (mySplitters == null) {
-      mySplitters = new UnifiedFileEditorsSplitters(myProject, this, myDockManager, true);
+      mySplitters = new UnifiedFileEditorsSplitters(myApplicationConcurrency, myProject, this, myDockManager, true);
     }
   }
 

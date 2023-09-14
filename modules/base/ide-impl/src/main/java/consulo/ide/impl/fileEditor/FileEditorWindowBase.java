@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.*;
@@ -28,9 +30,9 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
@@ -66,6 +68,14 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
     }
   }
 
+  protected void updateFileIcon(VirtualFile file, Image image) {
+    final int index = findEditorIndex(findFileComposite(file));
+    LOG.assertTrue(index != -1);
+    setIconAt(index, image);
+  }
+
+  @Deprecated
+  @DeprecationInfo("Don't use this method since this method required UI thread, but #getFileIcon() can freeze UI thread")
   protected void updateFileIcon(VirtualFile file) {
     final int index = findEditorIndex(findFileComposite(file));
     LOG.assertTrue(index != -1);
@@ -84,7 +94,8 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
    * @return icon which represents file's type and modification status
    */
   @Nullable
-  private Image getFileIcon(@Nonnull final VirtualFile file) {
+  @RequiredReadAction
+  protected Image getFileIcon(@Nonnull final VirtualFile file) {
     if (!file.isValid()) {
       return UnknownFileType.INSTANCE.getIcon();
     }

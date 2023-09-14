@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
@@ -28,11 +29,16 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 public class DesktopAWTDockableEditorContainerFactory implements DockableEditorContainerFactory {
-  private Project myProject;
-  private FileEditorManagerImpl myFileEditorManager;
-  private DockManager myDockManager;
+  private final ApplicationConcurrency myApplicationConcurrency;
+  private final Project myProject;
+  private final FileEditorManagerImpl myFileEditorManager;
+  private final DockManager myDockManager;
 
-  public DesktopAWTDockableEditorContainerFactory(Project project, FileEditorManagerImpl fileEditorManager, DockManager dockManager) {
+  public DesktopAWTDockableEditorContainerFactory(ApplicationConcurrency applicationConcurrency,
+                                                  Project project,
+                                                  FileEditorManagerImpl fileEditorManager,
+                                                  DockManager dockManager) {
+    myApplicationConcurrency = applicationConcurrency;
     this.myProject = project;
     myFileEditorManager = fileEditorManager;
     myDockManager = dockManager;
@@ -45,27 +51,28 @@ public class DesktopAWTDockableEditorContainerFactory implements DockableEditorC
 
   private DockContainer createContainer(boolean loadingState) {
     final SimpleReference<DesktopDockableEditorTabbedContainer> containerRef = SimpleReference.create();
-    DesktopFileEditorsSplitters splitters = new DesktopFileEditorsSplitters(myProject, myFileEditorManager, myDockManager, false) {
-      @Override
-      public void afterFileClosed(VirtualFile file) {
-        containerRef.get().fireContentClosed(file);
-      }
+    DesktopFileEditorsSplitters splitters =
+      new DesktopFileEditorsSplitters(myProject, myApplicationConcurrency, myFileEditorManager, myDockManager, false) {
+        @Override
+        public void afterFileClosed(VirtualFile file) {
+          containerRef.get().fireContentClosed(file);
+        }
 
-      @Override
-      public void afterFileOpen(VirtualFile file) {
-        containerRef.get().fireContentOpen(file);
-      }
+        @Override
+        public void afterFileOpen(VirtualFile file) {
+          containerRef.get().fireContentOpen(file);
+        }
 
-      @Override
-      protected IdeFrame getFrame(Project project) {
-        return DockManager.getInstance(project).getIdeFrame(containerRef.get());
-      }
+        @Override
+        protected IdeFrame getFrame(Project project) {
+          return DockManager.getInstance(project).getIdeFrame(containerRef.get());
+        }
 
-      @Override
-      public boolean isFloating() {
-        return true;
-      }
-    };
+        @Override
+        public boolean isFloating() {
+          return true;
+        }
+      };
     if (!loadingState) {
       splitters.createCurrentWindow();
     }
