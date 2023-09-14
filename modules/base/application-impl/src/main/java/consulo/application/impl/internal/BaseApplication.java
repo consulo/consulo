@@ -21,8 +21,10 @@ import consulo.application.AccessToken;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
+import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.start.StartupProgress;
@@ -36,7 +38,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
@@ -57,6 +58,7 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -73,14 +75,13 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -444,14 +445,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     ShutDownTracker.getInstance().ensureStopperThreadsFinished();
 
+    ApplicationConcurrency concurrency = getInstance(ApplicationConcurrency.class);
+
     super.dispose();
 
     // Remove IW lock from EDT as EDT might be re-created which might lead to deadlock if anybody uses this disposed app
     if (!USE_SEPARATE_WRITE_THREAD) {
-      invokeLater(() -> releaseWriteIntentLock(), IdeaModalityState.NON_MODAL);
+      invokeLater(() -> releaseWriteIntentLock(), ModalityState.nonModal());
     }
 
-    AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
+    AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
     service.shutdownAppScheduledExecutorService();
 
     Disposer.dispose(myLastDisposable); // dispose it last
