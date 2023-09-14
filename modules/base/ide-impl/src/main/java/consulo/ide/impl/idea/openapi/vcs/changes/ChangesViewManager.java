@@ -160,7 +160,7 @@ public class ChangesViewManager implements ChangesViewI, Disposable, PersistentS
 
     myContent = new MyChangeViewContent(createChangeViewComponent(), ChangesViewContentManager.LOCAL_CHANGES, false);
     myContent.setCloseable(false);
-    myContentManager.addContent(myContent);
+    myProject.getUIAccess().give(() -> myContentManager.addContent(myContent));
 
     scheduleRefresh();
     myProject.getMessageBus().connect().subscribe(RemoteRevisionChangeListener.class, () -> ApplicationManager.getApplication().invokeLater(() -> refreshView(), IdeaModalityState.NON_MODAL, myProject.getDisposed()));
