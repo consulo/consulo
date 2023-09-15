@@ -143,7 +143,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
         for (int i = openFiles.length - 1; i >= 0; i--) {
           final VirtualFile file = openFiles[i];
           LOG.assertTrue(file != null);
-          updateFileIcon(file);
+          updateFileIconAsync(file);
         }
       }
     }
@@ -192,7 +192,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
       final VirtualFile currentFile = getCurrentFile();
       if (currentFile != null && Comparing.equal(psiFile.getVirtualFile(), currentFile)) {
-        updateFileIcon(currentFile);
+        updateFileIconAsync(currentFile);
       }
     }
   }

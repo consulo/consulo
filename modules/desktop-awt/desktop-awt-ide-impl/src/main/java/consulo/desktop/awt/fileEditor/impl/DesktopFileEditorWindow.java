@@ -510,7 +510,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         if (selectEditor) {
           setSelectedEditor((DesktopFileEditorWithProviderComposite)editor, focusEditor);
         }
-        myOwner.updateFileIcon(file);
+        myOwner.updateFileIconAsync(file);
         myOwner.updateFileColor(file);
       }
       myOwner.setCurrentWindow(this, false);

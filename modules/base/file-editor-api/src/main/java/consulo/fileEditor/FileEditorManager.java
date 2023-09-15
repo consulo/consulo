@@ -343,11 +343,11 @@ public abstract class FileEditorManager {
 
   public abstract Set<FileEditorsSplitters> getAllSplitters();
 
-  public void refreshIcons() {
+  public void refreshIconsAsync() {
     Set<FileEditorsSplitters> splitters = getAllSplitters();
     for (FileEditorsSplitters each : splitters) {
       for (VirtualFile file : getOpenFiles()) {
-        each.updateFileIcon(file);
+        each.updateFileIconAsync(file);
       }
     }
   }

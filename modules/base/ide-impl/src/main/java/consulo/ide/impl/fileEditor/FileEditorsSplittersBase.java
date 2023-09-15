@@ -87,7 +87,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
       for (VirtualFile file : getOpenFiles()) {
         updateFileBackgroundColor(file);
-        updateFileIcon(file);
+        updateFileIconAsync(file);
         updateFileColor(file);
       }
     });
@@ -179,7 +179,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     return myManager;
   }
 
-  private void updateFileIconLater(VirtualFile file) {
+  @Override
+  public void updateFileIconAsync(@Nonnull VirtualFile file) {
     myFilesToUpdateIconsFor.add(file);
     myIconUpdaterFuture.cancel(false);
 
@@ -217,11 +218,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   protected boolean showEmptyText() {
     return myCurrentWindow == null || myCurrentWindow.getFiles().length == 0;
-  }
-
-  @Override
-  public void updateFileIcon(@Nonnull final VirtualFile file) {
-    updateFileIconLater(file);
   }
 
   @Override

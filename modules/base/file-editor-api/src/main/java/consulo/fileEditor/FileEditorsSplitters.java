@@ -64,7 +64,13 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   @Nullable
   FileEditorWindow getCurrentWindow();
 
-  void updateFileIcon(VirtualFile virtualFile);
+  @Deprecated
+  @DeprecationInfo("Always call async version #updateFileIconAsync()")
+  default void updateFileIcon(@Nonnull VirtualFile virtualFile) {
+    updateFileIconAsync(virtualFile);
+  }
+
+  void updateFileIconAsync(@Nonnull VirtualFile virtualFile);
 
   void updateFileName(VirtualFile virtualFile);
 

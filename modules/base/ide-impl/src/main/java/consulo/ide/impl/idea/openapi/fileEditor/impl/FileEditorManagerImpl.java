@@ -378,7 +378,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (!isFileOpen(file)) return;
 
     updateFileColor(file);
-    updateFileIcon(file);
+    updateFileIconAsync(file);
     updateFileName(file);
     updateFileBackgroundColor(file);
   }
@@ -405,10 +405,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
    * Updates tab icon for the specified {@code file}. The {@code file}
    * should be opened in the myEditor, otherwise the method throws an assertion.
    */
-  protected void updateFileIcon(@Nonnull VirtualFile file) {
+  protected void updateFileIconAsync(@Nonnull VirtualFile file) {
     Set<FileEditorsSplitters> all = getAllSplitters();
     for (FileEditorsSplitters each : all) {
-      each.updateFileIcon(file);
+      each.updateFileIconAsync(file);
     }
   }
 
@@ -1627,7 +1627,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         final VirtualFile file = e.getFile();
         if (isFileOpen(file)) {
           updateFileName(file);
-          updateFileIcon(file); // file type can change after renaming
+          updateFileIconAsync(file); // file type can change after renaming
           updateFileBackgroundColor(file);
         }
       }
@@ -1641,7 +1641,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       assertDispatchThread();
       final VirtualFile file = e.getFile();
       if (isFileOpen(file)) {
-        updateFileIcon(file);
+        updateFileIconAsync(file);
         if (file.equals(getSelectedFiles()[0])) { // update "write" status
           final StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(myProject);
           assert statusBar != null;
@@ -1678,7 +1678,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         final FileEditor editor = (FileEditor)e.getSource();
         final FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
-          updateFileIcon(composite.getFile());
+          updateFileIconAsync(composite.getFile());
         }
       }
       else if (FileEditor.PROP_VALID.equals(propertyName)) {
@@ -1728,7 +1728,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     private void updateFileStatus(final VirtualFile file) {
       updateFileColor(file);
-      updateFileIcon(file);
+      updateFileIconAsync(file);
     }
   }
 
@@ -1743,7 +1743,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       for (int i = openFiles.length - 1; i >= 0; i--) {
         final VirtualFile file = openFiles[i];
         LOG.assertTrue(file != null);
-        updateFileIcon(file);
+        updateFileIconAsync(file);
       }
     }
   }
@@ -1837,7 +1837,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       final VirtualFile[] openFiles = getOpenFiles();
       for (int i = openFiles.length - 1; i >= 0; i--) {
         final VirtualFile file = openFiles[i];
-        updateFileIcon(file);
+        updateFileIconAsync(file);
         updateFileName(file);
         updateFileBackgroundColor(file);
       }
@@ -1863,7 +1863,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       @Override
       public void run() {
         if (isFileOpen(file)) {
-          updateFileIcon(file);
+          updateFileIconAsync(file);
           updateFileColor(file);
           updateFileBackgroundColor(file);
         }
@@ -1926,14 +1926,5 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   public AsyncResult<Void> getReady(@Nonnull Object requestor) {
     return myBusyObject.getReady(requestor);
-  }
-
-  public void refreshIcons() {
-    Set<FileEditorsSplitters> splitters = getAllSplitters();
-    for (FileEditorsSplitters each : splitters) {
-      for (VirtualFile file : getOpenFiles()) {
-        each.updateFileIcon(file);
-      }
-    }
   }
 }

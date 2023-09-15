@@ -18,17 +18,15 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.internal.FileEditorManagerEx;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.IdeBundle;
-import consulo.language.impl.util.NoAccessDuringPsiEvents;
-import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.Queue;
 import consulo.ide.impl.idea.util.exception.FrequentErrorLogger;
+import consulo.language.impl.util.NoAccessDuringPsiEvents;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
@@ -44,14 +42,16 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.Queue;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
+import consulo.virtualFileSystem.event.BatchFileChangeListener;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -378,7 +378,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
     try {
       myPublisher.exitDumbMode();
-      FileEditorManagerEx.getInstanceEx(myProject).refreshIcons();
+      FileEditorManager.getInstance(myProject).refreshIconsAsync();
     }
     finally {
       // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
