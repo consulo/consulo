@@ -131,12 +131,6 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
     KeymapManager.getInstance().addKeymapManagerListener(keymapListener, this);
   }
 
-  @Nonnull
-  @Override
-  protected ModalityState getComponentModality() {
-    return IdeaModalityState.stateForComponent(myComponent);
-  }
-
   @Override
   public void revalidate() {
     myComponent.revalidate();

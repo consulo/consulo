@@ -32,12 +32,12 @@ import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -56,9 +56,6 @@ import java.util.function.Supplier;
  * @since 2018-05-11
  */
 public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> implements FileEditorsSplitters, Disposable {
-  private record WindowIconUpdateData<WW extends FileEditorWindowBase>(WW window, Image icon) {
-  }
-
   private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
   @Nonnull
@@ -70,7 +67,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
   protected Element mySplittersElement;  // temporarily used during initialization
 
-  private final MergingQueue<VirtualFile, WindowIconUpdateData<W>> myIconUpdater;
+  private final MergingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
 
   protected FileEditorsSplittersBase(@Nonnull ApplicationConcurrency applicationConcurrency,
                                      @Nonnull Project project,
@@ -82,15 +79,15 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
       @Override
       protected void calculateValue(@Nonnull Project project,
                                     @Nonnull VirtualFile key,
-                                    @Nonnull Consumer<WindowIconUpdateData<W>> consumer) {
+                                    @Nonnull Consumer<Pair<W, Image>> consumer) {
         collectFileIcons(key, consumer);
       }
 
       @Override
       protected void updateValueInsideUI(@Nonnull Project project,
                                          @Nonnull VirtualFile key,
-                                         @Nonnull WindowIconUpdateData<W> value) {
-        value.window().updateFileIcon(key, value.icon());
+                                         @Nonnull Pair<W, Image> value) {
+        value.getFirst().updateFileIcon(key, value.getSecond());
       }
     };
 
@@ -112,9 +109,6 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   @RequiredUIAccess
   protected abstract void createCurrentWindow();
-
-  @Nonnull
-  protected abstract ModalityState getComponentModality();
 
   protected void stopListeningFocus() {
   }
@@ -198,12 +192,12 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     myIconUpdater.queueAdd(file);
   }
 
-  private void collectFileIcons(final VirtualFile file, Consumer<WindowIconUpdateData<W>> windowIcons) {
+  private void collectFileIcons(final VirtualFile file, Consumer<Pair<W, Image>> windowIcons) {
     final Collection<W> windows = findWindows(file);
     for (W window : windows) {
       Image fileIcon = myProject.getApplication().runReadAction((Supplier<Image>)() -> window.getFileIcon(file));
 
-      windowIcons.accept(new WindowIconUpdateData<>(window, fileIcon));
+      windowIcons.accept(Pair.create(window, fileIcon));
     }
   }
 

@@ -16,7 +16,6 @@
 package consulo.ide.impl.fileEditor;
 
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
@@ -25,7 +24,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.WrappedLayout;
@@ -112,12 +110,6 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
     LOG.assertTrue(myCurrentWindow == null);
     setCurrentWindow(new UnifiedFileEditorWindow(myProject, myManager, this));
     myLayout.set(myCurrentWindow.getUIComponent());
-  }
-
-  @Nonnull
-  @Override
-  protected ModalityState getComponentModality() {
-    return IdeaModalityState.any();
   }
 
   @Override

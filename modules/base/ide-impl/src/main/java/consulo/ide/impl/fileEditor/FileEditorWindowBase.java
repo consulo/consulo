@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.fileEditor;
 
-import consulo.annotation.DeprecationInfo;
+import com.google.common.base.Objects;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
@@ -23,7 +23,6 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
@@ -73,14 +72,6 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
     if (index != -1) {
       setIconAt(index, image);
     }
-  }
-
-  @Deprecated
-  @DeprecationInfo("Don't use this method since this method required UI thread, but #getFileIcon() can freeze UI thread")
-  protected void updateFileIcon(VirtualFile file) {
-    final int index = findEditorIndex(findFileComposite(file));
-    LOG.assertTrue(index != -1);
-    setIconAt(index, getFileIcon(file));
   }
 
   protected void updateFileBackgroundColor(@Nonnull VirtualFile file) {
@@ -151,7 +142,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
   public void closeAllExcept(VirtualFile selectedFile) {
     final VirtualFile[] files = getFiles();
     for (final VirtualFile file : files) {
-      if (!Comparing.equal(file, selectedFile) && !isFilePinned(file)) {
+      if (!Objects.equal(file, selectedFile) && !isFilePinned(file)) {
         closeFile(file);
       }
     }

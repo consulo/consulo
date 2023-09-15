@@ -35,6 +35,8 @@ import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ide.impl.idea.ui.tabs.JBTabs;
+import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
@@ -779,8 +781,11 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     }
     boolean wasPinned = editorComposite.isPinned();
     editorComposite.setPinned(pinned);
-    if (wasPinned != pinned && ApplicationManager.getApplication().isDispatchThread()) {
-      updateFileIcon(file);
+    if (wasPinned != pinned && UIAccess.isUIThread()) {
+      JBTabs tabs = myTabbedPane.getTabs();
+      if (tabs instanceof JBTabsImpl implTabs) {
+        implTabs.doLayout();
+      }
     }
   }
 
