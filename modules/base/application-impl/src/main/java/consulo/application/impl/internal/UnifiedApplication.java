@@ -128,14 +128,20 @@ public abstract class UnifiedApplication extends BaseApplication {
 
   @Nonnull
   @Override
-  public IdeaModalityState getCurrentModalityState() {
-    return IdeaModalityState.NON_MODAL;
+  public ModalityState getCurrentModalityState() {
+    return ModalityState.nonModal();
   }
 
   @Nonnull
   @Override
-  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return IdeaModalityState.NON_MODAL;
+  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    return ModalityState.nonModal();
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState getDefaultModalityState() {
+    return ModalityState.nonModal();
   }
 
   @RequiredUIAccess

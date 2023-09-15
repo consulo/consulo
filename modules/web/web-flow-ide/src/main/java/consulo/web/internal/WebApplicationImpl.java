@@ -1,6 +1,5 @@
 package consulo.web.internal;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.logging.Logger;
@@ -8,10 +7,9 @@ import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.awt.*;
+
 import java.util.function.BooleanSupplier;
 
 /**
@@ -60,24 +58,6 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveAndWaitIfNeed(runnable);
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getCurrentModalityState() {
-    return IdeaModalityState.NON_MODAL;
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return IdeaModalityState.NON_MODAL;
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getDefaultModalityState() {
-    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
