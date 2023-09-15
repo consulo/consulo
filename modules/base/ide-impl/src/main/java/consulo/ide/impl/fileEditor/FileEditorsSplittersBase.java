@@ -45,10 +45,8 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -58,12 +56,11 @@ import java.util.function.Supplier;
  * @since 2018-05-11
  */
 public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> implements FileEditorsSplitters, Disposable {
-  private record WindowIconUpdateData<WW extends FileEditorWindowBase>(WW window, VirtualFile file, Image icon) {
+  private record WindowIconUpdateData<WW extends FileEditorWindowBase>(WW window, Image icon) {
   }
 
   private static final Logger LOG = Logger.getInstance(FileEditorsSplittersBase.class);
 
-  private final ApplicationConcurrency myApplicationConcurrency;
   @Nonnull
   protected final Project myProject;
   protected final FileEditorManagerImpl myManager;
@@ -72,13 +69,30 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected W myCurrentWindow;
   protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
   protected Element mySplittersElement;  // temporarily used during initialization
-  private Future<?> myIconUpdaterFuture = CompletableFuture.completedFuture(null);
-  private final Set<VirtualFile> myFilesToUpdateIconsFor = new HashSet<>();
 
-  protected FileEditorsSplittersBase(ApplicationConcurrency applicationConcurrency, Project project, FileEditorManagerImpl manager) {
-    myApplicationConcurrency = applicationConcurrency;
+  private final MergingQueue<VirtualFile, WindowIconUpdateData<W>> myIconUpdater;
+
+  protected FileEditorsSplittersBase(@Nonnull ApplicationConcurrency applicationConcurrency,
+                                     @Nonnull Project project,
+                                     @Nonnull FileEditorManagerImpl manager) {
     myProject = project;
     myManager = manager;
+
+    myIconUpdater = new MergingQueue<>(applicationConcurrency, project, 200) {
+      @Override
+      protected void calculateValue(@Nonnull Project project,
+                                    @Nonnull VirtualFile key,
+                                    @Nonnull Consumer<WindowIconUpdateData<W>> consumer) {
+        collectFileIcons(key, consumer);
+      }
+
+      @Override
+      protected void updateValueInsideUI(@Nonnull Project project,
+                                         @Nonnull VirtualFile key,
+                                         @Nonnull WindowIconUpdateData<W> value) {
+        value.window().updateFileIcon(key, value.icon());
+      }
+    };
 
     project.getApplication().getMessageBus().connect(this).subscribe(UISettingsListener.class, source -> {
       if (!project.isOpen()) {
@@ -181,38 +195,15 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   @Override
   public void updateFileIconAsync(@Nonnull VirtualFile file) {
-    myFilesToUpdateIconsFor.add(file);
-    myIconUpdaterFuture.cancel(false);
-
-    ModalityState modality = getComponentModality();
-    myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
-      if (myProject.isDisposed()) return;
-
-      List<WindowIconUpdateData<W>> windowIcons = new ArrayList<>(myFilesToUpdateIconsFor.size());
-      for (VirtualFile file1 : myFilesToUpdateIconsFor) {
-        collectFileIcons(file1, windowIcons);
-      }
-
-      myFilesToUpdateIconsFor.clear();
-
-      if (windowIcons.isEmpty()) {
-        return;
-      }
-
-      myProject.getApplication().invokeLater(() -> {
-        for (WindowIconUpdateData data : windowIcons) {
-          data.window().updateFileIcon(file, data.icon());
-        }
-      }, modality);
-    }, 200, TimeUnit.MILLISECONDS);
+    myIconUpdater.queueAdd(file);
   }
 
-  private void collectFileIcons(final VirtualFile file, List<WindowIconUpdateData<W>> windowIcons) {
+  private void collectFileIcons(final VirtualFile file, Consumer<WindowIconUpdateData<W>> windowIcons) {
     final Collection<W> windows = findWindows(file);
     for (W window : windows) {
       Image fileIcon = myProject.getApplication().runReadAction((Supplier<Image>)() -> window.getFileIcon(file));
 
-      windowIcons.add(new WindowIconUpdateData<>(window, file, fileIcon));
+      windowIcons.accept(new WindowIconUpdateData<>(window, fileIcon));
     }
   }
 
@@ -488,8 +479,8 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
 
   @Override
   public void dispose() {
-    myIconUpdaterFuture.cancel(false);
-    
+    myIconUpdater.dispose();
+
     stopListeningFocus();
   }
 
