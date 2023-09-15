@@ -70,8 +70,9 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
 
   protected void updateFileIcon(VirtualFile file, Image image) {
     final int index = findEditorIndex(findFileComposite(file));
-    LOG.assertTrue(index != -1);
-    setIconAt(index, image);
+    if (index != -1) {
+      setIconAt(index, image);
+    }
   }
 
   @Deprecated
