@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.fileEditor;
 
-import com.google.common.base.Objects;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
@@ -33,6 +32,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -142,7 +142,7 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
   public void closeAllExcept(VirtualFile selectedFile) {
     final VirtualFile[] files = getFiles();
     for (final VirtualFile file : files) {
-      if (!Objects.equal(file, selectedFile) && !isFilePinned(file)) {
+      if (!Objects.equals(file, selectedFile) && !isFilePinned(file)) {
         closeFile(file);
       }
     }
