@@ -27,9 +27,9 @@ import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileEx;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;

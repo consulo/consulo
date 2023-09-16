@@ -782,6 +782,12 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
       Map<FileEditor, HighlightingPass[]> passes = new HashMap<>(activeEditors.size());
       for (FileEditor fileEditor : activeEditors) {
+        if (fileEditor instanceof TextEditor textEditor && !AsyncEditorLoader.isEditorLoaded(textEditor.getEditor())) {
+          // make sure the highlighting is restarted when the editor is finally loaded, because otherwise some crazy things happen,
+          // for instance `FileEditor.getBackgroundHighlighter()` returning null, essentially stopping highlighting silently
+          AsyncEditorLoader.performWhenLoaded(((TextEditor)fileEditor).getEditor(), this);
+        }
+
         BackgroundEditorHighlighter highlighter = fileEditor.getBackgroundHighlighter();
         if (highlighter != null) {
           HighlightingPass[] highlightingPasses = highlighter.createPassesForEditor();
@@ -790,7 +796,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       }
 
       // wait for heavy processing to stop, re-schedule daemon but not too soon
-      boolean heavyProcessIsRunning = ReadAction.compute(() -> heavyProcessIsRunning());
+      boolean heavyProcessIsRunning = heavyProcessIsRunning();
       if (heavyProcessIsRunning) {
         boolean hasPasses = false;
         for (Map.Entry<FileEditor, HighlightingPass[]> entry : passes.entrySet()) {
