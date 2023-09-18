@@ -15,12 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.service.project.ExternalSystemProjectResolver;
 import consulo.externalSystem.task.ExternalSystemTaskManager;
-import consulo.externalSystem.util.ExternalSystemConstants;
-import consulo.application.util.registry.Registry;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
@@ -80,10 +78,6 @@ public class RemoteExternalSystemFacadeImpl<S extends ExternalSystemExecutionSet
               String.format("Can't create external system facade. Reason: given external system build manager (%s) must be IS-A '%s'", buildManagerClass,
                             ExternalSystemTaskManager.class));
     }
-
-    // running the code indicates remote communication mode with external system
-    Registry.get(System.getProperty(ExternalSystemConstants.EXTERNAL_SYSTEM_ID_KEY) + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX)
-            .setValue(false);
 
     RemoteExternalSystemFacadeImpl facade = new RemoteExternalSystemFacadeImpl(resolverClass, buildManagerClass);
     facade.init();

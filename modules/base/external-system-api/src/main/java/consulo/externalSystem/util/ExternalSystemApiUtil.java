@@ -858,8 +858,9 @@ public class ExternalSystemApiUtil {
    * @return <code>true</code> if the ide is configured to work with external system api from the ide process;
    * <code>false</code> otherwise
    */
+  @Deprecated(forRemoval = true)
   public static boolean isInProcessMode(ProjectSystemId externalSystemId) {
-    return Registry.is(externalSystemId.getId() + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX, false);
+    return externalSystemId.isInProcessMode();
   }
 
   /**
