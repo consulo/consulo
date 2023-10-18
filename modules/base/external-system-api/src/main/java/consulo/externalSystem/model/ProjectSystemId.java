@@ -56,7 +56,7 @@ public class ProjectSystemId implements Serializable {
    * <code>false</code> otherwise
    */
   public boolean isInProcessMode() {
-    return false;
+    return true;
   }
 
   @Nonnull
