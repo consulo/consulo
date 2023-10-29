@@ -15,33 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.module.Module;
+import consulo.compiler.artifact.Artifact;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.setting.ui.MasterDetailsComponent;
-import consulo.ui.ex.awt.MasterDetailsState;
-import consulo.compiler.artifact.Artifact;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.module.Module;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsState;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;

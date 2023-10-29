@@ -140,11 +140,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   @Override
-  public void addNode(MyNode nodeToAdd, MyNode parent) {
-    super.addNode(nodeToAdd, parent);
-  }
-
-  @Override
   @Nonnull
   protected ArrayList<AnAction> createActions(final boolean fromPopup) {
     final ArrayList<AnAction> result = super.createActions(fromPopup);

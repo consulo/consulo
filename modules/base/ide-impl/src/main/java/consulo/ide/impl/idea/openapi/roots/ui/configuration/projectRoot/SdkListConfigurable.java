@@ -42,10 +42,8 @@ import org.jetbrains.annotations.Nls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
+
+import javax.swing.tree.*;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -116,7 +114,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         sdk.setName(newName);
         sdk.setPredefined(false);
 
-        sdksModel.doAdd(sdk, sdk1 -> addSdkNode(sdk1, true));
+        sdksModel.doAdd(sdk, sdk1 -> addSdkNode(sdk1));
       }
     }
 
@@ -240,31 +238,33 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
     return result;
   }
 
-  public boolean addSdkNode(final Sdk sdk, final boolean selectInTree) {
-    if (!myUiDisposed) {
-      SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
-
-      // todo myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(sdk));
-
-      MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, sdksModel, TREE_UPDATER));
-
-      final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
-      if (groupNode != null) {
-        addNode(newSdkNode, groupNode);
-      }
-      else {
-        final MyNode sdkGroupNode = createSdkGroupNode((SdkType)sdk.getSdkType());
-
-        addNode(sdkGroupNode, myRoot);
-        addNode(newSdkNode, sdkGroupNode);
-      }
-
-      if (selectInTree) {
-        selectNodeInTree(newSdkNode);
-      }
-      return true;
+  public boolean addSdkNode(final Sdk sdk) {
+    if (myUiDisposed) {
+      return false;
     }
-    return false;
+
+    SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
+
+    // todo myContext.getDaemonAnalyzer().queueUpdate(new SdkProjectStructureElement(sdk));
+
+    MyNode newSdkNode = new MyNode(new SdkConfigurable((SdkImpl)sdk, sdksModel, TREE_UPDATER));
+
+    final MyNode groupNode = MasterDetailsComponent.findNodeByObject(myRoot, sdk.getSdkType());
+    if (groupNode != null) {
+      addNode(newSdkNode, groupNode);
+    }
+    else {
+      final MyNode sdkGroupNode = createSdkGroupNode((SdkType)sdk.getSdkType());
+
+      sdkGroupNode.add(newSdkNode);
+
+      addNode(sdkGroupNode, myRoot);
+
+      TreeUtil.expandAll(myTree);
+    }
+
+    selectNodeInTree(newSdkNode);
+    return true;
   }
 
   @Override
@@ -283,8 +283,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
       final TreeNode childAt = myRoot.getChildAt(i);
       if (childAt instanceof MyNode) {
         if (childAt.getChildCount() == 0) {
-          myRoot.remove((MutableTreeNode)childAt);
-          ((DefaultTreeModel)myTree.getModel()).reload(myRoot);
+          ((DefaultTreeModel)myTree.getModel()).removeNodeFromParent((MutableTreeNode)childAt);
         }
       }
     }
@@ -307,10 +306,11 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
   @RequiredUIAccess
   @Override
   public void reset() {
-    super.reset();
     SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
     sdksModel.reset();
+
+    super.reset();
 
     myTree.setRootVisible(false);
   }
@@ -360,7 +360,7 @@ public class SdkListConfigurable extends BaseStructureConfigurable implements Ap
         SettingsSdksModel sdksModel = myShowSettingsUtil.getSdksModel();
 
         DefaultActionGroup group = new DefaultActionGroup(ProjectBundle.message("add.action.name"), true);
-        sdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk, true), ADD_SDK_FILTER);
+        sdksModel.createAddActions(group, myTree, sdk -> addSdkNode(sdk), ADD_SDK_FILTER);
         return group.getChildren(null);
       }
     };
