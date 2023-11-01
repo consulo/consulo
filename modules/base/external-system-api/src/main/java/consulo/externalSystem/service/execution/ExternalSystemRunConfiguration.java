@@ -38,7 +38,6 @@ import consulo.project.Project;
 import consulo.util.io.NetUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.nodep.collection.ContainerUtilRt;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
@@ -48,6 +47,7 @@ import org.jdom.Element;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,10 +58,14 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
   private static final Logger LOG = Logger.getInstance(ExternalSystemRunConfiguration.class);
 
+  @Nonnull
+  private final ProjectSystemId myExternalSystemId;
+
   private ExternalSystemTaskExecutionSettings mySettings = new ExternalSystemTaskExecutionSettings();
 
   public ExternalSystemRunConfiguration(@Nonnull ProjectSystemId externalSystemId, Project project, ConfigurationFactory factory, String name) {
     super(project, factory, name);
+    myExternalSystemId = externalSystemId;
     mySettings.setExternalSystemIdString(externalSystemId.getId());
   }
 
@@ -101,7 +105,8 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     SettingsEditorGroup<ExternalSystemRunConfiguration> group = new SettingsEditorGroup<>();
-    group.addEditor(ExecutionBundle.message("run.configuration.configuration.tab.title"), new ExternalSystemRunConfigurationEditor(getProject(), mySettings.getExternalSystemId()));
+    group.addEditor(ExecutionBundle.message("run.configuration.configuration.tab.title"), new ExternalSystemRunConfigurationEditor(getProject(),
+                                                                                                                                   myExternalSystemId));
     group.addEditor(ExecutionBundle.message("logs.tab.title"), new LogConfigurationPanel<>());
     return group;
   }
@@ -109,11 +114,13 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
   @Nullable
   @Override
   public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
-    return new MyRunnableState(mySettings, getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
+    return new MyRunnableState(myExternalSystemId, mySettings, getProject(), DefaultDebugExecutor.EXECUTOR_ID.equals(executor.getId()));
   }
 
   public static class MyRunnableState implements RunProfileState {
 
+    @Nonnull
+    private final ProjectSystemId myExternalSystemId;
     @Nonnull
     private final ExternalSystemTaskExecutionSettings mySettings;
     @Nonnull
@@ -121,7 +128,11 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
     private final int myDebugPort;
 
-    public MyRunnableState(@Nonnull ExternalSystemTaskExecutionSettings settings, @Nonnull Project project, boolean debug) {
+    public MyRunnableState(@Nonnull ProjectSystemId externalSystemId,
+                           @Nonnull ExternalSystemTaskExecutionSettings settings,
+                           @Nonnull Project project,
+                           boolean debug) {
+      myExternalSystemId = externalSystemId;
       mySettings = settings;
       myProject = project;
       int port;
@@ -151,7 +162,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
 
       ExternalSystemApiUtil.updateRecentTasks(new ExternalTaskExecutionInfo(mySettings.clone(), executor.getId()), myProject);
       ConsoleView console = TextConsoleBuilderFactory.getInstance().createBuilder(myProject).getConsole();
-      final List<ExternalTaskPojo> tasks = ContainerUtilRt.newArrayList();
+      final List<ExternalTaskPojo> tasks = new ArrayList<>();
       for (String taskName : mySettings.getTaskNames()) {
         tasks.add(new ExternalTaskPojo(taskName, mySettings.getExternalProjectPath(), null));
       }
@@ -167,7 +178,7 @@ public class ExternalSystemRunConfiguration extends LocatableConfigurationBase {
       FileDocumentManager.getInstance().saveAllDocuments();
 
       ExternalSystemInternalHelper helper = Application.get().getInstance(ExternalSystemInternalHelper.class);
-      final ExternalSystemTask task = helper.createExecuteSystemTask(mySettings.getExternalSystemId(), myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
+      final ExternalSystemTask task = helper.createExecuteSystemTask(myExternalSystemId, myProject, tasks, mySettings.getVmOptions(), mySettings.getScriptParameters(), debuggerSetup);
 
       final MyProcessHandler processHandler = new MyProcessHandler(task);
       console.attachToProcess(processHandler);

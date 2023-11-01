@@ -15,13 +15,12 @@
  */
 package consulo.externalSystem.model.execution;
 
-import consulo.externalSystem.model.ProjectSystemId;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,10 +57,6 @@ public class ExternalSystemTaskExecutionSettings implements Cloneable {
 
   public String getExternalSystemIdString() {
     return myExternalSystemIdString;
-  }
-
-  public ProjectSystemId getExternalSystemId() {
-    return new ProjectSystemId(myExternalSystemIdString);
   }
 
   public void setExternalSystemIdString(String externalSystemIdString) {

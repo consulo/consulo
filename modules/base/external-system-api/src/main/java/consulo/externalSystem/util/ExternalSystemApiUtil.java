@@ -354,15 +354,16 @@ public class ExternalSystemApiUtil {
    * @param project  target project
    */
   public static void updateRecentTasks(@Nonnull ExternalTaskExecutionInfo taskInfo, @Nonnull Project project) {
-    ProjectSystemId externalSystemId = taskInfo.getSettings().getExternalSystemId();
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManagerStrict(taskInfo.getSettings().getExternalSystemIdString());
+
+    ProjectSystemId externalSystemId = manager.getSystemId();
+
     ExternalSystemRecentTasksList recentTasksList = getToolWindowElement(ExternalSystemRecentTasksList.class, project, ExternalSystemDataKeys.RECENT_TASKS_LIST, externalSystemId);
     if (recentTasksList == null) {
       return;
     }
     recentTasksList.setFirst(taskInfo);
 
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
-    assert manager != null;
     AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
     settings.setRecentTasks(recentTasksList.getModel().getTasks());
   }
@@ -497,14 +498,29 @@ public class ExternalSystemApiUtil {
     return toCanonicalPath(file.getPath());
   }
 
+  @Nonnull
+  public static ExternalSystemManager<?, ?, ?, ?, ?> getManagerStrict(@Nonnull String externalSystemId) {
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = getManager(externalSystemId);
+    if (manager != null) {
+      return manager;
+    }
+
+    throw new IllegalArgumentException("There no " + ExternalSystemManager.class.getName() + " for id: " + externalSystemId);
+  }
+
   @Nullable
-  public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull ProjectSystemId externalSystemId) {
+  public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull String externalSystemId) {
     for (ExternalSystemManager manager : ExternalSystemManager.EP_NAME.getExtensionList()) {
-      if (externalSystemId.equals(manager.getSystemId())) {
+      if (Objects.equals(externalSystemId, manager.getSystemId().getId())) {
         return manager;
       }
     }
     return null;
+  }
+
+  @Nullable
+  public static ExternalSystemManager<?, ?, ?, ?, ?> getManager(@Nonnull ProjectSystemId externalSystemId) {
+    return getManager(externalSystemId.getId());
   }
 
   @SuppressWarnings("ManualArrayToCollectionCopy")

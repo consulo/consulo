@@ -1,6 +1,5 @@
 package consulo.externalSystem.service.execution;
 
-import consulo.application.util.NotNullLazyValue;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
@@ -19,6 +18,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -42,18 +42,14 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
   private final ConfigurationFactory[] myFactories = new ConfigurationFactory[1];
 
   @Nonnull
-  private final NotNullLazyValue<Image> myIcon = new NotNullLazyValue<Image>() {
-    @Nonnull
-    @Override
-    protected Image compute() {
-      ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
-      Image result = null;
-      if (manager instanceof ExternalSystemUiAware) {
-        result = ((ExternalSystemUiAware)manager).getProjectIcon();
-      }
-      return result == null ? PlatformIconGroup.nodesTask() : result;
+  private final LazyValue<Image> myIcon = LazyValue.notNull(() -> {
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(getExternalSystemId());
+    Image result = null;
+    if (manager instanceof ExternalSystemUiAware) {
+      result = ((ExternalSystemUiAware)manager).getProjectIcon();
     }
-  };
+    return result == null ? PlatformIconGroup.nodesTask() : result;
+  });
 
   protected AbstractExternalSystemTaskConfigurationType(@Nonnull final ProjectSystemId externalSystemId) {
     myExternalSystemId = externalSystemId;
@@ -99,7 +95,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
 
   @Override
   public Image getIcon() {
-    return myIcon.getValue();
+    return myIcon.get();
   }
 
   @Nonnull
@@ -115,22 +111,22 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
 
   @Nonnull
   public static String generateName(@Nonnull Project project, @Nonnull ExternalSystemTaskExecutionSettings settings) {
-    return generateName(project, settings.getExternalSystemId(), settings.getExternalProjectPath(), settings.getTaskNames());
+    return generateName(project, settings.getExternalSystemIdString(), settings.getExternalProjectPath(), settings.getTaskNames());
   }
 
   @Nonnull
-  public static String generateName(@Nonnull Project project, @Nonnull ExternalTaskPojo task, @Nonnull ProjectSystemId externalSystemId) {
+  public static String generateName(@Nonnull Project project, @Nonnull ExternalTaskPojo task, @Nonnull String externalSystemId) {
     return generateName(project, externalSystemId, task.getLinkedExternalProjectPath(), Collections.singletonList(task.getName()));
   }
 
   @Nonnull
   public static String generateName(@Nonnull Project project,
-                                    @Nonnull ProjectSystemId externalSystemId,
+                                    @Nonnull String externalSystemId,
                                     @Nullable String externalProjectPath,
                                     @Nonnull List<String> taskNames)
   {
-    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
-    assert manager != null;
+    ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManagerStrict(externalSystemId);
+
     AbstractExternalSystemSettings<?, ?,?> s = manager.getSettingsProvider().apply(project);
     Map<String/* project dir path */, String/* project file path */> rootProjectPaths = new HashMap<>();
     for (ExternalProjectSettings projectSettings : s.getLinkedProjectsSettings()) {
