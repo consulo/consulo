@@ -20,8 +20,11 @@ import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
+import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.MultiMap;
@@ -44,7 +47,7 @@ public class LightProject extends BaseComponentManager implements Project {
   private final LightExtensionRegistrator myRegistrator;
 
   public LightProject(@Nonnull Application application, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(application, name, ComponentScope.PROJECT, false);
+    super(application, name, ComponentScope.PROJECT, new ComponentBinding(new InjectingBindingLoader(), new TopicBindingLoader()), false);
     myApplication = application;
     myName = name;
     myRegistrator = registrator;

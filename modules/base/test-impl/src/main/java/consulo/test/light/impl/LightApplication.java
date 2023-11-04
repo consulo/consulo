@@ -25,16 +25,19 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
-import consulo.disposer.Disposable;
+import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
+import consulo.component.internal.inject.TopicBindingLoader;
+import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.function.ThrowableSupplier;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -50,7 +53,11 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   private final LightExtensionRegistrator myRegistrator;
 
   public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
-    super(null, "LightApplication", ComponentScope.APPLICATION, false);
+    super(null,
+          "LightApplication",
+          ComponentScope.APPLICATION,
+          new ComponentBinding(new InjectingBindingLoader(), new TopicBindingLoader()),
+          false);
     myLastDisposable = lastDisposable;
     myRegistrator = registrator;
 
