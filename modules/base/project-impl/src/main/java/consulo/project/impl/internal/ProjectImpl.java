@@ -24,6 +24,7 @@ import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.TimedReference;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StoreUtil;
@@ -84,8 +85,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
                      @Nonnull ProjectManager manager,
                      @Nonnull String dirPath,
                      String projectName,
-                     boolean noUIThread) {
-    super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT);
+                     boolean noUIThread,
+                     ComponentBinding componentBinding) {
+    super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT, componentBinding);
     myDirPath = dirPath;
 
     putUserData(CREATION_TIME, System.nanoTime());

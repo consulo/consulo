@@ -15,26 +15,27 @@
  */
 package consulo.project.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.project.internal.DefaultProjectFactory;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.internal.DefaultProjectFactory;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -50,15 +51,17 @@ public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements 
   private boolean myDefaultProjectWasDisposed = false;
 
   @Inject
-  public DefaultProjectFactoryImpl(@Nonnull Application application, @Nonnull ProjectManager projectManager) {
-    myDefaultProject = new DefaultProjectImpl(application, projectManager, "", application.isUnitTestMode());
+  public DefaultProjectFactoryImpl(@Nonnull Application application,
+                                   @Nonnull ProjectManager projectManager,
+                                   @Nonnull ComponentBinding binding) {
+    myDefaultProject = new DefaultProjectImpl(application, projectManager, "", binding);
     myDefaultProject.initNotLazyServices();
     myDefaultProject.setInitialized();
   }
 
   @TestOnly
   public boolean isDefaultProjectInitialized() {
-    return myDefaultProject != null;                                                                  
+    return myDefaultProject != null;
   }
 
   @Override

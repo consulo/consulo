@@ -27,6 +27,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
@@ -39,7 +40,7 @@ import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
+import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
@@ -98,6 +99,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   @Nonnull
   private final Application myApplication;
+  @Nonnull
+  private final ComponentBinding myComponentBinding;
+  @Nonnull
   private final ProgressIndicatorProvider myProgressManager;
 
   private final EventDispatcher<ProjectManagerListener> myDeprecatedListenerDispatcher =
@@ -113,8 +117,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   private ExcludeRootsCache myExcludeRootsCache;
 
   @Inject
-  public ProjectManagerImpl(@Nonnull Application application) {
+  public ProjectManagerImpl(@Nonnull Application application, @Nonnull ComponentBinding componentBinding) {
     myApplication = application;
+    myComponentBinding = componentBinding;
     myProgressManager = application.getProgressManager();
 
     MessageBus messageBus = application.getMessageBus();
@@ -227,7 +232,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   private ProjectImpl createProject(@Nullable String projectName,
                                     @Nonnull String dirPath,
                                     boolean noUICall) {
-    return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), projectName, noUICall);
+    return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), projectName, noUICall, myComponentBinding);
   }
 
   @Nonnull

@@ -30,6 +30,7 @@ import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.json.JsonBaseRequestHandler;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.builtinWebServer.json.JsonPostRequestHandler;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -106,8 +107,8 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
   @Nonnull
   @Override
-  protected Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
-    return new DesktopApplicationImpl(isHeadlessMode, splashRef);
+  protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+    return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
   }
 
   @Nullable

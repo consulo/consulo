@@ -6,16 +6,17 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.internal.inject.InjectingContainerOwner;
+import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.collection.*;
 import consulo.util.lang.CompoundRuntimeException;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.lang.reflect.Proxy;
 import java.util.Queue;
 import java.util.*;
@@ -58,6 +59,9 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   private final RootBus myRootBus;
 
+  @Nonnull
+  protected final TopicBindingLoader myTopicBindingLoader;
+
   //is used for debugging purposes
   private final InjectingContainerOwner myOwner;
   private boolean myDisposed;
@@ -65,7 +69,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   private final MessageBusConnectionImpl myLazyConnection;
 
-  public MessageBusImpl(@Nonnull InjectingContainerOwner owner, @Nonnull MessageBusImpl parentBus) {
+  public MessageBusImpl(@Nonnull TopicBindingLoader topicBindingLoader, @Nonnull InjectingContainerOwner owner, @Nonnull MessageBusImpl parentBus) {
+    myTopicBindingLoader = topicBindingLoader;
     myOwner = owner;
     myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
     myParentBus = parentBus;
@@ -81,8 +86,9 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   // root message bus constructor
-  private MessageBusImpl(@Nonnull InjectingContainerOwner owner) {
+  private MessageBusImpl(@Nonnull TopicBindingLoader topicBindingLoader, @Nonnull InjectingContainerOwner owner) {
     myOwner = owner;
+    myTopicBindingLoader = topicBindingLoader;
     myConnectionDisposable = Disposable.newDisposable(myOwner.toString());
     myOrder = ArrayUtil.EMPTY_INT_ARRAY;
     myRootBus = (RootBus)this;
@@ -506,8 +512,8 @@ public class MessageBusImpl implements MessageBus, Disposable {
       myClearedSubscribersCache = true;
     }
 
-    RootBus(@Nonnull InjectingContainerOwner owner) {
-      super(owner);
+    RootBus(@Nonnull TopicBindingLoader bindingLoader, @Nonnull InjectingContainerOwner owner) {
+      super(bindingLoader, owner);
     }
   }
 }

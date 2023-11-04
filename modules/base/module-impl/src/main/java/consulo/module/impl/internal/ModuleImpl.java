@@ -19,6 +19,7 @@ package consulo.module.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.module.Module;
@@ -43,8 +44,8 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Nullable
   private final VirtualFilePointer myDirVirtualFilePointer;
 
-  public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project) {
-    super(project, "Module " + name, ComponentScope.MODULE);
+  public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project, @Nonnull ComponentBinding componentBinding) {
+    super(project, "Module " + name, ComponentScope.MODULE, componentBinding);
     myName = name;
     myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
   }

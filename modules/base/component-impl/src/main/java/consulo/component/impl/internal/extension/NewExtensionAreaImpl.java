@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
 
@@ -41,11 +42,14 @@ public class NewExtensionAreaImpl {
   private final Runnable myCheckCanceled;
   private final InjectingBindingLoader myInjectingBindingLoader;
 
-  public NewExtensionAreaImpl(ComponentManager componentManager, ComponentScope componentScope, Runnable checkCanceled) {
+  public NewExtensionAreaImpl(ComponentManager componentManager,
+                              ComponentBinding componentBinding,
+                              ComponentScope componentScope,
+                              Runnable checkCanceled) {
     myComponentManager = componentManager;
     myComponentScope = componentScope;
     myCheckCanceled = checkCanceled;
-    myInjectingBindingLoader = InjectingBindingLoader.INSTANCE; // TODO ref it
+    myInjectingBindingLoader = componentBinding.injectingBindingLoader();
   }
 
   public void registerFromInjectingBinding(ComponentScope componentScope) {

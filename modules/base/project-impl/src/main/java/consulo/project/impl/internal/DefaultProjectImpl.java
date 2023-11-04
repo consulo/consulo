@@ -16,6 +16,7 @@
 package consulo.project.impl.internal;
 
 import consulo.application.Application;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.project.ProjectManager;
 import org.jdom.Element;
 
@@ -31,8 +32,11 @@ public class DefaultProjectImpl extends ProjectImpl {
   private Element myStateElement;
   private boolean myInitialized;
 
-  DefaultProjectImpl(@Nonnull Application application, @Nonnull ProjectManager manager, @Nonnull String filePath, boolean optimiseTestLoadSpeed) {
-    super(application, manager, filePath, TEMPLATE_PROJECT_NAME, false);
+  DefaultProjectImpl(@Nonnull Application application,
+                     @Nonnull ProjectManager manager,
+                     @Nonnull String filePath,
+                     @Nonnull ComponentBinding componentBinding) {
+    super(application, manager, filePath, TEMPLATE_PROJECT_NAME, true, componentBinding);
   }
 
   @Nullable

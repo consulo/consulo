@@ -27,14 +27,12 @@ import java.util.Map;
  * @since 13-Jun-22
  */
 public class InjectingBindingLoader extends BindingLoader<InjectingBinding> {
-  public static final InjectingBindingLoader INSTANCE = new InjectingBindingLoader();
-
   private final Map<ComponentScope, InjectingBindingHolder> myServices = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myExtensions = new HashMap<>();
   private final Map<ComponentScope, InjectingBindingHolder> myTopics = new HashMap<>();
   private final InjectingBindingHolder myActions = new InjectingBindingHolder(myLocked);
 
-  private InjectingBindingLoader() {
+  public InjectingBindingLoader() {
   }
 
   @Nonnull

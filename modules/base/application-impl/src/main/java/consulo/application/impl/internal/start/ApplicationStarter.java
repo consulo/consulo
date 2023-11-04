@@ -25,6 +25,7 @@ import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.container.boot.ContainerPathManager;
@@ -89,9 +90,16 @@ public abstract class ApplicationStarter {
   }
 
   @Nonnull
-  protected abstract Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args);
+  protected abstract Application createApplication(ComponentBinding componentBinding,
+                                                   boolean isHeadlessMode,
+                                                   SimpleReference<StartupProgress> splashRef,
+                                                   CommandLineArgs args);
 
-  protected abstract void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args);
+  protected abstract void main(StatCollector stat,
+                               Runnable appInitializeMark,
+                               ApplicationEx app,
+                               boolean newConfigFolder,
+                               @Nonnull CommandLineArgs args);
 
   public boolean needStartInTransaction() {
     return false;
@@ -116,20 +124,22 @@ public abstract class ApplicationStarter {
 
     Map<String, List<String>> filesWithMarkers = new HashMap<>();
 
-    InjectingBindingLoader injectingBindingLoader = InjectingBindingLoader.INSTANCE;
-    TopicBindingLoader topicBindingLoader = TopicBindingLoader.INSTANCE;
+    InjectingBindingLoader injectingBindingLoader = new InjectingBindingLoader();
+    TopicBindingLoader topicBindingLoader = new TopicBindingLoader();
 
     libraryStats.markWith("injecting.binding.analyze", injectingBindingLoader::analyzeBindings);
     libraryStats.markWith("topic.binding.analyze", topicBindingLoader::analyzeBindings);
 
     libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
-    libraryStats.markWith("localize.initialize", () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
-    libraryStats.markWith("icon.initialize", () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
+    libraryStats.markWith("localize.initialize",
+                          () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
+    libraryStats.markWith("icon.initialize",
+                          () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
 
     libraryStats.dump("Libraries", LOG::info);
 
-    createApplication(isHeadlessMode, mySplashRef, args);
+    createApplication(new ComponentBinding(injectingBindingLoader, topicBindingLoader), isHeadlessMode, mySplashRef, args);
   }
 
   protected void dumpPluginClassStatistics() {
@@ -143,7 +153,9 @@ public abstract class ApplicationStarter {
     });
   }
 
-  private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor, Map<String, List<String>> filesWithMarkers, String marker) {
+  private void searchMarkerInClassLoaderMarker(PluginDescriptor pluginDescriptor,
+                                               Map<String, List<String>> filesWithMarkers,
+                                               String marker) {
 
     try {
       ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
@@ -177,7 +189,11 @@ public abstract class ApplicationStarter {
       }
 
       if (needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> main(stat, appInitalizeMark, app, newConfigFolder, myArgs));
+        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> main(stat,
+                                                                                            appInitalizeMark,
+                                                                                            app,
+                                                                                            newConfigFolder,
+                                                                                            myArgs));
       }
       else {
         main(stat, appInitalizeMark, app, newConfigFolder, myArgs);

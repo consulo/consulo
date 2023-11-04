@@ -35,6 +35,7 @@ import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
@@ -94,8 +95,8 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private volatile boolean myDisposeInProgress;
 
-  public DesktopApplicationImpl(boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(splashRef);
+  public DesktopApplicationImpl(ComponentBinding componentBinding, boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    super(componentBinding, splashRef);
 
     ApplicationManager.setApplication(this);
 

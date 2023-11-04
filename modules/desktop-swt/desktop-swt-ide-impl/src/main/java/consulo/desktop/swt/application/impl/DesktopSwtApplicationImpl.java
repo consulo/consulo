@@ -17,10 +17,10 @@ package consulo.desktop.swt.application.impl;
 
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.impl.internal.start.StartupProgress;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -28,8 +28,8 @@ import jakarta.annotation.Nonnull;
  * @since 29/04/2021
  */
 public class DesktopSwtApplicationImpl extends UnifiedApplication {
-  public DesktopSwtApplicationImpl(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(splashRef);
+  public DesktopSwtApplicationImpl(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    super(componentBinding, splashRef);
   }
 
   @Nonnull

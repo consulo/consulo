@@ -17,7 +17,6 @@ package consulo.component.impl.internal.messagebus;
 
 import consulo.component.bind.TopicBinding;
 import consulo.component.bind.TopicMethod;
-import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.lang.ObjectUtil;
@@ -46,7 +45,7 @@ public class TopicInvocationHandler<L> implements InvocationHandler, Function<Me
     myMessageBus = messageBus;
     myTopicClass = topicClass;
 
-    TopicBinding binding = TopicBindingLoader.INSTANCE.getBinding(topicClass.getName());
+    TopicBinding binding = messageBus.myTopicBindingLoader.getBinding(topicClass.getName());
 
     if (binding != null) {
       myTopicMethods = binding.methods();

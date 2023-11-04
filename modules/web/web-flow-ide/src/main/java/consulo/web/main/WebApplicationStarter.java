@@ -20,6 +20,7 @@ import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.container.util.StatCollector;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.internal.WebApplicationImpl;
@@ -45,8 +46,8 @@ public class WebApplicationStarter extends ApplicationStarter {
 
   @Nonnull
   @Override
-  protected Application createApplication(boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
-    return new WebApplicationImpl(splashRef);
+  protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+    return new WebApplicationImpl(componentBinding, splashRef);
   }
 
   @Override

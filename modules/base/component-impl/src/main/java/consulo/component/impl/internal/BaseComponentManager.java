@@ -25,17 +25,12 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.impl.internal.extension.NewExtensionAreaImpl;
 import consulo.component.impl.internal.messagebus.MessageBusFactory;
 import consulo.component.impl.internal.messagebus.MessageBusImpl;
-import consulo.component.internal.inject.InjectingBindingHolder;
-import consulo.component.internal.inject.InjectingBindingLoader;
+import consulo.component.internal.inject.*;
 import consulo.component.messagebus.MessageBus;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.component.internal.inject.InjectingContainer;
-import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.internal.inject.InjectingPoint;
-import consulo.component.internal.inject.InjectingKey;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -84,10 +79,18 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   private final ComponentScope myComponentScope;
 
-  protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ComponentScope componentScope, boolean buildInjectionContainer) {
+  @Nonnull
+  private final ComponentBinding myComponentBinding;
+
+  protected BaseComponentManager(@Nullable ComponentManager parent,
+                                 @Nonnull String name,
+                                 @Nullable ComponentScope componentScope,
+                                 @Nonnull ComponentBinding componentBinding,
+                                 boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
     myComponentScope = componentScope;
+    myComponentBinding = componentBinding;
 
     if (buildInjectionContainer) {
       buildInjectingContainer();
@@ -95,7 +98,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void buildInjectingContainer() {
-    myMessageBus = MessageBusFactory.newMessageBus(this, myParent == null ? null : myParent.getMessageBus());
+    myMessageBus = MessageBusFactory.newMessageBus(myComponentBinding.topicBindingLoader(), this, myParent == null ? null : myParent.getMessageBus());
 
     MultiMap<String, InjectingBinding> mapByTopic = new MultiMap<>();
 
@@ -103,7 +106,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     myMessageBus.setLazyListeners(mapByTopic);
 
-    myNewExtensionArea = new NewExtensionAreaImpl(this, getComponentScope(), this::checkCanceled);
+    myNewExtensionArea = new NewExtensionAreaImpl(this, myComponentBinding, getComponentScope(), this::checkCanceled);
 
     myNewExtensionArea.registerFromInjectingBinding(getComponentScope());
 
@@ -163,7 +166,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
-    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(TopicAPI.class, getComponentScope());
+    InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(TopicAPI.class, getComponentScope());
 
     for (List<InjectingBinding> bindings : holder.getBindings().values()) {
       for (InjectingBinding binding : bindings) {
@@ -179,11 +182,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    builder.bind(ComponentBinding.class).to(myComponentBinding);
   }
 
   @SuppressWarnings("unchecked")
   protected void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
-    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ServiceAPI.class, getComponentScope());
+    InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ServiceAPI.class, getComponentScope());
 
     int profiles = getProfiles();
 

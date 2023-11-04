@@ -42,6 +42,7 @@ import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateStorageException;
@@ -204,8 +205,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return SemVer.parseFromText(version);
   });
 
-  public BaseApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(null, "Application", ComponentScope.APPLICATION);
+  public BaseApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    super(null, "Application", ComponentScope.APPLICATION, componentBinding);
     mySplashRef = splashRef;
     myStartTime = System.currentTimeMillis();
   }

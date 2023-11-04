@@ -13,8 +13,8 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.component.bind.InjectingBinding;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingHolder;
-import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
@@ -35,8 +35,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionPopupMenuListener;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.util.collection.Lists;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
@@ -58,17 +56,19 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.TObjectIntHashMap;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -148,7 +148,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
   private final ActionPopupMenuFactory myPopupMenuFactory;
 
   @Inject
-  ActionManagerImpl(Application application, ActionToolbarFactory toolbarFactory, ActionPopupMenuFactory popupMenuFactory) {
+  ActionManagerImpl(Application application,
+                    ActionToolbarFactory toolbarFactory,
+                    ActionPopupMenuFactory popupMenuFactory,
+                    ComponentBinding componentBinding) {
     myToolbarFactory = toolbarFactory;
     myPopupMenuFactory = popupMenuFactory;
 
@@ -158,7 +161,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     StatCollector injectStat = new StatCollector();
     injectStat.markWith("register", () -> {
-      InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(ActionAPI.class, ComponentScope.APPLICATION);
+      InjectingBindingHolder holder = componentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
 
       String actionGroupClassName = ActionGroup.class.getName();
       for (List<InjectingBinding> bindingList : holder.getBindings().values()) {

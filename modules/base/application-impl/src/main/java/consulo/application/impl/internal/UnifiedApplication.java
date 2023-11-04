@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.component.ComponentManager;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -39,8 +40,8 @@ import java.util.function.BooleanSupplier;
  * @since 12-Jul-22
  */
 public abstract class UnifiedApplication extends BaseApplication {
-  public UnifiedApplication(@Nonnull SimpleReference<? extends StartupProgress> splashRef) {
-    super(splashRef);
+  public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    super(componentBinding, splashRef);
 
     myLock = new ReadMostlyRWLock(null);
 

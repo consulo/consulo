@@ -2,6 +2,7 @@ package consulo.web.internal;
 
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.impl.internal.start.StartupProgress;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
@@ -21,8 +22,8 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
 
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(@Nonnull SimpleReference<? extends StartupProgress> splash) {
-    super(splash);
+  public WebApplicationImpl(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splash) {
+    super(componentBinding, splash);
   }
 
   @Nullable

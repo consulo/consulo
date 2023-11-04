@@ -27,8 +27,6 @@ import java.util.Map;
  * @since 25/01/2023
  */
 public class TopicBindingLoader extends BindingLoader<TopicBinding> {
-  public static final TopicBindingLoader INSTANCE = new TopicBindingLoader();
-
   private Map<String, TopicBinding> myBindings = new HashMap<>();
 
   @Nonnull

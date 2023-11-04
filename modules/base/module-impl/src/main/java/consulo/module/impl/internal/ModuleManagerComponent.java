@@ -13,32 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.module.impl;
+package consulo.module.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.impl.internal.ModuleEx;
-import consulo.module.impl.internal.ModuleImpl;
-import consulo.module.impl.internal.ModuleManagerImpl;
-import consulo.project.Project;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.AccessRule;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -49,12 +45,17 @@ import jakarta.annotation.Nullable;
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 
+  @Nonnull
   private final ProgressManager myProgressManager;
+  @Nonnull
   private final MessageBusConnection myConnection;
+  @Nonnull
+  private final ComponentBinding myComponentBinding;
 
   @Inject
-  public ModuleManagerComponent(Project project, ProgressManager progressManager) {
+  public ModuleManagerComponent(Project project, @Nonnull ProgressManager progressManager, @Nonnull ComponentBinding componentBinding) {
     super(project);
+    myComponentBinding = componentBinding;
     myConnection = myMessageBus.connect(project);
     myProgressManager = progressManager;
 
@@ -70,7 +71,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
       }
     });
 
-    if(project.isDefault()) {
+    if (project.isDefault()) {
       myReady = true;
     }
   }
@@ -78,7 +79,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
   @Nonnull
   @Override
   protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
-    return new ModuleImpl(name, dirUrl, myProject);
+    return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
   }
 
   public void loadModules(@Nonnull ProgressIndicator indicator, AsyncResult<Void> result) {
@@ -103,8 +104,8 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
   @Override
   protected void fireModulesAdded() {
     Runnable runnableWithProgress = () -> {
+      Application app = myProject.getApplication();
       for (final Module module : myModuleModel.getModules()) {
-        final Application app = ApplicationManager.getApplication();
         final Runnable swingRunnable = () -> fireModuleAddedInWriteAction(module);
         if (app.isDispatchThread() || app.isHeadlessEnvironment()) {
           swingRunnable.run();

@@ -22,13 +22,14 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.impl.internal.BaseComponentManager;
+import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateComponentInfo;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PlatformComponentManagerImpl extends BaseComponentManager {
@@ -38,8 +39,11 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
 
   private IComponentStore myComponentStore;
 
-  protected PlatformComponentManagerImpl(@Nullable ComponentManager parent, @Nonnull String name, @Nonnull ComponentScope areaId) {
-    super(parent, name, areaId, true);
+  protected PlatformComponentManagerImpl(@Nullable ComponentManager parent,
+                                         @Nonnull String name,
+                                         @Nonnull ComponentScope componentScope,
+                                         @Nonnull ComponentBinding componentBinding) {
+    super(parent, name, componentScope, componentBinding, true);
   }
 
   protected void notifyAboutInitialization(float percentOfLoad, Object component) {
