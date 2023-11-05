@@ -24,16 +24,21 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightProjectBuilderTest {
+public class FrameworkTest {
   public static class TextFileParserTest implements ThrowableRunnable<Throwable> {
 
     private final PsiFileFactory myPsiFileFactory;
@@ -60,6 +65,24 @@ public class LightProjectBuilderTest {
   @AfterEach
   public void after() {
     Disposer.assertIsEmpty();
+  }
+
+  @Test
+  public void testLocalFileSystem() throws Throwable {
+    try (AutoDisposable disposable = AutoDisposable.newAutoDisposable("testLocalFileSystem")) {
+      LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
+
+      Application application = builder.build();
+
+      VirtualFileManager virtualFileManager = application.getInstance(VirtualFileManager.class);
+
+      Path tempFile = Files.createTempFile("someTest", "txt");
+      Files.writeString(tempFile, "test");
+
+      VirtualFile path = virtualFileManager.findFileByNioPath(tempFile);
+
+      Assertions.assertNotNull(path);
+    }
   }
 
   @Test
