@@ -96,7 +96,7 @@ public class FrameworkTest {
 
       Project project = projectBuilder.build();
 
-      TextFileParserTest parser = project.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
+      TextFileParserTest parser = project.getUnbindedInstance(TextFileParserTest.class);
 
       parser.run();
     }
