@@ -7,7 +7,7 @@ import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.DiskQueryRelay;
 import consulo.ide.impl.idea.openapi.vfs.SafeWriteRequestor;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
+import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.util.PathUtil;

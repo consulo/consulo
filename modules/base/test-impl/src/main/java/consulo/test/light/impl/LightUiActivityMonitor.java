@@ -15,18 +15,22 @@
  */
 package consulo.test.light.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightUiActivityMonitor extends UiActivityMonitor {
   @Override
   public BusyObject getBusy(@Nonnull ComponentManager project, UiActivity... toWatch) {

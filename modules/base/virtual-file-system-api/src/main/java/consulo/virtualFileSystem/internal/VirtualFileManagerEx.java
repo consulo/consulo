@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package consulo.ide.impl.idea.openapi.vfs.ex;
+package consulo.virtualFileSystem.internal;
 
 import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.VirtualFileManager;

@@ -17,7 +17,6 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;

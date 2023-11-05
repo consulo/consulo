@@ -675,14 +675,12 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.vcs.vfs;
   exports consulo.ide.impl.idea.openapi.vfs;
   exports consulo.ide.impl.idea.openapi.vfs.encoding;
-  exports consulo.ide.impl.idea.openapi.vfs.ex;
   exports consulo.ide.impl.idea.openapi.vfs.ex.dummy;
   exports consulo.ide.impl.idea.openapi.vfs.ex.temp;
   exports consulo.ide.impl.idea.openapi.vfs.impl;
   exports consulo.ide.impl.idea.openapi.vfs.impl.http;
   exports consulo.ide.impl.idea.openapi.vfs.impl.jar;
   exports consulo.ide.impl.idea.openapi.vfs.impl.local;
-  exports consulo.ide.impl.idea.openapi.vfs.local;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
   exports consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;

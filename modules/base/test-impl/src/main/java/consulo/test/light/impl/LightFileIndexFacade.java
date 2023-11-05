@@ -15,14 +15,18 @@
  */
 package consulo.test.light.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.util.ModificationTracker;
+import consulo.language.content.FileIndexFacade;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.language.content.FileIndexFacade;
-import consulo.component.util.ModificationTracker;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +34,12 @@ import java.util.List;
  * @author VISTALL
  * @since 2018-08-25
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightFileIndexFacade extends FileIndexFacade {
   private final List<VirtualFile> myLibraryRoots = new ArrayList<>();
 
+  @Inject
   public LightFileIndexFacade(final Project project) {
     super(project);
   }
@@ -61,7 +68,7 @@ public class LightFileIndexFacade extends FileIndexFacade {
   @Override
   public boolean isInLibraryClasses(@Nonnull VirtualFile file) {
     for (VirtualFile libraryRoot : myLibraryRoots) {
-      if (VfsUtilCore.isAncestor(libraryRoot, file, false)) {
+      if (VirtualFileUtil.isAncestor(libraryRoot, file, false)) {
         return true;
       }
     }
@@ -90,7 +97,7 @@ public class LightFileIndexFacade extends FileIndexFacade {
 
   @Override
   public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child) {
-    return VfsUtilCore.isAncestor(baseDir, child, false);
+    return VirtualFileUtil.isAncestor(baseDir, child, false);
   }
 
   public void addLibraryRoot(VirtualFile file) {

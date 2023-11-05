@@ -15,6 +15,8 @@
  */
 package consulo.test.light.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -24,15 +26,18 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightFileDocumentManager implements FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<? super CharSequence, ? extends Document> myFactory;

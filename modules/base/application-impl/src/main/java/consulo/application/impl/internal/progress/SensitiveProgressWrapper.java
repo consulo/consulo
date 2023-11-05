@@ -16,7 +16,6 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.progress.ProgressIndicator;
-
 import jakarta.annotation.Nonnull;
 
 /**

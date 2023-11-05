@@ -1,6 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.language.impl.internal.psi;
+package consulo.ide.impl.language.psi.cache;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.util.CachedValuesFactory;
@@ -11,11 +11,11 @@ import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.language.psi.PsiManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**

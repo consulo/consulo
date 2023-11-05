@@ -17,28 +17,29 @@ package consulo.test.light.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
-import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.disposer.Disposable;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.annotation.Nonnull;
 
-import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
@@ -49,21 +50,40 @@ import java.util.function.Supplier;
  * @since 2018-08-25
  */
 public class LightApplication extends BaseComponentManager implements Application {
-  private final Disposable myLastDisposable;
+  private final ComponentBinding myComponentBinding;
   private final LightExtensionRegistrator myRegistrator;
 
-  public LightApplication(Disposable lastDisposable, LightExtensionRegistrator registrator) {
+  private final ProgressManager myProgressManager;
+
+  public LightApplication(Disposable lastDisposable, ComponentBinding componentBinding, LightExtensionRegistrator registrator) {
     super(null,
           "LightApplication",
           ComponentScope.APPLICATION,
-          new ComponentBinding(new InjectingBindingLoader(), new TopicBindingLoader()),
+          componentBinding,
           false);
-    myLastDisposable = lastDisposable;
+    myComponentBinding = componentBinding;
     myRegistrator = registrator;
 
-    ApplicationManager.setApplication(this, myLastDisposable);
+    myProgressManager = new LightProgressManager();
+    
+    ApplicationManager.setApplication(this, lastDisposable);
 
     buildInjectingContainer();
+  }
+
+  public ComponentBinding getComponentBinding() {
+    return myComponentBinding;
+  }
+
+  @Nonnull
+  @Override
+  public ProgressManager getProgressManager() {
+    return myProgressManager;
+  }
+
+  @Override
+  public int getProfiles() {
+    return ComponentProfiles.LIGHT_TEST;
   }
 
   @Override
@@ -81,6 +101,8 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     super.bootstrapInjectingContainer(builder);
 
     builder.bind(Application.class).to(this);
+    builder.bind(FileTypeRegistry.class).to(new LightFileTypeRegistry());
+    builder.bind(ProgressIndicatorProvider.class).to(myProgressManager);
   }
 
   @Override
@@ -191,47 +213,41 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getCurrentModalityState() {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public ModalityState getCurrentModalityState() {
+    return ModalityState.nonModal();
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState getDefaultModalityState() {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public IdeaModalityState getDefaultModalityState() {
-    return getNoneModalityState();
+  public ModalityState getNoneModalityState() {
+    return ModalityState.nonModal();
   }
 
   @Nonnull
   @Override
-  public IdeaModalityState getNoneModalityState() {
-    return IdeaModalityState.NON_MODAL;
-  }
-
-  @Nonnull
-  @Override
-  public IdeaModalityState getAnyModalityState() {
+  public ModalityState getAnyModalityState() {
     throw new UnsupportedOperationException();
   }
 

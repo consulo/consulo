@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,23 @@ package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.language.impl.internal.psi.DocumentCommitProcessor;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 2018-08-25
+ * @since 2023-11-05
  */
-@Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
-public class LightEncodingManager extends LightEncodingProjectManager {
+@Singleton
+public class LightPsiDocumentManager extends PsiDocumentManagerBase {
+  @Inject
+  public LightPsiDocumentManager(@Nonnull Project project,
+                                    DocumentCommitProcessor documentCommitProcessor) {
+    super(project, documentCommitProcessor);
+  }
 }

@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.util;
 
+import consulo.application.internal.util.CachaValueEx;
 import consulo.application.internal.util.CachedValueProfiler;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.RecursionGuard;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CachedValueBase<T> {
+public abstract class CachedValueBase<T> implements CachaValueEx<T> {
   private static final Logger LOG = Logger.getInstance(CachedValueBase.class);
   private final boolean myTrackValue;
   private volatile SoftReference<Data<T>> myData;
@@ -178,6 +179,7 @@ public abstract class CachedValueBase<T> {
     }
   }
 
+  @Override
   public T setValue(@Nonnull CachedValueProvider.Result<T> result) {
     Data<T> data = computeData(() -> result);
     setData(data);

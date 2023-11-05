@@ -9,12 +9,11 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.util.collection.ConcurrentList;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,8 +55,10 @@ public final class ReadMostlyRWLock {
   public static class Reader {
     @Nonnull
     private final Thread thread;   // its thread
-    public volatile boolean readRequested; // this reader is requesting or obtained read access. Written by reader thread only, read by writer.
-    private volatile boolean blocked;       // this reader is blocked waiting for the writer thread to release write lock. Written by reader thread only, read by writer.
+    public volatile boolean readRequested;
+      // this reader is requesting or obtained read access. Written by reader thread only, read by writer.
+    private volatile boolean blocked;
+      // this reader is blocked waiting for the writer thread to release write lock. Written by reader thread only, read by writer.
     private boolean impatientReads; // true if should throw PCE on contented read lock
 
     Reader(@Nonnull Thread readerThread) {
@@ -148,7 +149,8 @@ public final class ReadMostlyRWLock {
 
   private void throwIfImpatient(Reader status) throws ApplicationUtil.CannotRunReadActionException {
     // when client explicitly runs in non-cancelable block do not throw from within nested read actions
-    if (status.impatientReads && writeRequested && !ProgressManager.getInstance().isInNonCancelableSection() && CoreProgressManager.ENABLED) {
+    if (status.impatientReads && writeRequested && !ProgressManager.getInstance()
+                                                                   .isInNonCancelableSection() && CoreProgressManager.ENABLED) {
       throw ApplicationUtil.CannotRunReadActionException.create();
     }
   }
@@ -312,16 +314,16 @@ public final class ReadMostlyRWLock {
   @Override
   public String toString() {
     return "ReadMostlyRWLock{" +
-           "writeThread=" +
-           writeThread +
-           ", writeRequested=" +
-           writeRequested +
-           ", writeAcquired=" +
-           writeAcquired +
-           ", readers=" +
-           readers +
-           ", writeSuspended=" +
-           writeSuspended +
-           '}';
+      "writeThread=" +
+      writeThread +
+      ", writeRequested=" +
+      writeRequested +
+      ", writeAcquired=" +
+      writeAcquired +
+      ", readers=" +
+      readers +
+      ", writeSuspended=" +
+      writeSuspended +
+      '}';
   }
 }

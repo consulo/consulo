@@ -99,7 +99,10 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * @param project       the project in the context of which the operation is executed.
    * @return true if the operation completed successfully, false if it was cancelled.
    */
-  public abstract boolean runProcessWithProgressSynchronously(@Nonnull Runnable process, @Nonnull String progressTitle, boolean canBeCanceled, @Nullable ComponentManager project);
+  public abstract boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                              @Nonnull String progressTitle,
+                                                              boolean canBeCanceled,
+                                                              @Nullable ComponentManager project);
 
   /**
    * Runs the specified operation in a background thread and shows a modal progress dialog in the
@@ -132,11 +135,13 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
    * @param parentComponent the component which will be used to calculate the progress window ancestor
    * @return true if the operation completed successfully, false if it was cancelled.
    */
-  public abstract boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
-                                                              @Nonnull String progressTitle,
-                                                              boolean canBeCanceled,
-                                                              @Nullable ComponentManager project,
-                                                              @Nullable JComponent parentComponent);
+  public boolean runProcessWithProgressSynchronously(@Nonnull Runnable process,
+                                                     @Nonnull String progressTitle,
+                                                     boolean canBeCanceled,
+                                                     @Nullable ComponentManager project,
+                                                     @Nullable JComponent parentComponent) {
+    throw new AbstractMethodError("AWT/Swing dependency");
+  }
 
   /**
    * Runs a specified {@code process} in a background thread and shows a progress dialog, which can be made non-modal by pressing
@@ -195,7 +200,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     return task.getResult();
   }
 
-  public abstract void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task, @Nonnull ProgressIndicator progressIndicator);
+  public abstract void runProcessWithProgressAsynchronously(@Nonnull Task.Backgroundable task,
+                                                            @Nonnull ProgressIndicator progressIndicator);
 
   protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) {
   }
@@ -211,11 +217,13 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
   /**
    * @param progress an indicator to use, {@code null} means reuse current progress
    */
-  public abstract void executeProcessUnderProgress(@Nonnull Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
+  public abstract void executeProcessUnderProgress(@Nonnull Runnable process,
+                                                   @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
   public static void assertNotCircular(@Nonnull ProgressIndicator original) {
     Set<ProgressIndicator> wrappedParents = null;
-    for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator; i = ((WrappedProgressIndicator)i).getOriginalProgressIndicator()) {
+    for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator;
+         i = ((WrappedProgressIndicator)i).getOriginalProgressIndicator()) {
       if (wrappedParents == null) wrappedParents = new HashSet<>();
       if (!wrappedParents.add(i)) {
         throw new IllegalArgumentException(i + " wraps itself");

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.local;
+package consulo.virtualFileSystem.internal.core.local;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.*;
@@ -133,7 +133,7 @@ public class CoreLocalVirtualFile extends VirtualFile {
 
   @Override
   public InputStream getInputStream() throws IOException {
-    return VfsUtilCore.inputStreamSkippingBOM(new BufferedInputStream(new FileInputStream(myIoFile)), this);
+    return VirtualFileUtil.inputStreamSkippingBOM(new BufferedInputStream(new FileInputStream(myIoFile)), this);
   }
 
   @Override

@@ -34,6 +34,11 @@ public final class ComponentProfiles {
    */
   public static final int UNIFIED = 1 << 3;
 
+  /**
+   * Marker for light test implementation
+   */
+  public static final int LIGHT_TEST = 1 << 4;
+
   private ComponentProfiles() {
   }
 }

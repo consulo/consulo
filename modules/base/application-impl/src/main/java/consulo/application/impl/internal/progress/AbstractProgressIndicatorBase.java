@@ -47,7 +47,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private Stack<LocalizeValue> myText2Stack; // guarded by this
 
   private ProgressIndicator myModalityProgress;
-  private volatile ModalityState myModalityState = IdeaModalityState.NON_MODAL;
+  private volatile ModalityState myModalityState = ModalityState.nonModal();
   private volatile int myNonCancelableSectionCount;
   private final Object lock = ObjectUtil.sentinel("APIB lock");
 

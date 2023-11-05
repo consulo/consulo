@@ -15,15 +15,18 @@
  */
 package consulo.test.light.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.concurrent.Job;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.component.ProcessCanceledException;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -34,6 +37,8 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2018-08-25
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightJobLauncher extends JobLauncher {
   @Override
   public <T> boolean invokeConcurrentlyUnderProgress(@Nonnull List<? extends T> things, ProgressIndicator progress, @Nonnull Predicate<? super T> thingProcessor) throws ProcessCanceledException {

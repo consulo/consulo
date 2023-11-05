@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.test.light.impl;
+package consulo.application.internal.util;
 
-import consulo.component.macro.PathMacroFilter;
-import consulo.application.macro.PathMacros;
-import consulo.component.store.impl.internal.PathMacrosService;
-import org.jdom.Element;
-
+import consulo.application.util.CachedValueProvider;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2018-08-25
+ * @since 2023-11-05
  */
-public class LightPathMacrosService extends PathMacrosService {
-  @Override
-  public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
-    return Collections.emptySet();
-  }
+public interface CachaValueEx<T> {
+  T setValue(@Nonnull CachedValueProvider.Result<T> result);
 }

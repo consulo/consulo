@@ -25,9 +25,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.util.lang.TimeoutUtil;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.application.HeavyProcessLatch;
-import consulo.application.Application;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -40,7 +38,6 @@ import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 /**

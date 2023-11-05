@@ -11,7 +11,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.impl.VirtualFileManagerImpl;
+import consulo.virtualFileSystem.internal.BaseVirtualFileManager;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -64,7 +64,7 @@ public final class AsyncEventSupport {
     }
 
     List<AsyncFileListener.ChangeApplier> appliers = new ArrayList<>();
-    List<AsyncFileListener> allListeners = ContainerUtil.concat(EP_NAME.getExtensionList(), ((VirtualFileManagerImpl)VirtualFileManager.getInstance()).getAsyncFileListeners());
+    List<AsyncFileListener> allListeners = ContainerUtil.concat(EP_NAME.getExtensionList(), ((BaseVirtualFileManager)VirtualFileManager.getInstance()).getAsyncFileListeners());
     for (AsyncFileListener listener : allListeners) {
       ProgressManager.checkCanceled();
       long startNs = System.nanoTime();

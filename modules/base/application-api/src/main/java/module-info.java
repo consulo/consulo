@@ -50,7 +50,12 @@ module consulo.application.api {
           consulo.version.control.system.distributed.api,
           consulo.logging.log4j2.impl;
 
-  exports consulo.application.internal.util to consulo.language.api, consulo.application.impl;
+  exports consulo.application.internal.util to
+          consulo.language.api,
+          consulo.language.impl,
+          consulo.language.inject.impl,
+          consulo.test.impl,
+          consulo.application.impl;
 
   exports consulo.application.util.mac.foundation;
 

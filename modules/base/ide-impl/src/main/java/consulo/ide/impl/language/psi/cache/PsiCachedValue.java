@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.psi;
+package consulo.ide.impl.language.psi.cache;
 
 import consulo.application.impl.internal.util.CachedValueBase;
 import consulo.application.impl.internal.util.CachedValuesFactory;
@@ -26,7 +26,6 @@ import consulo.project.content.ProjectRootModificationTracker;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 
 /**

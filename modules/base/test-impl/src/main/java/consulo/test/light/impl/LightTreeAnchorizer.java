@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.ex;
+package consulo.test.light.impl;
 
-import consulo.virtualFileSystem.event.VirtualFileManagerListener;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import jakarta.inject.Singleton;
 
-@Deprecated
-public abstract class VirtualFileManagerAdapter implements VirtualFileManagerListener {
+/**
+ * @author VISTALL
+ * @since 2023-11-05
+ */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
+public class LightTreeAnchorizer extends TreeAnchorizer {
 }

@@ -15,12 +15,11 @@
  */
 package consulo.application.impl.internal.progress;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
-
+import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
@@ -131,8 +130,8 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   @Nonnull
   @Override
-  public IdeaModalityState getModalityState() {
-    return IdeaModalityState.NON_MODAL;
+  public ModalityState getModalityState() {
+    return ModalityState.nonModal();
   }
 
   @Override

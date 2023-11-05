@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.impl.internal.psi.PsiCachedValue;
+import consulo.ide.impl.language.psi.cache.PsiCachedValue;
 import consulo.logging.Logger;
 import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.util.collection.Sets;

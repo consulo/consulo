@@ -1,9 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.language.impl.internal.psi;
+package consulo.ide.impl.language.psi.cache;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.language.ast.ASTNode;
+import consulo.language.impl.internal.psi.DebugReflectionUtil;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.util.PsiTreeUtil;

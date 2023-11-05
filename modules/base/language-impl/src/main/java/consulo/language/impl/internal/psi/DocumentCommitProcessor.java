@@ -19,17 +19,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.TransactionId;
 import consulo.document.Document;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DocumentCommitProcessor {
   void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
+
   void commitAsynchronously(@Nonnull final Project project,
                             @Nonnull final Document document,
-                            @NonNls @Nonnull Object reason,
+                            @Nonnull Object reason,
                             @Nullable TransactionId context);
 }

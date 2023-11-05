@@ -18,7 +18,6 @@ package consulo.language.impl.psi.stub;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.PrivilegedAction;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.RecursionManager;
@@ -31,26 +30,28 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.SharedImplUtil;
-import consulo.language.impl.internal.psi.*;
+import consulo.language.impl.internal.psi.SingleProjectHolder;
+import consulo.language.impl.internal.psi.SubstrateRef;
+import consulo.language.impl.internal.psi.SubstrateRefOwner;
 import consulo.language.impl.psi.ASTDelegatePsiElement;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.psi.*;
-import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,9 @@ import java.util.List;
  */
 public class StubBasedPsiElementBase<T extends StubElement> extends ASTDelegatePsiElement implements StubBasedPsiElement<T>, SubstrateRefOwner<T> {
   public static final Key<String> CREATION_TRACE = Key.create("CREATION_TRACE");
-  public static final boolean ourTraceStubAstBinding = PrivilegedAction.runPrivilegedAction(() -> "true".equals(System.getProperty("trace.stub.ast.binding", "false")));
+  public static final boolean ourTraceStubAstBinding =
+    Boolean.valueOf(Platform.current().jvm().getRuntimeProperty("trace.stub.ast.binding", "false"));
+
   private volatile SubstrateRef mySubstrateRef;
   private final IElementType myElementType;
 

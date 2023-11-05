@@ -13,36 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.vfs.impl;
+package consulo.virtualFileSystem.internal;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.util.Iconable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.VfsIconUtil;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerEx;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.*;
 
-public class VirtualFileManagerImpl extends VirtualFileManagerEx {
-  private static final Logger LOG = Logger.getInstance(VirtualFileManagerImpl.class);
+public class BaseVirtualFileManager extends VirtualFileManagerEx {
+  private static final Logger LOG = Logger.getInstance(BaseVirtualFileManager.class);
 
   private final EventDispatcher<VirtualFileListener> myVirtualFileListenerMulticaster = EventDispatcher.create(VirtualFileListener.class);
   private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = Lists.newLockFreeCopyOnWriteList();
@@ -50,14 +45,17 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   private final Map<String, VirtualFileSystem> myVirtualFileSystems = new HashMap<>();
   private final List<VirtualFileSystem> myRefreshableFileSystems = new ArrayList<>();
   private final List<AsyncFileListener> myAsyncFileListeners = Lists.newLockFreeCopyOnWriteList();
+  @Nonnull
+  protected final Application myApplication;
   private int myRefreshCount = 0;
 
   @Inject
-  public VirtualFileManagerImpl(@Nonnull Application application) {
+  public BaseVirtualFileManager(@Nonnull Application application) {
     this(application, application.getExtensionPoint(VirtualFileSystem.class).getExtensionList());
   }
 
-  public VirtualFileManagerImpl(@Nonnull Application application, @Nonnull List<VirtualFileSystem> fileSystems) {
+  public BaseVirtualFileManager(@Nonnull Application application, @Nonnull List<VirtualFileSystem> fileSystems) {
+    myApplication = application;
     for (VirtualFileSystem system : fileSystems) {
       registerFileSystem(system);
     }
@@ -110,7 +108,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
   protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
     if (!asynchronous) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      myApplication.assertIsDispatchThread();
     }
 
     for (VirtualFileSystem fileSystem : myRefreshableFileSystems) {
@@ -125,7 +123,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
   @Override
   public void refreshWithoutFileWatcher(final boolean asynchronous) {
     if (!asynchronous) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      myApplication.assertIsDispatchThread();
     }
 
     for (VirtualFileSystem fileSystem : myRefreshableFileSystems) {
@@ -206,17 +204,16 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
                                     @Nonnull final String property,
                                     final Object oldValue,
                                     final Object newValue) {
-    final Application application = ApplicationManager.getApplication();
     final Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        if (virtualFile.isValid() && !application.isDisposed()) {
-          application.runWriteAction(new Runnable() {
+        if (virtualFile.isValid() && !myApplication.isDisposed()) {
+          myApplication.runWriteAction(new Runnable() {
             @Override
             public void run() {
               List<VFilePropertyChangeEvent> events =
                 Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
-              BulkFileListener listener = application.getMessageBus().syncPublisher(BulkFileListener.class);
+              BulkFileListener listener = myApplication.getMessageBus().syncPublisher(BulkFileListener.class);
               listener.before(events);
               listener.after(events);
             }
@@ -224,7 +221,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
         }
       }
     };
-    application.invokeLater(runnable, IdeaModalityState.NON_MODAL);
+    myApplication.invokeLater(runnable, myApplication.getNoneModalityState());
   }
 
   @Override
@@ -377,6 +374,6 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
   @Override
   public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
-    return VfsIconUtil.getIcon(file, flags, (Project)project);
+    return null;
   }
 }

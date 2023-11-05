@@ -17,40 +17,33 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
-import consulo.ide.setting.module.ModuleConfigurationState;
-import consulo.language.editor.LangDataKeys;
-import consulo.module.Module;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.module.content.layer.ModulesProvider;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.layer.ModuleRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
+import consulo.ide.setting.module.ModuleConfigurationState;
+import consulo.language.editor.LangDataKeys;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootModel;
+import consulo.module.content.layer.ModulesProvider;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
-import consulo.ui.ex.awt.JBSplitter;
-import consulo.ui.ex.awt.OnePixelSplitter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
-
+import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -84,7 +77,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     myState = state;
     myModuleName = moduleName;
     myModulesProvider = state.getModulesConfigurator();
-    final VirtualFileManagerAdapter fileManagerListener = new VirtualFileManagerAdapter() {
+    final VirtualFileManagerListener fileManagerListener = new VirtualFileManagerListener() {
       @Override
       public void afterRefreshFinish(boolean asynchronous) {
         if (state.getProject().isDisposed()) {

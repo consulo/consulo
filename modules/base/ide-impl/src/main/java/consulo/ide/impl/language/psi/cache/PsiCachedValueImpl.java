@@ -14,36 +14,45 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.psi;
+package consulo.ide.impl.language.psi.cache;
 
 import consulo.application.impl.internal.util.CachedValuesFactory;
-import consulo.language.psi.PsiManager;
+import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
-import consulo.application.util.ParameterizedCachedValue;
-import consulo.application.util.ParameterizedCachedValueProvider;
+import consulo.language.psi.PsiManager;
+
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
-public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
-  private final ParameterizedCachedValueProvider<T, P> myProvider;
+/**
+ * @author Dmitry Avdeev
+ */
+public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
+  private final CachedValueProvider<T> myProvider;
 
-  PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue, CachedValuesFactory factory) {
+  public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+    this(manager, provider, false, factory);
+  }
+
+  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
     super(manager, trackValue, factory);
     myProvider = provider;
   }
 
   @Override
-  public T getValue(P param) {
-    return getValueWithLock(param);
+  @Nullable
+  public T getValue() {
+    return getValueWithLock(null);
   }
 
   @Nonnull
   @Override
-  public ParameterizedCachedValueProvider<T, P> getValueProvider() {
+  public CachedValueProvider<T> getValueProvider() {
     return myProvider;
   }
 
   @Override
-  protected <X> CachedValueProvider.Result<T> doCompute(X param) {
-    return myProvider.compute((P)param);
+  protected <P> CachedValueProvider.Result<T> doCompute(P param) {
+    return myProvider.compute();
   }
 }

@@ -27,7 +27,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
@@ -77,8 +76,7 @@ import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;

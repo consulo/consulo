@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.test.light.impl;
 
-package consulo.language.impl.internal.psi;
-
-import consulo.application.impl.internal.util.CachedValuesFactory;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
-import consulo.language.psi.PsiManager;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 /**
- * @author Dmitry Avdeev
+ * @author VISTALL
+ * @since 2023-11-05
  */
-public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
+public class LightCachedValue<T> implements CachedValue<T> {
   private final CachedValueProvider<T> myProvider;
 
-  public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
-    this(manager, provider, false, factory);
-  }
-
-  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
-    super(manager, trackValue, factory);
+  public LightCachedValue(CachedValueProvider<T> provider) {
     myProvider = provider;
   }
 
   @Override
-  @Nullable
   public T getValue() {
-    return getValueWithLock(null);
+    CachedValueProvider.Result<T> compute = myProvider.compute();
+    return compute == null ? null : compute.getValue();
   }
 
   @Nonnull
@@ -52,7 +45,12 @@ public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedVa
   }
 
   @Override
-  protected <P> CachedValueProvider.Result<T> doCompute(P param) {
-    return myProvider.compute();
+  public boolean hasUpToDateValue() {
+    return true;
+  }
+
+  @Override
+  public Supplier<T> getUpToDateOrNull() {
+    return this::getValue;
   }
 }

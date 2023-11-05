@@ -16,21 +16,19 @@
 package consulo.test.light.impl;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.impl.internal.BaseComponentManager;
 import consulo.component.impl.internal.ComponentBinding;
-import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.InjectingContainer;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -46,13 +44,18 @@ public class LightProject extends BaseComponentManager implements Project {
   @Nonnull
   private final LightExtensionRegistrator myRegistrator;
 
-  public LightProject(@Nonnull Application application, @Nonnull String name, @Nonnull LightExtensionRegistrator registrator) {
-    super(application, name, ComponentScope.PROJECT, new ComponentBinding(new InjectingBindingLoader(), new TopicBindingLoader()), false);
+  public LightProject(@Nonnull Application application, @Nonnull String name, ComponentBinding componentBinding, @Nonnull LightExtensionRegistrator registrator) {
+    super(application, name, ComponentScope.PROJECT, componentBinding, false);
     myApplication = application;
     myName = name;
     myRegistrator = registrator;
 
     buildInjectingContainer();
+  }
+
+  @Override
+  public int getProfiles() {
+    return ComponentProfiles.LIGHT_TEST;
   }
 
   @Nonnull

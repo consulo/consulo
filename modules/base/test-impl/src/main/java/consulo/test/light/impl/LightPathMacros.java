@@ -15,11 +15,14 @@
  */
 package consulo.test.light.impl;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
+
 import java.util.Collection;
 import java.util.Set;
 
@@ -27,6 +30,8 @@ import java.util.Set;
  * @author VISTALL
  * @since 2018-08-25
  */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightPathMacros implements PathMacros {
   @Override
   public Set<String> getAllMacroNames() {

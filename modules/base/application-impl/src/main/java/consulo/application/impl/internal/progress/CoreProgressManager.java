@@ -3,8 +3,8 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.JobScheduler;
 import consulo.application.internal.ApplicationEx;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.*;
@@ -470,7 +470,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
             modality = progressIndicator.get().getModalityState();
           }
           catch (Throwable e) {
-            modality = IdeaModalityState.NON_MODAL;
+            modality = ModalityState.nonModal();
           }
         }
 

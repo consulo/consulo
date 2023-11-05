@@ -347,7 +347,9 @@ public interface Application extends ComponentManager {
    * @return the modality state.
    */
   @Nonnull
-  ModalityState getModalityStateForComponent(@Nonnull Component c);
+  default ModalityState getModalityStateForComponent(@Nonnull Component c) {
+    throw new AbstractMethodError("AWT/Swing dependency");
+  }
 
   /**
    * Returns the current modality state for the current thread (which may be different

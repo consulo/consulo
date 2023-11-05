@@ -16,25 +16,12 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.application.util.concurrent.JobLauncher;
-import consulo.application.macro.PathMacros;
-import consulo.application.progress.ProgressManager;
-import consulo.application.ui.UISettings;
-import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.component.impl.internal.ComponentBinding;
+import consulo.component.internal.inject.InjectingBindingLoader;
+import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.disposer.Disposable;
-import consulo.document.FileDocumentManager;
-import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.language.impl.internal.parser.PsiBuilderFactoryImpl;
-import consulo.language.parser.PsiBuilderFactory;
-import consulo.test.light.impl.*;
-import consulo.ui.ex.UiActivityMonitor;
-import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
-import consulo.ui.ex.awt.tree.TreeUIHelper;
-import consulo.ui.ex.tree.TreeAnchorizer;
-import consulo.virtualFileSystem.encoding.EncodingManager;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-
+import consulo.test.light.impl.LightApplication;
+import consulo.test.light.impl.LightExtensionRegistrator;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -43,36 +30,6 @@ import jakarta.annotation.Nonnull;
  */
 public class LightApplicationBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
-    //@Override
-    //public void registerExtensionPointsAndExtensions(@Nonnull ExtensionsAreaImpl area) {
-    //  registerExtensionPoint(area, ASTLazyFactory.EP.getExtensionPointName(), ASTLazyFactory.class);
-    //  registerExtension(area, ASTLazyFactory.EP.getExtensionPointName(), new DefaultASTLazyFactory());
-    //
-    //  registerExtensionPoint(area, ASTLeafFactory.EP.getExtensionPointName(), ASTLeafFactory.class);
-    //  registerExtension(area, ASTLeafFactory.EP.getExtensionPointName(), new DefaultASTLeafFactory());
-    //
-    //  registerExtensionPoint(area, ASTCompositeFactory.EP.getExtensionPointName(), ASTCompositeFactory.class);
-    //  registerExtension(area, ASTCompositeFactory.EP.getExtensionPointName(), new DefaultASTCompositeFactory());
-    //
-    //
-    //}
-
-    @Override
-    public void registerServices(@Nonnull InjectingContainerBuilder builder) {
-      builder.bind(PsiBuilderFactory.class).to(PsiBuilderFactoryImpl.class);
-      builder.bind(FileTypeRegistry.class).to(LightFileTypeRegistry.class);
-      builder.bind(FileDocumentManager.class).to(LightFileDocumentManager.class);
-      builder.bind(JobLauncher.class).to(LightJobLauncher.class);
-      builder.bind(EncodingManager.class).to(LightEncodingManager.class);
-      builder.bind(PathMacrosService.class).to(LightPathMacrosService.class);
-      builder.bind(PathMacros.class).to(LightPathMacros.class);
-      builder.bind(UISettings.class);
-      builder.bind(ExpandableItemsHandlerFactory.class).to(LightExpandableItemsHandlerFactory.class);
-      builder.bind(TreeUIHelper.class).to(LightTreeUIHelper.class);
-      builder.bind(UiActivityMonitor.class).to(LightUiActivityMonitor.class);
-      builder.bind(TreeAnchorizer.class).to(TreeAnchorizer.class);
-      builder.bind(ProgressManager.class).to(CoreProgressManager.class);
-    }
   }
 
   @Nonnull
@@ -95,6 +52,10 @@ public class LightApplicationBuilder {
 
   @Nonnull
   public Application build() {
-    return new LightApplication(myRootDisposable, myRegistrator);
+    InjectingBindingLoader bindingLoader = new InjectingBindingLoader();
+    bindingLoader.analyzeBindings();
+    return new LightApplication(myRootDisposable,
+                                new ComponentBinding(bindingLoader, new TopicBindingLoader()),
+                                myRegistrator);
   }
 }

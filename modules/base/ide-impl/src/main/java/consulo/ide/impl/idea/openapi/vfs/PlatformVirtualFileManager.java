@@ -17,22 +17,25 @@ package consulo.ide.impl.idea.openapi.vfs;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.vfs.impl.VirtualFileManagerImpl;
+import consulo.component.ComponentManager;
+import consulo.component.util.Iconable;
+import consulo.ide.impl.VfsIconUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
+import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.internal.BaseVirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 @Singleton
 @ServiceImpl
-public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
+public class PlatformVirtualFileManager extends BaseVirtualFileManager {
   @Nonnull
   private final ManagingFS myManagingFS;
 
@@ -43,9 +46,14 @@ public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   }
 
   @Override
+  public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    return VfsIconUtil.getIcon(file, flags, (Project)project);
+  }
+
+  @Override
   protected long doRefresh(boolean asynchronous, @Nullable Runnable postAction) {
     if (!asynchronous) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      myApplication.assertIsDispatchThread();
     }
 
     // todo: get an idea how to deliver changes from local FS to jar fs before they go refresh

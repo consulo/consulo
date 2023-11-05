@@ -16,18 +16,18 @@
 package consulo.test.light;
 
 import consulo.application.Application;
-import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import consulo.disposer.Disposable;
+import consulo.disposer.AutoDisposable;
 import consulo.disposer.Disposer;
+import consulo.language.impl.DebugUtil;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.language.impl.DebugUtil;
+import consulo.project.Project;
 import consulo.util.lang.function.ThrowableRunnable;
-import org.junit.Assert;
-import org.junit.Test;
-
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author VISTALL
@@ -49,30 +49,33 @@ public class LightProjectBuilderTest {
 
       PsiFile file = myPsiFileFactory.createFileFromText(fileName, PlainTextFileType.INSTANCE, "some test");
 
-      Assert.assertNotNull(file);
+      Assertions.assertNotNull(file);
 
-      Assert.assertEquals(file.getName(), fileName);
+      Assertions.assertEquals(file.getName(), fileName);
 
-      Assert.assertNotNull(DebugUtil.psiToString(file, false));
+      Assertions.assertNotNull(DebugUtil.psiToString(file, false));
     }
+  }
+
+  @AfterEach
+  public void after() {
+    Disposer.assertIsEmpty();
   }
 
   @Test
   public void testPlaintTextFileParser() throws Throwable {
-    Disposable disposable = Disposable.newDisposable("root");
+    try (AutoDisposable disposable = AutoDisposable.newAutoDisposable("testPlaintTextFileParser")) {
+      LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
 
-    LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
+      Application application = builder.build();
 
-    Application application = builder.build();
+      LightProjectBuilder projectBuilder = LightProjectBuilder.create(application);
 
-    LightProjectBuilder projectBuilder = LightProjectBuilder.create(application);
+      Project project = projectBuilder.build();
 
-    Project project = projectBuilder.build();
+      TextFileParserTest parser = project.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
 
-    TextFileParserTest parser = project.getInjectingContainer().getUnbindedInstance(TextFileParserTest.class);
-
-    parser.run();
-
-    Disposer.dispose(disposable);
+      parser.run();
+    }
   }
 }
