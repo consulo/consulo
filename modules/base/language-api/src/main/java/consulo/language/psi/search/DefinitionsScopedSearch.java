@@ -21,6 +21,7 @@ import consulo.application.util.query.ExtensibleQueryFactory;
 import consulo.application.util.query.Query;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
@@ -83,7 +84,7 @@ public class DefinitionsScopedSearch extends ExtensibleQueryFactory<PsiElement, 
 
     @Nonnull
     public SearchScope getScope() {
-      return ApplicationManager.getApplication().runReadAction((Supplier<SearchScope>)() -> myScope.intersectWith(PsiSearchHelper.getInstance(myElement.getProject()).getUseScope(myElement)));
+      return ApplicationManager.getApplication().runReadAction((Supplier<SearchScope>)() -> myScope.intersectWith(PsiSearchScopeUtil.getUseScope(myElement)));
     }
   }
 

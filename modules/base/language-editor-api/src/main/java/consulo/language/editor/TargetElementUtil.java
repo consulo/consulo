@@ -32,16 +32,16 @@ import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.*;
-import consulo.language.psi.search.PsiSearchHelper;
-import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.language.psi.util.EditSourceUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -389,6 +389,6 @@ public class TargetElementUtil {
   }
 
   public static SearchScope getSearchScope(Editor editor, PsiElement element) {
-    return PsiSearchHelper.getInstance(element.getProject()).getUseScope(element);
+    return PsiSearchScopeUtil.getUseScope(element);
   }
 }

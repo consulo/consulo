@@ -17,19 +17,29 @@ package consulo.language.psi;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.SearchScope;
-
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
  * @author nik
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class UseScopeEnlarger {
-  public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create(UseScopeEnlarger.class);
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface UseScopeEnlarger {
+  @Nonnull
+  static SearchScope getUseScope(@Nonnull PsiElement element) {
+    Project project = element.getProject();
+    SearchScope scope = element.getUseScope();
+    for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
+      final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
+      if (additionalScope != null) {
+        scope = scope.union(additionalScope);
+      }
+    }
+    return scope;
+  }
 
   @Nullable
-  public abstract SearchScope getAdditionalUseScope(@Nonnull PsiElement element);
+  SearchScope getAdditionalUseScope(@Nonnull PsiElement element);
 }

@@ -31,6 +31,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPolyVariantReference;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.language.psi.search.PsiNonJavaFileReferenceProcessor;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.language.psi.search.TextOccurenceProcessor;
@@ -118,7 +119,7 @@ public class TextOccurrencesUtil {
                                                           final boolean ignoreReferences,
                                                           @Nonnull final BiPredicate<PsiElement, TextRange> processor) {
     PsiSearchHelper helper = PsiSearchHelper.getInstance(element.getProject());
-    SearchScope scope = helper.getUseScope(element);
+    SearchScope scope = PsiSearchScopeUtil.getUseScope(element);
     scope = GlobalSearchScope.projectScope(element.getProject()).intersectWith(scope);
     Processor<PsiElement> commentOrLiteralProcessor = new Processor<PsiElement>() {
       @Override

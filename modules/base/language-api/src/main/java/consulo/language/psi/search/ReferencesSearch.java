@@ -11,12 +11,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.project.Project;
 import consulo.project.util.query.DumbAwareSearchParameters;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.BiPredicate;
 
 /**
@@ -112,7 +113,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
       if (scope == null) {
         if (!myElementToSearch.isValid()) return GlobalSearchScope.EMPTY_SCOPE;
 
-        SearchScope useScope = PsiSearchHelper.getInstance(myElementToSearch.getProject()).getUseScope(myElementToSearch);
+        SearchScope useScope = PsiSearchScopeUtil.getUseScope(myElementToSearch);
         myEffectiveScope = scope = myScope.intersectWith(useScope);
       }
       return scope;

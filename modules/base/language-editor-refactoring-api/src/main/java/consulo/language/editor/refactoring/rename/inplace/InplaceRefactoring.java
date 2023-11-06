@@ -20,7 +20,6 @@ import consulo.application.Result;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.query.Query;
 import consulo.codeEditor.*;
-import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
@@ -42,8 +41,8 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.refactoring.NamesValidator;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.event.TemplateEditingAdapter;
@@ -53,7 +52,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.inject.InjectedLanguageManagerUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
@@ -85,11 +84,11 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -230,7 +229,7 @@ public abstract class InplaceRefactoring {
 
   @Nullable
   protected PsiElement checkLocalScope() {
-    final SearchScope searchScope = PsiSearchHelper.getInstance(myElementToRename.getProject()).getUseScope(myElementToRename);
+    final SearchScope searchScope = PsiSearchScopeUtil.getUseScope(myElementToRename);
     if (searchScope instanceof LocalSearchScope) {
       final PsiElement[] elements = ((LocalSearchScope)searchScope).getScope();
       return PsiTreeUtil.findCommonParent(elements);
@@ -254,7 +253,7 @@ public abstract class InplaceRefactoring {
   protected Collection<PsiReference> collectRefs(SearchScope referencesSearchScope) {
     final Query<PsiReference> search = ReferencesSearch.search(myElementToRename, referencesSearchScope, false);
 
-    final CommonProcessors.CollectProcessor<PsiReference> processor = new CommonProcessors.CollectProcessor<PsiReference>() {
+    final CommonProcessors.CollectProcessor<PsiReference> processor = new CommonProcessors.CollectProcessor<>() {
       @Override
       protected boolean accept(PsiReference reference) {
         return acceptReference(reference);

@@ -33,7 +33,7 @@ import java.util.Objects;
  * <ol>
  * <li>
  * {@link PsiSearchHelper#getUseScope(PsiElement)},
- * {@link com.intellij.psi.impl.search.PsiSearchHelperImpl#USE_SCOPE_OPTIMIZER_EP_NAME}
+ * {@link PsiSearchHelperImpl#USE_SCOPE_OPTIMIZER_EP_NAME}
  * to perform optimization of PsiElement's use scope.
  * </li>
  * <li>

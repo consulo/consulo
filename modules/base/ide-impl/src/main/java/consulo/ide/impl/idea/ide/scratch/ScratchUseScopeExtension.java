@@ -25,7 +25,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ExtensionImpl
-public class ScratchUseScopeExtension extends UseScopeEnlarger {
+public class ScratchUseScopeExtension implements UseScopeEnlarger {
   @Nullable
   @Override
   public SearchScope getAdditionalUseScope(@Nonnull PsiElement element) {

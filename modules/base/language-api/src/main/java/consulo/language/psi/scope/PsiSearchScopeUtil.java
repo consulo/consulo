@@ -18,13 +18,34 @@ package consulo.language.psi.scope;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.UseScopeEnlarger;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class PsiSearchScopeUtil {
+  /**
+   * Returns the scope in which references to the specified element are searched. This scope includes the result of
+   * {@link PsiElement#getUseScope()} and also the results returned from the registered
+   * {@link UseScopeEnlarger} instances.
+   *
+   * @param element the element to return the use scope form.
+   * @return the search scope instance.
+   */
+  @Nonnull
+  public static SearchScope getUseScope(@Nonnull PsiElement element) {
+    Project project = element.getProject();
+    SearchScope scope = element.getUseScope();
+    for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
+      final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
+      if (additionalScope != null) {
+        scope = scope.union(additionalScope);
+      }
+    }
+    return scope;
+  }
 
   @Nullable
   public static SearchScope union(@Nullable SearchScope a, @Nullable SearchScope b) {

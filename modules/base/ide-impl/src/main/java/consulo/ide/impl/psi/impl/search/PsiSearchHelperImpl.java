@@ -43,7 +43,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
@@ -64,6 +63,7 @@ import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
@@ -88,23 +88,10 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     PROCESS_INJECTED_PSI, CASE_SENSITIVE_SEARCH, PROCESS_ONLY_JAVA_IDENTIFIERS_IF_POSSIBLE
   }
 
-  @Override
-  @Nonnull
-  public SearchScope getUseScope(@Nonnull PsiElement element) {
-    SearchScope scope = element.getUseScope();
-    for (UseScopeEnlarger enlarger : UseScopeEnlarger.EP_NAME.getExtensionList()) {
-      final SearchScope additionalScope = enlarger.getAdditionalUseScope(element);
-      if (additionalScope != null) {
-        scope = scope.union(additionalScope);
-      }
-    }
-    return scope;
-  }
-
   @Inject
-  public PsiSearchHelperImpl(@Nonnull PsiManager manager) {
+  public PsiSearchHelperImpl(@Nonnull PsiManager manager, DumbService dumbService) {
     myManager = (PsiManagerEx)manager;
-    myDumbService = DumbService.getInstance(myManager.getProject());
+    myDumbService = dumbService;
   }
 
   @Override
@@ -568,7 +555,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     try {
       progress.setText(PsiBundle.message("psi.search.in.non.java.files.progress"));
 
-      final SearchScope useScope = originalElement == null ? null : myDumbService.runReadActionInSmartMode(() -> getUseScope(originalElement));
+      final SearchScope useScope = originalElement == null ? null : myDumbService.runReadActionInSmartMode(() -> PsiSearchScopeUtil.getUseScope(originalElement));
 
       final int patternLength = qName.length();
       for (int i = 0; i < files.length; i++) {
@@ -662,7 +649,7 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
 
   @Override
   public boolean processRequests(@Nonnull SearchRequestCollector collector, @Nonnull Processor<? super PsiReference> processor) {
-    final Map<SearchRequestCollector, Processor<? super PsiReference>> collectors = ContainerUtil.newHashMap();
+    final Map<SearchRequestCollector, Processor<? super PsiReference>> collectors = new HashMap<>();
     collectors.put(collector, processor);
 
     ProgressIndicator progress = getOrCreateIndicator();

@@ -24,14 +24,14 @@ import consulo.find.FindUsagesUtil;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -60,8 +60,7 @@ public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
 
   @Override
   protected boolean isInFileOnly() {
-    return super.isInFileOnly() ||
-           PsiSearchHelper.SERVICE.getInstance(myPsiElement.getProject()).getUseScope(myPsiElement) instanceof LocalSearchScope;
+    return super.isInFileOnly() || PsiSearchScopeUtil.getUseScope(myPsiElement) instanceof LocalSearchScope;
   }
 
   @Override

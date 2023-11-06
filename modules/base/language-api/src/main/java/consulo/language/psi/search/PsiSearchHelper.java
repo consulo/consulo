@@ -24,10 +24,10 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.project.Project;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -125,7 +125,10 @@ public interface PsiSearchHelper {
    * @return the search scope instance.
    */
   @Nonnull
-  SearchScope getUseScope(@Nonnull PsiElement element);
+  @Deprecated
+  default SearchScope getUseScope(@Nonnull PsiElement element) {
+    return PsiSearchScopeUtil.getUseScope(element);
+  }
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_CODE code}
