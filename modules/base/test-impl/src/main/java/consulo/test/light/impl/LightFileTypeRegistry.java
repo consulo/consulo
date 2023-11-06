@@ -15,12 +15,13 @@
  */
 package consulo.test.light.impl;
 
-import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.*;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
@@ -39,11 +40,8 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   private final List<FileType> myAllFileTypes = new ArrayList<>();
 
   @Inject
-  public LightFileTypeRegistry(Application application) {
+  public LightFileTypeRegistry() {
     myAllFileTypes.add(UnknownFileType.INSTANCE);
-
-    for (FileTypeFactory fileTypeFactory : application.getExtensionList(FileTypeFactory.class)) {
-    }
   }
 
   @Override
@@ -56,6 +54,7 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
     return file.getFileType() == type;
   }
 
+  @Nonnull
   @Override
   public FileType[] getRegisteredFileTypes() {
     return myAllFileTypes.toArray(new FileType[myAllFileTypes.size()]);
@@ -69,7 +68,7 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
 
   @Nonnull
   @Override
-  public FileType getFileTypeByFileName(@Nonnull @NonNls String fileName) {
+  public FileType getFileTypeByFileName(@Nonnull String fileName) {
     final String extension = FileUtil.getExtension(fileName);
     return getFileTypeByExtension(extension);
   }
@@ -83,12 +82,12 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
 
   @Nonnull
   @Override
-  public FileType getFileTypeByExtension(@NonNls @Nonnull String extension) {
+  public FileType getFileTypeByExtension(@Nonnull String extension) {
     final FileType result = myExtensionsMap.get(extension);
     return result == null ? UnknownFileType.INSTANCE : result;
   }
 
-  public void registerFileType(@Nonnull FileType fileType, @Nonnull @NonNls String extension) {
+  public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
     myAllFileTypes.add(fileType);
     for (final String ext : extension.split(";")) {
       myExtensionsMap.put(ext, fileType);
@@ -97,7 +96,7 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
 
   @Nullable
   @Override
-  public FileType findFileTypeByName(String fileTypeName) {
+  public FileType findFileTypeByName(@Nonnull String fileTypeName) {
     for (FileType type : myAllFileTypes) {
       if (type.getId().equals(fileTypeName)) {
         return type;
