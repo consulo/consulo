@@ -66,7 +66,7 @@ public class LightProgressManager extends ProgressManager {
 
   @Override
   public void executeNonCancelableSection(@Nonnull Runnable runnable) {
-
+    runnable.run();
   }
 
   @Override

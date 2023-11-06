@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
