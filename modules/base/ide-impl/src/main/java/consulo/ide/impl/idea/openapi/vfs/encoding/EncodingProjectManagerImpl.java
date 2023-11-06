@@ -16,22 +16,23 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Lists;
+import consulo.util.collection.Maps;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
@@ -40,12 +41,12 @@ import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
 @Singleton
 @ServiceImpl
 @State(name = "Encoding", storages = @Storage("encodings.xml"))
-public final class EncodingProjectManagerImpl extends EncodingProjectManager implements PersistentStateComponent<Element>, Disposable {
+public final class EncodingProjectManagerImpl implements EncodingProjectManager, PersistentStateComponent<Element>, Disposable {
   private static final String PROJECT_URL = "PROJECT";
   private final Project myProject;
   private final EncodingManagerImpl myIdeEncodingManager;
@@ -65,7 +66,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
   private Charset myDefaultConsoleCharset;
   private final SimpleModificationTracker myModificationTracker = new SimpleModificationTracker();
   private BOMForNewUTF8Files myBomForNewUtf8Files = BOMForNewUTF8Files.NEVER;
-  private final Map<VirtualFilePointer, Charset> myMapping = ConcurrentCollectionFactory.createMap(new HashingStrategy<VirtualFilePointer>() {
+  private final Map<VirtualFilePointer, Charset> myMapping = Maps.newConcurrentHashMap(new HashingStrategy<VirtualFilePointer>() {
     @Override
     public int hashCode(VirtualFilePointer pointer) {
       // TODO !! hashCode is unstable - VirtualFilePointer URL can change
@@ -80,9 +81,9 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
   private volatile Charset myProjectCharset;
 
   @Inject
-  public EncodingProjectManagerImpl(@Nonnull Project project) {
+  public EncodingProjectManagerImpl(@Nonnull Project project, @Nonnull ApplicationEncodingManager applicationEncodingManager) {
     myProject = project;
-    myIdeEncodingManager = (EncodingManagerImpl)EncodingManager.getInstance();
+    myIdeEncodingManager = (EncodingManagerImpl)applicationEncodingManager;
   }
 
   @Override
@@ -94,7 +95,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
     Element element = new Element("x");
     if (!myMapping.isEmpty()) {
       List<Map.Entry<VirtualFilePointer, Charset>> mappings = new ArrayList<>(myMapping.entrySet());
-      ContainerUtil.quickSort(mappings, Comparator.comparing(e -> e.getKey().getUrl()));
+      Lists.quickSort(mappings, Comparator.comparing(e -> e.getKey().getUrl()));
       for (Map.Entry<VirtualFilePointer, Charset> mapping : mappings) {
         VirtualFilePointer file = mapping.getKey();
         Charset charset = mapping.getValue();

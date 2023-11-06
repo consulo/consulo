@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.vfs.encoding;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
@@ -27,7 +28,6 @@ import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
-import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.xml.serializer.annotation.Attribute;
@@ -36,11 +36,11 @@ import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingManagerListener;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Singleton
 @ServiceImpl
 @State(name = "Encoding", storages = @Storage("encoding.xml"))
-public class EncodingManagerImpl extends ApplicationEncodingManager implements PersistentStateComponent<EncodingManagerImpl.State>, Disposable {
+public class EncodingManagerImpl implements PersistentStateComponent<EncodingManagerImpl.State>, ApplicationEncodingManager, Disposable {
   private static final Logger LOG = Logger.getInstance(EncodingManagerImpl.class);
 
   static final class State {
@@ -90,7 +90,10 @@ public class EncodingManagerImpl extends ApplicationEncodingManager implements P
   private static final Key<Charset> CACHED_CHARSET_FROM_CONTENT = Key.create("CACHED_CHARSET_FROM_CONTENT");
 
   private final ExecutorService changedDocumentExecutor =
-          AppExecutorUtil.createBoundedApplicationPoolExecutor("EncodingManagerImpl Document Pool", AppExecutorUtil.getAppExecutorService(), JobSchedulerImpl.getJobPoolParallelism(), this);
+    AppExecutorUtil.createBoundedApplicationPoolExecutor("EncodingManagerImpl Document Pool",
+                                                         AppExecutorUtil.getAppExecutorService(),
+                                                         JobSchedulerImpl.getJobPoolParallelism(),
+                                                         this);
 
   private final AtomicBoolean myDisposed = new AtomicBoolean();
 
@@ -217,7 +220,7 @@ public class EncodingManagerImpl extends ApplicationEncodingManager implements P
       if (myDisposed.get()) return;
       Document document = ref.get();
       if (document == null) return; // document gced, don't bother
-      ((EncodingManagerImpl)getInstance()).handleDocument(document);
+      ((EncodingManagerImpl)ApplicationEncodingManager.getInstance()).handleDocument(document);
     }
   }
 
@@ -262,7 +265,8 @@ public class EncodingManagerImpl extends ApplicationEncodingManager implements P
   public void clearDocumentQueue() {
     if (((BoundedTaskExecutor)changedDocumentExecutor).isEmpty()) return;
     if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
-      throw new IllegalStateException("Must not call clearDocumentQueue() from under write action because some queued detectors require read action");
+      throw new IllegalStateException(
+        "Must not call clearDocumentQueue() from under write action because some queued detectors require read action");
     }
     ((BoundedTaskExecutor)changedDocumentExecutor).clearAndCancelAll();
     // after clear and canceling all queued tasks, make sure they all are finished
@@ -364,7 +368,11 @@ public class EncodingManagerImpl extends ApplicationEncodingManager implements P
     myState.myDefaultConsoleEncoding = encodingReference;
   }
 
-  static void firePropertyChange(@Nullable Document document, @Nonnull String propertyName, final Object oldValue, final Object newValue, @Nullable Project project) {
+  static void firePropertyChange(@Nullable Document document,
+                                 @Nonnull String propertyName,
+                                 final Object oldValue,
+                                 final Object newValue,
+                                 @Nullable Project project) {
     MessageBus messageBus = (project != null ? project : ApplicationManager.getApplication()).getMessageBus();
     EncodingManagerListener publisher = messageBus.syncPublisher(EncodingManagerListener.class);
     publisher.propertyChanged(document, propertyName, oldValue, newValue);

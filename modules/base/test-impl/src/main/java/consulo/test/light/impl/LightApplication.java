@@ -37,7 +37,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.function.ThrowableSupplier;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
@@ -101,7 +102,8 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     super.bootstrapInjectingContainer(builder);
 
     builder.bind(Application.class).to(this);
-    builder.bind(FileTypeRegistry.class).to(new LightFileTypeRegistry());
+    builder.bind(LightFileTypeRegistry.class).to(LightFileTypeRegistry.class);
+    builder.bind(EncodingRegistry.class).to(ApplicationEncodingManager::getInstance);
     builder.bind(ProgressIndicatorProvider.class).to(myProgressManager);
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.encoding;
+package consulo.test.light.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
-
-import jakarta.annotation.Nonnull;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 06-Sep-22
+ * @since 2018-08-25
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface ApplicationEncodingManager extends EncodingManager {
-  @Nonnull
-  public static ApplicationEncodingManager getInstance() {
-    return Application.get().getInstance(ApplicationEncodingManager.class);
-  }
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
+public class LightApplicationEncodingManager extends LightEncodingManager implements ApplicationEncodingManager {
 }

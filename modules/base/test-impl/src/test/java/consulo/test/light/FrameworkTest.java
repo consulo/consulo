@@ -22,6 +22,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
@@ -65,6 +66,33 @@ public class FrameworkTest {
   @AfterEach
   public void after() {
     Disposer.assertIsEmpty();
+  }
+
+  @Test
+  public void testPlatform() throws Exception {
+    Platform platform = Platform.current();
+    Assertions.assertNotNull(platform.getName());
+  }
+
+  @Test
+  public void testFileTextAndEncoding() throws Throwable {
+    try (AutoDisposable disposable = AutoDisposable.newAutoDisposable("testLocalFileSystem")) {
+      LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
+
+      Application application = builder.build();
+
+      VirtualFileManager virtualFileManager = application.getInstance(VirtualFileManager.class);
+
+      String text = "some text";
+      Path tempFile = Files.createTempFile("someTest", "txt");
+      Files.writeString(tempFile, text);
+
+      VirtualFile path = virtualFileManager.findFileByNioPath(tempFile);
+
+      Assertions.assertNotNull(path);
+      Assertions.assertEquals(text, path.loadText());
+      Assertions.assertNotNull(path.getCharset());
+    }
   }
 
   @Test

@@ -15,8 +15,12 @@ module consulo.test.impl {
   requires consulo.component.impl;
   requires consulo.language.impl;
   requires consulo.document.impl;
+  requires consulo.platform.impl;
 
   exports consulo.test.light;
   exports consulo.test.light.impl;
+
+  provides consulo.platform.internal.PlatformInternal with consulo.test.light.impl.LightPlatformInternal;
+  provides consulo.container.internal.PluginManagerInternal with consulo.test.light.impl.LightPluginManager;
 }
 

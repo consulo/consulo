@@ -13,5 +13,8 @@ module consulo.platform.api {
   
   exports consulo.platform;
   exports consulo.platform.os;
-  exports consulo.platform.internal to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl;
+  exports consulo.platform.internal to
+    consulo.desktop.awt.ide.impl,
+    consulo.test.impl,
+    consulo.desktop.swt.ide.impl;
 }

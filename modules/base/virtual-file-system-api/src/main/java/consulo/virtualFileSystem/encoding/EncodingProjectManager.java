@@ -4,12 +4,12 @@ package consulo.virtualFileSystem.encoding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
-
 import jakarta.annotation.Nonnull;
+
 import java.nio.charset.Charset;
 
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class EncodingProjectManager extends EncodingManager {
+public interface EncodingProjectManager extends EncodingManager {
   public static EncodingProjectManager getInstance(@Nonnull ComponentManager project) {
     return project.getInstance(EncodingProjectManager.class);
   }
@@ -19,18 +19,18 @@ public abstract class EncodingProjectManager extends EncodingManager {
    */
   @Nonnull
   @Override
-  public abstract String getDefaultCharsetName();
+  String getDefaultCharsetName();
 
   /**
    * @return Project encoding (configured in Settings|File Encodings|Project Encoding)
    */
   @Nonnull
   @Override
-  public abstract Charset getDefaultCharset();
+  Charset getDefaultCharset();
 
   /**
    * Sets Project encoding (configured in Settings|File Encodings|Project Encoding). Use empty string to specify "System Default"
    */
   @Override
-  public abstract void setDefaultCharsetName(@Nonnull String name);
+  void setDefaultCharsetName(@Nonnull String name);
 }

@@ -3,9 +3,9 @@ package consulo.virtualFileSystem.encoding;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.charset.Charset;
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @see ApplicationEncodingManager
  * @see EncodingProjectManager
  */
-public abstract class EncodingManager extends EncodingRegistry {
+public interface EncodingManager extends EncodingRegistry {
   public static final String PROP_NATIVE2ASCII_SWITCH = "native2ascii";
   public static final String PROP_PROPERTIES_FILES_ENCODING = "propertiesFilesEncoding";
 
@@ -25,40 +25,38 @@ public abstract class EncodingManager extends EncodingRegistry {
   }
 
   @Nonnull
-  public abstract Collection<Charset> getFavorites();
+  Collection<Charset> getFavorites();
 
   @Override
-  public abstract boolean isNative2AsciiForPropertiesFiles();
+  boolean isNative2AsciiForPropertiesFiles();
 
-  public abstract void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii);
+  void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii);
 
   /**
    * @return returns empty for system default
    */
   @Nonnull
-  public abstract String getDefaultCharsetName();
+  String getDefaultCharsetName();
 
-  public void setDefaultCharsetName(@Nonnull String name) {
-    throw new UnsupportedOperationException("Not implemented");
-  }
+  void setDefaultCharsetName(@Nonnull String name);
 
   /**
    * @return null for system-default
    */
   @Override
   @Nullable
-  public abstract Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile);
+  Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile);
 
-  public abstract void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset);
+  void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset);
 
   /**
    * @return encoding used by default in {@link GeneralCommandLine}
    */
   @Override
   @Nonnull
-  public abstract Charset getDefaultConsoleEncoding();
+  Charset getDefaultConsoleEncoding();
 
-  public boolean shouldAddBOMForNewUtf8File() {
+  default boolean shouldAddBOMForNewUtf8File() {
     return false;
   }
 }

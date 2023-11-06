@@ -18,5 +18,6 @@ module consulo.platform.impl {
   exports consulo.platform.impl to
     consulo.desktop.ide.impl,
     consulo.desktop.awt.ide.impl,
+    consulo.test.impl,
     consulo.desktop.swt.ide.impl;
 }

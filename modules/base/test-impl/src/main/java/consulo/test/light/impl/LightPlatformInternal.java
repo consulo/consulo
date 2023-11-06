@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.encoding;
+package consulo.test.light.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
-
+import consulo.platform.Platform;
+import consulo.platform.internal.PlatformInternal;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 06-Sep-22
+ * @since 2023-11-06
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public interface ApplicationEncodingManager extends EncodingManager {
+public class LightPlatformInternal extends PlatformInternal {
   @Nonnull
-  public static ApplicationEncodingManager getInstance() {
-    return Application.get().getInstance(ApplicationEncodingManager.class);
+  @Override
+  public Platform createCurrent() {
+    return new LightPlatform();
   }
 }

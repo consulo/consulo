@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,84 @@
  */
 package consulo.test.light.impl;
 
-import consulo.annotation.component.ComponentProfiles;
-import consulo.annotation.component.ServiceImpl;
-import jakarta.inject.Singleton;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author VISTALL
- * @since 2018-08-25
+ * @since 2023-11-06
  */
-@Singleton
-@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
-public class LightEncodingManager extends LightEncodingProjectManager {
+public abstract class LightEncodingManager implements EncodingManager {
+  @Nonnull
+  @Override
+  public Collection<Charset> getFavorites() {
+    return List.of(StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
+    return false;
+  }
+
+  @Override
+  public boolean isNative2AsciiForPropertiesFiles() {
+    return false;
+  }
+
+  @Nonnull
+  @Override
+  public Charset getDefaultCharset() {
+    return StandardCharsets.UTF_8;
+  }
+
+  @Nullable
+  @Override
+  public Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults) {
+    return null;
+  }
+
+  @Override
+  public void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset) {
+
+  }
+
+  @Override
+  public void setNative2AsciiForPropertiesFiles(VirtualFile virtualFile, boolean native2Ascii) {
+
+  }
+
+  @Nonnull
+  @Override
+  public String getDefaultCharsetName() {
+    return StandardCharsets.UTF_8.name();
+  }
+
+  @Override
+  public void setDefaultCharsetName(@Nonnull String name) {
+
+  }
+
+  @Nullable
+  @Override
+  public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+    return null;
+  }
+
+  @Override
+  public void setDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile, @Nullable Charset charset) {
+
+  }
+
+  @Nonnull
+  @Override
+  public Charset getDefaultConsoleEncoding() {
+    return StandardCharsets.UTF_8;
+  }
 }

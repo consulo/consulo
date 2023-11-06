@@ -14,16 +14,16 @@ import java.util.Objects;
 /**
  * @author yole
  */
-public abstract class EncodingRegistry {
-  public abstract boolean isNative2Ascii(@Nonnull VirtualFile virtualFile);
+public interface EncodingRegistry {
+  boolean isNative2Ascii(@Nonnull VirtualFile virtualFile);
 
-  public abstract boolean isNative2AsciiForPropertiesFiles();
+  boolean isNative2AsciiForPropertiesFiles();
 
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
   @Nonnull
-  public abstract Charset getDefaultCharset();
+  Charset getDefaultCharset();
 
   /**
    * @param virtualFile       file to get encoding for
@@ -33,17 +33,17 @@ public abstract class EncodingRegistry {
    * null if there is no configured encoding found.
    */
   @Nullable
-  public abstract Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
+  Charset getEncoding(@Nullable VirtualFile virtualFile, boolean useParentDefaults);
 
   /**
    * @param virtualFileOrDir null means project
    * @param charset          null means remove mapping
    */
-  public abstract void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
+  void setEncoding(@Nullable VirtualFile virtualFileOrDir, @Nullable Charset charset);
 
   // "null means 'use system-default'"
   @Nullable
-  public Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
+  default Charset getDefaultCharsetForPropertiesFiles(@Nullable VirtualFile virtualFile) {
     return null;
   }
 
@@ -51,7 +51,7 @@ public abstract class EncodingRegistry {
    * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
   @Nonnull
-  public abstract Charset getDefaultConsoleEncoding();
+  Charset getDefaultConsoleEncoding();
 
   @Nonnull
   @Deprecated

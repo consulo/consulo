@@ -67,19 +67,21 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-component-impl</artifactId>
       <version>${project.version}</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-language-impl</artifactId>
       <version>${project.version}</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-document-impl</artifactId>
       <version>${project.version}</version>
-      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-platform-impl</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>

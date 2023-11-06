@@ -15,15 +15,15 @@
  */
 package consulo.test.light.impl;
 
+import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.util.collection.Maps;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.fileType.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
@@ -38,8 +38,12 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
   private final Map<String, FileType> myExtensionsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
   private final List<FileType> myAllFileTypes = new ArrayList<>();
 
-  public LightFileTypeRegistry() {
+  @Inject
+  public LightFileTypeRegistry(Application application) {
     myAllFileTypes.add(UnknownFileType.INSTANCE);
+
+    for (FileTypeFactory fileTypeFactory : application.getExtensionList(FileTypeFactory.class)) {
+    }
   }
 
   @Override
