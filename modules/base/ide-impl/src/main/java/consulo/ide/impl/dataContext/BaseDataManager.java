@@ -24,7 +24,6 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.internal.DataRuleHoler;
 import consulo.ide.impl.idea.ide.impl.dataRules.*;
-import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -32,18 +31,20 @@ import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.collection.Maps;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -66,7 +67,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
     private final M myDataManager;
     private final Reference<C> myRef;
     private Map<Key, Object> myUserData;
-    private final Map<Key, Object> myCachedData = ContainerUtil.createWeakValueMap();
+    private final Map<Key, Object> myCachedData = Maps.newWeakValueHashMap();
 
     public BaseDataContext(M manager, C component) {
       myDataManager = manager;
@@ -125,7 +126,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
     private Map<Key, Object> getOrCreateMap() {
       Map<Key, Object> userData = myUserData;
       if (userData == null) {
-        myUserData = userData = ContainerUtil.createWeakValueMap();
+        myUserData = userData = Maps.newWeakValueHashMap();
       }
       return userData;
     }
