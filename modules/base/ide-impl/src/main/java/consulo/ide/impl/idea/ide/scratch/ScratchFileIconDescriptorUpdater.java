@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiElement;

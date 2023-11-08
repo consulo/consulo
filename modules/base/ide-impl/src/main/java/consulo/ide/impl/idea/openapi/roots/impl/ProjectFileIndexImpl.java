@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.FileTypeManager;
 import consulo.module.Module;

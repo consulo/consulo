@@ -22,6 +22,8 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.function.ThrowableRunnable;
@@ -92,6 +94,34 @@ public class FrameworkTest {
       Assertions.assertNotNull(path);
       Assertions.assertEquals(text, path.loadText());
       Assertions.assertNotNull(path.getCharset());
+    }
+  }
+
+  @Test
+  public void testReferenceSearch() throws Throwable {
+    try (AutoDisposable disposable = AutoDisposable.newAutoDisposable("testLocalFileSystem")) {
+      LightApplicationBuilder builder = LightApplicationBuilder.create(disposable);
+
+      Application application = builder.build();
+
+      VirtualFileManager virtualFileManager = application.getInstance(VirtualFileManager.class);
+
+      String text = "some text\n\n";
+      Path tempFile = Files.createTempFile("someTest", "txt");
+      Files.writeString(tempFile, text);
+
+      VirtualFile path = virtualFileManager.findFileByNioPath(tempFile);
+
+      LightProjectBuilder projectBuilder = LightProjectBuilder.create(application);
+
+      Project project = projectBuilder.build();
+
+      PsiManager manager = project.getInstance(PsiManager.class);
+
+      PsiFile file = manager.findFile(path);
+
+      ReferencesSearch.search(file.getFirstChild()).forEach(psiReference -> {
+      });
     }
   }
 

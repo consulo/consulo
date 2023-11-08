@@ -2114,6 +2114,54 @@ public final class StringUtil {
     return new MergingCharSequence(new MergingCharSequence(new CharSequenceSubSequence(charSeq, 0, start), replacement), new CharSequenceSubSequence(charSeq, end, charSeq.length()));
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static List<String> getWordsInStringLongestFirst(@Nonnull String find) {
+    List<String> words = getWordsIn(find);
+    // hope long words are rare
+    words.sort(new Comparator<String>() {
+      @Override
+      public int compare(@Nonnull final String o1, @Nonnull final String o2) {
+        return o2.length() - o1.length();
+      }
+    });
+    return words;
+  }
+
+  @Contract(pure = true)
+  public static boolean isEscapedBackslash(@Nonnull CharSequence text, int startOffset, int backslashOffset) {
+    if (text.charAt(backslashOffset) != '\\') {
+      return true;
+    }
+    boolean escaped = false;
+    for (int i = startOffset; i < backslashOffset; i++) {
+      if (text.charAt(i) == '\\') {
+        escaped = !escaped;
+      }
+      else {
+        escaped = false;
+      }
+    }
+    return escaped;
+  }
+
+  @Contract(pure = true)
+  public static boolean isEscapedBackslash(@Nonnull char[] chars, int startOffset, int backslashOffset) {
+    if (chars[backslashOffset] != '\\') {
+      return true;
+    }
+    boolean escaped = false;
+    for (int i = startOffset; i < backslashOffset; i++) {
+      if (chars[i] == '\\') {
+        escaped = !escaped;
+      }
+      else {
+        escaped = false;
+      }
+    }
+    return escaped;
+  }
+  
   public static void assertValidSeparators(@Nonnull CharSequence s) {
     char[] chars = CharArrayUtil.fromSequenceWithoutCopying(s);
     int slashRIndex = -1;

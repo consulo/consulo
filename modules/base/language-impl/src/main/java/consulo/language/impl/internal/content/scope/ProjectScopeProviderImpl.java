@@ -1,26 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.search;
+package consulo.language.impl.internal.content.scope;
 
+import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.psi.scope.EverythingGlobalScope;
-import consulo.module.content.DirectoryInfo;
-import consulo.ide.impl.idea.openapi.roots.impl.ProjectFileIndexImpl;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiBundle;
+import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.scratch.RootType;
 import consulo.module.Module;
 import consulo.module.UnloadedModuleDescription;
+import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopeProvider;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -30,8 +31,8 @@ import java.util.function.Supplier;
  * @author yole
  */
 @Singleton
-@ServiceImpl
-public class ProjectScopeProviderImpl extends ProjectScopeProvider {
+@ServiceImpl(profiles = ComponentProfiles.PRODUCTION)
+public class ProjectScopeProviderImpl implements ProjectScopeProvider {
 
   public static class ContentSearchScope extends GlobalSearchScope {
 
@@ -135,7 +136,7 @@ public class ProjectScopeProviderImpl extends ProjectScopeProvider {
       return new ProjectAndLibrariesScope(myProject) {
         @Override
         public boolean contains(@Nonnull VirtualFile file) {
-          DirectoryInfo info = ((ProjectFileIndexImpl)myProjectFileIndex).getInfoForFileOrDirectory(file);
+          DirectoryInfo info = ((FileIndexBase)myProjectFileIndex).getInfoForFileOrDirectory(file);
           return info.isInProject(file) && (info.getModule() != null || info.hasLibraryClassRoot() || info.isInLibrarySource(file));
         }
       };

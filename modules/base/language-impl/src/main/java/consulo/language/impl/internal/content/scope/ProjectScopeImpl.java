@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.impl.internal.content.scope;
 
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.scope.GlobalSearchScope;

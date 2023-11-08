@@ -126,7 +126,7 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
 
   protected static int initOccurrencesNumber(PsiNameIdentifierOwner nameIdentifierOwner) {
     final ProgressManager progressManager = ProgressManager.getInstance();
-    final PsiSearchHelper searchHelper = PsiSearchHelper.SERVICE.getInstance(nameIdentifierOwner.getProject());
+    final PsiSearchHelper searchHelper = PsiSearchHelper.getInstance(nameIdentifierOwner.getProject());
     final GlobalSearchScope scope = GlobalSearchScope.projectScope(nameIdentifierOwner.getProject());
     final String name = nameIdentifierOwner.getName();
     final boolean isCheapToSearch =

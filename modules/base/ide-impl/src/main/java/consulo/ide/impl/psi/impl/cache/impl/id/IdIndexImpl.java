@@ -2,20 +2,20 @@
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.cacheBuilder.CacheBuilderRegistry;
-import consulo.language.psi.stub.IdIndexEntry;
-import consulo.language.psi.stub.IdIndexer;
-import consulo.language.psi.stub.IdTableBuilding;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.ThreadLocalCachedIntArray;
 import consulo.ide.impl.idea.util.indexing.CustomInputsIndexFileBasedIndexExtension;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import jakarta.inject.Inject;
-
+import consulo.language.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.internal.psi.stub.IdIndex;
+import consulo.language.psi.stub.IdIndexEntry;
+import consulo.language.psi.stub.IdIndexer;
+import consulo.language.psi.stub.IdTableBuilding;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ThreadLocalCachedIntArray;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,15 +28,18 @@ import java.util.Collection;
 public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIndexExtension<IdIndexEntry> {
   private static final ThreadLocalCachedIntArray spareBufferLocal = new ThreadLocalCachedIntArray();
 
+  private final FileTypeRegistry myFileTypeRegistry;
+
   @Inject
-  public IdIndexImpl(CacheBuilderRegistry cacheBuilderRegistry) {
+  public IdIndexImpl(CacheBuilderRegistry cacheBuilderRegistry, FileTypeRegistry fileTypeRegistry) {
     super(cacheBuilderRegistry);
+    myFileTypeRegistry = fileTypeRegistry;
   }
 
   @Override
   public int getVersion() {
-    FileType[] types = FileTypeRegistry.getInstance().getRegisteredFileTypes();
-    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getName(), o2.getName()));
+    FileType[] types = myFileTypeRegistry.getRegisteredFileTypes();
+    Arrays.sort(types, (o1, o2) -> Comparing.compare(o1.getId(), o2.getId()));
 
     int version = super.getVersion();
     for (FileType fileType : types) {
@@ -51,7 +54,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
   @Nonnull
   @Override
   public DataExternalizer<Collection<IdIndexEntry>> createExternalizer() {
-    return new DataExternalizer<Collection<IdIndexEntry>>() {
+    return new DataExternalizer<>() {
       @Override
       public void save(@Nonnull DataOutput out, @Nonnull Collection<IdIndexEntry> value) throws IOException {
         int size = value.size();

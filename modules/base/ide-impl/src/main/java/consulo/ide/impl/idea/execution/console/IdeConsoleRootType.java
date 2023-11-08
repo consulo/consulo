@@ -17,32 +17,30 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.fileEditor.FileEditorManager;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.editor.scratch.FileEditorTrackingRootType;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.ObjectUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.inject.Inject;
-
+import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
 
 /**
  * @author gregsh
  */
 @ExtensionImpl
-public class IdeConsoleRootType extends ConsoleRootType {
+public class IdeConsoleRootType extends ConsoleRootType implements FileEditorTrackingRootType {
   @Inject
-  IdeConsoleRootType() {
-    super("ide", ApplicationNamesInfo.getInstance().getProductName() + " Consoles");
+  public IdeConsoleRootType() {
+    super("ide", "Consoles");
   }
 
   @Nonnull
@@ -55,7 +53,10 @@ public class IdeConsoleRootType extends ConsoleRootType {
   public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
     if (file.isDirectory()) return null;
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
-    Image icon = fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtil.notNull(fileType.getIcon(), AllIcons.Debugger.Console);
+    Image icon =
+      fileType == UnknownFileType.INSTANCE || fileType == PlainTextFileType.INSTANCE ? AllIcons.Debugger.Console : ObjectUtil.notNull(
+        fileType.getIcon(),
+        AllIcons.Debugger.Console);
     return ImageEffects.layered(icon, AllIcons.Nodes.RunnableMark);
   }
 

@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.ContentIterator;
+import consulo.module.content.internal.FileIndexBase;
 import consulo.content.OrderRootType;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.content.LanguageContentFolderScopes;

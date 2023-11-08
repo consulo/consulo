@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -32,32 +32,33 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
 import consulo.language.Language;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.editor.scratch.FileEditorTrackingRootType;
 import consulo.language.file.FileTypeManager;
 import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.language.plain.PlainTextLanguage;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 
@@ -108,8 +109,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (!isEditable(file)) return;
         RootType rootType = getRootType(file);
-        if (rootType == null) return;
-        rootType.fileOpened(file, source);
+        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+          fileEditorTrackingRootType.fileOpened(file, source);
+        }
       }
 
       @Override
@@ -118,8 +120,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         if (!isEditable(file)) return;
 
         RootType rootType = getRootType(file);
-        if (rootType == null) return;
-        rootType.fileClosed(file, source);
+        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+          fileEditorTrackingRootType.fileClosed(file, source);
+        }
       }
 
       boolean isEditable(@Nonnull VirtualFile file) {
@@ -212,8 +215,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     String ext = PathUtil.getFileExtension(pathName);
     String fileNameExt = PathUtil.getFileName(pathName);
     String fileName = StringUtil.trimEnd(fileNameExt, ext == null ? "" : "." + ext);
-    AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
-    try {
+    return WriteAction.compute(() -> {
       VirtualFile dir = VfsUtil.createDirectories(PathUtil.getParentPath(fullPath));
       if (option == Option.create_new_always) {
         return VfsUtil.createChildSequent(LocalFileSystem.getInstance(), dir, fileName, StringUtil.notNullize(ext));
@@ -221,10 +223,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       else {
         return dir.createChildData(LocalFileSystem.getInstance(), fileNameExt);
       }
-    }
-    finally {
-      token.finish();
-    }
+    });
   }
 
   @Nullable

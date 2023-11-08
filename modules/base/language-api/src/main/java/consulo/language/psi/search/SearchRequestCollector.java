@@ -3,7 +3,6 @@ package consulo.language.psi.search;
 
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -12,9 +11,10 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author peter
@@ -23,7 +23,7 @@ public class SearchRequestCollector {
   private final Object lock = new Object();
   private final List<PsiSearchRequest> myWordRequests = new ArrayList<>();
   private final List<QuerySearchRequest> myQueryRequests = new ArrayList<>();
-  private final List<Processor<Processor<? super PsiReference>>> myCustomSearchActions = new ArrayList<>();
+  private final List<Predicate<Predicate<? super PsiReference>>> myCustomSearchActions = new ArrayList<>();
   private final SearchSession mySession;
 
   public SearchRequestCollector(@Nonnull SearchSession session) {
@@ -129,7 +129,7 @@ public class SearchRequestCollector {
     }
   }
 
-  public void searchCustom(@Nonnull Processor<Processor<? super PsiReference>> searchAction) {
+  public void searchCustom(@Nonnull Predicate<Predicate<? super PsiReference>> searchAction) {
     synchronized (lock) {
       myCustomSearchActions.add(searchAction);
     }
@@ -155,7 +155,7 @@ public class SearchRequestCollector {
   }
 
   @Nonnull
-  public List<Processor<Processor<? super PsiReference>>> takeCustomSearchActions() {
+  public List<Predicate<Predicate<? super PsiReference>>> takeCustomSearchActions() {
     return takeRequests(myCustomSearchActions);
   }
 

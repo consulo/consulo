@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ui.ex.awt.CellRendererPanel;

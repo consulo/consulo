@@ -22,5 +22,6 @@ module consulo.test.impl {
 
   provides consulo.platform.internal.PlatformInternal with consulo.test.light.impl.LightPlatformInternal;
   provides consulo.container.internal.PluginManagerInternal with consulo.test.light.impl.LightPluginManager;
+  provides consulo.ui.internal.UIInternal with consulo.test.light.impl.LightUIInternal;
 }
 

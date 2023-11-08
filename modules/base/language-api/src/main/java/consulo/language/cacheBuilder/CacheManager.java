@@ -18,31 +18,35 @@ package consulo.language.cacheBuilder;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
+import java.util.function.Predicate;
+
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class CacheManager {
+public interface CacheManager {
   @Nonnull
-  public static CacheManager getInstance(@Nonnull Project project) {
+  @Deprecated
+  static CacheManager getInstance(@Nonnull Project project) {
     return project.getInstance(CacheManager.class);
   }
 
   @Nonnull
-  public abstract PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
+  PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
 
   @Nonnull
-  public abstract VirtualFile[] getVirtualFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, final boolean caseSensitively);
+  VirtualFile[] getVirtualFilesWithWord(@Nonnull String word,
+                                        short occurenceMask,
+                                        @Nonnull GlobalSearchScope scope,
+                                        final boolean caseSensitively);
 
-  public abstract boolean processFilesWithWord(@Nonnull Processor<PsiFile> processor,
-                                               @Nonnull String word,
-                                               short occurenceMask,
-                                               @Nonnull GlobalSearchScope scope,
-                                               final boolean caseSensitively);
+  boolean processFilesWithWord(@Nonnull Predicate<PsiFile> processor,
+                               @Nonnull String word,
+                               short occurenceMask,
+                               @Nonnull GlobalSearchScope scope,
+                               final boolean caseSensitively);
 }
 

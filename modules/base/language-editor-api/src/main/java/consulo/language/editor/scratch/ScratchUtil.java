@@ -18,6 +18,8 @@ package consulo.language.editor.scratch;
 import consulo.application.ApplicationManager;
 import consulo.language.Language;
 import consulo.language.file.FileTypeManager;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;

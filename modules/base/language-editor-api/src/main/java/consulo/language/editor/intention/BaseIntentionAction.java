@@ -16,7 +16,7 @@
 
 package consulo.language.editor.intention;
 
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.Nls;

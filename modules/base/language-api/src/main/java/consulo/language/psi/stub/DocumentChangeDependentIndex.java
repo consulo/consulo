@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.language.psi.stub.FileBasedIndexExtension;
 
@@ -9,5 +9,4 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
  * Note, every {@link FileBasedIndexExtension} where {@link FileBasedIndexExtension#dependsOnFileContent()} returns false is treated as document change dependent.
  */
 public interface DocumentChangeDependentIndex {
-
 }

@@ -26,26 +26,26 @@ import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class ProjectScopeProvider {
+public interface ProjectScopeProvider {
   public static ProjectScopeProvider getInstance(Project project) {
     return project.getInstance(ProjectScopeProvider.class);
   }
 
   @Nonnull
-  public abstract ProjectAwareSearchScope getEverythingScope();
+  ProjectAwareSearchScope getEverythingScope();
 
   @Nonnull
-  public abstract ProjectAwareSearchScope getLibrariesScope();
+  ProjectAwareSearchScope getLibrariesScope();
 
   /**
    * @return Scope for all things inside the project: files in the project content plus files in libraries/libraries sources
    */
   @Nonnull
-  public abstract ProjectAwareSearchScope getAllScope();
+  ProjectAwareSearchScope getAllScope();
 
   @Nonnull
-  public abstract ProjectAwareSearchScope getProjectScope();
+  ProjectAwareSearchScope getProjectScope();
 
   @Nonnull
-  public abstract ProjectAwareSearchScope getContentScope();
+  ProjectAwareSearchScope getContentScope();
 }

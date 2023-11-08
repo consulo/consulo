@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.search;
+package consulo.virtualFileSystem;
 
-import consulo.language.psi.PsiElement;
-import consulo.application.util.StringSearcher;
 import jakarta.annotation.Nonnull;
 
-@FunctionalInterface
-interface BulkOccurrenceProcessor {
-  boolean execute(@Nonnull PsiElement scope, @Nonnull int[] offsetsInScope, @Nonnull StringSearcher searcher);
+/**
+ * @author VISTALL
+ * @since 2023-11-08
+ */
+public interface VirtualFileDelegate {
+  @Nonnull
+  VirtualFile getDelegate();
 }

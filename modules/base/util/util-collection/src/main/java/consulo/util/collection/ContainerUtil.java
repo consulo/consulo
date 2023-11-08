@@ -344,6 +344,17 @@ public class ContainerUtil {
     return list;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> Set<V> map2LinkedSet(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
+    if (collection.isEmpty()) return Collections.emptySet();
+    Set<V> set = new LinkedHashSet<V>(collection.size());
+    for (final T t : collection) {
+      set.add(mapper.apply(t));
+    }
+    return set;
+  }
+
   public static <T extends Comparable<T>> void sort(@Nonnull List<T> list) {
     int size = list.size();
 

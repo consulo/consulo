@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.impl.*;
 import consulo.ide.impl.idea.util.indexing.impl.forward.*;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
+import consulo.language.internal.psi.stub.IdIndex;
 import consulo.index.io.*;
 import consulo.index.io.internal.DebugAssertions;
 import consulo.language.psi.stub.FileBasedIndex;

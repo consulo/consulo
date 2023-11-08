@@ -18,7 +18,7 @@ package consulo.language.editor.refactoring.move.fileOrDirectory;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.refactoring.move.MoveCallback;
 import consulo.language.editor.refactoring.move.MoveHandlerDelegate;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.ScratchFileService;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.plain.psi.PsiPlainText;

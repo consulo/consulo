@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.usages.impl;
 
 import consulo.find.FindManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.HyperlinkAdapter;

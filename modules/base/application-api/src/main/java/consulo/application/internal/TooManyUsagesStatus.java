@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.progress.util;
+package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;

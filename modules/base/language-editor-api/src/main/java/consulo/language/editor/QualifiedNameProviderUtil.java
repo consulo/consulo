@@ -3,8 +3,8 @@
 package consulo.language.editor;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

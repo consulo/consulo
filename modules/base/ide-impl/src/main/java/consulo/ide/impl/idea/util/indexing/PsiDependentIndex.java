@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.language.psi.stub.DocumentChangeDependentIndex;
+
 /**
  * Marker interface of index that is built from PSI, meaning its invalidation will happen upon producing new PSI.
  *

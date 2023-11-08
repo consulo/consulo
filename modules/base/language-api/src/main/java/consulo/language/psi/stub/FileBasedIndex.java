@@ -4,6 +4,7 @@ package consulo.language.psi.stub;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ReadAction;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.PerApplicationInstance;
 import consulo.application.util.function.Processor;
@@ -14,25 +15,24 @@ import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
 import consulo.language.util.IncorrectOperationException;
 import consulo.module.content.ProjectFileIndex;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author dmitrylomov
@@ -115,8 +115,8 @@ public abstract class FileBasedIndex {
   public abstract <K, V> boolean processFilesContainingAllKeys(@Nonnull ID<K, V> indexId,
                                                                @Nonnull Collection<? extends K> dataKeys,
                                                                @Nonnull SearchScope filter,
-                                                               @Nullable Condition<? super V> valueChecker,
-                                                               @Nonnull Processor<? super VirtualFile> processor);
+                                                               @Nullable Predicate<? super V> valueChecker,
+                                                               @Nonnull Predicate<? super VirtualFile> processor);
 
   /**
    * It is guaranteed to return data which is up-to-date within the given project.

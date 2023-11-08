@@ -39,4 +39,6 @@ module consulo.language.impl {
   exports consulo.language.impl.internal.pom to consulo.ide.impl;
   exports consulo.language.impl.internal.pattern.compiler to consulo.ide.impl;
   exports consulo.language.impl.internal.template to consulo.ide.impl;
+  exports consulo.language.impl.internal.psi.search to consulo.ide.impl, consulo.test.impl;
+  exports consulo.language.impl.internal.content.scope to consulo.ide.impl;
 }

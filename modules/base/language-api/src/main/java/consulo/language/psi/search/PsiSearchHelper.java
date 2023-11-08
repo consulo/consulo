@@ -18,7 +18,6 @@ package consulo.language.psi.search;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -31,6 +30,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.function.Predicate;
+
 /**
  * Provides low-level search and find usages services for a project, like finding references
  * to an element, finding overriding / inheriting elements, finding to do items and so on.
@@ -39,19 +40,19 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiSearchHelper {
-  @Deprecated
+  @Deprecated(forRemoval = true)
   class SERVICE {
     private SERVICE() {
     }
 
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static PsiSearchHelper getInstance(Project project) {
       return project.getInstance(PsiSearchHelper.class);
     }
   }
 
   @Nonnull
-  public static PsiSearchHelper getInstance(Project project) {
+   static PsiSearchHelper getInstance(Project project) {
     return project.getInstance(PsiSearchHelper.class);
   }
 
@@ -73,13 +74,13 @@ public interface PsiSearchHelper {
    * @param processor
    * @return false if processor returned false, true otherwise
    */
-  boolean processCommentsContainingIdentifier(@Nonnull String identifier, @Nonnull SearchScope searchScope, @Nonnull Processor<PsiElement> processor);
+  boolean processCommentsContainingIdentifier(@Nonnull String identifier, @Nonnull SearchScope searchScope, @Nonnull Predicate<PsiElement> processor);
 
   /**
    * Given a text, scope and other search flags, runs the processor on all indexed files that contain all words from the text.
    * Note that this doesn't mean the files contain the text itself.
    */
-  boolean processCandidateFilesForText(@Nonnull GlobalSearchScope scope, short searchContext, boolean caseSensitively, @Nonnull String text, @Nonnull Processor<? super VirtualFile> processor);
+  boolean processCandidateFilesForText(@Nonnull GlobalSearchScope scope, short searchContext, boolean caseSensitively, @Nonnull String text, @Nonnull Predicate<? super VirtualFile> processor);
 
   /**
    * Returns the list of files which contain the specified word in "plain text"
@@ -139,7 +140,7 @@ public interface PsiSearchHelper {
    * @param processor       the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWord(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor, final boolean caseSensitively);
+  boolean processAllFilesWithWord(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, final boolean caseSensitively);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_PLAIN_TEXT code}
@@ -150,7 +151,7 @@ public interface PsiSearchHelper {
    * @param processor       the processor which accepts the references.
    * @param caseSensitively if words differing in the case only should not be considered equal
    */
-  boolean processAllFilesWithWordInText(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor, final boolean caseSensitively);
+  boolean processAllFilesWithWordInText(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor, final boolean caseSensitively);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_COMMENTS comments}
@@ -160,7 +161,7 @@ public interface PsiSearchHelper {
    * @param scope     the scope in which occurrences are searched.
    * @param processor the processor which accepts the references.
    */
-  boolean processAllFilesWithWordInComments(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor);
+  boolean processAllFilesWithWordInComments(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor);
 
   /**
    * Passes all files containing the specified word in {@link UsageSearchContext#IN_STRINGS string literal}
@@ -170,12 +171,12 @@ public interface PsiSearchHelper {
    * @param scope     the scope in which occurrences are searched.
    * @param processor the processor which accepts the references.
    */
-  boolean processAllFilesWithWordInLiterals(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Processor<PsiFile> processor);
+  boolean processAllFilesWithWordInLiterals(@Nonnull String word, @Nonnull GlobalSearchScope scope, @Nonnull Predicate<PsiFile> processor);
 
-  boolean processRequests(@Nonnull SearchRequestCollector request, @Nonnull Processor<? super PsiReference> processor);
+  boolean processRequests(@Nonnull SearchRequestCollector request, @Nonnull Predicate<? super PsiReference> processor);
 
   @Nonnull
-  AsyncFuture<Boolean> processRequestsAsync(@Nonnull SearchRequestCollector request, @Nonnull Processor<PsiReference> processor);
+  AsyncFuture<Boolean> processRequestsAsync(@Nonnull SearchRequestCollector request, @Nonnull Predicate<PsiReference> processor);
 
   boolean processElementsWithWord(@Nonnull TextOccurenceProcessor processor, @Nonnull SearchScope searchScope, @Nonnull String text, short searchContext, boolean caseSensitive);
 
@@ -204,7 +205,7 @@ public interface PsiSearchHelper {
                                       final short searchContext,
                                       final boolean caseSensitively,
                                       @Nonnull String text,
-                                      @Nonnull final Processor<VirtualFile> processor);
+                                      @Nonnull final Predicate<VirtualFile> processor);
 
   enum SearchCostResult {
     ZERO_OCCURRENCES,

@@ -20,9 +20,11 @@
 package consulo.language.file.inject;
 
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileDelegate;
 import jakarta.annotation.Nonnull;
 
-public interface VirtualFileWindow {
+public interface VirtualFileWindow extends VirtualFileDelegate {
+  @Override
   @Nonnull
   VirtualFile getDelegate();
 

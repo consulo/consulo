@@ -17,32 +17,32 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.index.io.StorageException;
 import consulo.index.io.ValueContainer;
-import consulo.util.lang.function.Condition;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public class InvertedIndexUtil {
   @Nonnull
   public static <K, V, I> IntSet collectInputIdsContainingAllKeys(@Nonnull InvertedIndex<? super K, V, I> index,
                                                                   @Nonnull Collection<? extends K> dataKeys,
-                                                                  @Nullable Condition<? super K> keyChecker,
-                                                                  @Nullable Condition<? super V> valueChecker,
+                                                                  @Nullable Predicate<? super K> keyChecker,
+                                                                  @Nullable Predicate<? super V> valueChecker,
                                                                   @Nullable ValueContainer.IntPredicate idChecker) throws StorageException {
     IntSet mainIntersection = null;
 
     for (K dataKey : dataKeys) {
-      if (keyChecker != null && !keyChecker.value(dataKey)) continue;
+      if (keyChecker != null && !keyChecker.test(dataKey)) continue;
 
       final IntSet copy = IntSets.newHashSet();
       final ValueContainer<V> container = index.getData(dataKey);
 
       for (ValueContainer.ValueIterator<V> valueIt = container.getValueIterator(); valueIt.hasNext(); ) {
         final V value = valueIt.next();
-        if (valueChecker != null && !valueChecker.value(value)) {
+        if (valueChecker != null && !valueChecker.test(value)) {
           continue;
         }
 

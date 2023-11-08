@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.find.impl;
 
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.CompactVirtualFileSet;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -25,7 +25,8 @@ import consulo.content.FileIndex;
 import consulo.content.scope.SearchScope;
 import consulo.find.FindBundle;
 import consulo.find.FindModel;
-import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
+import consulo.language.impl.internal.psi.search.PsiSearchHelperImpl;
+import consulo.language.internal.PsiSearchHelperEx;
 import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
@@ -34,6 +35,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.PsiSearchHelper;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -258,7 +260,7 @@ class FindInProjectTask {
       return true;
     };
     List<VirtualFile> sorted = ContainerUtil.sorted(virtualFiles, SEARCH_RESULT_FILE_COMPARATOR);
-    PsiSearchHelperImpl.processFilesConcurrentlyDespiteWriteActions(myProject, sorted, myProgress, new AtomicBoolean(), processor);
+    ((PsiSearchHelperEx)PsiSearchHelper.getInstance(myProject)).processFilesConcurrentlyDespiteWriteActions(myProject, sorted, myProgress, new AtomicBoolean(), processor);
   }
 
   // must return non-binary files

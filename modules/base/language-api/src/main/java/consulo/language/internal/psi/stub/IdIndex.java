@@ -1,28 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.psi.impl.cache.impl.id;
+package consulo.language.internal.psi.stub;
 
 import consulo.index.io.DataIndexer;
-import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.index.io.ID;
-import consulo.language.psi.stub.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.LanguageFileType;
-import consulo.language.custom.CustomSyntaxTableFileType;
-import consulo.project.DumbService;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.search.UsageSearchContext;
-import consulo.language.psi.PsiUtilCore;
-import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.indexing.*;
-import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.InlineKeyDescriptor;
 import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.language.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.custom.CustomSyntaxTableFileType;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.UsageSearchContext;
+import consulo.language.psi.stub.*;
+import consulo.platform.Platform;
+import consulo.project.DumbService;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -37,7 +36,11 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final FileBasedIndex.InputFilter myInputFilter;
 
-  public static final boolean ourSnapshotMappingsEnabled = SystemProperties.getBooleanProperty("idea.index.snapshot.mappings.enabled", true);
+  public static final boolean ourSnapshotMappingsEnabled = Boolean.parseBoolean(Platform.current()
+                                                                                        .jvm()
+                                                                                        .getRuntimeProperty(
+                                                                                          "idea.index.snapshot.mappings.enabled",
+                                                                                          "true"));
 
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
@@ -127,9 +130,9 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   public static boolean isIndexable(@Nonnull CacheBuilderRegistry cacheBuilderRegistry, FileType fileType) {
     return fileType instanceof LanguageFileType ||
-           fileType instanceof CustomSyntaxTableFileType ||
-           IdTableBuilding.isIdIndexerRegistered(fileType) ||
-           cacheBuilderRegistry.getCacheBuilder(fileType) != null;
+      fileType instanceof CustomSyntaxTableFileType ||
+      IdTableBuilding.isIdIndexerRegistered(fileType) ||
+      cacheBuilderRegistry.getCacheBuilder(fileType) != null;
   }
 
   @Override

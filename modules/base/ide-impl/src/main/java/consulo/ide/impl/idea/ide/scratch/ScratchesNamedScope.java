@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.ide.IdeBundle;
-import consulo.language.editor.scratch.RootType;
+import consulo.language.scratch.RootType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.AbstractPackageSet;

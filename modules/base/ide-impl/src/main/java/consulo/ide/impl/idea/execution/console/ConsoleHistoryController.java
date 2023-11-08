@@ -41,7 +41,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;

@@ -27,7 +27,7 @@ import consulo.find.*;
 import consulo.ide.impl.idea.find.FindProgressIndicator;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
-import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

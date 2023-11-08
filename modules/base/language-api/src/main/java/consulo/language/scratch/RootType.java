@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.scratch;
+package consulo.language.scratch;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.FileEditorManager;
 import consulo.language.Language;
 import consulo.language.file.FileTypeManager;
 import consulo.language.util.LanguageUtil;
@@ -28,9 +27,9 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -111,12 +110,6 @@ public abstract class RootType {
 
   public VirtualFile findFile(@Nullable Project project, @Nonnull String pathName, ScratchFileService.Option option) throws IOException {
     return ScratchFileService.getInstance().findFile(this, pathName, option);
-  }
-
-  public void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
-  }
-
-  public void fileClosed(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
   }
 
   public boolean isIgnored(@Nonnull Project project, @Nonnull VirtualFile element) {

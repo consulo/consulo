@@ -298,7 +298,9 @@ public abstract class DumbService {
    *
    * @return Wrapped component.
    */
-  public abstract JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable);
+  public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
+    throw new AbstractMethodError("AWT/Swing Dependency");
+  }
 
   /**
    * Disables given component temporarily during dumb mode.

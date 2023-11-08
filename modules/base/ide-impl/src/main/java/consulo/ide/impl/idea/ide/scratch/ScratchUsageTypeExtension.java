@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.ConcurrentFactoryMap;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.usage.UsageType;

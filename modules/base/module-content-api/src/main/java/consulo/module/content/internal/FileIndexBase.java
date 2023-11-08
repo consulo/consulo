@@ -13,38 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.impl;
+package consulo.module.content.internal;
 
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.file.FileTypeManager;
-import consulo.module.Module;
+import consulo.application.AccessRule;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;
+import consulo.module.Module;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileDelegate;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.application.AccessRule;
-import jakarta.inject.Provider;
-
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Provider;
 
 /**
  * @author nik
  */
 public abstract class FileIndexBase implements FileIndex {
-  protected final FileTypeManager myFileTypeManager;
+  protected final FileTypeRegistry myFileTypeManager;
   protected final Provider<DirectoryIndex> myDirectoryIndexProvider;
   private final VirtualFileFilter myContentFilter = file -> {
     assert file != null;
     return ObjectUtil.assertNotNull(AccessRule.<Boolean, RuntimeException>read(() -> !isScopeDisposed() && isInContent(file)));
   };
 
-  public FileIndexBase(@Nonnull Provider<DirectoryIndex> directoryIndexProvider, @Nonnull FileTypeManager fileTypeManager) {
+  public FileIndexBase(@Nonnull Provider<DirectoryIndex> directoryIndexProvider, @Nonnull FileTypeRegistry fileTypeManager) {
     myDirectoryIndexProvider = directoryIndexProvider;
     myFileTypeManager = fileTypeManager;
   }
@@ -68,13 +67,13 @@ public abstract class FileIndexBase implements FileIndex {
   }
 
   private static boolean iterateContentUnderDirectoryWithFilter(@Nonnull VirtualFile dir, @Nonnull ContentIterator iterator, @Nonnull VirtualFileFilter filter) {
-    return VfsUtilCore.iterateChildrenRecursively(dir, filter, iterator);
+    return VirtualFileUtil.iterateChildrenRecursively(dir, filter, iterator);
   }
 
   @Nonnull
   public DirectoryInfo getInfoForFileOrDirectory(@Nonnull VirtualFile file) {
-    if (file instanceof VirtualFileWindow) {
-      file = ((VirtualFileWindow)file).getDelegate();
+    if (file instanceof VirtualFileDelegate) {
+      file = ((VirtualFileDelegate)file).getDelegate();
     }
     return myDirectoryIndexProvider.get().getInfoForFile(file);
   }

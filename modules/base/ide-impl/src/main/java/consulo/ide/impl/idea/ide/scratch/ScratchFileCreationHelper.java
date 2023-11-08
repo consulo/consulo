@@ -13,7 +13,7 @@ import consulo.ide.impl.idea.util.PathUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.WriteCommandAction;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;

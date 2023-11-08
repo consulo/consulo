@@ -5,7 +5,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;

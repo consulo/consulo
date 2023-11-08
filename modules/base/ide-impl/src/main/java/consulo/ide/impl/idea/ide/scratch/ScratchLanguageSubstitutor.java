@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.scratch.RootType;
+import consulo.language.scratch.ScratchFileService;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.LanguageSubstitutor;
 import consulo.language.psi.LanguageSubstitutors;

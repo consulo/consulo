@@ -395,7 +395,7 @@ public class FindUsagesManager {
           }
         }
 
-        PsiSearchHelper.SERVICE.getInstance(project).processRequests(optionsClone.fastTrack, ref -> {
+        PsiSearchHelper.getInstance(project).processRequests(optionsClone.fastTrack, ref -> {
           ThrowableComputable<UsageInfo,RuntimeException> action = () -> {
             if (!ref.getElement().isValid()) return null;
             return new UsageInfo(ref);

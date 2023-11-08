@@ -58,7 +58,7 @@ import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndexExtension;
 import consulo.index.io.InvertedIndexValueIterator;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
+import consulo.language.internal.psi.stub.IdIndex;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.ide.impl.psi.stubs.SerializationManagerEx;
 import consulo.index.io.ID;
@@ -1004,8 +1004,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   public <K, V> boolean processFilesContainingAllKeys(@Nonnull final ID<K, V> indexId,
                                                       @Nonnull final Collection<? extends K> dataKeys,
                                                       @Nonnull final SearchScope filter,
-                                                      @Nullable Condition<? super V> valueChecker,
-                                                      @Nonnull final Processor<? super VirtualFile> processor) {
+                                                      @Nullable Predicate<? super V> valueChecker,
+                                                      @Nonnull final Predicate<? super VirtualFile> processor) {
     ProjectIndexableFilesFilter filesSet = createProjectIndexableFiles(((ProjectAwareSearchScope)filter).getProject());
     final IntSet set = collectFileIdsContainingAllKeys(indexId, dataKeys, filter, valueChecker, filesSet);
     return set != null && processVirtualFiles(set, filter, processor);
@@ -1127,7 +1127,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   private <K, V> IntSet collectFileIdsContainingAllKeys(@Nonnull final ID<K, V> indexId,
                                                         @Nonnull final Collection<? extends K> dataKeys,
                                                         @Nonnull final SearchScope filter,
-                                                        @Nullable final Condition<? super V> valueChecker,
+                                                        @Nullable final Predicate<? super V> valueChecker,
                                                         @Nullable final ProjectIndexableFilesFilter projectFilesFilter) {
     ThrowableConvertor<UpdatableIndex<K, V, FileContent>, IntSet, StorageException> convertor = index -> InvertedIndexUtil.collectInputIdsContainingAllKeys(index, dataKeys, __ -> {
       ProgressManager.checkCanceled();
@@ -1137,7 +1137,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     return processExceptions(indexId, null, filter, convertor);
   }
 
-  private static boolean processVirtualFiles(@Nonnull IntSet ids, @Nonnull final SearchScope filter, @Nonnull final Processor<? super VirtualFile> processor) {
+  private static boolean processVirtualFiles(@Nonnull IntSet ids, @Nonnull final SearchScope filter, @Nonnull final Predicate<? super VirtualFile> processor) {
     final PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
     PrimitiveIterator.OfInt iterator = ids.iterator();
     while (iterator.hasNext()) {
@@ -1147,7 +1147,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       VirtualFile file = IndexInfrastructure.findFileByIdIfCached(fs, id);
 
       if (file != null && filter.accept(file)) {
-        if (!processor.process(file)) {
+        if (!processor.test(file)) {
           return false;
         }
       }
