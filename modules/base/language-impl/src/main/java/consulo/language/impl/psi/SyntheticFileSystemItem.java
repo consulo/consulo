@@ -1,25 +1,24 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.language.impl.psi.PsiElementBase;
-import consulo.language.psi.*;
-import consulo.project.Project;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
   public static final Logger LOG = Logger.getInstance(SyntheticFileSystemItem.class);
@@ -86,6 +85,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     // TODO
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
@@ -99,6 +99,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     return myManager;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
@@ -122,22 +123,26 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public TextRange getTextRange() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public int getTextLength() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return null;
@@ -148,12 +153,14 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public String getText() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public char[] textToCharArray() {

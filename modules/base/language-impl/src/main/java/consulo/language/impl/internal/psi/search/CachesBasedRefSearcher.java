@@ -1,10 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.impl.search;
+package consulo.language.impl.internal.psi.search;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.impl.SyntheticFileSystemItem;
+import consulo.language.impl.psi.SyntheticFileSystemItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
@@ -28,6 +29,7 @@ public class CachesBasedRefSearcher extends QueryExecutorBase<PsiReference, Refe
   }
 
   @Override
+  @RequiredReadAction
   public void processQuery(@Nonnull ReferencesSearch.SearchParameters p, @Nonnull Processor<? super PsiReference> consumer) {
     final PsiElement refElement = p.getElementToSearch();
     boolean caseSensitive = refElement.getLanguage().isCaseSensitive();
