@@ -4,7 +4,6 @@ package consulo.ide.impl.psi.impl.search;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.impl.SyntheticFileSystemItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
@@ -12,11 +11,11 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import consulo.project.util.query.QueryExecutorBase;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**

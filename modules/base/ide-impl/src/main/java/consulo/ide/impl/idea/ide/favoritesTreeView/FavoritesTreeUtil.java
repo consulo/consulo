@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.bookmark.ui.view.FavoritesListProvider;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.Tree;
@@ -121,7 +124,7 @@ public class FavoritesTreeUtil {
     return null;
   }
 
-  static FavoritesListProvider getProvider(@Nonnull FavoritesManager manager, @Nonnull FavoritesTreeNodeDescriptor descriptor) {
+  static FavoritesListProvider getProvider(@Nonnull FavoritesManagerImpl manager, @Nonnull FavoritesTreeNodeDescriptor descriptor) {
     AbstractTreeNode treeNode = descriptor.getElement();
     while (treeNode != null && (!(treeNode instanceof FavoritesListNode))) {
       treeNode = (AbstractTreeNode)treeNode.getParent();

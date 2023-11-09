@@ -22,6 +22,7 @@ import consulo.module.ModuleManager;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiDirectory;

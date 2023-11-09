@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.bookmark.ui.view.FavoritesViewSettings;
 import consulo.component.PropertyName;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FavoritesViewSettings implements ViewSettings {
+public class FavoritesViewSettingsImpl implements FavoritesViewSettings {
 
   @PropertyName("favorites.view.settings.show.members")
   public boolean myShowMembers = false;
@@ -45,7 +45,7 @@ public class FavoritesViewSettings implements ViewSettings {
   public boolean myAbbreviateQualifiedPackages = false;
 
 
-  public FavoritesViewSettings() {
+  public FavoritesViewSettingsImpl() {
     PropertiesComponent.getInstance().loadFields(this);
   }
 

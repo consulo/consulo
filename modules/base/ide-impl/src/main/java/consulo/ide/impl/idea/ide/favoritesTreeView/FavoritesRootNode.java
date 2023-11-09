@@ -40,7 +40,7 @@ public class FavoritesRootNode extends AbstractTreeNode<String> {
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {
     if (myFavoritesRoots == null) {
-      myFavoritesRoots = new ArrayList<AbstractTreeNode>(FavoritesManager.getInstance(myProject).createRootNodes());
+      myFavoritesRoots = new ArrayList<AbstractTreeNode>(FavoritesManagerImpl.getInstance(myProject).createRootNodes());
     }
     return myFavoritesRoots;
   }

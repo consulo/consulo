@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -41,7 +41,7 @@ public class AddNewFavoritesListAction extends AnAction {
   }
 
   public static String doAddNewFavoritesList(final Project project) {
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     final String name = Messages.showInputDialog(project,
                                                  IdeBundle.message("prompt.input.new.favorites.list.name"),
                                                  IdeBundle.message("title.add.new.favorites.list"),
@@ -70,7 +70,7 @@ public class AddNewFavoritesListAction extends AnAction {
   }
 
   private static String getUniqueName(Project project) {
-    List<String> names = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
+    List<String> names = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     for (int i = 0; ; i++) {
       String newName = IdeBundle.message("favorites.list.unnamed", i > 0 ? i : "");
       if (names.contains(newName)) continue;

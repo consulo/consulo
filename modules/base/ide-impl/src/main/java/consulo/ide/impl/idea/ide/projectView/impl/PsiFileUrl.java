@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiFile;

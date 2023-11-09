@@ -16,18 +16,20 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ViewSettings;
+import consulo.bookmark.ui.view.BookmarkNodeProvider;
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeStructure;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
         if (value instanceof SmartPsiElementPointer && ((SmartPsiElementPointer)value).getElement() == null) continue;
 
         boolean invalid = false;
-        for (FavoriteNodeProvider nodeProvider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, myProject)) {
+        for (BookmarkNodeProvider nodeProvider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
           if (nodeProvider.isInvalidElement(value)) {
             invalid = true;
             break;

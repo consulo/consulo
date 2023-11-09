@@ -17,8 +17,8 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
@@ -46,7 +46,7 @@ public class SendToFavoritesGroup extends ActionGroup {
       return EMPTY_ARRAY;
     }
     final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
-    final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
+    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
     if (availableFavoritesLists.isEmpty()) {
       return new AnAction[]{new SendToNewFavoritesListAction()};
@@ -83,7 +83,7 @@ public class SendToFavoritesGroup extends ActionGroup {
 
       String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
       if (newName != null) {
-        new SendToFavoritesAction(newName).doSend(FavoritesManager.getInstance(project), roots, listName);
+        new SendToFavoritesAction(newName).doSend(FavoritesManagerImpl.getInstance(project), roots, listName);
       }
     }
   }

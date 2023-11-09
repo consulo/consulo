@@ -20,19 +20,19 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.event.BookmarksListener;
+import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
+import consulo.bookmark.ui.view.FavoritesManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.ImageEffects;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Collections;

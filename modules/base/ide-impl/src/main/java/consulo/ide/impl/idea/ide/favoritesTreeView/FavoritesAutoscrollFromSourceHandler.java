@@ -40,12 +40,12 @@ public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollF
 
   @Override
   protected boolean isAutoScrollEnabled() {
-    return FavoritesManager.getInstance(myProject).getViewSettings().isAutoScrollFromSource();
+    return FavoritesManagerImpl.getInstance(myProject).getViewSettings().isAutoScrollFromSource();
   }
 
   @Override
   protected void setAutoScrollEnabled(boolean enabled) {
-    FavoritesManager.getInstance(myProject).getViewSettings().setAutoScrollFromSource(enabled);
+    FavoritesManagerImpl.getInstance(myProject).getViewSettings().setAutoScrollFromSource(enabled);
   }
 
   @Override

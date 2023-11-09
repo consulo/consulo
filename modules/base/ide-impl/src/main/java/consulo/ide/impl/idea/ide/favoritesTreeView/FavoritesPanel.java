@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.dnd.FileCopyPasteUtil;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
@@ -99,7 +101,7 @@ public class FavoritesPanel {
       @Override
       public void drop(DnDEvent event) {
         final FavoritesListNode node = myViewPanel.findFavoritesListNode(event.getPoint());
-        final FavoritesManager mgr = FavoritesManager.getInstance(myProject);
+        final FavoritesManagerImpl mgr = FavoritesManagerImpl.getInstance(myProject);
 
         if (node == null) return;
 

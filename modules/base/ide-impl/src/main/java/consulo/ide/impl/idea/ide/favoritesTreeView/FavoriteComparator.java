@@ -5,6 +5,7 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ide.impl.idea.ide.projectView.impl.GroupByTypeComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 

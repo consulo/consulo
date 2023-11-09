@@ -21,6 +21,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.content.ContentIterator;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.projectView.impl.PackageViewPane;
@@ -29,7 +30,6 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageViewModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewModuleGroupNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewModuleNode;
 import consulo.language.content.ProjectRootsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -44,18 +44,18 @@ import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.tree.*;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @ExtensionImpl
-public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
+public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   @Override
   public Collection<AbstractTreeNode> getFavoriteNodes(final DataContext context, final ViewSettings viewSettings) {
-    final Project project = context.getData(CommonDataKeys.PROJECT);
+    final Project project = context.getData(Project.KEY);
     if (project == null) {
       return null;
     }
@@ -115,7 +115,7 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
     if (element instanceof PackageElement) {
       return new PackageElementNode(project, element, viewSettings);
     }
-    return super.createNode(project, element, viewSettings);
+    return null;
   }
 
   @Override
@@ -214,6 +214,6 @@ public class PsiPackageFavoriteNodeProvider extends FavoriteNodeProvider {
     if (element instanceof PackageElement) {
       return ((PackageElement)element).getPackage();
     }
-    return super.getPsiElement(element);
+    return BookmarkNodeProvider.super.getPsiElement(element);
   }
 }

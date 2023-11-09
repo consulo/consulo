@@ -16,11 +16,10 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.bookmark.ui.view.BookmarkNodeProvider;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoriteNodeProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
@@ -35,13 +34,15 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ public class AddToFavoritesAction extends AnAction {
 
     if (nodesToAdd != null && !nodesToAdd.isEmpty()) {
       Project project = e.getData(CommonDataKeys.PROJECT);
-      FavoritesManager.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
+      FavoritesManagerImpl.getInstance(project).addRoots(myFavoritesListName, nodesToAdd);
     }
   }
 
@@ -80,7 +81,7 @@ public class AddToFavoritesAction extends AnAction {
     Module moduleContext = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
     Collection<AbstractTreeNode> nodesToAdd = null;
-    for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
+    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
       nodesToAdd = provider.getFavoriteNodes(dataContext, ViewSettings.DEFAULT);
       if (nodesToAdd != null) {
         break;
@@ -142,8 +143,8 @@ public class AddToFavoritesAction extends AnAction {
                                            boolean inProjectView,
                                            ViewSettings favoritesConfig) {
     if (project == null) return Collections.emptyList();
-    ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
-    for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
+    ArrayList<AbstractTreeNode> result = new ArrayList<>();
+    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
       final AbstractTreeNode treeNode = provider.createNode(project, object, favoritesConfig);
       if (treeNode != null) {
         result.add(treeNode);

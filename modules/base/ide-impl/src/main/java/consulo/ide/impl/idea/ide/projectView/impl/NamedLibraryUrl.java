@@ -16,7 +16,8 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
+import consulo.project.ui.view.internal.AbstractUrl;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;

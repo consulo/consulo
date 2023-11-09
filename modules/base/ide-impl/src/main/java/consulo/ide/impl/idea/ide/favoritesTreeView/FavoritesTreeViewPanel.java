@@ -16,69 +16,70 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.application.AllIcons;
+import consulo.bookmark.ui.view.event.FavoritesListener;
+import consulo.bookmark.ui.view.BookmarkNodeProvider;
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.bookmark.ui.view.FavoritesListProvider;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
 import consulo.ide.IdeView;
+import consulo.ide.impl.idea.ide.favoritesTreeView.actions.*;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
+import consulo.ide.impl.idea.ide.util.DeleteHandler;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
+import consulo.ide.util.DirectoryChooserUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
+import consulo.language.editor.util.EditorHelper;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
-import consulo.application.AllIcons;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.ide.impl.idea.ide.favoritesTreeView.actions.*;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.SwingDockContainer;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.LoadingNode;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
-import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
-import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.util.EditorHelper;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.navigation.ItemPresentation;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.RelativeRectangle;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
-import consulo.ui.ex.awt.tree.action.CollapseAllAction;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.LoadingNode;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.action.CollapseAllAction;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -113,12 +114,12 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
   private final AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
   private final IdeView myIdeView = new MyIdeView();
-  private final FavoritesManager myFavoritesManager;
+  private final FavoritesManagerImpl myFavoritesManager;
 
   public FavoritesTreeViewPanel(Project project) {
     super(new BorderLayout());
     myProject = project;
-    myFavoritesManager = FavoritesManager.getInstance(myProject);
+    myFavoritesManager = FavoritesManagerImpl.getInstance(myProject);
 
     myFavoritesTreeStructure = new FavoritesTreeStructure(project);
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
@@ -377,7 +378,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
         }
       }
       else {
-        for (FavoriteNodeProvider provider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, myProject)) {
+        for (BookmarkNodeProvider provider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
           final PsiElement psiElement = provider.getPsiElement(element);
           if (psiElement != null) {
             result.add(psiElement);
@@ -630,14 +631,14 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     return null;
   }
 
-  void dropPsiElements(FavoritesManager mgr, FavoritesListNode node, PsiElement[] elements) {
+  void dropPsiElements(FavoritesManagerImpl mgr, FavoritesListNode node, PsiElement[] elements) {
     if (elements != null && elements.length > 0) {
       final ArrayList<AbstractTreeNode> nodes = new ArrayList<>();
       for (PsiElement element : elements) {
         if (element instanceof SmartPsiElementPointer) {
           element = ((SmartPsiElementPointer)element).getElement();
         }
-        final Collection<AbstractTreeNode> tmp = AddToFavoritesAction.createNodes(myProject, null, element, true, FavoritesManager.getInstance(myProject).getViewSettings());
+        final Collection<AbstractTreeNode> tmp = AddToFavoritesAction.createNodes(myProject, null, element, true, FavoritesManagerImpl.getInstance(myProject).getViewSettings());
         nodes.addAll(tmp);
         mgr.addRoots(node.getValue(), nodes);
       }
@@ -727,7 +728,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       if (myBuilder == null) return null;
       final Object[] selectedNodeElements = getSelectedNodeElements();
       if (selectedNodeElements.length != 1) return null;
-      for (FavoriteNodeProvider nodeProvider : Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, myProject)) {
+      for (BookmarkNodeProvider nodeProvider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
         final PsiElement psiElement = nodeProvider.getPsiElement(selectedNodeElements[0]);
         if (psiElement instanceof PsiDirectory) {
           return new PsiDirectory[]{(PsiDirectory)psiElement};

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl;
+package consulo.project.ui.view.internal;
 
 import consulo.project.Project;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
 
 /**
  * @author cdr
@@ -29,7 +28,7 @@ public abstract class AbstractUrl {
   protected final String moduleName;
   private final String myType;
 
-  protected AbstractUrl(String url, String moduleName, @NonNls String type) {
+  protected AbstractUrl(String url, String moduleName,  String type) {
     myType = type;
     this.url = url == null ? "" : url;
     this.moduleName = moduleName;

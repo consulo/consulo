@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.favoritesTreeView;
+package consulo.bookmark.ui.view;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.component.extension.Extensions;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * User: anna
@@ -87,8 +86,7 @@ public class FavoritesTreeNodeDescriptor extends PresentableNodeDescriptor<Abstr
       return (module != null ? module.getName() : "") + ":" + namedLibraryElement.getOrderEntry().getPresentableName();
     }
 
-    final FavoriteNodeProvider[] nodeProviders = Extensions.getExtensions(FavoriteNodeProvider.EP_NAME, project);
-    for (FavoriteNodeProvider provider : nodeProviders) {
+    for (BookmarkNodeProvider provider : project.getExtensionList(BookmarkNodeProvider.class)) {
       String location = provider.getElementLocation(nodeElement);
       if (location != null) return location;
     }

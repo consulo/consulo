@@ -44,6 +44,8 @@ import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
 import consulo.project.ui.view.ProjectViewPane;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;

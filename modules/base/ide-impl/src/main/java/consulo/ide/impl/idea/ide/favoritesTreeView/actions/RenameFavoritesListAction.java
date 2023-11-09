@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -44,7 +44,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
     if (project == null) {
       return;
     }
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     if (listName == null || favoritesManager.getListProvider(listName) != null) return;
     favoritesManager.renameList(project, listName);
@@ -58,7 +58,7 @@ public class RenameFavoritesListAction extends AnAction implements DumbAware {
       e.getPresentation().setEnabled(false);
       return;
     }
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     e.getPresentation().setEnabled(listName != null && favoritesManager.getListProvider(listName) == null);
   }

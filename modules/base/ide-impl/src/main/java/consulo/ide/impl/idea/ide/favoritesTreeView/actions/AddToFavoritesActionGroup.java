@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
@@ -44,7 +44,7 @@ public class AddToFavoritesActionGroup extends ActionGroup {
     if (project == null) {
       return AnAction.EMPTY_ARRAY;
     }
-    final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
+    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     availableFavoritesLists.remove(e.getDataContext().getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
     if (availableFavoritesLists.isEmpty()) {
       return new AnAction[]{new AddToNewFavoritesListAction()};

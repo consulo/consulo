@@ -71,7 +71,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
     final ActionCallback result = new ActionCallback();
 
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
-    final ToolWindow favoritesToolWindow = windowManager.getToolWindow(ToolWindowId.FAVORITES_VIEW);
+    final ToolWindow favoritesToolWindow = windowManager.getToolWindow(ToolWindowId.BOOKMARKS);
 
     if (favoritesToolWindow != null) {
       final Runnable runnable = () -> {
@@ -99,7 +99,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
   }
 
   public static String findSuitableFavoritesList(VirtualFile file, Project project, final String currentSubId) {
-    return FavoritesManager.getInstance(project).getFavoriteListName(currentSubId, file);
+    return FavoritesManagerImpl.getInstance(project).getFavoriteListName(currentSubId, file);
   }
 
   @Override

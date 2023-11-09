@@ -16,9 +16,9 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesListNode;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
@@ -45,7 +45,7 @@ public class SendToFavoritesAction extends AnAction {
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     Project project = e.getData(CommonDataKeys.PROJECT);
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
     FavoritesTreeNodeDescriptor[] roots = dataContext.getData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
     if (roots == null) return;
@@ -58,7 +58,7 @@ public class SendToFavoritesAction extends AnAction {
     }
   }
 
-  public void doSend(final FavoritesManager favoritesManager, final FavoritesTreeNodeDescriptor[] roots, final String listName) {
+  public void doSend(final FavoritesManagerImpl favoritesManager, final FavoritesTreeNodeDescriptor[] roots, final String listName) {
     for (FavoritesTreeNodeDescriptor root : roots) {
       final AbstractTreeNode rootElement = root.getElement();
       String name = listName;

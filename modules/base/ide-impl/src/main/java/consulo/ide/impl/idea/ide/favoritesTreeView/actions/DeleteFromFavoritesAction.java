@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
+import consulo.bookmark.ui.view.FavoritesListNode;
+import consulo.bookmark.ui.view.FavoritesListProvider;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.favoritesTreeView.*;
@@ -60,7 +63,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     if (selection.isEmpty()) {
       return;
     }
-    FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
     if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection)) {
@@ -107,7 +110,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
     Set<Object> selection = builder.getSelectedElements();
     String listName = dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);
 
-    FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
     if (provider != null) {
       boolean willHandle = provider.willHandle(CommonActionsPanel.Buttons.REMOVE, project, selection);

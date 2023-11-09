@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -47,7 +47,7 @@ public class AddAllOpenFilesToFavorites extends AnAction {
       return;
     }
 
-    final FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    final FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
 
     final ArrayList<PsiFile> filesToAdd = getFilesToAdd(project);
     for (PsiFile file : filesToAdd) {

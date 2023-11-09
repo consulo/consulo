@@ -42,7 +42,7 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
   @Nonnull
   @Override
   public String getId() {
-    return ToolWindowId.FAVORITES_VIEW;
+    return ToolWindowId.BOOKMARKS;
   }
 
   @RequiredUIAccess
@@ -69,12 +69,12 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
   @Nonnull
   @Override
   public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolwindowfavorites();
+    return PlatformIconGroup.toolwindowsToolwindowbookmarks();
   }
 
   @Nonnull
   @Override
   public LocalizeValue getDisplayName() {
-    return LocalizeValue.localizeTODO("Favorites");
+    return LocalizeValue.localizeTODO("Bookmarks");
   }
 }

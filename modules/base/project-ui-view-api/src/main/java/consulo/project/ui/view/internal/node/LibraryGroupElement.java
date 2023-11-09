@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.internal.node;
 
 import consulo.module.Module;
 import consulo.util.dataholder.Key;

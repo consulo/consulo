@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.application.AllIcons;
+import consulo.bookmark.ui.view.ProjectViewNodeWithChildrenList;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;

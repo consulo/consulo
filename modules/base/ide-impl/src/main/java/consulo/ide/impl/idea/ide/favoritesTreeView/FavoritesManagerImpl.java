@@ -16,66 +16,66 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesAction;
-import consulo.ide.impl.idea.ide.projectView.impl.*;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.LibraryGroupElement;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.NamedLibraryElement;
-import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.bookmark.ui.view.*;
+import consulo.bookmark.ui.view.event.FavoritesListener;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.content.ContentIterator;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.disposer.Disposable;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesAction;
+import consulo.ide.impl.idea.ide.projectView.impl.*;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.project.Project;
-import consulo.content.ContentIterator;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ui.view.internal.AbstractUrl;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.util.lang.TreeItem;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.disposer.Disposable;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 @State(name = "FavoritesManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public class FavoritesManager implements PersistentStateComponent<Element> {
+public class FavoritesManagerImpl implements FavoritesManager, PersistentStateComponent<Element> {
   private final ArrayList<String> myListOrder = new ArrayList<>();
   // fav list name -> list of (root: root url, root class)
-  private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots = new TreeMap<>((o1, o2) -> myListOrder.indexOf(o1) - myListOrder.indexOf(o2));
+  private final Map<String, List<TreeItem<Pair<AbstractUrl, String>>>> myName2FavoritesRoots =
+    new TreeMap<>((o1, o2) -> myListOrder.indexOf(o1) - myListOrder.indexOf(o2));
   private final Map<String, String> myDescriptions = new HashMap<>();
   private final Project myProject;
   private final EventDispatcher<FavoritesListener> myListeners = EventDispatcher.create(FavoritesListener.class);
-  private final FavoritesViewSettings myViewSettings = new FavoritesViewSettings();
+  private final FavoritesViewSettingsImpl myViewSettings = new FavoritesViewSettingsImpl();
 
   @Nullable
   private Map<String, FavoritesListProvider> myProviders;
@@ -94,42 +94,52 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
 
   public void renameList(final Project project, @Nonnull String listName) {
     final String newName =
-            Messages.showInputDialog(project, IdeBundle.message("prompt.input.favorites.list.new.name", listName), IdeBundle.message("title.rename.favorites.list"), Messages.getInformationIcon(),
-                                     listName, new InputValidator() {
-                      @RequiredUIAccess
-                      @Override
-                      public boolean checkInput(String inputString) {
-                        return inputString != null && inputString.trim().length() > 0;
-                      }
+      Messages.showInputDialog(project,
+                               IdeBundle.message("prompt.input.favorites.list.new.name", listName),
+                               IdeBundle.message("title.rename.favorites.list"),
+                               Messages.getInformationIcon(),
+                               listName,
+                               new InputValidator() {
+                                 @RequiredUIAccess
+                                 @Override
+                                 public boolean checkInput(String inputString) {
+                                   return inputString != null && inputString.trim().length() > 0;
+                                 }
 
-                      @RequiredUIAccess
-                      @Override
-                      public boolean canClose(String inputString) {
-                        inputString = inputString.trim();
-                        if (myName2FavoritesRoots.keySet().contains(inputString) || getProviders().keySet().contains(inputString)) {
-                          Messages.showErrorDialog(project, IdeBundle.message("error.favorites.list.already.exists", inputString.trim()), IdeBundle.message("title.unable.to.add.favorites.list"));
-                          return false;
-                        }
-                        return !inputString.isEmpty();
-                      }
-                    });
+                                 @RequiredUIAccess
+                                 @Override
+                                 public boolean canClose(String inputString) {
+                                   inputString = inputString.trim();
+                                   if (myName2FavoritesRoots.keySet().contains(inputString) || getProviders().keySet()
+                                                                                                             .contains(inputString)) {
+                                     Messages.showErrorDialog(project,
+                                                              IdeBundle.message("error.favorites.list.already.exists", inputString.trim()),
+                                                              IdeBundle.message("title.unable.to.add.favorites.list"));
+                                     return false;
+                                   }
+                                   return !inputString.isEmpty();
+                                 }
+                               });
 
     if (newName != null && renameFavoritesList(listName, newName)) {
       rootsChanged();
     }
   }
 
+  @Override
   @Deprecated
   public void addFavoritesListener(FavoritesListener listener) {
     myListeners.addListener(listener);
     listener.rootsChanged();
   }
 
+  @Override
   public void addFavoritesListener(final FavoritesListener listener, @Nonnull Disposable parent) {
     myListeners.addListener(listener, parent);
     listener.rootsChanged();
   }
 
+  @Override
   @Deprecated
   public void removeFavoritesListener(FavoritesListener listener) {
     myListeners.removeListener(listener);
@@ -151,12 +161,12 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     return result;
   }
 
-  public static FavoritesManager getInstance(Project project) {
-    return project.getComponent(FavoritesManager.class);
+  public static FavoritesManagerImpl getInstance(Project project) {
+    return (FavoritesManagerImpl)project.getInstance(FavoritesManager.class);
   }
 
   @Inject
-  public FavoritesManager(Project project) {
+  public FavoritesManagerImpl(Project project) {
     myProject = project;
   }
 
@@ -195,7 +205,8 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     rootsChanged();
   }
 
-  public FavoritesViewSettings getViewSettings() {
+  @Override
+  public FavoritesViewSettingsImpl getViewSettings() {
     return myViewSettings;
   }
 
@@ -207,6 +218,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     return result;
   }
 
+  @Override
   @Nonnull
   public List<TreeItem<Pair<AbstractUrl, String>>> getFavoritesListRootUrls(@Nonnull String name) {
     final List<TreeItem<Pair<AbstractUrl, String>>> pairs = myName2FavoritesRoots.get(name);
@@ -257,7 +269,10 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     }
   }
 
-  public synchronized boolean addRoot(@Nonnull String name, @Nonnull List<AbstractTreeNode> parentElements, final AbstractTreeNode newElement, @Nullable AbstractTreeNode sibling) {
+  public synchronized boolean addRoot(@Nonnull String name,
+                                      @Nonnull List<AbstractTreeNode> parentElements,
+                                      final AbstractTreeNode newElement,
+                                      @Nullable AbstractTreeNode sibling) {
     final List<TreeItem<Pair<AbstractUrl, String>>> items = myName2FavoritesRoots.get(name);
     if (items == null) return false;
     AbstractUrl url = createUrlByElement(newElement.getValue(), myProject);
@@ -324,7 +339,9 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     return true;
   }
 
-  private <T> boolean findListToRemoveFrom(@Nonnull String name, @Nonnull final List<T> elements, final Convertor<T, AbstractUrl> convertor) {
+  private <T> boolean findListToRemoveFrom(@Nonnull String name,
+                                           @Nonnull final List<T> elements,
+                                           final Convertor<T, AbstractUrl> convertor) {
     Collection<TreeItem<Pair<AbstractUrl, String>>> list = getFavoritesListRootUrls(name);
     if (elements.size() > 1) {
       final List<T> sublist = elements.subList(0, elements.size() - 1);
@@ -460,7 +477,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     final String urlValue = element.getAttributeValue(ATTRIBUTE_URL);
     final String moduleName = element.getAttributeValue(ATTRIBUTE_MODULE);
 
-    for (FavoriteNodeProvider nodeProvider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
+    for (BookmarkNodeProvider nodeProvider : project.getExtensionList(BookmarkNodeProvider.class)) {
       if (nodeProvider.getFavoriteTypeId().equals(type)) {
         return new AbstractUrlFavoriteAdapter(urlValue, moduleName, nodeProvider);
       }
@@ -491,7 +508,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
   public static AbstractUrl createUrlByElement(Object element, final Project project) {
     if (element instanceof SmartPsiElementPointer) element = ((SmartPsiElementPointer)element).getElement();
 
-    for (FavoriteNodeProvider nodeProvider : FavoriteNodeProvider.EP_NAME.getExtensionList(project)) {
+    for (BookmarkNodeProvider nodeProvider : project.getExtensionList(BookmarkNodeProvider.class)) {
       String url = nodeProvider.getElementUrl(element);
       if (url != null) {
         return new AbstractUrlFavoriteAdapter(url, nodeProvider.getElementModuleName(element), nodeProvider);
@@ -584,7 +601,9 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
         ModuleRootManager.getInstance((Module)element).getFileIndex().iterateContent(contentIterator);
       }
       if (element instanceof LibraryGroupElement) {
-        final boolean inLibrary = ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule()).getFileIndex().isInContent(vFile) && projectFileIndex.isInLibraryClasses(vFile);
+        final boolean inLibrary = ModuleRootManager.getInstance(((LibraryGroupElement)element).getModule())
+                                                   .getFileIndex()
+                                                   .isInContent(vFile) && projectFileIndex.isInLibraryClasses(vFile);
         if (inLibrary) {
           return true;
         }
@@ -605,7 +624,7 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
       }
 
 
-      for (FavoriteNodeProvider provider : FavoriteNodeProvider.EP_NAME.getExtensionList(myProject)) {
+      for (BookmarkNodeProvider provider : myProject.getExtensionList(BookmarkNodeProvider.class)) {
         if (provider.elementContainsFile(element, vFile)) {
           return true;
         }
@@ -618,7 +637,8 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
     return false;
   }
 
-  private static void iterateTreeItems(final Collection<TreeItem<Pair<AbstractUrl, String>>> coll, Consumer<TreeItem<Pair<AbstractUrl, String>>> consumer) {
+  private static void iterateTreeItems(final Collection<TreeItem<Pair<AbstractUrl, String>>> coll,
+                                       Consumer<TreeItem<Pair<AbstractUrl, String>>> consumer) {
     final ArrayDeque<TreeItem<Pair<AbstractUrl, String>>> queue = new ArrayDeque<>();
     queue.addAll(coll);
     while (!queue.isEmpty()) {
@@ -638,14 +658,15 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
       final PsiElement newParent = event.getNewParent();
       final PsiElement child = event.getChild();
       if (newParent instanceof PsiDirectory) {
-        final Module module = ModuleUtil.findModuleForPsiElement(newParent);
+        final Module module = newParent.getModule();
         if (module == null) return;
         AbstractUrl childUrl = null;
         if (child instanceof PsiFile) {
           childUrl = new PsiFileUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiFile)child).getName());
         }
         else if (child instanceof PsiDirectory) {
-          childUrl = new DirectoryUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiDirectory)child).getName(), module.getName());
+          childUrl =
+            new DirectoryUrl(((PsiDirectory)newParent).getVirtualFile().getUrl() + "/" + ((PsiDirectory)child).getName(), module.getName());
         }
 
         for (String listName : myName2FavoritesRoots.keySet()) {
@@ -676,10 +697,11 @@ public class FavoritesManager implements PersistentStateComponent<Element> {
 
     @Override
     public void beforePropertyChange(@Nonnull final PsiTreeChangeEvent event) {
-      if (event.getPropertyName().equals(PsiTreeChangeEvent.PROP_FILE_NAME) || event.getPropertyName().equals(PsiTreeChangeEvent.PROP_DIRECTORY_NAME)) {
+      if (event.getPropertyName().equals(PsiTreeChangeEvent.PROP_FILE_NAME) || event.getPropertyName()
+                                                                                    .equals(PsiTreeChangeEvent.PROP_DIRECTORY_NAME)) {
         final PsiElement psiElement = event.getChild();
         if (psiElement instanceof PsiFile || psiElement instanceof PsiDirectory) {
-          final Module module = ModuleUtil.findModuleForPsiElement(psiElement);
+          final Module module = psiElement.getModule();
           if (module == null) return;
           final String url = ((PsiDirectory)psiElement.getParent()).getVirtualFile().getUrl() + "/" + event.getNewValue();
           final AbstractUrl childUrl = psiElement instanceof PsiFile ? new PsiFileUrl(url) : new DirectoryUrl(url, module.getName());

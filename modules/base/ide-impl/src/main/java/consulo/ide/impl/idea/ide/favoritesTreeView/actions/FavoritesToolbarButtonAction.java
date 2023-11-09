@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewSettings;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewSettingsImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
@@ -31,7 +31,7 @@ import consulo.ui.image.Image;
  */
 public abstract class FavoritesToolbarButtonAction extends AnActionButton implements Toggleable {
   private FavoritesViewTreeBuilder myBuilder;
-  private FavoritesViewSettings mySettings;
+  private FavoritesViewSettingsImpl mySettings;
 
   @Deprecated
   public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, String name, Image icon) {
@@ -41,7 +41,7 @@ public abstract class FavoritesToolbarButtonAction extends AnActionButton implem
   public FavoritesToolbarButtonAction(Project project, FavoritesViewTreeBuilder builder, LocalizeValue name, Image icon) {
     super(name, LocalizeValue.empty(), icon);
     myBuilder = builder;
-    mySettings = FavoritesManager.getInstance(project).getViewSettings();
+    mySettings = FavoritesManagerImpl.getInstance(project).getViewSettings();
     setContextComponent(myBuilder.getTree());
     Disposer.register(project, () -> {
       myBuilder = null;
@@ -53,7 +53,7 @@ public abstract class FavoritesToolbarButtonAction extends AnActionButton implem
 
   public abstract void setOption(boolean enabled);
 
-  public FavoritesViewSettings getViewSettings() {
+  public FavoritesViewSettingsImpl getViewSettings() {
     return mySettings;
   }
 

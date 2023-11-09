@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
+import consulo.project.ui.view.internal.AbstractUrl;
 import org.jetbrains.annotations.NonNls;
 
 /**

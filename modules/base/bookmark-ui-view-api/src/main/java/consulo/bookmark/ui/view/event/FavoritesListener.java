@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.favoritesTreeView;
+package consulo.bookmark.ui.view.event;
+
+import java.util.EventListener;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Irina.Chernushina
- * Date: 6/1/12
- * Time: 1:53 PM
+ * @author Konstantin Bulenkov
  */
-public enum PercentDone {
-  _0(0), _05(5), _20(20), _50(50), _70(70), _100(100);
-
-  private final int myPercent;
-
-  private PercentDone(int percent) {
-    myPercent = percent;
+public interface FavoritesListener extends EventListener {
+  default void rootsChanged() {
   }
 
-  public int getPercent() {
-    return myPercent;
-  }
+  void listAdded(String listName);
+
+  void listRemoved(String listName);
 }

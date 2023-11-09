@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.favoritesTreeView;
+package consulo.bookmark.ui.view;
 
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
@@ -37,7 +37,7 @@ public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode
 
   protected ProjectViewNodeWithChildrenList(Project project, T t, ViewSettings viewSettings) {
     super(project, t, viewSettings);
-    myChildren = new ArrayList<AbstractTreeNode>();
+    myChildren = new ArrayList<>();
   }
 
   @RequiredReadAction

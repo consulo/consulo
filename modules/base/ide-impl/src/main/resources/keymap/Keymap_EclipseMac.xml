@@ -333,7 +333,7 @@
   </action>
 
   <action id="ActivateProjectToolWindow"/>
-  <action id="ActivateFavoritesToolWindow"/>
+  <action id="ActivateBookmarksToolWindow"/>
   <action id="ActivateFindToolWindow">
     <keyboard-shortcut first-keystroke="alt meta Q" second-keystroke="S"/>
   </action>

@@ -41,6 +41,8 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.SelectInTarget;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.ui.Tree;
 import consulo.ui.TreeNode;

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView.impl.nodes;
+package consulo.project.ui.view.internal.node;
 
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 
 /**
  * @author Eugene Zhuravlev

@@ -19,6 +19,8 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
+import consulo.project.ui.view.internal.node.LibraryGroupElement;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.*;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.content.OrderRootType;

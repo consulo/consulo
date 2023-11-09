@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.favoritesTreeView;
+package consulo.bookmark.ui.view;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
+import consulo.project.ui.view.internal.AbstractUrl;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ProjectViewNode;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Pair;
 import consulo.util.lang.TreeItem;
 import jakarta.annotation.Nonnull;
@@ -95,8 +95,8 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
       try {
         final String className = pair.getData().getSecond();
 
-        @SuppressWarnings("unchecked")
-        final Class<? extends AbstractTreeNode> nodeClass = (Class<? extends AbstractTreeNode>)Class.forName(className);
+        @SuppressWarnings("unchecked") final Class<? extends AbstractTreeNode> nodeClass =
+          (Class<? extends AbstractTreeNode>)Class.forName(className);
 
         final AbstractTreeNode node = ProjectViewNode
           .createTreeNode(nodeClass, project, path[path.length - 1], FavoritesManager.getInstance(project).getViewSettings());

@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.favoritesTreeView;
+package consulo.bookmark.ui.view;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.dataContext.DataContext;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -36,10 +32,8 @@ import java.util.Collection;
  *
  * @author yole
  */
-@ExtensionAPI(ComponentScope.PROJECT)
-public abstract class FavoriteNodeProvider {
-  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create(FavoriteNodeProvider.class);
-
+@Deprecated
+public abstract class FavoriteNodeProvider implements BookmarkNodeProvider {
   @Nullable
   public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);
 
@@ -90,7 +84,6 @@ public abstract class FavoriteNodeProvider {
    * @return the string identifier.
    */
   @Nonnull
-  @NonNls
   public abstract String getFavoriteTypeId();
 
   /**
@@ -100,7 +93,6 @@ public abstract class FavoriteNodeProvider {
    * @return the URL, or null if the element is not supported by this provider.
    */
   @Nullable
-  @NonNls
   public abstract String getElementUrl(final Object element);
 
   /**

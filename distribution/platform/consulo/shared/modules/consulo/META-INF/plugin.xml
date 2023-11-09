@@ -1968,7 +1968,6 @@
               use-shortcut-of="RecentFiles"/>
     </group>
 
-    <!-- <action id="UsageView.ImportToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.ImportUsagesAction"/> -->
     <action id="NewElementSamePlace" class="consulo.ide.impl.idea.ide.actions.NewElementSamePlaceAction"/>
 
     <action id="ChangeCodeStyleScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeCodeStyleSchemeAction">

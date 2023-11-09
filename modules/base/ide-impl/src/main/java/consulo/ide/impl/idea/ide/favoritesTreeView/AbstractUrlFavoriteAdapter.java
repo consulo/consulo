@@ -16,16 +16,17 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
+import consulo.bookmark.ui.view.BookmarkNodeProvider;
+import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.Project;
 
 /**
  * @author yole
  */
 public class AbstractUrlFavoriteAdapter extends AbstractUrl {
-  private final FavoriteNodeProvider myNodeProvider;
+  private final BookmarkNodeProvider myNodeProvider;
 
-  public AbstractUrlFavoriteAdapter(final String url, final String moduleName, final FavoriteNodeProvider nodeProvider) {
+  public AbstractUrlFavoriteAdapter(final String url, final String moduleName, final BookmarkNodeProvider nodeProvider) {
     super(url, moduleName, nodeProvider.getFavoriteTypeId());
     myNodeProvider = nodeProvider;
   }

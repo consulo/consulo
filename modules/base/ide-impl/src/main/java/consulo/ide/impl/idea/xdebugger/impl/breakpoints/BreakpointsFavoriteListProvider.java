@@ -21,8 +21,8 @@ import consulo.application.AllIcons;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.bookmark.ui.view.AbstractFavoritesListProvider;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
@@ -115,7 +115,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
         replicate((DefaultMutableTreeNode)child, myNode, myChildren);
       }
     }
-    FavoritesManager.getInstance(myProject).fireListeners(getListName(myProject));
+    FavoritesManagerImpl.getInstance(myProject).fireListeners(getListName(myProject));
   }
 
   private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, final List<AbstractTreeNode<Object>> destinationChildren) {

@@ -19,8 +19,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ReadAction;
 import consulo.content.scope.SearchScope;
 import consulo.content.scope.SearchScopeProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
+import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.util.lang.TreeItem;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
@@ -44,7 +44,7 @@ public class FavoritesSearchScopeProvider implements SearchScopeProvider {
   @Nonnull
   @Override
   public List<SearchScope> getSearchScopes(@Nonnull Project project) {
-    FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     if (favoritesManager == null) return Collections.emptyList();
     List<SearchScope> result = new ArrayList<>();
     for (String favorite : favoritesManager.getAvailableFavoritesListNames()) {

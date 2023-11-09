@@ -6,7 +6,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
+import consulo.bookmark.ui.view.FavoritesTreeNodeDescriptor;
 import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;

@@ -23,6 +23,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
 import consulo.ide.IdeBundle;
+import consulo.project.ui.view.internal.node.NamedLibraryElement;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

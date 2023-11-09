@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -44,7 +44,7 @@ class AddToNewFavoritesListAction extends AnAction {
     if (nodesToAdd != null) {
       final String newName = AddNewFavoritesListAction.doAddNewFavoritesList(project);
       if (newName != null) {
-        FavoritesManager.getInstance(project).addRoots(newName, nodesToAdd);
+        FavoritesManagerImpl.getInstance(project).addRoots(newName, nodesToAdd);
       }
     }
   }

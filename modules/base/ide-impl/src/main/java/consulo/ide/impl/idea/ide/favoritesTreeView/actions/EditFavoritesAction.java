@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesListProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.bookmark.ui.view.FavoritesListProvider;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.ex.action.AnAction;
@@ -39,7 +39,7 @@ public class EditFavoritesAction extends AnAction {
     if (project == null || treeBuilder == null || listName == null) {
       return;
     }
-    FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
     Set<Object> selection = treeBuilder.getSelectedElements();
     if (provider != null && provider.willHandle(CommonActionsPanel.Buttons.EDIT, project, selection)) {
@@ -61,7 +61,7 @@ public class EditFavoritesAction extends AnAction {
       e.getPresentation().setEnabled(false);
       return;
     }
-    FavoritesManager favoritesManager = FavoritesManager.getInstance(project);
+    FavoritesManagerImpl favoritesManager = FavoritesManagerImpl.getInstance(project);
     FavoritesListProvider provider = favoritesManager.getListProvider(listName);
     Set<Object> selection = treeBuilder.getSelectedElements();
     if (provider != null) {

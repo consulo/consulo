@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
 import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -35,7 +35,7 @@ public class AddToFavoritesPopupAction extends QuickSwitchSchemeAction {
   protected void fillActions(Project project, @Nonnull DefaultActionGroup group, @Nonnull DataContext dataContext) {
     group.removeAll();
 
-    final List<String> availableFavoritesLists = FavoritesManager.getInstance(project).getAvailableFavoritesListNames();
+    final List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
     availableFavoritesLists.remove(dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
 
     for (String favoritesList : availableFavoritesLists) {
