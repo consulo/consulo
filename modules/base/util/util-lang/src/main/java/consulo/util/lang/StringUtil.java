@@ -2118,6 +2118,10 @@ public final class StringUtil {
   @Contract(pure = true)
   public static List<String> getWordsInStringLongestFirst(@Nonnull String find) {
     List<String> words = getWordsIn(find);
+    if (words.isEmpty()) {
+      return List.of();
+    }
+    
     // hope long words are rare
     words.sort(new Comparator<String>() {
       @Override
