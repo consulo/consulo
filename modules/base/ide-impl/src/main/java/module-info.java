@@ -920,7 +920,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.impl.cache.impl;
   exports consulo.ide.impl.psi.impl.cache.impl.id;
   exports consulo.ide.impl.psi.impl.cache.impl.todo;
-  exports consulo.ide.impl.psi.impl.file;
   exports consulo.ide.impl.psi.impl.file.impl;
   exports consulo.ide.impl.psi.impl.search;
   exports consulo.ide.impl.psi.impl.source;

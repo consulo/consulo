@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.impl.internal.psi.resolve.reference;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.*;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,16 +32,29 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class PsiReferenceServiceImpl extends PsiReferenceService {
+  private final ReferenceProvidersRegistry myReferenceProvidersRegistry;
+
+  @Inject
+  public PsiReferenceServiceImpl(ReferenceProvidersRegistry referenceProvidersRegistry) {
+    myReferenceProvidersRegistry = referenceProvidersRegistry;
+  }
+
   @RequiredReadAction
   @Nonnull
   @Override
   public List<PsiReference> getReferences(@Nonnull PsiElement element, @Nonnull Hints hints) {
     if (element instanceof ContributedReferenceHost) {
-      return Arrays.asList(ReferenceProvidersRegistry.getReferencesFromProviders(element, hints));
+      return Arrays.asList(getReferencesFromProviders(element, hints));
     }
     if (element instanceof HintedReferenceHost) {
       return Arrays.asList(((HintedReferenceHost)element).getReferences(hints));
     }
     return Arrays.asList(element.getReferences());
+  }
+
+  private PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull PsiReferenceService.Hints hints) {
+    ProgressIndicatorProvider.checkCanceled();
+    assert context.isValid() : "Invalid context: " + context;
+    return myReferenceProvidersRegistry.doGetReferencesFromProviders(context, hints);
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
@@ -42,17 +42,19 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class PsiParserFacadeImpl implements PsiParserFacade {
-  protected final PsiManager myManager;
+  private final PsiManager myPsiManager;
+  private final PsiFileFactory myPsiFileFactory;
 
   @Inject
-  public PsiParserFacadeImpl(PsiManager manager) {
-    myManager = manager;
+  public PsiParserFacadeImpl(PsiManager psiManager, PsiFileFactory psiFileFactory) {
+    myPsiManager = psiManager;
+    myPsiFileFactory = psiFileFactory;
   }
 
   @Override
   @Nonnull
   public PsiElement createWhiteSpaceFromText(@Nonnull String text) throws IncorrectOperationException {
-    final FileElement holderElement = DummyHolderFactory.createHolder(myManager, null).getTreeElement();
+    final FileElement holderElement = DummyHolderFactory.createHolder(myPsiManager, null).getTreeElement();
     final LeafElement newElement = ASTFactory.leaf(TokenType.WHITE_SPACE, holderElement.getCharTable().intern(text));
     holderElement.rawAddChildren(newElement);
     CodeEditUtil.markGenerated(newElement);
@@ -81,7 +83,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     final String blockCommentPrefix = commenter.getBlockCommentPrefix();
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
 
-    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", language, (blockCommentPrefix + text + blockCommentSuffix));
+    PsiFile aFile = myPsiFileFactory.createFileFromText("_Dummy_", language, (blockCommentPrefix + text + blockCommentSuffix));
     return findPsiCommentChild(aFile);
   }
 
@@ -95,7 +97,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
     assert prefix != null || (blockCommentPrefix != null && blockCommentSuffix != null);
 
-    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
+    PsiFile aFile = myPsiFileFactory.createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
     return findPsiCommentChild(aFile);
   }
 
@@ -105,7 +107,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     for (PsiElement aChildren : children) {
       if (aChildren instanceof PsiComment) {
         PsiComment comment = (PsiComment)aChildren;
-        DummyHolderFactory.createHolder(myManager, (TreeElement)SourceTreeToPsiMap.psiElementToTree(comment), null);
+        DummyHolderFactory.createHolder(myPsiManager, (TreeElement)SourceTreeToPsiMap.psiElementToTree(comment), null);
         return comment;
       }
     }
@@ -116,6 +118,6 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     String ext = fileType.getDefaultExtension();
     String fileName = "_Dummy_." + ext;
 
-    return PsiFileFactory.getInstance(myManager.getProject()).createFileFromText(fileType, fileName, text, 0, text.length());
+    return myPsiFileFactory.createFileFromText(fileType, fileName, text, 0, text.length());
   }
 }

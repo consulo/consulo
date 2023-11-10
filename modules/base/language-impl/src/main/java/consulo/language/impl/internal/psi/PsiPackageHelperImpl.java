@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.file;
+package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.UserHomeFileUtil;

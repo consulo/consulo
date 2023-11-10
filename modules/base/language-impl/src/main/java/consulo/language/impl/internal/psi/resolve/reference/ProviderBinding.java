@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.language.impl.internal.psi.resolve.reference;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceService;
@@ -24,11 +24,9 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 01.04.2003
  * Time: 16:52:28
- * To change this template use Options | File Templates.
  */
 public interface ProviderBinding<T> {
   class ProviderInfo<T, Context> {

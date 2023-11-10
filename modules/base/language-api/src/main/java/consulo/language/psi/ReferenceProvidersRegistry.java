@@ -66,5 +66,5 @@ public abstract class ReferenceProvidersRegistry {
     return registry.doGetReferencesFromProviders(context, hints);
   }
 
-  protected abstract PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints);
+  public abstract PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints);
 }

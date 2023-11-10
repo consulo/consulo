@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.language.impl.internal.psi.resolve.reference;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
+import consulo.util.lang.Comparing;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 @Singleton
 @ServiceImpl
 public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
-  private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing.compare(o2.priority, o1.priority);
+  private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing
+    .compare(o2.priority, o1.priority);
 
   private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = FactoryMap.create(language -> {
     PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
@@ -60,7 +61,7 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
   }
 
   @Override
-  protected PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
+  public PsiReference[] doGetReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
     List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForContextLanguage = getRegistrar(context.getLanguage()).getPairsByElement(context, hints);
 
     List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> providersForAllLanguages = getRegistrar(Language.ANY).getPairsByElement(context, hints);
@@ -107,6 +108,6 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
         }
       }
     }
-    return result.isEmpty() ? PsiReference.EMPTY_ARRAY : ContainerUtil.toArray(result, new PsiReference[result.size()]);
+    return result.isEmpty() ? PsiReference.EMPTY_ARRAY : result.toArray(PsiReference.ARRAY_FACTORY);
   }
 }

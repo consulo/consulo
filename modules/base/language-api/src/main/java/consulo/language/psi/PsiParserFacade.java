@@ -63,7 +63,7 @@ public interface PsiParserFacade {
   @Nonnull
   PsiComment createLineOrBlockCommentFromText(@Nonnull Language lang, @Nonnull String text) throws IncorrectOperationException;
 
-  @Deprecated
+  @Deprecated(forRemoval = true)
   class SERVICE {
     private SERVICE() {
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.language.impl.internal.psi.resolve.reference;
 
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.pattern.ElementPattern;
@@ -22,24 +22,22 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 01.04.2003
  * Time: 16:52:28
- * To change this template use Options | File Templates.
  */
 public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider> {
-  private final List<ProviderInfo<Provider, ElementPattern>> myProviderPairs = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ProviderInfo<Provider, ElementPattern>> myProviderPairs = Lists.newLockFreeCopyOnWriteList();
 
   public void registerProvider(Provider provider, ElementPattern pattern, double priority) {
-    myProviderPairs.add(new ProviderInfo<Provider, ElementPattern>(provider, pattern, priority));
+    myProviderPairs.add(new ProviderInfo<>(provider, pattern, priority));
   }
 
   @Override
@@ -62,14 +60,14 @@ public class SimpleProviderBinding<Provider> implements ProviderBinding<Provider
       catch (IndexNotReadyException ignored) {
       }
       if (suitable) {
-        list.add(new ProviderInfo<Provider, ProcessingContext>(trinity.provider, context, trinity.priority));
+        list.add(new ProviderInfo<>(trinity.provider, context, trinity.priority));
       }
     }
   }
 
   @Override
   public void unregisterProvider(@Nonnull final Provider provider) {
-    for (final ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<ProviderInfo<Provider, ElementPattern>>(myProviderPairs)) {
+    for (final ProviderInfo<Provider, ElementPattern> trinity : new ArrayList<>(myProviderPairs)) {
       if (trinity.provider.equals(provider)) {
         myProviderPairs.remove(trinity);
       }

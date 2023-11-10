@@ -6,6 +6,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
@@ -85,8 +86,10 @@ public final class DocumentCommitThread implements Runnable, Disposable, Documen
 
   @Inject
   DocumentCommitThread(Application application) {
+    UIAccess uiAccess = application.getLastUIAccess();
+
     // install listener in EDT to avoid missing events in case we are inside write action right now
-    application.invokeLater(() -> {
+    uiAccess.give(() -> {
       if (application.isDisposed()) return;
       assert !application.isWriteAccessAllowed() || application.isUnitTestMode(); // crazy stuff happens in tests, e.g. UIUtil.dispatchInvocationEvents() inside write action
       application.addApplicationListener(new ApplicationListener() {

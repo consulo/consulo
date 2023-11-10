@@ -22,8 +22,7 @@ import consulo.application.util.ConcurrentFactoryMap;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.ide.impl.idea.openapi.roots.impl.LibraryScopeCache;
-import consulo.language.psi.FileContextUtil;
-import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.psi.ResolveScopeManager;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
@@ -36,10 +35,10 @@ import consulo.project.Project;
 import consulo.project.content.TestSourcesFilter;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class ResolveScopeManagerImpl extends ResolveScopeManager {
       return scope;
     });
 
-    ((PsiManagerImpl)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
+    ((PsiManagerEx)psiManager).registerRunnableToRunOnChange(myDefaultResolveScopesCache::clear);
   }
 
   @Nonnull

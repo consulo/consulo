@@ -13,34 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.language.impl.internal.psi.resolve.reference;
 
-import consulo.language.pattern.*;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReferenceContributor;
-import consulo.language.psi.PsiReferenceProvider;
-import consulo.language.psi.PsiReferenceRegistrar;
-import consulo.language.psi.PsiReferenceService;
-import consulo.language.psi.filter.ElementFilter;
-import consulo.language.pattern.FilterPattern;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.language.util.ProcessingContext;
-import consulo.util.collection.SmartList;
 import consulo.application.util.ConcurrentFactoryMap;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import consulo.language.pattern.*;
+import consulo.language.psi.*;
+import consulo.language.psi.filter.ElementFilter;
+import consulo.language.util.ProcessingContext;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Maps;
+import consulo.util.collection.SmartList;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Dmitry Avdeev
  */
 public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
-  private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = ContainerUtil.newConcurrentMap();
-  private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<Class, SimpleProviderBinding<PsiReferenceProvider>> myBindingsMap = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Class, NamedObjectProviderBinding<PsiReferenceProvider>> myNamedBindingsMap = new ConcurrentHashMap<>();
   private final ConcurrentMap<Class, Class[]> myKnownSupers = ConcurrentFactoryMap.createMap(key -> {
     final Set<Class> result = new LinkedHashSet<Class>();
     for (Class candidate : myBindingsMap.keySet()) {
@@ -58,17 +53,6 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     }
     return result.toArray(new Class[result.size()]);
   });
-
-  /**
-   * @deprecated {@see com.intellij.psi.PsiReferenceContributor
-   */
-  public void registerReferenceProvider(@Nullable ElementFilter elementFilter,
-                                        @Nonnull Class scope,
-                                        @Nonnull PsiReferenceProvider provider,
-                                        double priority) {
-    PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement(scope);
-    registerReferenceProvider(capture.and(new FilterPattern(elementFilter)), provider, priority);
-  }
 
   @Override
   public <T extends PsiElement> void registerReferenceProvider(@Nonnull ElementPattern<T> pattern,
@@ -111,21 +95,6 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     }
   }
 
-  /**
-   * @deprecated {@link PsiReferenceContributor}
-   */
-  public void registerReferenceProvider(@Nullable ElementFilter elementFilter,
-                                        @Nonnull Class scope,
-                                        @Nonnull PsiReferenceProvider provider) {
-    registerReferenceProvider(elementFilter, scope, provider, DEFAULT_PRIORITY);
-  }
-
-  public void unregisterReferenceProvider(@Nonnull Class scope, @Nonnull PsiReferenceProvider provider) {
-    ProviderBinding<PsiReferenceProvider> providerBinding = myBindingsMap.get(scope);
-    providerBinding.unregisterProvider(provider);
-  }
-
-
   private void registerNamedReferenceProvider(@Nonnull String[] names,
                                               final PsiNamePatternCondition<?> nameCondition,
                                               @Nonnull Class scopeClass,
@@ -136,7 +105,7 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     NamedObjectProviderBinding<PsiReferenceProvider> providerBinding = myNamedBindingsMap.get(scopeClass);
 
     if (providerBinding == null) {
-      providerBinding = ConcurrencyUtil.cacheOrGet(myNamedBindingsMap, scopeClass, new NamedObjectProviderBinding<PsiReferenceProvider>() {
+      providerBinding = Maps.cacheOrGet(myNamedBindingsMap, scopeClass, new NamedObjectProviderBinding<PsiReferenceProvider>() {
         @Override
         protected String getName(final PsiElement position) {
           return nameCondition.getPropertyValue(position);
@@ -145,14 +114,6 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     }
 
     providerBinding.registerProvider(names, pattern, caseSensitive, provider, priority);
-  }
-
-  /**
-   * @see PsiReferenceContributor
-   * @deprecated
-   */
-  public void registerReferenceProvider(@Nonnull Class scope, @Nonnull PsiReferenceProvider provider) {
-    registerReferenceProvider(null, scope, provider);
   }
 
   @Nonnull
