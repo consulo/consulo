@@ -3,26 +3,24 @@
 package consulo.ide.impl.psi.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import consulo.project.impl.internal.ProjectImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.FileContentUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
@@ -38,14 +36,14 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
+import consulo.project.impl.internal.ProjectImpl;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 //todo listen & notifyListeners readonly events?
@@ -70,7 +68,6 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         fireDocumentCreated(document, psiFile);
       }
     });
-    Disposer.register(this, () -> ((DocumentCommitThread)myDocumentCommitProcessor).cancelTasksOnProjectDispose(project));
   }
 
   @Nullable
@@ -156,13 +153,6 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     final PostprocessReformattingAspectImpl component = (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(myProject);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
-  }
-
-  @Override
-  @TestOnly
-  public void clearUncommittedDocuments() {
-    super.clearUncommittedDocuments();
-    ((DocumentCommitThread)myDocumentCommitProcessor).clearQueue();
   }
 
   @Nonnull

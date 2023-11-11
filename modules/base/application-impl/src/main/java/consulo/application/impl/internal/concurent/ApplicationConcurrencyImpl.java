@@ -62,6 +62,12 @@ public class ApplicationConcurrencyImpl implements ApplicationConcurrency {
     return new BoundedTaskExecutor(name, backendExecutor, maxThreads, true);
   }
 
+  @Nonnull
+  @Override
+  public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name, int maxThreads, @Nonnull Disposable parentDisposable) {
+    return createBoundedApplicationPoolExecutor(name, getExecutorService(), maxThreads, parentDisposable);
+  }
+
   @Override
   @Nonnull
   public ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,

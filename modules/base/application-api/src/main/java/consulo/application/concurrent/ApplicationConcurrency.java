@@ -75,6 +75,16 @@ public interface ApplicationConcurrency {
                                                        int maxThreads,
                                                        @Nonnull Disposable parentDisposable);
 
+  /**
+   * @param name is used to generate thread name which will be shown in thread dumps, so it should be human readable and use title capitalization
+   * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
+   * which will shutdown itself when {@code parentDisposable} gets disposed.
+   */
+  @Nonnull
+  ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
+                                                       int maxThreads,
+                                                       @Nonnull Disposable parentDisposable);
+
   @Nonnull
   default ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name) {
     return createBoundedApplicationPoolExecutor(name, getExecutorService(), 1);

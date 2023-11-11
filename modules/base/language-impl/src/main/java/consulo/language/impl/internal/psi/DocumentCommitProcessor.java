@@ -17,12 +17,11 @@ package consulo.language.impl.internal.psi;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.TransactionId;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DocumentCommitProcessor {
@@ -31,5 +30,5 @@ public interface DocumentCommitProcessor {
   void commitAsynchronously(@Nonnull final Project project,
                             @Nonnull final Document document,
                             @Nonnull Object reason,
-                            @Nullable TransactionId context);
+                            @Nonnull ModalityState modalityState);
 }

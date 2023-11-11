@@ -45,6 +45,7 @@ import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.collection.Maps;
@@ -344,7 +345,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
   }
 
-  private boolean isEventSystemEnabled(Document document) {
+  public boolean isEventSystemEnabled(Document document) {
     FileViewProvider viewProvider = getCachedViewProvider(document);
     return viewProvider != null && viewProvider.isEventSystemEnabled() && !AbstractFileViewProvider.isFreeThreaded(viewProvider);
   }
@@ -549,17 +550,17 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
       });
       if (executed) break;
 
-      TransactionId contextTransaction = TransactionGuard.getInstance().getContextTransaction();
+      ModalityState modality = myProject.getApplication().getDefaultModalityState();
       Semaphore semaphore = new Semaphore(1);
-      application.invokeLater(() -> {
+      AppUIExecutor.onWriteThread(ModalityState.any()).submit(() -> {
         if (myProject.isDisposed()) {
           // committedness doesn't matter anymore; give clients a chance to do checkCanceled
           semaphore.up();
           return;
         }
 
-        performWhenAllCommitted(() -> semaphore.up(), contextTransaction);
-      }, application.getAnyModalityState());
+        performWhenAllCommitted(modality, () -> semaphore.up());
+      });
 
       while (!semaphore.waitFor(10)) {
         ProgressManager.checkCanceled();
@@ -574,10 +575,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
    */
   @Override
   public boolean performWhenAllCommitted(@Nonnull final Runnable action) {
-    return performWhenAllCommitted(action, TransactionGuard.getInstance().getContextTransaction());
+    return performWhenAllCommitted(myProject.getApplication().getDefaultModalityState(), action);
   }
 
-  private boolean performWhenAllCommitted(@Nonnull Runnable action, @Nullable TransactionId context) {
+  private boolean performWhenAllCommitted(@Nonnull ModalityState modality, @Nonnull Runnable action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     checkWeAreOutsideAfterCommitHandler();
 
@@ -593,11 +594,10 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     }
     actions.add(action);
 
-    if (context != null) {
-      // re-add all uncommitted documents into the queue with this new modality
-      // because this client obviously expects them to commit even inside modal dialog
+    if (modality != ModalityState.nonModal() && TransactionGuard.getInstance().isWriteSafeModality(modality)) {
+      // this client obviously expects all documents to be committed ASAP even inside modal dialog
       for (Document document : myUncommittedDocuments) {
-        myDocumentCommitProcessor.commitAsynchronously(myProject, document, "re-added with context " + context + " because performWhenAllCommitted(" + context + ") was called", context);
+        retainProviderAndCommitAsync(document, "re-added because performWhenAllCommitted(" + modality + ") was called", modality);
       }
     }
     return false;
@@ -609,7 +609,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
-  public void performLaterWhenAllCommitted(@Nonnull final Runnable runnable, final consulo.ui.ModalityState modalityState) {
+  public void performLaterWhenAllCommitted(@Nonnull final Runnable runnable, final ModalityState modalityState) {
     final Runnable whenAllCommitted = () -> ApplicationManager.getApplication().invokeLater(() -> {
       if (hasUncommitedDocuments()) {
         // no luck, will try later
@@ -910,7 +910,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         commitDocument(document);
       }
       else if (!document.isInBulkUpdate() && myPerformBackgroundCommit) {
-        myDocumentCommitProcessor.commitAsynchronously(myProject, document, event, TransactionGuard.getInstance().getContextTransaction());
+        myDocumentCommitProcessor.commitAsynchronously(myProject, document, event, myProject.getApplication().getDefaultModalityState());
       }
     }
     else {
@@ -925,7 +925,16 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   public void bulkUpdateFinished(@Nonnull Document document) {
-    myDocumentCommitProcessor.commitAsynchronously(myProject, document, "Bulk update finished", TransactionGuard.getInstance().getContextTransaction());
+    retainProviderAndCommitAsync(document, "Bulk update finished", myProject.getApplication().getDefaultModalityState());
+  }
+
+  private void retainProviderAndCommitAsync(@Nonnull Document document,
+                                            @Nonnull Object reason,
+                                            @Nonnull ModalityState modality) {
+    myDocumentCommitProcessor.commitAsynchronously(myProject,
+                                                   document,
+                                                   reason,
+                                                   modality);
   }
 
   public class PriorityEventCollector implements PrioritizedInternalDocumentListener {
