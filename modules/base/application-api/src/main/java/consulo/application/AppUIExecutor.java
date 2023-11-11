@@ -2,11 +2,9 @@
 package consulo.application;
 
 import consulo.component.ComponentManager;
-import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Contract;
 
 /**
  * An executor that invokes given runnables on Swing Event Dispatch thread when all constraints of a given set are satisfied at the same time.
@@ -79,12 +77,4 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   @Nonnull
   @Contract(pure = true)
   AppUIExecutor inSmartMode(@Nonnull ComponentManager project);
-
-  /**
-   * @return an executor that invokes runnables only in transaction. Automatically expires when {@code parentDisposable} is disposed.
-   * @see TransactionGuard#submitTransaction(Disposable, Runnable)
-   */
-  @Nonnull
-  @Contract(pure = true)
-  AppUIExecutor inTransaction(@Nonnull Disposable parentDisposable);
 }

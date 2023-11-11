@@ -15,6 +15,7 @@
  */
 package consulo.application;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.component.ProcessCanceledException;
@@ -163,6 +164,8 @@ public abstract class TransactionGuard {
    * @return the id of the currently running transaction for using in {@link #submitTransaction(Disposable, TransactionId, Runnable)},
    * or null if there's no transaction running or transaction nesting is not allowed in the callee context (e.g. from invokeLater).
    */
+  @Deprecated
+  @DeprecationInfo("Use Application#getDefaultModalityState() and Application#invokeLater()")
   public abstract TransactionId getContextTransaction();
 
   public boolean isWriteSafeModality(ModalityState state) {

@@ -52,12 +52,4 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
 
     return Result.CONTINUE;
   }
-
-  /**
-   * @deprecated can be emulated with {@link AppUIExecutor}
-   */
-  @Deprecated
-  public static void runLaterWithCommitted(@Nonnull final Project project, final Document document, @Nonnull final Runnable runnable) {
-    AutoPopupControllerImpl.runTransactionWithEverythingCommitted(project, runnable);
-  }
 }

@@ -175,12 +175,4 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
     }
     throw new TimeoutException();
   }
-
-  /**
-   * @deprecated can be emulated with {@link AppUIExecutor}
-   */
-  @Deprecated
-  public static void runTransactionWithEverythingCommitted(@Nonnull final Project project, @Nonnull final Runnable runnable) {
-    AppUIExecutor.onUiThread().later().withDocumentsCommitted(project).inTransaction(project).execute(runnable);
-  }
 }

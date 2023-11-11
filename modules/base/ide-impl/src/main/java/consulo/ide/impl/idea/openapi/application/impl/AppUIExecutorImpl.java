@@ -152,31 +152,6 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     return withConstraint(new InSmartMode((Project)project), project);
   }
 
-  @Nonnull
-  @Override
-  public AppUIExecutor inTransaction(@Nonnull Disposable parentDisposable) {
-    TransactionId id = TransactionGuard.getInstance().getContextTransaction();
-    return withConstraint(new ContextConstraint() {
-      @Override
-      public boolean isCorrectContext() {
-        return TransactionGuard.getInstance().getContextTransaction() != null;
-      }
-
-      @Override
-      public void schedule(Runnable runnable) {
-        // The Application instance is passed as a disposable here to ensure the runnable is always invoked,
-        // regardless expiration state of the proper parentDisposable. In case the latter is disposed,
-        // a continuation is resumed with a cancellation exception anyway (.expireWith() takes care of that).
-        TransactionGuard.getInstance().submitTransaction(ApplicationManager.getApplication(), id, runnable);
-      }
-
-      @Override
-      public String toString() {
-        return "inTransaction";
-      }
-    }).expireWith(parentDisposable);
-  }
-
   @Override
   public void dispatchLaterUnconstrained(Runnable runnable) {
     switch (thread) {
