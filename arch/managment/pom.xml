@@ -864,7 +864,7 @@
       <url>https://maven.consulo.io/repository/snapshots/</url>
       <snapshots>
         <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
+        <updatePolicy>interval:60</updatePolicy>
       </snapshots>
     </repository>
   </repositories>
@@ -875,7 +875,7 @@
       <url>https://maven.consulo.io/repository/snapshots/</url>
       <snapshots>
         <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
+        <updatePolicy>interval:60</updatePolicy>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
