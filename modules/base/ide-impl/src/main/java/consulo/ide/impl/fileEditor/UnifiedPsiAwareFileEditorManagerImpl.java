@@ -80,4 +80,8 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   protected DockableEditorContainerFactory createDockContainerFactory() {
     return new UnifiedDockableEditorContainerFactory();
   }
+
+  @Override
+  public void dispose() {
+  }
 }

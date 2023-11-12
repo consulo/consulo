@@ -35,8 +35,6 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
@@ -50,27 +48,27 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.*;
 
 /**
  * @author peter
  */
 @Singleton
 @ServiceImpl
-public class EditorNotificationsImpl extends EditorNotifications {
+public class EditorNotificationsImpl extends EditorNotifications implements Disposable {
   private record NotificationInfo(EditorNotificationBuilder builder, Disposable disposer) {
   }
 
   private static final Key<WeakReference<ProgressIndicator>> CURRENT_UPDATES = Key.create("CURRENT_UPDATES");
   private final ExecutorService myExecutor;
 
-  private final MergingUpdateQueue myUpdateMerger;
   private final Project myProject;
   private final FileEditorManager myFileEditorManager;
   private final EditorNotificationBuilderFactory myEditorNotificationBuilderFactory;
 
   private final Map<String, Key<NotificationInfo>> myKeyStore = new ConcurrentHashMap<>();
+
+  private Future<?> myUpdateAllFuture = CompletableFuture.completedFuture(null);
 
   @Inject
   public EditorNotificationsImpl(ApplicationConcurrency applicationConcurrency,
@@ -81,7 +79,6 @@ public class EditorNotificationsImpl extends EditorNotifications {
     myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("EditorNotificationsImpl pool");
     myEditorNotificationBuilderFactory = notificationBuilderFactory;
     myFileEditorManager = fileEditorManager;
-    myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);
     MessageBusConnection connection = project.getMessageBus().connect(project);
     connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
@@ -216,14 +213,16 @@ public class EditorNotificationsImpl extends EditorNotifications {
   }
 
   @Override
+  public void dispose() {
+  }
+
+  @Override
   public void updateAllNotifications() {
-    myUpdateMerger.queue(new Update("update") {
-      @Override
-      public void run() {
-        for (VirtualFile file : myFileEditorManager.getOpenFiles()) {
-          updateNotifications(file);
-        }
+    myUpdateAllFuture.cancel(false);
+    myUpdateAllFuture = myProject.getUIAccess().getScheduler().schedule(() -> {
+      for (VirtualFile file : myFileEditorManager.getOpenFiles()) {
+        updateNotifications(file);
       }
-    });
+    }, 100, TimeUnit.MILLISECONDS);
   }
 }

@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.ui;
 
+import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 
@@ -22,11 +23,6 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 2023-11-10
  */
-public class WebModalityState implements ModalityState {
+public class WebModalityState extends IdeaModalityStateEx implements ModalityState {
   public static final WebModalityState INSTANCE = new WebModalityState();
-
-  @Override
-  public boolean dominates(@Nonnull ModalityState anotherState) {
-    return false;
-  }
 }

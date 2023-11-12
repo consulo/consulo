@@ -2,9 +2,8 @@
 package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.internal.ApplicationEx;
 import consulo.application.impl.internal.JobScheduler;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.*;
@@ -338,7 +337,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         runProcessWithProgressSynchronously(task);
       }
       else {
-        runProcessWithProgressInCurrentThread(task, new EmptyProgressIndicator(), IdeaModalityState.defaultModalityState());
+        runProcessWithProgressInCurrentThread(task, new EmptyProgressIndicator(), myApplication.getDefaultModalityState());
       }
     }
     else if (task.isModal()) {
@@ -378,7 +377,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         }
 
         runProcessWithProgressAsynchronously(task);
-      }, IdeaModalityState.defaultModalityState());
+      }, myApplication.getDefaultModalityState());
     }
   }
 

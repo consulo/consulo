@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.progress.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
@@ -41,13 +40,14 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.EmptyRunnable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ProgressWindow extends ProgressIndicatorBase implements BlockingProgressIndicator, Disposable {
   private static final Logger LOG = Logger.getInstance(ProgressWindow.class);
@@ -143,7 +143,8 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     // executed in a small amount of time. Problem: UI blinks and looks ugly if we show progress dialog that disappears shortly
     // for each of them. Solution is to postpone the tasks of showing progress dialog. Hence, it will not be shown at all
     // if the task is already finished when the time comes.
-    Timer timer = UIUtil.createNamedTimer("Progress window timer", myDelayInMillis, e -> ApplicationManager.getApplication().invokeLater(() -> {
+    Application application = Application.get();
+    application.getLastUIAccess().getScheduler().schedule(() -> {
       if (isRunning()) {
         if (myDialog != null) {
           myDialog.copyPopupStateToWindow();
@@ -153,11 +154,9 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
       else {
         Disposer.dispose(this);
         final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-        focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), IdeaModalityState.defaultModalityState());
+        focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), application.getDefaultModalityState());
       }
-    }, getModalityState()));
-    timer.setRepeats(false);
-    timer.start();
+    }, getModalityState(), myDelayInMillis, TimeUnit.MILLISECONDS);
   }
 
   final void enterModality() {

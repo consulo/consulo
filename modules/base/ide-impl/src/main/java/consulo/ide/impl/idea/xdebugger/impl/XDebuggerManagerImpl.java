@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
@@ -63,11 +64,11 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -165,9 +166,12 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
   private final AtomicReference<XDebugSessionImpl> myActiveSession = new AtomicReference<>();
 
   @Inject
-  public XDebuggerManagerImpl(final Project project, final StartupManager startupManager, EditorFactory editorFactory) {
+  public XDebuggerManagerImpl(Project project,
+                              StartupManager startupManager,
+                              EditorFactory editorFactory,
+                              ApplicationConcurrency applicationConcurrency) {
     myProject = project;
-    myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager);
+    myBreakpointManager = new XBreakpointManagerImpl(project, this, startupManager, applicationConcurrency);
     myWatchesManager = new XDebuggerWatchesManager();
     mySessions = new LinkedHashMap<>();
     myExecutionPointHighlighter = new ExecutionPointHighlighter(project);

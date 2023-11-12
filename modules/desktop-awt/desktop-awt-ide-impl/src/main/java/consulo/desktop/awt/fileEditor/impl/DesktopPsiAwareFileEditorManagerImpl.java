@@ -99,4 +99,8 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
       }
     }
   }
+
+  @Override
+  public void dispose() {
+  }
 }

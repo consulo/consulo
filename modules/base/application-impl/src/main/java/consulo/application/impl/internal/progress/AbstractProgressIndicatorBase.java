@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.progress;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
@@ -14,14 +14,15 @@ import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.doubles.DoubleList;
 import consulo.util.collection.primitive.doubles.DoubleLists;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -244,11 +245,14 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     setModalityState(modalityProgress);
   }
 
+  @RequiredUIAccess
   private void setModalityState(@Nullable ProgressIndicator modalityProgress) {
-    ModalityState modalityState = IdeaModalityState.defaultModalityState();
+    Application application = Application.get();
+
+    ModalityState modalityState = application.getDefaultModalityState();
 
     if (modalityProgress != null) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
+      application.assertIsDispatchThread();
       modalityState = ((IdeaModalityStateEx)modalityState).appendProgress(modalityProgress);
       ((TransactionGuardEx)TransactionGuard.getInstance()).enteredModality(modalityState);
     }

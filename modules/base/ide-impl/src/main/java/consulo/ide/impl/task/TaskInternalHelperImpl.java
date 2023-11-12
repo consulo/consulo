@@ -23,12 +23,14 @@ import consulo.task.internal.TaskInternalHelper;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 02-Aug-22
  */
 @ServiceImpl
+@Singleton
 public class TaskInternalHelperImpl implements TaskInternalHelper {
   @RequiredUIAccess
   @Override

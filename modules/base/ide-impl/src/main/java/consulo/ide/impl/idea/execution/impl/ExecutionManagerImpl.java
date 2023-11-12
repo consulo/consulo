@@ -16,10 +16,7 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
-import consulo.application.TransactionGuard;
+import consulo.application.*;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -43,11 +40,9 @@ import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
-import consulo.application.SaveAndSyncHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
@@ -63,22 +58,23 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -96,7 +92,6 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
   private final Provider<ToolWindowManager> myToolWindowManager;
 
   private RunContentManagerImpl myContentManager;
-  private final Alarm awaitingTerminationAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private final List<Trinity<RunContentDescriptor, RunnerAndConfigurationSettings, Executor>> myRunningConfigurations = ContainerUtil.createLockFreeCopyOnWriteList();
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
@@ -427,24 +422,25 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
     }
 
-    awaitingTerminationAlarm.addRequest(new Runnable() {
+    myProject.getUIAccess().getScheduler().schedule(new Runnable() {
       @Override
       public void run() {
         if (ExecutorRegistry.getInstance().isStarting(environment)) {
-          awaitingTerminationAlarm.addRequest(this, 100);
+          myProject.getUIAccess().getScheduler().schedule(this, 100, TimeUnit.MILLISECONDS);
           return;
         }
 
         for (RunContentDescriptor descriptor : runningOfTheSameType) {
           ProcessHandler processHandler = descriptor.getProcessHandler();
           if (processHandler != null && !processHandler.isProcessTerminated()) {
-            awaitingTerminationAlarm.addRequest(this, 100);
+            myProject.getUIAccess().getScheduler().schedule(this, 100, TimeUnit.MILLISECONDS);
             return;
           }
         }
+        
         start(environment);
       }
-    }, 50);
+    }, 50, TimeUnit.MILLISECONDS);
   }
 
   private static void start(@Nonnull ExecutionEnvironment environment) {

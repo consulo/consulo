@@ -67,7 +67,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
   protected final Set<W> myWindows = new CopyOnWriteArraySet<>();
   protected Element mySplittersElement;  // temporarily used during initialization
 
-  private final MergingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
+  private final MergingProcessingQueue<VirtualFile, Pair<W, Image>> myIconUpdater;
 
   protected FileEditorsSplittersBase(@Nonnull ApplicationConcurrency applicationConcurrency,
                                      @Nonnull Project project,
@@ -75,7 +75,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     myProject = project;
     myManager = manager;
 
-    myIconUpdater = new MergingQueue<>(applicationConcurrency, project, 200) {
+    myIconUpdater = new MergingProcessingQueue<>(applicationConcurrency, project, 200) {
       @Override
       protected void calculateValue(@Nonnull Project project,
                                     @Nonnull VirtualFile key,

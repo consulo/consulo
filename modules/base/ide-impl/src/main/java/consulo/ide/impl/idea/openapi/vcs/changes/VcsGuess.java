@@ -16,16 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.Supplier;
 
 public class VcsGuess {
 
@@ -60,8 +61,8 @@ public class VcsGuess {
   }
 
   private boolean isFileInIndex(@Nullable final FilePath filePath, @Nonnull final VirtualFile validParent) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-      public Boolean compute() {
+    return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
+      public Boolean get() {
         if (myProject.isDisposed()) return false;
         boolean inContent = myVcsManager.isFileInContent(validParent);
         if (inContent) return true;

@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -167,12 +168,15 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   private final Collection<LocalChangeList> myListsToBeDeleted = new HashSet<>();
 
   public static ChangeListManagerImpl getInstanceImpl(final Project project) {
-    return (ChangeListManagerImpl)project.getComponent(ChangeListManager.class);
+    return (ChangeListManagerImpl)project.getInstance(ChangeListManager.class);
   }
 
 
   @Inject
-  public ChangeListManagerImpl(Project project, final VcsConfiguration config) {
+  public ChangeListManagerImpl(Project project,
+                               VcsConfiguration config,
+                               ApplicationConcurrency applicationConcurrency,
+                               EditorNotifications editorNotifications) {
     myProject = project;
     myConfig = config;
     myFreezeName = new AtomicReference<>(null);
@@ -187,17 +191,15 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     myDelayedNotificator = new DelayedNotificator(myListeners, myScheduler);
     myModifier = new Modifier(myWorker, myDelayedNotificator);
 
-    myConflictTracker = new ChangelistConflictTracker(project, this, myFileStatusManager, EditorNotifications.getInstance(project));
+    myConflictTracker = new ChangelistConflictTracker(project, this, myFileStatusManager, editorNotifications, applicationConcurrency);
 
-    myListeners.addListener(new ChangeListAdapter() {
+    myListeners.addListener(new ChangeListListener() {
       @Override
       public void defaultListChanged(final ChangeList oldDefaultList, ChangeList newDefaultList) {
         final LocalChangeList oldList = (LocalChangeList)oldDefaultList;
         if (oldDefaultList == null || oldList.hasDefaultName() || oldDefaultList.equals(newDefaultList)) return;
 
-        if (!ApplicationManager.getApplication().isUnitTestMode()) {
-          scheduleAutomaticChangeListDeletionIfEmpty(oldList, config);
-        }
+        scheduleAutomaticChangeListDeletionIfEmpty(oldList, config);
       }
     });
   }

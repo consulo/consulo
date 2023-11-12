@@ -21,6 +21,7 @@ import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
@@ -75,6 +76,7 @@ import consulo.project.event.DumbModeListener;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.wm.MergingQueue;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
@@ -85,8 +87,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -131,7 +131,7 @@ import java.util.function.Consumer;
  * @author Vladimir Kondratyev
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
-public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element> {
+public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
   private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
@@ -144,8 +144,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   private final List<Pair<VirtualFile, FileEditorWindow>> mySelectionHistory = new ArrayList<>();
   private Reference<FileEditorComposite> myLastSelectedComposite = new WeakReference<>(null);
 
-  private final MergingUpdateQueue myQueue =
-    new MergingUpdateQueue("FileEditorManagerUpdateQueue", 50, true, MergingUpdateQueue.ANY_COMPONENT);
+  private MergingQueue<Runnable> myQueue;
 
   private final BusyObject.Impl.Simple myBusyObject = new BusyObject.Impl.Simple();
 
@@ -161,7 +160,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   private final MessageListenerList<FileEditorManagerListener> myListenerList;
 
-  public FileEditorManagerImpl(@Nonnull Application application, @Nonnull Project project, DockManager dockManager) {
+  public FileEditorManagerImpl(@Nonnull Application application,
+                               @Nonnull ApplicationConcurrency applicationConcurrency,
+                               @Nonnull Project project,
+                               DockManager dockManager) {
     myProject = project;
     myDockManager = dockManager;
     myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.class);
@@ -169,6 +171,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (myProject.isDefault()) {
       return;
     }
+
+    myQueue = new MergingQueue<>(applicationConcurrency, project, 50, this, Runnable::run);
 
     if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
       myListenerList.add(new FileEditorManagerListener() {
@@ -179,8 +183,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
       });
     }
-
-    myQueue.setTrackUiActivity(true);
 
     final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(DumbModeListener.class, new DumbModeListener() {
@@ -418,18 +420,15 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   public void updateFileName(@Nullable final VirtualFile file) {
     // Queue here is to prevent title flickering when tab is being closed and two events arriving: with component==null and component==next focused tab
     // only the last event makes sense to handle
-    myQueue.queue(new Update("UpdateFileName " + (file == null ? "" : file.getPath())) {
-      @Override
-      public boolean isExpired() {
-        return myProject.isDisposed() || !myProject.isOpen() || (file == null ? super.isExpired() : !file.isValid());
+    myQueue.queue(() -> {
+      boolean isExpired = myProject.isDisposed() || !myProject.isOpen() || file != null && !file.isValid();
+      if (isExpired) {
+        return;
       }
 
-      @Override
-      public void run() {
-        Set<FileEditorsSplitters> all = getAllSplitters();
-        for (FileEditorsSplitters each : all) {
-          each.updateFileName(file);
-        }
+      Set<FileEditorsSplitters> all = getAllSplitters();
+      for (FileEditorsSplitters each : all) {
+        each.updateFileName(file);
       }
     });
   }
@@ -1859,15 +1858,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   void queueUpdateFile(@Nonnull final VirtualFile file) {
-    myQueue.queue(new Update(file) {
-      @Override
-      public void run() {
-        if (isFileOpen(file)) {
-          updateFileIconAsync(file);
-          updateFileColor(file);
-          updateFileBackgroundColor(file);
-        }
-
+    myQueue.queue(() -> {
+      if (isFileOpen(file)) {
+        updateFileIconAsync(file);
+        updateFileColor(file);
+        updateFileBackgroundColor(file);
       }
     });
   }

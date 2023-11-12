@@ -16,36 +16,27 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.fileEditor.EditorNotifications;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
-import consulo.versionControlSystem.change.ChangeListAdapter;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.versionControlSystem.change.ChangesUtil;
-import consulo.versionControlSystem.change.InvokeAfterUpdateMode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.project.ProjectLocator;
+import consulo.project.ui.wm.MergingQueue;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeList;
-import consulo.versionControlSystem.change.ContentRevision;
-import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
@@ -61,7 +52,7 @@ public class ChangelistConflictTracker {
 
   private final ChangeListManager myChangeListManager;
   private final EditorNotifications myEditorNotifications;
-  private final ChangeListAdapter myChangeListListener;
+  private final ChangeListListener myChangeListListener;
 
   private final FileDocumentManager myDocumentManager;
   private final DocumentAdapter myDocumentListener;
@@ -73,7 +64,8 @@ public class ChangelistConflictTracker {
   public ChangelistConflictTracker(@Nonnull Project project,
                                    @Nonnull ChangeListManager changeListManager,
                                    @Nonnull FileStatusManager fileStatusManager,
-                                   @Nonnull EditorNotifications editorNotifications) {
+                                   @Nonnull EditorNotifications editorNotifications,
+                                   @Nonnull ApplicationConcurrency applicationConcurrency) {
     myProject = project;
 
     myChangeListManager = changeListManager;
@@ -83,10 +75,9 @@ public class ChangelistConflictTracker {
     myCheckSetLock = new Object();
     myCheckSet = new HashSet<>();
 
-    final Application application = ApplicationManager.getApplication();
-    final ZipperUpdater zipperUpdater = new ZipperUpdater(300, Alarm.ThreadToUse.SWING_THREAD, project);
+    final MergingQueue<Runnable> zipperUpdater = new MergingQueue<>(applicationConcurrency, project, 300, project, Runnable::run);
     final Runnable runnable = () -> {
-      if (application.isDisposed() || myProject.isDisposed() || !myProject.isOpen()) {
+      if (project.getApplication().isDisposed() || myProject.isDisposed() || !myProject.isOpen()) {
         return;
       }
       final Set<VirtualFile> localSet;
@@ -105,7 +96,7 @@ public class ChangelistConflictTracker {
         }
         Document document = e.getDocument();
         VirtualFile file = myDocumentManager.getFile(document);
-        if (ProjectUtil.guessProjectForFile(file) == myProject) {
+        if (ProjectLocator.getInstance().guessProjectForFile(file) == myProject) {
           synchronized (myCheckSetLock) {
             myCheckSet.add(file);
           }
@@ -114,7 +105,7 @@ public class ChangelistConflictTracker {
       }
     };
 
-    myChangeListListener = new ChangeListAdapter() {
+    myChangeListListener = new ChangeListListener() {
       @Override
       public void changeListChanged(ChangeList list) {
         if (myChangeListManager.isDefaultChangeList(list)) {

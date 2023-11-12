@@ -20,31 +20,29 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.component.extension.Extensions;
-import consulo.project.DumbService;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -53,6 +51,9 @@ import java.awt.event.KeyListener;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
@@ -62,10 +63,11 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
 
   private static final Key<KeyListener> EDITOR_LISTENER_ADDED = Key.create("previewManagerListenerAdded");
 
-  private final Alarm alarm = new Alarm();
+  private Future<?> executeFuture = CompletableFuture.completedFuture(null);
 
   /**
    * this collection should not keep strong references to the elements
+   *
    * @link getPsiElementsAt()
    */
   @Nullable
@@ -73,10 +75,10 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
 
   @Inject
   public ImageOrColorPreviewManager(Application application, EditorFactory editorFactory) {
-    if(!application.isSwingApplication()) {
+    if (!application.isSwingApplication()) {
       return;
     }
-    
+
     // we don't use multicaster because we don't want to serve all editors - only supported
     editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
       @Override
@@ -126,8 +128,10 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
           if (pointerInfo != null) {
             Point location = pointerInfo.getLocation();
             SwingUtilities.convertPointFromScreen(location, editor.getContentComponent());
-            alarm.cancelAllRequests();
-            alarm.addRequest(new PreviewRequest(location, editor, true), 100);
+
+            executeFuture.cancel(false);
+            executeFuture =
+              project.getUIAccess().getScheduler().schedule(new PreviewRequest(location, editor, true), 100, TimeUnit.MILLISECONDS);
           }
         }
       }
@@ -139,7 +143,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
 
   private static boolean isSupportedFile(PsiFile psiFile) {
     for (PsiFile file : psiFile.getViewProvider().getAllFiles()) {
-      for (ElementPreviewProvider provider : Extensions.getExtensions(ElementPreviewProvider.EP_NAME)) {
+      for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
         if (provider.isSupportedFile(file)) {
           return true;
         }
@@ -180,7 +184,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
 
   @Override
   public void dispose() {
-    alarm.cancelAllRequests();
+    executeFuture.cancel(false);
     myElements = null;
   }
 
@@ -191,22 +195,28 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
       return;
     }
 
-    alarm.cancelAllRequests();
+    Project project = editor.getProject();
+    if (project == null) {
+      return;
+    }
+
+    executeFuture.cancel(false);
     Point point = event.getMouseEvent().getPoint();
     if (myElements == null && event.getMouseEvent().isShiftDown()) {
-      alarm.addRequest(new PreviewRequest(point, editor, false), 100);
+      executeFuture = project.getUIAccess().getScheduler().schedule(new PreviewRequest(point, editor, false), 100, TimeUnit.MILLISECONDS);
     }
     else {
       Collection<PsiElement> elements = myElements;
       if (!getPsiElementsAt(point, editor).equals(elements)) {
         myElements = null;
-        for (ElementPreviewProvider provider : Extensions.getExtensions(ElementPreviewProvider.EP_NAME)) {
+        for (ElementPreviewProvider provider : ElementPreviewProvider.EP_NAME.getExtensionList()) {
           try {
             if (elements != null) {
               for (PsiElement element : elements) {
                 provider.hide(element, editor);
               }
-            } else {
+            }
+            else {
               provider.hide(null, editor);
             }
           }
@@ -216,11 +226,6 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
         }
       }
     }
-  }
-
-  @Override
-  public void mouseDragged(EditorMouseEvent e) {
-    // nothing
   }
 
   private final class PreviewRequest implements Runnable {
@@ -243,7 +248,7 @@ public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotion
           return;
         }
         if (PsiDocumentManager.getInstance(element.getProject()).isUncommited(editor.getDocument()) ||
-            DumbService.getInstance(element.getProject()).isDumb()) {
+          DumbService.getInstance(element.getProject()).isDumb()) {
           return;
         }
 

@@ -3216,6 +3216,8 @@ public class UIUtil {
   }
 
   @Nonnull
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use UIAccessScheduler")
   public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay, @Nonnull ActionListener listener) {
     return new Timer(delay, listener) {
       @Override
@@ -3226,6 +3228,8 @@ public class UIUtil {
   }
 
   @Nonnull
+  @Deprecated(forRemoval = true)
+  @DeprecationInfo("Use UIAccessScheduler")
   public static Timer createNamedTimer(@NonNls @Nonnull final String name, int delay) {
     return new Timer(delay, null) {
       @Override

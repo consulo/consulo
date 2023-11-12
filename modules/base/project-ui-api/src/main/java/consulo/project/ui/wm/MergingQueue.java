@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.fileEditor;
+package consulo.project.ui.wm;
 
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
-import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,26 +31,32 @@ import java.util.function.Consumer;
 
 /**
  * @author VISTALL
- * @since 15/09/2023
+ * @since 11/11/2023
  */
-public abstract class MergingQueue<K, V> {
+public final class MergingQueue<V> implements Disposable {
   private final ApplicationConcurrency myApplicationConcurrency;
   private final Project myProject;
   private final int myTickInMiliseconds;
+  private final Consumer<V> myValueConsumer;
 
   private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
-  private final Queue<K> myUpdateQeueu = new ConcurrentLinkedDeque<K>();
+  private final Queue<V> myUpdateQeueu = new ConcurrentLinkedDeque<V>();
 
   public MergingQueue(ApplicationConcurrency applicationConcurrency,
                       Project project,
-                      int tickInMiliseconds) {
+                      int tickInMiliseconds,
+                      Disposable parentDisposable,
+                      Consumer<V> valueConsumer) {
     myApplicationConcurrency = applicationConcurrency;
     myProject = project;
     myTickInMiliseconds = tickInMiliseconds;
+    myValueConsumer = valueConsumer;
+
+    Disposer.register(parentDisposable, this);
   }
 
-  public void queueAdd(K key) {
-    myUpdateQeueu.add(key);
+  public void queue(V value) {
+    myUpdateQeueu.add(value);
 
     if (myUpdateFuture.isCancelled() || myUpdateFuture.isDone()) {
       restart();
@@ -61,13 +67,11 @@ public abstract class MergingQueue<K, V> {
     myApplicationConcurrency.getScheduledExecutorService().schedule(() -> {
       if (myProject.isDisposed()) return;
 
-      List<Pair<K, V>> collectedValues = new ArrayList<>(myUpdateQeueu.size());
+      List<V> collectedValues = new ArrayList<>(myUpdateQeueu.size());
 
-      K it = null;
+      V it = null;
       while ((it = myUpdateQeueu.poll()) != null) {
-        final K finalIt = it;
-
-        calculateValue(myProject, it, v -> collectedValues.add(Pair.pair(finalIt, v)));
+        collectedValues.add(it);
       }
 
       if (collectedValues.isEmpty()) {
@@ -75,8 +79,8 @@ public abstract class MergingQueue<K, V> {
       }
 
       myProject.getUIAccess().give(() -> {
-        for (Pair<K, V> data : collectedValues) {
-          updateValueInsideUI(myProject, data.getKey(), data.getValue());
+        for (V collectedValue : collectedValues) {
+          myValueConsumer.accept(collectedValue);
         }
       });
     }, myTickInMiliseconds, TimeUnit.MILLISECONDS);
@@ -86,8 +90,4 @@ public abstract class MergingQueue<K, V> {
     myUpdateQeueu.clear();
     myUpdateFuture.cancel(false);
   }
-
-  protected abstract void calculateValue(@Nonnull Project project, @Nonnull K key, @Nonnull Consumer<V> consumer);
-
-  protected abstract void updateValueInsideUI(@Nonnull Project project, @Nonnull K key, @Nonnull V value);
 }

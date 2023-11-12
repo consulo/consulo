@@ -15,36 +15,37 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.disposer.Disposable;
 import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ui.image.Image;
 import consulo.util.collection.MultiValuesMap;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.http.HttpFileSystem;
-import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import consulo.execution.debug.XDebuggerUtil;
-import consulo.execution.debug.XSourcePosition;
-import consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
-import consulo.ui.image.Image;
-import org.jdom.Element;
-
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 
 /**
@@ -67,12 +68,15 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
   private long myTime;
   private String myDefaultGroup;
 
-  public XBreakpointManagerImpl(final Project project, final XDebuggerManagerImpl debuggerManager, StartupManager startupManager) {
+  public XBreakpointManagerImpl(Project project,
+                                XDebuggerManagerImpl debuggerManager,
+                                StartupManager startupManager,
+                                ApplicationConcurrency applicationConcurrency) {
     myProject = project;
     myDebuggerManager = debuggerManager;
     myAllBreakpointsDispatcher = EventDispatcher.create(XBreakpointListener.class);
     myDependentBreakpointManager = new XDependentBreakpointManager(this);
-    myLineBreakpointManager = new XLineBreakpointManager(project, myDependentBreakpointManager, startupManager);
+    myLineBreakpointManager = new XLineBreakpointManager(project, myDependentBreakpointManager, startupManager, applicationConcurrency);
     if (!project.isDefault()) {
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
         HttpVirtualFileListener httpVirtualFileListener = this::updateBreakpointInFile;
@@ -113,7 +117,8 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Override
   @Nonnull
-  public <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(final XBreakpointType<XBreakpoint<T>, T> type, @Nullable final T properties) {
+  public <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(final XBreakpointType<XBreakpoint<T>, T> type,
+                                                                        @Nullable final T properties) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     XBreakpointBase<?, T, ?> breakpoint = createBreakpoint(type, properties, true, false);
     addBreakpoint(breakpoint, false, true);
@@ -124,13 +129,16 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
                                                                                       T properties,
                                                                                       final boolean enabled,
                                                                                       boolean defaultBreakpoint) {
-    BreakpointState<?, T, ?> state = new BreakpointState<>(enabled, type.getId(), defaultBreakpoint ? 0 : myTime++, type.getDefaultSuspendPolicy());
+    BreakpointState<?, T, ?> state =
+      new BreakpointState<>(enabled, type.getId(), defaultBreakpoint ? 0 : myTime++, type.getDefaultSuspendPolicy());
     getBreakpointDefaults(type).applyDefaults(state);
     state.setGroup(myDefaultGroup);
     return new XBreakpointBase<XBreakpoint<T>, T, BreakpointState<?, T, ?>>(type, this, properties, state);
   }
 
-  private <T extends XBreakpointProperties> void addBreakpoint(final XBreakpointBase<?, T, ?> breakpoint, final boolean defaultBreakpoint, boolean initUI) {
+  private <T extends XBreakpointProperties> void addBreakpoint(final XBreakpointBase<?, T, ?> breakpoint,
+                                                               final boolean defaultBreakpoint,
+                                                               boolean initUI) {
     XBreakpointType type = breakpoint.getType();
     if (defaultBreakpoint) {
       LOG.assertTrue(!myDefaultBreakpoints.containsKey(type), "Cannot have more than one default breakpoint (type " + type.getId() + ")");
@@ -218,7 +226,8 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
                                                                                 @Nullable final T properties,
                                                                                 boolean temporary) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    LineBreakpointState<T> state = new LineBreakpointState<>(true, type.getId(), fileUrl, line, temporary, myTime++, type.getDefaultSuspendPolicy());
+    LineBreakpointState<T> state =
+      new LineBreakpointState<>(true, type.getId(), fileUrl, line, temporary, myTime++, type.getDefaultSuspendPolicy());
     getBreakpointDefaults(type).applyDefaults(state);
     state.setGroup(myDefaultGroup);
     XLineBreakpointImpl<T> breakpoint = new XLineBreakpointImpl<>(type, this, properties, state);
@@ -328,7 +337,8 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
   }
 
   @Override
-  public void addBreakpointListener(@Nonnull final XBreakpointListener<XBreakpoint<?>> listener, @Nonnull final Disposable parentDisposable) {
+  public void addBreakpointListener(@Nonnull final XBreakpointListener<XBreakpoint<?>> listener,
+                                    @Nonnull final Disposable parentDisposable) {
     myAllBreakpointsDispatcher.addListener(listener, parentDisposable);
   }
 
@@ -508,7 +518,9 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Nullable
   @RequiredWriteAction
-  <T extends XBreakpointProperties> XLineBreakpoint<T> copyLineBreakpoint(@Nonnull XLineBreakpoint<T> source, @Nonnull String fileUrl, int line) {
+  <T extends XBreakpointProperties> XLineBreakpoint<T> copyLineBreakpoint(@Nonnull XLineBreakpoint<T> source,
+                                                                          @Nonnull String fileUrl,
+                                                                          int line) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (!(source instanceof XLineBreakpointImpl<?>)) {
       return null;
@@ -516,7 +528,8 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     myDependentBreakpointManager.saveState();
     final LineBreakpointState sourceState = ((XLineBreakpointImpl<?>)source).getState();
 
-    final LineBreakpointState newState = XmlSerializer.deserialize(XmlSerializer.serialize(sourceState, SERIALIZATION_FILTER), LineBreakpointState.class);
+    final LineBreakpointState newState =
+      XmlSerializer.deserialize(XmlSerializer.serialize(sourceState, SERIALIZATION_FILTER), LineBreakpointState.class);
     newState.setLine(line);
     newState.setFileUrl(fileUrl);
 

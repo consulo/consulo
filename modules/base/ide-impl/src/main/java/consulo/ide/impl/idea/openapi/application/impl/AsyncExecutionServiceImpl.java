@@ -4,11 +4,10 @@ package consulo.ide.impl.idea.openapi.application.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ModalityState;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 
@@ -43,13 +42,13 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   @Nonnull
   @Override
   protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.EDT);
+    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
   }
 
   @Nonnull
   @Override
   protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.WT);
+    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
   }
 
   @Nonnull

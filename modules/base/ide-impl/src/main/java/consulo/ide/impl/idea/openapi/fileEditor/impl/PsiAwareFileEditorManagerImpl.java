@@ -69,7 +69,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
                                        PsiManager psiManager,
                                        Provider<WolfTheProblemSolver> problemSolver,
                                        DockManager dockManager) {
-    super(application, project, dockManager);
+    super(application, applicationConcurrency, project, dockManager);
     myApplicationConcurrency = applicationConcurrency;
 
     myPsiManager = psiManager;
