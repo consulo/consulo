@@ -835,7 +835,26 @@
       <properties>
         <build.number>${env.BUILD_NUMBER}</build.number>
         <dev.mode>false</dev.mode>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>${maven.jar.plugin}</version>
+            <configuration>
+              <archive>
+                <index>true</index>
+                <manifestEntries>
+                  <Consulo-Build-Number>${build.number}</Consulo-Build-Number>
+                  <Consulo-Build-Date>${timestamp}</Consulo-Build-Date>
+                </manifestEntries>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
@@ -862,6 +881,14 @@
   </pluginRepositories>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.extensions</groupId>
+        <artifactId>maven-build-cache-extension</artifactId>
+        <version>1.0.1</version>
+      </extension>
+    </extensions>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -934,13 +961,6 @@
         <version>${maven.jar.plugin}</version>
         <configuration>
           <forceCreation>false</forceCreation>
-          <archive>
-            <index>true</index>
-            <manifestEntries>
-              <Consulo-Build-Number>${build.number}</Consulo-Build-Number>
-              <Consulo-Build-Date>${timestamp}</Consulo-Build-Date>
-            </manifestEntries>
-          </archive>
         </configuration>
       </plugin>
       <plugin>

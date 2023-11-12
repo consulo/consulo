@@ -70,7 +70,7 @@ public class ApplicationInfo {
 
       // yyyyMMddHHmm
       String buildDate = attributes.getValue("Consulo-Build-Date");
-      if (buildDate != null) {                                                               
+      if (buildDate != null) {
         myBuildDate = parseDate(buildDate);
       }
     }

@@ -17,13 +17,12 @@ package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.TransactionId;
 import consulo.document.Document;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -42,7 +41,7 @@ public class LightDocumentCommitProcessor implements DocumentCommitProcessor {
   public void commitAsynchronously(@Nonnull Project project,
                                    @Nonnull Document document,
                                    @Nonnull Object reason,
-                                   @Nullable TransactionId context) {
+                                   @Nonnull ModalityState modalityState) {
 
   }
 }
