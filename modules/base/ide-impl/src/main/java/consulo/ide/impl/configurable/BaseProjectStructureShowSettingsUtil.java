@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.options.impl;
+package consulo.ide.impl.configurable;
 
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.base.BaseShowSettingsUtil;

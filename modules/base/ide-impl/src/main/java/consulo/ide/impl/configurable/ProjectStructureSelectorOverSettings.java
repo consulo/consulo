@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.options;
+package consulo.ide.impl.configurable;
 
 import consulo.compiler.artifact.Artifact;
 import consulo.configurable.MasterDetailsConfigurable;

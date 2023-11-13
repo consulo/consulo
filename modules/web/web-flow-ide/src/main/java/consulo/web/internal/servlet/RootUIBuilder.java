@@ -17,7 +17,6 @@ package consulo.web.internal.servlet;
 
 import consulo.application.WriteAction;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -26,11 +25,10 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
+import consulo.util.lang.TimeoutUtil;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
 import jakarta.annotation.Nonnull;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
@@ -61,15 +59,17 @@ public class RootUIBuilder implements UIBuilder {
 
     UIAccess access = UIAccess.current();
 
-    scheduleWelcomeFrame(access, window);
+    scheduleWelcomeFrame(access, window, 0);
   }
 
-  private void scheduleWelcomeFrame(UIAccess access, Window window) {
-    AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+  private void scheduleWelcomeFrame(UIAccess access, Window window, int tryCount) {
+    new Thread(() -> {
+      TimeoutUtil.sleep(1000L);
+      
       WebApplication application = WebApplication.getInstance();
       if (application == null || !((ApplicationEx)application).isLoaded()) {
         if (access.isValid()) {
-          scheduleWelcomeFrame(access, window);
+          scheduleWelcomeFrame(access, window, tryCount + 1);
         }
         return;
       }
@@ -77,7 +77,7 @@ public class RootUIBuilder implements UIBuilder {
       if (access.isValid()) {
         access.give(() -> showWelcomeFrame(application, window));
       }
-    }, 1, TimeUnit.SECONDS);
+    }, "UI Starter=" + tryCount).start();
   }
 
   @RequiredUIAccess

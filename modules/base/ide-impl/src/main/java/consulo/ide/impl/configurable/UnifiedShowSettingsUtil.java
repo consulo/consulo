@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.options.impl;
+package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.project.internal.DefaultProjectFactory;
-import consulo.project.Project;
-import consulo.ide.setting.ProjectStructureSelector;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.impl.ui.app.impl.settings.UnifiedSettingsDialog;
+import consulo.ide.setting.ProjectStructureSelector;
+import consulo.ide.setting.bundle.SettingsSdksModel;
+import consulo.project.Project;
+import consulo.project.internal.DefaultProjectFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.function.Consumer;
 

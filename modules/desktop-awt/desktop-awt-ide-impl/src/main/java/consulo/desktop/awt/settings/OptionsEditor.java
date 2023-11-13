@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.options.ProjectStructureSelectorOverSettings;
+import consulo.ide.impl.configurable.ProjectStructureSelectorOverSettings;
 import consulo.ide.impl.roots.ui.configuration.session.internal.ConfigurableSessionImpl;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;

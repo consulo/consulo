@@ -25,7 +25,7 @@ import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.ui.CustomProtocolHandler;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
-import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
+import consulo.application.util.mac.foundation.MacUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import java.util.function.Function;
 import com.sun.jna.Callback;

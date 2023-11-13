@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.impl;
+package consulo.ide.impl.compiler;
 
 import consulo.compiler.impl.internal.CompilerWorkspaceConfiguration;
 import consulo.compiler.impl.internal.action.CompilerPropertiesAction;
 import consulo.compiler.impl.internal.action.ExcludeFromCompileAction;
-import consulo.ide.impl.compiler.HelpID;
 import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeElement;
 import consulo.ide.impl.idea.ide.errorTreeView.ErrorTreeNodeDescriptor;
 import consulo.ide.impl.idea.ide.errorTreeView.GroupingElement;
@@ -30,7 +29,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nullable;
 
 public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {

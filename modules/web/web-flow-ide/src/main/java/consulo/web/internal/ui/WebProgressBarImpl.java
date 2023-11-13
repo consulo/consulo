@@ -64,6 +64,6 @@ public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarIm
 
   @Override
   public void setValue(int value) {
-    getVaadinComponent().setValue(value);
+    getVaadinComponent().setValue(value / 100d);
   }
 }

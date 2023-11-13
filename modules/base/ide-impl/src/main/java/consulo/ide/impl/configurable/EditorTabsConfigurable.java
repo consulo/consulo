@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.settings.impl;
+package consulo.ide.impl.configurable;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;

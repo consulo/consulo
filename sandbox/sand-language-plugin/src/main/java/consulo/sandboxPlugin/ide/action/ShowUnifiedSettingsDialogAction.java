@@ -15,18 +15,17 @@
  */
 package consulo.sandboxPlugin.ide.action;
 
-import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ActionRef;
+import consulo.ide.impl.configurable.UnifiedShowSettingsUtil;
+import consulo.project.Project;
 import consulo.project.internal.DefaultProjectFactory;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.options.impl.UnifiedShowSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
@@ -46,6 +45,6 @@ public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull AnActionEvent e) {
     UnifiedShowSettingsUtil unifiedShowSettingsUtil = new UnifiedShowSettingsUtil(myDefaultProjectFactory);
 
-    unifiedShowSettingsUtil.showSettingsDialog(e.getData(CommonDataKeys.PROJECT));
+    unifiedShowSettingsUtil.showSettingsDialog(e.getData(Project.KEY));
   }
 }

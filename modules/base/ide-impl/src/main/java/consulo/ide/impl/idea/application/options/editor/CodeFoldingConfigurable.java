@@ -30,7 +30,7 @@ import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
+import consulo.ide.impl.configurable.EditorGeneralConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;

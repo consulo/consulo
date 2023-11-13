@@ -15,30 +15,34 @@
  */
 
 
-package consulo.ide.impl.idea.compiler.impl.resourceCompiler;
+package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.compiler.resourceCompiler.ResourceCompiler;
-import consulo.compiler.util.CompilerUtil;
-import consulo.compiler.util.MakeUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.application.ApplicationManager;
-import consulo.compiler.*;
+import consulo.compiler.CompileContext;
+import consulo.compiler.CompilerBundle;
+import consulo.compiler.CompilerMessageCategory;
+import consulo.compiler.ResourceCompilerExtension;
+import consulo.compiler.resourceCompiler.ResourceCompiler;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.compiler.scope.CompileScope;
+import consulo.compiler.util.CompilerUtil;
+import consulo.compiler.util.MakeUtil;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
+import consulo.util.io.FilePermissionCopier;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ExceptionUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -113,7 +117,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             continue;
           }
           final String sourcePath = file.getPath();
-          final String relativePath = VfsUtilCore.getRelativePath(file, fileRoot, '/');
+          final String relativePath = VirtualFileUtil.getRelativePath(file, fileRoot, '/');
           final VirtualFile outputDir = context.getOutputForFile(module, file);
           if (outputDir == null) {
             continue;
@@ -219,7 +223,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         LOG.debug("Copying " + myFromPath + " to " + myToPath);
       }
       final File targetFile = new File(myToPath);
-      FileUtil.copyContent(new File(myFromPath), targetFile);
+      FileUtil.copyContent(new File(myFromPath), targetFile, FilePermissionCopier.BY_NIO2);
       filesToRefresh.add(targetFile);
       return new MyOutputItem(myToPath, mySourceFile);
     }

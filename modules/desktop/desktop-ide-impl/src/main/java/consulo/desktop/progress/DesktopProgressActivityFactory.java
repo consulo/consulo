@@ -13,24 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.swt.ide;
+package consulo.desktop.progress;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
-
+import consulo.platform.Platform;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
- * @since 16-Jul-22
+ * @since 23-Mar-22
  */
 @Singleton
 @ServiceImpl
-public class DesktopSwtProgressActivityFactoryImpl implements ProgressActivityFactory {
+public class DesktopProgressActivityFactory implements ProgressActivityFactory {
+  private final boolean myShouldStartActivity;
+
+  public DesktopProgressActivityFactory() {
+    Platform platform = Platform.current();
+    
+    boolean isMac = platform.os().isMac();
+    myShouldStartActivity = isMac && Boolean.parseBoolean(platform.jvm().getRuntimeProperty("consulo.mac.prevent.app.nap", "true"));
+  }
+
   @Nullable
   @Override
   public Runnable createActivity() {
+    if (myShouldStartActivity) {
+      return MacActivityUtil.wakeUpNeo(this);
+    }
     return null;
   }
 }

@@ -33,6 +33,7 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -76,6 +77,7 @@ import org.vaadin.stefan.table.Table;
 @Uses(TextField.class)
 @Uses(TabSheet.class)
 @Uses(TextArea.class)
+@Uses(ProgressBar.class)
 public class ConsuloAppShellConfigurator implements AppShellConfigurator {
   @Override
   public void configurePage(AppShellSettings settings) {

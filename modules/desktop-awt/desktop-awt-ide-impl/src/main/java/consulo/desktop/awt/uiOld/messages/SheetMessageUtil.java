@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.uiOld.messages;
 
-import consulo.application.util.registry.Registry;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.WindowManager;
+import consulo.application.util.registry.Registry;
+import consulo.desktop.awt.wm.mac.MacNativeUIUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.ModalityHelper;
-import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -69,7 +69,7 @@ public class SheetMessageUtil {
       }
     }
 
-    while (_window != null && MacUtil.getWindowTitle(_window) == null) {
+    while (_window != null && MacNativeUIUtil.getWindowTitle(_window) == null) {
       _window = _window.getOwner();
       //At least our frame should have a title
     }

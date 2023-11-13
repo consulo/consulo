@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.compiler.actions;
+package consulo.ide.impl.compiler.action;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 08-Aug-22
  */
+@ExtensionImpl
 public class BuildArtifactNotificationGroupContributor implements NotificationGroupContributor {
   @Override
   public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {

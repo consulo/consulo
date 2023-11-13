@@ -45,6 +45,7 @@ module consulo.application.impl {
     consulo.desktop.awt.ide.impl,
     consulo.test.impl,
     consulo.compiler.impl,
+    consulo.desktop.ide.impl,
     consulo.desktop.swt.ide.impl;
 
   exports consulo.application.impl.internal.performance to consulo.ide.impl, consulo.proxy, consulo.desktop.awt.ide.impl;

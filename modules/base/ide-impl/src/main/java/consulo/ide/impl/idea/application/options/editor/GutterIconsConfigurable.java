@@ -26,7 +26,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
+import consulo.ide.impl.configurable.EditorGeneralConfigurable;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
