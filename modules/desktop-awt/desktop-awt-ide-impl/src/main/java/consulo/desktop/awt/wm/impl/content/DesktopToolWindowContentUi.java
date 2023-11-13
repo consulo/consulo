@@ -19,7 +19,7 @@ import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowContentAction;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;

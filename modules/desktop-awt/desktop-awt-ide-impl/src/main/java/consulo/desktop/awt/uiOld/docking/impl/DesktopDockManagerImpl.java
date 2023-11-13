@@ -28,7 +28,7 @@ import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
@@ -78,6 +78,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @Singleton
 @ServiceImpl
@@ -403,7 +404,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     return window;
   }
 
-  private class DockWindow extends FrameWrapper implements IdeEventQueue.EventDispatcher, BaseDockManager.DockWindow {
+  private class DockWindow extends FrameWrapper implements Predicate<AWTEvent>, BaseDockManager.DockWindow {
 
     private final String myId;
     private final DockContainer myContainer;
@@ -527,7 +528,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     }
 
     @Override
-    public boolean dispatch(AWTEvent e) {
+    public boolean test(AWTEvent e) {
       if (e instanceof KeyEvent) {
         if (myCurrentDragSession != null) {
           stopCurrentDragSession();

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
@@ -57,12 +57,13 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatcher {
+public class IdeMenuBar extends JMenuBar implements Predicate<AWTEvent> {
   private static final int COLLAPSED_HEIGHT = 2;
 
   private enum State {
@@ -303,7 +304,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   }
 
   @Override
-  public boolean dispatch(AWTEvent e) {
+  public boolean test(AWTEvent e) {
     if (e instanceof MouseEvent) {
       MouseEvent mouseEvent = (MouseEvent)e;
       Component component = findActualComponent(mouseEvent);

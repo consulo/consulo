@@ -18,5 +18,8 @@ module consulo.compiler.artifact.api {
 
   opens consulo.compiler.artifact.element to consulo.util.xml.serializer;
 
-  exports consulo.compiler.artifact.internal to consulo.ide.impl;
+  exports consulo.compiler.artifact.internal to
+    consulo.compiler.artifact.impl,
+    consulo.compiler.impl,
+    consulo.ide.impl;
 }

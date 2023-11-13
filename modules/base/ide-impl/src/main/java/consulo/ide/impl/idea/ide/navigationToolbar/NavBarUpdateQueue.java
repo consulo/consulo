@@ -1,27 +1,27 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import java.util.function.Consumer;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.util.concurrent.ActionCallback;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
@@ -38,7 +38,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     super("NavBar", Registry.intValue("navBar.updateMergeTime"), true, panel, panel);
     myPanel = panel;
     setTrackUiActivity(true);
-    IdeEventQueue.getInstance().addActivityListener(() -> restartRebuild(), panel);
+    IdeEventQueueProxy.getInstance().addActivityListener(() -> restartRebuild(), panel);
   }
 
   private void requestModelUpdate(@Nullable final DataContext context, final @Nullable Object object, boolean requeue) {

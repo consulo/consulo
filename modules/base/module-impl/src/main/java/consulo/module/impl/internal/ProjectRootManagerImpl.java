@@ -40,11 +40,10 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -340,15 +339,6 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
 
   @Override
   public void markRootsForRefresh() {
-  }
-
-  public static String extractLocalPath(final String url) {
-    final String path = VirtualFileUtil.urlToPath(url);
-    final int jarSeparatorIndex = path.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
-    if (jarSeparatorIndex > 0) {
-      return path.substring(0, jarSeparatorIndex);
-    }
-    return path;
   }
 
   private ModuleManager getModuleManager() {

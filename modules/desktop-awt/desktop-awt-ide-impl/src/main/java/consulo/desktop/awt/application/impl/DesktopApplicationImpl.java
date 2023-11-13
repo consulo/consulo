@@ -38,6 +38,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
@@ -46,7 +47,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.LogEventException;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.ide.impl.idea.openapi.progress.util.PotemkinProgress;
+import consulo.desktop.awt.progress.PotemkinProgress;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
@@ -100,8 +101,6 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     ApplicationManager.setApplication(this);
 
-    AWTExceptionHandler.register(); // do not crash AWT on exceptions
-
     myIsInternal = ApplicationProperties.isInternal();
 
     String debugDisposer = System.getProperty("idea.disposer.debug");
@@ -149,9 +148,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     myLock = new ReadMostlyRWLock(edt);
 
-    if (!USE_SEPARATE_WRITE_THREAD) {
-      UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
-    }
+    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
 
     NoSwingUnderWriteAction.watchForEvents(this);
   }
@@ -239,7 +236,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
     Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null, true);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null);
   }
 
   @RequiredUIAccess
@@ -496,30 +493,12 @@ public class DesktopApplicationImpl extends BaseApplication {
                                             @Nullable JComponent parentComponent,
                                             @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
                                             @Nonnull Consumer<? super ProgressIndicator> action) {
-    if (!USE_SEPARATE_WRITE_THREAD) {
-      // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
-      return runWriteActionWithClass(action.getClass(), () -> {
-        PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
-        indicator.runInSwingThread(() -> action.accept(indicator));
-        return !indicator.isCanceled();
-      });
-    }
-
-    ProgressWindow progress = createProgressWindow(title, cancelText != null, true, project, parentComponent, cancelText);
-
-    ProgressResult<Object> result =
-            new ProgressRunner<>(() -> runWriteAction(() -> action.accept(progress)))
-                    .sync()
-                    .onThread(ProgressRunner.ThreadToUse.WRITE)
-                    .withProgress(progress)
-                    .modal()
-                    .submitAndGet();
-
-    if (result.getThrowable() instanceof RuntimeException) {
-      throw (RuntimeException)result.getThrowable();
-    }
-
-    return true;
+    // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
+    return runWriteActionWithClass(action.getClass(), () -> {
+      PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
+      indicator.runInSwingThread(() -> action.accept(indicator));
+      return !indicator.isCanceled();
+    });
   }
 
   @Nonnull

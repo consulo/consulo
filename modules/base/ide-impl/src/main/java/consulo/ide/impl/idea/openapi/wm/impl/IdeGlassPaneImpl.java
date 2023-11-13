@@ -15,30 +15,30 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ui.ex.awt.dnd.DnDAware;
-import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
-import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.util.collection.FactoryMap;
-import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
+import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
+import consulo.ide.impl.idea.ui.BalloonImpl;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.Painter;
 import consulo.ui.ex.awt.Divider;
+import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.popup.Balloon;
-
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.collection.FactoryMap;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -49,8 +49,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
-public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEventQueue.EventDispatcher {
+public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicate<AWTEvent> {
 
   private static final Logger LOG = Logger.getInstance(IdeGlassPaneImpl.class);
   private static final String PREPROCESSED_CURSOR_KEY = "SuperCursor";
@@ -100,7 +101,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
   }
 
   @Override
-  public boolean dispatch(@Nonnull final AWTEvent e) {
+  public boolean test(@Nonnull final AWTEvent e) {
     JRootPane eventRootPane = myRootPane;
 
     if (e instanceof MouseEvent) {
@@ -511,7 +512,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
       setVisible(hasWork);
     }
 
-    IdeEventQueue queue = IdeEventQueue.getInstance();
+    IdeEventQueueProxy queue = IdeEventQueueProxy.getInstance();
     if (!queue.containsDispatcher(this) && (myPreprocessorActive || isVisible())) {
       queue.addDispatcher(this, null);
     }

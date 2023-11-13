@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ui.OwnerOptional;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.ui.ex.awt.UIUtil;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

@@ -18,6 +18,7 @@ package consulo.desktop.awt.fileEditor.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
@@ -30,6 +31,8 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
@@ -38,6 +41,9 @@ import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 /**
  * @author VISTALL
@@ -98,6 +104,27 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
         }
       }
     }
+  }
+
+  @Override
+  protected boolean isOpenInNewWindow() {
+    AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
+
+    // Shift was used while clicking
+    if (event instanceof MouseEvent &&
+      ((MouseEvent)event).isShiftDown() &&
+      (event.getID() == MouseEvent.MOUSE_CLICKED || event.getID() == MouseEvent.MOUSE_PRESSED || event.getID() == MouseEvent.MOUSE_RELEASED)) {
+      return true;
+    }
+
+    if (event instanceof KeyEvent) {
+      KeyEvent ke = (KeyEvent)event;
+      Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+      String[] ids = keymap.getActionIds(KeyStroke.getKeyStroke(ke.getKeyCode(), ke.getModifiers()));
+      return Arrays.asList(ids).contains("OpenElementInNewWindow");
+    }
+
+    return false;
   }
 
   @Override

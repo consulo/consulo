@@ -13,12 +13,12 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.awt.language.editor.documentation.DocumentationComponent;
 import consulo.desktop.awt.language.editor.documentation.DocumentationManagerImpl;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.QuickDocUtil;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.ui.LightweightHint;
@@ -26,6 +26,7 @@ import consulo.ide.impl.idea.ui.MouseMovementTracker;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
@@ -56,11 +57,11 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -116,7 +117,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       }
     });
 
-    IdeEventQueue.getInstance().addActivityListener(this::onActivity, this);
+    IdeEventQueueProxy.getInstance().addActivityListener(this::onActivity, this);
   }
 
   @Override

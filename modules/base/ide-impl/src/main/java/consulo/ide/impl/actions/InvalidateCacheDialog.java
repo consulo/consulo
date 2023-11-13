@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.actions;
 
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.application.Application;
+import consulo.application.CachesInvalidator;
 import consulo.application.internal.ApplicationEx;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.stub.gist.GistManager;
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.language.psi.stub.gist.GistManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.CheckBox;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.collection.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.LinkedHashMap;
@@ -61,7 +61,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
     setOKButtonText(restartCapable ? "Invalidate & Restart" : "Invalidate");
     setOKButtonIcon(TargetAWT.to(PlatformIconGroup.generalWarning()));
 
-    if(restartCapable) {
+    if (restartCapable) {
       myJustRestartAction = new DialogWrapperAction(LocalizeValue.localizeTODO("Just Restart")) {
         @Override
         protected void doAction(ActionEvent e) {
@@ -81,12 +81,13 @@ public class InvalidateCacheDialog extends DialogWrapper {
   @RequiredUIAccess
   protected JComponent createCenterPanel() {
     VerticalLayout root = VerticalLayout.create();
-    root.add(HorizontalLayout.create().add(Label.create(LocalizeValue.localizeTODO("The caches will be invalidated and rebuilt on the next startup"))));
+    root.add(HorizontalLayout.create()
+                             .add(Label.create(LocalizeValue.localizeTODO("The caches will be invalidated and rebuilt on the next startup"))));
 
     VerticalLayout optionalLayout = VerticalLayout.create();
     root.add(LabeledLayout.create(LocalizeValue.localizeTODO("Optional:"), optionalLayout));
 
-    for (CachesInvalidator invalidator : CachesInvalidator.EP_NAME.getExtensionList()) {
+    Application.get().getExtensionPoint(CachesInvalidator.class).forEachExtensionSafe(invalidator -> {
       CheckBox checkBox = CheckBox.create(invalidator.getDescription());
       checkBox.setValue(invalidator.isEnabledByDefault());
       checkBox.addValueListener(event -> myStates.put(invalidator, event.getValue()));
@@ -94,7 +95,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
       myStates.put(invalidator, checkBox.getValueOrError());
 
       optionalLayout.add(checkBox);
-    }
+    });
     return (JComponent)TargetAWT.to(root);
   }
 
@@ -119,11 +120,11 @@ public class InvalidateCacheDialog extends DialogWrapper {
   @Override
   protected Action[] createActions() {
     Action[] actions = super.createActions();
-    if(myJustRestartAction == null) {
+    if (myJustRestartAction == null) {
       return actions;
     }
-    
-    if(Platform.current().os().isMac()) {
+
+    if (Platform.current().os().isMac()) {
       return ArrayUtil.prepend(myJustRestartAction, actions);
     }
     else {

@@ -17,32 +17,34 @@ package consulo.desktop.awt.application;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.SaveAndSyncHandler;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.event.FrameStateListener;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
+import consulo.document.internal.FileDocumentManagerEx;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.application.SaveAndSyncHandler;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.virtualFileSystem.*;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -59,10 +61,11 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
   private final PropertyChangeListener myGeneralSettingsListener;
   private final GeneralSettings mySettings;
   private final ProgressManager myProgressManager;
-  private final SingleAlarm myRefreshDelayAlarm = new SingleAlarm(this::doScheduledRefresh, 300, this);
   private final AtomicInteger myBlockSaveOnFrameDeactivationCount = new AtomicInteger();
   private final AtomicInteger myBlockSyncOnFrameActivationCount = new AtomicInteger();
   private volatile long myRefreshSessionId;
+
+  private Future<?> myRefreshDelayAlarm = CompletableFuture.completedFuture(null);
 
   @Inject
   public DesktopSaveAndSyncHandlerImpl(@Nonnull Application application,
@@ -76,7 +79,7 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     myIdleListener = () -> {
       if (mySettings.isAutoSaveIfInactive() && canSyncOrSave()) {
-        TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerImpl)fileDocumentManager).saveAllDocuments(false));
+        TransactionGuard.submitTransaction(myApplication, () -> ((FileDocumentManagerEx)fileDocumentManager).saveAllDocuments(false));
       }
     };
     IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
@@ -135,7 +138,8 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
   @Override
   public void scheduleRefresh() {
-    myRefreshDelayAlarm.cancelAndRequest();
+    myRefreshDelayAlarm.cancel(false);
+    myRefreshDelayAlarm = myApplication.getLastUIAccess().getScheduler().schedule(this::doScheduledRefresh, 300, TimeUnit.MILLISECONDS);
   }
 
   private void doScheduledRefresh() {
@@ -157,7 +161,8 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
       LOG.debug("vfs refreshed");
     }
     else if (LOG.isDebugEnabled()) {
-      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0) + ", isSyncOnFrameActivation: " + mySettings.isSyncOnFrameActivation());
+      LOG.debug("vfs refresh rejected, blocked: " + (myBlockSyncOnFrameActivationCount.get() != 0) + ", isSyncOnFrameActivation: " + mySettings
+        .isSyncOnFrameActivation());
     }
   }
 

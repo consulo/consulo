@@ -51,6 +51,7 @@
     <module>modules/base/base-localize-library</module>
     <module>modules/base/base-icon-library</module>
     <module>modules/base/build-ui-api</module>
+    <module>modules/base/build-ui-impl</module>
     <module>modules/base/ide-impl</module>
     <module>modules/base/component-api</module>
     <module>modules/base/application-api</module>
@@ -104,6 +105,7 @@
     <module>modules/base/file-editor-api</module>
     <module>modules/base/file-editor-impl</module>
     <module>modules/base/compiler-artifact-api</module>
+    <module>modules/base/compiler-artifact-impl</module>
     <module>modules/base/color-scheme-api</module>
     <module>modules/base/color-scheme-impl</module>
     <module>modules/base/ide-api</module>

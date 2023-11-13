@@ -19,50 +19,51 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.application.util.registry.Registry;
+import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.AnimatedIconComponent;
-import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.AnimatedIconComponent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -73,6 +74,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -100,7 +102,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
   private boolean myIsPlaying = false;
   @NonNls
   private static final String ELEMENT_MACRO = "macro";
-  private final IdeEventQueue.EventDispatcher myKeyProcessor;
+  private final Predicate<AWTEvent> myKeyProcessor;
 
   private Set<InputEvent> myLastActionInputEvent = new HashSet<InputEvent>();
   private ActionMacroManager.Widget myWidget;
@@ -133,9 +135,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
     myKeyProcessor = new MyKeyPostpocessor();
 
-    if (application.isSwingApplication()) {
-      IdeEventQueue.getInstance().addPostprocessor(myKeyProcessor, null);
-    }
+    IdeEventQueueProxy.getInstance().addPostprocessor(myKeyProcessor, null);
   }
 
   @Override
@@ -169,10 +169,6 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     final StatusBar statusBar = WindowManager.getInstance().getIdeFrame(null).getStatusBar();
     myWidget = new Widget(statusBar);
     statusBar.addWidget(myWidget);
-  }
-
-  @Override
-  public void dispose() {
   }
 
   private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
@@ -407,8 +403,9 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     return myIsRecording;
   }
 
-  public void disposeComponent() {
-    IdeEventQueue.getInstance().removePostprocessor(myKeyProcessor);
+  @Override
+  public void dispose() {
+    IdeEventQueueProxy.getInstance().removePostprocessor(myKeyProcessor);
   }
 
   public ActionMacro[] getAllMacros() {
@@ -500,16 +497,13 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
       getTemplatePresentation().setText(macro.getName(), false);
     }
 
+    @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-      IdeEventQueue.getInstance().doWhenReady(new Runnable() {
-        @Override
-        public void run() {
-          getInstance().playMacro(myMacro);
-        }
-      });
+      IdeEventQueueProxy.getInstance().doWhenReady(() -> getInstance().playMacro(myMacro));
     }
 
+    @RequiredUIAccess
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
@@ -517,10 +511,10 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     }
   }
 
-  private class MyKeyPostpocessor implements IdeEventQueue.EventDispatcher {
+  private class MyKeyPostpocessor implements Predicate<AWTEvent> {
 
     @Override
-    public boolean dispatch(AWTEvent e) {
+    public boolean test(AWTEvent e) {
       if (isRecording() && e instanceof KeyEvent) {
         postProcessKeyEvent((KeyEvent)e);
       }
@@ -536,7 +530,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
       final boolean modifierKeyIsPressed = e.getKeyCode() == KeyEvent.VK_CONTROL || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_META || e.getKeyCode() == KeyEvent.VK_SHIFT;
       if (modifierKeyIsPressed) return;
 
-      final boolean ready = IdeEventQueue.getInstance().getKeyEventDispatcher().isReady();
+      final boolean ready = IdeEventQueueProxy.getInstance().isKeyEventDispatcherReady();
       final boolean isChar = e.getKeyChar() != KeyEvent.CHAR_UNDEFINED && UIUtil.isReallyTypedEvent(e);
       final boolean hasActionModifiers = e.isAltDown() | e.isControlDown() | e.isMetaDown();
       final boolean plainType = isChar && !hasActionModifiers;

@@ -81,6 +81,7 @@ public final class OpenUrlHyperlinkInfo implements HyperlinkWithPopupMenuInfo {
     return builder.build();
   }
 
+  @RequiredUIAccess
   @Override
   public void navigate(Project project) {
     BrowserLauncher.getInstance().browse(url, browser, project);

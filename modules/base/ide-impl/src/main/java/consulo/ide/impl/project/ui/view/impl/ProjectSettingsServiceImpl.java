@@ -16,7 +16,7 @@
 package consulo.ide.impl.project.ui.view.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.compiler.artifact.Artifact;
+import consulo.configurable.Configurable;
 import consulo.content.library.Library;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.OrderEntryTypeEditor;
@@ -27,11 +27,10 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -72,13 +71,19 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
   @Override
   @RequiredUIAccess
   public void openModuleLibrarySettings(final Module module) {
-    myShowSettingsUtil.showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("modules.classpath.title"), true));
+    myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
+                                                  config -> config.select(module.getName(),
+                                                                          ProjectBundle.message("modules.classpath.title"),
+                                                                          true));
   }
 
   @Override
   @RequiredUIAccess
   public void openContentEntriesSettings(final Module module) {
-    myShowSettingsUtil.showProjectStructureDialog(module.getProject(), config -> config.select(module.getName(), ProjectBundle.message("module.paths.title"), true));
+    myShowSettingsUtil.showProjectStructureDialog(module.getProject(),
+                                                  config -> config.select(module.getName(),
+                                                                          ProjectBundle.message("module.paths.title"),
+                                                                          true));
   }
 
   @Override
@@ -101,5 +106,11 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
   @RequiredUIAccess
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
     myShowSettingsUtil.showProjectStructureDialog(myProject, config -> config.select(moduleToSelect, editorNameToSelect, true));
+  }
+
+  @Override
+  @RequiredUIAccess
+  public void showAndSelect(Class<? extends Configurable> configurableClass) {
+    myShowSettingsUtil.showAndSelect(myProject, configurableClass);
   }
 }

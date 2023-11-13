@@ -17,6 +17,7 @@
 package consulo.module.impl.internal.layer.library;
 
 import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
@@ -30,7 +31,8 @@ import java.util.List;
  * @author dsl
  */
 public class LibraryTableImplUtil {
-  public static final String MODULE_LEVEL = "module";
+  @Deprecated
+  public static final String MODULE_LEVEL = LibraryEx.MODULE_LEVEL;
 
   private LibraryTableImplUtil() {
   }

@@ -9,6 +9,7 @@ import consulo.dataContext.DataProvider;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
@@ -94,6 +95,7 @@ public final class BuildConsoleUtils {
         if (linkEnd > 0) {
           String linkText = content.substring(tagMatcher.end(), linkEnd).replaceAll(TAG_PATTERN.pattern(), "");
           consoleView.printHyperlink(linkText, new HyperlinkInfo() {
+            @RequiredUIAccess
             @Override
             public void navigate(Project project) {
               if (notification != null && notification.getListener() != null) {

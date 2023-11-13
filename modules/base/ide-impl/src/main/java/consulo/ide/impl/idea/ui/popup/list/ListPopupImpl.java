@@ -1,40 +1,35 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup.list;
 
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
 import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.statistics.StatisticsInfo;
-import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.idea.ui.ListActions;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.SeparatorWithText;
-import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;
-import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ide.impl.idea.ui.popup.NextStepHandler;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
+import consulo.ide.impl.psi.statistics.StatisticsInfo;
+import consulo.ide.impl.psi.statistics.StatisticsManager;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.ide.ui.popup.HintUpdateSupply;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
@@ -519,7 +514,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
     @Override
     public void mouseReleased(MouseEvent e) {
       if (!isActionClick(e) || isMultiSelectionEnabled() && UIUtil.isSelectionButtonDown(e)) return;
-      IdeEventQueue.getInstance().blockNextEvents(e); // sometimes, after popup close, MOUSE_RELEASE event delivers to other components
+      IdeEventQueueProxy.getInstance().blockNextEvents(e); // sometimes, after popup close, MOUSE_RELEASE event delivers to other components
       final Object selectedValue = myList.getSelectedValue();
       final ListPopupStep<Object> listStep = getListStep();
       handleSelect(handleFinalChoices(e, selectedValue, listStep), e);

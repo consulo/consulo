@@ -3,9 +3,8 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.navigation.GotoSymbolContributor;
@@ -15,7 +14,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-
 import jakarta.annotation.Nonnull;
 
 public class GotoSymbolAction extends GotoActionBase implements DumbAware {
@@ -26,21 +24,11 @@ public class GotoSymbolAction extends GotoActionBase implements DumbAware {
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
-    if (Registry.is("new.search.everywhere")) {
-      if (!dumb || new SymbolSearchEverywhereContributor(project, null).isDumbAware()) {
-        showInSearchEverywherePopup(SymbolSearchEverywhereContributor.class.getSimpleName(), e, true, true);
-      }
-      else {
-        GotoClassAction.invokeGoToFile(project, e);
-      }
+    if (!dumb || new SymbolSearchEverywhereContributor(project, null).isDumbAware()) {
+      showInSearchEverywherePopup(SymbolSearchEverywhereContributor.class.getSimpleName(), e, true, true);
     }
     else {
-      if (!dumb) {
-        super.actionPerformed(e);
-      }
-      else {
-        GotoClassAction.invokeGoToFile(project, e);
-      }
+      GotoClassAction.invokeGoToFile(project, e);
     }
   }
 

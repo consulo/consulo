@@ -2,7 +2,7 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.content.TabbedContent;

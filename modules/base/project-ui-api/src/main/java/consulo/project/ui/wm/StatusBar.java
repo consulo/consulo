@@ -25,6 +25,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -35,6 +36,8 @@ import java.awt.*;
  * @author spleaner
  */
 public interface StatusBar extends StatusBarInfo, Disposable {
+  Key<StatusBar> KEY = Key.create(StatusBar.class);
+
   abstract class Info implements StatusBarInfo {
     private Info() {
     }

@@ -379,10 +379,6 @@ public final class ProgressRunner<R> {
   }
 
   private static void waitForFutureUnlockingThread(@Nonnull CompletableFuture<?> resultFuture) {
-    if (ApplicationManager.getApplication().isWriteThread()) {
-      pollLaterInvocatorActively(resultFuture, LaterInvocator::pollWriteThreadEventsOnce);
-      return;
-    }
     if (UIAccess.isUIThread()) {
       throw new UnsupportedOperationException("Sync waiting from EDT is dangerous.");
     }

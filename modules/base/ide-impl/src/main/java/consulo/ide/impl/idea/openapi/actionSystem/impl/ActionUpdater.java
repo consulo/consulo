@@ -14,9 +14,9 @@ import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -232,7 +232,7 @@ public class ActionUpdater {
 
   private static void cancelAndRestartOnUserActivity(Promise<?> promise, ProgressIndicator indicator) {
     Disposable disposable = Disposable.newDisposable("Action Update");
-    IdeEventQueue.getInstance().addPostprocessor(e -> {
+    IdeEventQueueProxy.getInstance().addPostprocessor(e -> {
       if (e instanceof ComponentEvent && !(e instanceof PaintEvent) && (e.getID() & AWTEvent.MOUSE_MOTION_EVENT_MASK) == 0) {
         indicator.cancel();
       }

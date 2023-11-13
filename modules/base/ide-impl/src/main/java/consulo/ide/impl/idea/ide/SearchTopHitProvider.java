@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import consulo.application.util.registry.Registry;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -21,6 +20,6 @@ public interface SearchTopHitProvider {
   void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, @Nullable Project project);
 
   static String getTopHitAccelerator() {
-    return Registry.is("new.search.everywhere") ? "/" : "#";
+    return "/";
   }
 }

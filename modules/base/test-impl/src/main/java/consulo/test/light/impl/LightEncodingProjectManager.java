@@ -17,8 +17,14 @@ package consulo.test.light.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.util.ModificationTracker;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
+
+import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * @author VISTALL
@@ -26,5 +32,21 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
-public class LightEncodingProjectManager extends LightEncodingManager implements EncodingProjectManager {
+public class LightEncodingProjectManager extends LightEncodingManager implements EncodingProjectManager, ModificationTracker {
+  @Nonnull
+  @Override
+  public ModificationTracker getModificationTracker() {
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public Map<? extends VirtualFile, ? extends Charset> getAllMappings() {
+    return Map.of();
+  }
+
+  @Override
+  public long getModificationCount() {
+    return 0;
+  }
 }

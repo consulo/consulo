@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.ui.OwnerOptional;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 

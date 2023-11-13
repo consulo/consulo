@@ -56,7 +56,6 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -88,8 +87,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
@@ -116,8 +113,6 @@ import org.jdom.Element;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -660,27 +655,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
   }
 
-  private boolean isOpenInNewWindow() {
-    if (!myProject.getApplication().isSwingApplication()) {
-      return false;
-    }
-
-    AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
-
-    // Shift was used while clicking
-    if (event instanceof MouseEvent &&
-      ((MouseEvent)event).isShiftDown() &&
-      (event.getID() == MouseEvent.MOUSE_CLICKED || event.getID() == MouseEvent.MOUSE_PRESSED || event.getID() == MouseEvent.MOUSE_RELEASED)) {
-      return true;
-    }
-
-    if (event instanceof KeyEvent) {
-      KeyEvent ke = (KeyEvent)event;
-      Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
-      String[] ids = keymap.getActionIds(KeyStroke.getKeyStroke(ke.getKeyCode(), ke.getModifiers()));
-      return Arrays.asList(ids).contains("OpenElementInNewWindow");
-    }
-
+  protected boolean isOpenInNewWindow() {
     return false;
   }
 

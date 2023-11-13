@@ -24,13 +24,12 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 
 /**
- * Created by IntelliJ IDEA.
  * User: max
  * Date: Jul 22, 2003
  * Time: 3:33:04 PM
- * To change this template use Options | File Templates.
  */
 public class EditMacrosAction extends AnAction implements DumbAware {
+  @Override
   public void actionPerformed(AnActionEvent e) {
     EditMacrosDialog dialog = new EditMacrosDialog(e.getData(CommonDataKeys.PROJECT));
     dialog.show();

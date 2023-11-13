@@ -987,6 +987,27 @@ public class ContainerUtil {
     };
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <U> Iterator<U> mapIterator(@Nonnull PrimitiveIterator.OfInt iterator, @Nonnull IntFunction<? extends U> mapper) {
+    return new Iterator<U>() {
+      @Override
+      public boolean hasNext() {
+        return iterator.hasNext();
+      }
+
+      @Override
+      public U next() {
+        return mapper.apply(iterator.next());
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
+  }
+
   @Contract(pure = true)
   @Nonnull
   public static <T, U> Iterator<U> mapIterator(final @Nonnull Iterator<? extends T> iterator, final @Nonnull Function<? super T, ? extends U> mapper) {

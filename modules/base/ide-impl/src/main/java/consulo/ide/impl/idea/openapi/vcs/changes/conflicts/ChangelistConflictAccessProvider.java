@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -70,12 +70,12 @@ public class ChangelistConflictAccessProvider extends WritingAccessProvider {
       }
 
       ChangelistConflictDialog dialog;
-      final int savedEventCount = IdeEventQueue.getInstance().getEventCount();
+      Runnable markEventCount = UIAccess.current().markEventCount();
       do {
         dialog = new ChangelistConflictDialog(myProject, new ArrayList<>(changeLists), denied);
         dialog.show();
       } while (dialog.isOK() && !dialog.getResolution().resolveConflict(myProject, changes, null));
-      IdeEventQueue.getInstance().setEventCount(savedEventCount);
+      markEventCount.run();
 
       if (dialog.isOK()) {
         options.LAST_RESOLUTION = dialog.getResolution();

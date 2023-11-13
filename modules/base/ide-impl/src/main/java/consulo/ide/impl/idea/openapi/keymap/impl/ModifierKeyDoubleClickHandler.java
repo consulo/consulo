@@ -18,27 +18,26 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.event.AnActionListener;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.util.lang.Clock;
-import consulo.util.lang.Couple;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.util.lang.Clock;
+import consulo.util.lang.Couple;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntIntProcedure;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -46,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 
 import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapShortcuts;
 
@@ -96,7 +96,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   public static ModifierKeyDoubleClickHandler getInstance() {
-    return ApplicationManager.getApplication().getComponent(ModifierKeyDoubleClickHandler.class);
+    return ApplicationManager.getApplication().getInstance(ModifierKeyDoubleClickHandler.class);
   }
 
   public static int getMultiCaretActionModifier() {
@@ -112,9 +112,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
-    if (Application.get().isSwingApplication()) {
-      IdeEventQueue.getInstance().addDispatcher(dispatcher, dispatcher);
-    }
+    IdeEventQueueProxy.getInstance().addDispatcher(dispatcher, dispatcher);
     myActionManager.addAnActionListener(dispatcher, dispatcher);
     if (oldDispatcher != null) {
       Disposer.dispose(oldDispatcher);
@@ -141,7 +139,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     return myIsRunningAction;
   }
 
-  private class MyDispatcher implements AnActionListener, IdeEventQueue.EventDispatcher, Disposable {
+  private class MyDispatcher implements AnActionListener, Predicate<AWTEvent>, Disposable {
     private final String myActionId;
     private final int myModifierKeyCode;
     private final int myActionKeyCode;
@@ -160,7 +158,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
     }
 
     @Override
-    public boolean dispatch(@Nonnull AWTEvent event) {
+    public boolean test(@Nonnull AWTEvent event) {
       if (event instanceof KeyEvent) {
         final KeyEvent keyEvent = (KeyEvent)event;
         final int keyCode = keyEvent.getKeyCode();

@@ -30,7 +30,7 @@ import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.daemon.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;

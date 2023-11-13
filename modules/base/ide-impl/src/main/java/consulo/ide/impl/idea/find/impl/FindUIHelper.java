@@ -22,7 +22,7 @@ import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
@@ -66,7 +66,7 @@ public class FindUIHelper implements Disposable {
       Disposer.register(myUI.getDisposable(), this);
     }
     else {
-      IdeEventQueue.getInstance().flushDelayedKeyEvents();
+      IdeEventQueueProxy.getInstance().flushDelayedKeyEvents();
     }
     return myUI;
   }

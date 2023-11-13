@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ui.ex.UIBundle;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.ui.OwnerOptional;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;

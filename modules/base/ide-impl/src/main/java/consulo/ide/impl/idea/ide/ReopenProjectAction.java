@@ -19,6 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.module.content.layer.ModuleExtensionProvider;
 import consulo.project.Project;
@@ -61,7 +62,7 @@ public class ReopenProjectAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     //Force move focus to IdeFrame
-    IdeEventQueue.getInstance().getPopupManager().closeAllPopups();
+    IdeEventQueueProxy.getInstance().closeAllPopups();
 
     final int modifiers = e.getModifiers();
     final boolean forceOpenInNewFrame = BitUtil.isSet(modifiers, InputEvent.CTRL_MASK) || BitUtil.isSet(modifiers, InputEvent.SHIFT_MASK) || e.getPlace() == ActionPlaces.WELCOME_SCREEN;

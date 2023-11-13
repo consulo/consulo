@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.application.CachesInvalidator;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
@@ -107,7 +107,7 @@ public class VcsLogDataImpl implements VcsLogData {
     VcsLogProgress progress = new VcsLogProgress();
     Disposer.register(this, progress);
 
-    VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtension(VcsLogCachesInvalidator.class);
+    VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
     if (invalidator.isValid()) {
       myHashMap = createLogHashMap();
       myIndex = new VcsLogPersistentIndex(myProject, myHashMap, progress, logProviders, myFatalErrorsConsumer, this);

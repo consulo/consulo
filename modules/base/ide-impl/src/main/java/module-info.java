@@ -105,7 +105,10 @@ open module consulo.ide.impl {
   requires transitive consulo.util.rmi;
   requires transitive consulo.util.jna;
   requires transitive consulo.util.xml.serializer;
+
+  requires consulo.build.ui.impl;
   requires consulo.remote.server.impl;
+  requires consulo.compiler.artifact.impl;
   requires consulo.task.impl;
 
   // TODO [VISTALL] remove this dependency
@@ -162,13 +165,10 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.application;
   exports consulo.ide.impl.base;
   exports consulo.ide.impl.bundle;
-  exports consulo.ide.impl.codeEditor;
   exports consulo.ide.impl.codeInsight;
   exports consulo.ide.impl.codeInsight.daemon.impl;
-  exports consulo.ide.impl.codeInspection.ui;
   exports consulo.ide.impl.command;
   exports consulo.ide.impl.compiler;
-  exports consulo.ide.impl.compiler.build;
   exports consulo.ide.impl.compiler.resourceCompiler;
   exports consulo.ide.impl.compiler.setting;
   exports consulo.ide.impl.configurationStore.vcs;
@@ -221,10 +221,8 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.application.options.editor;
   exports consulo.ide.impl.idea.application.options.pathMacros;
   exports consulo.ide.impl.idea.build;
-  exports consulo.ide.impl.idea.build.events.impl;
   exports consulo.ide.impl.idea.build.issue.quickfix;
   exports consulo.ide.impl.idea.build.output;
-  exports consulo.ide.impl.idea.build.progress;
   exports consulo.ide.impl.idea.buildfiles;
   exports consulo.ide.impl.idea.codeEditor.printing;
   exports consulo.ide.impl.idea.codeInsight;
@@ -296,11 +294,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.codeStyle;
   exports consulo.ide.impl.idea.compiler.actions;
   exports consulo.ide.impl.idea.compiler.impl;
-  exports consulo.ide.impl.idea.compiler.impl.generic;
-  exports consulo.ide.impl.idea.compiler.impl.packagingCompiler;
   exports consulo.ide.impl.idea.compiler.impl.resourceCompiler;
-  exports consulo.ide.impl.idea.compiler.make;
-  exports consulo.ide.impl.idea.compiler.progress;
   exports consulo.ide.impl.idea.concurrency;
   exports consulo.ide.impl.idea.conversion;
   exports consulo.ide.impl.idea.coverage;
@@ -477,7 +471,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.internal;
   exports consulo.ide.impl.idea.internal.anomalies;
   exports consulo.ide.impl.idea.internal.encodings;
-  exports consulo.ide.impl.idea.internal.focus;
   exports consulo.ide.impl.idea.internal.psiView;
   exports consulo.ide.impl.idea.internal.psiView.formattingblocks;
   exports consulo.ide.impl.idea.internal.statistic;
@@ -587,7 +580,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.keymap;
   exports consulo.ide.impl.idea.openapi.keymap.ex;
   exports consulo.ide.impl.idea.openapi.keymap.impl;
-  exports consulo.ide.impl.idea.openapi.keymap.impl.keyGestures;
   exports consulo.ide.impl.idea.openapi.keymap.impl.ui;
   exports consulo.ide.impl.idea.openapi.localVcs;
   exports consulo.ide.impl.idea.openapi.module;
@@ -693,10 +685,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.packageDependencies;
   exports consulo.ide.impl.idea.packageDependencies.actions;
   exports consulo.ide.impl.idea.packageDependencies.ui;
-  exports consulo.ide.impl.idea.packaging.impl.artifacts;
-  exports consulo.ide.impl.idea.packaging.impl.artifacts.state;
   exports consulo.ide.impl.idea.packaging.impl.compiler;
-  exports consulo.ide.impl.idea.packaging.impl.elements;
   exports consulo.ide.impl.idea.packaging.impl.run;
   exports consulo.ide.impl.idea.packaging.impl.ui;
   exports consulo.ide.impl.idea.packaging.impl.ui.actions;
@@ -895,9 +884,7 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.options;
   exports consulo.ide.impl.options.impl;
   exports consulo.ide.impl.packageDependencies;
-  exports consulo.ide.impl.packaging.impl.artifacts;
   exports consulo.ide.impl.packaging.impl.run;
-  exports consulo.ide.impl.packaging.impl.util;
   exports consulo.ide.impl.plugins;
   exports consulo.ide.impl.plugins.pluginsAdvertisement;
   exports consulo.ide.impl.plugins.whatsNew;
@@ -990,4 +977,5 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.project.ui.impl;
 
   exports consulo.ide.impl.desktop.awt.editor to consulo.desktop.awt.ide.impl;
+  exports consulo.ide.impl.wm.statusBar to consulo.desktop.awt.ide.impl;
 }

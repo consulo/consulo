@@ -7,10 +7,10 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -32,9 +32,9 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.update.Activatable;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 public abstract class DockablePopupManager<T extends JComponent & Disposable> {
@@ -99,7 +99,8 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
     final ToolWindowManagerEx toolWindowManagerEx = ToolWindowManagerEx.getInstanceEx(myProject);
     final ToolWindow toolWindow = toolWindowManagerEx.getToolWindow(getToolwindowId());
-    myToolWindow = toolWindow == null ? toolWindowManagerEx.registerToolWindow(getToolwindowId(), true, ToolWindowAnchor.RIGHT, myProject) : toolWindow;
+    myToolWindow =
+      toolWindow == null ? toolWindowManagerEx.registerToolWindow(getToolwindowId(), true, ToolWindowAnchor.RIGHT, myProject) : toolWindow;
     myToolWindow.setIcon(AllIcons.Toolwindows.Documentation);
 
     myToolWindow.setAvailable(true, null);
@@ -149,18 +150,19 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   }
 
   protected AnAction[] createActions() {
-    ToggleAction toggleAutoUpdateAction = new ToggleAction(getAutoUpdateTitle(), getAutoUpdateDescription(), AllIcons.General.AutoscrollFromSource) {
-      @Override
-      public boolean isSelected(@Nonnull AnActionEvent e) {
-        return PropertiesComponent.getInstance().getBoolean(getAutoUpdateEnabledProperty(), getAutoUpdateDefault());
-      }
+    ToggleAction toggleAutoUpdateAction =
+      new ToggleAction(getAutoUpdateTitle(), getAutoUpdateDescription(), AllIcons.General.AutoscrollFromSource) {
+        @Override
+        public boolean isSelected(@Nonnull AnActionEvent e) {
+          return PropertiesComponent.getInstance().getBoolean(getAutoUpdateEnabledProperty(), getAutoUpdateDefault());
+        }
 
-      @Override
-      public void setSelected(@Nonnull AnActionEvent e, boolean state) {
-        PropertiesComponent.getInstance().setValue(getAutoUpdateEnabledProperty(), state, getAutoUpdateDefault());
-        restartAutoUpdate(state);
-      }
-    };
+        @Override
+        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+          PropertiesComponent.getInstance().setValue(getAutoUpdateEnabledProperty(), state, getAutoUpdateDefault());
+          restartAutoUpdate(state);
+        }
+      };
     return new AnAction[]{createRestorePopupAction(), toggleAutoUpdateAction};
   }
 
@@ -179,12 +181,12 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
       if (myAutoUpdateRequest == null) {
         myAutoUpdateRequest = this::updateComponent;
 
-        UIUtil.invokeLaterIfNeeded(() -> IdeEventQueue.getInstance().addIdleListener(myAutoUpdateRequest, 500));
+      UIUtil.invokeLaterIfNeeded(() -> IdeEventQueueProxy.getInstance().addIdleListener(myAutoUpdateRequest, 500));
       }
     }
     else {
       if (myAutoUpdateRequest != null) {
-        IdeEventQueue.getInstance().removeIdleListener(myAutoUpdateRequest);
+        IdeEventQueueProxy.getInstance().removeIdleListener(myAutoUpdateRequest);
         myAutoUpdateRequest = null;
       }
     }

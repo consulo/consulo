@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ui.ex.UIBundle;
 import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.ui.OwnerOptional;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;

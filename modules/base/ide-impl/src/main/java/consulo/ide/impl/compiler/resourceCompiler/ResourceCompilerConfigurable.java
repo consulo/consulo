@@ -66,7 +66,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
   @Nonnull
   @Override
   public String getId() {
-    return "project.propCompiler";
+    return "project.propCompiler.resourceCompiler";
   }
 
   @Nullable

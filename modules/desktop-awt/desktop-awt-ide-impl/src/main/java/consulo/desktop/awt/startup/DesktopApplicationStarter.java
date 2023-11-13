@@ -35,9 +35,11 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.desktop.application.jna.windows.WindowsAutoRestartManager;
+import consulo.desktop.awt.application.impl.AWTExceptionHandler;
 import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.uiOld.DesktopAppUIUtil;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
@@ -45,7 +47,6 @@ import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
@@ -124,11 +125,11 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
   @Override
   protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
-    invokeAtUIAndWait(() -> {
-      System.setProperty("sun.awt.noerasebackground", "true");
+    AWTExceptionHandler.register(); // do not crash AWT on exceptions
+  
+    System.setProperty("sun.awt.noerasebackground", "true");
 
-      IdeEventQueue.initialize(); // replace system event queue
-    });
+    invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
 
     stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
 

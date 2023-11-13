@@ -76,8 +76,10 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<Object> SELECTED_ITEM = Key.create("selectedItem");
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
   Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
+  @Deprecated
   Key<ToolWindow> TOOL_WINDOW = ToolWindow.KEY;
-  Key<StatusBar> STATUS_BAR = Key.create("STATUS_BAR");
+  @Deprecated
+  Key<StatusBar> STATUS_BAR = StatusBar.KEY;
   Key<TreeExpander> TREE_EXPANDER = Key.create("treeExpander");
   Key<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = Key.create("exporterToTextFile");
   Key<VirtualFile> PROJECT_FILE_DIRECTORY = Project.PROJECT_FILE_DIRECTORY;

@@ -47,22 +47,14 @@ public class ActionMacro implements JDOMExternalizable {
   private String myName;
 
   private final ArrayList<ActionDescriptor> myActions = new ArrayList<ActionDescriptor>();
-  @NonNls
   public static final String MACRO_ACTION_PREFIX = "Macro.";
-  @NonNls
   private static final String ATTRIBUTE_NAME = "name";
-  @NonNls
   private static final String ELEMENT_TYPING = "typing";
 
-  @NonNls
   private static final String ELEMENT_SHORTCUT = "shortuct";
-  @NonNls
   private static final String ATTRIBUTE_TEXT = "text";
-  @NonNls
   private static final String ATTRIBUTE_KEY_CODES = "text-keycode";
-  @NonNls
   private static final String ELEMENT_ACTION = "action";
-  @NonNls
   private static final String ATTRIBUTE_ID = "id";
 
 

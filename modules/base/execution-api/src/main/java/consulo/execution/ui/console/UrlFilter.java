@@ -4,6 +4,7 @@ package consulo.execution.ui.console;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.ExecutionBundle;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.URLUtil;
@@ -99,6 +100,7 @@ public class UrlFilter implements Filter, DumbAware {
       myUrl = url;
     }
 
+    @RequiredUIAccess
     @Override
     public void navigate(@Nonnull Project project) {
       VirtualFile file = getVirtualFile();

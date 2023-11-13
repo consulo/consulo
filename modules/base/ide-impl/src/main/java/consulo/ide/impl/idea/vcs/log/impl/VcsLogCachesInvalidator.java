@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.application.CachesInvalidator;
 import consulo.ide.impl.idea.vcs.log.util.PersistentUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl

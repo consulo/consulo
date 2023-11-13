@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.WindowManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder;
+import consulo.compiler.artifact.internal.ArtifactBySourceFileFinder;
 import consulo.util.lang.SyncDateFormat;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -9,6 +9,9 @@ import consulo.application.util.DateFormatUtil;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.build.ui.*;
 import consulo.build.ui.event.*;
+import consulo.build.ui.impl.internal.event.FailureResultImpl;
+import consulo.build.ui.impl.internal.event.FileNavigatable;
+import consulo.build.ui.impl.internal.event.SkippedResultImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
@@ -21,9 +24,8 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.build.events.impl.FailureResultImpl;
-import consulo.ide.impl.idea.build.events.impl.SkippedResultImpl;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
@@ -31,23 +33,19 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.RelativeFont;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
-import consulo.process.event.ProcessEvent;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
 import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
@@ -63,13 +61,14 @@ import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -92,13 +91,13 @@ import java.util.function.Supplier;
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
-import static consulo.util.lang.ObjectUtil.chooseNotNull;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
 import static consulo.ui.ex.awt.UIUtil.*;
 import static consulo.ui.ex.awt.internal.laf.DefaultTreeUI.AUTO_EXPAND_ALLOWED;
 import static consulo.ui.ex.awt.util.RenderingHelper.SHRINK_LONG_RENDERER;
+import static consulo.util.lang.ObjectUtil.chooseNotNull;
 
 /**
  * @author Vladislav.Soroka
@@ -134,7 +133,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
   private final ExecutionNodeImpl myBuildProgressRootNode;
   private final Set<Predicate<? super ExecutionNodeImpl>> myNodeFilters;
   private final ProblemOccurrenceNavigatorSupport myOccurrenceNavigatorSupport;
-  private final Set<BuildEvent> myDeferredEvents = ContainerUtil.newConcurrentSet();
+  private final Set<BuildEvent> myDeferredEvents = ConcurrentHashMap.newKeySet();
 
   public BuildTreeConsoleView(@Nonnull Project project,
                               @Nonnull BuildDescriptor buildDescriptor,
@@ -142,7 +141,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
                               @Nonnull BuildViewSettingsProvider buildViewSettingsProvider) {
     myProject = project;
     myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor)buildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
-    myNodeFilters = ContainerUtil.newConcurrentSet();
+    myNodeFilters = ConcurrentHashMap.newKeySet();
     myWorkingDir = FileUtil.toSystemIndependentName(buildDescriptor.getWorkingDir());
     myNavigateToTheFirstErrorLocation = project.getInstance(BuildWorkspaceConfiguration.class).isShowFirstErrorInEditor();
 

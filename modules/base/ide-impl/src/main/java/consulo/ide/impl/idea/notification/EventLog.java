@@ -42,6 +42,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.IJSwingUtilities;
@@ -497,6 +498,7 @@ public class EventLog {
       myHref = href;
     }
 
+    @RequiredUIAccess
     @Override
     public void navigate(Project project) {
       NotificationListener listener = myNotification.getListener();
@@ -520,6 +522,7 @@ public class EventLog {
       myRangeHighlighter = rangeHighlighter;
     }
 
+    @RequiredUIAccess
     @Override
     public void navigate(Project project) {
       hideBalloon(myNotification);

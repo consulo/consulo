@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.codeInsight;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
@@ -15,8 +14,8 @@ import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.hint.ShowParameterInfoHandler;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionType;
@@ -31,12 +30,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.LockSupport;
@@ -64,7 +63,7 @@ public class AutoPopupControllerImpl extends AutoPopupController implements Disp
       }
     });
 
-    IdeEventQueue.getInstance().addActivityListener(this::cancelAllRequests, this);
+    IdeEventQueueProxy.getInstance().addActivityListener(this::cancelAllRequests, this);
   }
 
   @Override

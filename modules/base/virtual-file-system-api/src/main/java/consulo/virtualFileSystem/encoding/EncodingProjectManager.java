@@ -4,9 +4,12 @@ package consulo.virtualFileSystem.encoding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
+import consulo.component.util.ModificationTracker;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface EncodingProjectManager extends EncodingManager {
@@ -33,4 +36,13 @@ public interface EncodingProjectManager extends EncodingManager {
    */
   @Override
   void setDefaultCharsetName(@Nonnull String name);
+
+  @Nonnull
+  ModificationTracker getModificationTracker();
+
+  /**
+   * @return readonly map of current mappings. to modify mappings use {@link #setMapping(Map)}
+   */
+  @Nonnull
+  Map<? extends VirtualFile, ? extends Charset> getAllMappings();
 }

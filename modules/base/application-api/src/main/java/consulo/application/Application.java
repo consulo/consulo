@@ -242,7 +242,7 @@ public interface Application extends ComponentManager {
    * @see #runWriteAction(Runnable)
    */
   default boolean isWriteAccessAllowed() {
-    return isWriteThread();
+    return isDispatchThread();
   }
 
   /**
@@ -255,9 +255,7 @@ public interface Application extends ComponentManager {
   boolean isReadAccessAllowed();
 
   /**
-   * Checks if the current thread is the Swing dispatch thread.
-   * <p>
-   * Dispatch thread not always is "write thread". For checking if current thread is "write thread" use {@link #isWriteThread()}
+   * Checks if the current thread is the UI thread
    *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
    */
@@ -268,6 +266,7 @@ public interface Application extends ComponentManager {
    *
    * @return true if the current thread is the "write thread", false otherwise.
    */
+  @Deprecated
   boolean isWriteThread();
 
   /**
@@ -513,6 +512,7 @@ public interface Application extends ComponentManager {
   /**
    * Return true of application is swing based, and AWT thread used as ui thread
    */
+  @Deprecated
   default boolean isSwingApplication() {
     return false;
   }

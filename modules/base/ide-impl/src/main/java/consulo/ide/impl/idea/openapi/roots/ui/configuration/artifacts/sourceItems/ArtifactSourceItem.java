@@ -23,7 +23,7 @@ import consulo.compiler.artifact.ArtifactPointerUtil;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import consulo.ide.impl.packaging.impl.artifacts.ZipArtifactType;
+import consulo.compiler.artifact.element.ZipArtifactType;
 import consulo.compiler.artifact.ui.ArtifactElementPresentation;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

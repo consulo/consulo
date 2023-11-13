@@ -16,8 +16,10 @@
 package consulo.execution.ui.console;
 
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 public interface HyperlinkInfo {
+  @RequiredUIAccess
   void navigate(Project project);
 
   default boolean includeInOccurenceNavigation() {

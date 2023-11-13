@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.BaseStru
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.compiler.artifact.ArtifactUtil;
-import consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifact;
+import consulo.compiler.artifact.impl.internal.InvalidArtifact;
 import consulo.compiler.artifact.PackagingElementPath;
 import consulo.compiler.artifact.PackagingElementProcessor;
 import consulo.compiler.artifact.element.LibraryElementType;

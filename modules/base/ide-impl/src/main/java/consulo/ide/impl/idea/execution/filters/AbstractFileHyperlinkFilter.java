@@ -8,6 +8,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -146,6 +147,7 @@ public abstract class AbstractFileHyperlinkFilter implements Filter {
       myDocumentColumn = documentColumn;
     }
 
+    @RequiredUIAccess
     @Override
     public void navigate(@Nonnull Project project) {
       Ref<VirtualFile> fileRef = myFileRef;

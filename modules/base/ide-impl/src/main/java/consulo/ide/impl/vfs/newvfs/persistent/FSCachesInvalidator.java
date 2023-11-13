@@ -16,7 +16,7 @@
 package consulo.ide.impl.vfs.newvfs.persistent;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.application.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.localize.LocalizeValue;
 

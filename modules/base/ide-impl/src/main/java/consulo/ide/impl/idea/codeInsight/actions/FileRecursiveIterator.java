@@ -7,7 +7,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.vfs.CompactVirtualFileSet;
+import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;

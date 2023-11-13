@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;

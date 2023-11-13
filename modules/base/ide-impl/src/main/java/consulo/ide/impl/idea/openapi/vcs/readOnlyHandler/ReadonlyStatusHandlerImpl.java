@@ -16,26 +16,26 @@
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.collection.MultiValuesMap;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -106,14 +106,14 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
     // This event count hack is necessary to allow actions that called this stuff could still get data from their data contexts.
     // Otherwise data manager stuff will fire up an assertion saying that event count has been changed (due to modal dialog show-up)
     // The hack itself is safe since we guarantee that focus will return to the same component had it before modal dialog have been shown.
-    final int savedEventCount = IdeEventQueue.getInstance().getEventCount();
+    Runnable markEventCount = UIAccess.current().markEventCount();
     if (myState.SHOW_DIALOG) {
       new ReadOnlyStatusDialog(myProject, fileInfos).show();
     }
     else {
-      processFiles(new ArrayList<FileInfo>(Arrays.asList(fileInfos)), null); // the collection passed is modified
+      processFiles(new ArrayList<>(Arrays.asList(fileInfos)), null); // the collection passed is modified
     }
-    IdeEventQueue.getInstance().setEventCount(savedEventCount);
+    markEventCount.run();
     return createResultStatus(files);
   }
 

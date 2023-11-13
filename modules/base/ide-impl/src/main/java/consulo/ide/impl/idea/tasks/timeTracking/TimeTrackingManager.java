@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.tasks.timeTracking;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.persist.PersistentStateComponent;
@@ -11,7 +10,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;
@@ -168,7 +167,7 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
       }
     };
     if (getState().autoMode) {
-      addAWTListener();
+      addActivityListener();
     }
   }
 
@@ -177,10 +176,10 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     if (on != oldState) {
       getState().autoMode = on;
       if (on) {
-        addAWTListener();
+        addActivityListener();
       }
       else {
-        IdeEventQueue.getInstance().removeActivityListener(myActivityListener);
+        IdeEventQueueProxy.getInstance().removeActivityListener(myActivityListener);
         myIdleFuture.cancel(false);
         if (!myTimeTrackingTimer.isRunning()) {
           myTimeTrackingTimer.start();
@@ -189,11 +188,8 @@ public class TimeTrackingManager implements PersistentStateComponent<TimeTrackin
     }
   }
 
-  private void addAWTListener() {
-    if (!Application.get().isSwingApplication()) {
-      return;
-    }
-    IdeEventQueue.getInstance().addActivityListener(myActivityListener, myProject);
+  private void addActivityListener() {
+    IdeEventQueueProxy.getInstance().addActivityListener(myActivityListener, myProject);
   }
 
   @Override

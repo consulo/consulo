@@ -1494,4 +1494,15 @@ public class FileUtil {
 
     return null;
   }
+
+  public static boolean isFilePathAcceptable(@Nonnull File root, @Nullable FileFilter fileFilter) {
+    if (fileFilter == null) return true;
+    File file = root;
+    do {
+      if (!fileFilter.accept(file)) return false;
+      file = file.getParentFile();
+    }
+    while (file != null);
+    return true;
+  }
 }

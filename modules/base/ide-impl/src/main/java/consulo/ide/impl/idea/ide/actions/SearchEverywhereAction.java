@@ -17,14 +17,13 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
@@ -79,10 +78,11 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
   }
 
   public void actionPerformed(AnActionEvent e, MouseEvent me) {
-    if (Registry.is("new.search.everywhere") && e.getData(CommonDataKeys.PROJECT) != null) {
+    Project project = e.getData(Project.KEY);
+    if (project != null) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
 
-      SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(e.getData(CommonDataKeys.PROJECT));
+      SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
       String searchProviderID = SearchEverywhereManagerImpl.ALL_CONTRIBUTORS_GROUP_ID;
       if (seManager.isShown()) {
         if (searchProviderID.equals(seManager.getSelectedContributorID())) {
@@ -98,7 +98,7 @@ public class SearchEverywhereAction extends AnAction implements CustomComponentA
 
       //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
       //SearchEverywhereUsageTriggerCollector.trigger(e.getProject(), SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
-      IdeEventQueue.getInstance().getPopupManager().closeAllPopups(false);
+      IdeEventQueueProxy.getInstance().closeAllPopups(false);
       String text = GotoActionBase.getInitialTextForNavigation(e);
       seManager.show(searchProviderID, text, e);
       return;

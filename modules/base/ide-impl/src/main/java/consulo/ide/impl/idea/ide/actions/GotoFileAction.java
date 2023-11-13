@@ -15,28 +15,27 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FileSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.PsiFile;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -55,12 +54,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (Registry.is("new.search.everywhere")) {
-      showInSearchEverywherePopup(FileSearchEverywhereContributor.class.getSimpleName(), e, true, true);
-    }
-    else {
-      super.actionPerformed(e);
-    }
+    showInSearchEverywherePopup(FileSearchEverywhereContributor.class.getSimpleName(), e, true, true);
   }
 
   @Override

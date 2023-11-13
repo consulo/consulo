@@ -61,16 +61,16 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
   private ProgressDialog myDialog;
 
-  final Project myProject;
-  final boolean myShouldShowCancel;
-  String myCancelText;
+  public final Project myProject;
+  public final boolean myShouldShowCancel;
+  public String myCancelText;
 
   private String myTitle;
 
   private boolean myStoppedAlready;
   private boolean myStarted;
   protected boolean myBackgrounded;
-  int myDelayInMillis = DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS;
+  protected int myDelayInMillis = DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS;
   private boolean myModalityEntered;
 
   public ProgressWindow(boolean shouldShowCancel, Project project) {
@@ -128,7 +128,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
    * <p/>
    * Default value is {@link #DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS}
    *
-   * @param delayInMillis   new delay time in milliseconds
+   * @param delayInMillis new delay time in milliseconds
    */
   public void setDelayInMillis(int delayInMillis) {
     myDelayInMillis = delayInMillis;
@@ -159,14 +159,14 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     }, getModalityState(), myDelayInMillis, TimeUnit.MILLISECONDS);
   }
 
-  final void enterModality() {
+  public final void enterModality() {
     if (isModalEntity() && !myModalityEntered) {
       LaterInvocator.enterModal(this, (IdeaModalityStateEx)getModalityState());
       myModalityEntered = true;
     }
   }
 
-  final void exitModality() {
+  public final void exitModality() {
     if (isModalEntity() && myModalityEntered) {
       myModalityEntered = false;
       LaterInvocator.leaveModal(this);
@@ -218,12 +218,12 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     }
   }
 
-  final boolean isCancellationEvent(@Nullable AWTEvent event) {
+  public final boolean isCancellationEvent(@Nullable AWTEvent event) {
     return myShouldShowCancel &&
-           event instanceof KeyEvent &&
-           event.getID() == KeyEvent.KEY_PRESSED &&
-           ((KeyEvent)event).getKeyCode() == KeyEvent.VK_ESCAPE &&
-           ((KeyEvent)event).getModifiers() == 0;
+      event instanceof KeyEvent &&
+      event.getID() == KeyEvent.KEY_PRESSED &&
+      ((KeyEvent)event).getKeyCode() == KeyEvent.VK_ESCAPE &&
+      ((KeyEvent)event).getModifiers() == 0;
   }
 
   protected void showDialog() {
@@ -333,7 +333,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     }
   }
 
-  IdeFocusManager getFocusManager() {
+  public IdeFocusManager getFocusManager() {
     return ProjectIdeFocusManager.getInstance(myProject);
   }
 
@@ -358,7 +358,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
   @Override
   public String toString() {
-    return getTitle() + " " + System.identityHashCode(this) + ": running="+isRunning()+"; canceled="+isCanceled();
+    return getTitle() + " " + System.identityHashCode(this) + ": running=" + isRunning() + "; canceled=" + isCanceled();
   }
 
   private class MyDelegate extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {

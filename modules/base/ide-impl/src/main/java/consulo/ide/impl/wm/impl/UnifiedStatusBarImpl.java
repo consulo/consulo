@@ -17,15 +17,12 @@ package consulo.ide.impl.wm.impl;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsWidget;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -47,9 +44,9 @@ import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -111,11 +108,11 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     addWidget(myInfoAndProgressPanel, Position.CENTER, "__IGNORED__");
 
     if (master == null) {
-      addWidget(new ToolWindowsWidget(this), Position.LEFT);
+      addWidget(new UnifiedToolWindowsWidget(this), Position.LEFT);
     }
 
-    myComponent.addUserDataProvider(CommonDataKeys.PROJECT, this::getProject);
-    myComponent.addUserDataProvider(PlatformDataKeys.STATUS_BAR, () -> this);
+    myComponent.addUserDataProvider(Project.KEY, this::getProject);
+    myComponent.addUserDataProvider(StatusBar.KEY, () -> this);
 
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }

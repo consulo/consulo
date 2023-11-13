@@ -27,7 +27,7 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIUtil;
@@ -50,9 +50,9 @@ import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class JBTerminalPanel extends TerminalPanel implements FocusListener, TerminalSettingsListener, Disposable,
-  IdeEventQueue.EventDispatcher {
+public class JBTerminalPanel extends TerminalPanel implements FocusListener, TerminalSettingsListener, Disposable, Predicate<AWTEvent> {
   private static final String[] ACTIONS_TO_SKIP = new String[]{
     "ActivateTerminalToolWindow",
     "ActivateMessagesToolWindow",
@@ -141,7 +141,7 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
   }
 
   @Override
-  public boolean dispatch(AWTEvent e) {
+  public boolean test(AWTEvent e) {
     if (e instanceof KeyEvent && !skipKeyEvent((KeyEvent)e)) {
       dispatchEvent(e);
       return true;

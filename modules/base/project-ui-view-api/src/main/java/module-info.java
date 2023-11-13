@@ -19,6 +19,9 @@ module consulo.project.ui.view.api {
   exports consulo.project.ui.view.tree;
   exports consulo.project.ui.view.commander;
 
-  exports consulo.project.ui.view.internal to consulo.ide.impl, consulo.bookmark.ui.view.api;
+  exports consulo.project.ui.view.internal to
+    consulo.ide.impl,
+    consulo.compiler.impl,
+    consulo.bookmark.ui.view.api;
   exports consulo.project.ui.view.internal.node to consulo.ide.impl, consulo.bookmark.ui.view.api;
 }

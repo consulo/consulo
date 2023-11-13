@@ -7,9 +7,9 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
@@ -19,11 +19,11 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -53,7 +53,7 @@ public class RunAnythingManager {
   }
 
   public void show(@Nullable String searchText, boolean selectSearchText, @Nonnull AnActionEvent initEvent) {
-    IdeEventQueue.getInstance().getPopupManager().closeAllPopups(false);
+    IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
     Project project = initEvent.getData(CommonDataKeys.PROJECT);
 

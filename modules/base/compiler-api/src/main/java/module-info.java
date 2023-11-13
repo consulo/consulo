@@ -20,5 +20,8 @@ module consulo.compiler.api {
   exports consulo.compiler.util;
   exports consulo.compiler.resourceCompiler;
 
+  exports consulo.compiler.internal to
+    consulo.compiler.impl;
+
   opens consulo.compiler.resourceCompiler to consulo.util.xml.serializer;
 }

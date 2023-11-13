@@ -1,20 +1,17 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.start.ApplicationStarterCore;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ModalityStateListener;
 import consulo.util.collection.*;
 import consulo.util.concurrent.ActionCallback;
@@ -22,20 +19,17 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
 
@@ -54,9 +48,7 @@ public final class LaterInvocator {
   private static final Stack<IdeaModalityStateEx> ourModalityStack = new Stack<>((IdeaModalityStateEx)IdeaModalityState.NON_MODAL);
   private static final EventDispatcher<ModalityStateListener> ourModalityStateMulticaster = EventDispatcher.create(ModalityStateListener.class);
 
-  private static final Executor ourWriteThreadExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Write Thread", 1);
   private static final FlushQueue ourEdtQueue = new FlushQueue(SwingUtilities::invokeLater);
-  private static final FlushQueue ourWtQueue = new FlushQueue(r -> ourWriteThreadExecutor.execute(() -> ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(r)));
 
   public static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     if (!ourModalityStateMulticaster.getListeners().contains(listener)) {
@@ -101,11 +93,14 @@ public final class LaterInvocator {
   @Nonnull
   public static AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired) {
     AsyncResult<Void> callback = AsyncResult.undefined();
-    invokeLaterWithCallback(runnable, modalityState, expired, callback, true);
+    invokeLaterWithCallback(runnable, modalityState, expired, callback);
     return callback;
   }
 
-  public static void invokeLaterWithCallback(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired, @Nullable ActionCallback callback, boolean onEdt) {
+  public static void invokeLaterWithCallback(@Nonnull Runnable runnable,
+                                             @Nonnull ModalityState modalityState,
+                                             @Nonnull BooleanSupplier expired,
+                                             @Nullable ActionCallback callback) {
     if (expired.getAsBoolean()) {
       if (callback != null) {
         callback.setRejected();
@@ -113,12 +108,12 @@ public final class LaterInvocator {
       return;
     }
     FlushQueue.RunnableInfo runnableInfo = new FlushQueue.RunnableInfo(runnable, modalityState, expired, callback);
-    getRunnableQueue(onEdt).push(runnableInfo);
+    getRunnableQueue().push(runnableInfo);
     requestFlush();
   }
 
   public static void invokeAndWait(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
-    LOG.assertTrue(!isDispatchThread());
+    UIAccess.assetIsNotUIThread();
 
     final Semaphore semaphore = new Semaphore();
     semaphore.down();
@@ -143,7 +138,7 @@ public final class LaterInvocator {
         return "InvokeAndWait[" + runnable + "]";
       }
     };
-    invokeLaterWithCallback(runnable1, modalityState, () -> false, null, true);
+    invokeLaterWithCallback(runnable1, modalityState, () -> false, null);
     semaphore.waitFor();
     if (!exception.isNull()) {
       Throwable cause = exception.get();
@@ -169,7 +164,7 @@ public final class LaterInvocator {
   }
 
   public static void enterModal(@Nonnull Object modalEntity, @Nonnull IdeaModalityStateEx appendedState) {
-    LOG.assertTrue(isWriteThread(), "enterModal() should be invoked in write thread");
+    assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("enterModal:" + modalEntity);
@@ -191,7 +186,7 @@ public final class LaterInvocator {
   }
 
   public static void enterModal(Project project, @Nonnull Dialog dialog) {
-    LOG.assertTrue(isDispatchThread(), "enterModal() should be invoked in event-dispatch thread");
+    assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("enterModal:" + dialog.getName() + " ; for project: " + project.getName());
@@ -224,7 +219,7 @@ public final class LaterInvocator {
   }
 
   public static void leaveModal(Project project, @Nonnull Dialog dialog) {
-    LOG.assertTrue(isWriteThread(), "leaveModal() should be invoked in write thread");
+    assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("leaveModal:" + dialog.getName() + " ; for project: " + project.getName());
@@ -265,7 +260,7 @@ public final class LaterInvocator {
 
 
   public static void leaveModal(@Nonnull Object modalEntity) {
-    LOG.assertTrue(isWriteThread(), "leaveModal() should be invoked in write thread");
+    assertIsDispatchThread();
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("leaveModal:" + modalEntity);
@@ -291,22 +286,22 @@ public final class LaterInvocator {
 
   @Nonnull
   public static Object [] getCurrentModalEntities() {
-    ApplicationManager.getApplication().assertIsWriteThread();
+    assertIsDispatchThread();
+
     return ArrayUtil.toObjectArray(ourModalEntities);
   }
 
   @Nonnull
   public static IdeaModalityStateEx getCurrentModalityState() {
-    if (!UIAccess.isUIThread()) {
-      ApplicationManager.getApplication().assertIsWriteThread();
-    }
+    assertIsDispatchThread();
+
     synchronized (ourModalityStack) {
       return ourModalityStack.peek();
     }
   }
 
   public static boolean isInModalContextForProject(final Project project) {
-    LOG.assertTrue(isWriteThread());
+    assertIsDispatchThread();
 
     if (ourModalEntities.isEmpty()) return false;
 
@@ -319,35 +314,24 @@ public final class LaterInvocator {
     return isInModalContextForProject(null);
   }
 
-  private static boolean isDispatchThread() {
-    return ApplicationManager.getApplication().isDispatchThread();
-  }
-
-  private static boolean isWriteThread() {
-    return ApplicationManager.getApplication().isWriteThread();
+  @RequiredUIAccess
+  private static void assertIsDispatchThread() {
+    UIAccess.assertIsUIThread();
   }
 
   @Nonnull
-  private static FlushQueue getRunnableQueue(boolean onEdt) {
-    return onEdt ? ourEdtQueue : ourWtQueue;
+  private static FlushQueue getRunnableQueue() {
+    return ourEdtQueue;
   }
 
   static void requestFlush() {
     SUBMITTED_COUNT.incrementAndGet();
     while (FLUSHER_SCHEDULED.compareAndSet(false, true)) {
-      int whichThread = THREAD_TO_FLUSH.getAndUpdate(operand -> operand ^ 1);
-
       long submittedCount = SUBMITTED_COUNT.get();
 
-      FlushQueue firstQueue = getRunnableQueue(whichThread == 0);
+      FlushQueue firstQueue = getRunnableQueue();
       if (firstQueue.mayHaveItems()) {
         firstQueue.scheduleFlush();
-        return;
-      }
-
-      FlushQueue secondQueue = getRunnableQueue(whichThread != 0);
-      if (secondQueue.mayHaveItems()) {
-        secondQueue.scheduleFlush();
         return;
       }
 
@@ -363,27 +347,16 @@ public final class LaterInvocator {
     }
   }
 
-  public static void pollWriteThreadEventsOnce() {
-    LOG.assertTrue(!SwingUtilities.isEventDispatchThread());
-    LOG.assertTrue(ApplicationManager.getApplication().isWriteThread());
-
-    ourWtQueue.flushNow();
-  }
-
   /**
    * There might be some requests in the queue, but ourFlushQueueRunnable might not be scheduled yet. In these circumstances
    * {@link EventQueue#peekEvent()} default implementation would return null, and {@link UIUtil#dispatchAllInvocationEvents()} would
    * stop processing events too early and lead to spurious test failures.
    *
-   * @see consulo.ide.impl.idea.ide.IdeEventQueue#peekEvent()
+   * @see IdeEventQueue#peekEvent()
    */
   public static boolean ensureFlushRequested() {
     if (ourEdtQueue.getNextEvent(false) != null) {
       ourEdtQueue.scheduleFlush();
-      return true;
-    }
-    else if (ourWtQueue.getNextEvent(false) != null) {
-      ourWtQueue.scheduleFlush();
       return true;
     }
     return false;
@@ -393,41 +366,13 @@ public final class LaterInvocator {
 
   private static final AtomicLong SUBMITTED_COUNT = new AtomicLong(0);
 
-  private static final AtomicInteger THREAD_TO_FLUSH = new AtomicInteger(0);
-
-  @TestOnly
-  @Nonnull
-  public static Collection<FlushQueue.RunnableInfo> getLaterInvocatorEdtQueue() {
-    return ourEdtQueue.getQueue();
-  }
-
-  @TestOnly
-  @Nonnull
-  public static Collection<FlushQueue.RunnableInfo> getLaterInvocatorWtQueue() {
-    return ourWtQueue.getQueue();
-  }
-
   private static void reincludeSkippedItemsAndRequestFlush() {
     ourEdtQueue.reincludeSkippedItems();
-    ourWtQueue.reincludeSkippedItems();
     requestFlush();
   }
 
   public static void purgeExpiredItems() {
     ourEdtQueue.purgeExpiredItems();
-    ourWtQueue.purgeExpiredItems();
     requestFlush();
   }
-
-  //@TestOnly
-  //public static void dispatchPendingFlushes() {
-  //  if (!SwingUtilities.isEventDispatchThread()) throw new IllegalStateException("Must call from EDT");
-  //
-  //  Semaphore semaphore = new Semaphore();
-  //  semaphore.down();
-  //  invokeLater(semaphore::up, IdeaModalityStateEx.any());
-  //  while (!semaphore.isUp()) {
-  //    UIUtil.dispatchAllInvocationEvents();
-  //  }
-  //}
 }

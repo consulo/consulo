@@ -15,22 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.ui.playback;
 
-import consulo.ide.impl.idea.ide.IdeEventQueue;
-import consulo.ui.ex.UiActivityMonitor;
-import consulo.disposer.Disposable;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.ui.playback.commands.AssertFocused;
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.ui.playback.commands.*;
-import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.IdeFrame;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.ui.playback.commands.*;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.text.StringTokenizer;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
+import consulo.logging.Logger;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ex.UiActivityMonitor;
 import consulo.util.concurrent.ActionCallback;
-
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -126,7 +123,7 @@ public class PlaybackRunner {
             executeFrom(0, getScriptDir());
           }
           else {
-            IdeEventQueue.getInstance().doWhenReady(new Runnable() {
+            IdeEventQueueProxy.getInstance().doWhenReady(new Runnable() {
               public void run() {
                 executeFrom(0, getScriptDir());
               }

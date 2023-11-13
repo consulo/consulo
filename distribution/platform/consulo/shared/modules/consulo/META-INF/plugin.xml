@@ -34,8 +34,6 @@
     <!--id="delete.in.column.mode"/>-->
 
 
-
-
     <projectService serviceInterface="consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
                     serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettingsImpl"/>
 
@@ -228,6 +226,8 @@
   </extensions>
 
   <actions>
+    <action id="RunAPT" class="consulo.ui.ex.action.EmptyAction"/>
+    
     <group id="Vcs.KeymapGroup" text="Version Control Systems"/>
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="VcsGeneral.KeymapGroup"/>
@@ -2346,24 +2346,6 @@
       <add-to-group group-id="AnalyzeMenu" anchor="first"/>
     </group>
 
-    <group id="BuildMenu" popup="true">
-      <action id="CompileDirty" class="consulo.ide.impl.idea.compiler.actions.CompileDirtyAction"
-              icon="consulo.platform.base.PlatformIconGroup@actions.compile"/>
-      <action id="MakeModule" class="consulo.ide.impl.idea.compiler.actions.MakeModuleAction"/>
-      <action id="Compile" class="consulo.ide.impl.idea.compiler.actions.CompileAction"/>
-
-      <action id="RunAPT" class="consulo.ui.ex.action.EmptyAction"/>
-      <!--consulo.ide.impl.idea.compiler.actions.ProcessAnnotationsAction-->
-      <separator/>
-      <action id="CompileProject" class="consulo.ide.impl.idea.compiler.actions.CompileProjectAction"/>
-      <separator/>
-      <!--<action id="GenerateAntBuild" class="consulo.ide.impl.idea.compiler.actions.GenerateAntBuildAction"/>
-
-      <separator/>  -->
-      <reference id="BuildArtifact"/>
-      <add-to-group group-id="MainMenu" anchor="before" relative-to-action="RunMenu"/>
-    </group>
-
     <group id="CompilerErrorViewPopupMenu">
     </group>
 
@@ -2812,7 +2794,7 @@
     </group>
 
     <group id="Vcs.Log.Toolbar"/>
-    
+
     <group id="Dvcs.Log.Toolbar">
       <reference id="Vcs.CherryPick"/>
       <add-to-group group-id="Vcs.Log.Toolbar"/>

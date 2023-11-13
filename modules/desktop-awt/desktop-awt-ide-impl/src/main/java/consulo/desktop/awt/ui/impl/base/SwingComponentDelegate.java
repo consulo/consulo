@@ -222,6 +222,13 @@ public class SwingComponentDelegate<T extends java.awt.Component> implements Com
     return TargetAWT.from(toAWTComponent().getCursor());
   }
 
+  @Override
+  public void forceRepaint() {
+    T component = toAWTComponent();
+    component.invalidate();
+    component.repaint();
+  }
+
   private void bordersChanged() {
     JComponent component = (JComponent)toAWTComponent();
 

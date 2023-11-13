@@ -21,7 +21,7 @@ import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.*;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.build.events.impl.StartBuildEventImpl;
+import consulo.build.ui.impl.internal.event.StartBuildEventImpl;
 import consulo.ide.impl.idea.execution.actions.StopAction;
 import consulo.ide.impl.idea.execution.actions.StopProcessAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;

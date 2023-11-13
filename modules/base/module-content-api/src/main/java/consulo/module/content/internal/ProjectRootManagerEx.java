@@ -19,7 +19,8 @@ package consulo.module.content.internal;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
-
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.annotation.Nonnull;
 
 public abstract class ProjectRootManagerEx extends ProjectRootManager {
@@ -37,4 +38,13 @@ public abstract class ProjectRootManagerEx extends ProjectRootManager {
   public abstract void addOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);
 
   public abstract void removeOrderWithTracking(@Nonnull OrderEntryWithTracking orderEntry);
+
+  public static String extractLocalPath(final String url) {
+    final String path = VirtualFileUtil.urlToPath(url);
+    final int jarSeparatorIndex = path.indexOf(ArchiveFileSystem.ARCHIVE_SEPARATOR);
+    if (jarSeparatorIndex > 0) {
+      return path.substring(0, jarSeparatorIndex);
+    }
+    return path;
+  }
 }

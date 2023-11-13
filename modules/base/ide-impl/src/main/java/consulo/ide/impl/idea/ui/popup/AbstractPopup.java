@@ -24,7 +24,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.HelpTooltipImpl;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.WindowAction;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
@@ -37,6 +36,7 @@ import consulo.ide.impl.idea.util.FunctionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
@@ -280,7 +280,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myActivityKey = new UiActivity.Focus("Popup:" + this);
     myProject = project;
     myComponent = component;
-    myPopupBorder = showBorder ? borderColor != null ? PopupBorder.Factory.createColored(borderColor) : PopupBorder.Factory.create(true, showShadow) : PopupBorder.Factory.createEmpty();
+    myPopupBorder = showBorder ? borderColor != null ? PopupBorder.Factory.createColored(borderColor) : PopupBorder.Factory.create(true,
+                                                                                                                                   showShadow) : PopupBorder.Factory
+      .createEmpty();
     myShadowed = showShadow;
     myContent = createContentPanel(resizable, myPopupBorder, false);
     myMayBeParent = mayBeParent;
@@ -317,8 +319,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
       if (pinCallback != null) {
         Image icon =
-                ToolWindowManagerEx.getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent)myOwner)).getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
-        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), icon), e -> pinCallback.process(this)), JBUI.Borders.empty(4));
+          ToolWindowManagerEx.getInstanceEx(myProject != null ? myProject : ProjectUtil.guessCurrentProject((JComponent)myOwner))
+                             .getLocationIcon(ToolWindowId.FIND, AllIcons.General.Pin_tab);
+        myCaption.setButtonComponent(new InplaceButton(new IconButton(IdeBundle.message("show.in.find.window.button.name"), icon),
+                                                       e -> pinCallback.process(this)), JBUI.Borders.empty(4));
       }
       else if (cancelButton != null) {
         myCaption.setButtonComponent(new InplaceButton(cancelButton, e -> cancel()), JBUI.Borders.empty(4));
@@ -347,7 +351,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myCallBack = callback;
     myCancelOnClickOutside = cancelOnClickOutside;
     myCancelOnMouseOutCallback = cancelOnMouseOutCallback;
-    if(listeners != null) {
+    if (listeners != null) {
       myListeners.addAll(listeners);
     }
     myUseDimServiceForXYLocation = useDimServiceForXYLocation;
@@ -628,7 +632,9 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   }
 
   @Nonnull
-  private static Point getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(@Nonnull Point originalLocation, @Nonnull Dimension popupSize, @Nonnull Editor editor) {
+  private static Point getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(@Nonnull Point originalLocation,
+                                                                             @Nonnull Dimension popupSize,
+                                                                             @Nonnull Editor editor) {
     Rectangle preferredBounds = new Rectangle(originalLocation, popupSize);
     Rectangle adjustedBounds = new Rectangle(preferredBounds);
     ScreenUtil.moveRectangleToFitTheScreen(adjustedBounds);
@@ -650,7 +656,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   private RelativePoint relativePointWithDominantRectangle(final JLayeredPane layeredPane, final Rectangle bounds) {
     Dimension size = getSizeForPositioning();
-    List<Supplier<Point>> optionsToTry = Arrays.asList(() -> new Point(bounds.x + bounds.width, bounds.y), () -> new Point(bounds.x - size.width, bounds.y));
+    List<Supplier<Point>> optionsToTry =
+      Arrays.asList(() -> new Point(bounds.x + bounds.width, bounds.y), () -> new Point(bounds.x - size.width, bounds.y));
     for (Supplier<Point> option : optionsToTry) {
       Point location = option.get();
       SwingUtilities.convertPointToScreen(location, layeredPane);
@@ -707,7 +714,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Override
   public final void cancel() {
     InputEvent inputEvent = null;
-    AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
+    AWTEvent event = IdeEventQueueProxy.getInstance().getTrueCurrentEvent();
     if (event instanceof InputEvent && myPopup != null) {
       InputEvent ie = (InputEvent)event;
       Window window = myPopup.getWindow();
@@ -751,7 +758,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       }
 
       if (e instanceof MouseEvent) {
-        IdeEventQueue.getInstance().blockNextEvents((MouseEvent)e);
+        IdeEventQueueProxy.getInstance().blockNextEvents((MouseEvent)e);
       }
 
       myPopup.hide(false);
@@ -763,12 +770,10 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       disposePopup();
     }
 
-    if (myListeners != null) {
-      for (JBPopupListener each : myListeners) {
-        each.onClosed(new LightweightWindowEvent(this, myOk));
-      }
+    for (JBPopupListener each : myListeners) {
+      each.onClosed(new LightweightWindowEvent(this, myOk));
     }
-
+    
     Disposer.dispose(this, false);
     if (myProjectDisposable != null) {
       Disposer.dispose(myProjectDisposable);
@@ -810,7 +815,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     if (inputDetails != null) {
       Position2D positionOnScreen = inputDetails.getPositionOnScreen();
       show(TargetAWT.to(component), positionOnScreen.getX(), positionOnScreen.getY(), true);
-    } else {
+    }
+    else {
       show(TargetAWT.to(component), -1, -1, true);
     }
   }
@@ -962,27 +968,28 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       root.setGlassPane(glass);
 
       int i = Registry.intValue("ide.popup.resizable.border.sensitivity", 4);
-      WindowResizeListener resizeListener = new WindowResizeListener(myComponent, myMovable ? JBUI.insets(i) : JBUI.insets(0, 0, i, i), null) {
-        private Cursor myCursor;
+      WindowResizeListener resizeListener =
+        new WindowResizeListener(myComponent, myMovable ? JBUI.insets(i) : JBUI.insets(0, 0, i, i), null) {
+          private Cursor myCursor;
 
-        @Override
-        protected void setCursor(Component content, Cursor cursor) {
-          if (myCursor != cursor || myCursor != Cursor.getDefaultCursor()) {
-            glass.setCursor(cursor, this);
-            myCursor = cursor;
+          @Override
+          protected void setCursor(Component content, Cursor cursor) {
+            if (myCursor != cursor || myCursor != Cursor.getDefaultCursor()) {
+              glass.setCursor(cursor, this);
+              myCursor = cursor;
 
-            if (content instanceof JComponent) {
-              IdeGlassPaneImpl.savePreProcessedCursor((JComponent)content, content.getCursor());
+              if (content instanceof JComponent) {
+                IdeGlassPaneImpl.savePreProcessedCursor((JComponent)content, content.getCursor());
+              }
+              super.setCursor(content, cursor);
             }
-            super.setCursor(content, cursor);
           }
-        }
 
-        @Override
-        protected void notifyResized() {
-          myResizeListeners.forEach(Runnable::run);
-        }
-      };
+          @Override
+          protected void notifyResized() {
+            myResizeListeners.forEach(Runnable::run);
+          }
+        };
       glass.addMousePreprocessor(resizeListener, this);
       glass.addMouseMotionPreprocessor(resizeListener, this);
       myResizeListener = resizeListener;
@@ -1212,7 +1219,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     if (myCancelOnMouseOutCallback != null || myCancelOnWindow) {
       myMouseOutCanceller = new Canceller();
-      Toolkit.getDefaultToolkit().addAWTEventListener(myMouseOutCanceller, MOUSE_EVENT_MASK | WINDOW_ACTIVATED | WINDOW_GAINED_FOCUS | MOUSE_MOTION_EVENT_MASK);
+      Toolkit.getDefaultToolkit()
+             .addAWTEventListener(myMouseOutCanceller, MOUSE_EVENT_MASK | WINDOW_ACTIVATED | WINDOW_GAINED_FOCUS | MOUSE_MOTION_EVENT_MASK);
     }
 
 
@@ -1269,7 +1277,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       wndManager.setWindowMask(window, mask);
     }
 
-    WindowManagerEx.WindowShadowMode mode = myShadowed ? WindowManagerEx.WindowShadowMode.NORMAL : WindowManagerEx.WindowShadowMode.DISABLED;
+    WindowManagerEx.WindowShadowMode mode =
+      myShadowed ? WindowManagerEx.WindowShadowMode.NORMAL : WindowManagerEx.WindowShadowMode.DISABLED;
     WindowManagerEx.getInstanceEx().setWindowShadow(window, mode);
 
     return window;
@@ -1293,7 +1302,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   protected void afterShow() {
   }
 
-  protected final boolean requestFocus() {
+  public final boolean requestFocus() {
     if (!myFocusable) return false;
 
     getFocusManager().doWhenFocusSettlesDown(() -> _requestFocus());
@@ -1588,11 +1597,11 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     }
   }
 
-  boolean isCancelOnClickOutside() {
+  public boolean isCancelOnClickOutside() {
     return myCancelOnClickOutside;
   }
 
-  boolean isCancelOnWindowDeactivation() {
+  public boolean isCancelOnWindowDeactivation() {
     return myCancelOnWindowDeactivation;
   }
 

@@ -12,7 +12,6 @@ import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
@@ -21,8 +20,8 @@ import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.ui.popup.mock.MockConfirmation;
 import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
@@ -40,11 +39,12 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
@@ -111,7 +111,12 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
   @Nonnull
   @Override
-  public ListPopup createConfirmation(String title, final String yesText, String noText, final Runnable onYes, final Runnable onNo, int defaultOptionIndex) {
+  public ListPopup createConfirmation(String title,
+                                      final String yesText,
+                                      String noText,
+                                      final Runnable onYes,
+                                      final Runnable onNo,
+                                      int defaultOptionIndex) {
     final BaseListPopupStep<String> step = new BaseListPopupStep<String>(title, yesText, noText) {
       @Override
       public PopupStep onChosen(String selectedValue, final boolean finalChoice) {
@@ -152,7 +157,18 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                             final int maxRowCount,
                             final Condition<? super AnAction> preselectActionCondition,
                             @Nullable final String actionPlace) {
-      this(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, actionPlace, null,
+      this(title,
+           actionGroup,
+           dataContext,
+           showNumbers,
+           useAlphaAsNumbers,
+           showDisabledActions,
+           honorActionMnemonics,
+           disposeCallback,
+           maxRowCount,
+           preselectActionCondition,
+           actionPlace,
+           null,
            false);
     }
 
@@ -168,7 +184,18 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                             Condition<? super AnAction> preselectActionCondition,
                             @Nullable final String actionPlace,
                             boolean autoSelection) {
-      this(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, actionPlace, null,
+      this(title,
+           actionGroup,
+           dataContext,
+           showNumbers,
+           useAlphaAsNumbers,
+           showDisabledActions,
+           honorActionMnemonics,
+           disposeCallback,
+           maxRowCount,
+           preselectActionCondition,
+           actionPlace,
+           null,
            autoSelection);
     }
 
@@ -185,8 +212,22 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                             @Nullable final String actionPlace,
                             @Nullable BasePresentationFactory presentationFactory,
                             boolean autoSelection) {
-      this(null, createStep(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, preselectActionCondition, actionPlace, presentationFactory,
-                            autoSelection), disposeCallback, dataContext, actionPlace, maxRowCount);
+      this(null,
+           createStep(title,
+                      actionGroup,
+                      dataContext,
+                      showNumbers,
+                      useAlphaAsNumbers,
+                      showDisabledActions,
+                      honorActionMnemonics,
+                      preselectActionCondition,
+                      actionPlace,
+                      presentationFactory,
+                      autoSelection),
+           disposeCallback,
+           dataContext,
+           actionPlace,
+           maxRowCount);
     }
 
     protected ActionGroupPopup(@Nullable WizardPopup aParent,
@@ -223,7 +264,12 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       Presentation presentation = new Presentation();
       presentation.setDescription(action.getTemplatePresentation().getDescription());
 
-      final AnActionEvent actionEvent = new AnActionEvent(null, DataManager.getInstance().getDataContext(myComponent), myActionPlace, presentation, ActionManager.getInstance(), 0);
+      final AnActionEvent actionEvent = new AnActionEvent(null,
+                                                          DataManager.getInstance().getDataContext(myComponent),
+                                                          myActionPlace,
+                                                          presentation,
+                                                          ActionManager.getInstance(),
+                                                          0);
       actionEvent.setInjectedContext(action.isInInjectedContext());
       ActionUtil.performDumbAwareUpdate(action, actionEvent, false);
       return presentation;
@@ -243,10 +289,24 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
-      List<ActionItem> items = ActionPopupStep.createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
+      List<ActionItem> items = ActionPopupStep.createActionItems(actionGroup,
+                                                                 dataContext,
+                                                                 showNumbers,
+                                                                 useAlphaAsNumbers,
+                                                                 showDisabledActions,
+                                                                 honorActionMnemonics,
+                                                                 actionPlace,
+                                                                 presentationFactory);
 
-      return new ActionPopupStep(items, title, getComponentContextSupplier(component), actionPlace, showNumbers || honorActionMnemonics && itemsHaveMnemonics(items), preselectActionCondition,
-                                 autoSelection, showDisabledActions, presentationFactory);
+      return new ActionPopupStep(items,
+                                 title,
+                                 getComponentContextSupplier(component),
+                                 actionPlace,
+                                 showNumbers || honorActionMnemonics && itemsHaveMnemonics(items),
+                                 preselectActionCondition,
+                                 autoSelection,
+                                 showDisabledActions,
+                                 presentationFactory);
     }
 
     /**
@@ -261,7 +321,14 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                                   boolean showDisabledActions,
                                                   boolean honorActionMnemonics,
                                                   @Nullable String actionPlace) {
-      return ActionPopupStep.createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, null);
+      return ActionPopupStep.createActionItems(actionGroup,
+                                               dataContext,
+                                               showNumbers,
+                                               useAlphaAsNumbers,
+                                               showDisabledActions,
+                                               honorActionMnemonics,
+                                               actionPlace,
+                                               null);
     }
 
     @Override
@@ -338,8 +405,17 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                           int maxRowCount,
                                           Condition<? super AnAction> preselectActionCondition,
                                           @Nullable String actionPlace) {
-    return new ActionGroupPopup(title, actionGroup, dataContext, aid == ActionSelectionAid.ALPHA_NUMBERING || aid == ActionSelectionAid.NUMBERING, aid == ActionSelectionAid.ALPHA_NUMBERING,
-                                showDisabledActions, aid == ActionSelectionAid.MNEMONICS, disposeCallback, maxRowCount, preselectActionCondition, actionPlace);
+    return new ActionGroupPopup(title,
+                                actionGroup,
+                                dataContext,
+                                aid == ActionSelectionAid.ALPHA_NUMBERING || aid == ActionSelectionAid.NUMBERING,
+                                aid == ActionSelectionAid.ALPHA_NUMBERING,
+                                showDisabledActions,
+                                aid == ActionSelectionAid.MNEMONICS,
+                                disposeCallback,
+                                maxRowCount,
+                                preselectActionCondition,
+                                actionPlace);
   }
 
   @Nonnull
@@ -353,7 +429,17 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                           final Runnable disposeCallback,
                                           final int maxRowCount,
                                           final Condition<? super AnAction> preselectActionCondition) {
-    return new ActionGroupPopup(title, actionGroup, dataContext, showNumbers, true, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, null);
+    return new ActionGroupPopup(title,
+                                actionGroup,
+                                dataContext,
+                                showNumbers,
+                                true,
+                                showDisabledActions,
+                                honorActionMnemonics,
+                                disposeCallback,
+                                maxRowCount,
+                                preselectActionCondition,
+                                null);
   }
 
   @Nonnull
@@ -369,8 +455,19 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
                                                      int defaultOptionIndex,
                                                      boolean autoSelectionEnabled) {
     return ActionPopupStep
-            .createActionsStep(actionGroup, dataContext, showNumbers, true, showDisabledActions, title, honorActionMnemonics, autoSelectionEnabled, getComponentContextSupplier(component), actionPlace,
-                               null, defaultOptionIndex, null);
+      .createActionsStep(actionGroup,
+                         dataContext,
+                         showNumbers,
+                         true,
+                         showDisabledActions,
+                         title,
+                         honorActionMnemonics,
+                         autoSelectionEnabled,
+                         getComponentContextSupplier(component),
+                         actionPlace,
+                         null,
+                         defaultOptionIndex,
+                         null);
   }
 
   private static boolean itemsHaveMnemonics(final List<? extends ActionItem> items) {
@@ -487,7 +584,10 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
           if (bestRow != -1) {
             Rectangle rowBounds = tree.getRowBounds(bestRow);
-            tree.scrollRectToVisible(new Rectangle(rowBounds.x, rowBounds.y, Math.min(visibleRect.width, rowBounds.width), rowBounds.height));
+            tree.scrollRectToVisible(new Rectangle(rowBounds.x,
+                                                   rowBounds.y,
+                                                   Math.min(visibleRect.width, rowBounds.width),
+                                                   rowBounds.height));
             popupMenuPoint = new Point(rowBounds.x + 2, rowBounds.y + rowBounds.height - 1);
           }
         }
@@ -562,7 +662,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
   @Override
   public boolean isPopupActive() {
-    return IdeEventQueue.getInstance().isPopupActive();
+    return IdeEventQueueProxy.getInstance().isPopupActive();
   }
 
   @Nonnull
@@ -578,8 +678,16 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     final Color bg = UIManager.getColor("Panel.background");
     final Color borderOriginal = Color.darkGray;
     final Color border = ColorUtil.toAlpha(borderOriginal, 75);
-    builder.setDialogMode(true).setTitle(title).setAnimationCycle(200).setFillColor(bg).setBorderColor(border).setHideOnClickOutside(false).setHideOnKeyOutside(false).setHideOnAction(false)
-            .setCloseButtonEnabled(true).setShadow(true);
+    builder.setDialogMode(true)
+           .setTitle(title)
+           .setAnimationCycle(200)
+           .setFillColor(bg)
+           .setBorderColor(border)
+           .setHideOnClickOutside(false)
+           .setHideOnKeyOutside(false)
+           .setHideOnAction(false)
+           .setCloseButtonEnabled(true)
+           .setShadow(true);
 
     return builder;
   }
@@ -627,7 +735,9 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
   @Nonnull
   @Override
-  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, NotificationType type, @Nullable HyperlinkListener listener) {
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent,
+                                                     NotificationType type,
+                                                     @Nullable HyperlinkListener listener) {
     MessageType messageType = MessageType.from(type);
     return createHtmlTextBalloonBuilder(htmlContent, messageType.getDefaultIcon(), messageType.getPopupBackground(), listener);
   }

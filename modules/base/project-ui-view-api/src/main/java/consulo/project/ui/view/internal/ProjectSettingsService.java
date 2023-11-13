@@ -18,15 +18,15 @@ package consulo.project.ui.view.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.configurable.Configurable;
 import consulo.content.library.Library;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -85,5 +85,9 @@ public class ProjectSettingsService {
 
   @RequiredUIAccess
   public void showModuleConfigurationDialog(@Nullable String moduleToSelect, @Nullable String editorNameToSelect) {
+  }
+
+  @RequiredUIAccess
+  public void showAndSelect(Class<? extends Configurable> configurableClass) {
   }
 }

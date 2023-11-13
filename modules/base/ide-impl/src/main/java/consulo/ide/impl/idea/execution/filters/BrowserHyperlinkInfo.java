@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.execution.filters;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author Kir
@@ -29,6 +30,7 @@ public class BrowserHyperlinkInfo implements HyperlinkInfo {
     myUrl = url;
   }
 
+  @RequiredUIAccess
   public void navigate(Project project) {
     openUrl(myUrl);
   }

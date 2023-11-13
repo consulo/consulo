@@ -23,12 +23,12 @@ import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
@@ -41,9 +41,9 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
@@ -176,11 +176,18 @@ public abstract class GotoActionBase extends AnAction {
     showNavigationPopup(e, model, callback, true);
   }
 
-  protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback, final boolean allowMultipleSelection) {
+  protected <T> void showNavigationPopup(AnActionEvent e,
+                                         ChooseByNameModel model,
+                                         final GotoActionCallback<T> callback,
+                                         final boolean allowMultipleSelection) {
     showNavigationPopup(e, model, callback, null, true, allowMultipleSelection);
   }
 
-  protected <T> void showNavigationPopup(AnActionEvent e, ChooseByNameModel model, final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, boolean useSelectionFromEditor) {
+  protected <T> void showNavigationPopup(AnActionEvent e,
+                                         ChooseByNameModel model,
+                                         final GotoActionCallback<T> callback,
+                                         @Nullable final String findUsagesTitle,
+                                         boolean useSelectionFromEditor) {
     showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, true);
   }
 
@@ -190,7 +197,13 @@ public abstract class GotoActionBase extends AnAction {
                                          @Nullable final String findUsagesTitle,
                                          boolean useSelectionFromEditor,
                                          final boolean allowMultipleSelection) {
-    showNavigationPopup(e, model, callback, findUsagesTitle, useSelectionFromEditor, allowMultipleSelection, new DefaultChooseByNameItemProvider(getPsiContext(e)));
+    showNavigationPopup(e,
+                        model,
+                        callback,
+                        findUsagesTitle,
+                        useSelectionFromEditor,
+                        allowMultipleSelection,
+                        new DefaultChooseByNameItemProvider(getPsiContext(e)));
   }
 
   protected <T> void showNavigationPopup(AnActionEvent e,
@@ -201,16 +214,30 @@ public abstract class GotoActionBase extends AnAction {
                                          final boolean allowMultipleSelection,
                                          final DefaultChooseByNameItemProvider itemProvider) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
-    boolean mayRequestOpenInCurrentWindow = model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
+    boolean mayRequestOpenInCurrentWindow =
+      model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
     Pair<String, Integer> start = getInitialText(useSelectionFromEditor, e);
-    showNavigationPopup(callback, findUsagesTitle, ChooseByNamePopup.createPopup(project, model, itemProvider, start.first, mayRequestOpenInCurrentWindow, start.second), allowMultipleSelection);
+    showNavigationPopup(callback,
+                        findUsagesTitle,
+                        ChooseByNamePopup.createPopup(project,
+                                                      model,
+                                                      itemProvider,
+                                                      start.first,
+                                                      mayRequestOpenInCurrentWindow,
+                                                      start.second),
+                        allowMultipleSelection);
   }
 
-  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, final ChooseByNamePopup popup) {
+  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback,
+                                         @Nullable final String findUsagesTitle,
+                                         final ChooseByNamePopup popup) {
     showNavigationPopup(callback, findUsagesTitle, popup, true);
   }
 
-  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback, @Nullable final String findUsagesTitle, final ChooseByNamePopup popup, final boolean allowMultipleSelection) {
+  protected <T> void showNavigationPopup(final GotoActionCallback<T> callback,
+                                         @Nullable final String findUsagesTitle,
+                                         final ChooseByNamePopup popup,
+                                         final boolean allowMultipleSelection) {
 
     final Class startedAction = myInAction;
     LOG.assertTrue(startedAction != null);
@@ -221,10 +248,10 @@ public abstract class GotoActionBase extends AnAction {
 
     if (historyEnabled() && popup.getAdText() == null) {
       popup.setAdText("Press " +
-                      KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK)) +
-                      " or " +
-                      KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.CTRL_MASK)) +
-                      " to navigate through the history");
+                        KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK)) +
+                        " or " +
+                        KeymapUtil.getKeystrokeText(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.CTRL_MASK)) +
+                        " to navigate through the history");
     }
 
     popup.invoke(new ChooseByNamePopupComponent.Callback() {
@@ -309,8 +336,11 @@ public abstract class GotoActionBase extends AnAction {
     showInSearchEverywherePopup(searchProviderID, event, useEditorSelection, false);
   }
 
-  protected void showInSearchEverywherePopup(@Nonnull String searchProviderID, @Nonnull AnActionEvent event, boolean useEditorSelection, boolean sendStatistics) {
-    Project project = event.getData(CommonDataKeys.PROJECT);
+  protected void showInSearchEverywherePopup(@Nonnull String searchProviderID,
+                                             @Nonnull AnActionEvent event,
+                                             boolean useEditorSelection,
+                                             boolean sendStatistics) {
+    Project project = event.getData(Project.KEY);
     if (project == null) return;
     SearchEverywhereManager seManager = SearchEverywhereManager.getInstance(project);
     FeatureUsageTracker.getInstance().triggerFeatureUsed(IdeActions.ACTION_SEARCH_EVERYWHERE);
@@ -333,7 +363,7 @@ public abstract class GotoActionBase extends AnAction {
     //  FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(searchProviderID);
     //  SearchEverywhereUsageTriggerCollector.trigger(project, SearchEverywhereUsageTriggerCollector.DIALOG_OPEN, data);
     //}
-    IdeEventQueue.getInstance().getPopupManager().closeAllPopups(false);
+    IdeEventQueueProxy.getInstance().closeAllPopups(false);
     String searchText = StringUtil.nullize(getInitialText(useEditorSelection, event).first);
     seManager.show(searchProviderID, searchText, event);
   }

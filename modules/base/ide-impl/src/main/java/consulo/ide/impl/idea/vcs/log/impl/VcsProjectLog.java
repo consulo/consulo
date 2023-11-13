@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.application.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -119,7 +119,7 @@ public class VcsProjectLog {
       logManager.scheduleInitialization();
     }
     else if (PostponableLogRefresher.keepUpToDate()) {
-      VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtension(VcsLogCachesInvalidator.class);
+      VcsLogCachesInvalidator invalidator = CachesInvalidator.EP_NAME.findExtensionOrFail(VcsLogCachesInvalidator.class);
       if (invalidator.isValid()) {
         HeavyAwareExecutor.executeOutOfHeavyProcessLater(logManager::scheduleInitialization, 5000);
       }

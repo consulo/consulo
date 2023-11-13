@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.ide.impl.idea.diagnostic.IdeMessagePanel;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
@@ -34,11 +34,9 @@ import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.internal.ProgressIndicatorEx;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.impl.status.InfoAndProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
-import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
 import consulo.ui.ex.awt.util.ComponentUtil;
@@ -68,11 +66,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * User: spLeaner
  */
-public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEventQueue.EventDispatcher, DataProvider {
+public class IdeStatusBarImpl extends JComponent implements StatusBarEx, Predicate<AWTEvent>, DataProvider {
   private static final String WIDGET_ID = "STATUS_BAR_WIDGET_ID";
 
   private static final int MIN_ICON_HEIGHT = 18 + 1 + 1;
@@ -475,7 +474,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
   }
 
   @Override
-  public boolean dispatch(@Nonnull AWTEvent e) {
+  public boolean test(@Nonnull AWTEvent e) {
     if (e instanceof MouseEvent) {
       return dispatchMouseEvent((MouseEvent)e);
     }

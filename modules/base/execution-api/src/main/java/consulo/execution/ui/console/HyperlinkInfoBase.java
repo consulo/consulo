@@ -17,6 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -27,6 +28,7 @@ import jakarta.annotation.Nullable;
 public abstract class HyperlinkInfoBase implements HyperlinkInfo {
   public abstract void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint);
 
+  @RequiredUIAccess
   @Override
   public void navigate(Project project) {
     navigate(project, null);

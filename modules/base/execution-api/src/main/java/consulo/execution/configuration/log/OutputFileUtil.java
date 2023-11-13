@@ -29,6 +29,7 @@ import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -116,6 +117,7 @@ public class OutputFileUtil {
         final String filePath = StringUtil.trimEnd(line.substring(CONSOLE_OUTPUT_FILE_MESSAGE.length()), "\n");
 
         return new Result(entireLength - filePath.length() - 1, entireLength, new HyperlinkInfo() {
+          @RequiredUIAccess
           @Override
           public void navigate(final Project project) {
             final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {

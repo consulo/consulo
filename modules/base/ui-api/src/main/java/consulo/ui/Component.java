@@ -220,4 +220,7 @@ public interface Component extends UserDataHolder {
   default Disposable addClickListener(@RequiredUIAccess @Nonnull ClickListener clickListener) {
     return addListener(ClickListener.class, clickListener);
   }
+
+  default void forceRepaint() {
+  }
 }

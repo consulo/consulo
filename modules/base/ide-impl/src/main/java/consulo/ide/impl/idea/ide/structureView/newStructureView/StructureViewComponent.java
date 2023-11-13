@@ -23,20 +23,16 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.structureView.impl.StructureViewFactoryImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ide.util.FileStructurePopup;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
-import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import java.util.function.Function;
-import consulo.util.lang.ObjectUtil;
-import consulo.ui.ex.awt.util.SingleAlarm;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
@@ -59,9 +55,11 @@ import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
 import consulo.util.collection.JBIterable;
@@ -70,10 +68,11 @@ import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.lang.ObjectUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreePath;
@@ -88,6 +87,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 public class StructureViewComponent extends SimpleToolWindowPanel implements TreeActionsOwner, DataProvider, StructureView.Scrollable {
   private static final Logger LOG = Logger.getInstance(StructureViewComponent.class);
@@ -121,7 +121,10 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   private final AutoScrollFromSourceHandler myAutoScrollFromSourceHandler;
 
 
-  public StructureViewComponent(@Nullable FileEditor editor, @Nonnull StructureViewModel structureViewModel, @Nonnull Project project, boolean showRootNode) {
+  public StructureViewComponent(@Nullable FileEditor editor,
+                                @Nonnull StructureViewModel structureViewModel,
+                                @Nonnull Project project,
+                                boolean showRootNode) {
     super(true, true);
 
     myProject = project;
@@ -185,7 +188,9 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   }
 
   public static void registerAutoExpandListener(@Nonnull JTree tree, @Nonnull StructureViewModel structureViewModel) {
-    tree.getModel().addTreeModelListener(new MyExpandListener(tree, ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class)));
+    tree.getModel()
+        .addTreeModelListener(new MyExpandListener(tree,
+                                                   ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class)));
   }
 
   protected boolean showScrollToFromSourceActions() {
@@ -275,7 +280,9 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
   @Nonnull
   public static JBIterable<Object> getSelectedValues(JTree tree) {
-    return traverser().withRoots(JBIterable.of(tree.getSelectionPaths()).map(TreePath::getLastPathComponent).filterMap(StructureViewComponent::unwrapValue)).traverse();
+    return traverser().withRoots(JBIterable.of(tree.getSelectionPaths())
+                                           .map(TreePath::getLastPathComponent)
+                                           .filterMap(StructureViewComponent::unwrapValue)).traverse();
   }
 
   private void addTreeMouseListeners() {
@@ -397,7 +404,8 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       Object last = path.getLastPathComponent();
       Object userObject = unwrapNavigatable(last);
       Object value = unwrapValue(last);
-      if (Comparing.equal(value, element) || userObject instanceof AbstractTreeNode && ((AbstractTreeNode)userObject).canRepresent(element)) {
+      if (Comparing.equal(value,
+                          element) || userObject instanceof AbstractTreeNode && ((AbstractTreeNode)userObject).canRepresent(element)) {
         return TreeVisitor.Action.INTERRUPT;
       }
       if (value instanceof PsiElement && element instanceof PsiElement) {
@@ -640,7 +648,10 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       return myCopyPasteDelegator.getPasteProvider();
     }
     if (CommonDataKeys.NAVIGATABLE == dataId) {
-      List<Object> list = JBIterable.of(getTree().getSelectionPaths()).map(TreePath::getLastPathComponent).map(StructureViewComponent::unwrapNavigatable).toList();
+      List<Object> list = JBIterable.of(getTree().getSelectionPaths())
+                                    .map(TreePath::getLastPathComponent)
+                                    .map(StructureViewComponent::unwrapNavigatable)
+                                    .toList();
       Object[] selectedElements = list.isEmpty() ? null : ArrayUtil.toObjectArray(list);
       if (selectedElements == null || selectedElements.length == 0) return null;
       if (selectedElements[0] instanceof Navigatable) {
@@ -711,7 +722,8 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   //}
 
   private static int getMinimumExpandDepth(@Nonnull StructureViewModel structureViewModel) {
-    final StructureViewModel.ExpandInfoProvider provider = ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class);
+    final StructureViewModel.ExpandInfoProvider provider =
+      ObjectUtil.tryCast(structureViewModel, StructureViewModel.ExpandInfoProvider.class);
 
     return provider == null ? 2 : provider.getMinimumAutoExpandDepth();
   }
@@ -870,7 +882,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
     @Override
     public void processMouseEvent(MouseEvent event) {
-      IdeMouseEventDispatcher.requestFocusInNonFocusedWindow(event);
+      IdeEventQueueProxy.getInstance().requestFocusInNonFocusedWindow(event);
       super.processMouseEvent(event);
     }
   }

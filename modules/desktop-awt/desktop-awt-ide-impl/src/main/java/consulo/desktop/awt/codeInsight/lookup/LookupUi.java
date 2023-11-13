@@ -11,7 +11,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.application.ui.UISettings;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.application.ApplicationManager;

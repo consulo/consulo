@@ -3,14 +3,14 @@ package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
@@ -18,10 +18,8 @@ import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
@@ -41,10 +39,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -64,21 +63,11 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
-    if (Registry.is("new.search.everywhere")) {
-      if (!dumb || new ClassSearchEverywhereContributor(project, null).isDumbAware()) {
-        showInSearchEverywherePopup(ClassSearchEverywhereContributor.class.getSimpleName(), e, true, true);
-      }
-      else {
-        invokeGoToFile(project, e);
-      }
+    if (!dumb || new ClassSearchEverywhereContributor(project, null).isDumbAware()) {
+      showInSearchEverywherePopup(ClassSearchEverywhereContributor.class.getSimpleName(), e, true, true);
     }
     else {
-      if (!dumb) {
-        super.actionPerformed(e);
-      }
-      else {
-        invokeGoToFile(project, e);
-      }
+      invokeGoToFile(project, e);
     }
   }
 

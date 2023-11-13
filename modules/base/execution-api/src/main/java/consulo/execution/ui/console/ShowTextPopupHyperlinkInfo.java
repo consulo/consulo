@@ -8,6 +8,7 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
@@ -27,6 +28,7 @@ public class ShowTextPopupHyperlinkInfo implements HyperlinkInfo {
     myText = text;
   }
 
+  @RequiredUIAccess
   @Override
   public void navigate(Project project) {
     Application.get().invokeLater(() -> {

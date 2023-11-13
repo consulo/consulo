@@ -299,14 +299,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     });
   }
 
-  @Override
-  public void saveAllDocuments() {
-    saveAllDocuments(true);
-  }
-
   /**
    * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
    */
+  @Override
   public void saveAllDocuments(boolean isExplicit) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();

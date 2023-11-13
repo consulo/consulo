@@ -7,7 +7,7 @@ import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.SyncViewManager;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
-import consulo.ide.impl.idea.build.progress.BuildRootProgressImpl;
+import consulo.build.ui.impl.internal.BuildRootProgressImpl;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

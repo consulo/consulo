@@ -17,17 +17,16 @@
 package consulo.content.internal;
 
 import consulo.component.ComponentManager;
-import consulo.content.OrderRootType;
 import consulo.content.library.Library;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.List;
 
 /**
  *  @author dsl
  */
 public interface LibraryEx extends Library {
+  String MODULE_LEVEL = "module";
+
   boolean isDisposed();
 
   @Nonnull

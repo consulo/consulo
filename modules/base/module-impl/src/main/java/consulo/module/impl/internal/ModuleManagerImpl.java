@@ -336,9 +336,13 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
         throw e;
       }
       catch (ModuleWithNameAlreadyExistsException | ModuleDirIsNotExistsException e) {
+        LOG.warn(e);
+
         errors.add(ModuleLoadingErrorDescription.create(e.getMessage(), moduleLoadItem, this));
       }
       catch (Exception e) {
+        LOG.warn(e);
+
         errors.add(ModuleLoadingErrorDescription.create(ProjectBundle.message("module.cannot.load.error", moduleLoadItem.getName(), ExceptionUtil.getThrowableText(e)), moduleLoadItem, this));
       }
       finally {

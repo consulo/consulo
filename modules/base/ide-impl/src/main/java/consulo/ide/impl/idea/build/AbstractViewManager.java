@@ -2,15 +2,13 @@
 package consulo.ide.impl.idea.build;
 
 import consulo.application.AllIcons;
+import consulo.application.util.AtomicClearableLazyValue;
 import consulo.build.ui.*;
 import consulo.build.ui.event.*;
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.application.util.AtomicClearableLazyValue;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.DisposableWrapperList;
 import consulo.language.LangBundle;
 import consulo.logging.Logger;
@@ -27,10 +25,12 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

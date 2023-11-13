@@ -22,6 +22,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -85,6 +86,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
     return OpenFileDescriptorFactory.getInstance(myProject).builder(file).line(line).column(myDocumentColumn).build();
   }
 
+  @RequiredUIAccess
   @Override
   public void navigate(final Project project) {
     Application.get().runReadAction(() -> {

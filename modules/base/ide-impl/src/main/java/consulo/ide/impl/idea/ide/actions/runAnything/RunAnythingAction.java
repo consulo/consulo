@@ -1,17 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.runAnything;
 
-import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.execution.executor.Executor;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
+import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -35,21 +34,19 @@ public class RunAnythingAction extends AnAction implements CustomComponentAction
 
   private boolean myIsDoubleCtrlRegistered;
 
-  public RunAnythingAction(@Nonnull Application application) {
-    if (application.isSwingApplication()) {
-      IdeEventQueue.getInstance().addPostprocessor(event -> {
-        if (event instanceof KeyEvent) {
-          final int keyCode = ((KeyEvent)event).getKeyCode();
-          if (keyCode == KeyEvent.VK_SHIFT) {
-            SHIFT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
-          }
-          else if (keyCode == KeyEvent.VK_ALT) {
-            ALT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
-          }
+  public RunAnythingAction(@Nonnull IdeEventQueueProxy ideEventQueueProxy) {
+    ideEventQueueProxy.addPostprocessor(event -> {
+      if (event instanceof KeyEvent) {
+        final int keyCode = ((KeyEvent)event).getKeyCode();
+        if (keyCode == KeyEvent.VK_SHIFT) {
+          SHIFT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
         }
-        return false;
-      }, null);
-    }
+        else if (keyCode == KeyEvent.VK_ALT) {
+          ALT_IS_PRESSED.set(event.getID() == KeyEvent.KEY_PRESSED);
+        }
+      }
+      return false;
+    }, null);
   }
 
   @RequiredUIAccess

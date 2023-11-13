@@ -160,13 +160,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
   }
 
-  /**
-   * This boolean controls whether to use thread(s) other than EDT for acquiring IW lock (i.e. running write actions) or not.
-   * If value is {@code false}, IW lock will be granted on EDT at all times, guaranteeing the same execution model as before
-   * IW lock introduction.
-   */
-  public static final boolean USE_SEPARATE_WRITE_THREAD = Boolean.getBoolean("idea.use.separate.write.thread");
-
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
@@ -450,10 +443,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     super.dispose();
 
-    // Remove IW lock from EDT as EDT might be re-created which might lead to deadlock if anybody uses this disposed app
-    if (!USE_SEPARATE_WRITE_THREAD) {
-      invokeLater(() -> releaseWriteIntentLock(), ModalityState.nonModal());
-    }
+    invokeLater(() -> releaseWriteIntentLock(), ModalityState.nonModal());
 
     AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
     service.shutdownAppScheduledExecutorService();
@@ -772,21 +762,21 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull consulo.ui.ModalityState modal) {
+  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
     invokeLaterOnWriteThread(action, modal, getDisposed());
   }
 
   @Override
   public void invokeLaterOnWriteThread(@Nonnull Runnable action,
-                                       @Nonnull consulo.ui.ModalityState modal,
+                                       @Nonnull ModalityState modal,
                                        @Nonnull BooleanSupplier expired) {
     Runnable r = wrapLaterInvocation(action, (IdeaModalityState)modal);
     // EDT == Write Thread in legacy mode
     LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r),
                                            modal,
                                            expired,
-                                           null,
-                                           !USE_SEPARATE_WRITE_THREAD);
+                                           null
+    );
   }
 
   @Nonnull
@@ -796,19 +786,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Override
   public <T, E extends Throwable> T runUnlockingIntendedWrite(@Nonnull ThrowableComputable<T, E> action) throws E {
-    // Do not ever unlock IW in legacy mode (EDT is holding lock at all times)
-    if (isWriteThread() && USE_SEPARATE_WRITE_THREAD) {
-      releaseWriteIntentLock();
-      try {
-        return action.compute();
-      }
-      finally {
-        acquireWriteIntentLock(action.getClass().getName());
-      }
-    }
-    else {
-      return action.compute();
-    }
+    return action.compute();
   }
 
   @Override
