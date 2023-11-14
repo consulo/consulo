@@ -7,7 +7,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
-import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
+import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.ListActions;
 import consulo.ide.impl.idea.ui.popup.ClosableByLeftArrow;

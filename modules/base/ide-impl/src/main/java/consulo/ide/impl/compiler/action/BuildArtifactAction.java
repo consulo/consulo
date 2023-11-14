@@ -25,10 +25,8 @@ import consulo.compiler.impl.internal.artifact.ArtifactCompileScope;
 import consulo.compiler.scope.CompileScope;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
@@ -38,10 +36,7 @@ import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListSeparator;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
@@ -68,14 +63,14 @@ public class BuildArtifactAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(project != null && !ArtifactUtil.getArtifactWithOutputPaths(project).isEmpty());
   }
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     final List<Artifact> artifacts = ArtifactUtil.getArtifactWithOutputPaths(project);

@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
-import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
+import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.image.Image;

@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.tasks.actions;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
-import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
+import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

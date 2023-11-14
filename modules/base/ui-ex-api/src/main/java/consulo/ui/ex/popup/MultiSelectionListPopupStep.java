@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.ui.popup;
+package consulo.ui.ex.popup;
 
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.popup.PopupStep;
-
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nullable;
 
 import java.util.Collections;

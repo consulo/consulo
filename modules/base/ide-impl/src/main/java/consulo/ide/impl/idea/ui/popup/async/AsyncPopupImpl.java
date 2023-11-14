@@ -62,11 +62,7 @@ public class AsyncPopupImpl extends WizardPopup implements Runnable {
       try {
         myCallBackParent.handleNextStep(myFuture.get(), myParentValue);
       }
-      catch (InterruptedException e) {
-        //ignore
-      }
-      catch (ExecutionException e) {
-        //ignore
+      catch (InterruptedException | ExecutionException ignored) {
       }
       return;
     }
