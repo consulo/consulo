@@ -96,8 +96,8 @@ public abstract class BindingLoader<B> {
         throw new IllegalArgumentException("Duplicate registration of binding: " + provider.type());
       }
 
-      B binding = provider.get();
       try {
+        B binding = provider.get();
         process(binding);
       }
       catch (Throwable e) {
