@@ -60,6 +60,8 @@ module consulo.application.impl {
   exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl;
   exports consulo.application.impl.internal.concurent to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 
+  exports consulo.application.impl.internal.concurent.locking to consulo.desktop.awt.ide.impl;
+
   opens consulo.application.impl.internal.start to args4j;
 
   provides consulo.index.io.internal.LowMemoryWatcherInternal with consulo.application.impl.internal.util.RealLowMemoryWatcherInternal;

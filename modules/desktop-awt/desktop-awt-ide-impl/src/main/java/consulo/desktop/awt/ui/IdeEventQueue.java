@@ -22,7 +22,6 @@ import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
@@ -357,68 +356,34 @@ public class IdeEventQueue extends EventQueue {
     AWTEvent oldEvent = myCurrentEvent;
     myCurrentEvent = e;
 
-    AWTEvent finalE1 = e;
-    Runnable runnable = InvocationUtil.extractRunnable(e);
-    Class<? extends Runnable> runnableClass = runnable != null ? runnable.getClass() : Runnable.class;
-    Runnable processEventRunnable = () -> {
-      Application application = ApplicationManager.getApplication();
-      ProgressManager progressManager = application != null && !application.isDisposed() ? ProgressManager.getInstance() : null;
+    try {
+      _dispatchEvent(myCurrentEvent);
+    }
+    catch (Throwable t) {
+      processException(t);
+    }
+    finally {
+      myIsInInputEvent = wasInputEvent;
+      myCurrentEvent = oldEvent;
 
-      try (AccessToken ignored = startActivity(finalE1)) {
-        if (progressManager != null) {
-          progressManager.computePrioritized(() -> {
-            _dispatchEvent(myCurrentEvent);
-            return null;
-          });
-        }
-        else {
-          _dispatchEvent(myCurrentEvent);
-        }
-      }
-      catch (Throwable t) {
-        processException(t);
-      }
-      finally {
-        myIsInInputEvent = wasInputEvent;
-        myCurrentEvent = oldEvent;
-
-        if (myCurrentSequencedEvent == finalE1) {
-          myCurrentSequencedEvent = null;
-        }
-
-        for (Predicate<AWTEvent> each : myPostProcessors) {
-          each.test(finalE1);
-        }
-
-        if (finalE1 instanceof KeyEvent) {
-          maybeReady();
-        }
-        //if (eventWatcher != null && runnableClass != InvocationUtil.FLUSH_NOW_CLASS) {
-        //  eventWatcher.logTimeMillis(runnableClass != Runnable.class ? runnableClass.getName() : finalE1.toString(), startedAt, runnableClass);
-        //}
+      if (myCurrentSequencedEvent == e) {
+        myCurrentSequencedEvent = null;
       }
 
-      if (isFocusEvent(finalE1)) {
-        onFocusEvent(finalE1);
+      for (Predicate<AWTEvent> each : myPostProcessors) {
+        each.test(e);
       }
-    };
 
-    if (runnableClass != Runnable.class) {
-      if (ourRunnablesWoWrite.contains(runnableClass)) {
-        processEventRunnable.run();
-        return;
+      if (e instanceof KeyEvent) {
+        maybeReady();
       }
-      if (ourRunnablesWithWrite.contains(runnableClass)) {
-        ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-        return;
-      }
+      //if (eventWatcher != null && runnableClass != InvocationUtil.FLUSH_NOW_CLASS) {
+      //  eventWatcher.logTimeMillis(runnableClass != Runnable.class ? runnableClass.getName() : finalE1.toString(), startedAt, runnableClass);
+      //}
     }
 
-    if (ourDefaultEventWithWrite) {
-      ((ApplicationWithIntentWriteLock)Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-    }
-    else {
-      processEventRunnable.run();
+    if (isFocusEvent(e)) {
+      onFocusEvent(e);
     }
   }
 
@@ -454,7 +419,7 @@ public class IdeEventQueue extends EventQueue {
     if (manager == null) {
       Application app = ApplicationManager.getApplication();
       if (app != null && !app.isDisposed()) {
-        ourProgressManager = manager = ServiceManager.getService(ProgressManager.class);
+        ourProgressManager = manager = (ProgressManager)app.getProgressManager();
       }
     }
     return manager;
@@ -463,7 +428,7 @@ public class IdeEventQueue extends EventQueue {
   @Override
   @Nonnull
   public AWTEvent getNextEvent() throws InterruptedException {
-    AWTEvent event = appIsLoaded() ? ((ApplicationWithIntentWriteLock)Application.get()).runUnlockingIntendedWrite(() -> super.getNextEvent()) : super.getNextEvent();
+    AWTEvent event = super.getNextEvent();
 
     if (isKeyboardEvent(event) && myKeyboardEventsDispatched.incrementAndGet() > myKeyboardEventsPosted.get()) {
       throw new RuntimeException(event + "; posted: " + myKeyboardEventsPosted + "; dispatched: " + myKeyboardEventsDispatched);

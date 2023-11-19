@@ -15,11 +15,15 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.*;
-import consulo.application.impl.internal.*;
-import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
+import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.BaseApplication;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.concurent.locking.BaseDataLock;
+import consulo.application.impl.internal.concurent.locking.NewDataLock;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
@@ -27,12 +31,10 @@ import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
@@ -43,11 +45,12 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.LogEventException;
-import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
+import consulo.ide.impl.idea.ide.CommandLineProcessor;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.desktop.awt.progress.PotemkinProgress;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
@@ -57,6 +60,7 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -64,7 +68,6 @@ import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.EDT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ExceptionUtil;
@@ -73,7 +76,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -82,7 +84,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 public class DesktopApplicationImpl extends BaseApplication {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
@@ -134,23 +135,13 @@ public class DesktopApplicationImpl extends BaseApplication {
       };
     }
 
-    Thread edt = UIUtil.invokeAndWaitIfNeeded(() -> {
-      // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
-      // that thread was chosen because we know for sure it's running
-      AppScheduledExecutorService service = (AppScheduledExecutorService)AppExecutorUtil.getAppScheduledExecutorService();
-      Thread thread = service.getPeriodicTasksThread();
-      AWTAutoShutdownHacking.notifyThreadBusy(thread); // needed for EDT not to exit suddenly
-      Disposer.register(this, () -> {
-        AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
-      });
-      return Thread.currentThread();
-    });
-
-    myLock = new ReadMostlyRWLock(edt);
-
-    UIUtil.invokeAndWaitIfNeeded((Runnable)() -> acquireWriteIntentLock(getClass().getName()));
-
     NoSwingUnderWriteAction.watchForEvents(this);
+  }
+
+  @Nonnull
+  @Override
+  protected BaseDataLock createLock(EventDispatcher<ApplicationListener> dispatcher) {
+    return new NewDataLock(dispatcher);
   }
 
   @Override
@@ -167,7 +158,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Nonnull
   @Override
-  protected Runnable wrapLaterInvocation(Runnable action, IdeaModalityState state) {
+  protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
     return transactionGuard().wrapLaterInvocation(action, state);
   }
 
@@ -225,18 +216,18 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final BooleanSupplier expired) {
-    invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
+    invokeLater(runnable, getDefaultModalityState(), expired);
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state) {
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state) {
     invokeLater(runnable, state, getDisposed());
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null);
+  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final BooleanSupplier expired) {
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, state);
+    LaterInvocator.invokeLaterWithCallback(r, state, expired, null);
   }
 
   @RequiredUIAccess
@@ -290,13 +281,9 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     if (isDispatchThread()) {
       runnable.run();
-      return;
-    }
-    if (SwingUtilities.isEventDispatchThread()) {
-      runIntendedWriteActionOnCurrentThread(runnable);
       return;
     }
 
@@ -304,8 +291,8 @@ public class DesktopApplicationImpl extends BaseApplication {
       throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
     }
 
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)modalityState);
-    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)modalityState);
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, modalityState);
+    LaterInvocator.invokeAndWait(r, modalityState);
   }
 
   @Override
@@ -472,35 +459,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     return true;
   }
 
-  @Override
-  public boolean runWriteActionWithNonCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                          @Nullable ComponentManager project,
-                                                                          @Nullable JComponent parentComponent,
-                                                                          @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runEdtProgressWriteAction(title, project, parentComponent, null, action);
-  }
-
-  @Override
-  public boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                       @Nullable ComponentManager project,
-                                                                       @Nullable JComponent parentComponent,
-                                                                       @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
-  }
-
-  private boolean runEdtProgressWriteAction(@Nonnull String title,
-                                            @Nullable ComponentManager project,
-                                            @Nullable JComponent parentComponent,
-                                            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
-                                            @Nonnull Consumer<? super ProgressIndicator> action) {
-    // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
-    return runWriteActionWithClass(action.getClass(), () -> {
-      PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
-      indicator.runInSwingThread(() -> action.accept(indicator));
-      return !indicator.isCanceled();
-    });
-  }
-
   @Nonnull
   private ProgressWindow createProgressWindow(@Nonnull String progressTitle,
                                               boolean canBeCanceled,
@@ -514,16 +472,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     Disposer.register(this, progress);
     progress.setTitle(progressTitle);
     return progress;
-  }
-
-  @RequiredReadAction
-  @Override
-  public void assertReadAccessAllowed() {
-    if (!isReadAccessAllowed()) {
-      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
-                "Current thread: " + describe(Thread.currentThread()), "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
-                "SystemEventQueueThread: " + describe(getEventQueueThread()));
-    }
   }
 
   private static String describe(Thread o) {
@@ -558,29 +506,9 @@ public class DesktopApplicationImpl extends BaseApplication {
                                          describe(getEventQueueThread()), dump);
   }
 
-  @RequiredUIAccess
   @Override
-  public void assertIsWriteThread() {
-    if (isWriteThread()) return;
-    if (ShutDownTracker.isShutdownHookRunning()) return;
-    assertIsIsWriteThread("Access is allowed from write thread only.");
-  }
-
-  private void assertIsIsWriteThread(@Nonnull String message) {
-    if (isWriteThread()) return;
-    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
-    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-                                         EventQueue.isDispatchThread() +
-                                         " isDispatchThread()=" +
-                                         isDispatchThread() +
-                                         " Toolkit.getEventQueue()=" +
-                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                                         " Write Thread=" +
-                                         myLock.writeThread +
-                                         " Current thread: " +
-                                         describe(Thread.currentThread()) +
-                                         " SystemEventQueueThread: " +
-                                         describe(getEventQueueThread()), dump);
+  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    getLock().readSync(runnable::run);
   }
 
   @Override
@@ -619,11 +547,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public boolean isSwingApplication() {
     return true;
-  }
-
-  @Override
-  public boolean isCurrentWriteOnUIThread() {
-    return EDT.isEdt(myLock.writeThread);
   }
 
   @TestOnly

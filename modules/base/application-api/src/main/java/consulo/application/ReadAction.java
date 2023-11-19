@@ -16,6 +16,7 @@
 package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.DataLock;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import org.jetbrains.annotations.Contract;
@@ -27,18 +28,15 @@ import java.util.concurrent.Callable;
 @Deprecated
 public final class ReadAction<T>  {
   @Deprecated
-  public static AccessToken start() {
-    return ApplicationManager.getApplication().acquireReadActionLock();
-  }
-
-  @Deprecated
   public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
-    AccessRule.read(action);
+    DataLock locking = Application.get().getLock();
+    locking.readSync(action);
   }
 
   @Deprecated
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
-    return AccessRule.read(action);
+    DataLock locking = Application.get().getLock();
+    return locking.readSync(action);
   }
 
   /**

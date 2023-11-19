@@ -40,7 +40,7 @@ public class PsiVFSListenerStartUpActivity implements PostStartupActivity, DumbA
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent e) {
-        psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
+        psiVFSListener.myFileManager.processFileTypesChangedAsync(e.getRemovedFileType() != null);
       }
     });
     connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());

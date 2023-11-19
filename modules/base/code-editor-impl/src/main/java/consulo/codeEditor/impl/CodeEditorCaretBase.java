@@ -27,17 +27,18 @@ import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CharArrayUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 
 import static consulo.codeEditor.impl.CodeEditorSelectionModelBase.doSelectLineAtCaret;
@@ -733,7 +734,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   @Override
   public int getOffset() {
     validateCallContext();
-    validateContext(false);
+    validateContext();
     while (true) {
       PositionMarker marker = myPositionMarker;
       if (marker == null) return 0; // caret was disposed
@@ -979,7 +980,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public int getSelectionStart() {
-    validateContext(false);
+    validateContext();
     if (hasSelection()) {
       RangeMarker marker = mySelectionMarker;
       if (marker != null) {
@@ -992,7 +993,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   @Nonnull
   @Override
   public VisualPosition getSelectionStartPosition() {
-    validateContext(true);
+    validateContext();
     VisualPosition position;
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
@@ -1013,7 +1014,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   }
 
   LogicalPosition getSelectionStartLogicalPosition() {
-    validateContext(true);
+    validateContext();
     LogicalPosition position;
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
@@ -1031,7 +1032,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public int getSelectionEnd() {
-    validateContext(false);
+    validateContext();
     if (hasSelection()) {
       RangeMarker marker = mySelectionMarker;
       if (marker != null) {
@@ -1044,7 +1045,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   @Nonnull
   @Override
   public VisualPosition getSelectionEndPosition() {
-    validateContext(true);
+    validateContext();
     VisualPosition position;
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
@@ -1065,7 +1066,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   }
 
   LogicalPosition getSelectionEndLogicalPosition() {
-    validateContext(true);
+    validateContext();
     LogicalPosition position;
     SelectionMarker marker = mySelectionMarker;
     if (hasSelection()) {
@@ -1083,7 +1084,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public boolean hasSelection() {
-    validateContext(false);
+    validateContext();
     SelectionMarker marker = mySelectionMarker;
     return marker != null && marker.isValid() && (marker.getEndOffset() > marker.getStartOffset() || isVirtualSelectionEnabled() && marker.hasVirtualSelection());
   }
@@ -1135,7 +1136,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
       myUnknownDirection = false;
       final Document doc = myEditor.getDocument();
 
-      validateContext(true);
+      validateContext();
 
       int textLength = doc.getTextLength();
       if (startOffset < 0 || startOffset > textLength) {
@@ -1226,7 +1227,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
       return;
     }
     myCaretModel.doWithCaretMerging(() -> {
-      validateContext(true);
+      validateContext();
       myUnknownDirection = false;
       RangeMarker marker = mySelectionMarker;
       if (marker != null && marker.isValid()) {
@@ -1241,7 +1242,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public int getLeadSelectionOffset() {
-    validateContext(false);
+    validateContext();
     int caretOffset = getOffset();
     if (hasSelection()) {
       RangeMarker marker = mySelectionMarker;
@@ -1308,13 +1309,13 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
   @Override
   public void selectLineAtCaret() {
-    validateContext(true);
+    validateContext();
     myCaretModel.doWithCaretMerging(() -> doSelectLineAtCaret(this));
   }
 
   @Override
   public void selectWordAtCaret(final boolean honorCamelWordsSettings) {
-    validateContext(true);
+    validateContext();
     myCaretModel.doWithCaretMerging(() -> {
       removeSelection();
       final EditorSettings settings = myEditor.getSettings();
@@ -1365,13 +1366,9 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     }
   }
 
-  private static void validateContext(boolean requireEdt) {
-    if (requireEdt) {
-      UIAccess.assertIsUIThread();
-    }
-    else {
-      ApplicationManager.getApplication().assertReadAccessAllowed();
-    }
+  @RequiredUIAccess
+  private static void validateContext() {
+    UIAccess.assertIsUIThread();
   }
 
   private boolean isVirtualSelectionEnabled() {
@@ -1379,7 +1376,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   }
 
   boolean hasVirtualSelection() {
-    validateContext(false);
+    validateContext();
     SelectionMarker marker = mySelectionMarker;
     return marker != null && marker.isValid() && isVirtualSelectionEnabled() && marker.hasVirtualSelection();
   }

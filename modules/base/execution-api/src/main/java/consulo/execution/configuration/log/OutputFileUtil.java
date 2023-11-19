@@ -36,13 +36,11 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.function.Supplier;
 
 /**
  * User: anna
@@ -120,13 +118,7 @@ public class OutputFileUtil {
           @RequiredUIAccess
           @Override
           public void navigate(final Project project) {
-            final VirtualFile file = ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
-              @Nullable
-              @Override
-              public VirtualFile get() {
-                return LocalFileSystem.getInstance().refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath));
-              }
-            });
+            final VirtualFile file = ApplicationManager.getApplication().runWriteAction(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(FileUtil.toSystemIndependentName(filePath)));
 
             if (file != null) {
               file.refresh(false, false);

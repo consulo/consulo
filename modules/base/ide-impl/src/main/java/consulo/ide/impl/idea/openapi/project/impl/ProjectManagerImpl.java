@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
@@ -40,7 +39,6 @@ import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
@@ -48,6 +46,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
+import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
@@ -61,6 +60,7 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -71,6 +71,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -670,20 +671,22 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         }
       }
 
-      if (application.isActive()) {
-        Window projectFrame = WindowManager.getInstance().getWindow(project);
-        if (projectFrame != null) {
-          uiAccess.giveAndWaitIfNeed(() -> ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
-        }
-      }
+
 
       application.invokeLater(() -> {
-        if (!project.isDisposedOrDisposeInProgress()) {
+        if (project.getDisposeState().get() != ThreeState.NO) {
+          if (application.isActive()) {
+            Window projectFrame = WindowManager.getInstance().getWindow(project);
+            if (projectFrame != null) {
+              ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+            }
+          }
+
           startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
 
           logStart(project);
         }
-      }, IdeaModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
+      }, ModalityState.nonModal(), project::isDisposedOrDisposeInProgress);
     }
   }
 

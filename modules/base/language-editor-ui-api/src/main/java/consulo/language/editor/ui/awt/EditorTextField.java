@@ -48,9 +48,9 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

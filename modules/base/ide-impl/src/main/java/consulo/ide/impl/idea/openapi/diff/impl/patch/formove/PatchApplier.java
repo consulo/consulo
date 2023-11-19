@@ -399,14 +399,11 @@ public class PatchApplier<BinaryType extends FilePatch> {
   @Nonnull
   private ApplyPatchStatus createFiles() {
     final Application application = ApplicationManager.getApplication();
-    Boolean isSuccess = application.runWriteAction(new Computable<Boolean>() {
-      @Override
-      public Boolean compute() {
-        final List<FilePatch> filePatches = myVerifier.execute();
-        myFailedPatches.addAll(filePatches);
-        myPatches.removeAll(filePatches);
-        return myFailedPatches.isEmpty();
-      }
+    Boolean isSuccess = application.runWriteAction(() -> {
+      final List<FilePatch> filePatches = myVerifier.execute();
+      myFailedPatches.addAll(filePatches);
+      myPatches.removeAll(filePatches);
+      return myFailedPatches.isEmpty();
     });
     return isSuccess ? ApplyPatchStatus.SUCCESS : ApplyPatchStatus.FAILURE;
   }

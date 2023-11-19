@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.Computable;
 import consulo.diff.DiffManager;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
@@ -32,12 +31,9 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
@@ -47,17 +43,19 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -256,25 +254,19 @@ public class ApplyPatchAction extends DumbAwareAction {
                                                      @Nonnull final VirtualFile file,
                                                      @jakarta.annotation.Nullable final CommitContext commitContext) {
     final FilePatch patchBase = patch.getPatch();
-    return ApplicationManager.getApplication().runWriteAction(new Computable<ApplyFilePatch.Result>() {
-              @Override
-              public ApplyFilePatch.Result compute() {
-                try {
-                  return patch.apply(file, context, project, VcsUtil.getFilePath(file), new Getter<CharSequence>() {
-                    @Override
-                    public CharSequence get() {
-                      final BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
-                      final String path = ObjectUtil.chooseNotNull(patchBase.getBeforeName(), patchBase.getAfterName());
-                      return baseRevisionTextPatchEP.provideContent(path, commitContext);
-                    }
-                  }, commitContext);
-                }
-                catch (IOException e) {
-                  LOG.error(e);
-                  return ApplyFilePatch.Result.createThrow(e);
-                }
-              }
-            });
+    return ApplicationManager.getApplication().runWriteAction((() -> {
+      try {
+        return patch.apply(file, context, project, VcsUtil.getFilePath(file), () -> {
+          final BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
+          final String path = ObjectUtil.chooseNotNull(patchBase.getBeforeName(), patchBase.getAfterName());
+          return baseRevisionTextPatchEP.provideContent(path, commitContext);
+        }, commitContext);
+      }
+      catch (IOException e) {
+        LOG.error(e);
+        return ApplyFilePatch.Result.createThrow(e);
+      }
+    }));
   }
 
   @jakarta.annotation.Nullable

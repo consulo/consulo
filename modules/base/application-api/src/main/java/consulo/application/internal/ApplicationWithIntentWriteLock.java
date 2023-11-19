@@ -20,12 +20,14 @@ import consulo.application.util.function.ThrowableComputable;
 
 import jakarta.annotation.Nonnull;
 
+@Deprecated
 public interface ApplicationWithIntentWriteLock extends Application {
   /**
    * Acquires IW lock if it's not acquired by the current thread.
    *
    * @param invokedClassFqn fully qualified name of the class requiring the write-intent lock.
    */
+  @Deprecated
   default void acquireWriteIntentLock(@Nonnull String invokedClassFqn) {
     throw new UnsupportedOperationException();
   }
@@ -33,8 +35,10 @@ public interface ApplicationWithIntentWriteLock extends Application {
   /**
    * Releases IW lock.
    */
+  @Deprecated
   default void releaseWriteIntentLock() {
     throw new UnsupportedOperationException();
+
   }
 
   /**
@@ -42,8 +46,9 @@ public interface ApplicationWithIntentWriteLock extends Application {
    * <p>
    * This method is used to implement higher-level API. Please do not use it directly.
    */
+  @Deprecated
   default <T, E extends Throwable> T runUnlockingIntendedWrite(@Nonnull ThrowableComputable<T, E> action) throws E {
-    return action.compute();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -56,7 +61,8 @@ public interface ApplicationWithIntentWriteLock extends Application {
    *
    * @param action the action to run
    */
+  @Deprecated
   default void runIntendedWriteActionOnCurrentThread(@Nonnull Runnable action) {
-    action.run();
+    throw new UnsupportedOperationException();
   }
 }

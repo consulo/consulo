@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
@@ -23,6 +24,7 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.event.FrameStateListener;
+import consulo.application.ui.wm.FocusableFrame;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
@@ -53,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Singleton
 @ServiceImpl
-public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
+public class DesktopSaveAndSyncHandlerImpl implements SaveAndSyncHandler, Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 
   private final Application myApplication;
@@ -99,14 +101,15 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
 
     frameStateManager.addListener(new FrameStateListener() {
       @Override
-      public void onFrameDeactivated() {
+      public void onFrameDeactivated(FocusableFrame ideFrame) {
         LOG.debug("save(): enter");
-        TransactionGuard.submitTransaction(myApplication, () -> {
-          if (canSyncOrSave()) {
-            saveProjectsAndDocuments();
-          }
-          LOG.debug("save(): exit");
-        });
+
+        ideFrame.getUIAccess().giveAsync(() -> canSyncOrSave())
+                .whenCompleteAsync((canSave, throwable) -> {
+                  if (canSave) {
+                    saveProjectsAndDocumentsAsync().whenComplete((o, throwable1) -> LOG.debug("save(): exit"));
+                  }
+                }, application.getLock().writeExecutor());
       }
 
       @Override
@@ -134,6 +137,17 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
       myApplication.saveAll();
     }
+  }
+
+  @Nonnull
+  @Override
+  @RequiredWriteAction
+  public CompletableFuture<?> saveProjectsAndDocumentsAsync() {
+    if (!myApplication.isDisposed() && mySettings.isSaveOnFrameDeactivation() && myBlockSaveOnFrameDeactivationCount.get() == 0) {
+      return myApplication.saveAllAsync();
+    }
+
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

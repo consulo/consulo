@@ -3,6 +3,9 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.ApplicationProperties;
+import consulo.application.impl.internal.BaseApplication;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -12,12 +15,10 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.UIBundle;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
-import consulo.application.impl.internal.BaseApplication;
-import consulo.disposer.Disposer;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Deque;
@@ -37,16 +38,15 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
   }
 
   @Override
-  public
   @Nls
   @Nonnull
-  String getDisplayName() {
+  public String getDisplayName() {
     return UIBundle.message("status.bar.write.thread.widget.name");
   }
 
   @Override
   public boolean isAvailable(@Nonnull Project project) {
-    return ApplicationManager.getApplication().isInternal();
+    return ApplicationProperties.isInSandbox();
   }
 
   @Override
@@ -63,12 +63,12 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
   @Override
   public boolean isConfigurable() {
-    return ApplicationManager.getApplication().isInternal();
+    return ApplicationProperties.isInSandbox();
   }
 
   @Override
   public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    return ApplicationManager.getApplication().isInternal();
+    return ApplicationProperties.isInSandbox();
   }
 
   @Override

@@ -346,6 +346,7 @@ public final class ProgressRunner<R> {
       };
       // If a progress indicator has not been calculated yet, grabbing IW lock might lead to deadlock, as progress might need it for init
       progressFuture = progressFuture.thenApplyAsync(modalityRunnable, r -> {
+        r.run();
         if (ApplicationManager.getApplication().isWriteThread()) {
           r.run();
         }

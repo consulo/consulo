@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public interface IComponentStore {
   class SaveCancelledException extends RuntimeException {
@@ -39,7 +40,7 @@ public interface IComponentStore {
   void save(boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   @RequiredWriteAction
-  void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  CompletableFuture<?> saveAsync(boolean force, @Nonnull UIAccess uiAccess, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
    * Return storable info about component

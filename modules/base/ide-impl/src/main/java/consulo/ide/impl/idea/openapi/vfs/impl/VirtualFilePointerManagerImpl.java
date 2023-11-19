@@ -604,7 +604,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
                      long prepareElapsedMs,
                      int eventsSize) {
     long start = System.currentTimeMillis();
-    ApplicationManager.getApplication().assertIsWriteThread(); // guarantees no attempts to get read action lock under "this" lock
+    ApplicationManager.getApplication().assertWriteAccessAllowed(); // guarantees no attempts to get read action lock under "this" lock
     incModificationCount();
 
     VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();

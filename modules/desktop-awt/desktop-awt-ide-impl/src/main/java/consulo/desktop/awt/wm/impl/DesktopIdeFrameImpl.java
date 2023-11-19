@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
@@ -39,6 +38,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
@@ -56,10 +56,10 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ref.Ref;
-
-import javax.accessibility.AccessibleContext;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -558,6 +558,12 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     }
 
     return ActionCallback.DONE;
+  }
+
+  @Nonnull
+  @Override
+  public UIAccess getUIAccess() {
+    return Application.get().getLastUIAccess();
   }
 
   @Override

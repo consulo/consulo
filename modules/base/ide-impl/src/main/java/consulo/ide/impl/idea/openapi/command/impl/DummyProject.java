@@ -16,17 +16,14 @@
 package consulo.ide.impl.idea.openapi.command.impl;
 
 import consulo.application.Application;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.function.BooleanSupplier;
 
 /**
@@ -97,17 +94,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   @Override
   public String getBasePath() {
     return null;
-  }
-
-  @Override
-  public void save() {
-  }
-
-  @RequiredWriteAction
-  @Nonnull
-  @Override
-  public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
-    return AsyncResult.resolved();
   }
 
   @Override

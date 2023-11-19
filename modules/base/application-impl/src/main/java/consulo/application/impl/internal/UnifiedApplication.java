@@ -43,8 +43,6 @@ public abstract class UnifiedApplication extends BaseApplication {
   public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(componentBinding, splashRef);
 
-    myLock = new ReadMostlyRWLock(null);
-
     ApplicationManager.setApplication(this);
   }
 
@@ -63,7 +61,7 @@ public abstract class UnifiedApplication extends BaseApplication {
   @Override
   public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
     UIAccess uiAccess = getLastUIAccess();
-    uiAccess.give(() -> runIntendedWriteActionOnCurrentThread(action));
+    uiAccess.give(action);
   }
 
   @Override
@@ -107,21 +105,21 @@ public abstract class UnifiedApplication extends BaseApplication {
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
     UIAccess lastUIAccess = getLastUIAccess();
 
     lastUIAccess.give(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
+  public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired) {
     UIAccess lastUIAccess = getLastUIAccess();
 
     lastUIAccess.give(runnable);
   }
 
   @Override
-  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+  public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
     UIAccess lastUIAccess = getLastUIAccess();
 
     lastUIAccess.giveAndWait(runnable);

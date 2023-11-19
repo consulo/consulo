@@ -17,6 +17,7 @@ package consulo.component.store.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -33,13 +34,14 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -114,8 +116,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   @RequiredWriteAction
   @Override
-  public void saveAsync(@Nonnull UIAccess uiAccess, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    boolean force = false;
+  public final CompletableFuture<?> saveAsync(boolean force,
+                                              @Nonnull UIAccess uiAccess,
+                                              @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+    List<CompletableFuture<?>> initialFutures = new ArrayList<>();
 
     ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
@@ -124,20 +128,23 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       for (String name : names) {
         StateComponentInfo<?> componentInfo = myComponents.get(name);
 
-        commitComponentInsideSingleUIWriteThread(componentInfo, externalizationSession, force);
+        initialFutures.add(commitComponentAsync(componentInfo, externalizationSession, uiAccess, force));
       }
     }
 
     for (SettingsSavingComponent settingsSavingComponent : mySettingsSavingComponents) {
       try {
-        settingsSavingComponent.save();
+        initialFutures.add(settingsSavingComponent.saveAsync());
       }
       catch (Throwable e) {
         LOG.error(e);
       }
     }
 
-    doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
+    CompletableFuture<Void> joined = CompletableFuture.allOf(initialFutures.toArray(CompletableFuture[]::new));
+    return joined.thenCompose(v -> doSaveAsync(force,
+                                               externalizationSession == null ? null : externalizationSession.createSaveSessions(force),
+                                               readonlyFiles));
   }
 
   protected void doSave(boolean force, @Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
@@ -146,6 +153,21 @@ public abstract class ComponentStoreImpl implements IComponentStore {
         executeSave(session, force, readonlyFiles);
       }
     }
+  }
+
+  @Nonnull
+  protected CompletableFuture<?> doSaveAsync(boolean force,
+                                             @Nullable List<SaveSession> saveSessions,
+                                             @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+    if (saveSessions == null) {
+      return CompletableFuture.completedFuture(null);
+    }
+
+    List<CompletableFuture> futures = new ArrayList<>(saveSessions.size());
+    for (SaveSession session : saveSessions) {
+      futures.add(executeSaveAsync(session, force, readonlyFiles));
+    }
+    return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
   }
 
   protected static void executeSave(@Nonnull SaveSession session, boolean force, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
@@ -157,17 +179,32 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
+  protected static CompletableFuture<?> executeSaveAsync(@Nonnull SaveSession session,
+                                                         boolean force,
+                                                         @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
+    try {
+      return session.saveAsync(force);
+    }
+    catch (ReadOnlyModificationException e) {
+      readonlyFiles.add(Pair.create(session, e.getFile()));
+    }
+
+    return CompletableFuture.completedFuture(null);
+  }
+
   @SuppressWarnings({"unchecked", "RequiredXAction"})
-  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull ExternalizationSession session, boolean force) {
+  private <T> void commitComponentInsideSingleUIWriteThread(@Nonnull StateComponentInfo<T> componentInfo,
+                                                            @Nonnull ExternalizationSession session,
+                                                            boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;
-    if(component instanceof PersistentStateComponentWithModificationTracker && !force) {
+    if (component instanceof PersistentStateComponentWithModificationTracker && !force) {
       long count = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
 
       long oldCount = myComponentsModificationCount.get(componentInfo.getName());
 
-      if(count == oldCount) {
+      if (count == oldCount) {
         return;
       }
 
@@ -175,7 +212,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
 
     T state;
-    if(component instanceof PersistentStateComponentWithUIState) {
+    if (component instanceof PersistentStateComponentWithUIState) {
       PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
       Object uiState = uiComponent.getStateFromUI();
       state = uiComponent.getState(uiState);
@@ -184,20 +221,70 @@ public abstract class ComponentStoreImpl implements IComponentStore {
       state = component.getState();
     }
 
-    if (state != null) {
-      Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
-      session.setState(storageSpecs, component, componentInfo.getName(), state);
+    setStateImpl(state, componentInfo, countToSet, session);
+  }
 
-      if(countToSet != -1) {
-        myComponentsModificationCount.put(componentInfo.getName(), countToSet);
+  @SuppressWarnings({"unchecked", "RequiredXAction"})
+  private <T> CompletableFuture<T> commitComponentAsync(@Nonnull StateComponentInfo<T> componentInfo,
+                                                        @Nonnull ExternalizationSession session,
+                                                        @Nonnull UIAccess uiAccess,
+                                                        boolean force) {
+    PersistentStateComponent<T> component = componentInfo.getComponent();
+
+    long countToSet = -1;
+    if (component instanceof PersistentStateComponentWithModificationTracker && !force) {
+      long count = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
+
+      long oldCount = myComponentsModificationCount.get(componentInfo.getName());
+
+      if (count == oldCount) {
+        return CompletableFuture.completedFuture(null);
       }
+
+      countToSet = count;
+    }
+
+    if (component instanceof PersistentStateComponentWithUIState) {
+      PersistentStateComponentWithUIState<T, Object> uiComponent = (PersistentStateComponentWithUIState<T, Object>)component;
+      final long finalCountToSet = countToSet;
+
+      DataLock dataLock = DataLock.getInstance();
+      return uiAccess.giveAsync(uiComponent::getStateFromUI)
+                     .thenApplyAsync(uiComponent::getState, dataLock.writeExecutor())
+                     .whenComplete((state, throwable) -> setStateImpl(state, componentInfo, finalCountToSet, session));
+    }
+    else {
+      T state = component.getState();
+      setStateImpl(state, componentInfo, countToSet, session);
+      return CompletableFuture.completedFuture(null);
+    }
+  }
+
+  private <T> void setStateImpl(T state,
+                                @Nonnull StateComponentInfo<T> componentInfo,
+                                long countToSet,
+                                @Nonnull ExternalizationSession session) {
+    if (state == null) {
+      return;
+    }
+
+    PersistentStateComponent<T> component = componentInfo.getComponent();
+
+    Storage[] storageSpecs = getComponentStorageSpecs(component, componentInfo.getState(), StateStorageOperation.WRITE);
+
+    session.setState(storageSpecs, component, componentInfo.getName(), state);
+
+    if (countToSet != -1) {
+      myComponentsModificationCount.put(componentInfo.getName(), countToSet);
     }
   }
 
   private void doAddComponent(@Nonnull String componentName, @Nonnull StateComponentInfo<?> stateComponentInfo) {
     StateComponentInfo<?> existing = myComponents.get(componentName);
     if (existing != null && !existing.equals(stateComponentInfo)) {
-      LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent().getClass() + " and " + stateComponentInfo.getComponent().getClass());
+      LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent()
+                                                                                 .getClass() + " and " + stateComponentInfo.getComponent()
+                                                                                                                           .getClass());
     }
     myComponents.put(componentName, stateComponentInfo);
   }
@@ -221,7 +308,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private <T> void loadState(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
+  private <T> void loadState(@Nonnull StateComponentInfo<T> componentInfo,
+                             @Nullable Collection<? extends StateStorage> changedStorages,
+                             boolean reloadData) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
     State stateSpec = componentInfo.getState();
     String name = stateSpec.name();
@@ -236,7 +325,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     Storage[] storageSpecs = getComponentStorageSpecs(component, stateSpec, StateStorageOperation.READ);
     for (Storage storageSpec : storageSpecs) {
       StateStorage stateStorage = getStateStorageManager().getStateStorage(storageSpec);
-      if (stateStorage != null && (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
+      if (stateStorage != null && (stateStorage.hasState(component,
+                                                         name,
+                                                         stateClass,
+                                                         reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
         state = stateStorage.getState(component, name, stateClass);
         break;
       }
@@ -273,7 +365,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nullable
-  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo, @Nonnull Object component, @Nonnull final Class<T> stateClass) {
+  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo,
+                                 @Nonnull Object component,
+                                 @Nonnull final Class<T> stateClass) {
     String defaultStateFilePath = stateComponentInfo.getState().defaultStateFilePath();
 
     if (StringUtil.isEmpty(defaultStateFilePath)) {
@@ -303,7 +397,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nonnull
-  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent, @Nonnull State stateSpec, @Nonnull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent,
+                                                   @Nonnull State stateSpec,
+                                                   @Nonnull StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;

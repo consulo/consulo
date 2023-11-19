@@ -21,11 +21,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -50,19 +49,27 @@ public interface ApplicationEx extends Application {
    * @return true if this thread is inside read action.
    * @see #runReadAction(Runnable)
    */
-  boolean holdsReadLock();
+  @Deprecated
+  default boolean holdsReadLock() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * @return true if the EDT is performing write action right now.
    * @see #runWriteAction(Runnable)
    */
-  boolean isWriteActionInProgress();
+  @Deprecated
+  default boolean isWriteActionInProgress() {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * @return true if the EDT started to acquire write action but has not acquired it yet.
    * @see #runWriteAction(Runnable)
    */
-  boolean isWriteActionPending();
+  default boolean isWriteActionPending() {
+    throw new UnsupportedOperationException();
+  }
 
   @Nonnull
   default AccessToken startSaveBlock() {
@@ -126,12 +133,6 @@ public interface ApplicationEx extends Application {
                                               @Nullable ComponentManager project,
                                               @Nullable JComponent parentComponent,
                                               @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText);
-
-  @RequiredUIAccess
-  @Deprecated
-  default void assertIsDispatchThread(@Nullable JComponent component) {
-    assertIsDispatchThread();
-  }
 
   void assertTimeConsuming();
 

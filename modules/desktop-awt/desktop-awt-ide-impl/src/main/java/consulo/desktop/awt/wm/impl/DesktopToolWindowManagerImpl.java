@@ -225,14 +225,14 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
-          uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectOpened);
+          uiAccess.give(DesktopToolWindowManagerImpl.this::projectOpened);
         }
       }
 
       @Override
       public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
-          uiAccess.giveAndWaitIfNeed(DesktopToolWindowManagerImpl.this::projectClosed);
+          uiAccess.give(DesktopToolWindowManagerImpl.this::projectClosed);
         }
       }
     });
@@ -466,9 +466,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     UIManager.addPropertyChangeListener(uiManagerPropertyListener);
     LafManager.getInstance().addLafManagerListener(lafManagerListener, this);
 
-    Disposer.register(this, () -> {
-      UIManager.removePropertyChangeListener(uiManagerPropertyListener);
-    });
+    Disposer.register(this, () -> UIManager.removePropertyChangeListener(uiManagerPropertyListener));
 
     WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 

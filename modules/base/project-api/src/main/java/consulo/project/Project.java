@@ -15,16 +15,18 @@
  */
 package consulo.project;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Project interface class.
@@ -117,10 +119,14 @@ public interface Project extends ComponentManager, WindowOwner {
   @Nonnull
   String getLocationHash();
 
-  void save();
+  @RequiredWriteAction
+  default void save() {
+  }
 
-  @Nonnull
-  AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess);
+  @RequiredWriteAction
+  default CompletableFuture<?> saveAsync() {
+    return CompletableFuture.completedFuture(null);
+  }
 
   boolean isOpen();
 

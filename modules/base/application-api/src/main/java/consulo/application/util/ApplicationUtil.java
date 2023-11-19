@@ -47,7 +47,7 @@ public class ApplicationUtil {
   }
 
   public static void tryRunReadAction(@Nonnull final Runnable computable) throws CannotRunReadActionException {
-    if (!((Application)ApplicationManager.getApplication()).tryRunReadAction(computable)) {
+    if (!(ApplicationManager.getApplication()).tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();
     }
   }

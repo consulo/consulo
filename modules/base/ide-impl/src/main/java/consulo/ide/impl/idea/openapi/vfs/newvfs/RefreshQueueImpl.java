@@ -85,7 +85,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
         session.fireEvents(session.getEvents(), null);
       }
       else {
-        if (((ApplicationEx)myApplication).holdsReadLock()) {
+        if (myApplication.isReadAccessAllowed()) {
           LOG.error("Do not call synchronous refresh under read lock (except from EDT) - " + "this will cause a deadlock if there are any events to fire.");
           return;
         }

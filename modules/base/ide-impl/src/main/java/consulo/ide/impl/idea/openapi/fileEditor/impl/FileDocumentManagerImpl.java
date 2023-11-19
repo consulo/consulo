@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
@@ -57,12 +57,12 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -302,10 +302,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   /**
    * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
    */
+  @RequiredWriteAction
   @Override
   public void saveAllDocuments(boolean isExplicit) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     myMultiCaster.beforeAllDocumentsSaving();
     if (myUnsavedDocuments.isEmpty()) return;
@@ -344,8 +344,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   }
 
   public void saveDocument(@Nonnull final Document document, final boolean explicit) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    ((TransactionGuardEx)TransactionGuard.getInstance()).assertWriteActionAllowed();
+    ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     if (!myUnsavedDocuments.contains(document)) return;
 

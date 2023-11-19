@@ -61,13 +61,13 @@ public interface UIAccess extends Executor {
   @RequiredUIAccess
   static void assertIsUIThread() {
     if (!isUIThread()) {
-      throw new IllegalArgumentException("Call must be wrapped inside UI thread. Current thread: " + Thread.currentThread().getName());
+      throw new IllegalArgumentException("Call must be called inside UI thread. Current thread: " + Thread.currentThread().getName());
     }
   }
 
   static void assetIsNotUIThread() {
     if (isUIThread()) {
-      throw new IllegalArgumentException("Call must be wrapped outside UI thread. Current thread: " + Thread.currentThread().getName());
+      throw new IllegalArgumentException("Call must be called outside UI thread. Current thread: " + Thread.currentThread().getName());
     }
   }
 

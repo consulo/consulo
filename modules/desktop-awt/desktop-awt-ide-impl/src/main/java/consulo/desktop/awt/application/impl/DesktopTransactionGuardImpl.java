@@ -16,23 +16,24 @@
 package consulo.desktop.awt.application.impl;
 
 import com.google.common.base.MoreObjects;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.ProcessCanceledException;
-import consulo.application.util.registry.Registry;
-import consulo.application.util.Semaphore;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionId;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.application.util.Semaphore;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-
+import consulo.ui.ModalityState;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,13 +45,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   private static final Logger LOG = Logger.getInstance(DesktopTransactionGuardImpl.class);
   private final Queue<Transaction> myQueue = new LinkedBlockingQueue<>();
-  private final Map<consulo.ui.ModalityState, TransactionIdImpl> myModality2Transaction = ContainerUtil.createConcurrentWeakMap();
+  private final Map<ModalityState, TransactionIdImpl> myModality2Transaction = ContainerUtil.createConcurrentWeakMap();
 
   /**
    * Remembers the value of {@link #myWritingAllowed} at the start of each modality. If writing wasn't allowed at that moment
    * (e.g. inside SwingUtilities.invokeLater), it won't be allowed for all dialogs inside such modality, even from user activity.
    */
-  private final Map<consulo.ui.ModalityState, Boolean> myWriteSafeModalities = ContainerUtil.createConcurrentWeakMap();
+  private final Map<ModalityState, Boolean> myWriteSafeModalities = ContainerUtil.createConcurrentWeakMap();
   private TransactionIdImpl myCurrentTransaction;
   private boolean myWritingAllowed;
   private boolean myErrorReported;
@@ -227,7 +228,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   }
 
   @Override
-  public boolean isWriteSafeModality(consulo.ui.ModalityState state) {
+  public boolean isWriteSafeModality(ModalityState state) {
     return Boolean.TRUE.equals(myWriteSafeModalities.get(state));
   }
 
@@ -241,7 +242,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
     }
   }
 
-  private String reportWriteUnsafeContext(@Nonnull consulo.ui.ModalityState modality) {
+  private String reportWriteUnsafeContext(@Nonnull ModalityState modality) {
     return "Write-unsafe context! Model changes are allowed from write-safe contexts only. " +
            "Please ensure you're using invokeLater/invokeAndWait with a correct modality state (not \"any\"). " +
            "See TransactionGuard documentation for details." +
@@ -250,7 +251,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   }
 
   @Override
-  public void assertWriteSafeContext(@Nonnull consulo.ui.ModalityState modality) {
+  public void assertWriteSafeContext(@Nonnull ModalityState modality) {
     if (!isWriteSafeModality(modality) && areAssertionsEnabled()) {
       // please assign exceptions here to Peter
       LOG.error(reportWriteUnsafeContext(modality));
@@ -298,7 +299,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   }
 
   @Override
-  public void enteredModality(@Nonnull consulo.ui.ModalityState modality) {
+  public void enteredModality(@Nonnull ModalityState modality) {
     TransactionIdImpl contextTransaction = getContextTransaction();
     if (contextTransaction != null) {
       myModality2Transaction.put(modality, contextTransaction);
@@ -308,17 +309,17 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
 
   @Override
   @Nullable
-  public TransactionIdImpl getModalityTransaction(@Nonnull consulo.ui.ModalityState modalityState) {
+  public TransactionIdImpl getModalityTransaction(@Nonnull ModalityState modalityState) {
     return myModality2Transaction.get(modalityState);
   }
 
   @Nonnull
-  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull IdeaModalityState modalityState) {
+  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
     if (isWriteSafeModality(modalityState)) {
       return new Runnable() {
         @Override
         public void run() {
-          ApplicationManager.getApplication().assertIsWriteThread();
+          ApplicationManager.getApplication().assertIsDispatchThread();
           final boolean prev = myWritingAllowed;
           myWritingAllowed = true;
           try {

@@ -15,29 +15,41 @@
  */
 package consulo.application;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Kirill Likhodedov
  */
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
-public abstract class SaveAndSyncHandler {
+public interface SaveAndSyncHandler {
   public static SaveAndSyncHandler getInstance() {
     return Application.get().getInstance(SaveAndSyncHandler.class);
   }
 
-  public abstract void saveProjectsAndDocuments();
+  @Deprecated
+  void saveProjectsAndDocuments();
 
-  public abstract void scheduleRefresh();
+  @Nonnull
+  @RequiredWriteAction
+  default CompletableFuture<?> saveProjectsAndDocumentsAsync() {
+    saveProjectsAndDocuments();
+    return CompletableFuture.completedFuture(null);
+  }
 
-  public abstract void refreshOpenFiles();
+  void scheduleRefresh();
 
-  public abstract void blockSaveOnFrameDeactivation();
+  void refreshOpenFiles();
 
-  public abstract void unblockSaveOnFrameDeactivation();
+  void blockSaveOnFrameDeactivation();
 
-  public abstract void blockSyncOnFrameActivation();
+  void unblockSaveOnFrameDeactivation();
 
-  public abstract void unblockSyncOnFrameActivation();
+  void blockSyncOnFrameActivation();
+
+  void unblockSyncOnFrameActivation();
 }

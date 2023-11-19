@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import consulo.application.util.registry.Registry;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
@@ -28,9 +27,9 @@ import consulo.logging.attachment.ExceptionWithAttachments;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.ref.SoftReference;
 
 /**
@@ -217,7 +216,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   public static boolean isTrackingInvalidation() {
-    return Registry.is("psi.track.invalidation");
+    return true;
   }
 
   @Nullable

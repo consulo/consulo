@@ -161,12 +161,12 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
 
   @Nonnull
   public LogicalPosition offsetToLogicalPosition(int offset) {
-    assertIsReadAccess();
+    assertIsDispatchThread();
     return myMapper.offsetToLogicalPosition(offset);
   }
 
   public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
-    assertIsReadAccess();
+    assertIsDispatchThread();
     return myMapper.logicalPositionToOffset(pos);
   }
 
@@ -654,10 +654,6 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
 
   private static void assertIsDispatchThread() {
     UIAccess.assertIsUIThread();
-  }
-
-  private static void assertIsReadAccess() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
   }
 
   @Override

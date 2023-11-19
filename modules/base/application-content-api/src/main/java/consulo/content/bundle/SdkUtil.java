@@ -30,16 +30,15 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -108,8 +107,7 @@ public class SdkUtil {
   @Nullable
   public static Sdk createAndAddSDK(final String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
     VirtualFile sdkHome = ApplicationManager.getApplication()
-                                            .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance()
-                                                                                                        .refreshAndFindFileByPath(path));
+                                            .runWriteAction(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
       final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
       if (newSdk != null) {
@@ -231,7 +229,8 @@ public class SdkUtil {
   public static void selectSdkHome(final SdkType sdkType, @Nonnull @RequiredUIAccess final Consumer<String> consumer) {
     if (sdkType instanceof BundleType bundleType) {
       selectSdkHome(Platform.current(), bundleType, path -> consumer.accept(path.toString()));
-    } else {
+    }
+    else {
       selectLegacySdkHome(sdkType, consumer);
     }
   }

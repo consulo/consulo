@@ -15,11 +15,22 @@
  */
 package consulo.component.persist;
 
+import consulo.annotation.access.RequiredWriteAction;
+
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Component or service which implements this interfaces will be asked to save ({@link #save}) custom settings (in their own custom way)
  * when {@link Application#saveSettings()} (for Application level components) or {@link Project#save()}
  * (for Project level components) is invoked.
  */
 public interface SettingsSavingComponent {
+  @Deprecated
   void save();
+
+  @RequiredWriteAction
+  default CompletableFuture<?> saveAsync() {
+    save();
+    return CompletableFuture.completedFuture(null);
+  }
 }

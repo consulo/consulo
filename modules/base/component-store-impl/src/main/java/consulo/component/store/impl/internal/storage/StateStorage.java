@@ -21,6 +21,7 @@ import consulo.component.store.impl.internal.StateStorageException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public interface StateStorage {
   @Nullable
@@ -49,5 +50,11 @@ public interface StateStorage {
 
   interface SaveSession {
     void save(boolean force);
+
+    @Nonnull
+    default CompletableFuture<?> saveAsync(boolean force) {
+      save(force);
+      return CompletableFuture.completedFuture(null);
+    }
   }
 }
