@@ -24,14 +24,14 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author max
  */
 public class RefreshProgress extends ProgressIndicatorBase {
-  private static final Project[] NULL_ARRAY = {null};
-
   @Nonnull
   public static ProgressIndicator create(@Nonnull String message) {
     Application app = ApplicationManager.getApplication();
@@ -65,19 +65,26 @@ public class RefreshProgress extends ProgressIndicatorBase {
     WindowManager windowManager = WindowManager.getInstance();
 
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
-    if (projects.length == 0) projects = NULL_ARRAY;
+    if (projects.length == 0) {
+      application.invokeLater(() -> updateStatusBar(windowManager, null, start));
+      return;
+    }
+    
     for (Project project : projects) {
-      project.getUIAccess().give(() -> {
-        StatusBarEx statusBar = (StatusBarEx)windowManager.getStatusBar(project);
-        if (statusBar != null) {
-          if (start) {
-            statusBar.startRefreshIndication(myMessage);
-          }
-          else {
-            statusBar.stopRefreshIndication();
-          }
-        }
-      });
+      project.getUIAccess().give(() -> updateStatusBar(windowManager, project, start));
+    }
+  }
+
+  @RequiredUIAccess
+  private  void updateStatusBar(WindowManager windowManager, @Nullable Project project, boolean start) {
+    StatusBarEx statusBar = (StatusBarEx)windowManager.getStatusBar(project);
+    if (statusBar != null) {
+      if (start) {
+        statusBar.startRefreshIndication(myMessage);
+      }
+      else {
+        statusBar.stopRefreshIndication();
+      }
     }
   }
 }

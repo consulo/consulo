@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -65,7 +64,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -80,8 +78,6 @@ import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -93,8 +89,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");
 
-  private Project[] myOpenProjects = {}; // guarded by lock
-  private final Object lock = new Object();
+  private final List<Project> myOpenProjects = Lists.newLockFreeCopyOnWriteList();
 
   private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
@@ -250,16 +245,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   @Override
   @Nonnull
   public Project[] getOpenProjects() {
-    synchronized (lock) {
-      return myOpenProjects.clone();
-    }
+    return myOpenProjects.toArray(Project[]::new);
   }
 
   @Override
   public boolean isProjectOpened(Project project) {
-    synchronized (lock) {
-      return ArrayUtil.contains(project, myOpenProjects);
-    }
+    return myOpenProjects.contains(project);
   }
 
   private void logStart(Project project) {
@@ -273,23 +264,21 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   private boolean addToOpened(@Nonnull Project project) {
     assert !project.isDisposed() : "Must not open already disposed project";
-    synchronized (lock) {
-      if (isProjectOpened(project)) {
-        return false;
-      }
-      myOpenProjects = ArrayUtil.append(myOpenProjects, project);
-      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? project : null;
+    if (isProjectOpened(project)) {
+      return false;
     }
+
+    myOpenProjects.add(project);
+    SingleProjectHolder.theProject = myOpenProjects.size() == 1 ? project : null;
     return true;
   }
 
-  @Nonnull
-  private Collection<Project> removeFromOpened(@Nonnull Project project) {
-    synchronized (lock) {
-      myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
-      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
-      return Arrays.asList(myOpenProjects);
-    }
+  private void removeFromOpened(@Nonnull Project project) {
+    myOpenProjects.remove(project);
+
+    // use #getOpenProjects() which will return copy of data, since #size and #get can return different values
+    Project[] openProjects = getOpenProjects();
+    SingleProjectHolder.theProject = openProjects.length == 1 ? openProjects[0] : null;
   }
 
   private static boolean canCancelProjectLoading() {
