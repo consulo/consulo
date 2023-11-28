@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
+import consulo.document.Document;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
@@ -38,7 +39,7 @@ import java.util.List;
 /**
  * from kotlin
  */
-public class ConsolePromptDecorator extends EditorLinePainter implements TextAnnotationGutterProvider {
+public class ConsolePromptDecorator implements EditorLinePainter, TextAnnotationGutterProvider {
   private static final EditorColorKey promptColor = EditorColorKey.createColorKey("CONSOLE_PROMPT_COLOR");
 
   private final EditorEx myEditorEx;
@@ -91,7 +92,10 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
 
   @Nullable
   @Override
-  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
+  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project,
+                                                         @Nonnull VirtualFile file,
+                                                         @Nonnull Document document,
+                                                         int lineNumber) {
     return null;
   }
 

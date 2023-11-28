@@ -228,7 +228,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
 
-    ProgressRunner<?> progressRunner = new ProgressRunner<>(process).sync().onThread(ProgressRunner.ThreadToUse.POOLED).modal().withProgress(progress);
+    ProgressRunner<?> progressRunner = new ProgressRunner<>(process).sync().modal().withProgress(progress);
 
     ProgressResult<?> result = progressRunner.submitAndGet();
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import com.google.common.base.Objects;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
@@ -28,7 +29,6 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -42,7 +42,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Provider;
@@ -74,7 +74,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
     myPsiManager = psiManager;
     myProblemSolver = problemSolver;
-    myPsiTreeChangeListener = new MyPsiTreeChangeListener();
+    myPsiTreeChangeListener = new MyPsiTreeChangeListener(project);
     myProblemListener = new MyProblemListener();
     registerExtraEditorDataProvider(new TextEditorPsiDataProvider(), null);
 
@@ -135,6 +135,12 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
    * Updates attribute of open files when roots change
    */
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
+    private final Project myProject;
+
+    public MyPsiTreeChangeListener(Project project) {
+      myProject = project;
+    }
+
     @Override
     public void propertyChanged(@Nonnull final PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
@@ -174,14 +180,10 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
 
     private void doChange(final PsiTreeChangeEvent event) {
-      if(UIAccess.isUIThread()) {
-        doChangeInUI(event);
-      }
-      else {
-        Application.get().getLastUIAccess().giveAndWait(() -> doChangeInUI(event));
-      }
+      myProject.getUIAccess().give(() -> doChangeInUI(event));
     }
 
+    @RequiredUIAccess
     private void doChangeInUI(final PsiTreeChangeEvent event) {
       final PsiFile psiFile = event.getFile();
       if (psiFile == null) return;
@@ -191,7 +193,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
       if (editors.length == 0) return;
 
       final VirtualFile currentFile = getCurrentFile();
-      if (currentFile != null && Comparing.equal(psiFile.getVirtualFile(), currentFile)) {
+      if (currentFile != null && Objects.equal(psiFile.getVirtualFile(), currentFile)) {
         updateFileIconAsync(currentFile);
       }
     }

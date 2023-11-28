@@ -16,37 +16,36 @@
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.document.Document;
 import consulo.codeEditor.EditorLinePainter;
 import consulo.codeEditor.LineExtensionInfo;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.document.FileDocumentManager;
-import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.SimpleTextAttributes;
+import consulo.document.Document;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.execution.debug.ui.DebuggerColors;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XDebugView;
 import consulo.ide.impl.idea.xdebugger.impl.frame.XVariablesView;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueTextRendererImpl;
-import consulo.execution.debug.setting.XDebuggerSettingsManager;
-import consulo.execution.debug.ui.DebuggerColors;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
-
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -55,7 +54,7 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
-public class XDebuggerEditorLinePainter extends EditorLinePainter {
+public class XDebuggerEditorLinePainter implements EditorLinePainter {
   private static class LightDarkEditorColor implements ColorValue {
     private final RGBColor myLightColor;
     private final RGBColor myDarkColor;
@@ -78,15 +77,17 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   private static final int LINE_EXTENSIONS_MAX_COUNT = 200;
 
   @Override
-  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
+  public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project,
+                                                         @Nonnull VirtualFile file,
+                                                         @Nonnull Document doc,
+                                                         int lineNumber) {
     if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowValuesInline()) {
       return null;
     }
 
     XVariablesView.InlineVariablesInfo data = project.getUserData(XVariablesView.DEBUG_VARIABLES);
-    final Document doc = FileDocumentManager.getInstance().getDocument(file);
 
-    if (data == null || doc == null) {
+    if (data == null) {
       return null;
     }
 
@@ -101,7 +102,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       final int bpLine = getCurrentBreakPointLineInFile(session, file);
       boolean isTopFrame = session instanceof XDebugSessionImpl && ((XDebugSessionImpl)session).isTopFrameSelected();
       final TextAttributes attributes =
-              bpLine == lineNumber && isTopFrame && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter() ? getTopFrameSelectedAttributes() : getNormalAttributes();
+        bpLine == lineNumber && isTopFrame && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter() ? getTopFrameSelectedAttributes() : getNormalAttributes();
 
       ArrayList<VariableText> result = new ArrayList<>();
       for (XValueNodeImpl value : values) {
@@ -183,7 +184,11 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static TextAttributes getNormalAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(61, 128, 101), new RGBColor(135, 135, 135)), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(61, 128, 101), new RGBColor(135, 135, 135)),
+                                null,
+                                null,
+                                null,
+                                Font.ITALIC);
     }
     return attributes;
   }
@@ -191,16 +196,25 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static TextAttributes getChangedAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_MODIFIED);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(161, 131, 10), new RGBColor(202, 128, 33)), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(161, 131, 10), new RGBColor(202, 128, 33)),
+                                null,
+                                null,
+                                null,
+                                Font.ITALIC);
     }
     return attributes;
   }
 
   private static TextAttributes getTopFrameSelectedAttributes() {
-    TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
+    TextAttributes attributes =
+      EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
     if (attributes == null || attributes.getForegroundColor() == null) {
       //noinspection UseJBColor
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(255, 235, 9), new RGBColor(0, 255, 86)), null, null, null, Font.ITALIC);
+      return new TextAttributes(new LightDarkEditorColor(new RGBColor(255, 235, 9), new RGBColor(0, 255, 86)),
+                                null,
+                                null,
+                                null,
+                                Font.ITALIC);
     }
     return attributes;
   }

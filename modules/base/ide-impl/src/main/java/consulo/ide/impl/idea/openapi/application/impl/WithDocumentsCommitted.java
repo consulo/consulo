@@ -25,11 +25,9 @@ import consulo.ui.ModalityState;
  */
 public class WithDocumentsCommitted implements ConstrainedExecution.ContextConstraint {
   private final Project myProject;
-  private final ModalityState myModalityState;
 
-  public WithDocumentsCommitted(Project project, ModalityState modalityState) {
+  public WithDocumentsCommitted(Project project) {
     myProject = project;
-    myModalityState = modalityState;
   }
 
   @Override
@@ -39,7 +37,7 @@ public class WithDocumentsCommitted implements ConstrainedExecution.ContextConst
 
   @Override
   public void schedule(Runnable runnable) {
-    PsiDocumentManager.getInstance(myProject).performLaterWhenAllCommitted(runnable, myModalityState);
+    PsiDocumentManager.getInstance(myProject).performLaterWhenAllCommitted(runnable, ModalityState.any());
   }
 
   @Override

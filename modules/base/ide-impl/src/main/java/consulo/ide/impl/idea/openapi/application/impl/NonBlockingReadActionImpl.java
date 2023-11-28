@@ -155,7 +155,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   @Override
   @Nonnull
   public NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull ComponentManager project) {
-    return withConstraint(new WithDocumentsCommitted((Project)project, myApplication.getAnyModalityState())).expireWith(project);
+    return withConstraint(new WithDocumentsCommitted((Project)project)).expireWith(project);
   }
 
   @Override

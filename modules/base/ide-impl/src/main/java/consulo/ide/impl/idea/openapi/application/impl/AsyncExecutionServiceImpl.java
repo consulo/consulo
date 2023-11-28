@@ -37,13 +37,13 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   @Nonnull
   @Override
   protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+    return new AppUIExecutorImpl(myApplication.getLastUIAccess());
   }
 
   @Nonnull
   @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
+  protected AppUIExecutor createWriteThreadExecutor() {
+    return new AppUIExecutorImpl(myApplication.getLock().writeExecutor());
   }
 
   @Nonnull

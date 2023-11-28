@@ -16,14 +16,9 @@
 package consulo.ide.impl.idea.openapi.application.impl;
 
 import consulo.application.AppUIExecutor;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.concurrent.DataLock;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
-import consulo.ui.ModalityState;
-import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
@@ -35,90 +30,34 @@ import java.util.function.BooleanSupplier;
  * from kotlin
  */
 public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecutorImpl> implements AppUIExecutor {
-  private static class MyEdtExecutor implements Executor {
-    private final ModalityState modality;
-
-    private MyEdtExecutor(ModalityState modalityState) {
-      modality = modalityState;
-    }
-
-    @Override
-    public void execute(@Nonnull Runnable command) {
-      Application application = Application.get();
-      if (application.isDispatchThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
-      }
-      else {
-        application.invokeLater(command, modality);
-      }
-    }
+  public AppUIExecutorImpl(Executor executor) {
+    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), executor);
   }
 
-  private static class MyWtExecutor implements Executor {
-    private final ModalityState modality;
-
-    private MyWtExecutor(ModalityState modalityState) {
-      modality = modalityState;
-    }
-
-    @Override
-    public void execute(@Nonnull Runnable command) {
-      DataLock.getInstance().writeAsync(command);
-    }
-  }
-
-  private static Executor getExecutorForThread(ExecutionThread thread, ModalityState modality) {
-    switch (thread) {
-      case EDT:
-        return new MyEdtExecutor(modality);
-      case WT:
-        return new MyWtExecutor(modality);
-      default:
-        throw new UnsupportedOperationException(thread.name());
-    }
-  }
-
-  private final ModalityState modality;
-  private final ExecutionThread thread;
-
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread) {
-    super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), getExecutorForThread(thread, modalityState));
-    modality = modalityState;
-    this.thread = thread;
-  }
-
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
-    super(constraints, cancellationConditions, expirableHandles, getExecutorForThread(thread, modalityState));
-    this.thread = thread;
-    this.modality = modalityState;
+  public AppUIExecutorImpl(Executor executor,
+                           ContextConstraint[] constraints,
+                           BooleanSupplier[] cancellationConditions,
+                           Set<? extends Expiration> expirableHandles) {
+    super(constraints, cancellationConditions, expirableHandles, executor);
   }
 
   @Nonnull
   @Override
-  protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirationSet) {
-    return new AppUIExecutorImpl(modality, thread, constraints, cancellationConditions, expirationSet);
+  protected AppUIExecutorImpl cloneWith(ContextConstraint[] constraints,
+                                        BooleanSupplier[] cancellationConditions,
+                                        Set<? extends Expiration> expirationSet) {
+    return new AppUIExecutorImpl(myExecutor, constraints, cancellationConditions, expirationSet);
   }
 
   @Nonnull
   @Override
   public AppUIExecutor later() {
-    int edtEventCount = UIAccess.isUIThread() ? UIAccess.current().getEventCount() : -1;
     return withConstraint(new ContextConstraint() {
       private volatile boolean usedOnce;
 
       @Override
       public boolean isCorrectContext() {
-        switch (thread) {
-          case EDT:
-            if (edtEventCount == -1) {
-              return UIAccess.isUIThread();
-            }
-            return usedOnce || edtEventCount != UIAccess.current().getEventCount();
-          case WT:
-            return usedOnce;
-          default:
-            throw new UnsupportedOperationException();
-        }
+        return usedOnce;
       }
 
       @Override
@@ -139,7 +78,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
   @Nonnull
   @Override
   public AppUIExecutor withDocumentsCommitted(@Nonnull ComponentManager project) {
-    return withConstraint(new WithDocumentsCommitted((Project)project, modality), project);
+    return withConstraint(new WithDocumentsCommitted((Project)project), project);
   }
 
   @Nonnull
@@ -150,13 +89,6 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
   @Override
   public void dispatchLaterUnconstrained(Runnable runnable) {
-    switch (thread) {
-      case EDT:
-        ApplicationManager.getApplication().invokeLater(runnable, modality);
-        break;
-      case WT:
-        DataLock.getInstance().writeAsync(runnable);
-        break;
-    }
+    myExecutor.execute(runnable);
   }
 }

@@ -17,6 +17,7 @@ package consulo.webBrowser.action;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -46,6 +47,7 @@ import consulo.webBrowser.*;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -149,7 +151,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
   @Nullable
   public static Pair<OpenInBrowserRequest, WebBrowserUrlProvider> doUpdate(@Nonnull AnActionEvent event) {
-    OpenInBrowserRequest request = createRequest(event.getDataContext());
+    OpenInBrowserRequest request = ReadAction.compute(() -> createRequest(event.getDataContext()));
     boolean applicable = false;
     WebBrowserUrlProvider provider = null;
     if (request != null) {
@@ -197,15 +199,19 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
     final AsyncResult<Url> result = AsyncResult.undefined();
     JBPopupFactory.getInstance().createPopupChooserBuilder(new ArrayList<>(urls)).
-            setTitle("Choose Url").
-            setRenderer(new ColoredListCellRenderer() {
-              @Override
-              protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                // todo icons looks good, but is it really suitable for all URLs providers?
-                setIcon(AllIcons.Nodes.Servlet);
-                append(((Url)value).toDecodedForm());
-              }
-            }).setItemSelectedCallback(value -> {
+      setTitle("Choose Url").
+                    setRenderer(new ColoredListCellRenderer() {
+                      @Override
+                      protected void customizeCellRenderer(@Nonnull JList list,
+                                                           Object value,
+                                                           int index,
+                                                           boolean selected,
+                                                           boolean hasFocus) {
+                        // todo icons looks good, but is it really suitable for all URLs providers?
+                        setIcon(AllIcons.Nodes.Servlet);
+                        append(((Url)value).toDecodedForm());
+                      }
+                    }).setItemSelectedCallback(value -> {
       if (value != null) {
         result.setDone(value);
       }

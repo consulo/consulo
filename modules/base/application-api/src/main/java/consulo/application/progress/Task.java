@@ -17,7 +17,6 @@ package consulo.application.progress;
 
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
-import consulo.application.EdtReplacementThread;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
@@ -25,10 +24,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.util.function.Consumer;
 
@@ -123,14 +122,6 @@ public abstract class Task implements TaskInfo, Progressive {
 
   public final void queue() {
     ProgressManager.getInstance().run(this);
-  }
-
-  /**
-   * Specifies the thread to run callbacks on. See {@link EdtReplacementThread} documentation for more info.
-   */
-  @Nonnull
-  public EdtReplacementThread whereToRunCallbacks() {
-    return EdtReplacementThread.EDT_WITH_IW;
   }
 
   @Nullable

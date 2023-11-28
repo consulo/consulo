@@ -41,7 +41,7 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    */
   @Nonnull
   static AppUIExecutor onWriteThread(@Nonnull ModalityState modality) {
-    return AsyncExecutionService.getService().createWriteThreadExecutor(modality);
+    return AsyncExecutionService.getService().createWriteThreadExecutor();
   }
 
   /**

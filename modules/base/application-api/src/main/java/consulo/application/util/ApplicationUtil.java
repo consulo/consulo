@@ -17,25 +17,19 @@ package consulo.application.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.EdtReplacementThread;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.ProcessCanceledException;
-import consulo.logging.Logger;
-import consulo.ui.ModalityState;
-import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class ApplicationUtil {
@@ -89,39 +83,6 @@ public class ApplicationUtil {
     }
   }
 
-  public static void invokeLaterSomewhere(@Nonnull Application application,
-                                          @Nonnull EdtReplacementThread thread,
-                                          @Nonnull ModalityState modalityState,
-                                          @Nonnull Runnable r) {
-    switch (thread) {
-      case EDT:
-        application.getLastUIAccess().give(r);
-        break;
-      case EDT_WITH_IW:
-        application.invokeLater(r, modalityState);
-        break;
-    }
-  }
-
-  public static void invokeAndWaitSomewhere(@Nonnull Application application,
-                                            @Nonnull EdtReplacementThread thread,
-                                            @Nonnull ModalityState modalityState,
-                                            @Nonnull Runnable r) {
-    switch (thread) {
-      case EDT:
-        if (!UIAccess.isUIThread() && application.isWriteThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
-        }
-        Application.get().getLastUIAccess().giveAndWaitIfNeed(r);
-        break;
-      case EDT_WITH_IW:
-        if (!UIAccess.isUIThread() && application.isWriteThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
-        }
-        application.invokeAndWait(r, modalityState);
-        break;
-    }
-  }
 
   public static void showDialogAfterWriteAction(@Nonnull Runnable runnable) {
     Application application = ApplicationManager.getApplication();

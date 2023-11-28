@@ -12,20 +12,20 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.util.DocumentUtil;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -107,13 +107,13 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Override
   public void clearDocumentRangesModificationStatus() {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     myFoldTree.clearDocumentRangesModificationStatus();
   }
 
   @Override
   public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
-    assertReadAccess();
+    assertIsDispatchThread();
     return region instanceof FoldRegionImpl && ((FoldRegionImpl)region).hasDocumentRegionChanged();
   }
 
@@ -139,22 +139,18 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Override
   public boolean isOffsetCollapsed(int offset) {
-    assertReadAccess();
+    assertIsDispatchThread();
     return getCollapsedRegionAtOffset(offset) != null;
   }
 
   private boolean isOffsetInsideCollapsedRegion(int offset) {
-    assertReadAccess();
+    assertIsDispatchThread();
     FoldRegion region = getCollapsedRegionAtOffset(offset);
     return region != null && region.getStartOffset() < offset;
   }
 
-  private static void assertIsDispatchThreadForEditor() {
+  private static void assertIsDispatchThread() {
     ApplicationManager.getApplication().assertIsDispatchThread();
-  }
-
-  private static void assertReadAccess() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
   }
 
   private static void assertOurRegion(FoldRegion region) {
@@ -165,7 +161,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Override
   public void setFoldingEnabled(boolean isEnabled) {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     myIsFoldingEnabled = isEnabled;
   }
 
@@ -185,7 +181,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
   }
 
   private void runBatchFoldingOperation(@Nonnull Runnable operation, final boolean dontCollapseCaret, final boolean moveCaret) {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     boolean oldDontCollapseCaret = myDoNotCollapseCaret;
     myDoNotCollapseCaret |= dontCollapseCaret;
     boolean oldBatchFlag = myIsBatchFoldingProcessing;
@@ -227,7 +223,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
   @Override
   @Nonnull
   public FoldRegion[] getAllFoldRegions() {
-    assertReadAccess();
+    assertIsDispatchThread();
     return myFoldTree.fetchAllRegions();
   }
 
@@ -240,14 +236,14 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
   @Nullable
   @Override
   public FoldRegion getFoldRegion(int startOffset, int endOffset) {
-    assertReadAccess();
+    assertIsDispatchThread();
     return myFoldTree.getRegionAt(startOffset, endOffset);
   }
 
   @Override
   @Nullable
   public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
-    assertReadAccess();
+    assertIsDispatchThread();
     LogicalPosition pos = myEditor.xyToLogicalPosition(p);
     int line = pos.line;
 
@@ -260,7 +256,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Override
   public void removeFoldRegion(@Nonnull final FoldRegion region) {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     assertOurRegion(region);
 
     if (!myIsBatchFoldingProcessing) {
@@ -315,7 +311,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
   }
 
   public void expandFoldRegion(@Nonnull FoldRegion region, boolean notify) {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     if (region.isExpanded() || region.shouldNeverExpand()) return;
 
     if (!myIsBatchFoldingProcessing) {
@@ -345,7 +341,7 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
   }
 
   public void collapseFoldRegion(@Nonnull FoldRegion region, boolean notify) {
-    assertIsDispatchThreadForEditor();
+    assertIsDispatchThread();
     if (!region.isExpanded()) return;
 
     if (!myIsBatchFoldingProcessing) {
@@ -558,17 +554,21 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
   @Nullable
   @Override
-  public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
-    assertIsDispatchThreadForEditor();
+  public FoldRegion createFoldRegion(int startOffset,
+                                     int endOffset,
+                                     @Nonnull String placeholder,
+                                     @Nullable FoldingGroup group,
+                                     boolean neverExpands) {
+    assertIsDispatchThread();
     if (!myIsBatchFoldingProcessing) {
       LOG.error("Fold regions must be added or removed inside batchFoldProcessing() only.");
       return null;
     }
     if (!isFoldingEnabled() ||
-        startOffset >= endOffset ||
-        DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), startOffset) ||
-        DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), endOffset) ||
-        !myFoldTree.checkIfValidToCreate(startOffset, endOffset)) {
+      startOffset >= endOffset ||
+      DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), startOffset) ||
+      DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), endOffset) ||
+      !myFoldTree.checkIfValidToCreate(startOffset, endOffset)) {
       return null;
     }
 
@@ -626,7 +626,10 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     boolean[] invisibleRegions = new boolean[allFoldRegions.length];
     for (int i = 0; i < allFoldRegions.length; i++) {
       FoldRegion r1 = allFoldRegions[i];
-      LOG.assertTrue(r1.isValid() && !DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), r1.getStartOffset()) && !DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), r1.getEndOffset()),
+      LOG.assertTrue(r1.isValid() && !DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(),
+                                                                         r1.getStartOffset()) && !DocumentUtil.isInsideSurrogatePair(
+        myEditor.getDocument(),
+        r1.getEndOffset()),
                      "Invalid region");
       for (int j = i + 1; j < allFoldRegions.length; j++) {
         FoldRegion r2 = allFoldRegions[j];
@@ -634,7 +637,8 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
         int r1e = r1.getEndOffset();
         int r2s = r2.getStartOffset();
         int r2e = r2.getEndOffset();
-        LOG.assertTrue(r1s < r2s && (r1e <= r2s || r1e >= r2e) || r1s == r2s && r1e != r2e || r1s > r2s && r1s < r2e && r1e <= r2e || r1s >= r2e, "Disallowed relative position of regions");
+        LOG.assertTrue(r1s < r2s && (r1e <= r2s || r1e >= r2e) || r1s == r2s && r1e != r2e || r1s > r2s && r1s < r2e && r1e <= r2e || r1s >= r2e,
+                       "Disallowed relative position of regions");
         if (!r1.isExpanded() && r1s <= r2s && r1e >= r2e) invisibleRegions[j] = true;
         if (!r2.isExpanded() && r2s <= r1s && r2e >= r1e) invisibleRegions[i] = true;
       }
@@ -662,7 +666,8 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     if (actualTopLevels != null) {
       LOG.assertTrue(actualTopLevels.length == topLevelRegions.size(), "Wrong number of top-level regions");
       for (int i = 0; i < actualTopLevels.length; i++) {
-        LOG.assertTrue(FoldRegionsTree.OFFSET_BASED_HASHING_STRATEGY.equals(actualTopLevels[i], topLevelRegions.get(i)), "Unexpected top-level region");
+        LOG.assertTrue(FoldRegionsTree.OFFSET_BASED_HASHING_STRATEGY.equals(actualTopLevels[i], topLevelRegions.get(i)),
+                       "Unexpected top-level region");
       }
     }
   }
@@ -698,7 +703,13 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
 
     @Nonnull
     @Override
-    protected Node<FoldRegionImpl> createNewNode(@Nonnull FoldRegionImpl key, int start, int end, boolean greedyToLeft, boolean greedyToRight, boolean stickingToRight, int layer) {
+    protected Node<FoldRegionImpl> createNewNode(@Nonnull FoldRegionImpl key,
+                                                 int start,
+                                                 int end,
+                                                 boolean greedyToLeft,
+                                                 boolean greedyToRight,
+                                                 boolean stickingToRight,
+                                                 int layer) {
       return new Node<>(this, key, start, end, greedyToLeft, greedyToRight, stickingToRight) {
         @Override
         public void onRemoved() {
@@ -726,7 +737,9 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     }
 
     @Override
-    public boolean collectAffectedMarkersAndShiftSubtrees(@Nullable IntervalNode<FoldRegionImpl> root, @Nonnull DocumentEvent e, @Nonnull List<? super IntervalNode<FoldRegionImpl>> affected) {
+    public boolean collectAffectedMarkersAndShiftSubtrees(@Nullable IntervalNode<FoldRegionImpl> root,
+                                                          @Nonnull DocumentEvent e,
+                                                          @Nonnull List<? super IntervalNode<FoldRegionImpl>> affected) {
       if (inCollectCall) return super.collectAffectedMarkersAndShiftSubtrees(root, e, affected);
       inCollectCall = true;
       boolean result;
