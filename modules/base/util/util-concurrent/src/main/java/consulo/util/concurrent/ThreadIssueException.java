@@ -13,17 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.action;
-
-import jakarta.annotation.Nonnull;
+package consulo.util.concurrent;
 
 /**
  * @author VISTALL
- * @since 27/06/2023
+ * @since 2023-11-26
  */
-public interface PresentationFactory {
-  @Nonnull
-  Presentation getPresentation(@Nonnull AnAction action);
+public class ThreadIssueException extends RuntimeException {
+  public ThreadIssueException() {
+  }
 
-  void reset();
+  public ThreadIssueException(String message) {
+    super(message);
+  }
+
+  public ThreadIssueException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public ThreadIssueException(Throwable cause) {
+    super(cause);
+  }
+
+  public ThreadIssueException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

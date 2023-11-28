@@ -88,10 +88,6 @@ public class IdeEventQueue extends EventQueue {
 
   private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
-  private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-  private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of(InvocationUtil2.FLUSH_NOW_CLASS);
-  private static final boolean ourDefaultEventWithWrite = true;
-
   private static TransactionGuardEx ourTransactionGuard;
   private static ProgressManager ourProgressManager;
 
@@ -1027,18 +1023,6 @@ public class IdeEventQueue extends EventQueue {
 
   private static boolean isKeyboardEvent(@Nonnull AWTEvent event) {
     return event instanceof KeyEvent;
-  }
-
-  @Override
-  public AWTEvent peekEvent() {
-    AWTEvent event = super.peekEvent();
-    if (event != null) {
-      return event;
-    }
-    if (LaterInvocator.ensureFlushRequested()) {
-      return super.peekEvent();
-    }
-    return null;
   }
 
   /**

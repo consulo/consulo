@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
@@ -73,6 +74,8 @@ import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 @ServiceImpl
@@ -87,13 +90,15 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   protected static final Key<Boolean> MUST_RECOMPUTE_FILE_TYPE = Key.create("Must recompute file type");
   private static final Key<Boolean> BIG_FILE_PREVIEW = Key.create("BIG_FILE_PREVIEW");
 
-  private final Set<Document> myUnsavedDocuments = ContainerUtil.newConcurrentSet();
+  private final Set<Document> myUnsavedDocuments = ConcurrentHashMap.newKeySet();
 
   private final MessageBus myBus;
 
   private static final Object lock = new Object();
   private final FileDocumentManagerListener myMultiCaster;
   private final TrailingSpacesStripper myTrailingSpacesStripper = new TrailingSpacesStripper();
+  @Nonnull
+  private final Application myApplication;
 
   private boolean myOnClose;
 
@@ -126,6 +131,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
   @Inject
   public FileDocumentManagerImpl(Application application, ProjectManager projectManager) {
+    myApplication = application;
     ((ProjectManagerEx)projectManager).registerCloseProjectVeto(new MyProjectCloseHandler());
 
     myBus = application.getMessageBus();
@@ -185,10 +191,11 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
   }
 
+  @RequiredReadAction
   @Override
   @Nullable
   public Document getDocument(@Nonnull final VirtualFile file) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    myApplication.assertReadAccessAllowed();
     DocumentEx document = (DocumentEx)getCachedDocument(file);
     if (document == null) {
       if (!file.isValid() || file.isDirectory() || isBinaryWithoutDecompiler(file)) return null;
@@ -224,6 +231,12 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     return document;
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<Document> getDocumentAsync(@Nonnull VirtualFile file) {
+    return myApplication.getLock().readAsync(() -> getDocument(file));
   }
 
   public static boolean areTooManyDocumentsInTheQueue(@Nonnull Collection<? extends Document> documents) {

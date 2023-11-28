@@ -24,6 +24,7 @@ public enum EdtReplacementThread {
   /**
    * Mark code which works with the IDE model as "to run on Write Thread"
    */
+  @Deprecated
   WT,
   /**
    * Mark code which works both with UI and with the IDE model as "to run on EDT with IW lock acquired"

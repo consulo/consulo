@@ -17,14 +17,9 @@ package consulo.desktop.awt.application.impl;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.*;
-import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.concurent.locking.BaseDataLock;
-import consulo.application.impl.internal.concurent.locking.NewDataLock;
-import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
 import consulo.application.impl.internal.start.CommandLineArgs;
@@ -32,9 +27,6 @@ import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.ApplicationUtil;
-import consulo.application.util.concurrent.ThreadDumper;
-import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
@@ -45,12 +37,10 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.diagnostic.LogEventException;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
@@ -60,14 +50,12 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ExceptionUtil;
@@ -87,8 +75,6 @@ import java.util.function.BooleanSupplier;
 
 public class DesktopApplicationImpl extends BaseApplication {
   private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
-
-  private final ModalityInvokator myInvokator = new ModalityInvokatorImpl();
 
   private final boolean myHeadlessMode;
   private final boolean myIsInternal;
@@ -138,12 +124,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     NoSwingUnderWriteAction.watchForEvents(this);
   }
 
-  @Nonnull
-  @Override
-  protected BaseDataLock createLock(EventDispatcher<ApplicationListener> dispatcher) {
-    return new NewDataLock(dispatcher);
-  }
-
   @Override
   public int getProfiles() {
     return super.getProfiles() | ComponentProfiles.AWT;
@@ -154,12 +134,6 @@ public class DesktopApplicationImpl extends BaseApplication {
       myTransactionGuardImpl = new DesktopTransactionGuardImpl();
     }
     return myTransactionGuardImpl;
-  }
-
-  @Nonnull
-  @Override
-  protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
-    return transactionGuard().wrapLaterInvocation(action, state);
   }
 
   @Override
@@ -204,11 +178,6 @@ public class DesktopApplicationImpl extends BaseApplication {
     return myHeadlessMode;
   }
 
-  @Nonnull
-  public ModalityInvokator getInvokator() {
-    return myInvokator;
-  }
-
   @Override
   public void invokeLater(@Nonnull final Runnable runnable) {
     invokeLater(runnable, getDisposed());
@@ -226,8 +195,11 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final ModalityState state, @Nonnull final BooleanSupplier expired) {
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, state);
-    LaterInvocator.invokeLaterWithCallback(r, state, expired, null);
+    if (expired.getAsBoolean()) {
+      return;
+    }
+
+    getLastUIAccess().give(runnable);
   }
 
   @RequiredUIAccess
@@ -282,38 +254,25 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
-    if (isDispatchThread()) {
-      runnable.run();
-      return;
-    }
-
-    if (holdsReadLock()) {
-      throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
-    }
-
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, modalityState);
-    LaterInvocator.invokeAndWait(r, modalityState);
+    getLastUIAccess().giveAndWaitIfNeed(runnable);
   }
 
   @Override
   @Nonnull
   public ModalityState getCurrentModalityState() {
-    return LaterInvocator.getCurrentModalityState();
+    return ModalityState.nonModal();
   }
 
   @Override
   @Nonnull
   public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-    if (!isDispatchThread()) LOG.debug("please, use application dispatch thread to get a modality state");
-    Window window = UIUtil.getWindow(c);
-    if (window == null) return getNoneModalityState();
-    return LaterInvocator.modalityStateForWindow(window);
+    return ModalityState.nonModal();
   }
 
   @Override
   @Nonnull
   public ModalityState getDefaultModalityState() {
-    return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
+    return ModalityState.nonModal();
   }
 
   @RequiredUIAccess
@@ -477,38 +436,6 @@ public class DesktopApplicationImpl extends BaseApplication {
   private static String describe(Thread o) {
     if (o == null) return "null";
     return o + " " + System.identityHashCode(o);
-  }
-
-  private static Thread getEventQueueThread() {
-    return AWTAccessorHacking.getDispatchThread();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void assertIsDispatchThread() {
-    if (isDispatchThread()) return;
-    if (ShutDownTracker.isShutdownHookRunning()) return;
-    assertIsDispatchThread("Access is allowed from event dispatch thread only.");
-  }
-
-  private void assertIsDispatchThread(@Nonnull String message) {
-    if (isDispatchThread()) return;
-    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
-    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-                                         EventQueue.isDispatchThread() +
-                                         " isDispatchThread()=" +
-                                         isDispatchThread() +
-                                         " Toolkit.getEventQueue()=" +
-                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                                         " Current thread: " +
-                                         describe(Thread.currentThread()) +
-                                         " SystemEventQueueThread: " +
-                                         describe(getEventQueueThread()), dump);
-  }
-
-  @Override
-  public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
-    getLock().readSync(runnable::run);
   }
 
   @Override

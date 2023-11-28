@@ -97,9 +97,6 @@ public class ApplicationUtil {
       case EDT:
         application.getLastUIAccess().give(r);
         break;
-      case WT:
-        application.invokeLaterOnWriteThread(r, modalityState);
-        break;
       case EDT_WITH_IW:
         application.invokeLater(r, modalityState);
         break;
@@ -116,34 +113,6 @@ public class ApplicationUtil {
           Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
         }
         Application.get().getLastUIAccess().giveAndWaitIfNeed(r);
-        break;
-      case WT:
-        if (application.isWriteThread()) {
-          r.run();
-        }
-        else if (SwingUtilities.isEventDispatchThread()) {
-          Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from EDT to WT");
-        }
-        else {
-          Semaphore s = new Semaphore(1);
-          AtomicReference<Throwable> throwable = new AtomicReference<>();
-          application.invokeLaterOnWriteThread(() -> {
-            try {
-              r.run();
-            }
-            catch (Throwable t) {
-              throwable.set(t);
-            }
-            finally {
-              s.up();
-            }
-          }, modalityState);
-          s.waitFor();
-
-          if (throwable.get() != null) {
-            ExceptionUtil.rethrow(throwable.get());
-          }
-        }
         break;
       case EDT_WITH_IW:
         if (!UIAccess.isUIThread() && application.isWriteThread()) {

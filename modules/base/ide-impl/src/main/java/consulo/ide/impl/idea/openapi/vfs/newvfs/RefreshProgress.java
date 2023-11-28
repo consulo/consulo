@@ -24,8 +24,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.UIAccess;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -61,17 +59,15 @@ public class RefreshProgress extends ProgressIndicatorBase {
 
   private void updateIndicators(final boolean start) {
     Application application = Application.get();
-    UIAccess uiAccess = application.getLastUIAccess();
     // wrapping in invokeLater here reduces the number of events posted to EDT in case of multiple IDE frames
-    uiAccess.giveIfNeed(() -> {
-      if (application.isDisposed()) return;
+    if (application.isDisposed()) return;
 
-      WindowManager windowManager = WindowManager.getInstance();
-      if (windowManager == null) return;
+    WindowManager windowManager = WindowManager.getInstance();
 
-      Project[] projects = ProjectManager.getInstance().getOpenProjects();
-      if (projects.length == 0) projects = NULL_ARRAY;
-      for (Project project : projects) {
+    Project[] projects = ProjectManager.getInstance().getOpenProjects();
+    if (projects.length == 0) projects = NULL_ARRAY;
+    for (Project project : projects) {
+      project.getUIAccess().give(() -> {
         StatusBarEx statusBar = (StatusBarEx)windowManager.getStatusBar(project);
         if (statusBar != null) {
           if (start) {
@@ -81,7 +77,7 @@ public class RefreshProgress extends ProgressIndicatorBase {
             statusBar.stopRefreshIndication();
           }
         }
-      }
-    });
+      });
+    }
   }
 }

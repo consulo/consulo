@@ -113,6 +113,11 @@ public class NewDataLock extends BaseDataLock {
   }
 
   @Override
+  public boolean isWriteLockedByAnyThread() {
+    return myLock.isWriteLocked();
+  }
+
+  @Override
   public boolean isWriteActionInProgress() {
     return myLock.isWriteLocked();
   }

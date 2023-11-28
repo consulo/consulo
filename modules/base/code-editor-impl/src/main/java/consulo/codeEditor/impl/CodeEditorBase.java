@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
@@ -10,10 +9,9 @@ import consulo.application.util.Queryable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
-import consulo.codeEditor.event.*;
 import consulo.codeEditor.action.EditorAction;
+import consulo.codeEditor.event.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
-import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -28,8 +26,8 @@ import consulo.disposer.util.DisposerUtil;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
@@ -50,11 +48,11 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -1148,18 +1146,13 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
   @Nonnull
   @Override
   public EditorHighlighter getHighlighter() {
-    assertReadAccess();
+    UIAccess.assertIsUIThread();
     return myHighlighter;
   }
 
   @RequiredUIAccess
   public static void assertIsDispatchThread() {
     UIAccess.assertIsUIThread();
-  }
-
-  @RequiredReadAction
-  public static void assertReadAccess() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
   }
 
   public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {

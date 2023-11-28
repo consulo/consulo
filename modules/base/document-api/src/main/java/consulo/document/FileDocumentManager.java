@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
@@ -11,6 +12,8 @@ import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Tracks the correspondence between {@link VirtualFile} instances and corresponding {@link Document} instances.
@@ -38,7 +41,11 @@ public interface FileDocumentManager extends SavingRequestor {
    * @see Application#runReadAction(java.util.function.Supplier)
    */
   @Nullable
+  @RequiredReadAction
   public abstract Document getDocument(@Nonnull VirtualFile file);
+
+  @Nonnull
+  public abstract CompletableFuture<Document> getDocumentAsync(@Nonnull VirtualFile file);
 
   /**
    * Returns the document for the specified file which has already been loaded into memory.<p/>

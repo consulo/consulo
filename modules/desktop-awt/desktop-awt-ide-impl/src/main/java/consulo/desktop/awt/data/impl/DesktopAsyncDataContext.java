@@ -1,23 +1,23 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.data.impl;
 
-import consulo.desktop.awt.ui.ProhibitAWTEvents;
-import consulo.ide.impl.idea.openapi.actionSystem.BackgroundableDataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.ui.ProhibitAWTEvents;
+import consulo.ide.impl.idea.openapi.actionSystem.BackgroundableDataProvider;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;

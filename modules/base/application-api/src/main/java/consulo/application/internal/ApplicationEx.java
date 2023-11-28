@@ -145,8 +145,11 @@ public interface ApplicationEx extends Application {
 
   boolean isInImpatientReader();
 
+  @Deprecated
   default void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
-    throw new UnsupportedOperationException();
+    if (!tryRunReadAction(runnable)) {
+      throw ApplicationUtil.CannotRunReadActionException.create();
+    }
   }
 
   default boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,

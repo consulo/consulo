@@ -4,28 +4,28 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.TransactionId;
-import consulo.application.WriteAction;
+import consulo.application.concurrent.DataLock;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.util.Semaphore;
-import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
-import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.LocalFileSystemImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.RefreshWorker;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.NewVirtualFile;
-
+import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -47,15 +47,12 @@ public class RefreshSessionImpl extends RefreshSession {
   private final List<VFileEvent> myEvents = new ArrayList<>();
   private volatile RefreshWorker myWorker;
   private volatile boolean myCancelled;
-  private final TransactionId myTransaction;
   private boolean myLaunched;
 
   public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
-    myTransaction = ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(context);
-    LOG.assertTrue(context == IdeaModalityState.NON_MODAL || context != IdeaModalityState.any(), "Refresh session should have a specific modality");
     myStartTrace = rememberStartTrace();
   }
 
@@ -178,19 +175,22 @@ public class RefreshSessionImpl extends RefreshSession {
     }
   }
 
-  public void fireEvents(@Nonnull List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
-    try {
-      if ((myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed()) {
-        if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);
-        WriteAction.run(() -> fireEventsInWriteAction(events, appliers));
-      }
+  @Nonnull
+  public CompletableFuture<?> fireEventsAsync(@Nonnull List<? extends VFileEvent> events,
+                                              @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
+    CompletableFuture<?> future = CompletableFuture.completedFuture(null);
+    if ((myFinishRunnable != null || !events.isEmpty()) && !ApplicationManager.getApplication().isDisposed()) {
+      if (LOG.isDebugEnabled()) LOG.debug("events are about to fire: " + events);
+      DataLock lock = DataLock.getInstance();
+      future = lock.writeAsync(() -> fireEventsInWriteAction(events, appliers));
     }
-    finally {
-      mySemaphore.up();
-    }
+
+    future.whenComplete((o, throwable) -> mySemaphore.up());
+    return future;
   }
 
-  private void fireEventsInWriteAction(List<? extends VFileEvent> events, @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
+  private void fireEventsInWriteAction(List<? extends VFileEvent> events,
+                                       @Nullable List<? extends AsyncFileListener.ChangeApplier> appliers) {
     final VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
 
     manager.fireBeforeRefreshStart(myIsAsync);
@@ -217,11 +217,6 @@ public class RefreshSessionImpl extends RefreshSession {
 
   void waitFor() {
     mySemaphore.waitFor();
-  }
-
-  @Nullable
-  TransactionId getTransaction() {
-    return myTransaction;
   }
 
   @Override

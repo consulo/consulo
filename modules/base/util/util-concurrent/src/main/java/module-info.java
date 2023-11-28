@@ -9,4 +9,6 @@ module consulo.util.concurrent {
   requires consulo.util.collection;
 
   exports consulo.util.concurrent;
+
+  exports consulo.util.concurrent.internal to consulo.application.impl, consulo.ui.api;
 }

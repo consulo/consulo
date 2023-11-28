@@ -16,13 +16,12 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.CallChain;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,19 +33,16 @@ public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
   public InitToolWindowsActivity() {
   }
 
+  @RequiredUIAccess
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     UIAccess.assetIsNotUIThread();
 
     ToolWindowManagerBase manager = (ToolWindowManagerBase)ToolWindowManager.getInstance(project);
 
-    CallChain.Link<Void, Void> chain = CallChain.first(uiAccess);
-    chain = chain.linkUI(manager::initializeEditorComponent);
-    chain = chain.linkAsync(() -> manager.registerToolWindowsFromBeans(uiAccess));
-    chain = chain.linkUI(manager::postInitialize);
-    chain = chain.linkUI(manager::connectModuleExtensionListener);
-
-    // toss it, and wait result
-    chain.tossAsync().getResultSync();
+    uiAccess.giveAsync(() -> manager.initializeEditorComponent())
+            .whenCompleteAsync((o, t) -> manager.registerToolWindowsFromBeans(uiAccess))
+            .whenCompleteAsync((o, t) -> manager.postInitialize(), uiAccess)
+            .whenCompleteAsync((o, t) -> manager.connectModuleExtensionListener(), uiAccess);
   }
 }

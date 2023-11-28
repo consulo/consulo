@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.application.impl;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.application.constraint.Expiration;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
@@ -62,13 +63,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
 
     @Override
     public void execute(@Nonnull Runnable command) {
-      Application application = Application.get();
-      if (application.isWriteThread() && !application.getCurrentModalityState().dominates(modality)) {
-        command.run();
-      }
-      else {
-        application.invokeLaterOnWriteThread(command, modality);
-      }
+      DataLock.getInstance().writeAsync(command);
     }
   }
 
@@ -160,7 +155,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
         ApplicationManager.getApplication().invokeLater(runnable, modality);
         break;
       case WT:
-        ApplicationManager.getApplication().invokeLaterOnWriteThread(runnable, modality);
+        DataLock.getInstance().writeAsync(runnable);
         break;
     }
   }

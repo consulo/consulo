@@ -268,7 +268,6 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place and data available
    */
-  @RequiredUIAccess
   public void update(@Nonnull AnActionEvent e) {
   }
 
@@ -278,7 +277,6 @@ public abstract class AnAction implements PossiblyDumbAware {
    *
    * @param e Carries information on the invocation place and data available
    */
-  @RequiredUIAccess
   public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
     boolean worksInInjected = isInInjectedContext();
     e.setInjectedContext(worksInInjected);

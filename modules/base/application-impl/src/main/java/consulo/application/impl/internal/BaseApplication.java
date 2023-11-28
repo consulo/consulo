@@ -26,11 +26,11 @@ import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.concurent.locking.BaseDataLock;
+import consulo.application.impl.internal.concurent.locking.NewDataLock;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -55,7 +55,6 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.proxy.EventDispatcher;
-import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
@@ -80,14 +79,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
  * @since 2018-05-12
  */
-public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx, ApplicationWithIntentWriteLock {
+public abstract class BaseApplication extends PlatformComponentManagerImpl implements ApplicationEx {
   private static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
   private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
@@ -132,7 +130,9 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Nonnull
-  protected abstract BaseDataLock createLock(EventDispatcher<ApplicationListener> dispatcher);
+  protected BaseDataLock createLock(EventDispatcher<ApplicationListener> dispatcher) {
+    return new NewDataLock(dispatcher);
+  }
 
   @Nonnull
   @Override
@@ -254,7 +254,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         mySaveSettingsIsInProgress.set(false);
       });
     }
-    
+
     return CompletableFuture.completedFuture(null);
   }
 
@@ -288,24 +288,24 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     if (myDoNotSave) return CompletableFuture.completedFuture(null);
 
     return myLock.writeAsync(() -> FileDocumentManager.getInstance().saveAllDocuments())
-                  .thenComposeAsync(o -> {
-                    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
-                    List<CompletableFuture<?>> futures = new ArrayList<>(openProjects.length + 1);
-                    for (Project openProject : openProjects) {
-                      if (openProject.isDisposed()) {
-                        // debug for https://github.com/consulo/consulo/issues/296
-                        LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
-                        continue;
-                      }
+                 .thenComposeAsync(o -> {
+                   Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
+                   List<CompletableFuture<?>> futures = new ArrayList<>(openProjects.length + 1);
+                   for (Project openProject : openProjects) {
+                     if (openProject.isDisposed()) {
+                       // debug for https://github.com/consulo/consulo/issues/296
+                       LOG.error("Project is disposed: " + openProject.getName() + ", isInitialized: " + openProject.isInitialized());
+                       continue;
+                     }
 
-                      ProjectEx project = (ProjectEx)openProject;
-                      if (project.isInitialized()) {
-                        futures.add(project.saveAsync());
-                      }
-                    }
-                    futures.add(saveSettingsAsync());
-                    return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-                  }, myLock.writeExecutor());
+                     ProjectEx project = (ProjectEx)openProject;
+                     if (project.isInitialized()) {
+                       futures.add(project.saveAsync());
+                     }
+                   }
+                   futures.add(saveSettingsAsync());
+                   return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+                 }, myLock.writeExecutor());
   }
 
   @Override
@@ -402,8 +402,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     super.dispose();
 
-    invokeLater(() -> releaseWriteIntentLock(), ModalityState.nonModal());
-
     AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
     service.shutdownAppScheduledExecutorService();
 
@@ -492,6 +490,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull final Runnable action) {
+    if (isDispatchThread()) {
+      LOG.error("Calling write sync action inside ui thread");
+    }
+
     if (isWriteAccessAllowed()) {
       myLock.runWriteActionUnsafe(() -> {
         action.run();
@@ -514,6 +516,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+    if (isDispatchThread()) {
+      LOG.error("Calling write sync action inside ui thread");
+    }
+
     if (isWriteAccessAllowed()) {
       return myLock.runWriteActionUnsafe(computation);
     }
@@ -525,34 +531,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
       ExceptionUtil.rethrow(e);
       return null;
     }
-  }
-
-  @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-    invokeLaterOnWriteThread(action, modal, getDisposed());
-  }
-
-  @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action,
-                                       @Nonnull ModalityState modal,
-                                       @Nonnull BooleanSupplier expired) {
-    Runnable r = wrapLaterInvocation(action, modal);
-    // EDT == Write Thread in legacy mode
-    LaterInvocator.invokeLaterWithCallback(action, modal, expired, null);
-  }
-
-  @Nonnull
-  protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
-    return action;
-  }
-
-  @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-    invokeLaterOnWriteThread(action, getDefaultModalityState());
-  }
-
-  public boolean isCurrentWriteOnUIThread() {
-    return false;
   }
 
   @Override

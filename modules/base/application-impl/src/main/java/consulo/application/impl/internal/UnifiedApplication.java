@@ -59,12 +59,6 @@ public abstract class UnifiedApplication extends BaseApplication {
   }
 
   @Override
-  public void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-    UIAccess uiAccess = getLastUIAccess();
-    uiAccess.give(action);
-  }
-
-  @Override
   public void exit(boolean force, boolean exitConfirmed) {
 
   }

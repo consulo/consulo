@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
+import consulo.application.concurrent.DataLock;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
@@ -120,7 +121,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
       ourTimer2.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          boolean currentValue = application.isCurrentWriteOnUIThread();
+          boolean currentValue = DataLock.getInstance().isWriteLockedByAnyThread();
           AtomicIntegerArray currentStats = myCurrentStats;
           currentStats.incrementAndGet((currentValue ? ThreeState.YES : ThreeState.NO).ordinal());
           currentStats.incrementAndGet(3);

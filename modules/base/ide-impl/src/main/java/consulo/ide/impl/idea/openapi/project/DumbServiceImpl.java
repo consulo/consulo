@@ -375,28 +375,32 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   private void updateFinished() {
-    if (!WriteAction.compute(this::switchToSmartMode)) return;
+    DataLock lock = myProject.getApplication().getLock();
+    lock.writeAsync(this::switchToSmartMode)
+        .whenCompleteAsync((switchToSmartMode, throwable) -> {
+          if (switchToSmartMode) {
+            if (ApplicationProperties.isInSandbox()) LOG.info("updateFinished");
 
-    if (ApplicationManager.getApplication().isInternal()) LOG.info("updateFinished");
-
-    try {
-      myPublisher.exitDumbMode();
-      FileEditorManager.getInstance(myProject).refreshIconsAsync();
-    }
-    finally {
-      // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
-      // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
-      while (!isDumb()) {
-        final Runnable runnable;
-        synchronized (myRunWhenSmartQueue) {
-          if (myRunWhenSmartQueue.isEmpty()) {
-            break;
+            try {
+              myPublisher.exitDumbMode();
+              FileEditorManager.getInstance(myProject).refreshIconsAsync();
+            }
+            finally {
+              // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
+              // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
+              while (!isDumb()) {
+                final Runnable runnable;
+                synchronized (myRunWhenSmartQueue) {
+                  if (myRunWhenSmartQueue.isEmpty()) {
+                    break;
+                  }
+                  runnable = myRunWhenSmartQueue.pullFirst();
+                }
+                doRun(runnable);
+              }
+            }
           }
-          runnable = myRunWhenSmartQueue.pullFirst();
-        }
-        doRun(runnable);
-      }
-    }
+        }, myProject.getUIAccess());
   }
 
   // Extracted to have a capture point

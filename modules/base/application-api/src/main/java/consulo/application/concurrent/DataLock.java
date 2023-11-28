@@ -44,7 +44,7 @@ public interface DataLock {
       supplier.run();
       return;
     }
-    
+
     readSync(() -> {
       supplier.run();
       return null;
@@ -109,6 +109,8 @@ public interface DataLock {
    * @see #assertWriteAccessAllowed()
    */
   boolean isWriteAccessAllowed();
+
+  boolean isWriteLockedByAnyThread();
 
   /**
    * Asserts whether the read access is allowed.

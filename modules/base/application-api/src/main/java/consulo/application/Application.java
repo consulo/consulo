@@ -64,41 +64,6 @@ public interface Application extends ComponentManager {
   }
 
   /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * with {@link ModalityState#defaultModalityState()} modality state.
-   *
-   * @param action the runnable to execute.
-   */
-  @Deprecated
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-    throw new AbstractMethodError();
-  }
-
-  /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * when IDE is in the specified modality state (or a state with less modal dialogs open).
-   *
-   * @param action the runnable to execute.
-   * @param modal  the state in which action will be executed
-   */
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-    throw new AbstractMethodError();
-  }
-
-  /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * when IDE is in the specified modality state (or a state with less modal dialogs open)
-   * - unless the expiration condition is fulfilled.
-   *
-   * @param action  the runnable to execute.
-   * @param modal   the state in which action will be executed
-   * @param expired condition to check before execution.
-   */
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-    throw new AbstractMethodError();
-  }
-
-  /**
    * Runs the specified read action. Can be called from any thread. The action is executed immediately
    * if no write action is currently running, or blocked until the currently running write action completes.
    *
@@ -190,7 +155,9 @@ public interface Application extends ComponentManager {
    * Asserts whether the method is being called from the event dispatch thread.
    */
   @RequiredUIAccess
-  void assertIsDispatchThread();
+  default void assertIsDispatchThread() {
+    UIAccess.assertIsUIThread();
+  }
 
   /**
    * Asserts whether the method is being called from the write thread.

@@ -146,7 +146,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         }
 
         ZipHandler.clearFileAccessorCache();
-        LaterInvocator.purgeExpiredItems();
       }
 
       @Override
