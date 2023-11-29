@@ -40,8 +40,8 @@ public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
 
     ToolWindowManagerBase manager = (ToolWindowManagerBase)ToolWindowManager.getInstance(project);
 
-    uiAccess.giveAsync(() -> manager.initializeEditorComponent())
-            .whenCompleteAsync((o, t) -> manager.registerToolWindowsFromBeans(uiAccess))
+    uiAccess.giveAsync(manager::initializeEditorComponent)
+            .thenCompose(o -> manager.registerToolWindowsFromBeans(uiAccess))
             .whenCompleteAsync((o, t) -> manager.postInitialize(), uiAccess)
             .whenCompleteAsync((o, t) -> manager.connectModuleExtensionListener(), uiAccess);
   }

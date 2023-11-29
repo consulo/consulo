@@ -24,41 +24,41 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
-import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
-import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.externalService.statistic.UsageTrigger;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
-import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -260,32 +260,27 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   @Nonnull
-  protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
-    List<AsyncResult<Void>> results = new ArrayList<>();
+  protected CompletableFuture<?> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
+    List<CompletableFuture<?>> results = new ArrayList<>();
 
     for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
-      AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
-      results.add(toolWindowResult);
-
-      uiAccess.give(() -> {
+      CompletableFuture<?> future = CompletableFuture.runAsync(() -> {
         if (factory.validate(myProject)) {
           try {
             initToolWindow(factory);
-            toolWindowResult.setDone();
           }
           catch (ProcessCanceledException e) {
             throw e;
           }
           catch (Throwable t) {
-            toolWindowResult.rejectWithThrowable(t);
-
             LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
           }
         }
-      });
+      }, uiAccess);
+      results.add(future);
     }
 
-    return AsyncResult.merge(results);
+    return CompletableFuture.allOf(results.toArray(CompletableFuture[]::new));
   }
 
   @RequiredUIAccess

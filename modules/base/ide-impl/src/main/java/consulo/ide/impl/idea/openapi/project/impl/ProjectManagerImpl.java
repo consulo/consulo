@@ -659,8 +659,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         }
       }
 
-
-
       application.invokeLater(() -> {
         if (project.getDisposeState().get() != ThreeState.NO) {
           if (application.isActive()) {
