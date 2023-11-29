@@ -24,7 +24,6 @@ import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
@@ -35,8 +34,6 @@ import java.util.function.Supplier;
  * @since 16-Jun-16
  */
 public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
-  private static final Logger LOG = Logger.getInstance(WebUIAccessImpl.class);
-
   private final UI myUI;
 
   public WebUIAccessImpl(UI ui) {
@@ -69,25 +66,11 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     return result;
   }
 
-  @Nonnull
   @Override
-  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> result = AsyncResult.undefined();
+  public void give(@Nonnull Runnable runnable) {
     if (isValid()) {
-      myUI.access(() -> {
-        try {
-          result.setDone(supplier.get());
-        }
-        catch (Throwable e) {
-          LOG.error(e);
-          result.rejectWithThrowable(e);
-        }
-      });
+      myUI.access(() -> wrapRunnable(runnable).run());
     }
-    else {
-      result.setDone();
-    }
-    return result;
   }
 
   @Override
@@ -95,7 +78,7 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
     ComponentStoreImpl.assertIfInsideSavingSession();
 
     if (isValid()) {
-      myUI.accessSynchronously(runnable::run);
+      myUI.accessSynchronously(() -> wrapRunnable(runnable).run());
     }
   }
 

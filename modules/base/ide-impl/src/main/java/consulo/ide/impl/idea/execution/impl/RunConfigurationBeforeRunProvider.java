@@ -30,6 +30,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
+import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -192,7 +193,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
           runner.execute(environment, descriptor -> {
             ProcessHandler processHandler = descriptor != null ? descriptor.getProcessHandler() : null;
             if (processHandler != null) {
-              processHandler.addProcessListener(new ProcessAdapter() {
+              processHandler.addProcessListener(new ProcessListener() {
                 @Override
                 public void processTerminated(ProcessEvent event) {
                   if(event.getExitCode() == 0) {
@@ -210,7 +211,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
           result.setRejected();
           LOG.error(e);
         }
-      }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+      });
 
       return result;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.application.impl.internal.concurent.locking;
 
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.fileEditor.FileEditor;
+import java.util.concurrent.locks.Lock;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 2023-11-26
  */
-public class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
-  @Override
-  @SuppressWarnings("deprecation")
-  public FileEditor getCurrentEditor() {
-    DataContext dataContext = DataManager.getInstance().getDataContext();
-    return dataContext.getData(FileEditor.KEY);
-  }
+public interface NewLock {
+  boolean isReadLockedByCurrentThread();
+
+  boolean isWriteLockedByCurrentThread();
+
+  boolean isWriteLocked();
+
+  Lock asReadLock();
+
+  Lock asWriteLock();
 }

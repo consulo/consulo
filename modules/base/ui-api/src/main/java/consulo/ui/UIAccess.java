@@ -19,11 +19,11 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.internal.ThreadAssertion;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -92,19 +92,7 @@ public interface UIAccess extends Executor {
     return true;
   }
 
-  @Nonnull
-  default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
-    return give(() -> {
-      runnable.run();
-      return null;
-    });
-  }
-
-  /**
-   * prefer {@link #giveAsync(Supplier)}
-   */
-  @Nonnull
-  <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
+  void give(@RequiredUIAccess @Nonnull Runnable runnable);
 
   @Nonnull
   default CompletableFuture<?> giveAsync(@RequiredUIAccess @Nonnull Runnable runnable) {
@@ -118,7 +106,12 @@ public interface UIAccess extends Executor {
   <T> CompletableFuture<T> giveAsync(@RequiredUIAccess @Nonnull Supplier<T> supplier);
 
   default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
-    give(runnable).getResultSync();
+    try {
+      giveAsync(runnable).get();
+    }
+    catch (InterruptedException | ExecutionException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @SuppressWarnings("unchecked")

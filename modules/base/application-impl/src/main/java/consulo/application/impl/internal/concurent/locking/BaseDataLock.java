@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.concurrent.DataLock;
 import consulo.logging.Logger;
+import consulo.util.concurrent.internal.ThreadAssertion;
 import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
 
@@ -27,18 +28,18 @@ import jakarta.annotation.Nonnull;
  * @since 2023-11-14
  */
 public abstract class BaseDataLock implements DataLock {
-  private static final Logger LOG = Logger.getInstance(BaseDataLock.class);
+  protected static final Logger LOG = Logger.getInstance(BaseDataLock.class);
 
   @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
-    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action. Current thread: " + Thread.currentThread());
+    ThreadAssertion.assertTrue(!isWriteAccessAllowed(), "Write access is allowed inside write-action");
   }
 
   @RequiredReadAction
   @Override
   public void assertReadAccessAllowed() {
-    LOG.assertTrue(isReadAccessAllowed(), "Read access is only under read action. Current thread: " + Thread.currentThread());
+    ThreadAssertion.assertTrue(!isReadAccessAllowed(), "Read access is only under read action");
   }
 
   public abstract boolean isWriteActionInProgress();

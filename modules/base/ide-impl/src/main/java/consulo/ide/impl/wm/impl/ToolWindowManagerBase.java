@@ -271,15 +271,18 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
         if (factory.validate(myProject)) {
           try {
             initToolWindow(factory);
+            toolWindowResult.setDone();
           }
           catch (ProcessCanceledException e) {
             throw e;
           }
           catch (Throwable t) {
+            toolWindowResult.rejectWithThrowable(t);
+
             LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
           }
         }
-      }).notify(toolWindowResult);
+      });
     }
 
     return AsyncResult.merge(results);

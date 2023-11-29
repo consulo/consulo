@@ -282,7 +282,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     saveSettings();
   }
 
-  @RequiredWriteAction
   @Override
   public CompletableFuture<?> saveAllAsync() {
     if (myDoNotSave) return CompletableFuture.completedFuture(null);

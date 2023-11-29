@@ -17,19 +17,15 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
@@ -41,21 +37,10 @@ import java.util.function.Supplier;
  */
 public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
   public static UIAccess ourInstance = new AWTUIAccessImpl();
-  private static final Logger LOGGER = Logger.getInstance(AWTUIAccessImpl.class);
-
-  @Override
-  public void execute(@Nonnull Runnable command) {
-    SwingUtilities.invokeLater(command);
-  }
 
   @Override
   public boolean isHeadless() {
     return GraphicsEnvironment.isHeadless();
-  }
-
-  @Override
-  public boolean isInModalContext() {
-    return LaterInvocator.isInModalContext();
   }
 
   @RequiredUIAccess
@@ -72,48 +57,35 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
     return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
   }
 
+  @Override
+  public void give(@Nonnull Runnable runnable) {
+    EventQueue.invokeLater(wrapRunnable(runnable));
+  }
+
   @Nonnull
   @Override
   public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
     CompletableFuture<T> future = new CompletableFuture<>();
-    SwingUtilities.invokeLater(() -> {
+    EventQueue.invokeLater(() -> {
       try {
         T result = supplier.get();
         future.complete(result);
       }
       catch (Throwable e) {
-        LOGGER.error(e);
+        LOG.error(e);
         future.completeExceptionally(e);
       }
     });
     return future;
   }
 
-  @Nonnull
-  @Override
-  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> asyncResult = AsyncResult.undefined();
-    SwingUtilities.invokeLater(() -> {
-      try {
-        T result = supplier.get();
-        asyncResult.setDone(result);
-      }
-      catch (Throwable e) {
-        LOGGER.error(e);
-        asyncResult.rejectWithThrowable(e);
-      }
-    });
-    return asyncResult;
-  }
-
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
     ComponentStoreImpl.assertIfInsideSavingSession();
     try {
-      SwingUtilities.invokeAndWait(runnable);
+      EventQueue.invokeAndWait(wrapRunnable(runnable));
     }
-    catch (InterruptedException | InvocationTargetException e) {
-      //
+    catch (InterruptedException | InvocationTargetException ignored) {
     }
   }
 

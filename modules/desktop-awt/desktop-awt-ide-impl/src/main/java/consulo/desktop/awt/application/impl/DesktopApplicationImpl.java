@@ -71,6 +71,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
 
 public class DesktopApplicationImpl extends BaseApplication {
@@ -83,7 +84,11 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private volatile boolean myDisposeInProgress;
 
-  public DesktopApplicationImpl(ComponentBinding componentBinding, boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+  private final AtomicBoolean myExitState = new AtomicBoolean();
+
+  public DesktopApplicationImpl(ComponentBinding componentBinding,
+                                boolean isHeadless,
+                                @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(componentBinding, splashRef);
 
     ApplicationManager.setApplication(this);
@@ -226,7 +231,8 @@ public class DesktopApplicationImpl extends BaseApplication {
       return true;
     }
 
-    CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
+    CompletableFuture<ProgressWindow> progress =
+      createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
 
     ProgressRunner<?> progressRunner = new ProgressRunner<>(process).sync().modal().withProgress(progress);
 
@@ -247,9 +253,19 @@ public class DesktopApplicationImpl extends BaseApplication {
                                                                                    @Nullable JComponent parentComponent,
                                                                                    @Nullable String cancelText) {
     if (SwingUtilities.isEventDispatchThread()) {
-      return CompletableFuture.completedFuture(createProgressWindow(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText));
+      return CompletableFuture.completedFuture(createProgressWindow(progressTitle,
+                                                                    canBeCanceled,
+                                                                    shouldShowModalWindow,
+                                                                    project,
+                                                                    parentComponent,
+                                                                    cancelText));
     }
-    return CompletableFuture.supplyAsync(() -> createProgressWindow(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText), this::invokeLater);
+    return CompletableFuture.supplyAsync(() -> createProgressWindow(progressTitle,
+                                                                    canBeCanceled,
+                                                                    shouldShowModalWindow,
+                                                                    project,
+                                                                    parentComponent,
+                                                                    cancelText), this::invokeLater);
   }
 
   @Override
@@ -308,6 +324,67 @@ public class DesktopApplicationImpl extends BaseApplication {
    */
   private static volatile boolean exiting = false;
 
+  public void exitAsync(boolean force, boolean exitConfirmed, boolean allowListenersToCancel, boolean restart) {
+    if (!force && myExitState.get()) {
+      return;
+    }
+
+    if (!myExitState.compareAndSet(false, true)) {
+      return;
+    }
+
+    UIAccess uiAccess = getLastUIAccess();
+    uiAccess.give(() -> {
+      confirmExitIfNeededAsync(exitConfirmed).whenComplete((exitConfirmNext, e) -> {
+        if (exitConfirmNext == null) {
+          return;
+        }
+
+        if (!force && !exitConfirmNext) {
+          myExitState.compareAndSet(true, false);
+          saveAllAsync();
+          return;
+        }
+
+        // TODO run exit
+      });
+    });
+
+
+    exiting = true;
+    try {
+      if (!force && !exitConfirmed) {
+        return;
+      }
+
+      Runnable runnable = new Runnable() {
+        @Override
+        @RequiredUIAccess
+        public void run() {
+          if (!force && !confirmExitIfNeeded(exitConfirmed)) {
+            saveAll();
+            return;
+          }
+
+          getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
+          myDisposeInProgress = true;
+          doExit(allowListenersToCancel, restart);
+          myDisposeInProgress = false;
+        }
+      };
+
+      if (isDispatchThread()) {
+        runnable.run();
+      }
+      else {
+        invokeLater(runnable, IdeaModalityState.NON_MODAL);
+      }
+    }
+    finally {
+      exiting = false;
+    }
+  }
+
   public void exit(final boolean force, final boolean exitConfirmed, final boolean allowListenersToCancel, final boolean restart) {
     if (!force && exiting) {
       return;
@@ -315,7 +392,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     exiting = true;
     try {
-      if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.NON_MODAL) {
+      if (!force && !exitConfirmed) {
         return;
       }
 
@@ -373,6 +450,28 @@ public class DesktopApplicationImpl extends BaseApplication {
     return true;
   }
 
+  private CompletableFuture<Boolean> confirmExitIfNeededAsync(boolean exitConfirmed) {
+    final boolean hasUnsafeBgTasks = getProgressManager().hasUnsafeProgressIndicator();
+    if (exitConfirmed && !hasUnsafeBgTasks) {
+      return CompletableFuture.completedFuture(true);
+    }
+
+// TODO [VISTALL] impl task ask
+//    if (hasUnsafeBgTasks || option.isToBeShown()) {
+//      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt",
+//                                                 ApplicationNamesInfo.getInstance().getFullProductName());
+//
+//      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message)
+//                              .yesText(ApplicationBundle.message("command.exit"))
+//                              .noText(CommonBundle.message("button.cancel"))
+//                              .doNotAsk(option)
+//                              .show() != Messages.YES) {
+//        return false;
+//    }
+
+    return CompletableFuture.completedFuture(true);
+  }
+
   private static boolean confirmExitIfNeeded(boolean exitConfirmed) {
     final boolean hasUnsafeBgTasks = ProgressManager.getInstance().hasUnsafeProgressIndicator();
     if (exitConfirmed && !hasUnsafeBgTasks) {
@@ -408,10 +507,14 @@ public class DesktopApplicationImpl extends BaseApplication {
     };
 
     if (hasUnsafeBgTasks || option.isToBeShown()) {
-      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
+      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt",
+                                                 ApplicationNamesInfo.getInstance().getFullProductName());
 
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit")).noText(CommonBundle.message("button.cancel"))
-                  .doNotAsk(option).show() != Messages.YES) {
+      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message)
+                              .yesText(ApplicationBundle.message("command.exit"))
+                              .noText(CommonBundle.message("button.cancel"))
+                              .doNotAsk(option)
+                              .show() != Messages.YES) {
         return false;
       }
     }

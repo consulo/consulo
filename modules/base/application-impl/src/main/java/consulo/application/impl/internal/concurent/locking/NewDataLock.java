@@ -26,14 +26,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.Lock;
 
 /**
  * @author VISTALL
  * @since 2023-11-17
  */
 public class NewDataLock extends BaseDataLock {
-  private final NewApplicationRWLock myLock = new NewApplicationRWLock();
+  private final NewLock myLock = new NewStampedLock();
 
   private final ExecutorService myInternalWriteExecutor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Write Thread"));
   private final Executor myWriteExecutor = command -> myInternalWriteExecutor.submit(() -> runWriteAction(() -> {
@@ -61,7 +61,7 @@ public class NewDataLock extends BaseDataLock {
       return supplier.get();
     }
 
-    ReentrantReadWriteLock.ReadLock readLock = myLock.readLock();
+    Lock readLock = myLock.asReadLock();
     try {
       readLock.lock();
       return supplier.get();
@@ -124,7 +124,7 @@ public class NewDataLock extends BaseDataLock {
 
   @Override
   public boolean tryReadSync(Runnable runnable) {
-    ReentrantReadWriteLock.ReadLock readLock = myLock.readLock();
+    Lock readLock = myLock.asReadLock();
     if (readLock.tryLock()) {
       try {
         runnable.run();
@@ -149,7 +149,7 @@ public class NewDataLock extends BaseDataLock {
   }
 
   private <V> V runReadAction(ThrowableSupplier<V, Throwable> supplier) {
-    ReentrantReadWriteLock.ReadLock readLock = myLock.readLock();
+    Lock readLock = myLock.asReadLock();
     try {
       readLock.lock();
       return supplier.get();
@@ -166,7 +166,7 @@ public class NewDataLock extends BaseDataLock {
   private <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     myDispatcher.getMulticaster().beforeWriteActionStart(computation);
 
-    ReentrantReadWriteLock.WriteLock writeLock = myLock.writeLock();
+    Lock writeLock = myLock.asWriteLock();
     try {
       writeLock.lock();
       myDispatcher.getMulticaster().writeActionStarted(computation);

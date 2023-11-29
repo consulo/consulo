@@ -18,13 +18,15 @@ package consulo.application.impl.internal.concurent.locking;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author VISTALL
  * @since 2023-11-18
  */
-public class NewApplicationRWLock extends ReentrantReadWriteLock {
+@Deprecated
+public class NewApplicationRWLock extends ReentrantReadWriteLock implements NewLock {
   private static class ReadCounter {
     private long id = Thread.currentThread().getId();
     private volatile int count;
@@ -80,7 +82,7 @@ public class NewApplicationRWLock extends ReentrantReadWriteLock {
 
     private void decCounter() {
       ReadCounter counter = myCounter.get();
-      counter.count --;
+      counter.count--;
 
       if (counter.count == 0) {
         myCounter.remove();
@@ -106,7 +108,18 @@ public class NewApplicationRWLock extends ReentrantReadWriteLock {
     return myReadLock;
   }
 
+  @Override
   public boolean isReadLockedByCurrentThread() {
     return myReadLock.isUnderReadLock();
+  }
+
+  @Override
+  public Lock asReadLock() {
+    return readLock();
+  }
+
+  @Override
+  public Lock asWriteLock() {
+    return writeLock();
   }
 }

@@ -556,7 +556,9 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
           }
         }
       }
-    }).notify(result);
+
+      result.setDone();
+    });
 
     return result;
   }

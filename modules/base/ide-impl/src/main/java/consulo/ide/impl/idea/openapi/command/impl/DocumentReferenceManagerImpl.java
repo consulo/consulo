@@ -4,24 +4,25 @@ package consulo.ide.impl.idea.openapi.command.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
-import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
 
   private static final Key<Reference<DocumentReference>> FILE_TO_REF_KEY = Key.create("FILE_TO_REF_KEY");
   private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
-  private final Map<DocumentFilePath, DocumentReference> myDeletedFilePathToRef = ContainerUtil.createWeakValueMap();
+  private final Map<DocumentFilePath, DocumentReference> myDeletedFilePathToRef = Maps.newWeakValueHashMap();
 
   @Inject
   DocumentReferenceManagerImpl(@Nonnull Application application) {
