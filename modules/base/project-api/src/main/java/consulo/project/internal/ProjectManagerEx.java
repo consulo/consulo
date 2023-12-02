@@ -15,6 +15,7 @@
  */
 package consulo.project.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -22,6 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 public abstract class ProjectManagerEx extends ProjectManager {
@@ -45,10 +47,18 @@ public abstract class ProjectManagerEx extends ProjectManager {
     return newProject(name, path, true);
   }
 
-  public abstract boolean canClose(Project project);
+  @Nonnull
+  public abstract CompletableFuture<Boolean> askForCloseAsync(Project project);
+
+  @Deprecated
+  @DeprecationInfo("Use registerCloseProjectVetoAsync")
+  public Disposable registerCloseProjectVeto(Predicate<Project> projectPredicate) {
+    return () -> {
+    };
+  }
 
   @Nonnull
-  public abstract Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto);
+  public abstract Disposable registerCloseProjectVetoAsync(@Nonnull ProjectCloseHandler projectVeto);
 
   @Nonnull
   //@ApiStatus.Internal

@@ -346,6 +346,8 @@ public class DesktopApplicationImpl extends BaseApplication {
           return;
         }
 
+        getMessageBus().syncPublisher(AppLifecycleListener.class).appClosing();
+
         // TODO run exit
       });
     });

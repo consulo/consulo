@@ -376,16 +376,23 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     myDispatcher.removeListener(l);
   }
 
+  @Deprecated
   protected boolean canExit() {
-    ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
-    Project[] projects = projectManager.getOpenProjects();
-    for (Project project : projects) {
-      if (!projectManager.canClose(project)) {
-        return false;
-      }
-    }
+    return false;
+  }
 
-    return true;
+  protected boolean canExitAsync() {
+    // TODO
+//    ProjectManagerEx projectManager = (ProjectManagerEx)ProjectManager.getInstance();
+//    Project[] projects = projectManager.getOpenProjects();
+//    for (Project project : projects) {
+//      if (!projectManager.askForCloseAsync(project)) {
+//        return false;
+//      }
+//    }
+//
+//    return true;
+    return false;
   }
 
   @RequiredUIAccess

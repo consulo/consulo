@@ -54,6 +54,7 @@ import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectManagerImplMarker;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.impl.internal.store.IProjectStore;
+import consulo.project.internal.ProjectCloseHandler;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -80,7 +81,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 @ServiceImpl
@@ -91,7 +92,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   private final List<Project> myOpenProjects = Lists.newLockFreeCopyOnWriteList();
 
-  private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
+  private final List<ProjectCloseHandler> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
   private final Application myApplication;
@@ -313,7 +314,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     if (!isProjectOpened(project)) return true;
 
-    if (checkCanClose && !canClose(project)) return false;
+    if (checkCanClose && !askForClose(project)) return false;
     final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
     shutDownTracker.registerStopperThread(Thread.currentThread());
     try {
@@ -387,27 +388,36 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     LOG.assertTrue(removed);
   }
 
-  @Override
-  public boolean canClose(Project project) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: canClose()");
-    }
-
-    for (Predicate<Project> listener : myCloseProjectVetos) {
-      try {
-        if (!listener.test(project)) return false;
-      }
-      catch (Throwable e) {
-        LOG.warn(e); // DO NOT LET ANY PLUGIN to prevent closing due to exception
-      }
-    }
-
-    return true;
+  public boolean askForClose(Project project) {
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto) {
+  public CompletableFuture<Boolean> askForCloseAsync(Project project) {
+    CompletableFuture<Boolean> future = CompletableFuture.completedFuture(true);
+    for (ProjectCloseHandler listener : myCloseProjectVetos) {
+      future = future.thenCompose(canClose -> {
+        if (!canClose) {
+          return CompletableFuture.completedFuture(false);
+        }
+
+        try {
+          return listener.askForCloseAsync(project);
+        }
+        catch (Throwable e) {
+          LOG.warn(e); // DO NOT LET ANY PLUGIN to prevent closing due to exception
+          return CompletableFuture.completedFuture(true);
+        }
+      });
+    }
+
+    return future;
+  }
+
+  @Nonnull
+  @Override
+  public Disposable registerCloseProjectVetoAsync(@Nonnull ProjectCloseHandler projectVeto) {
     myCloseProjectVetos.add(projectVeto);
     return () -> myCloseProjectVetos.remove(projectVeto);
   }
@@ -485,7 +495,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
     if (checkCanClose) {
       uiAccess.give(() -> {
-        boolean canClose = canClose(project);
+        boolean canClose = askForClose(project);
         if (canClose) {
           closeCheckInsideUI.setDone();
         }

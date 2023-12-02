@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.process.BaseProcessHandler;
 import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
@@ -69,7 +69,7 @@ public class TerminateRemoteProcessDialog {
 
     AtomicBoolean alreadyGone = new AtomicBoolean(false);
     Runnable dialogRemover = Messages.createMessageDialogRemover(project);
-    ProcessAdapter listener = new ProcessAdapter() {
+    ProcessListener listener = new ProcessListener() {
       @Override
       public void processWillTerminate(ProcessEvent event, boolean willBeDestroyed) {
         alreadyGone.set(true);

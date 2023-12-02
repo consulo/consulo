@@ -1,15 +1,18 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.execution.ui;
 
-import consulo.execution.ExecutionBundle;
-import consulo.ide.impl.idea.execution.TerminateRemoteProcessDialog;
-import consulo.process.ProcessHandler;
-import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.Semaphore;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.ExecutionBundle;
+import consulo.ide.impl.idea.execution.TerminateRemoteProcessDialog;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.logging.Logger;
+import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
@@ -18,14 +21,10 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import consulo.application.util.Semaphore;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.Objects;
 
 public abstract class BaseContentCloseListener implements ProjectManagerListener, ContentManagerListener {
