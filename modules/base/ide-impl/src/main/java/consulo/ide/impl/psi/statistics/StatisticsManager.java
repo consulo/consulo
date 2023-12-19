@@ -18,14 +18,12 @@ package consulo.ide.impl.psi.statistics;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.component.persist.SettingsSavingComponent;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class StatisticsManager implements SettingsSavingComponent {
+public abstract class StatisticsManager {
   /**
    * The number of last entries stored for each context in {@link #getUseCount(StatisticsInfo)}.
    * If more entries are used over time, use count will be 0 for the most ancient entries.

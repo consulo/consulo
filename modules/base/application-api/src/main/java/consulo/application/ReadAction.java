@@ -19,6 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.concurrent.DataLock;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
+import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Contract;
 
 import jakarta.annotation.Nonnull;
@@ -37,6 +38,20 @@ public final class ReadAction<T>  {
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
     DataLock locking = Application.get().getLock();
     return locking.readSync(action);
+  }
+
+  public static <T, E extends Throwable> T tryCompute(@Nonnull ThrowableSupplier<T, E> action) throws E {
+    Application application = Application.get();
+    SimpleReference<T>  ref = SimpleReference.create();
+    boolean successRead = application.tryRunReadAction(() -> {
+      try {
+        ref.set(action.get());
+      }
+      catch (Throwable e) {
+        throw new RuntimeException(e);
+      }
+    });
+    return successRead ? ref.get() : null;
   }
 
   /**

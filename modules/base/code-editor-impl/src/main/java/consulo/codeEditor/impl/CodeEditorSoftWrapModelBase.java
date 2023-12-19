@@ -18,21 +18,20 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.util.DocumentUtil;
 import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
-import consulo.ui.UIAccess;
 import consulo.util.collection.Lists;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -180,7 +179,6 @@ public abstract class CodeEditorSoftWrapModelBase extends InlayModel.SimpleAdapt
 
   @Override
   public boolean isSoftWrappingEnabled() {
-    UIAccess.assertIsUIThread();
     return myUseSoftWraps && !myEditor.isPurePaintingMode();
   }
 

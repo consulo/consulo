@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.language.scratch.RootType;
@@ -35,6 +36,7 @@ public class ScratchFileEditorTabTitleProvider implements EditorTabTitleProvider
     myScratchFileService = scratchFileService;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {

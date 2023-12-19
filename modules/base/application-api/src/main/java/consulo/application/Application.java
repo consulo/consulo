@@ -18,6 +18,7 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.concurrent.DataLock;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.AppSemVer;
@@ -191,12 +192,14 @@ public interface Application extends ComponentManager {
 
   /**
    * Saves all open documents and projects.
-   *
+   * <p>
    * Always async
    */
   @RequiredWriteAction
+  @Deprecated
   void saveAll();
 
+  @Nonnull
   default CompletableFuture<?> saveAllAsync() {
     saveAll();
     return CompletableFuture.completedFuture(null);
@@ -410,18 +413,24 @@ public interface Application extends ComponentManager {
    *
    * @param action to be executed
    * @return future result
+   * @see ApplicationConcurrency
    */
   @Nonnull
-  Future<?> executeOnPooledThread(@Nonnull Runnable action);
+  default Future<?> executeOnPooledThread(@Nonnull Runnable action) {
+    return getInstance(ApplicationConcurrency.class).getExecutorService().submit(action);
+  }
 
   /**
    * Requests pooled thread to execute the action
    *
    * @param action to be executed
    * @return future result
+   * @see ApplicationConcurrency
    */
   @Nonnull
-  <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action);
+  default <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action) {
+    return getInstance(ApplicationConcurrency.class).getExecutorService().submit(action);
+  }
 
   /**
    * @return true if application is currently disposing (but not yet disposed completely)

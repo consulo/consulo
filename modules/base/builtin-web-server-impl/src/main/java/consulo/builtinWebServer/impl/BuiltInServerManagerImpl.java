@@ -3,6 +3,7 @@ package consulo.builtinWebServer.impl;
 import com.google.common.net.InetAddresses;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.start.ImportantFolderLocker;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.builtinWebServer.BuiltInServerManager;
@@ -24,12 +25,11 @@ import consulo.util.lang.function.ThrowableFunction;
 import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.resolver.HostsFileEntriesResolver;
 import io.netty.resolver.ResolvedAddressTypes;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -44,22 +44,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 
-  public static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup NOTIFICATION_GROUP =
+    new NotificationGroup("Built-in Server", NotificationDisplayType.STICKY_BALLOON, true);
 
-  @NonNls
   public static final String PROPERTY_RPC_PORT = "consulo.rpc.port";
   private static final int PORTS_COUNT = 20;
 
   private final AtomicBoolean started = new AtomicBoolean(false);
   private final Application myApplication;
+  private final ApplicationConcurrency myApplicationConcurrency;
 
   @Nullable
   private BuiltInServer server;
 
   @Inject
-  public BuiltInServerManagerImpl(Application application) {
+  public BuiltInServerManagerImpl(Application application, ApplicationConcurrency applicationConcurrency) {
     myApplication = application;
-    startServerInPooledThread();
+    myApplicationConcurrency = applicationConcurrency;
   }
 
   @Override
@@ -91,16 +92,17 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
   }
 
-  private Future<?> startServerInPooledThread() {
+  public Future<?> startServerInPooledThread() {
     if (!started.compareAndSet(false, true)) {
       return null;
     }
 
-    return myApplication.executeOnPooledThread(() -> {
+    return myApplicationConcurrency.getExecutorService().submit(() -> {
       try {
         ImportantFolderLocker locker = StartupUtil.getLocker();
 
-        BuiltInServer mainServer = locker instanceof ImportantFolderLockerViaBuiltInServer ? ((ImportantFolderLockerViaBuiltInServer)locker).getServer() : null;
+        BuiltInServer mainServer =
+          locker instanceof ImportantFolderLockerViaBuiltInServer ? ((ImportantFolderLockerViaBuiltInServer)locker).getServer() : null;
         if (mainServer == null || mainServer.getEventLoopGroup() instanceof OioEventLoopGroup) {
           server = BuiltInServer.start(1, getDefaultPort(), PORTS_COUNT, false, null);
         }
@@ -112,8 +114,8 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       catch (Throwable e) {
         LOG.info(e);
         NOTIFICATION_GROUP.createNotification("Cannot start internal HTTP server. Git integration, Some plugins may operate with errors. " +
-                                              "Please check your firewall settings and restart " +
-                                              Application.get().getName(), NotificationType.ERROR).notify(null);
+                                                "Please check your firewall settings and restart " +
+                                                Application.get().getName(), NotificationType.ERROR).notify(null);
         return;
       }
 
@@ -140,7 +142,10 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       // built-in server url contains query only if token specified
       return url;
     }
-    return Urls.newUrl(url.getScheme(), url.getAuthority(), url.getPath(), "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + BuiltInWebServerKt.acquireToken());
+    return Urls.newUrl(url.getScheme(),
+                       url.getAuthority(),
+                       url.getPath(),
+                       "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + BuiltInWebServerKt.acquireToken());
   }
 
   @Override
@@ -160,7 +165,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     }
 
     ThrowableFunction<InetAddress, Boolean, SocketException> isLocal =
-            inetAddress -> inetAddress.isAnyLocalAddress() || inetAddress.isLoopbackAddress() || NetworkInterface.getByInetAddress(inetAddress) != null;
+      inetAddress -> inetAddress.isAnyLocalAddress() || inetAddress.isLoopbackAddress() || NetworkInterface.getByInetAddress(inetAddress) != null;
 
     try {
       InetAddress address = InetAddress.getByName(host);
@@ -183,18 +188,9 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
   }
 
   private void bindCustomPorts(@Nonnull BuiltInServer server) {
-    if (myApplication.isUnitTestMode()) {
-      return;
-    }
-
-    for (CustomPortServerManager customPortServerManager : CustomPortServerManager.EP_NAME.getExtensionList()) {
-      try {
-        new SubServer(customPortServerManager, server).bind(customPortServerManager.getPort());
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
+    myApplication.getExtensionPoint(CustomPortServerManager.class).forEachExtensionSafe(customPortServerManager -> {
+      new SubServer(customPortServerManager, server).bind(customPortServerManager.getPort());
+    });
   }
 
   public static boolean isOnBuiltInWebServerByAuthority(@Nonnull String authority) {
@@ -222,8 +218,8 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
     try {
       InetAddress inetAddress = InetAddress.getByName(host);
       return inetAddress.isLoopbackAddress() ||
-             inetAddress.isAnyLocalAddress() ||
-             (options.builtInServerAvailableExternally && idePort != port && NetworkInterface.getByInetAddress(inetAddress) != null);
+        inetAddress.isAnyLocalAddress() ||
+        (options.builtInServerAvailableExternally && idePort != port && NetworkInterface.getByInetAddress(inetAddress) != null);
     }
     catch (IOException e) {
       return false;

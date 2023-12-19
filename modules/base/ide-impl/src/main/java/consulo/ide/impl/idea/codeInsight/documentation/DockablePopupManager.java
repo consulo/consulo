@@ -199,7 +199,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
   public void updateComponent(boolean requestFocus) {
     if (myProject.isDisposed()) return;
 
-    DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(dataContext -> {
+    DataManager.getInstance().getDataContextFromFocusAsync().thenAccept(dataContext -> {
       if (!myProject.isOpen()) return;
       updateComponentInner(dataContext, requestFocus);
     });

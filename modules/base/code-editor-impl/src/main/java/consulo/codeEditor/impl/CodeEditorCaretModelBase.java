@@ -3,7 +3,6 @@
 
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
@@ -14,18 +13,19 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.RangeMarkerTree;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -229,7 +229,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
   @Nonnull
   public CodeEditorCaretBase getCurrentCaret() {
     CodeEditorCaretBase currentCaret = myCurrentCaret.get();
-    return ApplicationManager.getApplication().isDispatchThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
+    return UIAccess.isUIThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
   }
 
   @Override

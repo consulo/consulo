@@ -66,8 +66,7 @@ public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements Du
   }
 
   private static void selectInNavBar() {
-    DataManager.getInstance().getDataContextFromFocus()
-      .doWhenDone(context -> {
+    DataManager.getInstance().getDataContextFromFocus().thenAccept(context -> {
         final IdeFrame frame = context.getData(IdeFrame.KEY);
         if (frame != null) {
           final IdeRootPaneNorthExtension navBarExt = frame.getNorthExtension(NavBarRootPaneExtension.NAV_BAR);

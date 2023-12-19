@@ -693,7 +693,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   }
 
   private void validateCallContext() {
-    LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread() || !myCaretModel.myIsInUpdate, "Caret model is in its update process. All requests are illegal at this point.");
+    LOG.assertTrue(!UIAccess.isUIThread() || !myCaretModel.myIsInUpdate, "Caret model is in its update process. All requests are illegal at this point.");
   }
 
   @Override

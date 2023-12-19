@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.contents;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionActionFilter;
+import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
 

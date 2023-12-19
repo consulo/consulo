@@ -311,10 +311,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
         SwingUtilities.invokeAndWait(runnable);
       }
     }
-    catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-    catch (InvocationTargetException e) {
+    catch (InterruptedException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }

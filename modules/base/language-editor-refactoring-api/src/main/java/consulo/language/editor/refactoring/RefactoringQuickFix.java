@@ -60,7 +60,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
       final RefactoringActionHandler handler = getHandler();
       handler.invoke(element.getProject(), new PsiElement[]{elementToRefactor}, dataContext);
     };
-    DataManager.getInstance().getDataContextFromFocus().doWhenDone(consumer);
+    DataManager.getInstance().getDataContextFromFocus().thenAccept(consumer);
   }
 
   @Override

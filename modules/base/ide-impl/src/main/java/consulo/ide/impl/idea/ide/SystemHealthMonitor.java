@@ -39,7 +39,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
 import consulo.ide.impl.idea.notification.NotificationsConfiguration;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.application.PreloadingActivity;
 import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
@@ -72,7 +72,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @ExtensionImpl
-public class SystemHealthMonitor extends PreloadingActivity {
+public class SystemHealthMonitor implements PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(SystemHealthMonitor.class);
 
   public static final NotificationGroup GROUP = new NotificationGroup("System Health", NotificationDisplayType.STICKY_BALLOON, false);

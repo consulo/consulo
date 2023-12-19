@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
@@ -32,11 +33,13 @@ public interface ElementPreviewProvider {
 
   boolean isSupportedFile(@Nonnull PsiFile psiFile);
 
+  @RequiredUIAccess
   void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered);
 
   /**
    * @param element if disposed
    * @param editor
    */
+  @RequiredUIAccess
   void hide(@Nullable PsiElement element, @Nonnull Editor editor);
 }

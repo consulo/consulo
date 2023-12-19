@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.diff.util;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.CustomHighlighterRenderer;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.document.Document;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import jakarta.annotation.Nonnull;
@@ -33,7 +34,7 @@ public class DiffEmptyHighlighterRenderer implements CustomHighlighterRenderer {
   }
 
   @Override
-  public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
+  public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, Document document, @Nonnull Graphics g) {
     g.setColor(TargetAWT.to(myDiffType.getColor(editor)));
     Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(highlighter.getStartOffset()));
     int endy = point.y + editor.getLineHeight() - 1;

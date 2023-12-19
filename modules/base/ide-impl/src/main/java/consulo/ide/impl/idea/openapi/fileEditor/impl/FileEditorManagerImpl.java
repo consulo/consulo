@@ -359,6 +359,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   @Nonnull
+  @RequiredReadAction
   public String getFileTooltipText(@Nonnull VirtualFile file) {
     List<EditorTabTitleProvider> availableProviders = DumbService.getDumbAwareExtensions(myProject, EditorTabTitleProvider.EP_NAME);
     for (EditorTabTitleProvider provider : availableProviders) {
@@ -1232,7 +1233,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   @Nonnull
   public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull final VirtualFile file) {
-    assertReadAccess();
+    UIAccess.assertIsUIThread();
 
     final FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
     if (composite != null) {

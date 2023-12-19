@@ -74,7 +74,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
 
   @Override
   public boolean isEnabledByDefault() {
-    return false;
+    return ApplicationProperties.isInSandbox();
   }
 
   private static class WriteThreadWidget implements CustomStatusBarWidget {

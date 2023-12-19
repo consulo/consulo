@@ -96,14 +96,15 @@ public class ProjectSettingsPanel {
     myScopesLink.addHyperlinkListener(new HyperlinkListener() {
       public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-          final DataContext dataContext = DataManager.getInstance().getDataContextFromFocus().getResult();
-          final Settings optionsEditor = dataContext.getData(Settings.KEY);
-          if (optionsEditor != null) {
-            Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);
-            if (configurable != null) {
-              optionsEditor.clearSearchAndSelect(configurable);
+          DataManager.getInstance().getDataContextFromFocus().thenAccept(dataContext -> {
+            final Settings optionsEditor = dataContext.getData(Settings.KEY);
+            if (optionsEditor != null) {
+              Configurable configurable = optionsEditor.findConfigurableById(ScopeChooserConfigurable.PROJECT_SCOPES);
+              if (configurable != null) {
+                optionsEditor.clearSearchAndSelect(configurable);
+              }
             }
-          }
+          });
         }
       }
     });

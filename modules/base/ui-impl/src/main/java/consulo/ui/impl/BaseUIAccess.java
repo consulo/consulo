@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
@@ -32,8 +33,10 @@ public abstract class BaseUIAccess implements UIAccess {
 
   @Nonnull
   protected Runnable wrapRunnable(Runnable runnable) {
+    String stackTrace = ExceptionUtil.getThrowableText(new Exception("ui stack trace"));
     return () -> {
       try {
+        String var = stackTrace;
         runnable.run();
       }
       catch (Throwable e) {
@@ -42,6 +45,8 @@ public abstract class BaseUIAccess implements UIAccess {
         }
 
         LOG.error(e);
+
+        ExceptionUtil.rethrow(e);
       }
     };
   }

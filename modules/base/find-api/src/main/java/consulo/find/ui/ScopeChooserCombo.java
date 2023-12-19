@@ -15,7 +15,6 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.Promise;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -27,6 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Disposable {
@@ -171,8 +171,8 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
 
   private void rebuildModelAndSelectScopeOnSuccess(@Nullable Object selection) {
     DefaultComboBoxModel<ScopeDescriptor> model = new DefaultComboBoxModel<>();
-    Promise<DataContext> promise = DataManager.getInstance().getDataContextFromFocusAsync();
-    promise.onSuccess(c -> {
+    CompletableFuture<DataContext> promise = DataManager.getInstance().getDataContextFromFocusAsync();
+    promise.thenAccept(c -> {
       processScopes(myProject, c, myOptions, descriptor -> {
         if (myScopeFilter == null || myScopeFilter.test(descriptor)) {
           model.addElement(descriptor);

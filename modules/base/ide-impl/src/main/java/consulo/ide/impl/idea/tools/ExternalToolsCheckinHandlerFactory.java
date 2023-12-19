@@ -17,18 +17,17 @@ package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.checkin.CheckinProjectPanel;
-import consulo.versionControlSystem.change.CommitContext;
-import consulo.versionControlSystem.checkin.CheckinHandler;
-import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
-import consulo.versionControlSystem.ui.RefreshableOnComponent;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-
+import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.checkin.CheckinHandler;
+import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
+import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -147,15 +146,8 @@ public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
         if (id == null) {
           return;
         }
-        DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
-          UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-
-            @Override
-            public void run() {
-              ToolAction.runTool(id, context);
-            }
-          });
-        });
+        UIAccess uiAccess = panel.getProject().getUIAccess();
+        DataManager.getInstance().getDataContextFromFocus().thenAcceptAsync(context -> ToolAction.runTool(id, context), uiAccess);
       }
     };
   }

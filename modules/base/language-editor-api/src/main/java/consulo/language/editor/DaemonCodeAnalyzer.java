@@ -102,7 +102,7 @@ public abstract class DaemonCodeAnalyzer {
                                           final int startOffset,
                                           final int endOffset,
                                           @Nonnull final Predicate<HighlightInfo> processor) {
-    Application.get().assertReadAccessAllowed();
+    project.getApplication().assertReadAccessAllowed();
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);

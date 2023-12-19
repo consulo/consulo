@@ -29,12 +29,13 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class PsiEditorUtil {
   private static final Logger LOG = Logger.getInstance(PsiEditorUtil.class);
@@ -75,9 +76,16 @@ public class PsiEditorUtil {
     }
 
     // We assume that data context from focus-based retrieval should success if performed from EDT.
-    AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
+    CompletableFuture<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
     if (asyncResult.isDone()) {
-      Editor editor = asyncResult.getResult().getData(Editor.KEY);
+      Editor editor;
+      try {
+        editor = asyncResult.get().getData(Editor.KEY);
+      }
+      catch (InterruptedException | ExecutionException e) {
+        throw new RuntimeException(e);
+      }
+
       if (editor != null) {
         Document cachedDocument = PsiDocumentManager.getInstance(project).getCachedDocument(psiFile);
         // Ensure that target editor is found by checking its document against the one from given PSI element.

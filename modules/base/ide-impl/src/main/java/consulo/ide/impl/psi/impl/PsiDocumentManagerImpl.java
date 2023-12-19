@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -70,6 +71,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     });
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public PsiFile getPsiFile(@Nonnull Document document) {

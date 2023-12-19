@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.language.editor.intention;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
@@ -26,8 +25,6 @@ import jakarta.annotation.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IntentionActionFilter {
-  ExtensionPointName<IntentionActionFilter> EXTENSION_POINT_NAME = ExtensionPointName.create(IntentionActionFilter.class);
-
   /**
    * @param file - might (and will be) null. Return true in this case if you'd like to switch this kind of action in ANY file
    */

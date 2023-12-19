@@ -199,7 +199,7 @@ public class DesktopLanguageConsoleBuilder extends BaseLanguageConsoleBuilder {
 
       private final CustomHighlighterRenderer renderer = new CustomHighlighterRenderer() {
         @Override
-        public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
+        public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, Document document, @Nonnull Graphics g) {
           Rectangle clip = g.getClipBounds();
           int lineHeight = editor.getLineHeight();
           int startLine = clip.y / lineHeight;

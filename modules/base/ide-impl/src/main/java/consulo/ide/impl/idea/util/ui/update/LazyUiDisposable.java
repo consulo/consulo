@@ -86,7 +86,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
     if (defaultValue == null) {
       if (ApplicationManager.getApplication() != null) {
         final AsyncResult<Disposable> result = AsyncResult.undefined();
-        DataManager.getInstance().getDataContextFromFocus().doWhenDone(context -> {
+        DataManager.getInstance().getDataContextFromFocus().thenAccept(context -> {
           Disposable disposable = context.getData(key);
           if (disposable == null) {
             disposable = Disposer.get("ui");

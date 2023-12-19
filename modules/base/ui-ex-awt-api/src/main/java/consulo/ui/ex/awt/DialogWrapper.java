@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
 /**
  * The standard base class for modal dialog boxes. The dialog wrapper could be used only on event dispatch thread.
  * In case when the dialog must be created from other threads use
- * {@link EventQueue#invokeLater(Runnable)} or {@link EventQueue#invokeAndWait(Runnable)}.
+ * {@link SwingUtilities#invokeLater(Runnable)} or {@link SwingUtilities#invokeAndWait(Runnable)}.
  * <p>
  * See also http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+DialogWrapper.
  */

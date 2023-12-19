@@ -53,7 +53,9 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
           requestModelUpdateFromContextOrObject(context, object);
         }
         else {
-          DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(dataContext -> requestModelUpdateFromContextOrObject(dataContext, null));
+          DataManager.getInstance().getDataContextFromFocusAsync().thenAccept(dataContext -> {
+            requestModelUpdateFromContextOrObject(dataContext, null);
+          });
         }
       }
 

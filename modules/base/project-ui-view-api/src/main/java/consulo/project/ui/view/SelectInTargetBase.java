@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2013 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.project.ui.view;
 
-/*
- * @author max
- */
-package consulo.codeEditor.markup;
+public abstract class SelectInTargetBase implements SelectInTarget {
+  @Override
+  public String getToolWindowId() {
+    return null;
+  }
 
-import consulo.codeEditor.Editor;
+  @Override
+  public String getMinorViewId() {
+    return null;
+  }
 
-import consulo.document.Document;
-import jakarta.annotation.Nonnull;
-import java.awt.*;
-
-public interface CustomHighlighterRenderer {
-  void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, Document document, @Nonnull Graphics g);
+  @Override
+  public float getWeight() {
+    return 0;
+  }
 }

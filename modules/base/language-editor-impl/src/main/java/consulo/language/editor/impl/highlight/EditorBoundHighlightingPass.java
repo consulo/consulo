@@ -16,13 +16,15 @@
 package consulo.language.editor.impl.highlight;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorSnapshot;
 import consulo.language.psi.PsiFile;
-
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * The pass which should be applied to every editor, even if there are many for this document.
- *
+ * <p>
  * Ordinary {@link TextEditorHighlightingPass} is document-bound,
  * i.e. after the pass finishes the markup is stored in the document.
  * For example, there is no point to recalculate syntax errors for each splitted editor of the same document.
@@ -40,5 +42,12 @@ public abstract class EditorBoundHighlightingPass extends TextEditorHighlighting
     super(psiFile.getProject(), editor.getDocument(), runIntentionPassAfter);
     myEditor = editor;
     myFile = psiFile;
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Object makeSnapshotFromUI() {
+    return EditorSnapshot.make(myEditor);
   }
 }

@@ -17,10 +17,10 @@ package consulo.ide.impl.webBrowser;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.SelectInTargetBase;
+import consulo.project.ui.view.SelectInTargetBase;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
 import consulo.project.ui.view.SelectInContext;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;

@@ -25,7 +25,6 @@ import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.view.EditorPainter;
 import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
-import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.IndentsPass;
 import consulo.ide.impl.idea.codeInsight.highlighting.DefaultLineMarkerRenderer;
@@ -37,8 +36,8 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.List;
 
@@ -47,13 +46,12 @@ import java.util.List;
  * @since 15/01/2023
  */
 public class DesktopAWTIndentPass extends IndentsPass {
-  private static final CustomHighlighterRenderer RENDERER = (editor, highlighter, g) -> {
+  private static final CustomHighlighterRenderer RENDERER = (editor, highlighter, doc, g) -> {
     if (!(editor instanceof RealEditor)) {
       return;
     }
 
     int startOffset = highlighter.getStartOffset();
-    final Document doc = highlighter.getDocument();
     if (startOffset >= doc.getTextLength()) return;
 
     final int endOffset = highlighter.getEndOffset();
@@ -191,7 +189,8 @@ public class DesktopAWTIndentPass extends IndentsPass {
   @Override
   @Nonnull
   protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
-    final RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
+    final RangeHighlighter highlighter =
+      mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     highlighter.setCustomRenderer(RENDERER);
     return highlighter;
   }

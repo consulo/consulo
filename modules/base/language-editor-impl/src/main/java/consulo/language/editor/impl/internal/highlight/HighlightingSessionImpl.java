@@ -15,8 +15,6 @@
  */
 package consulo.language.editor.impl.internal.highlight;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.EditorColorsScheme;
@@ -30,11 +28,12 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +49,6 @@ public class HighlightingSessionImpl implements HighlightingSession {
   private final Project myProject;
   private final Document myDocument;
   private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
-  private final TransferToEDTQueue<Runnable> myEDTQueue;
 
   private HighlightingSessionImpl(@Nonnull PsiFile psiFile, @Nonnull DaemonProgressIndicator progressIndicator, EditorColorsScheme editorColorsScheme) {
     myPsiFile = psiFile;
@@ -58,21 +56,12 @@ public class HighlightingSessionImpl implements HighlightingSession {
     myEditorColorsScheme = editorColorsScheme;
     myProject = psiFile.getProject();
     myDocument = PsiDocumentManager.getInstance(myProject).getDocument(psiFile);
-    myEDTQueue = new TransferToEDTQueue<Runnable>("Apply highlighting results", runnable -> {
-      runnable.run();
-      return true;
-    }, () -> myProject.isDisposed() || getProgressIndicator().isCanceled()) {
-      @Override
-      protected void schedule(@Nonnull Runnable updateRunnable) {
-        ApplicationManager.getApplication().invokeLater(updateRunnable, Application.get().getAnyModalityState());
-      }
-    };
   }
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
 
-  void applyInEDT(@Nonnull Runnable runnable) {
-    myEDTQueue.offer(runnable);
+  void applyInEDT(@RequiredUIAccess  @Nonnull Runnable runnable) {
+    myProject.getUIAccess().giveIfNeed(runnable);
   }
 
   public static HighlightingSession getHighlightingSession(@Nonnull PsiFile psiFile, @Nonnull ProgressIndicator progressIndicator) {
@@ -152,8 +141,6 @@ public class HighlightingSessionImpl implements HighlightingSession {
   }
 
   public void waitForHighlightInfosApplied() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-    myEDTQueue.drain();
   }
 
   public static void clearProgressIndicator(@Nonnull DaemonProgressIndicator indicator) {

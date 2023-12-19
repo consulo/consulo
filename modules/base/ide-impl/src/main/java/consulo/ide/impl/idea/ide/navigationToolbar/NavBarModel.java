@@ -2,17 +2,13 @@
 
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.navigationToolbar.NavBarModelExtension;
-import consulo.util.lang.function.PairProcessor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.dataContext.DataContext;
+import consulo.ide.navigationToolbar.NavBarModelExtension;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.*;
@@ -22,10 +18,14 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 import static consulo.language.psi.PsiUtilCore.findFileSystemItem;
@@ -174,7 +174,13 @@ public class NavBarModel {
       }
     }
 
-    List<Object> updatedModel = ReadAction.compute(() -> isValid(psiElement) ? myBuilder.createModel(psiElement, roots, ownerExtension) : Collections.emptyList());
+    List<Object> updatedModel =
+      ReadAction.tryCompute(() -> isValid(psiElement) ? myBuilder.createModel(psiElement, roots, ownerExtension) : Collections.emptyList());
+
+    if (updatedModel == null) {
+      // read not allowed
+      return;
+    }
 
     setModel(ContainerUtil.reverse(updatedModel));
   }

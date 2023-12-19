@@ -54,7 +54,7 @@ public class NewStampedLock extends StampedLock implements NewLock {
       if (stamp == 0) {
         return false;
       }
-      
+
       myStampHolder.set(stamp);
       return true;
     }
@@ -70,6 +70,8 @@ public class NewStampedLock extends StampedLock implements NewLock {
       if (stamp != null) {
         myStampHolder.remove();
         NewStampedLock.this.unlock(stamp);
+      } else {
+        throw new IllegalArgumentException("Can't unlock lock without stamp.");
       }
     }
 
@@ -104,6 +106,9 @@ public class NewStampedLock extends StampedLock implements NewLock {
 
   @Override
   public Lock asReadLock() {
+    if (isWriteLockedByCurrentThread()) {
+      throw new IllegalArgumentException();
+    }
     return myReadLock;
   }
 

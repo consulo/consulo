@@ -20,6 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -53,6 +54,14 @@ public interface DataLock {
 
   @Nonnull
   <V, T extends Throwable> V readSync(@RequiredReadAction @Nonnull ThrowableSupplier<V, T> supplier) throws T;
+
+  @Nonnull
+  default CompletableFuture<?> readAsync(@RequiredUIAccess Runnable runnable) {
+    return readAsync(() -> {
+      runnable.run();
+      return null;
+    });
+  }
 
   @Nonnull
   default <V> CompletableFuture<V> readAsync(@RequiredReadAction @Nonnull ThrowableSupplier<V, Throwable> supplier) {

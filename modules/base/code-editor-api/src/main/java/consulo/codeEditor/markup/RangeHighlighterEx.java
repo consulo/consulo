@@ -2,13 +2,10 @@
 
 package consulo.codeEditor.markup;
 
-import consulo.annotation.DeprecationInfo;
 import consulo.document.internal.RangeMarkerEx;
 
 import java.util.Comparator;
 
-@Deprecated
-@DeprecationInfo("Use RangeHighlighter")
 public interface RangeHighlighterEx extends RangeHighlighter, RangeMarkerEx {
   RangeHighlighterEx[] EMPTY_ARRAY = new RangeHighlighterEx[0];
 

@@ -43,7 +43,7 @@ public class UpdateHighlightersUtilImpl {
   private static boolean isCoveredByOffsets(HighlightInfo info, HighlightInfo coveredBy) {
     return ((HighlightInfoImpl)coveredBy).startOffset <= ((HighlightInfoImpl)info).startOffset &&
            ((HighlightInfoImpl)info).endOffset <= ((HighlightInfoImpl)coveredBy).endOffset &&
-           ((HighlightInfoImpl)info).getGutterIconRenderer() == null;
+           info.getGutterIconRenderer() == null;
   }
 
   public static void addHighlighterToEditorIncrementally(@Nonnull Project project,
@@ -68,7 +68,7 @@ public class UpdateHighlightersUtilImpl {
         return false;
       }
 
-      return ((HighlightInfoImpl)oldInfo).getGroup() != group || !((HighlightInfoImpl)oldInfo).equalsByActualOffset((HighlightInfoImpl)info);
+      return ((HighlightInfoImpl)oldInfo).getGroup() != group || !((HighlightInfoImpl)oldInfo).equalsByActualOffset(info);
     };
     boolean allIsClear = DaemonCodeAnalyzerEx.processHighlights(document, project, null, info.getActualStartOffset(), info.getActualEndOffset(), otherHighlightInTheWayProcessor);
     if (allIsClear) {
@@ -318,7 +318,7 @@ public class UpdateHighlightersUtilImpl {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     final Document document = e.getDocument();
-    if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
+    if (document instanceof DocumentEx && document.isInBulkUpdate()) return;
 
     final MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
     assertMarkupConsistent(markup, project);

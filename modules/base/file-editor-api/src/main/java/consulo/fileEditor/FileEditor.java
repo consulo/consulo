@@ -45,6 +45,13 @@ public interface FileEditor extends UserDataHolder, Disposable {
    */
   String PROP_VALID = "valid";
 
+  /**
+   * @return true if component visible for user (ui component attached to ui)
+   */
+  default boolean isDisplayable() {
+    return true;
+  }
+
   @Nullable
   default Component getUIComponent() {
     return null;

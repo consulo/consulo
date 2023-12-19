@@ -35,11 +35,20 @@ import java.util.concurrent.locks.Lock;
 public class NewDataLock extends BaseDataLock {
   private final NewLock myLock = new NewStampedLock();
 
-  private final ExecutorService myInternalWriteExecutor = Executors.newSingleThreadExecutor(r -> new Thread(r, "Write Thread"));
-  private final Executor myWriteExecutor = command -> myInternalWriteExecutor.submit(() -> runWriteAction(() -> {
-    command.run();
-    return null;
-  }));
+  private final ExecutorService myInternalWriteExecutor = Executors.newSingleThreadExecutor(r -> {
+    Thread thread = new Thread(r, "Write Thread");
+    thread.setPriority(Thread.MAX_PRIORITY);
+    return thread;
+  });
+
+  private final Executor myWriteExecutor = command -> {
+    myInternalWriteExecutor.execute(() -> {
+      runWriteAction(() -> {
+        command.run();
+        return null;
+      }, true);
+    });
+  };
 
   private final EventDispatcher<ApplicationListener> myDispatcher;
 
@@ -73,18 +82,30 @@ public class NewDataLock extends BaseDataLock {
 
   @Nonnull
   @Override
+  public <V> CompletableFuture<V> readAsync(@Nonnull ThrowableSupplier<V, Throwable> supplier) {
+    if (isReadAccessAllowed()) {
+      try {
+        return CompletableFuture.completedFuture(supplier.get());
+      }
+      catch (Throwable t) {
+        return CompletableFuture.failedFuture(t);
+      }
+    }
+
+    return super.readAsync(supplier);
+  }
+
+  @Nonnull
+  @Override
   public <V> CompletableFuture<V> writeAsync(@Nonnull ThrowableSupplier<V, Throwable> supplier) {
     // is inside current write thread
     if (isWriteAccessAllowed()) {
-      return CompletableFuture.supplyAsync(() -> runWriteActionUnsafe(() -> {
-        try {
-          return supplier.get();
-        }
-        catch (Throwable throwable) {
-          ExceptionUtil.rethrow(throwable);
-          return null;
-        }
-      }));
+      try {
+        return CompletableFuture.completedFuture(runWriteActionUnsafe(supplier));
+      }
+      catch (Throwable t) {
+        return CompletableFuture.failedFuture(t);
+      }
     }
 
     return super.writeAsync(supplier);
@@ -124,6 +145,11 @@ public class NewDataLock extends BaseDataLock {
 
   @Override
   public boolean tryReadSync(Runnable runnable) {
+    if (isReadAccessAllowed()) {
+      runnable.run();
+      return true;
+    }
+
     Lock readLock = myLock.asReadLock();
     if (readLock.tryLock()) {
       try {
@@ -139,7 +165,7 @@ public class NewDataLock extends BaseDataLock {
 
   @Override
   public <T, E extends Throwable> T runWriteActionUnsafe(@Nonnull ThrowableSupplier<T, E> computation) throws E {
-    return runWriteAction(computation);
+    return runWriteAction(computation, false);
   }
 
   @RequiredReadAction
@@ -163,12 +189,15 @@ public class NewDataLock extends BaseDataLock {
     }
   }
 
-  private <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+  private <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation, boolean lock) throws E {
     myDispatcher.getMulticaster().beforeWriteActionStart(computation);
 
     Lock writeLock = myLock.asWriteLock();
     try {
-      writeLock.lock();
+      if (lock) {
+        writeLock.lock();
+      }
+
       myDispatcher.getMulticaster().writeActionStarted(computation);
       T value = computation.get();
       myDispatcher.getMulticaster().writeActionFinished(computation);
@@ -179,7 +208,10 @@ public class NewDataLock extends BaseDataLock {
       return null;
     }
     finally {
-      writeLock.unlock();
+      if (lock) {
+        writeLock.unlock();
+      }
+
       myDispatcher.getMulticaster().afterWriteActionFinished(computation);
     }
   }

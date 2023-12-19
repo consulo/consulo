@@ -96,6 +96,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
   }
 
   @Override
+  public boolean isDisplayable() {
+    return myComponent.getComponentContainer().getComponent().isDisplayable();
+  }
+
+  @Override
   @Nonnull
   public JComponent getComponent() {
     return myComponent.getComponentContainer().getComponent();

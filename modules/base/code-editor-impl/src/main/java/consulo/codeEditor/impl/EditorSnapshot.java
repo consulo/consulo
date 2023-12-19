@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2013 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.codeEditor.impl;
 
-import consulo.project.ui.view.SelectInTarget;
+import consulo.codeEditor.Editor;
+import consulo.ui.annotation.RequiredUIAccess;
 
-public abstract class SelectInTargetBase implements SelectInTarget {
-  @Override
-  public String getToolWindowId() {
-    return null;
-  }
-
-  @Override
-  public String getMinorViewId() {
-    return null;
-  }
-
-  @Override
-  public float getWeight() {
-    return 0;
+/**
+ * @author VISTALL
+ * @since 2023-12-16
+ */
+public record EditorSnapshot(int caretOffset) {
+  @RequiredUIAccess
+  public static EditorSnapshot make(Editor editor) {
+    return new EditorSnapshot(editor.getCaretModel().getOffset());
   }
 }

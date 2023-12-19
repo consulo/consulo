@@ -142,7 +142,7 @@ public class ProjectViewTree extends DnDAwareTree {
       AbstractTreeNode node = (AbstractTreeNode)object;
       Object value = node.getValue();
       if (value instanceof PsiElement) {
-        return ReadAction.compute(() -> getColorForElement((PsiElement)value));
+        return ReadAction.tryCompute(() -> getColorForElement((PsiElement)value));
       }
     }
     if (object instanceof ProjectViewNode) {
@@ -151,7 +151,7 @@ public class ProjectViewTree extends DnDAwareTree {
       if (file != null) {
         Project project = node.getProject();
         if (project != null && !project.isDisposed()) {
-          Color color = ReadAction.compute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
+          Color color = ReadAction.tryCompute(() -> VfsPresentationUtil.getFileBackgroundColor(project, file));
           if (color != null) return color;
         }
       }

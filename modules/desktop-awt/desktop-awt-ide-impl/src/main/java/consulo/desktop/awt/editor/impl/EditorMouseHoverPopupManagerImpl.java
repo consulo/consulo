@@ -1,8 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.editor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.application.concurrent.DataLock;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
@@ -47,6 +49,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
@@ -296,21 +300,27 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
       closeHint();
       return;
     }
-    Context context = createContext(editor, targetOffset);
-    if (context == null) {
-      closeHint();
-      return;
-    }
-    Context.Relation relation = isHintShown() ? context.compareTo(myContext) : Context.Relation.DIFFERENT;
-    if (relation == Context.Relation.SAME) {
-      return;
-    }
-    else if (relation == Context.Relation.DIFFERENT) {
-      closeHint();
-    }
-    scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
+
+
+    UIAccess uiAccess = UIAccess.current();
+    DataLock.getInstance().readAsync(() -> createContext(editor, targetOffset))
+            .whenCompleteAsync((context, throwable) -> {
+              if (context == null) {
+                closeHint();
+                return;
+              }
+              Context.Relation relation = isHintShown() ? context.compareTo(myContext) : Context.Relation.DIFFERENT;
+              if (relation == Context.Relation.SAME) {
+                return;
+              }
+              else if (relation == Context.Relation.DIFFERENT) {
+                closeHint();
+              }
+              scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
+            }, uiAccess);
   }
 
+  @RequiredReadAction
   private static Context createContext(Editor editor, int offset) {
     Project project = Objects.requireNonNull(editor.getProject());
 
@@ -337,6 +347,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
     closeHint();
   }
 
+  @RequiredUIAccess
   private void closeHint() {
     AbstractPopup hint = getCurrentHint();
     if (hint != null) {

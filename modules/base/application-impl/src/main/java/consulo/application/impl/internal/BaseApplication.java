@@ -35,9 +35,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.component.ComponentManager;
-import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.impl.internal.IComponentStore;
@@ -53,7 +51,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
-import consulo.project.internal.ProjectManagerEx;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
@@ -121,6 +118,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return SemVer.parseFromText(version);
   });
 
+  private ApplicationConcurrency myConcurrency;
+
   public BaseApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(null, "Application", ComponentScope.APPLICATION, componentBinding);
     mySplashRef = splashRef;
@@ -146,6 +145,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     myProgressManager = getInjectingContainer().getInstance(ProgressManager.class);
 
     super.initNotLazyServices();
+
+    myConcurrency = getInjectingContainer().getInstance(ApplicationConcurrency.class);
   }
 
   @Nonnull
@@ -282,10 +283,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     saveSettings();
   }
 
+  @Nonnull
   @Override
   public CompletableFuture<?> saveAllAsync() {
     if (myDoNotSave) return CompletableFuture.completedFuture(null);
 
+    long time = System.currentTimeMillis();
     return myLock.writeAsync(() -> FileDocumentManager.getInstance().saveAllDocuments())
                  .thenComposeAsync(o -> {
                    Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
@@ -304,7 +307,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
                    }
                    futures.add(saveSettingsAsync());
                    return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-                 }, myLock.writeExecutor());
+                 }, myLock.writeExecutor())
+                 .whenComplete((aVoid, throwable) -> {
+                   if (throwable != null) {
+                     LOG.error(throwable);
+                   }
+                   
+                   LOG.info("Save all in " + (System.currentTimeMillis() - time) + " ms.");
+                 });
   }
 
   @Override
@@ -325,35 +335,23 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Future<?> executeOnPooledThread(@Nonnull final Runnable action) {
-    return PooledThreadExecutor.getInstance().submit(new RunnableAsCallable(action));
+    ApplicationConcurrency concurrency = myConcurrency;
+    if (concurrency == null) {
+      throw new IllegalArgumentException(
+        "Can't call #executeOnPooledThread() while application initialize. Use ApplicationConcurency injection");
+    }
+    return concurrency.getExecutorService().submit(action);
   }
 
   @Nonnull
   @Override
   public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
-    return PooledThreadExecutor.getInstance().submit(new Callable<T>() {
-      @Override
-      public T call() {
-        try {
-          return action.call();
-        }
-        catch (ProcessCanceledException e) {
-          // ignore
-        }
-        catch (Throwable t) {
-          LOG.error(t);
-        }
-        finally {
-          Thread.interrupted(); // reset interrupted status
-        }
-        return null;
-      }
-
-      @Override
-      public String toString() {
-        return action.toString();
-      }
-    });
+    ApplicationConcurrency concurrency = myConcurrency;
+    if (concurrency == null) {
+      throw new IllegalArgumentException(
+        "Can't call #executeOnPooledThread() while application initialize. Use ApplicationConcurency injection");
+    }
+    return concurrency.getExecutorService().submit(action);
   }
 
   @Override
@@ -398,7 +396,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredUIAccess
   @Override
   public void dispose() {
-    Application.get().assertIsDispatchThread();
+    assertIsDispatchThread();
 
     fireApplicationExiting();
 

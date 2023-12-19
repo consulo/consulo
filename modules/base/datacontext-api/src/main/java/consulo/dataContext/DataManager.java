@@ -18,14 +18,13 @@ package consulo.dataContext;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.internal.RootComponentHolder;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
+import java.util.concurrent.CompletableFuture;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class DataManager {
@@ -48,10 +47,10 @@ public abstract class DataManager {
    * @return {@link DataContext} constructed by the currently focused component.
    */
   @Nonnull
-  public abstract Promise<DataContext> getDataContextFromFocusAsync();
+  public abstract CompletableFuture<DataContext> getDataContextFromFocusAsync();
 
   @Nonnull
-  public abstract AsyncResult<DataContext> getDataContextFromFocus();
+  public abstract CompletableFuture<DataContext> getDataContextFromFocus();
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>

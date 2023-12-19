@@ -151,7 +151,7 @@ public class ShowFilePathAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    show(getFile(e), popup -> DataManager.getInstance().getDataContextFromFocus().doWhenDone(popup::showInBestPositionFor));
+    show(getFile(e), popup -> DataManager.getInstance().getDataContextFromFocus().thenAccept(popup::showInBestPositionFor));
   }
 
   public static void show(final VirtualFile file, final MouseEvent e) {

@@ -254,9 +254,6 @@ public final class ProgressRunner<R> {
   // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
   // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
   private boolean checkIfForceDirectExecNeeded() {
-    if (isSync && UIAccess.isUIThread() && !ApplicationManager.getApplication().isWriteThread()) {
-      throw new IllegalStateException("Running sync tasks on pure EDT (w/o IW lock) is dangerous for several reasons.");
-    }
     if (!isSync && isModal && UIAccess.isUIThread()) {
       throw new IllegalStateException("Running async modal tasks from EDT is impossible: modal implies sync dialog show + polling events");
     }

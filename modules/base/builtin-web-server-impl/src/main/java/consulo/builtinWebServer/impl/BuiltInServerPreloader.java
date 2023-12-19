@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2023 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.actionSystem.impl;
+package consulo.builtinWebServer.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.action.ActionManager;
-import consulo.application.ApplicationManager;
 import consulo.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
+import consulo.builtinWebServer.BuiltInServerManager;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
- * @author yole
+ * @author VISTALL
+ * @since 2023-12-03
  */
 @ExtensionImpl
-public class ActionPreloader implements PreloadingActivity {
+public class BuiltInServerPreloader implements PreloadingActivity {
+  private BuiltInServerManager myBuiltInServerManager;
+
+  @Inject
+  public BuiltInServerPreloader(BuiltInServerManager builtInServerManager) {
+    myBuiltInServerManager = builtInServerManager;
+  }
+
   @Override
   public void preload(@Nonnull ProgressIndicator indicator) {
-    if (!ApplicationManager.getApplication().isUnitTestMode() && !ApplicationManager.getApplication().isHeadlessEnvironment()) {
-      ((ActionManagerImpl)ActionManager.getInstance()).preloadActions(indicator);
-    }
+    ((BuiltInServerManagerImpl)myBuiltInServerManager).startServerInPooledThread();
   }
 }

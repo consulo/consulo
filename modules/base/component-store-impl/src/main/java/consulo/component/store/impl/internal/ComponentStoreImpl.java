@@ -47,13 +47,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class ComponentStoreImpl implements IComponentStore {
   private static final Logger LOG = Logger.getInstance(ComponentStoreImpl.class);
-  private static ThreadLocal<Boolean> ourInsideSavingSessionLocal = ThreadLocal.withInitial(() -> Boolean.FALSE);
-
-  public static void assertIfInsideSavingSession() {
-    if (ourInsideSavingSessionLocal.get() == Boolean.TRUE) {
-      throw new IllegalStateException("Can't call another thread inside saving session. Thread: " + Thread.currentThread());
-    }
-  }
 
   private final Map<String, StateComponentInfo<?>> myComponents = new ConcurrentHashMap<>();
   private final Map<String, Long> myComponentsModificationCount = ConcurrentFactoryMap.createMap(k -> -1L);

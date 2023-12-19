@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -96,7 +97,7 @@ public class PerformanceWatcher implements Disposable {
   }
 
   @Inject
-  public PerformanceWatcher(ContainerPathManager containerPathManager) {
+  public PerformanceWatcher(ContainerPathManager containerPathManager, ApplicationConcurrency applicationConcurrency) {
     myContainerPathManager = containerPathManager;
     myCurHangLogDir =
     mySessionLogDir = new File(containerPathManager.getLogPath(), "/threadDumps-" + myDateFormat.format(new Date()) + "-" + ApplicationInfo.getInstance().getBuild().asString());
@@ -120,7 +121,7 @@ public class PerformanceWatcher implements Disposable {
         }
       });
 
-      ApplicationManager.getApplication().executeOnPooledThread((Runnable)this::deleteOldThreadDumps);
+      applicationConcurrency.getExecutorService().execute(this::deleteOldThreadDumps);
 
       for (MemoryPoolMXBean bean : ManagementFactory.getMemoryPoolMXBeans()) {
         if ("Code Cache".equals(bean.getName())) {

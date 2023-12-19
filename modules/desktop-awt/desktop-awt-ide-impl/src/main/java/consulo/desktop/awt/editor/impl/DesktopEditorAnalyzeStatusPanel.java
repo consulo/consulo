@@ -18,6 +18,7 @@ package consulo.desktop.awt.editor.impl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.PowerSaveMode;
+import consulo.application.concurrent.DataLock;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
@@ -29,13 +30,13 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.action.ActionButtonUI;
+import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
-import consulo.desktop.awt.action.ActionButtonUI;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.desktop.awt.action.ActionButtonImpl;
-import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
@@ -45,6 +46,7 @@ import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Size;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
@@ -65,10 +67,10 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorEvent;
@@ -193,7 +195,11 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private final ActionButtonImpl myActionEmulator;
     private ActionButtonUI myActionButtonUI;
 
-    private StatusButton(@Nonnull AnAction action, @Nonnull Presentation presentation, @Nonnull String place, @Nonnull EditorColorsScheme colorsScheme, @Nonnull BooleanSupplier hasNavButtons) {
+    private StatusButton(@Nonnull AnAction action,
+                         @Nonnull Presentation presentation,
+                         @Nonnull String place,
+                         @Nonnull EditorColorsScheme colorsScheme,
+                         @Nonnull BooleanSupplier hasNavButtons) {
       setLayout(new GridBagLayout());
       setOpaque(false);
 
@@ -352,7 +358,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
         int counter = 0;
         for (StatusItem item : status) {
-          add(createStyledLabel(item.getText(), item.getIcon(), SwingConstants.LEFT), gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
+          add(createStyledLabel(item.getText(), item.getIcon(), SwingConstants.LEFT),
+              gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
         }
 
         add(Box.createHorizontalStrut(leftRightOffset), gc.next());
@@ -380,13 +387,15 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
           if (!SystemInfo.isWindows) {
             Font font = getFont();
-            font = new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2))); // Allow to reset the font by UI
+            font =
+              new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2))); // Allow to reset the font by UI
             setFont(font);
           }
         }
       };
 
-      label.setForeground(new JBColor(() -> ObjectUtil.notNull(TargetAWT.to(colorsScheme.getColor(ICON_TEXT_COLOR)), TargetAWT.to(ICON_TEXT_COLOR.getDefaultColorValue()))));
+      label.setForeground(new JBColor(() -> ObjectUtil.notNull(TargetAWT.to(colorsScheme.getColor(ICON_TEXT_COLOR)),
+                                                               TargetAWT.to(ICON_TEXT_COLOR.getDefaultColorValue()))));
       label.setIconTextGap(JBUIScale.scale(1));
 
       return label;
@@ -465,8 +474,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       myContent.setBackground(UIUtil.getToolTipBackground());
 
       myPopupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(myContent, null).
-              setCancelOnClickOutside(true).
-              setCancelCallback(() -> analyzerStatus == null || analyzerStatus.getController().canClosePopup());
+        setCancelOnClickOutside(true).
+                                       setCancelCallback(() -> analyzerStatus == null || analyzerStatus.getController().canClosePopup());
 
       myAncestorListener = new AncestorListenerAdapter() {
         @Override
@@ -493,7 +502,9 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     private void showPopup(@Nonnull InputEvent event) {
       showPopup(event, (size) -> {
         JComponent owner = (JComponent)event.getComponent();
-        return new RelativePoint(owner, new Point(owner.getWidth() - owner.getInsets().right + JBUIScale.scale(DELTA_X) - size.width, owner.getHeight() + JBUIScale.scale(DELTA_Y)));
+        return new RelativePoint(owner,
+                                 new Point(owner.getWidth() - owner.getInsets().right + JBUIScale.scale(DELTA_X) - size.width,
+                                           owner.getHeight() + JBUIScale.scale(DELTA_Y)));
       });
     }
 
@@ -536,10 +547,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       myContent.removeAll();
 
       GridBag gc = new GridBag().nextLine().next().
-              anchor(GridBagConstraints.LINE_START).
-              weightx(1).
-              fillCellHorizontally().
-              insets(10, 10, 10, 0);
+        anchor(GridBagConstraints.LINE_START).
+                                  weightx(1).
+                                  fillCellHorizontally().
+                                  insets(10, 10, 10, 0);
 
       boolean hasTitle = StringUtil.isNotEmpty(analyzerStatus.getTitle());
 
@@ -559,7 +570,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
       java.util.List<AnAction> actions = controller.getActions();
       if (!actions.isEmpty()) {
-        ActionButtonImpl menuButton = new ActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
+        ActionButtonImpl menuButton =
+          new ActionButtonImpl(new MenuAction(actions), presentation, ActionPlaces.EDITOR_POPUP, ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
 
         myContent.add(menuButton, gc.next().anchor(GridBagConstraints.LINE_END).weightx(0).insets(10, 6, 10, 6));
       }
@@ -568,19 +580,28 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       JPanel myProgressPanel = new NonOpaquePanel(new GridBagLayout());
       GridBag progressGC = new GridBag();
       for (PassWrapper pass : passes) {
-        myProgressPanel.add(new JLabel(pass.getPresentableName() + ": "), progressGC.nextLine().next().anchor(GridBagConstraints.LINE_START).weightx(0).insets(0, 10, 0, 6));
+        myProgressPanel.add(new JLabel(pass.getPresentableName() + ": "),
+                            progressGC.nextLine().next().anchor(GridBagConstraints.LINE_START).weightx(0).insets(0, 10, 0, 6));
 
         JProgressBar pb = new JProgressBar(0, 100);
         pb.setValue(pass.toPercent());
-        myProgressPanel.add(pb, progressGC.next().anchor(GridBagConstraints.LINE_START).weightx(1).fillCellHorizontally().insets(0, 0, 0, 6));
+        myProgressPanel.add(pb,
+                            progressGC.next().anchor(GridBagConstraints.LINE_START).weightx(1).fillCellHorizontally().insets(0, 0, 0, 6));
         myProgressBarMap.put(pass.getPresentableName(), pb);
       }
 
-      myContent.add(myProgressPanel, gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1));
+      myContent.add(myProgressPanel,
+                    gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1));
 
       if (hasTitle) {
         int topIndent = !myProgressBarMap.isEmpty() ? 10 : 0;
-        gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1).insets(topIndent, 10, 10, 6);
+        gc.nextLine()
+          .next()
+          .anchor(GridBagConstraints.LINE_START)
+          .fillCellHorizontally()
+          .coverLine()
+          .weightx(1)
+          .insets(topIndent, 10, 10, 6);
 
         if (StringUtil.isNotEmpty(analyzerStatus.getDetails())) {
           myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getDetails())), gc);
@@ -598,10 +619,14 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       //  myContent.add(openProblemsViewLabel, gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1).insets(10, 10, 10, 0));
       //}
 
-      myContent.add(createLowerPanel(controller), gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1));
+      myContent.add(createLowerPanel(controller),
+                    gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1));
     }
 
+    @RequiredUIAccess
     private void updateVisiblePopup() {
+      UIAccess.assertIsUIThread();
+
       if (myPopup != null && myPopup.isVisible()) {
         updateContentPanel(analyzerStatus.getController());
 
@@ -747,11 +772,14 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
   private static final int DELTA_X = 6;
   private static final int DELTA_Y = 6;
 
-  private static final EditorColorKey HOVER_BACKGROUND = EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBCurrentTheme.ActionButton.hoverBackground()));
+  private static final EditorColorKey HOVER_BACKGROUND =
+    EditorColorKey.createColorKey("ActionButton.hoverBackground", TargetAWT.from(JBCurrentTheme.ActionButton.hoverBackground()));
 
-  private static final EditorColorKey PRESSED_BACKGROUND = EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBCurrentTheme.ActionButton.pressedBackground()));
+  private static final EditorColorKey PRESSED_BACKGROUND =
+    EditorColorKey.createColorKey("ActionButton.pressedBackground", TargetAWT.from(JBCurrentTheme.ActionButton.pressedBackground()));
 
-  private static final EditorColorKey ICON_TEXT_COLOR = EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
+  private static final EditorColorKey ICON_TEXT_COLOR =
+    EditorColorKey.createColorKey("ActionButtonImpl.iconTextForeground", TargetAWT.from(UIUtil.getContextHelpForeground()));
 
   private static int getStatusIconSize() {
     return JBUIScale.scale(18);
@@ -925,7 +953,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       public void actionPerformed(@Nonnull AnActionEvent e) {
         IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myEditor.getProject());
 
-        AnActionEvent delegateEvent = AnActionEvent.createFromAnAction(delegate, e.getInputEvent(), ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, myEditor.getDataContext());
+        AnActionEvent delegateEvent =
+          AnActionEvent.createFromAnAction(delegate, e.getInputEvent(), ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, myEditor.getDataContext());
 
         if (focusManager.getFocusOwner() != myEditor.getContentComponent()) {
           focusManager.requestFocus(myEditor.getContentComponent(), true).doWhenDone(() -> {
@@ -985,22 +1014,31 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     }
   }
 
+  @RequiredUIAccess
   public void repaintTrafficLightIcon() {
     ErrorStripeRenderer errorStripeRenderer = myModel.getErrorStripeRenderer();
 
     if (errorStripeRenderer == null) return;
 
+    UIAccess uiAccess = UIAccess.current();
     myStatusUpdates.queue(Update.create("icon", () -> {
-      if (errorStripeRenderer != null) {
+      DataLock.getInstance().readAsync(() -> {
         AnalyzerStatus newStatus = errorStripeRenderer.getStatus(myEditor);
-        if (!AnalyzerStatus.equals(newStatus, analyzerStatus)) {
+        boolean statusChanged = !AnalyzerStatus.equals(newStatus, analyzerStatus);
+        if (statusChanged) {
           changeStatus(newStatus);
+        }
+        return statusChanged;
+      }).whenCompleteAsync((statusChanged, throwable) -> {
+        if (statusChanged == Boolean.TRUE) {
+          updateOnStatusChange();
         }
 
         if (myErrorPanel != null) {
           myErrorPanel.repaint();
         }
-      }
+      }, uiAccess);
+
     }));
   }
 
@@ -1012,7 +1050,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
   }
 
   private void changeStatus(AnalyzerStatus newStatus) {
-    boolean resetAnalyzingStatus = analyzerStatus != null && analyzerStatus.isTextStatus() && analyzerStatus.getAnalyzingType() == AnalyzingType.COMPLETE;
+    boolean resetAnalyzingStatus =
+      analyzerStatus != null && analyzerStatus.isTextStatus() && analyzerStatus.getAnalyzingType() == AnalyzingType.COMPLETE;
     analyzerStatus = newStatus;
     //smallIconLabel.setIcon(analyzerStatus.getIcon());
 
@@ -1028,7 +1067,10 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     if (analyzerStatus.getAnalyzingType() != AnalyzingType.EMPTY) {
       showNavigation = analyzerStatus.isShowNavigation();
     }
+  }
 
+  @RequiredUIAccess
+  public void updateOnStatusChange() {
     myPopupManager.updateVisiblePopup();
     ActivityTracker.getInstance().inc();
   }

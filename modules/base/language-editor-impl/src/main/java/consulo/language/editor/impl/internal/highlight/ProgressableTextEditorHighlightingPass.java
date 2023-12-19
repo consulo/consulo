@@ -16,6 +16,7 @@
 
 package consulo.language.editor.impl.internal.highlight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
@@ -69,6 +70,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     myHighlightInfoProcessor = highlightInfoProcessor;
   }
 
+  @RequiredReadAction
   @Override
   protected boolean isValid() {
     return super.isValid() && (myFile == null || myFile.isValid());

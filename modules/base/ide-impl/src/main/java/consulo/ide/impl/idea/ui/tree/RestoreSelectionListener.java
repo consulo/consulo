@@ -1,17 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.tree;
 
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
-
-import static consulo.ui.ex.awt.tree.TreeUtil.visitVisibleRows;
-import static java.awt.EventQueue.invokeLater;
 
 /**
  * Temporary solution to restore selection in a tree.
@@ -27,7 +25,7 @@ public final class RestoreSelectionListener implements TreeSelectionListener {
         if (source instanceof JTree) {
           JTree tree = (JTree)source;
           if (tree.getSelectionModel().isSelectionEmpty()) {
-            invokeLater(() -> {
+            SwingUtilities.invokeLater(() -> {
               // restore selection later, because nodes are removed before they are inserted
               if (tree.getSelectionModel().isSelectionEmpty()) {
                 // restore a path selection only if nothing is selected now
@@ -41,7 +39,7 @@ public final class RestoreSelectionListener implements TreeSelectionListener {
                     return action;
                   }
                 };
-                visitVisibleRows(tree, visitor);
+                TreeUtil.visitVisibleRows(tree, visitor);
                 tree.setSelectionPath(reference.get());
               }
             });

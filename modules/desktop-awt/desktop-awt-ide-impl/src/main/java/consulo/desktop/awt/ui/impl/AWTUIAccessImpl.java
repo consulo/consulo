@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
@@ -26,6 +25,7 @@ import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import jakarta.annotation.Nonnull;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletableFuture;
@@ -59,31 +59,19 @@ public class AWTUIAccessImpl extends BaseUIAccess implements UIAccess {
 
   @Override
   public void give(@Nonnull Runnable runnable) {
-    EventQueue.invokeLater(wrapRunnable(runnable));
+    SwingUtilities.invokeLater(wrapRunnable(runnable));
   }
 
   @Nonnull
   @Override
   public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
-    CompletableFuture<T> future = new CompletableFuture<>();
-    EventQueue.invokeLater(() -> {
-      try {
-        T result = supplier.get();
-        future.complete(result);
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        future.completeExceptionally(e);
-      }
-    });
-    return future;
+    return CompletableFuture.supplyAsync(supplier, this);
   }
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
-    ComponentStoreImpl.assertIfInsideSavingSession();
     try {
-      EventQueue.invokeAndWait(wrapRunnable(runnable));
+      SwingUtilities.invokeAndWait(wrapRunnable(runnable));
     }
     catch (InterruptedException | InvocationTargetException ignored) {
     }

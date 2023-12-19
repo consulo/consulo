@@ -22,7 +22,7 @@ import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.content.impl.internal.bundle.SdkPointerManagerImpl;
 import consulo.content.impl.internal.bundle.SdkTableImpl;
-import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
+import consulo.application.PreloadingActivity;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
@@ -40,7 +40,7 @@ import java.util.List;
  * @since 15:05/22.11.13
  */
 @ExtensionImpl
-public class PredefinedBundlesLoader extends PreloadingActivity {
+public class PredefinedBundlesLoader implements PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
 
   private static class ContextImpl implements PredefinedBundlesProvider.Context {

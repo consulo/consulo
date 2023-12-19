@@ -75,8 +75,6 @@ public class WebUIAccessImpl extends BaseUIAccess implements UIAccess {
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
-    ComponentStoreImpl.assertIfInsideSavingSession();
-
     if (isValid()) {
       myUI.accessSynchronously(() -> wrapRunnable(runnable).run());
     }

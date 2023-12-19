@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.application;
+package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.application.progress.ProgressIndicator;
 import jakarta.annotation.Nonnull;
 
@@ -27,18 +26,15 @@ import jakarta.annotation.Nonnull;
  * while required stuff is being lazily loaded.
  *
  * @author peter
- * @since 144
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class PreloadingActivity {
-  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create(PreloadingActivity.class);
-
+public interface PreloadingActivity {
   /**
    * Perform the preloading
+   *
    * @param indicator a progress indicator for the background preloading process.
    *                  Canceled if the application has exited.
    *                  Long actions should periodically perform <code>indicator.checkCanceled()</code>.
    */
   public abstract void preload(@Nonnull ProgressIndicator indicator);
-
 }

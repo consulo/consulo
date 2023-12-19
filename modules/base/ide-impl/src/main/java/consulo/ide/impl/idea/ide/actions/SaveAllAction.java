@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.application.Application;
-import consulo.application.concurrent.DataLock;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -27,17 +26,15 @@ import jakarta.inject.Inject;
 
 public class SaveAllAction extends AnAction implements DumbAware {
   private final Application myApplication;
-  private final DataLock myLock;
 
   @Inject
-  public SaveAllAction(Application application, DataLock lock) {
+  public SaveAllAction(Application application) {
     myApplication = application;
-    myLock = lock;
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    myLock.writeAsync(myApplication::saveAll);
+    myApplication.saveAllAsync();
   }
 }
