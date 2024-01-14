@@ -4,18 +4,17 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.psi.PsiNavigationSupport;
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import jakarta.inject.Singleton;
-
+import consulo.language.psi.PsiNavigationSupport;
+import consulo.language.psi.util.EditSourceUtil;
+import consulo.navigation.Navigatable;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 /**
  * @author yole
@@ -32,7 +31,8 @@ public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   @Nonnull
   @Override
   public Navigatable createNavigatable(@Nonnull Project project, @Nonnull VirtualFile vFile, int offset) {
-    return new OpenFileDescriptorImpl(project, vFile, offset);
+    OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(project);
+    return factory.newBuilder(vFile).offset(offset).build();
   }
 
   @Override
@@ -42,6 +42,11 @@ public class PsiNavigationSupportImpl extends PsiNavigationSupport {
 
   @Override
   public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
-    ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPaneImpl.ID, null, psiDirectory.getVirtualFile(), requestFocus);
+    ProjectViewSelectInTarget.select(psiDirectory.getProject(),
+                                     this,
+                                     ProjectViewPaneImpl.ID,
+                                     null,
+                                     psiDirectory.getVirtualFile(),
+                                     requestFocus);
   }
 }

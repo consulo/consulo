@@ -15,6 +15,7 @@
  */
 package consulo.fileEditor.impl.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.application.Application;
@@ -28,15 +29,16 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Anton Katilin
@@ -45,15 +47,46 @@ import java.util.*;
 @Singleton
 @ServiceImpl
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
-public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerState> {
+public final class FileEditorProviderManagerImpl implements FileEditorProviderManager, PersistentStateComponent<FileEditorProviderManagerState> {
 
   private final Application myApplication;
+
+  private final Project myProject;
+  private final Provider<DumbService> myDumbService;
 
   private FileEditorProviderManagerState myState = new FileEditorProviderManagerState();
 
   @Inject
-  public FileEditorProviderManagerImpl(Application application) {
+  public FileEditorProviderManagerImpl(Application application, Project project, Provider<DumbService> dumbService) {
     myApplication = application;
+    myProject = project;
+    myDumbService = dumbService;
+  }
+
+  @RequiredReadAction
+  @Nonnull
+  @Override
+  public List<FileEditorProvider> getProviders(@Nonnull VirtualFile file) {
+    DumbService dumbService = myDumbService.get();
+    List<FileEditorProvider> list = myApplication.getExtensionList(FileEditorProvider.class);
+
+    List<FileEditorProvider> result = new ArrayList<>(2);
+    boolean[] doNotShowTextEditor = {false};
+    dumbService.forEachDumAwareness(list, provider -> {
+      if (provider.accept(myProject, file)) {
+        result.add(provider);
+        doNotShowTextEditor[0] |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
+      }
+    });
+
+    // Throw out default editors provider if necessary
+    if (doNotShowTextEditor[0]) {
+      ContainerUtil.retainAll(result, provider -> !(provider instanceof TextEditorProvider));
+    }
+
+    // Sort editors according policies
+    result.sort(MyComparator.ourInstance);
+    return result;
   }
 
   @Override
@@ -109,23 +142,28 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   public void providerSelected(FileEditorComposite composite) {
-    if (!(composite instanceof FileEditorWithProviderComposite)) return;
-    FileEditorProvider[] providers = ((FileEditorWithProviderComposite)composite).getProviders();
-    if (providers.length < 2) return;
-    myState.getSelectedProviders().put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
+    if (!(composite instanceof FileEditorWithProviderComposite fileEditorWithProviderComposite)) return;
+    FileEditor[] editors = fileEditorWithProviderComposite.getEditors();
+    if (editors.length < 2) return;
+    myState.getSelectedProviders().put(computeKey(editors), composite.getSelectedEditor().getProvider().getEditorTypeId());
   }
 
-  private static String computeKey(FileEditorProvider[] providers) {
-    return StringUtil.join(ContainerUtil.map(providers, FileEditorProvider::getEditorTypeId), ",");
+  private static String computeKey(FileEditor[] editors) {
+    return Arrays.stream(editors)
+                 .map(FileEditor::getProvider)
+                 .map(FileEditorProvider::getEditorTypeId)
+                 .collect(Collectors.joining(","));
   }
 
   @Nullable
- public FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+  public FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager,
+                                                          VirtualFile file,
+                                                          FileEditor[] fileEditors) {
     FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
-    if (provider != null || providers.length < 2) {
+    if (provider != null || fileEditors.length < 2) {
       return provider;
     }
-    String id = myState.getSelectedProviders().get(computeKey(providers));
+    String id = myState.getSelectedProviders().get(computeKey(fileEditors));
     return id == null ? null : getProvider(id);
   }
 

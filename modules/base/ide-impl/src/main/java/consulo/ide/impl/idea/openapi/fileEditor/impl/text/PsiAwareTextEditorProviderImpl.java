@@ -20,6 +20,7 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import consulo.language.editor.folding.CodeFoldingManager;
@@ -141,14 +142,14 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   @Nonnull
   @Override
   protected EditorWrapper createWrapperForEditor(@Nonnull final Editor editor) {
-    return new PsiAwareEditorWrapper(editor);
+    return new PsiAwareEditorWrapper(editor, this);
   }
 
   private final class PsiAwareEditorWrapper extends EditorWrapper {
     private final TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
-    private PsiAwareEditorWrapper(@Nonnull Editor editor) {
-      super(editor);
+    private PsiAwareEditorWrapper(@Nonnull Editor editor, @Nonnull FileEditorProvider fileEditorProvider) {
+      super(editor, fileEditorProvider);
       final Project project = editor.getProject();
       myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);
     }

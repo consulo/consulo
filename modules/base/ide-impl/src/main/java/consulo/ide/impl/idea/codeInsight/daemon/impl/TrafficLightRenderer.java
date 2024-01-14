@@ -56,6 +56,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.OptionalNull;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -155,9 +156,14 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     }
   }
 
-  @RequiredReadAction
   public boolean isValid() {
-    return getPsiFile() != null;
+    OptionalNull<PsiFile> opt = ReadAction.tryCompute(this::getPsiFile);
+    if (opt.isValueSet()) {
+      return opt.get() != null;
+    }
+
+    // if compute failed - just return true, will be updated on write end
+    return true;
   }
 
   protected static final class DaemonCodeAnalyzerStatus {
@@ -277,7 +283,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
   @Override
   public void paint(@Nonnull Component c, Graphics g, @Nonnull Rectangle r) {
-    DaemonCodeAnalyzerStatus status = ReadAction.tryCompute(() -> getDaemonCodeAnalyzerStatus(mySeverityRegistrar));
+    DaemonCodeAnalyzerStatus status = ReadAction.tryCompute(() -> getDaemonCodeAnalyzerStatus(mySeverityRegistrar)).anyNull();
     if (status == null) {
       status = myLastComputedStatus;
     }

@@ -45,6 +45,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -95,7 +96,7 @@ public class IndentsPass extends TextEditorHighlightingPass implements DumbAware
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     final Long stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT);
     if (stamp != null && stamp.longValue() == nowStamp()) return;
 

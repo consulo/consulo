@@ -393,7 +393,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   private FileEditor createTempFileEditor(@Nonnull VirtualFile file) {
     if (file.getLength() > PersistentFSConstants.getMaxIntellisenseFileSize()) return null;
 
-    FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
+    FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance(myProject);
     final FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
     return providers.length == 0 ? null : providers[0].createEditor(myProject, file);
   }

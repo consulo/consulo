@@ -64,6 +64,7 @@ import jakarta.annotation.Nullable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -945,8 +946,9 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
 
   @Override
   public void navigate(boolean requestFocus) {
-    assert canNavigate() : this;
-    //noinspection ConstantConditions
+    if (!canNavigate()) {
+      throw new IllegalArgumentException("#canNavigate() return false");
+    }
     PsiNavigationSupport.getInstance().getDescriptor(this).navigate(requestFocus);
   }
 
@@ -955,9 +957,13 @@ public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileE
     return PsiNavigationSupport.getInstance().canNavigate(this);
   }
 
+  @Nonnull
   @Override
-  public boolean canNavigateToSource() {
-    return canNavigate();
+  public CompletableFuture<?> navigateAsync(boolean requestFocus) {
+    if (!canNavigate()) {
+      throw new IllegalArgumentException("#canNavigate() return false");
+    }
+    return PsiNavigationSupport.getInstance().getDescriptor(this).navigateAsync(requestFocus);
   }
 
   @Override

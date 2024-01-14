@@ -19,16 +19,39 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.navigation.Navigatable;
 import consulo.navigation.StatePreservingNavigatable;
+import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 public class OpenSourceUtil {
 
   private OpenSourceUtil() {
   }
 
+  @Nonnull
+  public static CompletableFuture<?> openSourcesFromAsync(DataContext context, boolean requestFocus) {
+    return navigateAsync(requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
+  }
+
+  @Nonnull
+  public static CompletableFuture<?> navigateAsync(final boolean requestFocus, final Navigatable... navigatables) {
+    if (navigatables == null) return CompletableFuture.completedFuture(null);
+    CompletableFuture[] futures = new CompletableFuture[navigatables.length];
+    for (int i = 0; i < navigatables.length; i++) {
+      Navigatable navigatable = navigatables[i];
+      futures[i] = navigatable.canNavigate() ? navigatable.navigateAsync(requestFocus) : CompletableFuture.completedFuture(null);
+    }
+    return CompletableFuture.allOf(futures);
+  }
+
+  // region Deprecated Stuff
+
+  @Deprecated
   public static void openSourcesFrom(DataContext context, boolean requestFocus) {
     navigate(requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
   }
 
+  @Deprecated
   public static void openSourcesFrom(DataProvider context, boolean requestFocus) {
     navigate(requestFocus, context.getDataUnchecked(Navigatable.KEY_OF_ARRAY));
   }
@@ -40,10 +63,12 @@ public class OpenSourceUtil {
    *
    * @see OpenSourceUtil#navigate(boolean, Navigatable...)
    */
+  @Deprecated
   public static void navigate(final Navigatable...navigatables) {
     navigate(true, navigatables);
   }
 
+  @Deprecated
   public static void navigate(final boolean requestFocus, final Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
@@ -53,6 +78,7 @@ public class OpenSourceUtil {
     }
   }
 
+  @Deprecated
   public static void navigate(final boolean requestFocus, final boolean tryNotToScroll, final Navigatable...navigatables) {
     if (navigatables == null) return;
     for (Navigatable navigatable : navigatables) {
@@ -65,4 +91,5 @@ public class OpenSourceUtil {
       }
     }
   }
+  // endregion
 }

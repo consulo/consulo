@@ -21,9 +21,7 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
@@ -68,10 +66,8 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   @Nonnull
   @Override
   protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                              @Nonnull FileEditor[] editors,
-                                                                              @Nonnull FileEditorProvider[] providers,
-                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
-    return new DesktopFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+                                                                              @Nonnull FileEditor[] editors) {
+    return new DesktopFileEditorWithProviderComposite(file, editors, this);
   }
 
   @Nonnull

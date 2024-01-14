@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.codeInsight.highlighting.actions;
 
-import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class HighlightUsagesAction extends AnAction implements DumbAware {
   public HighlightUsagesAction() {
@@ -56,17 +55,13 @@ public class HighlightUsagesAction extends AnAction implements DumbAware {
 
     CommandProcessor.getInstance().executeCommand(
       project,
-      new Runnable() {
-        @Override
-        @RequiredUIAccess
-        public void run() {
-          PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-          try {
-            HighlightUsagesHandler.invoke(project, editor, psiFile);
-          }
-          catch (IndexNotReadyException ex) {
-            DumbService.getInstance(project).showDumbModeNotification(ActionsBundle.message("action.HighlightUsagesInFile.not.ready"));
-          }
+      () -> {
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        try {
+          HighlightUsagesHandler.invoke(project, editor, psiFile);
+        }
+        catch (IndexNotReadyException ex) {
+          DumbService.getInstance(project).showDumbModeNotification(ActionsBundle.message("action.HighlightUsagesInFile.not.ready"));
         }
       },
       commandName,

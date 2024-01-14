@@ -39,6 +39,7 @@ import jakarta.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class PsiElementBase extends UserDataHolderBase implements NavigatablePsiElement {
   private static final Logger LOG = Logger.getInstance(PsiElementBase.class);
@@ -207,6 +208,16 @@ public abstract class PsiElementBase extends UserDataHolderBase implements Navig
     if (descriptor != null) {
       descriptor.navigate(requestFocus);
     }
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<?> navigateAsync(boolean requestFocus) {
+    final Navigatable descriptor = PsiNavigationSupport.getInstance().getDescriptor(this);
+    if (descriptor != null) {
+      return descriptor.navigateAsync(requestFocus);
+    }
+    return CompletableFuture.completedFuture(null);
   }
 
   @Override

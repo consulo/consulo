@@ -16,12 +16,9 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.logging.Logger;
-import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -30,26 +27,20 @@ import jakarta.annotation.Nonnull;
  */
 public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposite implements FileEditorWithProviderComposite {
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorWithProviderComposite.class);
-  private FileEditorProvider[] myProviders;
 
-  public DesktopFileEditorWithProviderComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors, @Nonnull FileEditorProvider[] providers, @Nonnull FileEditorManagerEx fileEditorManager) {
+  public DesktopFileEditorWithProviderComposite(@Nonnull VirtualFile file,
+                                                @Nonnull FileEditor[] editors,
+                                                @Nonnull FileEditorManagerEx fileEditorManager) {
     super(file, editors, fileEditorManager);
-    myProviders = providers;
   }
 
   @Override
   @Nonnull
-  public FileEditorProvider[] getProviders() {
-    return myProviders;
-  }
-
-  @Override
-  @Nonnull
-  public FileEditorWithProvider getSelectedEditorWithProvider() {
+  public FileEditor getSelectedEditor() {
     LOG.assertTrue(myEditors.length > 0, myEditors.length);
     if (myEditors.length == 1) {
       LOG.assertTrue(myTabbedPaneWrapper == null);
-      return new FileEditorWithProvider(myEditors[0], myProviders[0]);
+      return myEditors[0];
     }
     else { // we have to get myEditor from tabbed pane
       LOG.assertTrue(myTabbedPaneWrapper != null);
@@ -59,13 +50,7 @@ public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposi
       }
       LOG.assertTrue(index >= 0, index);
       LOG.assertTrue(index < myEditors.length, index);
-      return new FileEditorWithProvider(myEditors[index], myProviders[index]);
+      return myEditors[index];
     }
-  }
-
-  @Override
-  public void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider) {
-    addEditor(editor);
-    myProviders = ArrayUtil.append(myProviders, provider);
   }
 }

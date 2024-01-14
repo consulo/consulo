@@ -3,7 +3,6 @@
  */
 package consulo.desktop.awt.editor.impl.view;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.FoldRegion;
@@ -27,10 +26,10 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
@@ -652,8 +651,10 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
     return myBidiFlags;
   }
 
-  private static void assertIsDispatchThread() {
-    UIAccess.assertIsUIThread();
+  public void assertIsDispatchThread() {
+    if (myEditor.isUIThreadAssertion()) {
+      UIAccess.assertIsUIThread();
+    }
   }
 
   @Override

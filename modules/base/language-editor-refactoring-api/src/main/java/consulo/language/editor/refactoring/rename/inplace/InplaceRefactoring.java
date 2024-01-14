@@ -75,6 +75,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.undoRedo.util.UndoUtil;
@@ -501,15 +502,12 @@ public abstract class InplaceRefactoring {
   protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
     final StartMarkAction[] markAction = new StartMarkAction[1];
     final StartMarkAction.AlreadyStartedException[] ex = new StartMarkAction.AlreadyStartedException[1];
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
-        try {
-          markAction[0] = StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
-        }
-        catch (StartMarkAction.AlreadyStartedException e) {
-          ex[0] = e;
-        }
+    CommandProcessor.getInstance().executeCommand(myProject, () -> {
+      try {
+        markAction[0] = StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
+      }
+      catch (StartMarkAction.AlreadyStartedException e) {
+        ex[0] = e;
       }
     }, getCommandName(), null);
     if (ex[0] != null) throw ex[0];
@@ -592,7 +590,7 @@ public abstract class InplaceRefactoring {
 
   protected void revertState() {
     if (myOldName == null) return;
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myProject, new CommandRunnable() {
       @Override
       public void run() {
         final Editor topLevelEditor = EditorWindow.getTopLevelEditor(myEditor);

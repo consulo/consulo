@@ -159,28 +159,25 @@ public class SuppressActionWrapper extends ActionGroup implements CompactActionG
       ApplicationManager.getApplication().invokeLater(new Runnable() {
         @Override
         public void run() {
-          CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-            @Override
-            public void run() {
-              for (InspectionTreeNode node : myNodesToSuppress) {
-                final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
-                if (content.first == null) break;
-                final PsiElement element = content.first;
-                RefEntity refEntity = null;
-                if (node instanceof RefElementNode) {
-                  refEntity = ((RefElementNode)node).getElement();
-                }
-                else if (node instanceof ProblemDescriptionNode) {
-                  refEntity = ((ProblemDescriptionNode)node).getElement();
-                }
-                if (!suppress(element, content.second, mySuppressAction, refEntity)) break;
+          CommandProcessor.getInstance().executeCommand(myProject, () -> {
+            for (InspectionTreeNode node : myNodesToSuppress) {
+              final Pair<PsiElement, CommonProblemDescriptor> content = getContentToSuppress(node);
+              if (content.first == null) break;
+              final PsiElement element = content.first;
+              RefEntity refEntity = null;
+              if (node instanceof RefElementNode) {
+                refEntity = ((RefElementNode)node).getElement();
               }
-              final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
-              for (GlobalInspectionContextImpl context : globalInspectionContexts) {
-                context.refreshViews();
+              else if (node instanceof ProblemDescriptionNode) {
+                refEntity = ((ProblemDescriptionNode)node).getElement();
               }
-              CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
+              if (!suppress(element, content.second, mySuppressAction, refEntity)) break;
             }
+            final Set<GlobalInspectionContextImpl> globalInspectionContexts = myManager.getRunningContexts();
+            for (GlobalInspectionContextImpl context : globalInspectionContexts) {
+              context.refreshViews();
+            }
+            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
           }, getTemplatePresentation().getText(), null);
         }
       });

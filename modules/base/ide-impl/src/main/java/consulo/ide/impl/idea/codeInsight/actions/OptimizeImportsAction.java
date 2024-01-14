@@ -202,7 +202,6 @@ public class OptimizeImportsAction extends AnAction {
     }
   }
 
-  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();

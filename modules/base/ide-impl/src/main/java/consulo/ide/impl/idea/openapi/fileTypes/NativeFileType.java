@@ -19,6 +19,9 @@ import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
+import consulo.platform.PlatformOperatingSystem;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,16 +29,14 @@ import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author yole
  */
 public class NativeFileType implements INativeFileType {
   public static final NativeFileType INSTANCE = new NativeFileType();
 
-  private NativeFileType() { }
+  private NativeFileType() {
+  }
 
   @Override
   @Nonnull
@@ -66,24 +67,26 @@ public class NativeFileType implements INativeFileType {
   }
 
   public static boolean openAssociatedApplication(@Nonnull final VirtualFile file) {
-    final List<String> commands = new ArrayList<>();
-    if (SystemInfo.isWindows) {
-      commands.add("rundll32.exe");
-      commands.add("url.dll,FileProtocolHandler");
+    GeneralCommandLine commandLine = new GeneralCommandLine();
+
+    PlatformOperatingSystem os = Platform.current().os();
+    if (os.isWindows()) {
+      commandLine.setExePath("rundll32.exe);");
+      commandLine.addParameter("url.dll,FileProtocolHandler");
     }
-    else if (SystemInfo.isMac) {
-      commands.add("/usr/bin/open");
+    else if (os.isMac()) {
+      commandLine.setExePath("/usr/bin/open");
     }
     else if (SystemInfo.hasXdgOpen()) {
-      commands.add("xdg-open");
-    }
-    else {
+      commandLine.setExePath("xdg-open");
+    } else {
       return false;
     }
-    commands.add(file.getPath());
+
+    commandLine.addParameter(file.getPath());
 
     try {
-      new GeneralCommandLine(commands).createProcess();
+      ProcessHandlerBuilder.create(commandLine).build();
       return true;
     }
     catch (Exception e) {

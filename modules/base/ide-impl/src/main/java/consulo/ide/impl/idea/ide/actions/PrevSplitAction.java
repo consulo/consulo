@@ -31,17 +31,14 @@ public class PrevSplitAction extends AnAction implements DumbAware {
   public void actionPerformed(AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-      project, new Runnable(){
-        public void run() {
-          final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
-          manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
-        }
-      }, IdeBundle.message("command.go.to.prev.split"), null
+    commandProcessor.executeCommand(project, () -> {
+                                      final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
+                                      manager.setCurrentWindow(manager.getPrevWindow(manager.getCurrentWindow()));
+                                    }, IdeBundle.message("command.go.to.prev.split"), null
     );
   }
-  
-  public void update(final AnActionEvent event){
+
+  public void update(final AnActionEvent event) {
     final Project project = event.getData(CommonDataKeys.PROJECT);
     final Presentation presentation = event.getPresentation();
     if (project == null) {
@@ -50,6 +47,6 @@ public class PrevSplitAction extends AnAction implements DumbAware {
     }
     final FileEditorManagerEx manager = FileEditorManagerEx.getInstanceEx(project);
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-    presentation.setEnabled (toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null);
+    presentation.setEnabled(toolWindowManager.isEditorComponentActive() && manager.isInSplitter() && manager.getCurrentWindow() != null);
   }
 }

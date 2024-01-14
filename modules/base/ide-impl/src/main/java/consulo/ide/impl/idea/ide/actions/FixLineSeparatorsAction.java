@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import jakarta.annotation.Nonnull;
@@ -35,14 +34,12 @@ import jakarta.annotation.Nonnull;
 public class FixLineSeparatorsAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     final VirtualFile[] vFiles = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
     if (project == null || vFiles == null) return;
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      public void run() {
-        for (VirtualFile vFile : vFiles) {
-          fixSeparators(vFile);
-        }
+    CommandProcessor.getInstance().executeCommand(project, () -> {
+      for (VirtualFile vFile : vFiles) {
+        fixSeparators(vFile);
       }
     }, "fixing line separators", null);
   }

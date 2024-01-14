@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.fileEditor.FileEditorProvider;
 import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
 import consulo.ide.impl.idea.diff.util.FileEditorBase;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
@@ -53,20 +54,28 @@ public class DiffRequestProcessorEditor extends FileEditorBase {
 
   private final DiffVirtualFile myFile;
   private final DiffRequestProcessor myProcessor;
+  private final DiffEditorProvider myFileEditorProvider;
 
   private boolean myDisposed;
 
   private MyPanel myPanel;
 
-  public DiffRequestProcessorEditor(DiffVirtualFile file, DiffRequestProcessor processor) {
+  public DiffRequestProcessorEditor(DiffVirtualFile file, DiffRequestProcessor processor, DiffEditorProvider fileEditorProvider) {
     myFile = file;
     myProcessor = processor;
+    myFileEditorProvider = fileEditorProvider;
 
     myPanel = new MyPanel(processor.getComponent());
   }
 
   public DiffRequestProcessor getProcessor() {
     return myProcessor;
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
   }
 
   @Override

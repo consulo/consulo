@@ -30,10 +30,10 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.util.lang.ref.Ref;
-
+import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -60,7 +60,7 @@ public abstract class ElementCreator {
       return PsiElement.EMPTY_ARRAY;
     }
 
-    Ref<List<SmartPsiElementPointer>> createdElements = Ref.create();
+    SimpleReference<List<SmartPsiElementPointer>> createdElements = SimpleReference.create();
     Exception exception = executeCommand(getActionName(inputString), () -> {
       PsiElement[] psiElements = create(inputString);
       SmartPointerManager manager = SmartPointerManager.getInstance(myProject);

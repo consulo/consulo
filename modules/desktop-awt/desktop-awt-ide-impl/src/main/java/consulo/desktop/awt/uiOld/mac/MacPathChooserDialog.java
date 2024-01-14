@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld.mac;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.undoRedo.CommandProcessor;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;

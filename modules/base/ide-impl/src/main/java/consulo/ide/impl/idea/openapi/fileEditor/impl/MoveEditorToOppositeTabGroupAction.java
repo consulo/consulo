@@ -48,7 +48,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
       if (siblings.length == 1) {
         final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
         final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
-        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
+        ((DeprecatedFileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
         window.closeFile(vFile);
       }
     }

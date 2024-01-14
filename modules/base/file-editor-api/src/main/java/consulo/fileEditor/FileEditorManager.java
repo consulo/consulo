@@ -25,6 +25,7 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ComponentContainer;
 import consulo.util.concurrent.ActionCallback;
@@ -32,12 +33,13 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileEditorManager {
@@ -66,6 +68,21 @@ public abstract class FileEditorManager {
   @Nonnull
   public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
     return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
+  }
+
+  @Nonnull
+  public CompletableFuture<List<FileEditor>> openFileAsync(@Nonnull VirtualFile file,
+                                                           boolean focusEditor,
+                                                           UIAccess uiAccess) {
+    return openFileAsync(file, focusEditor, false, uiAccess);
+  }
+
+  @Nonnull
+  public CompletableFuture<List<FileEditor>> openFileAsync(@Nonnull VirtualFile file,
+                                                           boolean focusEditor,
+                                                           boolean searchForSplitter,
+                                                           UIAccess uiAccess) {
+    return CompletableFuture.completedFuture(List.of(openFile(file, focusEditor, searchForSplitter)));
   }
 
   /**
@@ -167,6 +184,7 @@ public abstract class FileEditorManager {
 
   /**
    * Add component to top of file editor
+   *
    * @return disposer for removing it from editor. null mean not added, if editor not found in registry
    */
   @Nullable
@@ -313,7 +331,9 @@ public abstract class FileEditorManager {
   public abstract VirtualFile getCurrentFile();
 
   @Nullable
-  public abstract FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file);
+  @Deprecated
+  @DeprecationInfo("Use getSelectedEditor().getProvider()")
+  public abstract FileEditor getSelectedEditorWithProvider(@Nonnull VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
@@ -327,11 +347,15 @@ public abstract class FileEditorManager {
   public abstract FileEditorsSplitters getSplitters();
 
   @Nonnull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
+                                                                                 boolean focusEditor,
+                                                                                 boolean searchForSplitter);
 
   @Nonnull
   @RequiredUIAccess
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull FileEditorWindow window);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
+                                                                                 boolean focusEditor,
+                                                                                 @Nonnull FileEditorWindow window);
 
   public abstract boolean isChanged(@Nonnull FileEditorComposite editor);
 

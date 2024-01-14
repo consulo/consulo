@@ -50,7 +50,7 @@ public class WhatsNewVirtualFileEditorProvider implements FileEditorProvider, Du
   @Nonnull
   @Override
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new WhatsNewVirtualFileEditor(project, myUpdateHistoryProvider.get(), file);
+    return new WhatsNewVirtualFileEditor(project, myUpdateHistoryProvider.get(), file, this);
   }
 
   @Nonnull

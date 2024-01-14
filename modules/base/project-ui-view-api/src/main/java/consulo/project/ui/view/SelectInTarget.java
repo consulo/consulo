@@ -20,7 +20,10 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface SelectInTarget {
@@ -34,6 +37,12 @@ public interface SelectInTarget {
   boolean canSelect(SelectInContext context);
 
   void selectIn(SelectInContext context, final boolean requestFocus);
+
+  @Nonnull
+  default CompletableFuture<?> selectInAsync(SelectInContext context, final boolean requestFocus) {
+    selectIn(context, requestFocus);
+    return CompletableFuture.completedFuture(null);
+  }
 
   /**
    * Tool window this target is supposed to select in

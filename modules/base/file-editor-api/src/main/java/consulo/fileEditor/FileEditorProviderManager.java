@@ -15,23 +15,25 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.List;
 
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
-@ServiceAPI(ComponentScope.APPLICATION)
-public abstract class FileEditorProviderManager {
-  public static FileEditorProviderManager getInstance() {
-    return Application.get().getInstance(FileEditorProviderManager.class);
+@ServiceAPI(ComponentScope.PROJECT)
+public interface FileEditorProviderManager {
+  @Nonnull
+  public static FileEditorProviderManager getInstance(Project project) {
+    return project.getInstance(FileEditorProviderManager.class);
   }
 
   /**
@@ -42,11 +44,15 @@ public abstract class FileEditorProviderManager {
    * is constructed with respect to editor policies.
    */
   @Nonnull
-  public abstract FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file);
+  FileEditorProvider[] getProviders(@Nonnull Project project, @Nonnull VirtualFile file);
+
+  @Nonnull
+  @RequiredReadAction
+  List<FileEditorProvider> getProviders(@Nonnull VirtualFile file);
 
   /**
    * @return may be null
    */
   @Nullable
-  public abstract FileEditorProvider getProvider(@Nonnull String editorTypeId);
+  FileEditorProvider getProvider(@Nonnull String editorTypeId);
 }

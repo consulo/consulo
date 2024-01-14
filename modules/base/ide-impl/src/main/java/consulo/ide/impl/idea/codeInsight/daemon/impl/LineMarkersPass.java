@@ -6,7 +6,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -30,11 +30,12 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.NotNullList;
 import gnu.trove.TIntObjectHashMap;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -69,7 +70,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     try {
       LineMarkersUtil.setLineMarkersToEditor(myProject, getDocument(), myRestrictRange, myMarkers, getId());
     }
@@ -77,9 +78,11 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     }
   }
 
-  @RequiredReadAction
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    UIAccess uiAccess = UIAccess.current();
+    DataLock dataLock = DataLock.getInstance();
+
     final List<LineMarkerInfo<PsiElement>> lineMarkers = new ArrayList<>();
     FileViewProvider viewProvider = myFile.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
@@ -92,11 +95,13 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
 
         queryProviders(elements.inside, root, providersList, (element, info) -> {
           lineMarkers.add(info);
-          ApplicationManager.getApplication().invokeLater(() -> {
-            if (isValid()) {
-              LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info);
-            }
-          }, myProject.getDisposed());
+
+          dataLock.readAsync(() -> isValid())
+                  .whenCompleteAsync((valid, throwable) -> {
+                     if (valid == Boolean.TRUE) {
+                       LineMarkersUtil.addLineMarkerToEditorIncrementally(myProject, getDocument(), info);
+                     }
+                  }, uiAccess);
         });
         queryProviders(elements.outside, root, providersList, (element, info) -> lineMarkers.add(info));
         return true;

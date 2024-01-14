@@ -15,18 +15,17 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
+import org.jdom.Element;
 
 /**
  * Should be registered via {@link #EP_FILE_EDITOR_PROVIDER}.
@@ -47,6 +46,7 @@ public interface FileEditorProvider {
    * @return whether the provider can create valid editor for the specified
    * {@code file} or not
    */
+  @RequiredReadAction
   boolean accept(@Nonnull Project project, @Nonnull VirtualFile file);
 
   /**
@@ -58,7 +58,7 @@ public interface FileEditorProvider {
    * @return created editor for specified file. This method should never return {@code null}.
    */
   @Nonnull
-  @RequiredUIAccess
+  @RequiredReadAction
   FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file);
 
   /**

@@ -28,18 +28,16 @@ import consulo.project.Project;
 public class UndoableCommand {
   
   public static void execute(final Project project, final UndoableAction action, String name, String groupId) {
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      public void run() {
+    CommandProcessor.getInstance().executeCommand(project, () -> {
 
-        try {
-          action.redo();
-        }
-        catch (UnexpectedUndoException e) {
-          throw new RuntimeException(e);
-        }
-        ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
-
+      try {
+        action.redo();
       }
+      catch (UnexpectedUndoException e) {
+        throw new RuntimeException(e);
+      }
+      ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
+
     }, name, groupId);
 
   }

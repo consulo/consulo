@@ -17,17 +17,18 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.logging.Logger;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
+import consulo.undoRedo.UndoConfirmationPolicy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,33 +99,31 @@ public class EditorAdapter {
   }
 
   private Runnable writingCommand(final Collection<Line> lines) {
-    final Runnable command = new Runnable() {
-      public void run() {
+    final CommandRunnable command = () -> {
 
-        Document document = myEditor.getDocument();
+      Document document = myEditor.getDocument();
 
-        StringBuilder buffer = new StringBuilder();
-        for (Line line : lines) {
-          buffer.append(line.getValue());
-        }
-        int endBefore = document.getTextLength();
-        int endBeforeLine = endBefore;
-        document.insertString(endBefore, buffer.toString());
-        for (Line line : lines) {
-          myEditor.getMarkupModel()
-              .addRangeHighlighter(endBeforeLine, Math.min(document.getTextLength(), endBeforeLine + line.getValue().length()), HighlighterLayer.ADDITIONAL_SYNTAX,
-                                   line.getAttributes(), HighlighterTargetArea.EXACT_RANGE);
-          endBeforeLine += line.getValue().length();
-          if (endBeforeLine > document.getTextLength()) break;
-        }
-        shiftCursorToTheEndOfDocument();
+      StringBuilder buffer = new StringBuilder();
+      for (Line line : lines) {
+        buffer.append(line.getValue());
       }
-    };
-    return new Runnable() {
-      public void run() {
-        CommandProcessor.getInstance().executeCommand(myProject, command, "", null, UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
+      int endBefore = document.getTextLength();
+      int endBeforeLine = endBefore;
+      document.insertString(endBefore, buffer.toString());
+      for (Line line : lines) {
+        myEditor.getMarkupModel()
+                .addRangeHighlighter(endBeforeLine,
+                                     Math.min(document.getTextLength(), endBeforeLine + line.getValue().length()),
+                                     HighlighterLayer.ADDITIONAL_SYNTAX,
+                                     line.getAttributes(),
+                                     HighlighterTargetArea.EXACT_RANGE);
+        endBeforeLine += line.getValue().length();
+        if (endBeforeLine > document.getTextLength()) break;
       }
+      shiftCursorToTheEndOfDocument();
     };
+    return () -> CommandProcessor.getInstance()
+                                 .executeCommand(myProject, command, "", null, UndoConfirmationPolicy.DEFAULT, myEditor.getDocument());
   }
 
   private void shiftCursorToTheEndOfDocument() {

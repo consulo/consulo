@@ -175,7 +175,7 @@ public class NavBarModel {
     }
 
     List<Object> updatedModel =
-      ReadAction.tryCompute(() -> isValid(psiElement) ? myBuilder.createModel(psiElement, roots, ownerExtension) : Collections.emptyList());
+      ReadAction.tryCompute(() -> isValid(psiElement) ? myBuilder.createModel(psiElement, roots, ownerExtension) : Collections.emptyList()).anyNull();
 
     if (updatedModel == null) {
       // read not allowed

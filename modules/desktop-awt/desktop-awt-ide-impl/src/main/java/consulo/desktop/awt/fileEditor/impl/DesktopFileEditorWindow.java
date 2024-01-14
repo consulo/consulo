@@ -32,6 +32,7 @@ import consulo.fileEditor.internal.EditorWindowHolder;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorWindowBase;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DeprecatedFileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
@@ -319,8 +320,8 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
   @Nonnull
   @Override
-  public FileEditorManagerImpl getManager() {
-    return myOwner.getManager();
+  public DeprecatedFileEditorManagerImpl getManager() {
+    return (DeprecatedFileEditorManagerImpl)myOwner.getManager();
   }
 
   @Override
@@ -420,7 +421,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         public void focusGained(FocusEvent e) {
           ApplicationManager.getApplication().invokeLater(() -> {
             if (!hasFocus()) return;
-            final JComponent focus = myEditor.getSelectedEditorWithProvider().getFileEditor().getPreferredFocusedComponent();
+            final JComponent focus = myEditor.getSelectedEditor().getPreferredFocusedComponent();
             if (focus != null && !focus.hasFocus()) {
               IdeFocusManager.getGlobalInstance().requestFocus(focus, true);
             }
@@ -531,13 +532,13 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
   @Nullable
   public DesktopFileEditorWindow split(final int orientation, boolean forceSplit, @Nullable VirtualFile virtualFile, boolean focusNew) {
     checkConsistency();
-    final FileEditorManagerImpl fileEditorManager = myOwner.getManager();
+    final DeprecatedFileEditorManagerImpl fileEditorManager = (DeprecatedFileEditorManagerImpl)myOwner.getManager();
     if (splitAvailable()) {
       if (!forceSplit && inSplitter()) {
         final DesktopFileEditorWindow[] siblings = findSiblings();
         final DesktopFileEditorWindow target = siblings[0];
         if (virtualFile != null) {
-          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.get(), target, virtualFile, focusNew, null, true).first;
+          final FileEditor[] editors = fileEditorManager.openFileImpl3(UIAccess.current(), target, virtualFile, focusNew, null, true).first;
           syncCaretIfPossible(editors);
         }
         return target;
@@ -570,8 +571,8 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
         final VirtualFile file = selectedEditor.getFile();
 
         if (virtualFile == null) {
-          for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-            VirtualFile associatedFile = finder.getAssociatedFileToOpen(fileEditorManager.getProject(), file);
+          for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList(fileEditorManager.getProject())) {
+            VirtualFile associatedFile = finder.getAssociatedFileToOpen(file);
 
             if (associatedFile != null) {
               virtualFile = associatedFile;

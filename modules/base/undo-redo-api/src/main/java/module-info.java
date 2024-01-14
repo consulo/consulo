@@ -10,5 +10,8 @@ module consulo.undo.redo.api {
   exports consulo.undoRedo;
   exports consulo.undoRedo.event;
   exports consulo.undoRedo.util;
-  exports consulo.undoRedo.internal to consulo.ide.impl, consulo.language.editor.refactoring.api;
+  exports consulo.undoRedo.internal to
+    consulo.ide.impl,
+    consulo.desktop.awt.ide.impl,
+    consulo.language.editor.refactoring.api;
 }

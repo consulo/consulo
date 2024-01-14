@@ -23,6 +23,7 @@ import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -202,7 +203,7 @@ public class CreateDirectoryOrPackageHandler implements InputValidatorEx {
   private void doCreateElement(final String subDirName, final boolean createFile) {
     boolean isDirectory = myType == CreateDirectoryOrPackageType.Directory;
 
-    Runnable command = () -> {
+    CommandRunnable command = () -> {
       final Runnable run = () -> {
         String dirPath = myDirectory.getVirtualFile().getPresentableUrl();
         String actionName = IdeBundle.message("progress.creating.directory", dirPath, File.separator, subDirName);

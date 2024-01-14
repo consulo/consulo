@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @since 2023-11-26
  */
 public final class ThreadAssertion {
-  public static final boolean ourIsEnabledStrictAsserting = false;
+  public static final boolean ourIsEnabledStrictAsserting = true;
 
   private static final Logger LOG = LoggerFactory.getLogger(ThreadAssertion.class);
 

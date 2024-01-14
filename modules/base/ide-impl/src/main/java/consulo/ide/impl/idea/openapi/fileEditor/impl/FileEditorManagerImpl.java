@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.DataLock;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
@@ -29,10 +29,8 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.messagebus.MessageListenerList;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithUIState;
@@ -47,7 +45,6 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
-import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.internal.FileEditorProviderManagerImpl;
@@ -57,10 +54,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
@@ -87,15 +81,18 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.undoRedo.CommandInfo;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -117,6 +114,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -127,15 +125,14 @@ import java.util.function.Consumer;
  */
 @State(name = "FileEditorManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public abstract class FileEditorManagerImpl extends FileEditorManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
-  private static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
+  protected static final Logger LOG = Logger.getInstance(FileEditorManagerImpl.class);
 
-  private static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
+  protected static final Key<Boolean> DUMB_AWARE = Key.create("DUMB_AWARE");
 
-  private static final FileEditor[] EMPTY_EDITOR_ARRAY = {};
-  private static final FileEditorProvider[] EMPTY_PROVIDER_ARRAY = {};
+  protected static final FileEditor[] EMPTY_EDITOR_ARRAY = {};
+  protected static final FileEditorProvider[] EMPTY_PROVIDER_ARRAY = {};
 
   protected FileEditorsSplitters mySplitters;
-  protected final Project myProject;
   private final List<Pair<VirtualFile, FileEditorWindow>> mySelectionHistory = new ArrayList<>();
   private Reference<FileEditorComposite> myLastSelectedComposite = new WeakReference<>(null);
 
@@ -143,17 +140,20 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   private final BusyObject.Impl.Simple myBusyObject = new BusyObject.Impl.Simple();
 
+  protected final DockManager myDockManager;
+  private DockContainerFactory.Persistent myContentFactory;
+
+  protected static final AtomicInteger ourOpenFilesSetModificationCount = new AtomicInteger();
+
+  public static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
+
+  private final MessageListenerList<FileEditorManagerListener> myListenerList;
+
+  protected final Project myProject;
   /**
    * Removes invalid myEditor and updates "modified" status.
    */
-  private final PropertyChangeListener myEditorPropertyChangeListener = new MyEditorPropertyChangeListener();
-  protected final DockManager myDockManager;
-  private DockContainerFactory.Persistent myContentFactory;
-  private static final AtomicInteger ourOpenFilesSetModificationCount = new AtomicInteger();
-
-  static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
-
-  private final MessageListenerList<FileEditorManagerListener> myListenerList;
+  protected final PropertyChangeListener myEditorPropertyChangeListener = new MyEditorPropertyChangeListener();
 
   public FileEditorManagerImpl(@Nonnull Application application,
                                @Nonnull ApplicationConcurrency applicationConcurrency,
@@ -169,15 +169,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     myQueue = new MergingQueue<>(applicationConcurrency, project, 50, this, Runnable::run);
 
-    if (FileEditorAssociateFinder.EP_NAME.hasAnyExtensions()) {
-      myListenerList.add(new FileEditorManagerListener() {
-        @Override
-        public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
-          FileEditorsSplitters splitters = getSplitters();
-          openAssociatedFile(UIAccess.current(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
-        }
-      });
-    }
+    myListenerList.add(new FileEditorManagerListener() {
+      @Override
+      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+        FileEditorsSplitters splitters = getSplitters();
+        openAssociatedFileAsync(UIAccess.current(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
+      }
+    });
 
     final MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(DumbModeListener.class, new DumbModeListener() {
@@ -209,12 +207,15 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   }
 
   @Nonnull
-  protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                              @Nonnull FileEditor[] editors,
-                                                                              @Nonnull FileEditorProvider[] providers,
-                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
-    throw new UnsupportedOperationException();
-  }
+  @Deprecated
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileImpl2(@Nonnull UIAccess uiAccess,
+                                                                         @Nonnull final FileEditorWindow window,
+                                                                         @Nonnull final VirtualFile file,
+                                                                         final boolean focusEditor);
+
+  @Nonnull
+  protected abstract FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
+                                                                                       @Nonnull FileEditor[] editors);
 
   private void dumbModeFinished(Project project) {
     VirtualFile[] files = getOpenFiles();
@@ -224,7 +225,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       for (FileEditorWithProviderComposite composite : composites) {
         providers.addAll(Arrays.asList(composite.getProviders()));
       }
-      FileEditorProvider[] newProviders = FileEditorProviderManager.getInstance().getProviders(project, file);
+      FileEditorProvider[] newProviders = FileEditorProviderManager.getInstance(project).getProviders(project, file);
       if (newProviders.length > providers.size()) {
         List<FileEditorProvider> toOpen = new ArrayList<>(Arrays.asList(newProviders));
         toOpen.removeAll(providers);
@@ -232,7 +233,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         for (FileEditorWithProviderComposite composite : composites) {
           for (FileEditorProvider provider : toOpen) {
             FileEditor editor = provider.createEditor(myProject, file);
-            composite.addEditor(editor, provider);
+            composite.addEditor(editor);
           }
         }
       }
@@ -298,7 +299,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     return result;
   }
 
-  private FileEditorsSplitters getActiveSplittersSync() {
+  protected FileEditorsSplitters getActiveSplittersSync() {
     assertDispatchThread();
 
     // FIXME [VISTALL] reimpl this
@@ -600,363 +601,45 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     runChange(splitters -> splitters.closeFile(file, moveFocus), closeAllCopies ? null : getActiveSplittersSync());
   }
 
-  //-------------------------------------- Open File ----------------------------------------
-
-  @Override
-  @Nonnull
-  @RequiredUIAccess
-  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull final VirtualFile file,
-                                                                        boolean focusEditor,
-                                                                        final boolean searchForSplitter) {
-    if (!file.isValid()) {
-      throw new IllegalArgumentException("file is not valid: " + file);
-    }
-    assertDispatchThread();
-
-    if (isOpenInNewWindow()) {
-      return openFileInNewWindow(file);
-    }
-
-
-    FileEditorWindow wndToOpenIn = null;
-    if (searchForSplitter) {
-      Set<FileEditorsSplitters> all = getAllSplitters();
-      FileEditorsSplitters active = getActiveSplittersSync();
-      if (active.getCurrentWindow() != null && active.getCurrentWindow().isFileOpen(file)) {
-        wndToOpenIn = active.getCurrentWindow();
-      }
-      else {
-        for (FileEditorsSplitters splitters : all) {
-          final FileEditorWindow window = splitters.getCurrentWindow();
-          if (window == null) continue;
-
-          if (window.isFileOpen(file)) {
-            wndToOpenIn = window;
-            break;
-          }
-        }
-      }
-    }
-    else {
-      wndToOpenIn = getSplitters().getCurrentWindow();
-    }
-
-    FileEditorsSplitters splitters = getSplitters();
-
-    if (wndToOpenIn == null) {
-      wndToOpenIn = splitters.getOrCreateCurrentWindow(file);
-    }
-
-    UIAccess uiAccess = UIAccess.get();
-    openAssociatedFile(uiAccess, file, wndToOpenIn, splitters);
-    return openFileImpl2(uiAccess, wndToOpenIn, file, focusEditor);
-  }
-
   public Pair<FileEditor[], FileEditorProvider[]> openFileInNewWindow(@Nonnull VirtualFile file) {
     return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
+  }
+
+  public List<FileEditor> openFileInNewWindowAsync(@Nonnull VirtualFile file) {
+    return ((BaseDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor2(file, this);
   }
 
   protected boolean isOpenInNewWindow() {
     return false;
   }
 
-  private void openAssociatedFile(UIAccess uiAccess,
-                                  VirtualFile file,
-                                  FileEditorWindow wndToOpenIn,
-                                  @Nonnull FileEditorsSplitters splitters) {
-    FileEditorWindow[] windows = splitters.getWindows();
-
-    if (file != null && windows.length == 2) {
-      for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-        VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, file);
-
-        if (associatedFile != null) {
-          FileEditorWindow currentWindow = splitters.getCurrentWindow();
-          int idx = windows[0] == wndToOpenIn ? 1 : 0;
-          openFileImpl2(uiAccess, windows[idx], associatedFile, false);
-
-          if (currentWindow != null) {
-            splitters.setCurrentWindow(currentWindow, false);
-          }
-
-          break;
-        }
-      }
-    }
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
-                                                                        boolean focusEditor,
-                                                                        @Nonnull FileEditorWindow window) {
-    if (!file.isValid()) {
-      throw new IllegalArgumentException("file is not valid: " + file);
-    }
-    assertDispatchThread();
-
-    return openFileImpl2(UIAccess.get(), window, file, focusEditor);
-  }
-
-  @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> openFileImpl2(@Nonnull UIAccess uiAccess,
-                                                                @Nonnull final FileEditorWindow window,
-                                                                @Nonnull final VirtualFile file,
-                                                                final boolean focusEditor) {
-    final Ref<Pair<FileEditor[], FileEditorProvider[]>> result = new Ref<>();
-    CommandProcessor.getInstance()
-                    .executeCommand(myProject, () -> result.set(openFileImpl3(uiAccess, window, file, focusEditor, null, true)), "", null);
-    return result.get();
-  }
-
-  /**
-   * @param file  to be opened. Unlike openFile method, file can be
-   *              invalid. For example, all file were invalidate and they are being
-   *              removed one by one. If we have removed one invalid file, then another
-   *              invalid file become selected. That's why we do not require that
-   *              passed file is valid.
-   * @param entry map between FileEditorProvider and FileEditorState. If this parameter
-   */
-  @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(@Nonnull UIAccess uiAccess,
-                                                                @Nonnull final FileEditorWindow window,
-                                                                @Nonnull final VirtualFile file,
-                                                                final boolean focusEditor,
-                                                                @Nullable final HistoryEntry entry,
-                                                                boolean current) {
-    return openFileImpl4(uiAccess, window, file, entry, current, focusEditor, null, -1);
-  }
-
-  @Deprecated
-  public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(@Nonnull UIAccess uiAccess,
-                                                                @Nonnull final FileEditorWindow window,
-                                                                @Nonnull final VirtualFile file,
-                                                                @Nullable final HistoryEntry entry,
-                                                                final boolean current,
-                                                                final boolean focusEditor,
-                                                                final Boolean pin,
-                                                                final int index) {
-    return openFileImpl4(uiAccess,
-                         window,
-                         file,
-                         entry,
-                         new FileEditorOpenOptions().withCurrentTab(current).withFocusEditor(focusEditor).withPin(pin).withIndex(index));
-  }
-
-  /**
-   * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
-   */
-  @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(@Nonnull UIAccess uiAccess,
-                                                                @Nonnull final FileEditorWindow window,
-                                                                @Nonnull final VirtualFile file,
-                                                                @Nullable final HistoryEntry entry,
-                                                                FileEditorOpenOptions options) {
-    assert UIAccess.isUIThread() || !ApplicationManager.getApplication()
-                                                       .isReadAccessAllowed() : "must not open files under read action since we are doing a lot of invokeAndWaits here";
-
-    int index = options.getIndex();
-    boolean current = options.isCurrentTab();
-    boolean focusEditor = options.isFocusEditor();
-    Boolean pin = options.getPin();
-
-    final Ref<FileEditorWithProviderComposite> compositeRef = new Ref<>();
-    if (!options.isReopeningEditorsOnStartup()) {
-      uiAccess.giveAndWaitIfNeed(() -> compositeRef.set(window.findFileComposite(file)));
-    }
-
-    final FileEditorProvider[] newProviders;
-    final AsyncFileEditorProvider.Builder[] builders;
-    if (compositeRef.isNull()) {
-      // File is not opened yet. In this case we have to create editors
-      // and select the created EditorComposite.
-      newProviders = FileEditorProviderManager.getInstance().getProviders(myProject, file);
-      if (newProviders.length == 0) {
-        return Pair.create(EMPTY_EDITOR_ARRAY, EMPTY_PROVIDER_ARRAY);
-      }
-
-      builders = new AsyncFileEditorProvider.Builder[newProviders.length];
-      for (int i = 0; i < newProviders.length; i++) {
-        try {
-          final FileEditorProvider provider = newProviders[i];
-          LOG.assertTrue(provider != null, "Provider for file " + file + " is null. All providers: " + Arrays.asList(newProviders));
-          ThrowableComputable<AsyncFileEditorProvider.Builder, RuntimeException> action = () -> {
-            if (myProject.isDisposed() || !file.isValid()) {
-              return null;
-            }
-            LOG.assertTrue(provider.accept(myProject, file), "Provider " + provider + " doesn't accept file " + file);
-            return provider instanceof AsyncFileEditorProvider ? ((AsyncFileEditorProvider)provider).createEditorAsync(myProject,
-                                                                                                                       file) : null;
-          };
-          builders[i] = AccessRule.read(action);
-        }
-        catch (ProcessCanceledException e) {
-          throw e;
-        }
-        catch (Exception | AssertionError e) {
-          LOG.error(e);
-        }
-      }
-    }
-    else {
-      newProviders = null;
-      builders = null;
-    }
-    Runnable runnable = () -> {
-      if (myProject.isDisposed() || !file.isValid()) {
-        return;
-      }
-
-      compositeRef.set(window.findFileComposite(file));
-      boolean newEditor = compositeRef.isNull();
-      if (newEditor) {
-        getProject().getMessageBus().syncPublisher(FileEditorManagerBeforeListener.class).beforeFileOpened(this, file);
-
-        FileEditor[] newEditors = new FileEditor[newProviders.length];
-        for (int i = 0; i < newProviders.length; i++) {
-          try {
-            final FileEditorProvider provider = newProviders[i];
-            final FileEditor editor = builders[i] == null ? provider.createEditor(myProject, file) : builders[i].build();
-            LOG.assertTrue(editor.isValid(),
-                           "Invalid editor created by provider " + (provider == null ? null : provider.getClass().getName()));
-            newEditors[i] = editor;
-            // Register PropertyChangeListener into editor
-            editor.addPropertyChangeListener(myEditorPropertyChangeListener);
-            editor.putUserData(DUMB_AWARE, DumbService.isDumbAware(provider));
-          }
-          catch (ProcessCanceledException e) {
-            throw e;
-          }
-          catch (Exception | AssertionError e) {
-            LOG.error(e);
-          }
-        }
-
-        // Now we have to create EditorComposite and insert it into the TabbedEditorComponent.
-        // After that we have to select opened editor.
-        FileEditorWithProviderComposite composite = createComposite(file, newEditors, newProviders);
-        if (composite == null) return;
-
-        if (index >= 0) {
-          composite.getFile().putUserData(FileEditorWindow.INITIAL_INDEX_KEY, index);
-        }
-
-        compositeRef.set(composite);
-      }
-
-      final FileEditorWithProviderComposite composite = compositeRef.get();
-      FileEditor[] editors = composite.getEditors();
-      FileEditorProvider[] providers = composite.getProviders();
-
-      window.setEditor(composite, current, focusEditor);
-
-      for (int i = 0; i < editors.length; i++) {
-        restoreEditorState(file, providers[i], editors[i], entry, newEditor);
-      }
-
-      // Restore selected editor
-      final FileEditorProvider selectedProvider;
-      if (entry == null) {
-        selectedProvider =
-          ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).getSelectedFileEditorProvider(EditorHistoryManagerImpl.getInstance(
-            myProject), file, providers);
-      }
-      else {
-        selectedProvider = entry.getSelectedProvider();
-      }
-      if (selectedProvider != null) {
-        for (int i = editors.length - 1; i >= 0; i--) {
-          final FileEditorProvider provider = providers[i];
-          if (provider.equals(selectedProvider)) {
-            composite.setSelectedEditor(i);
-            break;
-          }
-        }
-      }
-
-      // Notify editors about selection changes
-      window.getOwner().setCurrentWindow(window, focusEditor);
-      if (window.getOwner() instanceof FileEditorsSplittersBase) {
-        ((FileEditorsSplittersBase)window.getOwner()).afterFileOpen(file);
-      }
-      addSelectionRecord(file, window);
-
-      composite.getSelectedEditor().selectNotify();
-
-      // Transfer focus into editor
-      if (!Application.get().isUnitTestMode()) {
-        if (focusEditor) {
-          //myFirstIsActive = myTabbedContainer1.equals(tabbedContainer);
-          window.setAsCurrentWindow(true);
-          ToolWindowManager.getInstance(myProject).activateEditorComponent();
-
-          window.getOwner().toFront();
-        }
-      }
-
-      if (newEditor) {
-        notifyPublisher(() -> {
-          if (isFileOpen(file)) {
-            getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class).fileOpened(this, file);
-          }
-        });
-        ourOpenFilesSetModificationCount.incrementAndGet();
-      }
-
-      //[jeka] this is a hack to support back-forward navigation
-      // previously here was incorrect call to fireSelectionChanged() with a side-effect
-      ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myProject)).onSelectionChanged();
-
-      // Update frame and tab title
-      updateFileName(file);
-
-      // Make back/forward work
-      IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-
-      if (pin != null) {
-        window.setFilePinned(file, pin);
-      }
-    };
-
-    uiAccess.giveAndWaitIfNeed(runnable);
-
-    FileEditorWithProviderComposite composite = compositeRef.get();
-    return Pair.create(composite == null ? EMPTY_EDITOR_ARRAY : composite.getEditors(),
-                       composite == null ? EMPTY_PROVIDER_ARRAY : composite.getProviders());
-  }
-
   @Nullable
-  private FileEditorWithProviderComposite createComposite(@Nonnull VirtualFile file,
-                                                          @Nonnull FileEditor[] editors,
-                                                          @Nonnull FileEditorProvider[] providers) {
-    if (NullUtils.hasNull(editors) || NullUtils.hasNull(providers)) {
+  protected FileEditorWithProviderComposite createComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors) {
+    if (NullUtils.hasNull(editors)) {
       List<FileEditor> editorList = new ArrayList<>(editors.length);
-      List<FileEditorProvider> providerList = new ArrayList<>(providers.length);
       for (int i = 0; i < editors.length; i++) {
         FileEditor editor = editors[i];
-        FileEditorProvider provider = providers[i];
-        if (editor != null && provider != null) {
+        if (editor != null) {
           editorList.add(editor);
-          providerList.add(provider);
         }
       }
       if (editorList.isEmpty()) return null;
       editors = editorList.toArray(new FileEditor[editorList.size()]);
-      providers = providerList.toArray(new FileEditorProvider[providerList.size()]);
     }
-    return createEditorWithProviderComposite(file, editors, providers, this);
+    return createEditorWithProviderComposite(file, editors);
   }
 
-  private void restoreEditorState(@Nonnull VirtualFile file,
-                                  @Nonnull FileEditorProvider provider,
-                                  @Nonnull final FileEditor editor,
-                                  HistoryEntry entry,
-                                  boolean newEditor) {
+  protected void restoreEditorState(@Nonnull VirtualFile file,
+                                    @Nonnull final FileEditor editor,
+                                    HistoryEntry entry,
+                                    boolean newEditor) {
+    FileEditorProvider provider = editor.getProvider();
+
     FileEditorState state = null;
     if (entry != null) {
       state = entry.getState(provider);
     }
+
     if (state == null && newEditor) {
       // We have to try to get state from the history only in case
       // if editor is not opened. Otherwise history entry might have a state
@@ -1016,6 +699,276 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
   }
 
+  protected CompletableFuture<?> openAssociatedFileAsync(UIAccess uiAccess,
+                                                         VirtualFile file,
+                                                         FileEditorWindow wndToOpenIn,
+                                                         @Nonnull FileEditorsSplitters splitters) {
+    FileEditorWindow[] windows = splitters.getWindows();
+
+    if (file != null && windows.length == 2) {
+      return DataLock.getInstance().readAsync(() -> {
+        return FileEditorAssociateFinder.EP_NAME.computeSafeIfAny(myProject, finder -> finder.getAssociatedFileToOpen(file));
+      }).thenComposeAsync((associatedFile) -> {
+        if (associatedFile != null) {
+          FileEditorWindow currentWindow = splitters.getCurrentWindow();
+          int idx = windows[0] == wndToOpenIn ? 1 : 0;
+
+          return openFileAsync(uiAccess,
+                               windows[idx],
+                               associatedFile,
+                               null,
+                               new FileEditorOpenOptions()).whenCompleteAsync((fileEditors, throwable1) -> {
+            if (currentWindow != null) {
+              splitters.setCurrentWindow(currentWindow, false);
+            }
+          }, uiAccess);
+        }
+
+        return CompletableFuture.completedFuture(null);
+      }, uiAccess);
+    }
+
+    return CompletableFuture.completedFuture(null);
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<List<FileEditor>> openFileAsync(@Nonnull VirtualFile file,
+                                                           boolean focusEditor,
+                                                           boolean searchForSplitter,
+                                                           UIAccess uiAccess) {
+    if (!file.isValid()) {
+      throw new IllegalArgumentException("file is not valid: " + file);
+    }
+
+    return uiAccess.giveAsync(this::isOpenInNewWindow)
+                   .thenComposeAsync((openInNewWindow) -> {
+                     if (openInNewWindow == Boolean.TRUE) {
+                       return CompletableFuture.completedFuture(openFileInNewWindowAsync(file));
+                     }
+                     else {
+                       return openFileWithSplitter(uiAccess, searchForSplitter, file);
+                     }
+                   }, uiAccess);
+  }
+
+  @RequiredUIAccess
+  private CompletableFuture<List<FileEditor>> openFileWithSplitter(UIAccess uiAccess, boolean searchForSplitter, VirtualFile file) {
+    FileEditorWindow wndToOpenIn = null;
+    if (searchForSplitter) {
+      Set<FileEditorsSplitters> all = getAllSplitters();
+      FileEditorsSplitters active = getActiveSplittersSync();
+      if (active.getCurrentWindow() != null && active.getCurrentWindow().isFileOpen(file)) {
+        wndToOpenIn = active.getCurrentWindow();
+      }
+      else {
+        for (FileEditorsSplitters splitters : all) {
+          final FileEditorWindow window = splitters.getCurrentWindow();
+          if (window == null) continue;
+
+          if (window.isFileOpen(file)) {
+            wndToOpenIn = window;
+            break;
+          }
+        }
+      }
+    }
+    else {
+      wndToOpenIn = getSplitters().getCurrentWindow();
+    }
+
+    FileEditorsSplitters splitters = getSplitters();
+
+    if (wndToOpenIn == null) {
+      wndToOpenIn = splitters.getOrCreateCurrentWindow(file);
+    }
+
+    openAssociatedFileAsync(uiAccess, file, wndToOpenIn, splitters);
+    return openFileWithCommandAsync(uiAccess, wndToOpenIn, file, new FileEditorOpenOptions());
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public CompletableFuture<List<FileEditor>> openFileWithCommandAsync(@Nonnull UIAccess uiAccess,
+                                                                      @Nonnull final FileEditorWindow window,
+                                                                      @Nonnull final VirtualFile file,
+                                                                      FileEditorOpenOptions options) {
+    return CommandProcessor.getInstance().executeCommandAsync(CommandInfo.newBuilder().withProject(myProject).build(),
+                                                              executor -> openFileAsync(uiAccess,
+                                                                                        window,
+                                                                                        file,
+                                                                                        null,
+                                                                                        options));
+  }
+
+//  /**
+//   * @param file  to be opened. Unlike openFile method, file can be
+//   *              invalid. For example, all file were invalidate and they are being
+//   *              removed one by one. If we have removed one invalid file, then another
+//   *              invalid file become selected. That's why we do not require that
+//   *              passed file is valid.
+//   * @param entry map between FileEditorProvider and FileEditorState. If this parameter
+//   */
+//  @Nonnull
+//  public Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(@Nonnull UIAccess uiAccess,
+//                                                                @Nonnull final FileEditorWindow window,
+//                                                                @Nonnull final VirtualFile file,
+//                                                                final boolean focusEditor,
+//                                                                @Nullable final HistoryEntry entry,
+//                                                                boolean current) {
+//    return openFileImpl4(uiAccess, window, file, entry, current, focusEditor, null, -1);
+//  }
+
+  private record FileCompositeResult(FileEditorWithProviderComposite fileComposite, boolean isNew) {}
+
+  /**
+   * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
+   */
+  @Nonnull
+  public CompletableFuture<List<FileEditor>> openFileAsync(@Nonnull UIAccess uiAccess,
+                                                           @Nonnull FileEditorWindow window,
+                                                           @Nonnull VirtualFile file,
+                                                           @Nullable HistoryEntry entry,
+                                                           @Nonnull FileEditorOpenOptions options) {
+    assert UIAccess.isUIThread() || !myProject.getApplication()
+                                              .isReadAccessAllowed() : "must not open files under read action since we are doing a lot of invokeAndWaits here";
+
+    int index = options.getIndex();
+    boolean current = options.isCurrentTab();
+    boolean focusEditor = options.isFocusEditor();
+    Boolean pin = options.getPin();
+
+    CompletableFuture<FileCompositeResult> compositeFuture;
+    if (!options.isReopeningEditorsOnStartup()) {
+      compositeFuture = uiAccess.giveAsync(() -> {
+        FileEditorWithProviderComposite composite = window.findFileComposite(file);
+        return composite == null ? null : new FileCompositeResult(composite, false);
+      });
+    }
+    else {
+      compositeFuture = CompletableFuture.completedFuture(null);
+    }
+
+    DataLock dataLock = DataLock.getInstance();
+    compositeFuture = compositeFuture.<FileCompositeResult>thenComposeAsync(result -> {
+      if (result == null) {
+        return dataLock.<FileCompositeResult>readAsync(() -> {
+          List<FileEditorProvider> providers = FileEditorProviderManager.getInstance(myProject).getProviders(file);
+          if (providers.isEmpty()) {
+            return null;
+          }
+          else {
+            List<FileEditor> fileEditors = new ArrayList<>(providers.size());
+            for (FileEditorProvider provider : providers) {
+              FileEditor editor = provider.createEditor(myProject, file);
+              // Register PropertyChangeListener into editor
+              editor.addPropertyChangeListener(myEditorPropertyChangeListener);
+              editor.putUserData(DUMB_AWARE, DumbService.isDumbAware(provider));
+
+              fileEditors.add(editor);
+            }
+
+            // Now we have to create EditorComposite and insert it into the TabbedEditorComponent.
+            // After that we have to select opened editor.
+            FileEditorWithProviderComposite composite = createComposite(file, fileEditors.toArray(FileEditor[]::new));
+            if (composite == null) {
+              return null;
+            }
+
+            if (index >= 0) {
+              composite.getFile().putUserData(FileEditorWindow.INITIAL_INDEX_KEY, index);
+            }
+
+            return new FileCompositeResult(composite, true);
+          }
+        });
+      }
+      else {
+        return CompletableFuture.completedFuture(result);
+      }
+    });
+
+    return compositeFuture.handleAsync((result, throwable) -> {
+      if (throwable != null) {
+        LOG.error(throwable);
+      }
+
+      FileEditorWithProviderComposite composite = result.fileComposite();
+      boolean newEditor = result.isNew();
+
+      FileEditor[] editors = composite.getEditors();
+
+      window.setEditor(composite, current, focusEditor);
+
+      for (FileEditor editor : editors) {
+        restoreEditorState(file, editor, entry, newEditor);
+      }
+
+      // Restore selected editor
+      final FileEditorProvider selectedProvider;
+      if (entry == null) {
+        selectedProvider =
+          ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance(myProject)).getSelectedFileEditorProvider(
+            EditorHistoryManagerImpl.getInstance(myProject),file, editors);
+      }
+      else {
+        selectedProvider = entry.getSelectedProvider();
+      }
+      if (selectedProvider != null) {
+        for (int i = editors.length - 1; i >= 0; i--) {
+          final FileEditor editor = editors[i];
+          if (editor.getProvider().equals(selectedProvider)) {
+            composite.setSelectedEditor(i);
+            break;
+          }
+        }
+      }
+
+      // Notify editors about selection changes
+      window.getOwner().setCurrentWindow(window, focusEditor);
+      if (window.getOwner() instanceof FileEditorsSplittersBase) {
+        ((FileEditorsSplittersBase)window.getOwner()).afterFileOpen(file);
+      }
+      addSelectionRecord(file, window);
+
+      composite.getSelectedEditor().selectNotify();
+
+      // Transfer focus into editor
+      if (focusEditor) {
+        //myFirstIsActive = myTabbedContainer1.equals(tabbedContainer);
+        window.setAsCurrentWindow(true);
+
+        ToolWindowManager.getInstance(myProject).activateEditorComponent();
+
+        window.getOwner().toFront();
+      }
+
+      if (newEditor) {
+        notifyPublisher(() -> {
+          if (isFileOpen(file)) {
+            getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class).fileOpened(this, file);
+          }
+        });
+        ourOpenFilesSetModificationCount.incrementAndGet();
+      }
+
+      //[jeka] this is a hack to support back-forward navigation
+      // previously here was incorrect call to fireSelectionChanged() with a side-effect
+      ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myProject)).onSelectionChanged();
+
+      // Update frame and tab title
+      updateFileName(file);
+
+      // Make back/forward work
+      IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
+
+      if (pin != null) {
+        window.setFilePinned(file, pin);
+      }
+
+      return List.of(editors);
+    }, uiAccess);
+  }
 
   @Nullable
   public FileEditorWithProviderComposite newEditorComposite(final VirtualFile file) {
@@ -1023,7 +976,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       return null;
     }
 
-    final FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
+    final FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance(myProject);
     final FileEditorProvider[] providers = editorProviderManager.getProviders(myProject, file);
     if (providers.length == 0) return null;
     final FileEditor[] editors = new FileEditor[providers.length];
@@ -1037,7 +990,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       editor.addPropertyChangeListener(myEditorPropertyChangeListener);
     }
 
-    final FileEditorWithProviderComposite newComposite = createEditorWithProviderComposite(file, editors, providers, this);
+    final FileEditorWithProviderComposite newComposite = createEditorWithProviderComposite(file, editors);
     final EditorHistoryManagerImpl editorHistoryManager = EditorHistoryManagerImpl.getInstance(myProject);
     for (int i = 0; i < editors.length; i++) {
       final FileEditor editor = editors[i];
@@ -1211,15 +1164,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   @Override
   @Nullable
-  public FileEditor getSelectedEditor(@Nonnull final VirtualFile file) {
-    final FileEditorWithProvider selectedEditorWithProvider = getSelectedEditorWithProvider(file);
-    return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFileEditor();
-  }
-
-
-  @Override
-  @Nullable
-  public FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+  public FileEditor getSelectedEditor(@Nonnull VirtualFile file) {
     if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
     final FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
     if (composite != null) {
@@ -1228,6 +1173,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     final List<FileEditorWithProviderComposite> composites = getEditorComposites(file);
     return composites.isEmpty() ? null : composites.get(0).getSelectedEditorWithProvider();
+  }
+
+
+  @Override
+  @Nullable
+  public FileEditor getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+    return getSelectedEditor(file);
   }
 
   @Override
@@ -1250,7 +1202,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Override
   @Nonnull
   public FileEditor[] getEditors(@Nonnull VirtualFile file) {
-    assertReadAccess();
     if (file instanceof VirtualFileWindow) file = ((VirtualFileWindow)file).getDelegate();
 
     final FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
@@ -1446,7 +1397,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 //======================= Misc =====================
 
   @RequiredUIAccess
-  private static void assertDispatchThread() {
+  protected static void assertDispatchThread() {
     UIAccess.assertIsUIThread();
   }
 
@@ -1463,8 +1414,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     final boolean editorsEqual = oldData.second == null ? newData.second == null : oldData.second.equals(newData.second);
     if (!filesEqual || !editorsEqual) {
       if (oldData.first != null && newData.first != null) {
-        for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList()) {
-          VirtualFile associatedFile = finder.getAssociatedFileToOpen(myProject, oldData.first);
+        for (FileEditorAssociateFinder finder : FileEditorAssociateFinder.EP_NAME.getExtensionList(myProject)) {
+          VirtualFile associatedFile = finder.getAssociatedFileToOpen(oldData.first);
 
           if (Comparing.equal(associatedFile, newData.first)) {
             return;
@@ -1500,9 +1451,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
     else {
       file = composite.getFile();
-      final FileEditorWithProvider pair = composite.getSelectedEditorWithProvider();
-      editor = pair.getFileEditor();
-      provider = pair.getProvider();
+      final FileEditor fileEditor = composite.getSelectedEditor();
+      editor = fileEditor;
+      provider = fileEditor.getProvider();
     }
     return new Trinity<>(file, editor, provider);
   }
@@ -1731,7 +1682,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (myScheduled) return;
       myScheduled = true;
 
-      UIAccess uiAccess = UIAccess.get();
+      UIAccess uiAccess = UIAccess.current();
       DumbService.getInstance(myProject).runWhenSmart(() -> {
         myScheduled = false;
         handleRootChange(uiAccess);

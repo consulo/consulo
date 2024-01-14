@@ -202,12 +202,9 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
 
           final String commandName = RefactoringBundle
             .message("renaming.0.1.to.2", UsageViewUtil.getType(variable), DescriptiveNameUtil.getDescriptiveName(variable), newName);
-          CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-            @Override
-            public void run() {
-              performRenameInner(substituted, newName);
-              PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-            }
+          CommandProcessor.getInstance().executeCommand(myProject, () -> {
+            performRenameInner(substituted, newName);
+            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
           }, commandName, null);
         }
       }

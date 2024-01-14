@@ -31,6 +31,7 @@ import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
+import consulo.ui.UIAccess;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -197,7 +198,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     final boolean virtSpace = TargetElementUtil.inVirtualSpace(myEditor, myEditor.getCaretModel().getOffset());
     final List<HighlightInfo> infos = virtSpace ? Collections.<HighlightInfo>emptyList() : getHighlights();
     UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());

@@ -128,8 +128,8 @@ public class FixDocCommentAction extends EditorAction {
         task = () -> fixer.fixComment(project, editor, pair.second);
       }
     }
-    final Runnable command = () -> ApplicationManager.getApplication().runWriteAction(task);
-    CommandProcessor.getInstance().executeCommand(project, command, "Fix documentation", null);
+    CommandProcessor.getInstance().executeCommand(project,
+                                                  () -> ApplicationManager.getApplication().runWriteAction(task), "Fix documentation", null);
 
   }
 

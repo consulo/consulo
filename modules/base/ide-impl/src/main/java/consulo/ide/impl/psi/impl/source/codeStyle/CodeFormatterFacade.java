@@ -41,6 +41,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
@@ -563,7 +564,8 @@ public class CodeFormatterFacade {
     DataManager.getInstance().saveInDataContext(dataContext, WRAP_LONG_LINE_DURING_FORMATTING_IN_PROGRESS_KEY, true);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     try {
-      Runnable command = () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
+      CommandRunnable
+        command = () -> EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ENTER).execute(editor, dataContext);
       if (!commandProcessor.hasCurrentCommand()) {
         commandProcessor.executeCommand(editor.getProject(), command, WRAP_LINE_COMMAND_NAME, null);
       }

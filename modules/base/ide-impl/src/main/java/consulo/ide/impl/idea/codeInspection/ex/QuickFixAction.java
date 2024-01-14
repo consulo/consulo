@@ -151,21 +151,18 @@ public class QuickFixAction extends AnAction {
     try {
       final Set<PsiElement> ignoredElements = new HashSet<PsiElement>();
 
-      CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-        @Override
-        public void run() {
-          CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              final SequentialModalProgressTask progressTask =
-                new SequentialModalProgressTask(project, getTemplatePresentation().getText(), false);
-              progressTask.setMinIterationTime(200);
-              progressTask.setTask(new PerformFixesTask(project, descriptors, ignoredElements, progressTask, context));
-              ProgressManager.getInstance().run(progressTask);
-            }
-          });
-        }
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            final SequentialModalProgressTask progressTask =
+              new SequentialModalProgressTask(project, getTemplatePresentation().getText(), false);
+            progressTask.setMinIterationTime(200);
+            progressTask.setTask(new PerformFixesTask(project, descriptors, ignoredElements, progressTask, context));
+            ProgressManager.getInstance().run(progressTask);
+          }
+        });
       }, getTemplatePresentation().getText(), null);
 
       refreshViews(project, ignoredElements, myToolWrapper);
@@ -186,17 +183,14 @@ public class QuickFixAction extends AnAction {
       final boolean[] refreshNeeded = {false};
       if (refElements.length > 0) {
         final Project project = refElements[0].getRefManager().getProject();
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              @Override
-              public void run() {
-                refreshNeeded[0] = applyFix(refElements);
-              }
-            });
-          }
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+          CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
+          ApplicationManager.getApplication().runWriteAction(new Runnable() {
+            @Override
+            public void run() {
+              refreshNeeded[0] = applyFix(refElements);
+            }
+          });
         }, getTemplatePresentation().getText(), null);
       }
       if (refreshNeeded[0]) {

@@ -41,6 +41,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
@@ -156,7 +157,7 @@ public class CodeCompletionHandlerBase {
 
     long startingTime = System.currentTimeMillis();
 
-    Runnable initCmd = () -> {
+    CommandRunnable initCmd = () -> {
       CompletionInitializationContextImpl context =
               withTimeout(calcSyncTimeOut(startingTime), () -> CompletionInitializationUtil.createCompletionInitializationContext(project, editor, caret, invocationCount, completionType));
 

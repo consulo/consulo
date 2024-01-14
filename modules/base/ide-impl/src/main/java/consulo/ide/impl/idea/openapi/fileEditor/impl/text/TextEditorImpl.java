@@ -59,7 +59,10 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
 
   @Nonnull
   public final VirtualFile myFile;
- 
+
+  @Nonnull
+  private final TextEditorProviderImpl myProvider;
+
   private final AsyncEditorLoader myAsyncLoader;
 
   protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
@@ -68,16 +71,24 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
   public TextEditorImpl(@Nonnull final Project project, @Nonnull final VirtualFile file, final TextEditorProviderImpl provider) {
     myProject = project;
     myFile = file;
+    myProvider = provider;
     myChangeSupport = new PropertyChangeSupport(this);
     myTextEditorComponentContainerFactory = provider.myTextEditorComponentContainerFactory;
     myComponent = createEditorComponent(project, file);
     Disposer.register(this, myComponent);
 
     myAsyncLoader = new AsyncEditorLoader(this, myComponent, provider);
-    myAsyncLoader.start();
+    project.getUIAccess().give(() -> myAsyncLoader.start());
   }
 
   @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myProvider;
+  }
+
+  @Nonnull
+  @RequiredReadAction
   public Runnable loadEditorInBackground() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);

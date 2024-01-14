@@ -32,6 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicLong;
@@ -102,7 +103,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
   protected abstract void collectInformationWithProgress(@Nonnull ProgressIndicator progress);
 
   @Override
-  public final void doApplyInformationToEditor() {
+  public final void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     myFinished = true;
     applyInformationWithProgress();
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
@@ -179,7 +180,7 @@ public abstract class ProgressableTextEditorHighlightingPass extends TextEditorH
     }
 
     @Override
-    public void doApplyInformationToEditor() {
+    public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
       FileStatusMapImpl statusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
       statusMap.markFileUpToDate(getDocument(), getId());
     }

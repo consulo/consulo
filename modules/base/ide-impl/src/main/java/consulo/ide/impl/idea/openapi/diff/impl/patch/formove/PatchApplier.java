@@ -18,17 +18,13 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchContext;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
-import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
-import consulo.versionControlSystem.VcsNotifier;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchAction;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localHistory.Label;
@@ -44,13 +40,15 @@ import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -212,17 +210,14 @@ public class PatchApplier<BinaryType extends FilePatch> {
       final Ref<ApplyPatchStatus> refStatus = Ref.create(null);
       try {
         setConfirmationToDefault();
-        CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-          @Override
-          public void run() {
-            //consider pre-check status only if not successful, otherwise we could not detect already applied status
-            if (createFiles() != ApplyPatchStatus.SUCCESS) {
-              refStatus.set(createFiles());
-            }
-            addSkippedItems(trigger);
-            trigger.prepare();
-            refStatus.set(ApplyPatchStatus.and(refStatus.get(), executeWritable()));
+        CommandProcessor.getInstance().executeCommand(myProject, () -> {
+          //consider pre-check status only if not successful, otherwise we could not detect already applied status
+          if (createFiles() != ApplyPatchStatus.SUCCESS) {
+            refStatus.set(createFiles());
           }
+          addSkippedItems(trigger);
+          trigger.prepare();
+          refStatus.set(ApplyPatchStatus.and(refStatus.get(), executeWritable()));
         }, VcsBundle.message("patch.apply.command"), null);
       }
       finally {
@@ -283,22 +278,19 @@ public class PatchApplier<BinaryType extends FilePatch> {
     final TriggerAdditionOrDeletion trigger = new TriggerAdditionOrDeletion(project);
     final Ref<ApplyPatchStatus> refStatus = new Ref<>(result);
     try {
-      CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-        @Override
-        public void run() {
-          for (PatchApplier applier : group) {
-            refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.createFiles()));
-            applier.addSkippedItems(trigger);
-          }
-          trigger.prepare();
-          if (refStatus.get() == ApplyPatchStatus.SUCCESS) {
-            // all pre-check results are valuable only if not successful; actual status we can receive after executeWritable
-            refStatus.set(null);
-          }
-          for (PatchApplier applier : group) {
-            refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.executeWritable()));
-            if (refStatus.get() == ApplyPatchStatus.ABORT) break;
-          }
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        for (PatchApplier applier : group) {
+          refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.createFiles()));
+          applier.addSkippedItems(trigger);
+        }
+        trigger.prepare();
+        if (refStatus.get() == ApplyPatchStatus.SUCCESS) {
+          // all pre-check results are valuable only if not successful; actual status we can receive after executeWritable
+          refStatus.set(null);
+        }
+        for (PatchApplier applier : group) {
+          refStatus.set(ApplyPatchStatus.and(refStatus.get(), applier.executeWritable()));
+          if (refStatus.get() == ApplyPatchStatus.ABORT) break;
         }
       }, VcsBundle.message("patch.apply.command"), null);
     }

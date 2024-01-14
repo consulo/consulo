@@ -18,7 +18,6 @@ package consulo.ide.action;
 
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -27,7 +26,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -83,7 +81,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
   }
 
   protected boolean isAvailable(final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return false;
     }

@@ -470,9 +470,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
   private MyEditable myEditable;
 
-  public CodeEditorBase(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
-    assertIsDispatchThread();
+  protected boolean myUIThreadAssertion;
 
+  public CodeEditorBase(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
     myIsViewer = viewer;
     myKind = kind;
     myDocument = (DocumentEx)document;
@@ -545,6 +545,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     myScrollingPositionKeeper = new EditorScrollingPositionKeeper(this);
     Disposer.register(myDisposable, myScrollingPositionKeeper);
+  }
+
+  public boolean isUIThreadAssertion() {
+    return myUIThreadAssertion;
   }
 
   protected abstract CodeEditorSelectionModelBase createSelectionModel();
@@ -1138,8 +1142,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
   @Override
   public void setHighlighter(@Nonnull final EditorHighlighter highlighter) {
-    if (isReleased) return; // do not set highlighter to the released editor
+    if (isReleased) {
+      return; // do not set highlighter to the released editor
+    }
+
     assertIsDispatchThread();
+
     final Document document = getDocument();
     Disposer.dispose(myHighlighterDisposable);
 
@@ -1171,8 +1179,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
   }
 
   @RequiredUIAccess
-  public static void assertIsDispatchThread() {
-    UIAccess.assertIsUIThread();
+  public void assertIsDispatchThread() {
+    if (myUIThreadAssertion) {
+      UIAccess.assertIsUIThread();
+    }
   }
 
   public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {

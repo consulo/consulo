@@ -184,14 +184,11 @@ class EditVariableDialog extends DialogWrapper {
     ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        CommandProcessor.getInstance().executeCommand(null, new Runnable() {
-          @Override
-          public void run() {
-            Document document = myEditor.getDocument();
-            String templateText = document.getText();
-            templateText = templateText.replaceAll("\\$" + oldVar.getName() + "\\$", "\\$" + newVar.getName() + "\\$");
-            document.replaceString(0, document.getTextLength(), templateText);
-          }
+        CommandProcessor.getInstance().executeCommand(null, () -> {
+          Document document = myEditor.getDocument();
+          String templateText = document.getText();
+          templateText = templateText.replaceAll("\\$" + oldVar.getName() + "\\$", "\\$" + newVar.getName() + "\\$");
+          document.replaceString(0, document.getTextLength(), templateText);
         }, null, null);
       }
     });

@@ -36,11 +36,11 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -81,7 +81,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
     final CreateFileFromTemplateDialog.Builder builder = CreateFileFromTemplateDialog.createDialog(project);
     buildDialog(project, dir, builder);
 
-    final Ref<String> selectedTemplateName = Ref.create(null);
+    final SimpleReference<String> selectedTemplateName = SimpleReference.create(null);
     builder.show(getErrorTitle(), getDefaultTemplateName(dir), new CreateFileFromTemplateDialog.FileCreator<T>() {
       @Override
       public T createFile(@Nonnull String name, @Nonnull String templateName) {

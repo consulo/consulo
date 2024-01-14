@@ -12,7 +12,6 @@ import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.UIBundle;
@@ -23,14 +22,15 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.*;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -238,7 +238,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
   @RequiredUIAccess
   public Exception createNewFolder(final VirtualFile parentDirectory, final String newFolderName) {
     final Exception[] failReason = new Exception[]{null};
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myProject, new CommandRunnable() {
       @Override
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
@@ -268,7 +268,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                                  final FileType fileType,
                                  final String initialContent) {
     final Exception[] failReason = new Exception[]{null};
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myProject, new CommandRunnable() {
       @Override
       public void run() {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {

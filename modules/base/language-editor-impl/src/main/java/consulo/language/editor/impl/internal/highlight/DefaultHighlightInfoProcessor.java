@@ -73,7 +73,7 @@ public class DefaultHighlightInfoProcessor extends HighlightInfoProcessor {
             TextEditorHighlightingPassFactory.EP_NAME.findExtensionOrFail(project, ShowAutoImportPassFactory.class);
           TextEditorHighlightingPass highlightingPass = siFactory.createHighlightingPass(psiFile, editor);
           if (highlightingPass != null) {
-            highlightingPass.doApplyInformationToEditor();
+            highlightingPass.doApplyInformationToEditor(project.getUIAccess(), null);
           }
         }
 

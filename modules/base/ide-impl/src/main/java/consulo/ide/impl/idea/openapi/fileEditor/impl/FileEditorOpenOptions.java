@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 /**
  * @author yole
  */
-//@ApiStatus.Internal
 public class FileEditorOpenOptions {
   private boolean myCurrentTab = false;
   private boolean myFocusEditor = false;

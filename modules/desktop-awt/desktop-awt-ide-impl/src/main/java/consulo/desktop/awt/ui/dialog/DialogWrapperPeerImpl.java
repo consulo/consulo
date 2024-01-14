@@ -37,7 +37,7 @@ import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposer;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
+import consulo.undoRedo.internal.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;

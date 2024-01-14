@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.file;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.util.PerApplicationInstance;
@@ -83,25 +84,13 @@ public abstract class FileTypeManager extends FileTypeRegistry {
   @Deprecated
   public abstract void removeFileTypeListener(@Nonnull FileTypeListener listener);
 
-  /**
-   * If file is already associated with any known file type returns it.
-   * Otherwise asks user to select file type and associates it with fileName extension if any selected.
-   *
-   * @param file file to ask for file type association
-   * @return Known file type or {@code null}. Never returns {@link FileTypes#UNKNOWN}.
-   * @deprecated Use {@link #getKnownFileTypeOrAssociate(VirtualFile, Project)} instead
-   */
   @Nullable
-  @Deprecated
-  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file) {
-    return file.getFileType();
-  }
-
-  @Nullable
+  @RequiredReadAction
   public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project);
 
   @Nullable
   @Override
+  @RequiredReadAction
   public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
     return getKnownFileTypeOrAssociate(file, (Project)project);
   }

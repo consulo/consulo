@@ -142,7 +142,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   }
 
   public static void openFile(final VirtualFile virtualFile, final Project project) {
-    FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
+    FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance(project);
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
       Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
                                  IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());

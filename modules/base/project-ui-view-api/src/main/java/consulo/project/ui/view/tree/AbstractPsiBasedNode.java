@@ -31,13 +31,14 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Class for node descriptors based on PsiElements. Subclasses should define
@@ -234,9 +235,30 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
     }
   }
 
+  @Nonnull
+  @Override
+  public CompletableFuture<?> navigateAsync(boolean requestFocus, boolean preserveState) {
+    if (canNavigate()) {
+      if (requestFocus || preserveState) {
+        return PopupNavigationUtil.openFileWithPsiElementAsync(extractPsiFromValue(), requestFocus, requestFocus);
+      }
+      else {
+        return getNavigationItem().navigateAsync(requestFocus);
+      }
+    }
+
+    return CompletableFuture.completedFuture(null);
+  }
+
   @Override
   public void navigate(boolean requestFocus) {
     navigate(requestFocus, false);
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<?> navigateAsync(boolean requestFocus) {
+    return navigateAsync(requestFocus, false);
   }
 
   @Override

@@ -26,6 +26,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryEntry;
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryManager;
 import consulo.ide.impl.externalService.impl.repository.history.PluginHistoryRequest;
@@ -66,15 +67,26 @@ public class WhatsNewVirtualFileEditor extends UserDataHolderBase implements Fil
 
   private final UpdateHistory myUpdateHistory;
   private final VirtualFile myFile;
+  private final WhatsNewVirtualFileEditorProvider myFileEditorProvider;
   private JEditorPane myEditorPanel;
 
   private JBLoadingPanel myLoadingPanel;
 
   private Future<?> myLoadingFuture = CompletableFuture.completedFuture(null);
 
-  public WhatsNewVirtualFileEditor(Project project, UpdateHistory updateHistory, VirtualFile file) {
+  public WhatsNewVirtualFileEditor(Project project,
+                                   UpdateHistory updateHistory,
+                                   VirtualFile file,
+                                   WhatsNewVirtualFileEditorProvider fileEditorProvider) {
     myUpdateHistory = updateHistory;
     myFile = file;
+    myFileEditorProvider = fileEditorProvider;
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
   }
 
   @Nonnull

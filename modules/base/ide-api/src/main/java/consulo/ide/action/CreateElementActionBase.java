@@ -17,7 +17,6 @@
 package consulo.ide.action;
 
 import consulo.ide.IdeView;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
@@ -27,10 +26,10 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.function.Consumer;
 
 /**
@@ -82,7 +81,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
       return;
     }
 
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
 
     final PsiDirectory dir = view.getOrChooseDirectory();
     if (dir == null) return;

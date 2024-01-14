@@ -500,31 +500,25 @@ class Browser extends JPanel {
   }
 
   private void performFix(final RefEntity element, final CommonProblemDescriptor descriptor, final int idx, final QuickFix fix) {
-    final Runnable command = new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myView.getProject(), () -> ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
-            final long startCount = tracker.getModificationCount();
-            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
-            //CCE here means QuickFix was incorrectly inherited
-            fix.applyFix(myView.getProject(), descriptor);
-            if (startCount != tracker.getModificationCount()) {
-              InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
-              if (toolWrapper != null) {
-                InspectionToolPresentation presentation =
-                  myView.getGlobalInspectionContext().getPresentation(toolWrapper);
-                presentation.ignoreProblem(element, descriptor, idx);
-              }
-              myView.updateView(false);
-            }
+        final PsiModificationTracker tracker = PsiManager.getInstance(myView.getProject()).getModificationTracker();
+        final long startCount = tracker.getModificationCount();
+        CommandProcessor.getInstance().markCurrentCommandAsGlobal(myView.getProject());
+        //CCE here means QuickFix was incorrectly inherited
+        fix.applyFix(myView.getProject(), descriptor);
+        if (startCount != tracker.getModificationCount()) {
+          InspectionToolWrapper toolWrapper = myView.getTree().getSelectedToolWrapper();
+          if (toolWrapper != null) {
+            InspectionToolPresentation presentation =
+              myView.getGlobalInspectionContext().getPresentation(toolWrapper);
+            presentation.ignoreProblem(element, descriptor, idx);
           }
-        });
+          myView.updateView(false);
+        }
       }
-    };
-    CommandProcessor.getInstance().executeCommand(myView.getProject(), command, fix.getName(), null);
+    }), fix.getName(), null);
   }
 }
 

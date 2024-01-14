@@ -5,6 +5,8 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
@@ -118,6 +120,7 @@ public final class EditSourceOnDoubleClickHandler {
     }
 
     @Override
+    @RequiredUIAccess
     public boolean onDoubleClick(@Nonnull MouseEvent e) {
       TreePath clickPath = WideSelectionTreeUI.isWideSelection(myTree) ? myTree.getClosestPathForLocation(e.getX(), e.getY()) : myTree.getPathForLocation(e.getX(), e.getY());
       if (clickPath == null) return false;
@@ -136,10 +139,12 @@ public final class EditSourceOnDoubleClickHandler {
       return true;
     }
 
-    @SuppressWarnings("UnusedParameters")
+    @RequiredUIAccess
     protected void processDoubleClick(@Nonnull MouseEvent e, @Nonnull DataContext dataContext, @Nonnull TreePath treePath) {
-      OpenSourceUtil.openSourcesFrom(dataContext, true);
-      if (myWhenPerformed != null) myWhenPerformed.run();
+      UIAccess uiAccess = UIAccess.current();
+      OpenSourceUtil.openSourcesFromAsync(dataContext, true).whenCompleteAsync((o, throwable) -> {
+        if (myWhenPerformed != null) myWhenPerformed.run();
+      }, uiAccess);
     }
   }
 }

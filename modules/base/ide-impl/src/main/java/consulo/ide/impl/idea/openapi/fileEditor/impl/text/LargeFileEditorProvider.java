@@ -49,7 +49,7 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   @Nonnull
   public FileEditor createEditor(@Nonnull Project project, @Nonnull final VirtualFile file) {
-    return new LargeFileEditor(file);
+    return new LargeFileEditor(file, this);
   }
 
   @Override
@@ -66,9 +66,17 @@ public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
 
   private static class LargeFileEditor extends UserDataHolderBase implements FileEditor {
     private final VirtualFile myFile;
+    private final LargeFileEditorProvider myFileEditorProvider;
 
-    public LargeFileEditor(VirtualFile file) {
+    public LargeFileEditor(VirtualFile file, LargeFileEditorProvider fileEditorProvider) {
       myFile = file;
+      myFileEditorProvider = fileEditorProvider;
+    }
+
+    @Nonnull
+    @Override
+    public FileEditorProvider getProvider() {
+      return myFileEditorProvider;
     }
 
     @Nonnull

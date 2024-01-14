@@ -34,6 +34,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.FocusableComponent;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
@@ -234,19 +235,19 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
+    uiAccess.give(() -> {
+      CachedIntentions cachedIntentions = myCachedIntentions;
+      boolean actionsChanged = myActionsChanged;
+      TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
+      if ((state == null || state.isFinished()) && cachedIntentions != null) {
+        IntentionsInfo syncInfo = new IntentionsInfo();
+        getActionsToShowSync(myEditor, myFile, syncInfo, myPassIdToShowIntentionsFor);
+        actionsChanged |= cachedIntentions.addActions(syncInfo);
 
-    CachedIntentions cachedIntentions = myCachedIntentions;
-    boolean actionsChanged = myActionsChanged;
-    TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
-    if ((state == null || state.isFinished()) && cachedIntentions != null) {
-      IntentionsInfo syncInfo = new IntentionsInfo();
-      getActionsToShowSync(myEditor, myFile, syncInfo, myPassIdToShowIntentionsFor);
-      actionsChanged |= cachedIntentions.addActions(syncInfo);
-
-      IntentionsUI.getInstance(myProject).update(cachedIntentions, actionsChanged);
-    }
+        IntentionsUI.getInstance(myProject).update(cachedIntentions, actionsChanged);
+      }
+    });
   }
 
 

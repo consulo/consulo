@@ -16,23 +16,23 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
 
 public class ReloadFromDiskAction extends AnAction implements DumbAware {
   @Override
@@ -52,42 +52,33 @@ public class ReloadFromDiskAction extends AnAction implements DumbAware {
     );
     if (res != 0) return;
 
-    CommandProcessor.getInstance().executeCommand(
-        project, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(
+      new Runnable() {
         @Override
         public void run() {
-          ApplicationManager.getApplication().runWriteAction(
-            new Runnable() {
-              @Override
-              public void run() {
-                PsiManager.getInstance(project).reloadFromDisk(psiFile);
-              }
-            }
-          );
+          PsiManager.getInstance(project).reloadFromDisk(psiFile);
         }
-      },
-        IdeBundle.message("command.reload.from.disk"),
-        null
+      }), IdeBundle.message("command.reload.from.disk"), null
     );
   }
 
   @Override
-  public void update(AnActionEvent event){
+  public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    if (project == null){
+    if (project == null) {
       presentation.setEnabled(false);
       return;
     }
     Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
-    if (editor == null){
+    if (editor == null) {
       presentation.setEnabled(false);
       return;
     }
     Document document = editor.getDocument();
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
-    if (psiFile == null || psiFile.getVirtualFile() == null){
+    if (psiFile == null || psiFile.getVirtualFile() == null) {
       presentation.setEnabled(false);
     }
   }

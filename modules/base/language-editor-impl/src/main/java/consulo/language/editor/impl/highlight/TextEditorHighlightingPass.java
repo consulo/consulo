@@ -15,7 +15,7 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -23,7 +23,7 @@ import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TextEditorHighlightingPass implements HighlightingPass {
+public abstract class TextEditorHighlightingPass<S> implements HighlightingPass<S> {
   public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
   @Nullable
   protected final Document myDocument;
@@ -93,10 +93,9 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return true;
   }
 
-  @RequiredUIAccess
   @Override
-  public final void applyInformationToEditor() {
-    applyInformationToEditorValidated();
+  public final void applyInformationToEditor(UIAccess uiAccess, S snapshot) {
+    applyInformationToEditorValidated(uiAccess, snapshot);
   }
 
   @RequiredReadAction
@@ -119,13 +118,13 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return true;
   }
 
-  public void applyInformationToEditorValidated() {
-    doApplyInformationToEditor();
+  public void applyInformationToEditorValidated(UIAccess uiAccess, S snapshot) {
+    doApplyInformationToEditor(uiAccess, snapshot);
   }
 
   public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
 
-  public abstract void doApplyInformationToEditor();
+  public abstract void doApplyInformationToEditor(UIAccess uiAccess, S snapshot);
 
   public final int getId() {
     return myId;

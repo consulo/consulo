@@ -15,48 +15,49 @@
  */
 package consulo.ide.impl.execution.editor;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.configurable.ConfigurationException;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.internal.FileEditorWithModifiedIcon;
 import consulo.ide.impl.idea.execution.impl.RunConfigurable;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
  * @since 19/12/2021
  */
 public class RunConfigurationFileEditor extends UserDataHolderBase implements FileEditor, FileEditorWithModifiedIcon {
-  private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
-
   private boolean myDisposed;
 
   private final Project myProject;
   private final VirtualFile myFile;
+  private final FileEditorProvider myFileEditorProvider;
   private RunConfigurable myRunConfigurable;
 
   private JComponent myComponent;
 
-  public RunConfigurationFileEditor(Project project, VirtualFile file) {
+  public RunConfigurationFileEditor(Project project, VirtualFile file, FileEditorProvider fileEditorProvider) {
     myProject = project;
     myFile = file;
+    myFileEditorProvider = fileEditorProvider;
     myRunConfigurable = new RunConfigurable(project);
     myRunConfigurable.setEditorMode();
 
@@ -81,6 +82,12 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
         }
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
   }
 
   @Nonnull
@@ -118,8 +125,9 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
     return myComponent = component;
   }
 
+  @RequiredUIAccess
   private void addUpdateRequest(final Runnable updateRequest) {
-    myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.any());
+    UIAccess.current().getScheduler().schedule(() -> updateRequest, 500, TimeUnit.MILLISECONDS);
   }
 
   @Nullable

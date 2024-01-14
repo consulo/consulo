@@ -18,14 +18,13 @@ package consulo.ide.action;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.SystemInfo;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
-import consulo.externalService.statistic.UsageTrigger;
 import consulo.language.LangBundle;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -45,9 +44,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -81,17 +80,8 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
   @Nonnull
   protected void invokeDialog(final Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
     MyInputValidator validator = new MyValidator(project, directory);
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      try {
-        elementsConsumer.accept(validator.create("test"));
-      }
-      catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-    else {
-      createLightWeightPopup(validator, elementsConsumer).showCenteredInCurrentWindow(project);
-    }
+    
+    createLightWeightPopup(validator, elementsConsumer).showCenteredInCurrentWindow(project);
   }
 
   private JBPopup createLightWeightPopup(MyInputValidator validator, Consumer<PsiElement[]> consumer) {

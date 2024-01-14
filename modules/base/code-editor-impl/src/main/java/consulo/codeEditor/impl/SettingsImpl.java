@@ -24,6 +24,7 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
@@ -346,11 +347,13 @@ public class SettingsImpl implements EditorSettings {
     return mySoftWrapAppliancePlace;
   }
 
+  @RequiredReadAction
   public void reinitSettings() {
     myCachedTabSize = null;
     reinitDocumentIndentOptions();
   }
 
+  @RequiredReadAction
   private void reinitDocumentIndentOptions() {
     if (myEditor == null || myEditor.isViewer()) return;
     final Project project = myEditor.getProject();

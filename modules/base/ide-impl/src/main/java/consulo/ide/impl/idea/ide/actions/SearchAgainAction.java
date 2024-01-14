@@ -16,21 +16,21 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
+import consulo.find.FindManager;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
 
 public class SearchAgainAction extends AnAction implements DumbAware {
   public SearchAgainAction() {
@@ -43,26 +43,22 @@ public class SearchAgainAction extends AnAction implements DumbAware {
     final FileEditor editor = e.getData(PlatformDataKeys.FILE_EDITOR);
     if (editor == null || project == null) return;
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(
-        project, new Runnable() {
-        @Override
-        public void run() {
-          PsiDocumentManager.getInstance(project).commitAllDocuments();
-          IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
-          if(FindManager.getInstance(project).findNextUsageInEditor(editor)) {
-            return;
-          }
+    commandProcessor.executeCommand(project, () -> {
+                                      PsiDocumentManager.getInstance(project).commitAllDocuments();
+                                      IdeDocumentHistory.getInstance(project).includeCurrentCommandAsNavigation();
+                                      if (FindManager.getInstance(project).findNextUsageInEditor(editor)) {
+                                        return;
+                                      }
 
-          FindUtil.searchAgain(project, editor, e.getDataContext());
-        }
-      },
-      IdeBundle.message("command.find.next"),
-      null
+                                      FindUtil.searchAgain(project, editor, e.getDataContext());
+                                    },
+                                    IdeBundle.message("command.find.next"),
+                                    null
     );
   }
 
   @Override
-  public void update(AnActionEvent event){
+  public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     Project project = event.getData(CommonDataKeys.PROJECT);
     if (project == null) {

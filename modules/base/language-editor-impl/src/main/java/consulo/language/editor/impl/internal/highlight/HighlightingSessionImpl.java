@@ -60,6 +60,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
 
+  @Deprecated
   void applyInEDT(@RequiredUIAccess  @Nonnull Runnable runnable) {
     myProject.getUIAccess().giveIfNeed(runnable);
   }

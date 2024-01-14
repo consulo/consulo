@@ -31,7 +31,6 @@ import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
-
 import jakarta.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
@@ -67,26 +66,20 @@ public abstract class BaseCompleteMacro extends Macro {
     final Editor editor = context.getEditor();
 
     final PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);
-    Runnable runnable = new Runnable() {
-      @Override
-      public void run() {
-        if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) return;
+    Runnable runnable = () -> {
+      if (project.isDisposed() || editor.isDisposed() || psiFile == null || !psiFile.isValid()) return;
 
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            invokeCompletionHandler(project, editor);
-            Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
+      CommandProcessor.getInstance().executeCommand(project, () -> {
+        invokeCompletionHandler(project, editor);
+        Lookup lookup = LookupManager.getInstance(project).getActiveLookup();
 
-            if (lookup != null) {
-              lookup.addLookupListener(new MyLookupListener(context));
-            }
-            else {
-              considerNextTab(editor);
-            }
-          }
-        }, "", null);
-      }
+        if (lookup != null) {
+          lookup.addLookupListener(new MyLookupListener(context));
+        }
+        else {
+          considerNextTab(editor);
+        }
+      }, "", null);
     };
 
     ApplicationManager.getApplication().invokeLater(runnable);

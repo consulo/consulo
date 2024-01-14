@@ -15,6 +15,10 @@
  */
 package consulo.navigation;
 
+import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Navigatable that saves cursor position in the editor when navigating to
  * already opened documents
@@ -22,5 +26,16 @@ package consulo.navigation;
  * @author Konstantin Bulenkov
  */
 public interface StatePreservingNavigatable extends Navigatable {
+  @Override
+  default void navigate(boolean requestFocus) {
+    navigate(requestFocus, false);
+  }
+
   void navigate(boolean requestFocus, boolean preserveState);
+
+  @Nonnull
+  default CompletableFuture<?> navigateAsync(boolean requestFocus, boolean preserveState) {
+    navigate(requestFocus, preserveState);
+    return CompletableFuture.completedFuture(null);
+  }
 }

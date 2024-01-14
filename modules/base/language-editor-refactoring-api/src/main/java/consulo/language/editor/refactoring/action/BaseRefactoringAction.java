@@ -41,6 +41,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Condition;
@@ -122,12 +123,7 @@ public abstract class BaseRefactoringAction extends AnAction implements UpdateIn
     if (InplaceRefactoring.getActiveInplaceRenamer(editor) == null) {
       final LookupEx lookup = LookupManager.getActiveLookup(editor);
       if (lookup != null) {
-        Runnable command = new Runnable() {
-          @Override
-          public void run() {
-            lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR);
-          }
-        };
+        CommandRunnable command = () -> lookup.finishLookup(Lookup.NORMAL_SELECT_CHAR);
         assert editor != null;
         Document doc = editor.getDocument();
         DocCommandGroupId group = DocCommandGroupId.noneGroupId(doc);

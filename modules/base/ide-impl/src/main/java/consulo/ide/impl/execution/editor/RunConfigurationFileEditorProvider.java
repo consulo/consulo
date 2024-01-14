@@ -40,7 +40,7 @@ public class RunConfigurationFileEditorProvider implements FileEditorProvider, D
   @Nonnull
   @Override
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new RunConfigurationFileEditor(project, file);
+    return new RunConfigurationFileEditor(project, file, this);
   }
 
   @Nonnull

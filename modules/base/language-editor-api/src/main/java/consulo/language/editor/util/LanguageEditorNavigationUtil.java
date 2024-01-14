@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.util;
 
+import consulo.application.concurrent.DataLock;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.EditorHistoryManager;
@@ -25,19 +26,88 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.CommandInfo;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
  * @since 05-Apr-22
  */
 public class LanguageEditorNavigationUtil {
+  // region Async methods
+  @Nonnull
+  @RequiredUIAccess
+  public static CompletableFuture<Boolean> activateFileWithPsiElementAsync(@Nonnull PsiElement elt) {
+    return activateFileWithPsiElementAsync(elt, true);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public static CompletableFuture<Boolean> activateFileWithPsiElementAsync(@Nonnull PsiElement elt, boolean searchForOpen) {
+    return activateFileWithPsiElementAsync(elt, searchForOpen, true);
+  }
+
+  @Nonnull
+  @RequiredUIAccess
+  public static CompletableFuture<Boolean> activateFileWithPsiElementAsync(PsiElement element,
+                                                                           boolean searchForOpen,
+                                                                           boolean requestFocus) {
+    boolean openAsNative = false;
+    if (element instanceof PsiFile) {
+      VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
+      if (virtualFile != null) {
+        openAsNative = virtualFile.getFileType() instanceof INativeFileType || virtualFile.getFileType() == UnknownFileType.INSTANCE;
+      }
+    }
+
+    if (searchForOpen) {
+      element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);
+    }
+    else {
+      element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, true);
+    }
+
+    UIAccess uiAccess = UIAccess.current();
+    boolean openAsNativeFinal = openAsNative;
+    CommandInfo commandInfo = CommandInfo.newBuilder().withProject(element.getProject()).build();
+    CompletableFuture<Boolean> future = CommandProcessor.getInstance().executeCommandAsync(commandInfo, e -> {
+      if (openAsNativeFinal) {
+        final NavigationItem navigationItem = (NavigationItem)element;
+        if (navigationItem.canNavigate()) {
+          return navigationItem.navigateAsync(requestFocus).handle((o, throwable) -> true);
+        }
+      }
+
+      return activatePsiElementIfOpenAsync(element, searchForOpen, requestFocus, uiAccess).thenCompose(opened -> {
+        if (opened) {
+          return CompletableFuture.completedFuture(true);
+        }
+        
+        final NavigationItem navigationItem = (NavigationItem)element;
+        if (navigationItem.canNavigate()) {
+          return navigationItem.navigateAsync(requestFocus).handle((o, throwable) -> true);
+        } else {
+          return CompletableFuture.completedFuture(false);
+        }
+      });
+    });
+    future.whenComplete((aBoolean, throwable) -> element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null));
+    return future;
+  }
+
+  // endregion
+
   public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
     return activateFileWithPsiElement(elt, true);
   }
@@ -100,7 +170,7 @@ public class LanguageEditorNavigationUtil {
     }
 
     final TextRange range = elt.getTextRange();
-    if (range == null) return false;
+    if (range == TextRange.EMPTY_RANGE) return false;
 
     final FileEditor[] editors = fem.getEditors(vFile);
     for (FileEditor editor : editors) {
@@ -117,5 +187,67 @@ public class LanguageEditorNavigationUtil {
     }
 
     return false;
+  }
+
+  private static CompletableFuture<Boolean> activatePsiElementIfOpenAsync(@Nonnull PsiElement elt,
+                                                                          boolean searchForOpen,
+                                                                          boolean requestFocus,
+                                                                          @Nonnull UIAccess uiAccess) {
+    if (!elt.isValid()) {
+      return CompletableFuture.completedFuture(false);
+    }
+
+    elt = elt.getNavigationElement();
+    final PsiFile file = elt.getContainingFile();
+    if (file == null || !file.isValid()) {
+      return CompletableFuture.completedFuture(false);
+    }
+
+    VirtualFile vFile = file.getVirtualFile();
+    if (vFile == null) {
+      return CompletableFuture.completedFuture(false);
+    }
+
+    if (!EditorHistoryManager.getInstance(elt.getProject()).hasBeenOpen(vFile)) {
+      return CompletableFuture.completedFuture(false);
+    }
+
+    final FileEditorManager fem = FileEditorManager.getInstance(elt.getProject());
+    CompletableFuture<List<FileEditor>> fileEditorsFuture;
+    if (!fem.isFileOpen(vFile)) {
+      fileEditorsFuture = fem.openFileAsync(vFile, requestFocus, searchForOpen, uiAccess);
+    }
+    else {
+      fileEditorsFuture = uiAccess.giveAsync(() -> List.of(fem.getEditors(vFile)));
+    }
+
+    DataLock dataLock = DataLock.getInstance();
+
+    final PsiElement finalElt = elt;
+
+    return fileEditorsFuture.thenCompose((fileEditors) -> dataLock.readAsync(() -> Pair.create(finalElt.getTextRange(), fileEditors)))
+                            .thenComposeAsync(pair -> {
+                              List<FileEditor> editors = pair.getValue();
+                              TextRange range = pair.getKey();
+
+                              if (range == TextRange.EMPTY_RANGE) {
+                                return CompletableFuture.completedFuture(false);
+                              }
+                              else {
+                                for (FileEditor editor : editors) {
+                                  if (editor instanceof TextEditor) {
+                                    final Editor text = ((TextEditor)editor).getEditor();
+                                    final int offset = text.getCaretModel().getOffset();
+
+                                    if (range.containsOffset(offset)) {
+                                      // select the file
+                                      return fem.openFileAsync(vFile, requestFocus, searchForOpen, uiAccess).handle((f, t) -> true);
+                                    }
+                                  }
+                                }
+
+                                return CompletableFuture.completedFuture(false);
+                              }
+                            }, uiAccess);
   }
 }

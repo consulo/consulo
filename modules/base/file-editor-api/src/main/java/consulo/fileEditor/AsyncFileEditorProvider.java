@@ -20,6 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+@Deprecated
 public interface AsyncFileEditorProvider extends FileEditorProvider {
   /**
    * This method is intended to be called from background thread. It should perform all time-consuming tasks required to build an editor,

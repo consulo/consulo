@@ -80,7 +80,8 @@ public interface IdeFocusManager extends FocusRequestor {
 
 
   /**
-   * Finds focused component among descendants of the given component. Descendants may be in child popups and windows
+   * Finds focused component
+   * among descendants of the given component. Descendants may be in child popups and windows
    */
   @Nullable
   public abstract Component getFocusedDescendantFor(final Component comp);

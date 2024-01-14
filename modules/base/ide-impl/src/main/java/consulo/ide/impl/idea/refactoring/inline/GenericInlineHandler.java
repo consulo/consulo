@@ -112,24 +112,21 @@ public class GenericInlineHandler {
       public void run() {
         final String subj = element instanceof PsiNamedElement ? ((PsiNamedElement)element).getName() : "element";
 
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+          final PsiReference[] references = sortDepthFirstRightLeftOrder(allReferences);
 
 
-            final UsageInfo[] usages = new UsageInfo[references.length];
-            for (int i = 0; i < references.length; i++) {
-              usages[i] = new UsageInfo(references[i]);
-            }
+          final UsageInfo[] usages = new UsageInfo[references.length];
+          for (int i = 0; i < references.length; i++) {
+            usages[i] = new UsageInfo(references[i]);
+          }
 
-            for (UsageInfo usage : usages) {
-              inlineReference(usage, element, inliners);
-            }
+          for (UsageInfo usage : usages) {
+            inlineReference(usage, element, inliners);
+          }
 
-            if (!settings.isOnlyOneReferenceToInline()) {
-              languageSpecific.removeDefinition(element, settings);
-            }
+          if (!settings.isOnlyOneReferenceToInline()) {
+            languageSpecific.removeDefinition(element, settings);
           }
         }, RefactoringBundle.message("inline.command", StringUtil.notNullize(subj, "<nameless>")), null);
       }

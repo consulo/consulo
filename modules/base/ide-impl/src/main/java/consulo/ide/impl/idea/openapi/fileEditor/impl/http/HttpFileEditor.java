@@ -15,27 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
-import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.impl.DocumentImpl;
+import consulo.fileEditor.*;
+import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
+import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.text.TextEditorState;
-import consulo.fileEditor.FileEditorLocation;
-import consulo.fileEditor.FileEditorState;
-import consulo.fileEditor.FileEditorStateLevel;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import consulo.navigation.Navigatable;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import kava.beans.PropertyChangeListener;
 
 /**
  * @author nik
@@ -45,17 +42,27 @@ public class HttpFileEditor implements TextEditor {
   private final RemoteFilePanel myPanel;
   private Editor myMockTextEditor;
   private final Project myProject;
+  private final HttpFileEditorProvider myFileEditorProvider;
 
-  public HttpFileEditor(final Project project, final HttpVirtualFile virtualFile) {
+  public HttpFileEditor(final Project project, final HttpVirtualFile virtualFile, HttpFileEditorProvider fileEditorProvider) {
     myProject = project;
+    myFileEditorProvider = fileEditorProvider;
     myPanel = new RemoteFilePanel(project, virtualFile);
   }
 
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
+  }
+
+  @Override
   @Nonnull
   public JComponent getComponent() {
     return myPanel.getMainPanel();
   }
 
+  @Override
   public JComponent getPreferredFocusedComponent() {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -64,11 +71,13 @@ public class HttpFileEditor implements TextEditor {
     return myPanel.getMainPanel();
   }
 
+  @Override
   @Nonnull
   public String getName() {
     return "Http";
   }
 
+  @Override
   @Nonnull
   public Editor getEditor() {
     final TextEditor fileEditor = myPanel.getFileEditor();
@@ -81,6 +90,7 @@ public class HttpFileEditor implements TextEditor {
     return myMockTextEditor;
   }
 
+  @Override
   @Nonnull
   public FileEditorState getState(@Nonnull final FileEditorStateLevel level) {
     final TextEditor textEditor = myPanel.getFileEditor();
@@ -90,6 +100,7 @@ public class HttpFileEditor implements TextEditor {
     return new TextEditorState();
   }
 
+  @Override
   public void setState(@Nonnull final FileEditorState state) {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -97,30 +108,37 @@ public class HttpFileEditor implements TextEditor {
     }
   }
 
+  @Override
   public boolean isModified() {
     return false;
   }
 
+  @Override
   public boolean isValid() {
     return true;
   }
 
+  @Override
   public void selectNotify() {
     myPanel.selectNotify();
   }
 
+  @Override
   public void deselectNotify() {
     myPanel.deselectNotify();
   }
 
+  @Override
   public void addPropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myPanel.addPropertyChangeListener(listener);
   }
 
+  @Override
   public void removePropertyChangeListener(@Nonnull final PropertyChangeListener listener) {
     myPanel.removePropertyChangeListener(listener);
   }
 
+  @Override
   public BackgroundEditorHighlighter getBackgroundHighlighter() {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -129,6 +147,7 @@ public class HttpFileEditor implements TextEditor {
     return null;
   }
 
+  @Override
   public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -137,6 +156,7 @@ public class HttpFileEditor implements TextEditor {
     return false;
   }
 
+  @Override
   public void navigateTo(@Nonnull Navigatable navigatable) {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -144,6 +164,7 @@ public class HttpFileEditor implements TextEditor {
     }
   }
 
+  @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -152,6 +173,7 @@ public class HttpFileEditor implements TextEditor {
     return myUserDataHolder.getUserData(key);
   }
 
+  @Override
   public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -162,6 +184,7 @@ public class HttpFileEditor implements TextEditor {
     }
   }
 
+  @Override
   public FileEditorLocation getCurrentLocation() {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -170,6 +193,7 @@ public class HttpFileEditor implements TextEditor {
     return null;
   }
 
+  @Override
   public StructureViewBuilder getStructureViewBuilder() {
     final TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
@@ -184,6 +208,7 @@ public class HttpFileEditor implements TextEditor {
     return null;
   }
 
+  @Override
   public void dispose() {
     if (myMockTextEditor != null) {
       EditorFactory.getInstance().releaseEditor(myMockTextEditor);

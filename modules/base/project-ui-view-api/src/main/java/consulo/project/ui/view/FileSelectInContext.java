@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide;
+package consulo.project.ui.view;
 
 import consulo.project.Project;
-import consulo.project.ui.view.SelectInContext;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**

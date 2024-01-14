@@ -4,9 +4,12 @@ package consulo.virtualFileSystem.fileType;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
+import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A service for retrieving file types for files.
@@ -118,5 +121,14 @@ public abstract class FileTypeRegistry {
   public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
 
   @Nullable
+  @Deprecated
+  @DeprecationInfo("Use getKnownFileTypeOrAssociateAsync()")
   public abstract FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project);
+
+  @Nonnull
+  public CompletableFuture<FileType> getKnownFileTypeOrAssociateAsync(@Nonnull VirtualFile file,
+                                                                      @Nonnull ComponentManager project,
+                                                                      @Nonnull UIAccess uiAccess) {
+    return CompletableFuture.completedFuture(getKnownFileTypeOrAssociate(file, project));
+  }
 }

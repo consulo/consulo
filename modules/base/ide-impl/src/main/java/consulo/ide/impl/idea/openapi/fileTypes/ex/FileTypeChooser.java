@@ -15,41 +15,32 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
+import consulo.application.ApplicationManager;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginExtensionPreview;
 import consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.fileTypes.*;
+import consulo.ide.impl.idea.openapi.fileTypes.FileTypesBundle;
+import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeRenderer;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
+import consulo.ide.impl.idea.util.FunctionUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBRadioButton;
-import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -201,9 +192,6 @@ public class FileTypeChooser extends DialogWrapper {
   @Nullable
   @RequiredUIAccess
   public static FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nullable Project project) {
-    if (project != null && !(file instanceof FakeVirtualFile)) {
-      PsiManagerEx.getInstanceEx(project).getFileManager().findFile(file); // autodetect text file if needed
-    }
     FileType type = file.getFileType();
     if (type == UnknownFileType.INSTANCE) {
       type = getKnownFileTypeOrAssociate(file.getName());

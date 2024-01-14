@@ -206,7 +206,7 @@ public final class HistoryEntry {
 
     for (Element _e : e.getChildren(PROVIDER_ELEMENT)) {
       String typeId = _e.getAttributeValue(EDITOR_TYPE_ID_ATTR);
-      FileEditorProvider provider = FileEditorProviderManager.getInstance().getProvider(typeId);
+      FileEditorProvider provider = FileEditorProviderManager.getInstance(project).getProvider(typeId);
       if (provider == null) {
         continue;
       }

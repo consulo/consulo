@@ -18,16 +18,17 @@ package consulo.fileEditor.highlight;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ProcessCanceledException;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
-public interface HighlightingPass {
+public interface HighlightingPass<S> {
   HighlightingPass[] EMPTY_ARRAY = new HighlightingPass[0];
 
   @Nullable
   @RequiredUIAccess
-  default Object makeSnapshotFromUI() {
+  default S makeSnapshotFromUI() {
     return null;
   }
 
@@ -47,10 +48,10 @@ public interface HighlightingPass {
 
   /**
    * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
-   * This method is called from the event dispatch thread.
    * <p>
    * Must be called after only if {@link #canApplyInformationToEditor()} return true
+   * @param uiAccess
+   * @param snapshot
    */
-  @RequiredUIAccess
-  void applyInformationToEditor();
+  void applyInformationToEditor(UIAccess uiAccess, S snapshot);
 }

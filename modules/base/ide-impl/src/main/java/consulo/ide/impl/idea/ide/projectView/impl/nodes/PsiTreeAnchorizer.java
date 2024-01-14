@@ -52,7 +52,7 @@ public class PsiTreeAnchorizer extends TreeAnchorizer {
   @Nullable
   public Object retrieveElement(@Nonnull final Object pointer) {
     if (pointer instanceof SmartPsiElementPointer) {
-      return ReadAction.tryCompute(() -> ((SmartPsiElementPointer)pointer).getElement());
+      return ReadAction.tryCompute(() -> ((SmartPsiElementPointer)pointer).getElement()).anyNull();
     }
 
     return super.retrieveElement(pointer);

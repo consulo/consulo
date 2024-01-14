@@ -151,7 +151,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
   @Nullable
   public static Pair<OpenInBrowserRequest, WebBrowserUrlProvider> doUpdate(@Nonnull AnActionEvent event) {
-    OpenInBrowserRequest request = ReadAction.tryCompute(() -> createRequest(event.getDataContext()));
+    OpenInBrowserRequest request = ReadAction.tryCompute(() -> createRequest(event.getDataContext())).anyNull();
     boolean applicable = false;
     WebBrowserUrlProvider provider = null;
     if (request != null) {

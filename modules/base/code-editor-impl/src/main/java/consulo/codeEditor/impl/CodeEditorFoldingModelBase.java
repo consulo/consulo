@@ -18,6 +18,7 @@ import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Sets;
@@ -149,8 +150,10 @@ public class CodeEditorFoldingModelBase extends InlayModel.SimpleAdapter impleme
     return region != null && region.getStartOffset() < offset;
   }
 
-  private static void assertIsDispatchThread() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+  private void assertIsDispatchThread() {
+    if (myEditor.isUIThreadAssertion()) {
+      UIAccess.assertIsUIThread();
+    }
   }
 
   private static void assertOurRegion(FoldRegion region) {

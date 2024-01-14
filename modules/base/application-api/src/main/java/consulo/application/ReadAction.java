@@ -17,12 +17,12 @@ package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.concurrent.DataLock;
+import consulo.util.lang.OptionalNull;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import consulo.util.lang.ref.SimpleReference;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
 @Nonnull
@@ -40,18 +40,24 @@ public final class ReadAction<T>  {
     return locking.readSync(action);
   }
 
-  public static <T, E extends Throwable> T tryCompute(@Nonnull ThrowableSupplier<T, E> action) throws E {
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static <T, E extends Throwable> OptionalNull<T> tryCompute(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
     Application application = Application.get();
-    SimpleReference<T>  ref = SimpleReference.create();
+    Object[] ref = new Object[1];
     boolean successRead = application.tryRunReadAction(() -> {
       try {
-        ref.set(action.get());
+        ref[0] = action.get();
       }
       catch (Throwable e) {
         throw new RuntimeException(e);
       }
     });
-    return successRead ? ref.get() : null;
+
+    if (successRead) {
+      return OptionalNull.ofNullable((T)ref[0]);
+    }
+    return OptionalNull.empty();
   }
 
   /**

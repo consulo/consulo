@@ -46,6 +46,7 @@ import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
@@ -285,8 +286,8 @@ final class PassExecutorService implements Disposable {
         }
 
         @Override
-        public void doApplyInformationToEditor() {
-          pass.applyInformationToEditor();
+        public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
+          pass.applyInformationToEditor(uiAccess, snapshot);
           if (document != null) {
             VirtualFile file = FileDocumentManager.getInstance().getFile(document);
             FileEditor[] editors = file == null ? new FileEditor[0] : FileEditorManager.getInstance(myProject).getEditors(file);
@@ -440,7 +441,7 @@ final class PassExecutorService implements Disposable {
 
   private class ScheduledPass implements Runnable {
     private final FileEditor myFileEditor;
-    private final TextEditorHighlightingPass myPass;
+    private final TextEditorHighlightingPass<?> myPass;
     private final AtomicInteger myThreadsToStartCountdown;
     private final AtomicInteger myRunningPredecessorsCount = new AtomicInteger(0);
     private final List<ScheduledPass> mySuccessorsOnCompletion = new ArrayList<>();
@@ -520,7 +521,7 @@ final class PassExecutorService implements Disposable {
                                 log(myUpdateProgress, myPass, "Finished. ");
 
                                 if (!myUpdateProgress.isCanceled()) {
-                                  applyInformationToEditorsLater(myFileEditor, myPass, myUpdateProgress, myThreadsToStartCountdown, () -> {
+                                  applyInformationToEditorsLater(myFileEditor, myPass, myUpdateProgress, myThreadsToStartCountdown, o, () -> {
                                     for (ScheduledPass successor : mySuccessorsOnCompletion) {
                                       int predecessorsToRun = successor.myRunningPredecessorsCount.decrementAndGet();
                                       if (predecessorsToRun == 0) {
@@ -548,10 +549,12 @@ final class PassExecutorService implements Disposable {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void applyInformationToEditorsLater(@Nonnull final FileEditor fileEditor,
                                               @Nonnull final TextEditorHighlightingPass pass,
                                               @Nonnull final DaemonProgressIndicator updateProgress,
                                               @Nonnull final AtomicInteger threadsToStartCountdown,
+                                              @Nullable Object uiData,
                                               @Nonnull Runnable callbackOnApplied) {
     if (isDisposed() || !fileEditor.isValid()) {
       updateProgress.cancel();
@@ -572,15 +575,16 @@ final class PassExecutorService implements Disposable {
             return CompletableFuture.completedFuture(null);
           }
 
-          return uiAccess.giveAsync(() -> {
-            pass.applyInformationToEditor();
-            repaintErrorStripeAndIcon(fileEditor);
-            FileStatusMapImpl fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
-            if (document != null) {
-              fileStatusMap.markFileUpToDate(document, pass.getId());
-            }
-            log(updateProgress, pass, " Applied");
-          });
+          pass.applyInformationToEditor(uiAccess, uiData);
+
+          uiAccess.give(() -> repaintErrorStripeAndIcon(fileEditor));
+
+          FileStatusMapImpl fileStatusMap = DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap();
+          if (document != null) {
+            fileStatusMap.markFileUpToDate(document, pass.getId());
+          }
+          log(updateProgress, pass, " Applied");
+          return CompletableFuture.completedFuture(null);
         })
         .whenComplete((o, e) -> {
           if (e instanceof ProcessCanceledException) {

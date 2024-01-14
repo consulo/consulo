@@ -15,38 +15,40 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
-import consulo.ide.impl.idea.codeInsight.hints.filtering.Matcher;
-import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;
-import consulo.ide.impl.idea.codeInsight.hints.settings.Diff;
-import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsSettings;
-import consulo.language.Language;
 import consulo.application.Application;
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.ParameterHintsPresentationManager;
+import consulo.ide.impl.idea.codeInsight.hints.filtering.Matcher;
+import consulo.ide.impl.idea.codeInsight.hints.filtering.MatcherConstructor;
+import consulo.ide.impl.idea.codeInsight.hints.settings.Diff;
+import consulo.ide.impl.idea.codeInsight.hints.settings.ParameterNameHintsSettings;
 import consulo.ide.impl.idea.openapi.editor.ex.util.CaretVisualPositionKeeper;
-import consulo.application.progress.ProgressIndicator;
+import consulo.language.Language;
+import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.inlay.InlayInfo;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.inlay.MethodInfo;
-import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SyntaxTraverser;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.primitive.ints.IntMaps;
+import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
-import gnu.trove.TIntObjectHashMap;
-
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,7 +73,10 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
     return new ParameterHintsPass(file, editor);
   }
 
-  private static class ParameterHintsPass extends EditorBoundHighlightingPass {
+  private record ParameterHintsPassUIData(IntObjectMap<Caret> caretMap, CaretVisualPositionKeeper keeper){
+  }
+
+  private static class ParameterHintsPass extends EditorBoundHighlightingPass<ParameterHintsPassUIData> {
     private final Map<Integer, Pair<String, InlayParameterHintsProvider>> myAnnotations = new HashMap<>();
 
     private ParameterHintsPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
@@ -107,7 +112,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         Diff diff = settings.getBlackListDiff(language);
         return diff.applyOn(provider.getDefaultBlackList());
       }
-      return ContainerUtil.newHashOrEmptySet(ContainerUtil.emptyIterable());
+      return Set.of();
     }
 
     private static boolean isEnabled() {
@@ -127,17 +132,26 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
       }
     }
 
+    @RequiredUIAccess
+    @Nullable
     @Override
-    public void doApplyInformationToEditor() {
-      assert myDocument != null;
-      boolean firstTime = myEditor.getUserData(REPEATED_PASS) == null;
-      ParameterHintsPresentationManager presentationManager = ParameterHintsPresentationManager.getInstance();
-      Set<String> removedHints = new HashSet<>();
-      TIntObjectHashMap<Caret> caretMap = new TIntObjectHashMap<>();
+    public ParameterHintsPassUIData makeSnapshotFromUI() {
+      IntObjectMap<Caret> caretMap = IntMaps.newIntObjectHashMap();
       CaretVisualPositionKeeper keeper = new CaretVisualPositionKeeper(myEditor);
       for (Caret caret : myEditor.getCaretModel().getAllCarets()) {
         caretMap.put(caret.getOffset(), caret);
       }
+      return new ParameterHintsPassUIData(caretMap, keeper);
+    }
+
+    @Override
+    public void doApplyInformationToEditor(UIAccess uiAccess, ParameterHintsPassUIData snapshot) {
+      IntObjectMap<Caret> caretMap = snapshot.caretMap();
+      CaretVisualPositionKeeper keeper = snapshot.keeper();
+      assert myDocument != null;
+      boolean firstTime = myEditor.getUserData(REPEATED_PASS) == null;
+      ParameterHintsPresentationManager presentationManager = ParameterHintsPresentationManager.getInstance();
+      Set<String> removedHints = new HashSet<>();
       for (Inlay inlay : myEditor.getInlayModel().getInlineElementsInRange(0, myDocument.getTextLength())) {
         if (!presentationManager.isParameterHint(inlay)) continue;
         int offset = inlay.getOffset();
@@ -163,11 +177,13 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         InlayParameterHintsProvider provider = value.getSecond();
         presentationManager.addHint(myEditor, offset, provider, text, !firstTime && !removedHints.contains(text));
       }
-      keeper.restoreOriginalLocation();
+
+      uiAccess.give(keeper::restoreOriginalLocation);
+
       myEditor.putUserData(REPEATED_PASS, Boolean.TRUE);
     }
 
-    private boolean delayRemoval(Inlay inlay, TIntObjectHashMap<Caret> caretMap) {
+    private boolean delayRemoval(Inlay inlay, IntObjectMap<Caret> caretMap) {
       int offset = inlay.getOffset();
       Caret caret = caretMap.get(offset);
       if (caret == null) return false;

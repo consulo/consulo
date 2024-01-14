@@ -50,7 +50,7 @@ import jakarta.inject.Provider;
 /**
  * @author yole
  */
-public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImpl {
+public abstract class PsiAwareFileEditorManagerImpl extends DeprecatedFileEditorManagerImpl {
   private static final Logger LOG = Logger.getInstance(PsiAwareFileEditorManagerImpl.class);
 
   protected final ApplicationConcurrency myApplicationConcurrency;

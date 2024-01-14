@@ -33,10 +33,8 @@ public abstract class BaseUIAccess implements UIAccess {
 
   @Nonnull
   protected Runnable wrapRunnable(Runnable runnable) {
-    String stackTrace = ExceptionUtil.getThrowableText(new Exception("ui stack trace"));
     return () -> {
       try {
-        String var = stackTrace;
         runnable.run();
       }
       catch (Throwable e) {

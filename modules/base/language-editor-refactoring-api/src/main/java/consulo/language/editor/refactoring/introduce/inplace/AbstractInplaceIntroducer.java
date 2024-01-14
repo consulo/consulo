@@ -42,6 +42,7 @@ import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.popup.Balloon;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
@@ -184,7 +185,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   public boolean startInplaceIntroduceTemplate() {
     final boolean replaceAllOccurrences = isReplaceAllOccurrences();
     final Ref<Boolean> result = new Ref<Boolean>();
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myProject, new CommandRunnable() {
       @Override
       public void run() {
         final String[] names = suggestNames(replaceAllOccurrences, getLocalVariable());
@@ -286,38 +287,35 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   }
 
   public void restartInplaceIntroduceTemplate() {
-    Runnable restartTemplateRunnable = new Runnable() {
-      @Override
-      public void run() {
-        final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(myEditor);
-        if (templateState != null) {
-          myEditor.putUserData(INTRODUCE_RESTART, true);
+    CommandRunnable restartTemplateRunnable = () -> {
+      final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(myEditor);
+      if (templateState != null) {
+        myEditor.putUserData(INTRODUCE_RESTART, true);
+        try {
+          final TextRange range = templateState.getCurrentVariableRange();
+          if (range != null && range.isEmpty()) {
+            final String[] names = suggestNames(isReplaceAllOccurrences(), getLocalVariable());
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+              @Override
+              public void run() {
+                myEditor.getDocument().insertString(myEditor.getCaretModel().getOffset(), names[0]);
+              }
+            });
+          }
+          templateState.gotoEnd(true);
           try {
-            final TextRange range = templateState.getCurrentVariableRange();
-            if (range != null && range.isEmpty()) {
-              final String[] names = suggestNames(isReplaceAllOccurrences(), getLocalVariable());
-              ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                @Override
-                public void run() {
-                  myEditor.getDocument().insertString(myEditor.getCaretModel().getOffset(), names[0]);
-                }
-              });
-            }
-            templateState.gotoEnd(true);
-            try {
-              myShouldSelect = false;
-              startInplaceIntroduceTemplate();
-            }
-            finally {
-              myShouldSelect = true;
-            }
+            myShouldSelect = false;
+            startInplaceIntroduceTemplate();
           }
           finally {
-            myEditor.putUserData(INTRODUCE_RESTART, false);
+            myShouldSelect = true;
           }
         }
-        updateTitle(getVariable());
+        finally {
+          myEditor.putUserData(INTRODUCE_RESTART, false);
+        }
       }
+      updateTitle(getVariable());
     };
     CommandProcessor.getInstance().executeCommand(myProject, restartTemplateRunnable, getCommandName(), getCommandName());
   }
@@ -507,12 +505,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     }
 
     if (!isIdentifier(newName, myExpr != null ? myExpr.getLanguage() : getLocalVariable().getLanguage())) return false;
-    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
-        performIntroduce();
-      }
-    }, getCommandName(), getCommandName());
+    CommandProcessor.getInstance().executeCommand(myProject, () -> performIntroduce(), getCommandName(), getCommandName());
 
     V variable = getVariable();
     if (variable != null) {
@@ -571,13 +564,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   public void stopIntroduce(Editor editor) {
     final TemplateState templateState = TemplateManager.getInstance(myProject).getTemplateState(editor);
     if (templateState != null) {
-      final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-          templateState.gotoEnd(true);
-        }
-      };
-      CommandProcessor.getInstance().executeCommand(myProject, runnable, getCommandName(), getCommandName());
+      CommandProcessor.getInstance().executeCommand(myProject, () -> templateState.gotoEnd(true), getCommandName(), getCommandName());
     }
   }
 

@@ -15,10 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.fileEditor;
 
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorLocation;
-import consulo.fileEditor.FileEditorState;
-import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.*;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -31,6 +28,18 @@ import jakarta.annotation.Nonnull;
  * @since 30.05.14
  */
 public class SandFileEditor extends UserDataHolderBase implements FileEditor {
+  private final SandFileEditorProvider myFileEditorProvider;
+
+  public SandFileEditor(SandFileEditorProvider fileEditorProvider) {
+    myFileEditorProvider = fileEditorProvider;
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
+  }
+
   @Nonnull
   @Override
   public Component getUIComponent() {
