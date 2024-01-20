@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -253,11 +252,15 @@ public abstract class Indent {
     return Formatter.getInstance().getSmartIndent(type);
   }
 
+  public static Indent getSmartIndent(Type type, boolean relativeToDirectParent) {
+    return Formatter.getInstance().getSmartIndent(type, relativeToDirectParent);
+  }
+
   public static class Type {
     private final String myName;
 
 
-    private Type(@NonNls final String name) {
+    private Type(final String name) {
       myName = name;
     }
 

@@ -16,12 +16,17 @@
 package consulo.ide.impl.idea.formatting.engine;
 
 import consulo.language.codeStyle.internal.IndentImpl;
+import jakarta.annotation.Nonnull;
 
 public class ExpandableIndent extends IndentImpl {
   private boolean myEnforceIndent;
 
-  public ExpandableIndent(Type type) {
-    super(type, false, 0, false, true);
+  public ExpandableIndent(@Nonnull Type type) {
+    this(type, false);
+  }
+
+  public ExpandableIndent(@Nonnull Type type, boolean relativeToDirectParent) {
+    super(type, false, 0, relativeToDirectParent, true);
     myEnforceIndent = false;
   }
 
@@ -30,8 +35,8 @@ public class ExpandableIndent extends IndentImpl {
     return myEnforceIndent;
   }
 
-  void setEnforceIndent(boolean value) {
-    myEnforceIndent = value;
+  void enforceIndent() {
+    myEnforceIndent = true;
   }
 
   @Override

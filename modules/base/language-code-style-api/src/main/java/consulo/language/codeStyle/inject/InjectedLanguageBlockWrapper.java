@@ -20,9 +20,9 @@ import consulo.language.Language;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.DependantSpacingImpl;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +55,11 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
     this(original, offset, range, indent, null);
   }
 
-  public InjectedLanguageBlockWrapper(@Nonnull final Block original, final int offset, @Nullable TextRange range, @Nullable Indent indent, @Nullable Language language) {
+  public InjectedLanguageBlockWrapper(@Nonnull final Block original,
+                                      final int offset,
+                                      @Nullable TextRange range,
+                                      @Nullable Indent indent,
+                                      @Nullable Language language) {
     myOriginal = original;
     myOffset = offset;
     myRange = range;
@@ -155,7 +159,11 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
       DependantSpacingImpl hostSpacing = (DependantSpacingImpl)spacing;
       final int finalShift = shift;
       List<TextRange> shiftedRanges = ContainerUtil.map(hostSpacing.getDependentRegionRanges(), range -> range.shiftRight(finalShift));
-      return new DependantSpacingImpl(hostSpacing.getMinSpaces(), hostSpacing.getMaxSpaces(), shiftedRanges, hostSpacing.shouldKeepLineFeeds(), hostSpacing.getKeepBlankLines(),
+      return new DependantSpacingImpl(hostSpacing.getMinSpaces(),
+                                      hostSpacing.getMaxSpaces(),
+                                      shiftedRanges,
+                                      hostSpacing.shouldKeepLineFeeds(),
+                                      hostSpacing.getKeepBlankLines(),
                                       DependentSpacingRule.DEFAULT);
     }
     return spacing;
@@ -180,6 +188,19 @@ public final class InjectedLanguageBlockWrapper implements BlockEx {
   @Override
   public String toString() {
     return myOriginal.toString();
+  }
+
+  @Override
+  @Nullable
+  public String getDebugName() {
+    if (myOriginal != null) {
+      String originalDebugName = myOriginal.getDebugName();
+      if (originalDebugName == null) originalDebugName = myOriginal.getClass().getSimpleName();
+      return "wrapped " + originalDebugName;
+    }
+    else {
+      return null;
+    }
   }
 
   public Block getOriginal() {

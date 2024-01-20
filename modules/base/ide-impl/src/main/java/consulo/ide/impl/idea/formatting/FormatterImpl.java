@@ -3,15 +3,15 @@
 package consulo.ide.impl.idea.formatting;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.formatting.engine.ExpandableIndent;
-import consulo.ide.impl.idea.util.SequentialTask;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.formatting.engine.ExpandableIndent;
+import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
@@ -22,10 +22,10 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.Couple;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -518,6 +518,11 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
   @Override
   public Indent getSmartIndent(@Nonnull Indent.Type type) {
     return new ExpandableIndent(type);
+  }
+
+  @Override
+  public Indent getSmartIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent) {
+    return new ExpandableIndent(type, relativeToDirectParent);
   }
 
   @Override
