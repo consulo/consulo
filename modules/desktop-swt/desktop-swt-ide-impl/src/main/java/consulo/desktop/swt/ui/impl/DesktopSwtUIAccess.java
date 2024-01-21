@@ -17,12 +17,10 @@ package consulo.desktop.swt.ui.impl;
 
 import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
-import consulo.util.concurrent.AsyncResult;
 import jakarta.annotation.Nonnull;
 import org.eclipse.swt.widgets.Display;
 
@@ -36,8 +34,6 @@ import java.util.function.Supplier;
  */
 public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
   public static final DesktopSwtUIAccess INSTANCE = new DesktopSwtUIAccess();
-
-  private static final Logger LOG = Logger.getInstance(DesktopSwtUIAccess.class);
 
   private Display myDisplay;
 
@@ -100,49 +96,14 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
     return result;
   }
 
-  @Nonnull
   @Override
-  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
-    AsyncResult<T> result = AsyncResult.undefined();
-    myDisplay.asyncExec(() -> {
-      try {
-        result.setDone(supplier.get());
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        result.rejectWithThrowable(e);
-      }
-    });
-    return result;
-  }
-
-  @Nonnull
-  @Override
-  public AsyncResult<Void> give(@Nonnull Runnable runnable) {
-    AsyncResult<Void> result = AsyncResult.undefined();
-    myDisplay.asyncExec(() -> {
-      try {
-        runnable.run();
-        result.setDone();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-        result.rejectWithThrowable(e);
-      }
-    });
-    return result;
+  public void give(@Nonnull Runnable runnable) {
+    myDisplay.asyncExec(wrapRunnable(runnable));
   }
 
   @Override
   public void giveAndWait(@Nonnull Runnable runnable) {
-    myDisplay.syncExec(() -> {
-      try {
-        runnable.run();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    });
+    myDisplay.syncExec(wrapRunnable(runnable));
   }
 
   @Nonnull

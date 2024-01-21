@@ -17,15 +17,13 @@ package consulo.ide.impl.fileEditor;
 
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.FileEditorWithProvider;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ui.Component;
 import consulo.ui.ex.ComponentContainer;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.List;
 
@@ -36,15 +34,15 @@ import java.util.List;
 public class UnifiedFileEditorWithProviderComposite implements FileEditorWithProviderComposite {
   private VirtualFile myFile;
   private FileEditor[] myEditors;
-  private FileEditorProvider[] myProviders;
   private FileEditorManagerEx myFileEditorManager;
 
   private final Component[] myComponents;
 
-  public UnifiedFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
+  public UnifiedFileEditorWithProviderComposite(VirtualFile file,
+                                                FileEditor[] editors,
+                                                FileEditorManagerEx fileEditorManager) {
     myFile = file;
     myEditors = editors;
-    myProviders = providers;
     myFileEditorManager = fileEditorManager;
 
     myComponents = new Component[editors.length];
@@ -55,14 +53,8 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     }
   }
 
-  @Nonnull
   @Override
-  public FileEditorProvider[] getProviders() {
-    return myProviders;
-  }
-
-  @Override
-  public void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider) {
+  public void addEditor(@Nonnull FileEditor editor) {
 
   }
 
@@ -72,8 +64,8 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   }
 
   @Override
-  public FileEditorWithProvider getSelectedEditorWithProvider() {
-    return new FileEditorWithProvider(myEditors[0], myProviders[0]);
+  public FileEditor getSelectedEditor() {
+    return myEditors[0];
   }
 
   @Override
@@ -85,12 +77,6 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   @Override
   public FileEditor[] getEditors() {
     return myEditors;
-  }
-
-  @Nonnull
-  @Override
-  public FileEditor getSelectedEditor() {
-    return myEditors[0];
   }
 
   @Override

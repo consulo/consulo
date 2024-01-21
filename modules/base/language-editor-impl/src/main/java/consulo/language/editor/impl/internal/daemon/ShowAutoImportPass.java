@@ -24,6 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 
@@ -61,7 +62,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     TransactionGuard.submitTransaction(myProject, this::showImports);
   }
 

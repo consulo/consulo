@@ -20,6 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollingModel;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class CaretVisualPositionKeeper {
     }
   }
 
+  @RequiredUIAccess
   public void restoreOriginalLocation() {
     for (Map.Entry<Editor, Integer> e : myCaretRelativeVerticalPositions.entrySet()) {
       Editor editor = e.getKey();

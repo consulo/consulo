@@ -29,6 +29,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.view.FileSelectInContext;
 import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInManager;
 import consulo.project.ui.view.SelectInTarget;
@@ -42,6 +43,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   /**
@@ -141,28 +143,24 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
       throw new IllegalStateException("target not valid");
     }
 
-    if (!myFile.isDirectory() && navigateInEditorOrNativeApp(myProject, requestFocus)) return;
+    if (!myFile.isDirectory() && navigateInEditorOrNativeApp(requestFocus)) return;
 
     navigateInProjectView(requestFocus);
   }
 
-  private boolean navigateInEditorOrNativeApp(@Nonnull Project project, boolean requestFocus) {
-    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, project);
+  private boolean navigateInEditorOrNativeApp(boolean requestFocus) {
+    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, myProject);
     if (type == null || !myFile.isValid()) return false;
 
     if (type instanceof INativeFileType) {
-      return ((INativeFileType)type).openFileInAssociatedApplication(project, myFile);
+      return ((INativeFileType)type).openFileInAssociatedApplication(myProject, myFile);
     }
 
-    return navigateInEditor(project, requestFocus);
-  }
-
-  public boolean navigateInEditor(@Nonnull Project project, boolean requestFocus) {
-    return navigateInRequestedEditor() || navigateInAnyFileEditor(project, requestFocus);
+    return navigateInEditor(requestFocus);
   }
 
   private boolean navigateInRequestedEditor() {
-    @SuppressWarnings("deprecation") DataContext ctx = DataManager.getInstance().getDataContext();
+    DataContext ctx = DataManager.getInstance().getDataContext();
     Editor e = ctx.getData(NAVIGATE_IN_EDITOR);
     if (e == null) return false;
     if (!Objects.equals(FileDocumentManager.getInstance().getFile(e.getDocument()), myFile)) return false;
@@ -171,14 +169,18 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
     return true;
   }
 
-  private boolean navigateInAnyFileEditor(Project project, boolean focusEditor) {
-    List<FileEditor> editors = FileEditorManager.getInstance(project).openEditor(this, focusEditor);
+  public boolean navigateInEditor(boolean requestFocus) {
+    return navigateInRequestedEditor() || navigateInAnyFileEditor(requestFocus);
+  }
+
+  private boolean navigateInAnyFileEditor(boolean focusEditor) {
+    List<FileEditor> editors = FileEditorManager.getInstance(myProject).openEditor(this, focusEditor);
     for (FileEditor editor : editors) {
       if (editor instanceof TextEditor) {
         Editor e = ((TextEditor)editor).getEditor();
         unfoldCurrentLine(e);
         if (focusEditor) {
-          if (project.getApplication().isSwingApplication()) {
+          if (myProject.getApplication().isSwingApplication()) {
             ProjectIdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true);
           }
         }
@@ -188,25 +190,7 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   }
 
   private void navigateInProjectView(boolean requestFocus) {
-    SelectInContext context = new SelectInContext() {
-      @Override
-      @Nonnull
-      public Project getProject() {
-        return myProject;
-      }
-
-      @Override
-      @Nonnull
-      public VirtualFile getVirtualFile() {
-        return myFile;
-      }
-
-      @Override
-      @Nullable
-      public Object getSelectorInFile() {
-        return null;
-      }
-    };
+    SelectInContext context = new FileSelectInContext(myProject, myFile);
 
     for (SelectInTarget target : SelectInManager.getInstance(myProject).getTargets()) {
       if (target.canSelect(context)) {
@@ -214,6 +198,97 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
         return;
       }
     }
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<?> navigateAsync(boolean requestFocus) {
+    if (!canNavigate()) {
+      return CompletableFuture.failedFuture(new IllegalStateException("target not valid"));
+    }
+
+    // if its directory - just navigate in project view
+    if (myFile.isDirectory()) {
+      return navigateInProjectViewAsync(requestFocus);
+    }
+
+    return navigateInEditorOrNativeAppAsync(requestFocus);
+  }
+
+  @Nonnull
+  private CompletableFuture<Boolean> navigateInEditorOrNativeAppAsync(boolean requestFocus) {
+    FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, myProject);
+    if (type == null || !myFile.isValid()) return CompletableFuture.completedFuture(false);
+
+    if (type instanceof INativeFileType) {
+      return ((INativeFileType)type).openInExternalApplication(myProject, myFile);
+    }
+
+    return navigateInEditorAsync(requestFocus);
+  }
+
+  @Nonnull
+  public CompletableFuture<Boolean> navigateInEditorAsync(boolean requestFocus) {
+    return navigateInRequestedEditorAsync()
+      .thenCompose(result -> {
+        if (result) {
+          return CompletableFuture.completedFuture(result);
+        }
+
+        return navigateInAnyFileEditorAsync(requestFocus);
+      });
+  }
+
+  private CompletableFuture<Boolean> navigateInRequestedEditorAsync() {
+    return DataManager.getInstance().getDataContextFromFocusAsync().handle((dataContext, throwable) -> {
+      Editor editor = dataContext.getData(NAVIGATE_IN_EDITOR);
+      if (editor == null) {
+        return false;
+      }
+
+      if (!Objects.equals(FileDocumentManager.getInstance().getFile(editor.getDocument()), myFile)) {
+        return false;
+      }
+
+      navigateIn(editor);
+      return true;
+    });
+  }
+
+  private CompletableFuture<Boolean> navigateInAnyFileEditorAsync(boolean focusEditor) {
+    return FileEditorManager.getInstance(myProject)
+                            .openFileAsync(myFile, focusEditor, myProject.getUIAccess())
+                            .handleAsync((fileEditors, throwable) -> {
+                              if (fileEditors == null) {
+                                return false;
+                              }
+
+                              for (FileEditor editor : fileEditors) {
+                                if (editor instanceof TextEditor) {
+                                  Editor e = ((TextEditor)editor).getEditor();
+                                  unfoldCurrentLine(e);
+                                  if (focusEditor) {
+                                    if (myProject.getApplication().isSwingApplication()) {
+                                      ProjectIdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true);
+                                    }
+                                  }
+                                }
+                              }
+                              return !fileEditors.isEmpty();
+                            }, myProject.getUIAccess());
+  }
+
+  @Nonnull
+  private CompletableFuture<?> navigateInProjectViewAsync(boolean requestFocus) {
+    SelectInContext context = new FileSelectInContext(myProject, myFile);
+
+    for (SelectInTarget target : SelectInManager.getInstance(myProject).getTargets()) {
+      if (target.canSelect(context)) {
+        return target.selectInAsync(context, requestFocus);
+      }
+    }
+
+    return CompletableFuture.completedFuture(null);
   }
 
   public void navigateIn(@Nonnull Editor e) {
@@ -244,13 +319,10 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   private static void unfoldCurrentLine(@Nonnull final Editor editor) {
     final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
     final TextRange range = getRangeToUnfoldOnNavigation(editor);
-    editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
-      @Override
-      public void run() {
-        for (FoldRegion region : allRegions) {
-          if (!region.isExpanded() && range.intersects(TextRange.create(region))) {
-            region.setExpanded(true);
-          }
+    editor.getFoldingModel().runBatchFoldingOperation(() -> {
+      for (FoldRegion region : allRegions) {
+        if (!region.isExpanded() && range.intersects(TextRange.create(region))) {
+          region.setExpanded(true);
         }
       }
     });

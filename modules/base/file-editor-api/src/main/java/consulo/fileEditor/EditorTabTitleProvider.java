@@ -15,14 +15,13 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -33,14 +32,17 @@ public interface EditorTabTitleProvider {
   ExtensionPointName<EditorTabTitleProvider> EP_NAME = ExtensionPointName.create(EditorTabTitleProvider.class);
 
   @Nullable
+  @RequiredReadAction
   String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
 
   @Nullable
+  @RequiredReadAction
   default String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     return getEditorTabTitle(project, file);
   }
 
   @Nullable
+  @RequiredReadAction
   default String getEditorTabTooltipText(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return null;
   }

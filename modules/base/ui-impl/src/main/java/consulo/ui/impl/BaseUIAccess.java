@@ -15,8 +15,11 @@
  */
 package consulo.ui.impl;
 
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
+import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
@@ -26,6 +29,26 @@ import java.util.Objects;
  * @since 14/09/2023
  */
 public abstract class BaseUIAccess implements UIAccess {
+  protected static final Logger LOG = Logger.getInstance(UIAccess.class);
+
+  @Nonnull
+  protected Runnable wrapRunnable(Runnable runnable) {
+    return () -> {
+      try {
+        runnable.run();
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          return;
+        }
+
+        LOG.error(e);
+
+        ExceptionUtil.rethrow(e);
+      }
+    };
+  }
+
   protected SingleUIAccessScheduler myUIAccessScheduler;
 
   @Nonnull

@@ -20,6 +20,7 @@ import consulo.application.util.NotNullLazyValue;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.image.Image;
 
+import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
@@ -115,19 +116,19 @@ public class AnalyzerStatus {
 
   private boolean myShowNavigation;
 
-  private NotNullLazyValue<UIController> myControllerValue;
+  private Supplier<UIController> myControllerValue;
 
   public AnalyzerStatus(consulo.ui.image.Image icon, String title, String details, Supplier<UIController> controllerCreator) {
     myIcon = icon;
     myTitle = title;
     myDetails = details;
 
-    myControllerValue = NotNullLazyValue.createValue(controllerCreator);
+    myControllerValue = LazyValue.notNull(controllerCreator);
   }
 
   @Nonnull
   public UIController getController() {
-    return myControllerValue.getValue();
+    return myControllerValue.get();
   }
 
   public List<StatusItem> getExpandedStatus() {

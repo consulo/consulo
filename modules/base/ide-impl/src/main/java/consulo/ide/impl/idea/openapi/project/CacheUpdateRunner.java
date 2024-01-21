@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.openapi.project;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
@@ -22,8 +21,8 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -110,9 +109,9 @@ public class CacheUpdateRunner {
         innerIndicator.cancel();
       }
     };
-    final Application application = ApplicationManager.getApplication();
+    final Application application = project.getApplication();
     Disposable listenerDisposable = Disposable.newDisposable();
-    application.invokeAndWait(() -> application.addApplicationListener(canceller, listenerDisposable), IdeaModalityState.any());
+    application.addApplicationListener(canceller, listenerDisposable);
 
     final AtomicBoolean isFinished = new AtomicBoolean();
     try {

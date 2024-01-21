@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.*;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -105,6 +106,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
 
   @Override
   @Nullable
+  @RequiredReadAction
   public PsiFile getPsiFile(@Nonnull Document document) {
     if (document instanceof DocumentWindow && !((DocumentWindow)document).isValid()) {
       return null;

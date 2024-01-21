@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.ui.docking;
 
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.project.ui.wm.dock.DockContainer;
-import consulo.project.ui.wm.dock.DockContainerFactory;
-import consulo.project.ui.wm.dock.DockManager;
-import consulo.project.ui.wm.dock.DockableContent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.project.ui.wm.dock.DockManager;
+import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.collection.MutualMap;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 
 /**
@@ -169,7 +169,14 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
   }
 
   @Nonnull
-  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
+  public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
+                                                                            @Nonnull FileEditorManagerImpl fileEditorManager) {
+    throw new UnsupportedOperationException("desktop impl only");
+  }
+
+  @Nonnull
+  public List<FileEditor> createNewDockContainerFor2(@Nonnull VirtualFile file,
+                                                    @Nonnull FileEditorManagerImpl fileEditorManager) {
     throw new UnsupportedOperationException("desktop impl only");
   }
 }

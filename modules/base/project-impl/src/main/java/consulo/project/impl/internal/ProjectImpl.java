@@ -15,8 +15,8 @@
  */
 package consulo.project.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.BaseApplication;
@@ -41,21 +41,20 @@ import consulo.project.internal.StartupManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -260,6 +259,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   }
 
   @Override
+  @RequiredWriteAction
   public void save() {
     ApplicationEx application = (ApplicationEx)getApplication();
     if (application.isDoNotSave()) {
@@ -304,25 +304,23 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
   }
 
-  @Nonnull
+  @RequiredWriteAction
   @Override
-  public AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess) {
-    return AccessRule.writeAsync(() -> saveAsyncImpl(uiAccess));
-  }
-
-  private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {
+  public CompletableFuture<?> saveAsync() {
     ApplicationEx application = (ApplicationEx)getApplication();
-
     if (application.isDoNotSave()) {
       // no need to save
-      return;
+      return CompletableFuture.completedFuture(null);
+    }
+
+    if (!isModulesReady()) {
+      LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
+      return CompletableFuture.completedFuture(null);
     }
 
     if (!mySavingInProgress.compareAndSet(false, true)) {
-      return;
+      return CompletableFuture.completedFuture(null);
     }
-
-    //HeavyProcessLatch.INSTANCE.prioritizeUiActivity();
 
     try {
       if (!isDefault()) {
@@ -344,12 +342,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         }
       }
 
-      StoreUtil.saveAsync(getStateStore(), uiAccess, this);
     }
-    finally {
-      mySavingInProgress.set(false);
-      application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
+    catch (Throwable e) {
+      LOG.error(e);
     }
+
+    return StoreUtil.saveAsync(getStateStore(), getUIAccess(), false, this);
   }
 
   @RequiredUIAccess

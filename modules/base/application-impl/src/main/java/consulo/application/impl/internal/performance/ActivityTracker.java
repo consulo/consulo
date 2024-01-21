@@ -19,6 +19,10 @@
  */
 package consulo.application.impl.internal.performance;
 
+import consulo.ui.annotation.RequiredUIAccess;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ActivityTracker {
   private static final ActivityTracker INSTANCE = new ActivityTracker();
 
@@ -29,13 +33,14 @@ public class ActivityTracker {
   private ActivityTracker() {
   }
 
-  private int ourCount = 0;
+  private AtomicInteger myCount = new AtomicInteger();
 
   public int getCount() {
-    return ourCount;
+    return myCount.get();
   }
 
+  @RequiredUIAccess
   public void inc() {
-    ourCount++;
+    myCount.incrementAndGet();
   }
 }

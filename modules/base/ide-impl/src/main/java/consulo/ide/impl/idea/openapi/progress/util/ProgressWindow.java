@@ -22,7 +22,6 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.BlockingProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
@@ -199,12 +198,8 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
     try {
       try {
-        ((ApplicationWithIntentWriteLock)Application.get()).runUnlockingIntendedWrite(() -> {
-          // guarantee AWT event after the future is done will be pumped and loop exited
-          stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
-          myDialog.startBlocking(stopCondition, this::isCancellationEvent);
-          return null;
-        });
+        stopCondition.thenRun(() -> SwingUtilities.invokeLater(EmptyRunnable.INSTANCE));
+        myDialog.startBlocking(stopCondition, this::isCancellationEvent);
       }
       finally {
         exitModality();

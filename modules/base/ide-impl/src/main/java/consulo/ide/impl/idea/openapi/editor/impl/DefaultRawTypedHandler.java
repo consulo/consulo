@@ -8,8 +8,8 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.DocumentRunnable;
 import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
-import consulo.ide.impl.idea.openapi.command.CommandToken;
+import consulo.undoRedo.internal.CommandProcessorEx;
+import consulo.undoRedo.internal.CommandToken;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
@@ -18,12 +18,15 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import jakarta.annotation.Nonnull;
 
 public class DefaultRawTypedHandler implements TypedActionHandlerEx {
+  private final CommandProcessorEx myCommandProcessor;
+
   private final TypedAction myAction;
   private CommandToken myCurrentCommandToken;
   private boolean myInOuterCommand;
 
-  DefaultRawTypedHandler(TypedAction action) {
+  DefaultRawTypedHandler(TypedAction action, CommandProcessor commandProcessor) {
     myAction = action;
+    myCommandProcessor = (CommandProcessorEx)commandProcessor;
   }
 
   @Override
@@ -39,12 +42,11 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
 
   @Override
   public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
-    CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
     Project project = dataContext.getData(Project.KEY);
     if (myCurrentCommandToken != null) {
       throw new IllegalStateException("Unexpected reentrancy of DefaultRawTypedHandler");
     }
-    myCurrentCommandToken = commandProcessorEx.startCommand(project, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT);
+    myCurrentCommandToken = myCommandProcessor.startCommand(project, "", editor.getDocument(), UndoConfirmationPolicy.DEFAULT);
     myInOuterCommand = myCurrentCommandToken == null;
     try {
       if (!EditorModificationUtil.requestWriting(editor)) {
@@ -69,7 +71,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx {
     }
     finally {
       if (!myInOuterCommand) {
-        commandProcessorEx.finishCommand(myCurrentCommandToken, null);
+        myCommandProcessor.finishCommand(myCurrentCommandToken, null);
         myCurrentCommandToken = null;
       }
       myInOuterCommand = false;

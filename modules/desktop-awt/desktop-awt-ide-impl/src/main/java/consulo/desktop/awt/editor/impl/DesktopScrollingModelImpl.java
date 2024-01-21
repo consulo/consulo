@@ -16,7 +16,6 @@
 
 package consulo.desktop.awt.editor.impl;
 
-import consulo.application.Application;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
@@ -24,19 +23,19 @@ import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
+import consulo.codeEditor.impl.VisibleEditorsTracker;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.impl.VisibleEditorsTracker;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awt.Interpolable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -157,8 +156,8 @@ public class DesktopScrollingModelImpl extends CodeEditorScrollingModelBase {
     AsyncEditorLoader.performWhenLoaded(myEditor, () -> scrollTo(myEditor.logicalPositionToXY(pos), scrollType));
   }
 
-  private static void assertIsDispatchThread() {
-    Application.get().assertIsDispatchThread();
+  private void assertIsDispatchThread() {
+    myEditor.assertIsDispatchThread();
   }
 
   @Override

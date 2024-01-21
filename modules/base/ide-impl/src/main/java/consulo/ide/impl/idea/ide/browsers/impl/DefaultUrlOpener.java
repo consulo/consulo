@@ -16,12 +16,11 @@
 package consulo.ide.impl.idea.ide.browsers.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.UrlOpener;
 import consulo.webBrowser.WebBrowser;
-import consulo.project.Project;
-import consulo.ide.impl.idea.util.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

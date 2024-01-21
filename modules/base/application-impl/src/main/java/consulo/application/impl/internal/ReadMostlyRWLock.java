@@ -49,6 +49,7 @@ public final class ReadMostlyRWLock {
   private volatile long deadReadersGCStamp;
 
   public ReadMostlyRWLock(@Nullable Thread writeThread) {
+    writeThread = writeThread;
   }
 
   // Each reader thread has instance of this struct in its thread local. it's also added to global "readers" list.

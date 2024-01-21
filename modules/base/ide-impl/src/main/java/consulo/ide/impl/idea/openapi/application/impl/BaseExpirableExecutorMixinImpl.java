@@ -30,16 +30,16 @@ import java.util.function.BooleanSupplier;
  * from kotlin
  */
 public abstract class BaseExpirableExecutorMixinImpl<E extends BaseExpirableExecutorMixinImpl<E>> extends ExpirableConstrainedExecution<E> implements ConstrainedExecution<E> {
-  private final Executor executor;
+  protected final Executor myExecutor;
 
   protected BaseExpirableExecutorMixinImpl(ConstrainedExecution.ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles, Executor executor) {
     super(constraints, cancellationConditions, expirableHandles);
-    this.executor = executor;
+    this.myExecutor = executor;
   }
 
   @Override
   public void scheduleWithinConstraints(Runnable runnable, @Nullable BooleanSupplier condition) {
-    executor.execute(() -> super.scheduleWithinConstraints(runnable, condition));
+    myExecutor.execute(() -> super.scheduleWithinConstraints(runnable, condition));
   }
 
   public void execute(Runnable runnable) {

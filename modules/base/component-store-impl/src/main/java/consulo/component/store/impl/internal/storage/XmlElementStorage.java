@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.*;
@@ -247,6 +248,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
       return true;
     }
 
+    @RequiredWriteAction
     protected abstract void doSave(@Nullable Element element) throws IOException;
 
     protected void saveForProvider(@Nullable byte[] content, @Nullable Element element) throws IOException {

@@ -142,7 +142,8 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   }
 
   private void invokeLater(@Nonnull Runnable runnable) {
-    myApplication.invokeLaterOnWriteThread(runnable, myApplication.getAnyModalityState(), myApplication.getDisposed());
+    // TODO [VISTALL] wtf? uui thread?? for read?
+    myApplication.invokeLater(runnable);
   }
 
   @Override
@@ -154,7 +155,7 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
   @Override
   @Nonnull
   public NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull ComponentManager project) {
-    return withConstraint(new WithDocumentsCommitted((Project)project, myApplication.getAnyModalityState())).expireWith(project);
+    return withConstraint(new WithDocumentsCommitted((Project)project)).expireWith(project);
   }
 
   @Override

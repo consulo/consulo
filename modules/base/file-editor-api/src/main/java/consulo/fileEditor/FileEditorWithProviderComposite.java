@@ -24,9 +24,17 @@ import javax.swing.*;
  */
 public interface FileEditorWithProviderComposite extends FileEditorComposite {
   @Nonnull
-  FileEditorProvider[] getProviders();
+  @Deprecated
+  default FileEditorProvider[] getProviders() {
+    FileEditor[] editors = getEditors();
+    FileEditorProvider[] fileEditorProviders = new FileEditorProvider[editors.length];
+    for (int i = 0; i < fileEditorProviders.length; i++) {
+      fileEditorProviders[i] = editors[i].getProvider();
+    }
+    return fileEditorProviders;
+  }
 
-  void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider);
+  void addEditor(@Nonnull FileEditor editor);
 
   JComponent getPreferredFocusedComponent();
 

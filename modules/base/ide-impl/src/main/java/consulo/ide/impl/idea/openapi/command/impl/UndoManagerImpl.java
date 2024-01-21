@@ -33,27 +33,26 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.*;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
-import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -374,7 +373,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
     final RuntimeException[] exception = new RuntimeException[1];
-    Runnable executeUndoOrRedoAction = () -> {
+    CommandRunnable executeUndoOrRedoAction = () -> {
       try {
         if (myProject != null) {
           PsiDocumentManager.getInstance(myProject).commitAllDocuments();
@@ -610,7 +609,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private void flushMergers() {
     assert myProject == null || !myProject.isDisposed();
     // Run dummy command in order to flush all mergers...
-    CommandProcessor.getInstance().executeCommand(myProject, EmptyRunnable.getInstance(), CommonBundle.message("drop.undo.history.command.name"), null);
+    CommandProcessor.getInstance().executeCommand(myProject, () -> {}, CommonBundle.message("drop.undo.history.command.name"), null);
   }
 
   @TestOnly

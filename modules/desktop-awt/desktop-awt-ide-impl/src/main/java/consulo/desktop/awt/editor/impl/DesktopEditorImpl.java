@@ -31,6 +31,8 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
+import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
@@ -44,7 +46,6 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
@@ -59,7 +60,6 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -91,7 +91,9 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.update.Activatable;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.internal.CommandDocumentRunnable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -374,13 +376,16 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     });
 
     EditorHighlighter highlighter = new NullEditorHighlighter();
-    setHighlighter(highlighter);
+    setHighlighter(highlighter); // we don't need check thread
+    
 
     new FoldingPopupManager(this);
 
     myEditorComponent = new EditorComponentImpl(this);
     myVerticalScrollBar = (MyVerticalScrollBar)myScrollPane.getVerticalScrollBar();
     myPanel = new JPanel(new BorderLayout());
+
+    UiNotifyConnector.doWhenFirstShown(myPanel, () -> myUIThreadAssertion = true);
 
     getMarkupModel().updateUI();
 
@@ -2385,8 +2390,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
           stop();
           return;
         }
-        myCommandProcessor.executeCommand(myProject,
-                                          new DocumentRunnable(myDocument, myProject) {
+        myCommandProcessor.executeCommand(myProject, new CommandDocumentRunnable(myDocument, myProject) {
                                             @Override
                                             public void run() {
                                               int oldSelectionStart = mySelectionModel.getLeadSelectionOffset();
@@ -2882,15 +2886,14 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     private void runUndoTransparent(@Nonnull final Runnable runnable) {
-      CommandProcessor.getInstance().runUndoTransparentAction(() -> CommandProcessor.getInstance()
-                                                                                    .executeCommand(myProject,
-                                                                                                    () -> ApplicationManager.getApplication()
-                                                                                                                            .runWriteAction(
-                                                                                                                              runnable),
-                                                                                                    "",
-                                                                                                    getDocument(),
-                                                                                                    UndoConfirmationPolicy.DEFAULT,
-                                                                                                    getDocument()));
+      CommandProcessor processor = CommandProcessor.getInstance();
+      processor.runUndoTransparentAction(() -> processor
+        .executeCommand(myProject, () -> ApplicationManager.getApplication()
+                                                           .runWriteAction(runnable),
+                        "",
+                        getDocument(),
+                        UndoConfirmationPolicy.DEFAULT,
+                        getDocument()));
     }
 
     private boolean hasRelevantCommittedText(@Nonnull InputMethodEvent e) {
@@ -3031,7 +3034,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       if (event.isConsumed() && !forceProcessing) return;
 
       if (myCommandProcessor != null) {
-        Runnable runnable = () -> {
+        CommandRunnable runnable = () -> {
           if (processMousePressed(e) && myProject != null && !myProject.isDefault()) {
             IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
           }
@@ -3085,9 +3088,8 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       }
 
       if (myCommandProcessor != null) {
-        Runnable runnable = () -> processMouseReleased(e);
         myCommandProcessor.executeCommand(myProject,
-                                          runnable,
+                                          () -> processMouseReleased(e),
                                           "",
                                           DocCommandGroupId.noneGroupId(getDocument()),
                                           UndoConfirmationPolicy.DEFAULT,

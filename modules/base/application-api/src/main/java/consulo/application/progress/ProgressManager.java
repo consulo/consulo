@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Contract;
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -212,6 +213,11 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
 
   public static void checkCanceled() throws ProcessCanceledException {
     getInstance().doCheckCanceled();
+  }
+
+  @Nonnull
+  public Executor exectorUnderProgress(@Nullable ProgressIndicator progress) {
+    return command -> executeProcessUnderProgress(command, progress);
   }
 
   /**

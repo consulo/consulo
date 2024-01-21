@@ -16,7 +16,7 @@
 package consulo.ide.impl.language.editor.markup;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonTooltipRendererProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TrafficLightRenderer;
@@ -30,12 +30,12 @@ import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
@@ -44,11 +44,13 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
+  private final DataLock myDataLock;
   private final Project myProject;
   private final PsiDocumentManager myPsiDocumentManager;
 
   @Inject
-  public ErrorStripeUpdateManagerImpl(Project project) {
+  public ErrorStripeUpdateManagerImpl(DataLock dataLock, Project project) {
+    myDataLock = dataLock;
     myProject = project;
     myPsiDocumentManager = PsiDocumentManager.getInstance(myProject);
   }
@@ -56,21 +58,27 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
   @Override
   @RequiredUIAccess
   public void repaintErrorStripePanel(@Nonnull Editor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
+
     if (!myProject.isInitialized()) return;
 
-    PsiFile file = myPsiDocumentManager.getPsiFile(editor.getDocument());
-    final EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
-    markup.setErrorPanelPopupHandler(new DaemonEditorPopup(myProject, editor));
-    markup.setErrorStripTooltipRendererProvider(createTooltipRenderer(editor));
-    markup.setMinMarkHeight(DaemonCodeAnalyzerSettings.getInstance().getErrorStripeMarkMinHeight());
-    setOrRefreshErrorStripeRenderer(markup, file);
+    UIAccess uiAccess = UIAccess.current();
+
+    myDataLock.readAsync(() -> myPsiDocumentManager.getPsiFile(editor.getDocument()))
+              .whenCompleteAsync((file, throwable) -> {
+                final EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
+                markup.setErrorPanelPopupHandler(new DaemonEditorPopup(myProject, editor));
+                markup.setErrorStripTooltipRendererProvider(createTooltipRenderer(editor));
+                markup.setMinMarkHeight(DaemonCodeAnalyzerSettings.getInstance().getErrorStripeMarkMinHeight());
+                setOrRefreshErrorStripeRenderer(markup, file);
+              }, uiAccess);
   }
 
   @Override
   @RequiredUIAccess
   public void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
+
     if (!editorMarkupModel.isErrorStripeVisible() || !DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(file)) {
       return;
     }

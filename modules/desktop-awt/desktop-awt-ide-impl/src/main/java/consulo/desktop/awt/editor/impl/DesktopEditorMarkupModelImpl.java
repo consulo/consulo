@@ -126,6 +126,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
     }
   }
 
+  @RequiredUIAccess
   @Override
   public void repaintTrafficLightIcon() {
     myStatusPanel.repaintTrafficLightIcon();

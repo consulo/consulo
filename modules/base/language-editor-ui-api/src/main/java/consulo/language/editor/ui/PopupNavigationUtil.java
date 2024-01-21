@@ -37,6 +37,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author ven
@@ -120,6 +121,11 @@ public final class PopupNavigationUtil {
 
   public static boolean openFileWithPsiElement(PsiElement element, boolean searchForOpen, boolean requestFocus) {
     return LanguageEditorNavigationUtil.openFileWithPsiElement(element, searchForOpen, requestFocus);
+  }
+
+  @Nonnull
+  public static CompletableFuture<Boolean> openFileWithPsiElementAsync(PsiElement element, boolean searchForOpen, boolean requestFocus) {
+    return LanguageEditorNavigationUtil.activateFileWithPsiElementAsync(element, searchForOpen, requestFocus);
   }
 
   @Nonnull

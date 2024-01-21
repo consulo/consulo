@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
 import consulo.diff.request.DiffRequest;
@@ -31,6 +32,7 @@ import jakarta.annotation.Nonnull;
 // from kotlin
 @ExtensionImpl
 public class DiffEditorTabTitleProvider implements EditorTabTitleProvider, DumbAware {
+  @RequiredReadAction
   @Override
   public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
     String title = getTitle(project, file);

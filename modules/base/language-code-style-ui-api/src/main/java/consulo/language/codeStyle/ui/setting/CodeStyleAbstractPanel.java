@@ -51,10 +51,10 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -183,13 +183,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     int currOffs = myEditor.getScrollingModel().getVerticalScrollOffset();
 
     final Project finalProject = ProjectUIUtil.guessCurrentProject(getPanel());
-    CommandProcessor.getInstance().executeCommand(finalProject, new Runnable() {
-      @Override
-      @RequiredUIAccess
-      public void run() {
-        replaceText(finalProject);
-      }
-    }, null, null);
+    CommandProcessor.getInstance().executeCommand(finalProject, () -> replaceText(finalProject), null, null);
 
     myEditor.getSettings().setRightMargin(getAdjustedRightMargin());
     myLastDocumentModificationStamp = myEditor.getDocument().getModificationStamp();

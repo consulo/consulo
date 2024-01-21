@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal.storage;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
@@ -80,32 +81,31 @@ public class StorageUtil {
   }
 
   @Nonnull
-  @RequiredUIAccess
+  @RequiredWriteAction
   public static VirtualFile writeFile(@Nullable File file,
                                       @Nonnull Object requestor,
                                       @Nullable VirtualFile lastResolvedFile,
                                       @Nonnull byte[] content,
                                       @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+    Application.get().assertWriteAccessAllowed();
+
     SimpleReference<VirtualFile> vFileRef = SimpleReference.create();
     try {
-      return Application.get().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> {
-        VirtualFile virtualFile = lastResolvedFile;
-        vFileRef.set(virtualFile);
-        if (file != null && (virtualFile == null || !virtualFile.isValid())) {
-          virtualFile = getOrCreateVirtualFile(requestor, file);
+      VirtualFile virtualFile = lastResolvedFile;
+      vFileRef.set(virtualFile);
+      if (file != null && (virtualFile == null || !virtualFile.isValid())) {
+        virtualFile = getOrCreateVirtualFile(requestor, file);
+      }
+      vFileRef.set(virtualFile);
+      assert virtualFile != null;
+      try (OutputStream out = virtualFile.getOutputStream(requestor)) {
+        if (lineSeparatorIfPrependXmlProlog != null) {
+          out.write(XML_PROLOG);
+          out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
         }
-        vFileRef.set(virtualFile);
-        assert virtualFile != null;
-        try (OutputStream out = virtualFile.getOutputStream(requestor)) {
-          if (lineSeparatorIfPrependXmlProlog != null) {
-            out.write(XML_PROLOG);
-            out.write(lineSeparatorIfPrependXmlProlog.getSeparatorBytes());
-          }
-          out.write(content);
-        }
-        return virtualFile;
-      });
-
+        out.write(content);
+      }
+      return virtualFile;
     }
     catch (FileNotFoundException e) {
       VirtualFile virtualFile = vFileRef.get();

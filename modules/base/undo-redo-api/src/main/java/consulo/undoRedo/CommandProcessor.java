@@ -5,16 +5,17 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A class for defining 'command' scopes. Every undoable change should be executed as part of a command. Commands can nest, in such a case
@@ -23,7 +24,7 @@ import jakarta.annotation.Nullable;
  * 'adjacent' non-transparent commands.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class CommandProcessor {
+public interface CommandProcessor {
   @Nonnull
   public static CommandProcessor getInstance() {
     return Application.get().getInstance(CommandProcessor.class);
@@ -33,89 +34,110 @@ public abstract class CommandProcessor {
    * @deprecated use {@link #executeCommand(Project, Runnable, String, Object)}
    */
   @Deprecated
-  public abstract void executeCommand(@Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
+  default void executeCommand(@Nonnull CommandRunnable runnable, String name, Object groupId) {
+    executeCommand(null, runnable, name, groupId);
+  }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId);
+  default void executeCommand(Project project, @Nonnull CommandRunnable runnable, String name, Object groupId) {
+    executeCommand(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT);
+  }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nullable Document document);
+  default void executeCommand(Project project, @Nonnull CommandRunnable runnable, String name, Object groupId, Document document) {
+    executeCommand(project, runnable, name, groupId, UndoConfirmationPolicy.DEFAULT, document);
+  }
 
-  public abstract void executeCommand(@Nullable Project project, @Nonnull Runnable runnable, @Nullable String name, @Nullable Object groupId, @Nonnull UndoConfirmationPolicy confirmationPolicy);
+  default void executeCommand(Project project,
+                              @Nonnull final CommandRunnable command,
+                              final String name,
+                              final Object groupId,
+                              @Nonnull UndoConfirmationPolicy confirmationPolicy) {
+    executeCommand(project, command, name, groupId, confirmationPolicy, null);
+  }
 
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable command,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                      @Nullable Document document);
+  default void executeCommand(Project project,
+                              @Nonnull final CommandRunnable command,
+                              final String name,
+                              final Object groupId,
+                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                              Document document) {
+    executeCommand(CommandInfo.newBuilder()
+                              .withProject(project)
+                              .withName(name)
+                              .withGroupId(groupId)
+                              .withUndoConfirmationPolicy(confirmationPolicy)
+                              .withDocument(document)
+                              .build(),
+                   command);
+  }
 
-  /**
-   * @param shouldRecordCommandForActiveDocument {@code false} if the action is not supposed to be recorded into the currently open document's history.
-   *                                             Examples of such actions: Create New File, Change Project Settings etc.
-   *                                             Default is {@code true}.
-   */
-  public abstract void executeCommand(@Nullable Project project,
-                                      @Nonnull Runnable command,
-                                      @Nullable String name,
-                                      @Nullable Object groupId,
-                                      @Nonnull UndoConfirmationPolicy confirmationPolicy,
-                                      boolean shouldRecordCommandForActiveDocument);
+  default void executeCommand(@Nullable Project project,
+                              @Nonnull CommandRunnable command,
+                              @Nullable String name,
+                              @Nullable Object groupId,
+                              @Nonnull UndoConfirmationPolicy confirmationPolicy,
+                              boolean shouldRecordCommandForActiveDocument) {
+    executeCommand(CommandInfo.newBuilder()
+                              .withProject(project)
+                              .withName(name)
+                              .withGroupId(groupId)
+                              .withUndoConfirmationPolicy(confirmationPolicy)
+                              .withShouldRecordCommandForActiveDocument(shouldRecordCommandForActiveDocument)
+                              .build(),
+                   command);
+  }
 
-  public abstract void setCurrentCommandName(@Nullable String name);
 
-  public abstract void setCurrentCommandGroupId(@Nullable Object groupId);
+  void executeCommand(CommandInfo commandInfo, CommandRunnable command);
+
+  @Nonnull
+  @RequiredUIAccess
+  <V> CompletableFuture<V> executeCommandAsync(@Nonnull CommandInfo commandInfo,
+                                               @Nonnull CommandRunnableAsync<V> command);
+
+  void setCurrentCommandName(@Nullable String name);
+
+  void setCurrentCommandGroupId(@Nullable Object groupId);
 
   @Nullable
   @Deprecated
   @DeprecationInfo("Use #hasCurrentCommand()")
-  public final Runnable getCurrentCommand() {
+  default Runnable getCurrentCommand() {
     return hasCurrentCommand() ? EmptyRunnable.getInstance() : null;
   }
 
-  public abstract boolean hasCurrentCommand();
+  boolean hasCurrentCommand();
 
   @Nullable
-  public abstract String getCurrentCommandName();
+  String getCurrentCommandName();
 
   @Nullable
-  public abstract Object getCurrentCommandGroupId();
+  Object getCurrentCommandGroupId();
 
   @Nullable
-  public abstract Project getCurrentCommandProject();
+  Project getCurrentCommandProject();
 
   /**
    * Defines a scope which contains undoable actions, for which there won't be a separate undo/redo step - they will be undone/redone along
    * with 'adjacent' command.
    */
-  public abstract void runUndoTransparentAction(@Nonnull Runnable action);
+  void runUndoTransparentAction(@Nonnull Runnable action);
 
   /**
    * @see #runUndoTransparentAction(Runnable)
    */
-  public abstract boolean isUndoTransparentActionInProgress();
+  boolean isUndoTransparentActionInProgress();
 
-  public abstract void markCurrentCommandAsGlobal(@Nullable Project project);
+  void markCurrentCommandAsGlobal(@Nullable Project project);
 
-  public abstract void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
+  void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs);
 
-  public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
-
-  /**
-   * @deprecated use {@link CommandListener#class}
-   */
-  @Deprecated
-  public abstract void addCommandListener(@Nonnull CommandListener listener);
+  void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
 
   /**
    * @deprecated use {@link CommandListener#class}
    */
   @Deprecated
-  public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
+  default void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
+    Application.get().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
   }
-
-  /**
-   * @deprecated use {@link CommandListener#class}
-   */
-  @Deprecated
-  public abstract void removeCommandListener(@Nonnull CommandListener listener);
 }

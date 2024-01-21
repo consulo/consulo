@@ -3,7 +3,6 @@
 
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
@@ -14,18 +13,19 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.RangeMarkerTree;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -229,7 +229,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
   @Nonnull
   public CodeEditorCaretBase getCurrentCaret() {
     CodeEditorCaretBase currentCaret = myCurrentCaret.get();
-    return ApplicationManager.getApplication().isDispatchThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
+    return UIAccess.isUIThread() && currentCaret != null ? currentCaret : getPrimaryCaret();
   }
 
   @Override
@@ -278,7 +278,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
   @Nullable
   @Override
   public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     CARET caret = createCaret(myEditor, this);
     caret.doMoveToVisualPosition(pos, false);
     if (addCaret(caret, makePrimary)) {
@@ -289,7 +289,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
   }
 
   boolean addCaret(@Nonnull CARET caretToAdd, boolean makePrimary) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     for (CARET caret : myCarets) {
       if (caretsOverlap(caret, caretToAdd)) {
         return false;
@@ -310,7 +310,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
   @Override
   public boolean removeCaret(@Nonnull Caret caret) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     if (myCarets.size() <= 1 || !(caret instanceof CodeEditorCaretBase)) {
       return false;
     }
@@ -327,7 +327,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
   @Override
   public void removeSecondaryCarets() {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     ListIterator<CARET> caretIterator = myCarets.listIterator(myCarets.size() - 1);
     while (caretIterator.hasPrevious()) {
       CARET caret = caretIterator.previous();
@@ -346,7 +346,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
   @Override
   public void runForEachCaret(@Nonnull final CaretAction action, final boolean reverseOrder) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     if (myCurrentCaret.get() != null) {
       throw new IllegalStateException("Recursive runForEachCaret invocations are not allowed");
     }
@@ -376,12 +376,12 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
   @Override
   public void runBatchCaretOperation(@Nonnull Runnable runnable) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     doWithCaretMerging(runnable);
   }
 
   private void mergeOverlappingCaretsAndSelections() {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     if (myCarets.size() > 1) {
       LinkedList<CARET> carets = new LinkedList<>(myCarets);
       Collections.sort(carets, CARET_POSITION_COMPARATOR);
@@ -454,7 +454,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
   }
 
   public void doWithCaretMerging(@Nonnull Runnable runnable) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     if (myPerformCaretMergingAfterCurrentOperation) {
       runnable.run();
     }
@@ -477,7 +477,7 @@ public abstract class CodeEditorCaretModelBase<CARET extends CodeEditorCaretBase
 
   @Override
   public void setCaretsAndSelections(@Nonnull final List<? extends CaretState> caretStates, final boolean updateSystemSelection) {
-    CodeEditorBase.assertIsDispatchThread();
+    myEditor.assertIsDispatchThread();
     if (caretStates.isEmpty()) {
       throw new IllegalArgumentException("At least one caret should exist");
     }

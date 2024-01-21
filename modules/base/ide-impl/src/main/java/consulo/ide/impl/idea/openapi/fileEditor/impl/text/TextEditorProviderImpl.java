@@ -85,7 +85,7 @@ public class TextEditorProviderImpl extends TextEditorProvider {
 
   @Nonnull
   protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
-    return new EditorWrapper(editor);
+    return new EditorWrapper(editor, this);
   }
 
   public void setStateImpl(final Project project, final Editor editor, final TextEditorState state){
@@ -137,15 +137,23 @@ public class TextEditorProviderImpl extends TextEditorProvider {
 
   public class EditorWrapper extends UserDataHolderBase implements TextEditor {
     private final Editor myEditor;
+    private final FileEditorProvider myFileEditorProvider;
 
-    public EditorWrapper(@Nonnull Editor editor) {
+    public EditorWrapper(@Nonnull Editor editor, FileEditorProvider fileEditorProvider) {
       myEditor = editor;
+      myFileEditorProvider = fileEditorProvider;
     }
 
     @Override
     @Nonnull
     public Editor getEditor() {
       return myEditor;
+    }
+
+    @Nonnull
+    @Override
+    public FileEditorProvider getProvider() {
+      return myFileEditorProvider;
     }
 
     @Override

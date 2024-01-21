@@ -16,16 +16,14 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.DaemonListener;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
@@ -35,6 +33,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
+import consulo.ui.UIAccess;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
@@ -42,22 +41,18 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class StatusBarUpdater implements Disposable {
+  private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
+  private final ApplicationConcurrency myApplicationConcurrency;
   private final Project myProject;
-  private final DumbAwareRunnable myUpdateStatusRunnable = new DumbAwareRunnable() {
-    @Override
-    public void run() {
-      if (!myProject.isDisposed()) {
-        updateStatus();
-      }
-    }
-  };
 
-  private Future<?> updateStatusAlarm = CompletableFuture.completedFuture(null);
+  private Future<?> myUpdateStatusAlarm = CompletableFuture.completedFuture(null);
 
-  public StatusBarUpdater(Project project) {
+  public StatusBarUpdater(DaemonCodeAnalyzerImpl daemonCodeAnalyzer, ApplicationConcurrency applicationConcurrency, Project project) {
+    myDaemonCodeAnalyzer = daemonCodeAnalyzer;
+    myApplicationConcurrency = applicationConcurrency;
     myProject = project;
 
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerAdapter() {
+    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         updateLater();
@@ -73,12 +68,13 @@ public class StatusBarUpdater implements Disposable {
   }
 
   private void updateLater() {
-    updateStatusAlarm.cancel(false);
-    updateStatusAlarm = myProject.getUIAccess().getScheduler().schedule(myUpdateStatusRunnable, 100, TimeUnit.MILLISECONDS);
+    myUpdateStatusAlarm.cancel(false);
+    myUpdateStatusAlarm = myApplicationConcurrency.getScheduledExecutorService().schedule(this::updateStatus, 100, TimeUnit.MILLISECONDS);
   }
 
   @Override
   public void dispose() {
+    myUpdateStatusAlarm.cancel(false);
   }
 
   private void updateStatus() {
@@ -86,7 +82,7 @@ public class StatusBarUpdater implements Disposable {
       return;
     }
 
-    Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
+    Editor editor = FileEditorManager.getInstance(myProject).getSelectedTextEditor(true);
     if (editor == null) {
       return;
     }
@@ -99,18 +95,21 @@ public class StatusBarUpdater implements Disposable {
     final Document document = editor.getDocument();
     if (document instanceof DocumentEx && document.isInBulkUpdate()) return;
 
-    int offset = editor.getCaretModel().getOffset();
-    DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(myProject);
-    HighlightInfoImpl info =
-      ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(document, offset, false, HighlightSeverity.WARNING);
-    String text = info != null && info.getDescription() != null ? info.getDescription() : "";
-
-    StatusBar statusBar = WindowManager.getInstance().getStatusBar(contentUIComponent, myProject);
-    if (statusBar instanceof StatusBarEx) {
-      StatusBarEx barEx = (StatusBarEx)statusBar;
-      if (!text.equals(barEx.getInfo())) {
-        statusBar.setInfo(text, "updater");
-      }
-    }
+    UIAccess uiAccess = myProject.getUIAccess();
+    uiAccess.giveAsync(() -> editor.getCaretModel().getOffset())
+            .thenApplyAsync((offset) -> {
+              HighlightInfoImpl info = myDaemonCodeAnalyzer.findHighlightByOffset(document, offset, false, HighlightSeverity.WARNING);
+              return info != null && info.getDescription() != null ? info.getDescription() : "";
+            }, myProject.getApplication().getLock().readExecutor())
+            .handleAsync((text, throwable) -> {
+              StatusBar statusBar = WindowManager.getInstance().getStatusBar(contentUIComponent, myProject);
+              if (statusBar instanceof StatusBarEx) {
+                StatusBarEx barEx = (StatusBarEx)statusBar;
+                if (!text.equals(barEx.getInfo())) {
+                  statusBar.setInfo(text, "updater");
+                }
+              }
+              return null;
+            }, uiAccess);
   }
 }

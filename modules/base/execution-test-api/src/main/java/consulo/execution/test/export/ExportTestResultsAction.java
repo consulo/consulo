@@ -43,6 +43,7 @@ import consulo.util.io.PathUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -64,7 +65,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.function.Supplier;
 
 public class ExportTestResultsAction extends DumbAwareAction {
   private static final String ID = "ExportTestResults";
@@ -171,7 +171,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         ApplicationManager.getApplication().invokeAndWait(new Runnable() {
           @Override
           public void run() {
-            result.set(ApplicationManager.getApplication().runWriteAction(new Supplier<VirtualFile>() {
+            result.set(ApplicationManager.getApplication().runWriteAction(new ThrowableSupplier<VirtualFile, RuntimeException>() {
               @Override
               public VirtualFile get() {
                 outputFile.getParentFile().mkdirs();

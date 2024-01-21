@@ -18,6 +18,8 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.concurrent.DataLock;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.AppSemVer;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -31,10 +33,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.function.ThrowableSupplier;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -62,46 +65,14 @@ public interface Application extends ComponentManager {
   }
 
   /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * with {@link ModalityState#defaultModalityState()} modality state.
-   *
-   * @param action the runnable to execute.
-   */
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action) {
-    throw new AbstractMethodError();
-  }
-
-  /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * when IDE is in the specified modality state (or a state with less modal dialogs open).
-   *
-   * @param action the runnable to execute.
-   * @param modal  the state in which action will be executed
-   */
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal) {
-    throw new AbstractMethodError();
-  }
-
-  /**
-   * Causes {@code runnable} to be executed asynchronously under Write Intent lock on some thread,
-   * when IDE is in the specified modality state (or a state with less modal dialogs open)
-   * - unless the expiration condition is fulfilled.
-   *
-   * @param action  the runnable to execute.
-   * @param modal   the state in which action will be executed
-   * @param expired condition to check before execution.
-   */
-  default void invokeLaterOnWriteThread(@Nonnull Runnable action, @Nonnull ModalityState modal, @Nonnull BooleanSupplier expired) {
-    throw new AbstractMethodError();
-  }
-
-  /**
    * Runs the specified read action. Can be called from any thread. The action is executed immediately
    * if no write action is currently running, or blocked until the currently running write action completes.
    *
    * @param action the action to run.
    */
-  void runReadAction(@RequiredReadAction @Nonnull Runnable action);
+  default void runReadAction(@RequiredReadAction @Nonnull Runnable action) {
+    getLock().readSync(action::run);
+  }
 
   /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
@@ -111,7 +82,9 @@ public interface Application extends ComponentManager {
    * @param computation the computation to perform.
    * @return the result returned by the computation.
    */
-  <T> T runReadAction(@RequiredReadAction @Nonnull Supplier<T> computation);
+  default <T> T runReadAction(@RequiredReadAction @Nonnull Supplier<T> computation) {
+    return getLock().readSync(computation::get);
+  }
 
   /**
    * Grab the lock and run the action, in a non-blocking fashion
@@ -129,7 +102,9 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
+  default <T, E extends Throwable> T runReadAction(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> computation) throws E {
+    return getLock().readSync(computation);
+  }
 
   /**
    * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -137,19 +112,7 @@ public interface Application extends ComponentManager {
    *
    * @param action the action to run
    */
-  @RequiredUIAccess
   void runWriteAction(@RequiredWriteAction @Nonnull Runnable action);
-
-  /**
-   * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
-   * The action is executed immediately if no read actions or write actions are currently running,
-   * or blocked until all read actions and write actions complete.
-   *
-   * @param computation the computation to run
-   * @return the result returned by the computation.
-   */
-  @RequiredUIAccess
-  <T> T runWriteAction(@RequiredWriteAction @Nonnull Supplier<T> computation);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -160,7 +123,6 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  @RequiredUIAccess
   <T, E extends Throwable> T runWriteAction(@RequiredWriteAction @Nonnull ThrowableSupplier<T, E> computation) throws E;
 
   /**
@@ -169,31 +131,41 @@ public interface Application extends ComponentManager {
    * @param actionClass the class of the write action to return.
    * @return {@code true} if the action is running, or {@code false} if no action of the specified class is currently executing.
    */
-  boolean hasWriteAction(@Nonnull Class<?> actionClass);
+  @RequiredReadAction
+  default boolean hasWriteAction(@Nonnull Class<?> actionClass) {
+    return getLock().hasWriteAction(actionClass);
+  }
 
   /**
    * Asserts whether the read access is allowed.
    */
   @RequiredReadAction
-  void assertReadAccessAllowed();
+  default void assertReadAccessAllowed() {
+    getLock().assertReadAccessAllowed();
+  }
 
   /**
    * Asserts whether the write access is allowed.
    */
   @RequiredWriteAction
-  void assertWriteAccessAllowed();
+  default void assertWriteAccessAllowed() {
+    getLock().assertWriteAccessAllowed();
+  }
 
   /**
    * Asserts whether the method is being called from the event dispatch thread.
    */
   @RequiredUIAccess
-  void assertIsDispatchThread();
+  default void assertIsDispatchThread() {
+    UIAccess.assertIsUIThread();
+  }
 
   /**
    * Asserts whether the method is being called from the write thread.
    */
+  @Deprecated
   default void assertIsWriteThread() {
-    assertIsDispatchThread();
+    assertWriteAccessAllowed();
   }
 
   /**
@@ -220,14 +192,30 @@ public interface Application extends ComponentManager {
 
   /**
    * Saves all open documents and projects.
+   * <p>
+   * Always async
    */
-  @RequiredUIAccess
+  @RequiredWriteAction
+  @Deprecated
   void saveAll();
+
+  @Nonnull
+  default CompletableFuture<?> saveAllAsync() {
+    saveAll();
+    return CompletableFuture.completedFuture(null);
+  }
 
   /**
    * Saves all application settings.
    */
   void saveSettings();
+
+  @Nonnull
+  @RequiredWriteAction
+  default CompletableFuture<?> saveSettingsAsync() {
+    saveSettings();
+    return CompletableFuture.completedFuture(null);
+  }
 
   /**
    * Exits the application, showing the exit confirmation prompt if it is enabled.
@@ -242,7 +230,7 @@ public interface Application extends ComponentManager {
    * @see #runWriteAction(Runnable)
    */
   default boolean isWriteAccessAllowed() {
-    return isDispatchThread();
+    return getLock().isWriteAccessAllowed();
   }
 
   /**
@@ -252,22 +240,18 @@ public interface Application extends ComponentManager {
    * @see #assertReadAccessAllowed()
    * @see #runReadAction(Runnable)
    */
-  boolean isReadAccessAllowed();
+  default boolean isReadAccessAllowed() {
+    return getLock().isReadAccessAllowed();
+  }
 
   /**
    * Checks if the current thread is the UI thread
    *
    * @return true if the current thread is the Swing dispatch thread, false otherwise.
    */
-  boolean isDispatchThread();
-
-  /**
-   * Checks if the current thread is "write thread".
-   *
-   * @return true if the current thread is the "write thread", false otherwise.
-   */
-  @Deprecated
-  boolean isWriteThread();
+  default boolean isDispatchThread() {
+    return UIAccess.isUIThread();
+  }
 
   /**
    * Causes {@code runnable.run()} to be executed asynchronously on the
@@ -415,8 +399,11 @@ public interface Application extends ComponentManager {
 
   @Nonnull
   default ProgressIndicatorProvider getProgressManager() {
-    return getComponent(ProgressIndicatorProvider.class);
+    return getInstance(ProgressIndicatorProvider.class);
   }
+
+  @Nonnull
+  DataLock getLock();
 
   @Override
   boolean isDisposed();
@@ -426,18 +413,24 @@ public interface Application extends ComponentManager {
    *
    * @param action to be executed
    * @return future result
+   * @see ApplicationConcurrency
    */
   @Nonnull
-  Future<?> executeOnPooledThread(@Nonnull Runnable action);
+  default Future<?> executeOnPooledThread(@Nonnull Runnable action) {
+    return getInstance(ApplicationConcurrency.class).getExecutorService().submit(action);
+  }
 
   /**
    * Requests pooled thread to execute the action
    *
    * @param action to be executed
    * @return future result
+   * @see ApplicationConcurrency
    */
   @Nonnull
-  <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action);
+  default <T> Future<T> executeOnPooledThread(@Nonnull Callable<T> action) {
+    return getInstance(ApplicationConcurrency.class).getExecutorService().submit(action);
+  }
 
   /**
    * @return true if application is currently disposing (but not yet disposed completely)
@@ -526,32 +519,9 @@ public interface Application extends ComponentManager {
 
   // region Deprecated stuff
 
-  /**
-   * Returns lock used for read operations, should be closed in finally block
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use runReadAction(Runnable)")
-  AccessToken acquireReadActionLock();
-
-  /**
-   * Returns lock used for write operations, should be closed in finally block
-   */
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use runWriteAction(Runnable)")
-  @RequiredUIAccess
-  AccessToken acquireWriteActionLock(@Nonnull Class marker);
-
   @Deprecated
   @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
   default boolean isInternal() {
-    return false;
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use consulo.util.SandboxUtil#isInsideSandbox")
-  default boolean isEAP() {
     return false;
   }
 
@@ -564,6 +534,16 @@ public interface Application extends ComponentManager {
   @Deprecated
   @DeprecationInfo("Old IDEA UnitTesting mode was dropped. This method became useless. If you want check if you inside test mode - use #isTestingMode()")
   default boolean isUnitTestMode() {
+    return false;
+  }
+
+  /**
+   * Checks if the current thread is "write thread".
+   *
+   * @return true if the current thread is the "write thread", false otherwise.
+   */
+  @Deprecated
+  default boolean isWriteThread() {
     return false;
   }
   // endregion

@@ -107,28 +107,35 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     final FileEditorManagerAdapter editorListener = new FileEditorManagerAdapter() {
       @Override
       public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
-        if (!isEditable(file)) return;
-        RootType rootType = getRootType(file);
-        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
-          fileEditorTrackingRootType.fileOpened(file, source);
-        }
+        whenEditableAsync(file, () -> {
+          RootType rootType = getRootType(file);
+          if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+            fileEditorTrackingRootType.fileOpened(file, source);
+          }
+        });
       }
 
       @Override
       public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         if (Boolean.TRUE.equals(file.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
-        if (!isEditable(file)) return;
 
-        RootType rootType = getRootType(file);
-        if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
-          fileEditorTrackingRootType.fileClosed(file, source);
-        }
+        whenEditableAsync(file, () -> {
+          RootType rootType = getRootType(file);
+          if (rootType instanceof FileEditorTrackingRootType fileEditorTrackingRootType) {
+            fileEditorTrackingRootType.fileClosed(file, source);
+          }
+        });
       }
 
-      boolean isEditable(@Nonnull VirtualFile file) {
-        return FileDocumentManager.getInstance().getDocument(file) != null;
+      void whenEditableAsync(@Nonnull VirtualFile file, @Nonnull Runnable action) {
+        FileDocumentManager.getInstance().getDocumentAsync(file).whenCompleteAsync((document, e) -> {
+          if (document != null) {
+            action.run();
+          }
+        });
       }
     };
+
     ProjectManagerListener projectListener = new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {

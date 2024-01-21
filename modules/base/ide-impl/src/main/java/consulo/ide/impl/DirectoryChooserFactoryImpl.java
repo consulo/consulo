@@ -22,11 +22,13 @@ import consulo.ide.internal.DirectoryChooserFactory;
 import consulo.project.Project;
 
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 10-Jul-22
  */
+@Singleton
 @ServiceImpl
 public class DirectoryChooserFactoryImpl implements DirectoryChooserFactory {
   @Nonnull

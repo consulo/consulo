@@ -87,17 +87,14 @@ abstract class DocumentsSynchronizer {
                                @Nonnull final CharSequence newText) {
     try {
       myDuringModification = true;
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          assert endOffset <= document.getTextLength();
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              document.replaceString(startOffset, endOffset, newText);
-            }
-          });
-        }
+      CommandProcessor.getInstance().executeCommand(myProject, () -> {
+        assert endOffset <= document.getTextLength();
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            document.replaceString(startOffset, endOffset, newText);
+          }
+        });
       }, "Synchronize document and its fragment", document);
     }
     finally {

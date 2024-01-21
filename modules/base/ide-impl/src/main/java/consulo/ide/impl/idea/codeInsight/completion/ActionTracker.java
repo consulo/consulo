@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.event.AnActionListener;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.disposer.Disposable;
 
 /**
  * @author peter
@@ -61,22 +61,23 @@ class ActionTracker {
 
   void ignoreCurrentDocumentChange() {
     final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    if (commandProcessor.getCurrentCommand() == null) return;
+    if (!commandProcessor.hasCurrentCommand()) return;
 
     myIgnoreDocumentChanges = true;
-    commandProcessor.addCommandListener(new CommandListener() {
+    Disposable disposable = Disposable.newDisposable();
+    myProject.getApplication().getMessageBus().connect(disposable).subscribe(CommandListener.class, new CommandListener() {
       @Override
       public void commandFinished(CommandEvent event) {
-        commandProcessor.removeCommandListener(this);
+        disposable.disposeWithTree();
+
         myIgnoreDocumentChanges = false;
       }
     });
   }
 
   boolean hasAnythingHappened() {
-    return myActionsHappened ||DumbService.getInstance(myProject).isDumb() ||
-           myEditor.isDisposed() ||
-           (myEditor instanceof EditorWindow && !((EditorWindow)myEditor).isValid());
+    return myActionsHappened || DumbService.getInstance(myProject).isDumb() ||
+      myEditor.isDisposed() ||
+      (myEditor instanceof EditorWindow && !((EditorWindow)myEditor).isValid());
   }
-
 }

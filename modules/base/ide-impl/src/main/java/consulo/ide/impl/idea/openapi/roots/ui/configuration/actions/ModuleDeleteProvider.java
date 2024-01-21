@@ -59,32 +59,29 @@ public class ModuleDeleteProvider  implements DeleteProvider, TitledHandler  {
     String names = StringUtil.join(Arrays.asList(modules), module -> "\'" + module.getName() + "\'", ", ");
     int ret = Messages.showOkCancelDialog(getConfirmationText(modules, names), getActionTitle(), Messages.getQuestionIcon());
     if (ret != 0) return;
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        final Runnable action = new Runnable() {
-          @Override
-          public void run() {
-            final ModuleManager moduleManager = ModuleManager.getInstance(project);
-            final Module[] currentModules = moduleManager.getModules();
-            final ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
-            final Map<Module, ModifiableRootModel> otherModuleRootModels = new HashMap<Module, ModifiableRootModel>();
-            for (final Module module : modules) {
-              final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-              for (final Module otherModule : currentModules) {
-                if (otherModule == module || ArrayUtilRt.find(modules, otherModule) != -1) continue;
-                if (!otherModuleRootModels.containsKey(otherModule)) {
-                  otherModuleRootModels.put(otherModule, ModuleRootManager.getInstance(otherModule).getModifiableModel());
-                }
+    CommandProcessor.getInstance().executeCommand(project, () -> {
+      final Runnable action = new Runnable() {
+        @Override
+        public void run() {
+          final ModuleManager moduleManager = ModuleManager.getInstance(project);
+          final Module[] currentModules = moduleManager.getModules();
+          final ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
+          final Map<Module, ModifiableRootModel> otherModuleRootModels = new HashMap<Module, ModifiableRootModel>();
+          for (final Module module : modules) {
+            final ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
+            for (final Module otherModule : currentModules) {
+              if (otherModule == module || ArrayUtilRt.find(modules, otherModule) != -1) continue;
+              if (!otherModuleRootModels.containsKey(otherModule)) {
+                otherModuleRootModels.put(otherModule, ModuleRootManager.getInstance(otherModule).getModifiableModel());
               }
-              removeModule(module, modifiableModel, otherModuleRootModels.values(), modifiableModuleModel);
             }
-            final ModifiableRootModel[] modifiableRootModels = otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
-            ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
+            removeModule(module, modifiableModel, otherModuleRootModels.values(), modifiableModuleModel);
           }
-        };
-        ApplicationManager.getApplication().runWriteAction(action);
-      }
+          final ModifiableRootModel[] modifiableRootModels = otherModuleRootModels.values().toArray(new ModifiableRootModel[otherModuleRootModels.size()]);
+          ModifiableModelCommitter.getInstance(project).multiCommit(modifiableRootModels, modifiableModuleModel);
+        }
+      };
+      ApplicationManager.getApplication().runWriteAction(action);
     }, ProjectBundle.message("module.remove.command"), null);
   }
 

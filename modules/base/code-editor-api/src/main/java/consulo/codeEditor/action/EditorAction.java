@@ -23,6 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -100,7 +101,7 @@ public abstract class EditorAction extends AnAction implements DumbAware, Update
     if (editor == null) return;
 
     final EditorActionHandler handler = getHandler();
-    Runnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
+    CommandRunnable command = () -> handler.execute(editor, null, getProjectAwareDataContext(editor, dataContext));
 
     if (!handler.executeInCommand(editor, dataContext)) {
       command.run();

@@ -7,7 +7,6 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.internal.ProgressManagerEx;
 import consulo.application.progress.*;
-import consulo.application.util.ApplicationUtil;
 import consulo.application.util.ClientId;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -452,7 +451,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
         elapsed.set(System.currentTimeMillis() - start);
       }
       return null;
-    }).onThread(ProgressRunner.ThreadToUse.POOLED)
+    })
       .withProgress(progressIndicator)
       .submit()
       .whenComplete(ClientId.decorateBiConsumer((result, err) -> {
@@ -473,7 +472,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
           }
         }
 
-        ApplicationUtil.invokeLaterSomewhere(myApplication, task.whereToRunCallbacks(), modality, () -> {
+        myApplication.invokeAndWait(() -> {
           finishTask(task, result.isCanceled(), result.getThrowable() instanceof ProcessCanceledException ? null : result.getThrowable());
           if (indicatorDisposable != null) {
             Disposer.dispose(indicatorDisposable);
@@ -504,8 +503,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     boolean result = myApplication.runProcessWithProgressSynchronously(taskContainer, task.getTitle(), task.isCancellable(), task.isModal(),
                                                                        task.getProject(), task.getParentComponent(), task.getCancelText());
 
-    ApplicationUtil.invokeAndWaitSomewhere(myApplication, task.whereToRunCallbacks(),
-                                           myApplication.getDefaultModalityState(), () -> finishTask(task, !result, exceptionRef.get()));
+    myApplication.invokeAndWait(() -> finishTask(task, !result, exceptionRef.get()));
     return result;
   }
 
@@ -551,9 +549,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
     boolean finalCanceled = processCanceled || progressIndicator.isCanceled();
     Throwable finalException = exception;
 
-    ApplicationUtil.invokeAndWaitSomewhere(myApplication, task.whereToRunCallbacks(),
-                                           modalityState,
-                                           () -> finishTask(task, finalCanceled, finalException));
+    myApplication.invokeAndWait(() -> finishTask(task, finalCanceled, finalException));
   }
 
   @RequiredUIAccess

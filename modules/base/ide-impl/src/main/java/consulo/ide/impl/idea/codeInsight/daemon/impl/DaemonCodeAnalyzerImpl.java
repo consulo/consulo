@@ -1,14 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.*;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.HeavyProcessLatch;
+import consulo.application.PowerSaveMode;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighterEx;
@@ -31,10 +34,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.language.editor.*;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;
@@ -52,19 +52,18 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.file.FileTypeManager;
 import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.resolve.RefResolveService;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -77,8 +76,11 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -117,7 +119,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private final PassExecutorService myPassExecutorService;
 
   @Inject
-  public DaemonCodeAnalyzerImpl(@Nonnull Project project) {
+  public DaemonCodeAnalyzerImpl(@Nonnull Project project, @Nonnull ApplicationConcurrency applicationConcurrency) {
     // DependencyValidationManagerImpl adds scope listener, so, we need to force service creation
     DependencyValidationManager.getInstance(project);
 
@@ -127,14 +129,14 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     myLastSettings = ((DaemonCodeAnalyzerSettingsImpl)mySettings).clone();
 
     myFileStatusMap = new FileStatusMapImpl(project);
-    myPassExecutorService = new PassExecutorService(project);
+    myPassExecutorService = new PassExecutorService(project, applicationConcurrency);
     Disposer.register(this, myPassExecutorService);
     Disposer.register(this, myFileStatusMap);
     //noinspection TestOnlyProblems
     DaemonProgressIndicator.setDebug(LOG.isDebugEnabled());
 
     assert !myInitialized : "Double Initializing";
-    Disposer.register(this, new StatusBarUpdater(project));
+    Disposer.register(this, new StatusBarUpdater(this, applicationConcurrency, project));
 
     myInitialized = true;
     myDisposed = false;
@@ -270,176 +272,6 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     }
 
     return result;
-  }
-
-  private volatile boolean mustWaitForSmartMode = true;
-
-  @TestOnly
-  public void mustWaitForSmartMode(final boolean mustWait, @Nonnull Disposable parent) {
-    final boolean old = mustWaitForSmartMode;
-    mustWaitForSmartMode = mustWait;
-    Disposer.register(parent, () -> mustWaitForSmartMode = old);
-  }
-
-  @TestOnly
-  @RequiredUIAccess
-  public void runPasses(@Nonnull Application application,
-                        @Nonnull PsiFile file,
-                        @Nonnull Document document,
-                        @Nonnull List<? extends TextEditor> textEditors,
-                        @Nonnull int[] toIgnore,
-                        boolean canChangeDocument,
-                        @Nullable final Runnable callbackWhileWaiting) throws ProcessCanceledException {
-    assert myInitialized;
-    assert !myDisposed;
-    application.assertIsDispatchThread();
-    if (application.isWriteAccessAllowed()) {
-      throw new AssertionError("Must not start highlighting from within write action, or deadlock is imminent");
-    }
-    DaemonProgressIndicator.setDebug(!ApplicationInfoImpl.isInPerformanceTest());
-
-    ((FileTypeManagerImpl)FileTypeManager.getInstance()).drainReDetectQueue();
-
-    RefreshQueue refreshQueue = RefreshQueue.getInstance();
-    do {
-      UIUtil.dispatchAllInvocationEvents();
-      // refresh will fire write actions interfering with highlighting
-      // heavy ops are bad, but VFS refresh is ok
-    }
-    while (refreshQueue.isRefreshInProgress() || heavyProcessIsRunning());
-    
-    long dstart = System.currentTimeMillis();
-    while (mustWaitForSmartMode && DumbService.getInstance(myProject).isDumb()) {
-      if (System.currentTimeMillis() > dstart + 100000) {
-        throw new IllegalStateException("Timeout waiting for smart mode. If you absolutely want to be dumb, please use DaemonCodeAnalyzerImpl.mustWaitForSmartMode(false).");
-      }
-      UIUtil.dispatchAllInvocationEvents();
-    }
-
-    UIUtil.dispatchAllInvocationEvents();
-
-    FileStatusMapImpl fileStatusMap = getFileStatusMap();
-
-    NonBlockingReadActionImpl.waitForAsyncTaskCompletion(application); // wait for async editor loading
-    Map<FileEditor, HighlightingPass[]> map = new HashMap<>();
-    for (TextEditor textEditor : textEditors) {
-      TextEditorBackgroundHighlighter highlighter = (TextEditorBackgroundHighlighter)textEditor.getBackgroundHighlighter();
-      if (highlighter == null) {
-        Editor editor = textEditor.getEditor();
-        throw new RuntimeException("Null highlighter from " + textEditor + "; loaded: " + AsyncEditorLoader.isEditorLoaded(editor));
-      }
-      final List<TextEditorHighlightingPass> passes = highlighter.getPasses(toIgnore);
-      HighlightingPass[] array = passes.toArray(HighlightingPass.EMPTY_ARRAY);
-      assert array.length != 0 : "Highlighting is disabled for the file " + file;
-      map.put(textEditor, array);
-    }
-    for (int ignoreId : toIgnore) {
-      fileStatusMap.markFileUpToDate(document, ignoreId);
-    }
-
-    myUpdateRunnableFuture.cancel(false);
-
-    final DaemonProgressIndicator progress = createUpdateProgress(map.keySet());
-    myPassExecutorService.submitPasses(map, progress);
-    try {
-      fileStatusMap.allowDirt(canChangeDocument);
-      long start = System.currentTimeMillis();
-      while (progress.isRunning() && System.currentTimeMillis() < start + 10 * 60 * 1000) {
-        wrap(() -> {
-          progress.checkCanceled();
-          if (callbackWhileWaiting != null) {
-            callbackWhileWaiting.run();
-          }
-          waitInOtherThread(50, canChangeDocument);
-          UIUtil.dispatchAllInvocationEvents();
-          Throwable savedException = PassExecutorService.getSavedException(progress);
-          if (savedException != null) throw savedException;
-        });
-      }
-      if (progress.isRunning() && !progress.isCanceled()) {
-        throw new RuntimeException("Highlighting still running after " +
-                                   (System.currentTimeMillis() - start) / 1000 +
-                                   " seconds." +
-                                   " Still submitted passes: " +
-                                   myPassExecutorService.getAllSubmittedPasses() +
-                                   " ForkJoinPool.commonPool(): " +
-                                   ForkJoinPool.commonPool() +
-                                   "\n" +
-                                   ", ForkJoinPool.commonPool() active thread count: " +
-                                   ForkJoinPool.commonPool().getActiveThreadCount() +
-                                   ", ForkJoinPool.commonPool() has queued submissions: " +
-                                   ForkJoinPool.commonPool().hasQueuedSubmissions() +
-                                   "\n" +
-                                   ThreadDumper.dumpThreadsToString());
-      }
-
-      HighlightingSessionImpl session = (HighlightingSessionImpl)HighlightingSessionImpl.getOrCreateHighlightingSession(file, progress, null);
-      wrap(() -> {
-        if (!waitInOtherThread(60000, canChangeDocument)) {
-          throw new TimeoutException("Unable to complete in 60s");
-        }
-        session.waitForHighlightInfosApplied();
-      });
-      UIUtil.dispatchAllInvocationEvents();
-      UIUtil.dispatchAllInvocationEvents();
-      assert progress.isCanceled() && progress.isDisposed();
-    }
-    finally {
-      DaemonProgressIndicator.setDebug(false);
-      fileStatusMap.allowDirt(true);
-      waitForTermination();
-    }
-  }
-
-  @TestOnly
-  private boolean waitInOtherThread(int millis, boolean canChangeDocument) throws Throwable {
-    Disposable disposable = Disposable.newDisposable();
-    // last hope protection against PsiModificationTrackerImpl.incCounter() craziness (yes, Kotlin)
-    myProject.getMessageBus().connect(disposable).subscribe(PsiModificationTrackerListener.class, () -> {
-      throw new IllegalStateException("You must not perform PSI modifications from inside highlighting");
-    });
-    if (!canChangeDocument) {
-      myProject.getMessageBus().connect(disposable).subscribe(DaemonListener.class, new DaemonListener() {
-        @Override
-        public void daemonCancelEventOccurred(@Nonnull String reason) {
-          throw new IllegalStateException("You must not cancel daemon inside highlighting test: " + reason);
-        }
-      });
-    }
-
-    try {
-      Future<Boolean> future = ApplicationManager.getApplication().executeOnPooledThread(() -> {
-        try {
-          return myPassExecutorService.waitFor(millis);
-        }
-        catch (Throwable e) {
-          throw new RuntimeException(e);
-        }
-      });
-      return future.get();
-    }
-    finally {
-      Disposer.dispose(disposable);
-    }
-  }
-
-  @TestOnly
-  public void prepareForTest() {
-    setUpdateByTimerEnabled(false);
-    waitForTermination();
-    clearReferences();
-  }
-
-  @TestOnly
-  public void cleanupAfterTest() {
-    if (myProject.isOpen()) {
-      prepareForTest();
-    }
-  }
-
-  @TestOnly
-  public void waitForTermination() {
-    myPassExecutorService.cancelAll(true);
   }
 
   @Override
@@ -617,26 +449,29 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   }
 
 
+  @RequiredReadAction
   static boolean processHighlightsNearOffset(@Nonnull Document document,
                                              @Nonnull Project project,
                                              @Nonnull final HighlightSeverity minSeverity,
                                              final int offset,
                                              final boolean includeFixRange,
-                                             @Nonnull final Processor<? super HighlightInfo> processor) {
+                                             @Nonnull final Predicate<? super HighlightInfo> processor) {
     return processHighlights(document, project, null, 0, document.getTextLength(), info -> {
       if (!isOffsetInsideHighlightInfo(offset, info, includeFixRange)) return true;
 
       int compare = info.getSeverity().compareTo(minSeverity);
-      return compare < 0 || processor.process(info);
+      return compare < 0 || processor.test(info);
     });
   }
 
   @Nullable
+  @RequiredReadAction
   public HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange) {
     return findHighlightByOffset(document, offset, includeFixRange, HighlightSeverity.INFORMATION);
   }
 
   @Nullable
+  @RequiredReadAction
   HighlightInfoImpl findHighlightByOffset(@Nonnull Document document, final int offset, final boolean includeFixRange, @Nonnull HighlightSeverity minSeverity) {
     final List<HighlightInfoImpl> foundInfoList = new SmartList<>();
     processHighlightsNearOffset(document, myProject, minSeverity, offset, includeFixRange, info -> {

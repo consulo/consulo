@@ -18,26 +18,26 @@ package consulo.ide.impl.idea.openapi.application;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.HeavyProcessLatch;
+import consulo.application.PreloadingActivity;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.util.lang.TimeoutUtil;
-import consulo.application.HeavyProcessLatch;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import jakarta.inject.Singleton;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.Promises;
-
+import consulo.util.lang.TimeoutUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -70,17 +70,15 @@ public class Preloader implements Disposable {
   }
 
   @Inject
-  public Preloader(@Nonnull ApplicationConcurrency applicationConcurrency, @Nonnull ProgressManager progressManager) {
+  public Preloader(@Nonnull Application application, @Nonnull ApplicationConcurrency applicationConcurrency, @Nonnull ProgressManager progressManager) {
     myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("Preloader pool");
 
     StatCollector collector = new StatCollector();
 
-    List<AsyncPromise<Void>> result = new ArrayList<>();
-    for (final PreloadingActivity activity : PreloadingActivity.EP_NAME.getExtensionList()) {
-      AsyncPromise<Void> promise = new AsyncPromise<>();
-      result.add(promise);
+    List<CompletableFuture<?>> result = new ArrayList<>();
 
-      myExecutor.execute(() -> {
+    application.getExtensionPoint(PreloadingActivity.class).forEachExtensionSafe(activity -> {
+      result.add(CompletableFuture.runAsync(() -> {
         if (myIndicator.isCanceled()) return;
 
         checkHeavyProcessRunning();
@@ -98,14 +96,16 @@ public class Preloader implements Disposable {
           }
           finally {
             mark.run();
-            promise.setResult(null);
           }
           LOG.info("Finished preloading " + activity);
         }, myIndicator);
-      });
-    }
+      }, myExecutor));
+    });
 
-    Promises.all(result).onSuccess(o -> collector.dump("Preload statistics", LOG::info));
+    CompletableFuture.allOf(result.toArray(CompletableFuture[]::new)).handleAsync((aVoid, throwable) -> {
+      collector.dump("Preload statistics", LOG::info);
+      return true;
+    }, myExecutor);
   }
 
   @Override

@@ -7,6 +7,7 @@ import consulo.application.ui.FrameStateManager;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
@@ -965,7 +966,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     mySmartFadeoutDelay = delay;
     FrameStateManager.getInstance().addListener(new FrameStateListener() {
       @Override
-      public void onFrameDeactivated() {
+      public void onFrameDeactivated(FocusableFrame ideFrame) {
         if (myFadeoutAlarm.getActiveRequestCount() > 0) {
           myFadeoutAlarm.cancelAllRequests();
           mySmartFadeoutDelay = myFadeoutRequestDelay - (int)(System.currentTimeMillis() - myFadeoutRequestMillis);

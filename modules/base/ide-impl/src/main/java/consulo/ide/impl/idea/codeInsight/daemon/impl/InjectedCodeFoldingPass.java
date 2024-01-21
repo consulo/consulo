@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
@@ -48,7 +49,7 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     Runnable runnable;
     synchronized (this) {
       runnable = myRunnable;

@@ -16,6 +16,9 @@
 package consulo.navigation;
 
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+
+import java.util.concurrent.CompletableFuture;
 
 public interface Navigatable {
   static Key<Navigatable> KEY = Key.create(Navigatable.class);
@@ -29,6 +32,12 @@ public interface Navigatable {
    * @param requestFocus <code>true</code> if focus requesting is necessary
    */
   void navigate(boolean requestFocus);
+
+  @Nonnull
+  default CompletableFuture<?> navigateAsync(boolean requestFocus) {
+    navigate(requestFocus);
+    return CompletableFuture.completedFuture(null);
+  }
 
   /**
    * @return <code>false</code> if navigation is not possible for any reason.

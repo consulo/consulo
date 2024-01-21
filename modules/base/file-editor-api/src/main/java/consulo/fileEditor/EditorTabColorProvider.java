@@ -15,15 +15,15 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 /**
@@ -34,14 +34,17 @@ public interface EditorTabColorProvider {
   ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
 
   @Nullable
+  @RequiredReadAction
   Color getEditorTabColor(Project project, VirtualFile file);
 
   @Nullable
+  @RequiredReadAction
   default Color getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     return getEditorTabColor(project, file);
   }
 
   @Nullable
+  @RequiredReadAction
   default Color getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {
     return null;
   }

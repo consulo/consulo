@@ -236,28 +236,25 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-            @Override
-            public void run() {
-              try {
-                if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
-                  if (!DiffUtil.makeWritable(myProject, file)) {
-                    throw new IOException("File is read-only: " + file.getPresentableName());
-                  }
-                  MergeData data = myProvider.loadRevisions(file);
-                  if (isCurrent) {
-                    file.setBinaryContent(data.CURRENT);
-                  }
-                  else {
-                    file.setBinaryContent(data.LAST);
-                    checkMarkModifiedProject(file);
-                  }
+          CommandProcessor.getInstance().executeCommand(myProject, () -> {
+            try {
+              if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
+                if (!DiffUtil.makeWritable(myProject, file)) {
+                  throw new IOException("File is read-only: " + file.getPresentableName());
                 }
-                markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
+                MergeData data = myProvider.loadRevisions(file);
+                if (isCurrent) {
+                  file.setBinaryContent(data.CURRENT);
+                }
+                else {
+                  file.setBinaryContent(data.LAST);
+                  checkMarkModifiedProject(file);
+                }
               }
-              catch (Exception e) {
-                ex.set(e);
-              }
+              markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
+            }
+            catch (Exception e) {
+              ex.set(e);
             }
           }, "Accept " + (isCurrent ? "Yours" : "Theirs"), null);
         }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectMacrosUtil;
 import consulo.project.Project;
 import consulo.project.impl.internal.ProjectCheckMacroService;
+import jakarta.inject.Singleton;
 
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 18-Jul-22
  */
+@Singleton
 @ServiceImpl
 public class IdeProjectCheckMacroService implements ProjectCheckMacroService {
   @Override

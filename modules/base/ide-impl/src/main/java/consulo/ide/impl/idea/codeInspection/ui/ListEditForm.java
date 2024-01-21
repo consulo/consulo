@@ -37,7 +37,7 @@ public class ListEditForm {
       public void run(AnActionButton button) {
         final ListWrappingTableModel tableModel = table.getModel();
         tableModel.addRow();
-        EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
             final int lastRowIndex = tableModel.getRowCount() - 1;

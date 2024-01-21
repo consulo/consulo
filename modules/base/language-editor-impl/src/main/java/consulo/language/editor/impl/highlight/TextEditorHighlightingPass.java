@@ -15,14 +15,15 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.util.collection.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TextEditorHighlightingPass implements HighlightingPass {
+public abstract class TextEditorHighlightingPass<S> implements HighlightingPass<S> {
   public static final TextEditorHighlightingPass[] EMPTY_ARRAY = new TextEditorHighlightingPass[0];
   @Nullable
   protected final Document myDocument;
@@ -73,6 +74,7 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
     return myDumb;
   }
 
+  @RequiredReadAction
   protected boolean isValid() {
     if (isDumbMode() && !DumbService.isDumbAware(this)) {
       return false;
@@ -92,22 +94,37 @@ public abstract class TextEditorHighlightingPass implements HighlightingPass {
   }
 
   @Override
-  public final void applyInformationToEditor() {
-    if (!isValid()) return; // Document has changed.
+  public final void applyInformationToEditor(UIAccess uiAccess, S snapshot) {
+    applyInformationToEditorValidated(uiAccess, snapshot);
+  }
+
+  @RequiredReadAction
+  @Override
+  public boolean canApplyInformationToEditor() {
+    return isValid() && validateDumbMode();
+  }
+
+  @RequiredReadAction
+  public boolean validateDumbMode() {
     if (DumbService.getInstance(myProject).isDumb() && !DumbService.isDumbAware(this)) {
       Document document = getDocument();
       PsiFile file = document == null ? null : PsiDocumentManager.getInstance(myProject).getPsiFile(document);
       if (file != null) {
         DaemonCodeAnalyzerEx.getInstanceEx(myProject).getFileStatusMap().markFileUpToDate(getDocument(), getId());
       }
-      return;
+      return false;
     }
-    doApplyInformationToEditor();
+
+    return true;
+  }
+
+  public void applyInformationToEditorValidated(UIAccess uiAccess, S snapshot) {
+    doApplyInformationToEditor(uiAccess, snapshot);
   }
 
   public abstract void doCollectInformation(@Nonnull ProgressIndicator progress);
 
-  public abstract void doApplyInformationToEditor();
+  public abstract void doApplyInformationToEditor(UIAccess uiAccess, S snapshot);
 
   public final int getId() {
     return myId;

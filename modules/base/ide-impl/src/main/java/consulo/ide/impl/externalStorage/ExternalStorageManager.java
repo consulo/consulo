@@ -49,6 +49,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
@@ -216,7 +217,7 @@ public class ExternalStorageManager {
 
       LOG.info("Reloading components: " + reloadComponentNames);
 
-      AppUIExecutor.onWriteThread(IdeaModalityState.NON_MODAL).later().execute(() -> {
+      AppUIExecutor.onWriteThread(ModalityState.nonModal()).later().execute(() -> {
         myApplicationStore.reinitComponents(reloadComponentNames, true);
 
         myApplication.invokeLater(() -> {

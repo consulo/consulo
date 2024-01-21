@@ -33,7 +33,6 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -46,16 +45,13 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
@@ -66,7 +62,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   private final Project myProject;
 
   public static EditorHistoryManagerImpl getInstance(@Nonnull Project project) {
-    return (EditorHistoryManagerImpl) project.getComponent(EditorHistoryManager.class);
+    return (EditorHistoryManagerImpl)project.getComponent(EditorHistoryManager.class);
   }
 
   /**
@@ -109,7 +105,9 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
    * Makes file most recent one
    */
   @RequiredUIAccess
-  private void fileOpenedImpl(@Nonnull final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider) {
+  private void fileOpenedImpl(@Nonnull final VirtualFile file,
+                              @Nullable final FileEditor fallbackEditor,
+                              @Nullable FileEditorProvider fallbackProvider) {
     myProject.getApplication().assertIsDispatchThread();
     // don't add files that cannot be found via VFM (light & etc.)
     if (VirtualFileManager.getInstance().findFileByUrl(file.getUrl()) == null) return;
@@ -162,7 +160,10 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   }
 
   @RequiredUIAccess
-  private void updateHistoryEntry(@Nullable final VirtualFile file, @Nullable final FileEditor fallbackEditor, @Nullable FileEditorProvider fallbackProvider, final boolean changeEntryOrderOnly) {
+  private void updateHistoryEntry(@Nullable final VirtualFile file,
+                                  @Nullable final FileEditor fallbackEditor,
+                                  @Nullable FileEditorProvider fallbackProvider,
+                                  final boolean changeEntryOrderOnly) {
     if (file == null) {
       return;
     }
@@ -208,10 +209,10 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
         }
       }
     }
-    final FileEditorWithProvider selectedEditorWithProvider = editorManager.getSelectedEditorWithProvider(file);
-    if (selectedEditorWithProvider != null) {
+    final FileEditor selectedEditor = editorManager.getSelectedEditor(file);
+    if (selectedEditor != null) {
       //LOG.assertTrue(selectedEditorWithProvider != null);
-      entry.setSelectedProvider(selectedEditorWithProvider.getProvider());
+      entry.setSelectedProvider(selectedEditor.getProvider());
       LOG.assertTrue(entry.getSelectedProvider() != null);
 
       if (changeEntryOrderOnly) {
@@ -263,7 +264,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   @Override
   public synchronized boolean hasBeenOpen(@Nonnull VirtualFile f) {
     for (HistoryEntry each : myEntriesList) {
-      if (Comparing.equal(each.getFile(), f)) return true;
+      if (Objects.equals(each.getFile(), f)) return true;
     }
     return false;
   }
@@ -311,6 +312,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
   /**
    * If total number of files in history more then <code>UISettings.RECENT_FILES_LIMIT</code>
    * then removes the oldest ones to fit the history to new size.
+   *
    * @param uiSettings
    */
   private synchronized void trimToSize(UISettings uiSettings) {

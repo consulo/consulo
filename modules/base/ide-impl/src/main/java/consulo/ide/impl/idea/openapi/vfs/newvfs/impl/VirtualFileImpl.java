@@ -19,31 +19,25 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-import consulo.application.internal.ApplicationEx;
-import consulo.language.file.FileTypeManager;
+import consulo.application.ReadAction;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;
 import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.LargeFileWriteRequestor;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.RawFileLoader;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -138,13 +132,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
       // use getByFile() to not fall into recursive trap from vfile.getFileType() which would try to load contents again to detect charset
       FileType fileType = ObjectUtil.notNull(((FileTypeManagerImpl)FileTypeManager.getInstance()).getByFile(this), UnknownFileType.INSTANCE);
       if (fileType != UnknownFileType.INSTANCE && !fileType.isBinary()) {
-        try {
-          // execute in impatient mode to not deadlock when the indexing process waits under write action for the queue to load contents in other threads
-          // and that other thread asks JspManager for encoding which requires read action for PSI
-          ((ApplicationEx)ApplicationManager.getApplication()).executeByImpatientReader(() -> LoadTextUtil.detectCharsetAndSetBOM(this, bytes, fileType));
-        }
-        catch (ProcessCanceledException ignored) {
-        }
+        ReadAction.run(() -> LoadTextUtil.detectCharsetAndSetBOM(this, bytes, fileType));
       }
     }
     return bytes;

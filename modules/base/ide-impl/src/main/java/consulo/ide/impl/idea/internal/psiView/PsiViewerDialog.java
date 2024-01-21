@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.internal.psiView;
 
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.application.ui.DimensionService;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.*;
@@ -416,14 +417,10 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
     myTextPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
 
     final String text = myCurrentFile == null ? settings.text : myInitText;
-    final AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
-    try {
+    WriteAction.run(() -> {
       myEditor.getDocument().setText(text);
       myEditor.getSelectionModel().setSelection(0, text.length());
-    }
-    finally {
-      token.finish();
-    }
+    });
 
     updateVersionsCombo(settings.dialect);
     updateExtensionsCombo();

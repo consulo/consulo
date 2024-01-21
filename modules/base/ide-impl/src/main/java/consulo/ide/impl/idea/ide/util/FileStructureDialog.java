@@ -407,12 +407,9 @@ public class FileStructureDialog extends DialogWrapper {
     public boolean navigateSelectedElement() {
       final Ref<Boolean> succeeded = new Ref<Boolean>();
       final CommandProcessor commandProcessor = CommandProcessor.getInstance();
-      commandProcessor.executeCommand(myProject, new Runnable() {
-        @Override
-        public void run() {
-          succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
-          IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
-        }
+      commandProcessor.executeCommand(myProject, () -> {
+        succeeded.set(MyCommanderPanel.super.navigateSelectedElement());
+        IdeDocumentHistory.getInstance(myProject).includeCurrentCommandAsNavigation();
       }, "Navigate", null);
       if (succeeded.get()) {
         close(CANCEL_EXIT_CODE);

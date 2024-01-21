@@ -136,20 +136,18 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
   @SuppressWarnings("SynchronizeOnThis")
   public void runStartupActivities(UIAccess uiAccess) {
-    myApplication.runReadAction(() -> {
-      runActivities(uiAccess, myPreStartupActivities, Phases.PROJECT_PRE_STARTUP);
+    runActivities(uiAccess, myPreStartupActivities, Phases.PROJECT_PRE_STARTUP);
 
-      // to avoid atomicity issues if runWhenProjectIsInitialized() is run at the same time
-      synchronized (this) {
-        myPreStartupActivitiesPassed = true;
-      }
+    // to avoid atomicity issues if runWhenProjectIsInitialized() is run at the same time
+    synchronized (this) {
+      myPreStartupActivitiesPassed = true;
+    }
 
-      runActivities(uiAccess, myStartupActivities, Phases.PROJECT_STARTUP);
+    runActivities(uiAccess, myStartupActivities, Phases.PROJECT_STARTUP);
 
-      synchronized (this) {
-        myStartupActivitiesPassed = true;
-      }
-    });
+    synchronized (this) {
+      myStartupActivitiesPassed = true;
+    }
   }
 
   public void runPostStartupActivitiesFromExtensions(UIAccess uiAccess) {

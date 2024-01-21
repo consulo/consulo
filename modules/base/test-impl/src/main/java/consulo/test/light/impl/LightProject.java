@@ -134,18 +134,6 @@ public class LightProject extends BaseComponentManager implements Project {
   }
 
   @Override
-  public void save() {
-
-  }
-
-  @RequiredWriteAction
-  @Nonnull
-  @Override
-  public AsyncResult<Void> saveAsync(UIAccess uiAccess) {
-    return AsyncResult.resolved();
-  }
-
-  @Override
   public boolean isOpen() {
     return true;
   }
@@ -153,10 +141,5 @@ public class LightProject extends BaseComponentManager implements Project {
   @Override
   public boolean isInitialized() {
     return true;
-  }
-
-  @Override
-  public boolean isDefault() {
-    return false;
   }
 }

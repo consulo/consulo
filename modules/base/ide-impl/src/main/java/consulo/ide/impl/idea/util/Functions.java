@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 
@@ -27,6 +28,8 @@ import java.util.function.Function;
  * @author gregsh
  */
 @SuppressWarnings("unchecked")
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.function.Functions")
 public class Functions {
   public static <A> Function<A, A> id() {
     return Function.identity();

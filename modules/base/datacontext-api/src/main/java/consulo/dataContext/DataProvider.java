@@ -20,6 +20,8 @@ import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Allows a component hosting actions to provide context information to the actions. When a specific
  * data item is requested, the component hierarchy is walked up from the currently focused component,
@@ -32,8 +34,7 @@ import jakarta.annotation.Nullable;
  */
 public interface DataProvider {
   /**
-   * Returns the object corresponding to the specified data identifier. Some of the supported
-   * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
+   * Returns the object corresponding to the specified data identifier.
    *
    * @param dataId the data identifier for which the value is requested.
    * @return the value, or null if no value is available in the current context for this identifier.
@@ -41,9 +42,20 @@ public interface DataProvider {
   @Nullable
   Object getData(@Nonnull Key<?> dataId);
 
+  @Nonnull
+  default CompletableFuture<Object> getDataAsync(@Nonnull Key<?> dataId) {
+    return CompletableFuture.completedFuture(getData(dataId));
+  }
+
   @Nullable
   @SuppressWarnings("unchecked")
   default <T> T getDataUnchecked(@Nonnull Key<T> key) {
     return (T)getData(key);
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  default <T> CompletableFuture<T> getDataUncheckedAsync(@Nonnull Key<T> key) {
+    return (CompletableFuture<T>)getDataAsync(key);
   }
 }

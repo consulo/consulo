@@ -21,7 +21,7 @@ public abstract class AsyncExecutionService {
   protected abstract AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState);
 
   @Nonnull
-  protected abstract AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState);
+  protected abstract AppUIExecutor createWriteThreadExecutor();
 
   @Nonnull
   protected abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);

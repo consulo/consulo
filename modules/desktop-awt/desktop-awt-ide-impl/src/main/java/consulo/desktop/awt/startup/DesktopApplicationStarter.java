@@ -18,13 +18,16 @@ package consulo.desktop.awt.startup;
 import com.google.gson.Gson;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
+import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.plugin.CompositeMessage;
 import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.internal.ApplicationEx;
+import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.awt.hacking.X11Hacking;
 import consulo.builtinWebServer.http.HttpRequestHandler;
 import consulo.builtinWebServer.json.JsonBaseRequestHandler;
@@ -44,6 +47,7 @@ import consulo.desktop.awt.uiOld.DesktopAppUIUtil;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
+import consulo.disposer.Disposer;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
@@ -108,7 +112,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
   @Nonnull
   @Override
-  protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
+  protected Application createApplication(ComponentBinding componentBinding,
+                                          boolean isHeadlessMode,
+                                          SimpleReference<StartupProgress> splashRef,
+                                          CommandLineArgs args) {
     return new DesktopApplicationImpl(componentBinding, isHeadlessMode, splashRef);
   }
 
@@ -126,7 +133,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   @Override
   protected void initializeEnviroment(boolean isHeadlessMode, CommandLineArgs args, StatCollector stat) {
     AWTExceptionHandler.register(); // do not crash AWT on exceptions
-  
+
     System.setProperty("sun.awt.noerasebackground", "true");
 
     invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
@@ -146,9 +153,13 @@ public class DesktopApplicationStarter extends ApplicationStarter {
   }
 
   @Override
-  public void main(StatCollector stat, Runnable appInitializeMark, ApplicationEx app, boolean newConfigFolder, @Nonnull CommandLineArgs args) {
+  public void main(StatCollector stat,
+                   Runnable appInitializeMark,
+                   ApplicationEx app,
+                   boolean newConfigFolder,
+                   @Nonnull CommandLineArgs args) {
     IdeEventQueue.getInstance().addIdleTimeCounterRequest();
-    
+
     appInitializeMark.run();
 
     stat.dump("Startup statistics", LOG::info);
@@ -156,6 +167,16 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     dumpPluginClassStatistics();
 
     SwingUtilities.invokeLater(() -> {
+      // instantiate AppDelayQueue which starts "Periodic task thread" which we'll mark busy to prevent this EDT to die
+      // that thread was chosen because we know for sure it's running
+      AppScheduledExecutorService service =
+        (AppScheduledExecutorService)app.getInstance(ApplicationConcurrency.class).getScheduledExecutorService();
+      Thread thread = service.getPeriodicTasksThread();
+      AWTAutoShutdownHacking.notifyThreadBusy(thread); // needed for EDT not to exit suddenly
+      Disposer.register(app, () -> {
+        AWTAutoShutdownHacking.notifyThreadFree(thread); // allow for EDT to exit - needed for Upsource
+      });
+
       StartupProgress desktopSplash = mySplashRef.get();
       if (desktopSplash != null) {
         desktopSplash.dispose();
@@ -268,34 +289,42 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     if (pluginErrors != null) {
       for (CompositeMessage pluginError : pluginErrors) {
         String message = IdeBundle.message("title.plugin.notification.title");
-        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup, message, pluginError.toString(), NotificationType.ERROR, new NotificationListener() {
-          @RequiredUIAccess
-          @Override
-          public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-            notification.expire();
+        Notifications.Bus.notify(new Notification(PluginManagerMain.ourPluginsLifecycleGroup,
+                                                  message,
+                                                  pluginError.toString(),
+                                                  NotificationType.ERROR,
+                                                  new NotificationListener() {
+                                                    @RequiredUIAccess
+                                                    @Override
+                                                    public void hyperlinkUpdate(@Nonnull Notification notification,
+                                                                                @Nonnull HyperlinkEvent event) {
+                                                      notification.expire();
 
-            String description = event.getDescription();
-            if (PluginsInitializeInfo.EDIT.equals(description)) {
-              IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-              ShowSettingsUtil.getInstance().showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(), PluginsConfigurable.ID, null);
-              return;
-            }
+                                                      String description = event.getDescription();
+                                                      if (PluginsInitializeInfo.EDIT.equals(description)) {
+                                                        IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
+                                                        ShowSettingsUtil.getInstance()
+                                                                        .showSettingsDialog(ideFrame == null ? null : ideFrame.getProject(),
+                                                                                            PluginsConfigurable.ID,
+                                                                                            null);
+                                                        return;
+                                                      }
 
-            Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
-            if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
-              for (PluginId pluginId : plugins2Disable) {
-                if (!disabledPlugins.contains(pluginId)) {
-                  disabledPlugins.add(pluginId);
-                }
-              }
-            }
-            else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
-              disabledPlugins.removeAll(plugins2Enable);
-            }
+                                                      Set<PluginId> disabledPlugins = PluginManager.getDisabledPlugins();
+                                                      if (plugins2Disable != null && PluginsInitializeInfo.DISABLE.equals(description)) {
+                                                        for (PluginId pluginId : plugins2Disable) {
+                                                          if (!disabledPlugins.contains(pluginId)) {
+                                                            disabledPlugins.add(pluginId);
+                                                          }
+                                                        }
+                                                      }
+                                                      else if (plugins2Enable != null && PluginsInitializeInfo.ENABLE.equals(description)) {
+                                                        disabledPlugins.removeAll(plugins2Enable);
+                                                      }
 
-            PluginManager.replaceDisabledPlugins(disabledPlugins);
-          }
-        }));
+                                                      PluginManager.replaceDisabledPlugins(disabledPlugins);
+                                                    }
+                                                  }));
       }
     }
   }

@@ -32,9 +32,6 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.Maps;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.AsyncResult;
-import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
@@ -51,6 +48,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -217,17 +215,17 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
 
   @Nonnull
   @Override
-  public AsyncResult<DataContext> getDataContextFromFocus() {
-    AsyncResult<DataContext> context = AsyncResult.undefined();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> context.setDone(getDataContext()), IdeaModalityState.current());
-    return context;
+  public CompletableFuture<DataContext> getDataContextFromFocus() {
+    CompletableFuture<DataContext> result = new CompletableFuture<>();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.complete(getDataContext()), IdeaModalityState.current());
+    return result;
   }
 
   @Nonnull
   @Override
-  public Promise<DataContext> getDataContextFromFocusAsync() {
-    AsyncPromise<DataContext> result = new AsyncPromise<>();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.setResult(getDataContext()), IdeaModalityState.any());
+  public CompletableFuture<DataContext> getDataContextFromFocusAsync() {
+    CompletableFuture<DataContext> result = new CompletableFuture<>();
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.complete(getDataContext()), IdeaModalityState.any());
     return result;
   }
 

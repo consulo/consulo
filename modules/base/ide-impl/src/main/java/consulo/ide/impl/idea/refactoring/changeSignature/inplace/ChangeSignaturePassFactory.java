@@ -32,6 +32,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NonNls;
 
 import jakarta.annotation.Nonnull;
@@ -73,7 +74,7 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
     public void doCollectInformation(@Nonnull ProgressIndicator progress) {}
 
     @Override
-    public void doApplyInformationToEditor() {
+    public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
       HighlightInfo info = null;
       final InplaceChangeSignature currentRefactoring = InplaceChangeSignature.getCurrentRefactoring(myEditor);
       if (currentRefactoring != null) {

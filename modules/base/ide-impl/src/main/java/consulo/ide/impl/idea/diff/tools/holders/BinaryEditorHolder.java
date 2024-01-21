@@ -94,7 +94,7 @@ public class BinaryEditorHolder extends EditorHolder {
         if (project == null) project = ProjectManager.getInstance().getDefaultProject();
         VirtualFile file = ((FileContent)content).getFile();
 
-        FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
+        FileEditorProvider[] providers = FileEditorProviderManager.getInstance(project).getProviders(project, file);
         if (providers.length == 0) throw new IllegalStateException("Can't find FileEditorProvider: " + file.getFileType());
 
         FileEditorProvider provider = providers[0];
@@ -132,7 +132,7 @@ public class BinaryEditorHolder extends EditorHolder {
         if (project == null) project = ProjectManager.getInstance().getDefaultProject();
         VirtualFile file = ((FileContent)content).getFile();
 
-        return FileEditorProviderManager.getInstance().getProviders(project, file).length != 0;
+        return FileEditorProviderManager.getInstance(project).getProviders(project, file).length != 0;
       }
       return false;
     }

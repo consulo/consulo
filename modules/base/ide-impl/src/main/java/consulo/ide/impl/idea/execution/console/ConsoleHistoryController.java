@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
@@ -41,10 +41,10 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.scratch.ScratchFileService;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
+import consulo.language.scratch.ScratchFileService;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectExListener;
@@ -57,10 +57,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -440,14 +440,7 @@ public class ConsoleHistoryController {
         if (file == null) {
           if (loadHistoryOld(id)) {
             if (!myRootType.isHidden()) {
-              // migrate content
-              AccessToken token = ApplicationManager.getApplication().acquireWriteActionLock(getClass());
-              try {
-                VfsUtil.saveText(consoleFile, myContent);
-              }
-              finally {
-                token.finish();
-              }
+              WriteAction.run(() -> VfsUtil.saveText(consoleFile, myContent) );
             }
             return true;
           }

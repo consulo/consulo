@@ -21,8 +21,15 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface INativeFileType extends FileType {
   boolean openFileInAssociatedApplication(ComponentManager project, @Nonnull VirtualFile file);
+
+  @Nonnull
+  default CompletableFuture<Boolean> openInExternalApplication(ComponentManager project, @Nonnull VirtualFile file) {
+    return CompletableFuture.completedFuture(openFileInAssociatedApplication(project, file));
+  }
 
   @Deprecated
   @DeprecationInfo("Unused")

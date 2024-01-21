@@ -260,21 +260,16 @@ public class CopyFilesOrDirectoriesDialog extends DialogWrapper {
 
       RecentsManager.getInstance(myProject).registerRecentEntry(RECENT_KEYS, targetDirectoryName);
 
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+      CommandProcessor.getInstance().executeCommand(myProject, () -> ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                myTargetDirectory =
-                  DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
-              }
-              catch (IncorrectOperationException ignored) { }
-            }
-          });
+          try {
+            myTargetDirectory =
+              DirectoryUtil.mkdirs(PsiManager.getInstance(myProject), targetDirectoryName.replace(File.separatorChar, '/'));
+          }
+          catch (IncorrectOperationException ignored) { }
         }
-      }, RefactoringBundle.message("create.directory"), null);
+      }), RefactoringBundle.message("create.directory"), null);
 
       if (myTargetDirectory == null) {
         Messages.showErrorDialog(myProject, RefactoringBundle.message("cannot.create.directory"), RefactoringBundle.message("error.title"));

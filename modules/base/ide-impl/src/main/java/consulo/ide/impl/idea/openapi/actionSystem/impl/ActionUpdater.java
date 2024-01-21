@@ -3,12 +3,10 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
@@ -38,14 +36,13 @@ import java.awt.event.PaintEvent;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ActionUpdater {
   private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
-  private static final Executor ourExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("Action Updater", 2);
 
   private final boolean myModalContext;
   private final PresentationFactory myFactory;
@@ -81,18 +78,15 @@ public class ActionUpdater {
     myToolbarAction = isToolbarAction;
     myRealUpdateStrategy = new UpdateStrategy(action -> {
       // clone the presentation to avoid partially changing the cached one if update is interrupted
-      Presentation presentation = ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action).clone());
+      Presentation presentation = ActionUpdateExecutor.compute(() -> myFactory.getPresentation(action).clone());
       presentation.setEnabledAndVisible(true);
       Supplier<Boolean> doUpdate = () -> doUpdate(myModalContext, action, createActionEvent(action, presentation));
       boolean success = callAction(action, "update", doUpdate);
       return success ? presentation : null;
-    },
-                                              group -> callAction(group,
-                                                                  "getChildren",
-                                                                  () -> group.getChildren(createActionEvent(group,
-                                                                                                            orDefault(group,
-                                                                                                                      myUpdatedPresentations
-                                                                                                                        .get(group))))),
+    }, group -> callAction(group, "getChildren", () -> group.getChildren(createActionEvent(group,
+                                                                                           orDefault(group,
+                                                                                                     myUpdatedPresentations
+                                                                                                       .get(group))))),
                                               group -> callAction(group,
                                                                   "canBePerformed",
                                                                   () -> group.canBePerformed(getDataContext(group))));
@@ -122,21 +116,16 @@ public class ActionUpdater {
   }
 
   private static <T> T callAction(AnAction action, String operation, Supplier<T> call) {
-    if (action instanceof UpdateInBackground || ApplicationManager.getApplication().isDispatchThread()) return call.get();
-
-    ProgressIndicator progress = Objects.requireNonNull(ProgressManager.getInstance().getProgressIndicator());
-
-    return ActionUpdateEdtExecutor.computeOnEdt(() -> {
+    return ActionUpdateExecutor.compute(() -> {
       long start = System.currentTimeMillis();
       try {
-        return ProgressManager.getInstance().runProcess(call, ProgressWrapper.wrap(progress));
+        return call.get();
       }
       finally {
         long elapsed = System.currentTimeMillis() - start;
         if (elapsed > 100) {
-          LOG.warn("Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ". Consider speeding it up and/or implementing UpdateInBackground.");
+          LOG.warn("Slow (" + elapsed + "ms) '" + operation + "' on action " + action + " of " + action.getClass() + ".");
         }
-
       }
     });
   }
@@ -199,7 +188,7 @@ public class ActionUpdater {
     ProgressIndicator indicator = new EmptyProgressIndicator();
     promise.onError(__ -> {
       indicator.cancel();
-      ActionUpdateEdtExecutor.computeOnEdt(() -> {
+      ActionUpdateExecutor.compute(() -> {
         applyPresentationChanges();
         return null;
       });
@@ -207,20 +196,12 @@ public class ActionUpdater {
 
     cancelAndRestartOnUserActivity(promise, indicator);
 
-    ourExecutor.execute(() -> {
+    ForkJoinPool.commonPool().execute(() -> {
       while (promise.getState() == Promise.State.PENDING) {
         try {
-          boolean success = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
-            List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
-            ActionUpdateEdtExecutor.computeOnEdt(() -> {
-              applyPresentationChanges();
-              promise.setResult(result);
-              return null;
-            });
-          }, new SensitiveProgressWrapper(indicator));
-          if (!success) {
-            ProgressIndicatorUtils.yieldToPendingWriteActions();
-          }
+          List<AnAction> result = expandActionGroup(group, hideDisabled, myRealUpdateStrategy);
+          applyPresentationChanges();
+          promise.setResult(result);
         }
         catch (Throwable e) {
           promise.setError(e);
@@ -365,7 +346,7 @@ public class ActionUpdater {
   }
 
   private Presentation orDefault(AnAction action, Presentation presentation) {
-    return presentation != null ? presentation : ActionUpdateEdtExecutor.computeOnEdt(() -> myFactory.getPresentation(action));
+    return presentation != null ? presentation : ActionUpdateExecutor.compute(() -> myFactory.getPresentation(action));
   }
 
   private static List<AnAction> removeUnnecessarySeparators(List<? extends AnAction> visible) {

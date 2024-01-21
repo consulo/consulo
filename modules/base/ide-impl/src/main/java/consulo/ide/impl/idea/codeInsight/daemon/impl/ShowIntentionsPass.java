@@ -2,30 +2,31 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
-import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.CommonProcessors;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorSnapshot;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.RangeMarker;
+import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EditIntentionSettingsAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.EnableDisableIntentionAction;
 import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.codeEditor.EditorEx;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.CommonProcessors;
-import consulo.codeEditor.Editor;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.document.RangeMarker;
-import consulo.document.util.Segment;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
+import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.editor.intention.IntentionManager;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -33,11 +34,13 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.FocusableComponent;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,6 +74,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   @Nonnull
+  @RequiredUIAccess
   public static List<HighlightInfoImpl.IntentionActionDescriptor> getAvailableFixes(@Nonnull final Editor editor, @Nonnull final PsiFile file, final int passId, int offset) {
     final Project project = file.getProject();
 
@@ -82,7 +86,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   public static boolean markActionInvoked(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull IntentionAction action) {
-    final int offset = ((EditorEx)editor).getExpectedCaretOffset();
+    final int offset = editor.getExpectedCaretOffset();
 
     List<HighlightInfo> infos = new ArrayList<>();
     DaemonCodeAnalyzerImpl.processHighlightsNearOffset(editor.getDocument(), project, HighlightSeverity.INFORMATION, offset, true, new CommonProcessors.CollectProcessor<>(infos));
@@ -154,15 +158,15 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   public static class IntentionsInfo {
-    public final List<HighlightInfoImpl.IntentionActionDescriptor> intentionsToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-    public final List<HighlightInfoImpl.IntentionActionDescriptor> errorFixesToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-    public final List<HighlightInfoImpl.IntentionActionDescriptor> inspectionFixesToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-    public final List<HighlightInfoImpl.IntentionActionDescriptor> guttersToShow = ContainerUtil.createLockFreeCopyOnWriteList();
-    public final List<HighlightInfoImpl.IntentionActionDescriptor> notificationActionsToShow = ContainerUtil.createLockFreeCopyOnWriteList();
+    public final List<HighlightInfoImpl.IntentionActionDescriptor> intentionsToShow = Lists.newLockFreeCopyOnWriteList();
+    public final List<HighlightInfoImpl.IntentionActionDescriptor> errorFixesToShow = Lists.newLockFreeCopyOnWriteList();
+    public final List<HighlightInfoImpl.IntentionActionDescriptor> inspectionFixesToShow = Lists.newLockFreeCopyOnWriteList();
+    public final List<HighlightInfoImpl.IntentionActionDescriptor> guttersToShow = Lists.newLockFreeCopyOnWriteList();
+    public final List<HighlightInfoImpl.IntentionActionDescriptor> notificationActionsToShow = Lists.newLockFreeCopyOnWriteList();
     private int myOffset;
 
     public void filterActions(@Nullable PsiFile psiFile) {
-      List<IntentionActionFilter> filters = IntentionActionFilter.EXTENSION_POINT_NAME.getExtensionList();
+      List<IntentionActionFilter> filters = Application.get().getExtensionList(IntentionActionFilter.class);
       filter(intentionsToShow, psiFile, filters);
       filter(errorFixesToShow, psiFile, filters);
       filter(inspectionFixesToShow, psiFile, filters);
@@ -194,7 +198,6 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
       return intentionsToShow.isEmpty() && errorFixesToShow.isEmpty() && inspectionFixesToShow.isEmpty() && guttersToShow.isEmpty() && notificationActionsToShow.isEmpty();
     }
 
-    @NonNls
     @Override
     public String toString() {
       return "Errors: " +
@@ -214,6 +217,13 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     }
   }
 
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Object makeSnapshotFromUI() {
+    return EditorSnapshot.make(myEditor);
+  }
+
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !FocusableComponent.hasFocus(myEditor.getContentUIComponent())) return;
@@ -225,19 +235,19 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
+    uiAccess.give(() -> {
+      CachedIntentions cachedIntentions = myCachedIntentions;
+      boolean actionsChanged = myActionsChanged;
+      TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
+      if ((state == null || state.isFinished()) && cachedIntentions != null) {
+        IntentionsInfo syncInfo = new IntentionsInfo();
+        getActionsToShowSync(myEditor, myFile, syncInfo, myPassIdToShowIntentionsFor);
+        actionsChanged |= cachedIntentions.addActions(syncInfo);
 
-    CachedIntentions cachedIntentions = myCachedIntentions;
-    boolean actionsChanged = myActionsChanged;
-    TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
-    if ((state == null || state.isFinished()) && cachedIntentions != null) {
-      IntentionsInfo syncInfo = new IntentionsInfo();
-      getActionsToShowSync(myEditor, myFile, syncInfo, myPassIdToShowIntentionsFor);
-      actionsChanged |= cachedIntentions.addActions(syncInfo);
-
-      IntentionsUI.getInstance(myProject).update(cachedIntentions, actionsChanged);
-    }
+        IntentionsUI.getInstance(myProject).update(cachedIntentions, actionsChanged);
+      }
+    });
   }
 
 

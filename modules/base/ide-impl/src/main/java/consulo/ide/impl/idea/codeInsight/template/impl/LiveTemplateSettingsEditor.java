@@ -498,18 +498,13 @@ public class LiveTemplateSettingsEditor extends JPanel {
       myExpandByCombo.setSelectedItem(SPACE);
     }
 
-    CommandProcessor.getInstance().executeCommand(null, new Runnable() {
+    CommandProcessor.getInstance().executeCommand(null, () -> ApplicationManager.getApplication().runWriteAction(new Runnable() {
       @Override
       public void run() {
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-          @Override
-          public void run() {
-            final Document document = myTemplateEditor.getDocument();
-            document.replaceString(0, document.getTextLength(), myTemplate.getString());
-          }
-        });
+        final Document document = myTemplateEditor.getDocument();
+        document.replaceString(0, document.getTextLength(), myTemplate.getString());
       }
-    }, "", null);
+    }), "", null);
 
     myCbReformat.setSelected(myTemplate.isToReformat());
     myCbReformat.addActionListener(new ActionListener() {

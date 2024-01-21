@@ -15,11 +15,14 @@
  */
 package consulo.fileEditor.event;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use FileEditorManagerListener")
 public abstract class FileEditorManagerAdapter implements FileEditorManagerListener {
   @Override
   public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {}

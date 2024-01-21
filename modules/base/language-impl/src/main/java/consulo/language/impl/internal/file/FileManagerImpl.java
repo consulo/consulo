@@ -2,6 +2,7 @@
 package consulo.language.impl.internal.file;
 
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
@@ -76,12 +77,12 @@ public final class FileManagerImpl implements FileManager {
     myConnection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
-        processFileTypesChanged(false);
+        processFileTypesChangedAsync(false);
       }
 
       @Override
       public void exitDumbMode() {
-        processFileTypesChanged(false);
+        processFileTypesChangedAsync(false);
       }
     });
   }
@@ -279,28 +280,23 @@ public final class FileManagerImpl implements FileManager {
 
   private boolean myProcessingFileTypesChange;
 
-  public void processFileTypesChanged(boolean clearViewProviders) {
+  public void processFileTypesChangedAsync(boolean clearViewProviders) {
     if (myProcessingFileTypesChange) return;
     myProcessingFileTypesChange = true;
-    DebugUtil.performPsiModification(null, () -> {
-      try {
-        ApplicationManager.getApplication().runWriteAction(() -> {
-          PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(myManager);
-          event.setPropertyName(PsiTreeChangeEvent.PROP_FILE_TYPES);
-          myManager.beforePropertyChange(event);
+    DataLock.getInstance().writeAsync(() -> {
+      DebugUtil.performPsiModification("file types changes", () -> {
+        PsiTreeChangeEventImpl event = new PsiTreeChangeEventImpl(myManager);
+        event.setPropertyName(PsiTreeChangeEvent.PROP_FILE_TYPES);
+        myManager.beforePropertyChange(event);
 
-          possiblyInvalidatePhysicalPsi();
-          if (clearViewProviders) {
-            clearViewProviders();
-          }
+        possiblyInvalidatePhysicalPsi();
+        if (clearViewProviders) {
+          clearViewProviders();
+        }
 
-          myManager.propertyChanged(event);
-        });
-      }
-      finally {
-        myProcessingFileTypesChange = false;
-      }
-    });
+        myManager.propertyChanged(event);
+      });
+    }).whenComplete((o, throwable) -> myProcessingFileTypesChange = false);
   }
 
   public void possiblyInvalidatePhysicalPsi() {

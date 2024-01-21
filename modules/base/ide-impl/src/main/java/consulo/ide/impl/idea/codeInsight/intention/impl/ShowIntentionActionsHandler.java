@@ -2,47 +2,47 @@
 
 package consulo.ide.impl.idea.codeInsight.intention.impl;
 
-import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.language.editor.FileModificationService;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.IntentionActionDelegate;
-import consulo.language.editor.intention.PsiElementBaseIntentionAction;
-import consulo.language.editor.completion.lookup.LookupEx;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
-import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.undoRedo.CommandProcessor;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.application.util.registry.Registry;
+import consulo.externalService.impl.internal.statistic.FeatureUsageTrackerImpl;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.ShowIntentionsPass;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
+import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.IntentionActionDelegate;
+import consulo.language.editor.intention.PsiElementBaseIntentionAction;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
-import consulo.util.lang.function.PairProcessor;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.function.BiPredicate;
 
 /**
  * @author mike
@@ -149,20 +149,20 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
   public static Pair<PsiFile, Editor> chooseBetweenHostAndInjected(@Nonnull PsiFile hostFile,
                                                                    @Nonnull Editor hostEditor,
                                                                    @Nullable PsiFile injectedFile,
-                                                                   @Nonnull PairProcessor<? super PsiFile, ? super Editor> predicate) {
+                                                                   @Nonnull BiPredicate<? super PsiFile, ? super Editor> predicate) {
     Editor editorToApply = null;
     PsiFile fileToApply = null;
 
     Editor injectedEditor = null;
     if (injectedFile != null) {
       injectedEditor = InjectedLanguageUtil.getInjectedEditorForInjectedFile(hostEditor, injectedFile);
-      if (predicate.process(injectedFile, injectedEditor)) {
+      if (predicate.test(injectedFile, injectedEditor)) {
         editorToApply = injectedEditor;
         fileToApply = injectedFile;
       }
     }
 
-    if (editorToApply == null && hostEditor != injectedEditor && predicate.process(hostFile, hostEditor)) {
+    if (editorToApply == null && hostEditor != injectedEditor && predicate.test(hostFile, hostEditor)) {
       editorToApply = hostEditor;
       fileToApply = hostFile;
     }

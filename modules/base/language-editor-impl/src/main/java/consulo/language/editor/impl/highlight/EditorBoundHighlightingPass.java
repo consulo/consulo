@@ -17,18 +17,17 @@ package consulo.language.editor.impl.highlight;
 
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * The pass which should be applied to every editor, even if there are many for this document.
- *
+ * <p>
  * Ordinary {@link TextEditorHighlightingPass} is document-bound,
  * i.e. after the pass finishes the markup is stored in the document.
  * For example, there is no point to recalculate syntax errors for each splitted editor of the same document.
  * This pass however is for editor-specific markup, e.g. code folding.
  */
-public abstract class EditorBoundHighlightingPass extends TextEditorHighlightingPass {
+public abstract class EditorBoundHighlightingPass<S> extends TextEditorHighlightingPass<S> {
   @Nonnull
   protected final Editor myEditor;
   @Nonnull

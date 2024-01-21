@@ -30,6 +30,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 /**
@@ -68,6 +69,12 @@ public class LightFileDocumentManager implements FileDocumentManager {
       document = file.putUserDataIfAbsent(MOCK_DOC_KEY, document);
     }
     return document;
+  }
+
+  @Nonnull
+  @Override
+  public CompletableFuture<Document> getDocumentAsync(@Nonnull VirtualFile file) {
+    return CompletableFuture.completedFuture(getDocument(file));
   }
 
   @Override

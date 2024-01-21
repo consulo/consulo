@@ -17,7 +17,6 @@ package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
@@ -31,10 +30,7 @@ import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.diagnostic.Activity;
 import consulo.ide.impl.idea.diagnostic.ActivityCategory;
 import consulo.ide.impl.idea.diagnostic.StartUpMeasurer;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorHistoryUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorOpenOptions;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.HistoryEntry;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.*;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.wm.impl.IdePanePanel;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
@@ -46,7 +42,6 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -505,7 +500,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
         Activity activity = StartUpMeasurer.startActivity(PathUtil.getFileName(fileName), ActivityCategory.REOPENING_EDITOR);
         VirtualFile virtualFile = null;
         try {
-          final FileEditorManagerImpl fileEditorManager = getManager();
+          final DeprecatedFileEditorManagerImpl fileEditorManager = (DeprecatedFileEditorManagerImpl)getManager();
           final HistoryEntry entry = HistoryEntry.createLight(fileEditorManager.getProject(), historyElement);
           virtualFile = entry.getFile();
           if (virtualFile == null) throw new InvalidDataException("No file exists: " + entry.getFilePointer().getUrl());

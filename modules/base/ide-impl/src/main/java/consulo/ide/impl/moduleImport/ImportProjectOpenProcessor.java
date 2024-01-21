@@ -105,7 +105,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     String expectedProjectPath = ModuleImportProvider.getDefaultPath(virtualFile);
 
     AsyncResult<ThreeState> askDialogResult = AsyncResult.undefined();
-    if (!uiAccess.isHeadless() && DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
+    if (DefaultProjectOpenProcessor.getInstance().canOpenProject(new File(expectedProjectPath))) {
       Alert<ThreeState> alert = Alert.create();
       alert.title(IdeLocalize.titleOpenProject());
       alert.text(IdeBundle.message("project.import.open.existing", "an existing project", FileUtil.toSystemDependentName(ioPath.getPath()), virtualFile.getName()));

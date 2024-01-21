@@ -31,7 +31,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
- * @see consulo.ide.impl.idea.openapi.fileEditor.TextEditor
+ * @see TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
   Key<FileEditor> KEY = Key.create(FileEditor.class);
@@ -45,10 +45,20 @@ public interface FileEditor extends UserDataHolder, Disposable {
    */
   String PROP_VALID = "valid";
 
+  /**
+   * @return true if component visible for user (ui component attached to ui)
+   */
+  default boolean isDisplayable() {
+    return true;
+  }
+
   @Nullable
   default Component getUIComponent() {
     return null;
   }
+
+  @Nonnull
+  FileEditorProvider getProvider();
 
   /**
    * Returns component to be focused when editor is opened.

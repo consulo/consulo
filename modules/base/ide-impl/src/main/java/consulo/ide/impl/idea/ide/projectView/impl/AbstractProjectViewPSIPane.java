@@ -9,9 +9,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.ide.PsiCopyPasteManagerImpl;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.ide.impl.idea.ide.ui.customization.CustomizationUtil;
 import consulo.ide.impl.idea.ui.stripe.ErrorStripe;
 import consulo.ide.impl.idea.ui.stripe.ErrorStripePainter;
 import consulo.ide.impl.idea.ui.stripe.TreeUpdater;
@@ -23,6 +21,7 @@ import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
@@ -38,8 +37,8 @@ import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -76,7 +75,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     myComponent = ScrollPaneFactory.createScrollPane(myTree);
     if (Registry.is("error.stripe.enabled")) {
       ErrorStripePainter painter = new ErrorStripePainter(true);
-      Disposer.register(this, new TreeUpdater<ErrorStripePainter>(painter, myComponent, myTree) {
+      Disposer.register(this, new TreeUpdater<>(painter, myComponent, myTree) {
         @Override
         protected void update(ErrorStripePainter painter, int index, Object object) {
           if (object instanceof DefaultMutableTreeNode) {
@@ -159,7 +158,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
           }
 
           DataContext dataContext = DataManager.getInstance().getDataContext(myTree);
-          OpenSourceUtil.openSourcesFrom(dataContext, ScreenReader.isActive());
+          OpenSourceUtil.openSourcesFromAsync(dataContext, ScreenReader.isActive());
         }
         else if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
           if (e.isConsumed()) return;
@@ -172,7 +171,8 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         }
       }
     });
-    CustomizationUtil.installPopupHandler(myTree, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
+
+    PopupHandler.installPopupHandler(myTree, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
   }
 
   @Nonnull

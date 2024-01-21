@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.project;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
-import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.concurrent.DataLock;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -326,7 +326,8 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   private void enterDumbMode(@Nullable TransactionId contextTransaction, @Nonnull Throwable trace) {
     boolean wasSmart = !isDumb();
-    WriteAction.run(() -> {
+    DataLock dataLock = DataLock.getInstance();
+    dataLock.writeAsync(() -> {
       synchronized (myRunWhenSmartQueue) {
         myState.set(State.SCHEDULED_TASKS);
       }
@@ -334,15 +335,17 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
       myDumbEnterTrace = new Throwable();
       myDumbStartTransaction = contextTransaction;
       myModificationCount++;
+      return wasSmart;
+    }).whenComplete((smartFlag, throwable) -> {
+      if (smartFlag) {
+        try {
+          myPublisher.enteredDumbMode();
+        }
+        catch (Throwable e) {
+          LOG.error(e);
+        }
+      }
     });
-    if (wasSmart) {
-      try {
-        myPublisher.enteredDumbMode();
-      }
-      catch (Throwable e) {
-        LOG.error(e);
-      }
-    }
   }
 
   private void queueUpdateFinished() {
@@ -372,28 +375,32 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   }
 
   private void updateFinished() {
-    if (!WriteAction.compute(this::switchToSmartMode)) return;
+    DataLock lock = myProject.getApplication().getLock();
+    lock.writeAsync(this::switchToSmartMode)
+        .whenCompleteAsync((switchToSmartMode, throwable) -> {
+          if (switchToSmartMode) {
+            if (ApplicationProperties.isInSandbox()) LOG.info("updateFinished");
 
-    if (ApplicationManager.getApplication().isInternal()) LOG.info("updateFinished");
-
-    try {
-      myPublisher.exitDumbMode();
-      FileEditorManager.getInstance(myProject).refreshIconsAsync();
-    }
-    finally {
-      // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
-      // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
-      while (!isDumb()) {
-        final Runnable runnable;
-        synchronized (myRunWhenSmartQueue) {
-          if (myRunWhenSmartQueue.isEmpty()) {
-            break;
+            try {
+              myPublisher.exitDumbMode();
+              FileEditorManager.getInstance(myProject).refreshIconsAsync();
+            }
+            finally {
+              // It may happen that one of the pending runWhenSmart actions triggers new dumb mode;
+              // in this case we should quit processing pending actions and postpone them until the newly started dumb mode finishes.
+              while (!isDumb()) {
+                final Runnable runnable;
+                synchronized (myRunWhenSmartQueue) {
+                  if (myRunWhenSmartQueue.isEmpty()) {
+                    break;
+                  }
+                  runnable = myRunWhenSmartQueue.pullFirst();
+                }
+                doRun(runnable);
+              }
+            }
           }
-          runnable = myRunWhenSmartQueue.pullFirst();
-        }
-        doRun(runnable);
-      }
-    }
+        }, myProject.getUIAccess());
   }
 
   // Extracted to have a capture point
@@ -440,12 +447,12 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
       @Override
       public void enteredDumbMode() {
-        wrapper.setContentVisible(false);
+        getProject().getUIAccess().give(() -> wrapper.setContentVisible(false));
       }
 
       @Override
       public void exitDumbMode() {
-        wrapper.setContentVisible(true);
+        getProject().getUIAccess().give(() -> wrapper.setContentVisible(true));
       }
     });
 
@@ -454,7 +461,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   @Override
   public void smartInvokeLater(@Nonnull final Runnable runnable) {
-    smartInvokeLater(runnable, IdeaModalityState.defaultModalityState());
+    smartInvokeLater(runnable, myProject.getApplication().getDefaultModalityState());
   }
 
   @Override

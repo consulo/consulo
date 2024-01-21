@@ -48,15 +48,24 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
   private JComponent myComponent;
   private SplitEditorToolbar myToolbarWrapper;
   private final String myName;
+  @Nonnull
+  private final FileEditorProvider myFileEditorProvider;
 
-  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull String editorName) {
+  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull String editorName, @Nonnull FileEditorProvider fileEditorProvider) {
     myEditor = editor;
     myPreview = preview;
     myName = editorName;
+    myFileEditorProvider = fileEditorProvider;
   }
 
-  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview) {
-    this(editor, preview, "TextEditorWithPreview");
+  public TextEditorWithPreview(@Nonnull TextEditor editor, @Nonnull FileEditor preview, @Nonnull FileEditorProvider fileEditorProvider) {
+    this(editor, preview, "TextEditorWithPreview", fileEditorProvider);
+  }
+
+  @Nonnull
+  @Override
+  public FileEditorProvider getProvider() {
+    return myFileEditorProvider;
   }
 
   @Nullable
@@ -93,6 +102,11 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
   public void deselectNotify() {
     myEditor.deselectNotify();
     myPreview.deselectNotify();
+  }
+
+  @Override
+  public boolean isDisplayable() {
+    return getComponent().isDisplayable();
   }
 
   @Nonnull

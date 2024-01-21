@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.internal.CodeStyleCachingService;
@@ -285,6 +286,7 @@ public class CodeStyle {
    * @param project  The project of the document.
    * @param document The document to update indent options for.
    */
+  @RequiredReadAction
   public static void updateDocumentIndentOptions(@Nonnull Project project, @Nonnull Document document) {
     if (!project.isDisposed()) {
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);

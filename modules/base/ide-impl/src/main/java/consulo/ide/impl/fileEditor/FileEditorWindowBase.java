@@ -16,6 +16,7 @@
 package consulo.ide.impl.fileEditor;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.DataLock;
 import consulo.application.ui.UISettings;
 import consulo.component.util.Iconable;
 import consulo.fileEditor.*;
@@ -24,8 +25,11 @@ import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import jakarta.annotation.Nonnull;
@@ -59,11 +63,28 @@ public abstract class FileEditorWindowBase implements FileEditorWindow {
 
   protected abstract void trimToSize(final int limit, @Nullable final VirtualFile fileToIgnore, final boolean transferFocus);
 
+  @RequiredUIAccess
   protected void updateFileName(VirtualFile file) {
+    UIAccess.assertIsUIThread();
+
     final int index = findEditorIndex(findFileComposite(file));
     if (index != -1) {
-      setTitleAt(index, EditorTabPresentationUtil.getEditorTabTitle(getManager().getProject(), file, this));
-      setToolTipTextAt(index, UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(file) : null);
+      DataLock.getInstance().readAsync(() -> {
+        String title = EditorTabPresentationUtil.getEditorTabTitle(getManager().getProject(), file, this);
+        String tooltipText = UISettings.getInstance().getShowTabsTooltips() ? getManager().getFileTooltipText(file) : null;
+        return Couple.of(title, tooltipText);
+      }).whenCompleteAsync((couple, throwable) -> {
+        if (couple != null) {
+          String title = couple.getKey();
+          String tooltipText = couple.getValue();
+
+          final int againIndex = findEditorIndex(findFileComposite(file));
+          if (againIndex != -1) {
+            setTitleAt(againIndex, title);
+            setToolTipTextAt(againIndex, tooltipText);
+          }
+        }
+      }, UIAccess.current());
     }
   }
 

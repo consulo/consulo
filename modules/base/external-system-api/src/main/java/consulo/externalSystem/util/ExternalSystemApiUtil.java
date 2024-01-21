@@ -679,7 +679,7 @@ public class ExternalSystemApiUtil {
   }
 
   public static <T> T doWriteAction(@Nonnull final Supplier<T> task) {
-    return executeOnEdt(() -> ApplicationManager.getApplication().runWriteAction(task));
+    return executeOnEdt(() -> ApplicationManager.getApplication().runWriteAction(task::get));
   }
 
   public static void doWriteAction(@Nonnull final Runnable task) {

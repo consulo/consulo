@@ -20,8 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -40,7 +38,6 @@ import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
@@ -48,6 +45,7 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
+import consulo.module.impl.internal.ModuleManagerComponent;
 import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
@@ -56,21 +54,23 @@ import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectManagerImplMarker;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.impl.internal.store.IProjectStore;
+import consulo.project.internal.ProjectCloseHandler;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -79,11 +79,9 @@ import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 @ServiceImpl
@@ -92,10 +90,9 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   private static final Key<List<ProjectManagerListener>> LISTENERS_IN_PROJECT_KEY = Key.create("LISTENERS_IN_PROJECT_KEY");
 
-  private Project[] myOpenProjects = {}; // guarded by lock
-  private final Object lock = new Object();
+  private final List<Project> myOpenProjects = Lists.newLockFreeCopyOnWriteList();
 
-  private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
+  private final List<ProjectCloseHandler> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
   private final Application myApplication;
@@ -145,7 +142,6 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         }
 
         ZipHandler.clearFileAccessorCache();
-        LaterInvocator.purgeExpiredItems();
       }
 
       @Override
@@ -250,16 +246,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   @Override
   @Nonnull
   public Project[] getOpenProjects() {
-    synchronized (lock) {
-      return myOpenProjects.clone();
-    }
+    return myOpenProjects.toArray(Project[]::new);
   }
 
   @Override
   public boolean isProjectOpened(Project project) {
-    synchronized (lock) {
-      return ArrayUtil.contains(project, myOpenProjects);
-    }
+    return myOpenProjects.contains(project);
   }
 
   private void logStart(Project project) {
@@ -273,23 +265,21 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
   private boolean addToOpened(@Nonnull Project project) {
     assert !project.isDisposed() : "Must not open already disposed project";
-    synchronized (lock) {
-      if (isProjectOpened(project)) {
-        return false;
-      }
-      myOpenProjects = ArrayUtil.append(myOpenProjects, project);
-      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? project : null;
+    if (isProjectOpened(project)) {
+      return false;
     }
+
+    myOpenProjects.add(project);
+    SingleProjectHolder.theProject = myOpenProjects.size() == 1 ? project : null;
     return true;
   }
 
-  @Nonnull
-  private Collection<Project> removeFromOpened(@Nonnull Project project) {
-    synchronized (lock) {
-      myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
-      SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
-      return Arrays.asList(myOpenProjects);
-    }
+  private void removeFromOpened(@Nonnull Project project) {
+    myOpenProjects.remove(project);
+
+    // use #getOpenProjects() which will return copy of data, since #size and #get can return different values
+    Project[] openProjects = getOpenProjects();
+    SingleProjectHolder.theProject = openProjects.length == 1 ? openProjects[0] : null;
   }
 
   private static boolean canCancelProjectLoading() {
@@ -324,7 +314,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
   public boolean closeProject(@Nonnull final Project project, final boolean save, final boolean dispose, boolean checkCanClose) {
     if (!isProjectOpened(project)) return true;
 
-    if (checkCanClose && !canClose(project)) return false;
+    if (checkCanClose && !askForClose(project)) return false;
     final ShutDownTracker shutDownTracker = ShutDownTracker.getInstance();
     shutDownTracker.registerStopperThread(Thread.currentThread());
     try {
@@ -398,27 +388,36 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
     LOG.assertTrue(removed);
   }
 
-  @Override
-  public boolean canClose(Project project) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("enter: canClose()");
-    }
-
-    for (Predicate<Project> listener : myCloseProjectVetos) {
-      try {
-        if (!listener.test(project)) return false;
-      }
-      catch (Throwable e) {
-        LOG.warn(e); // DO NOT LET ANY PLUGIN to prevent closing due to exception
-      }
-    }
-
-    return true;
+  public boolean askForClose(Project project) {
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto) {
+  public CompletableFuture<Boolean> askForCloseAsync(Project project) {
+    CompletableFuture<Boolean> future = CompletableFuture.completedFuture(true);
+    for (ProjectCloseHandler listener : myCloseProjectVetos) {
+      future = future.thenCompose(canClose -> {
+        if (!canClose) {
+          return CompletableFuture.completedFuture(false);
+        }
+
+        try {
+          return listener.askForCloseAsync(project);
+        }
+        catch (Throwable e) {
+          LOG.warn(e); // DO NOT LET ANY PLUGIN to prevent closing due to exception
+          return CompletableFuture.completedFuture(true);
+        }
+      });
+    }
+
+    return future;
+  }
+
+  @Nonnull
+  @Override
+  public Disposable registerCloseProjectVetoAsync(@Nonnull ProjectCloseHandler projectVeto) {
     myCloseProjectVetos.add(projectVeto);
     return () -> myCloseProjectVetos.remove(projectVeto);
   }
@@ -496,7 +495,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
 
     if (checkCanClose) {
       uiAccess.give(() -> {
-        boolean canClose = canClose(project);
+        boolean canClose = askForClose(project);
         if (canClose) {
           closeCheckInsideUI.setDone();
         }
@@ -670,20 +669,20 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable, 
         }
       }
 
-      if (application.isActive()) {
-        Window projectFrame = WindowManager.getInstance().getWindow(project);
-        if (projectFrame != null) {
-          uiAccess.giveAndWaitIfNeed(() -> ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
-        }
-      }
-
       application.invokeLater(() -> {
-        if (!project.isDisposedOrDisposeInProgress()) {
+        if (project.getDisposeState().get() != ThreeState.NO) {
+          if (application.isActive()) {
+            Window projectFrame = WindowManager.getInstance().getWindow(project);
+            if (projectFrame != null) {
+              ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+            }
+          }
+
           startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
 
           logStart(project);
         }
-      }, IdeaModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
+      }, ModalityState.nonModal(), project::isDisposedOrDisposeInProgress);
     }
   }
 

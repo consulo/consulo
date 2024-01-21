@@ -3,16 +3,16 @@ package consulo.undoRedo.event;
 
 import consulo.document.Document;
 import consulo.project.Project;
+import consulo.undoRedo.Command;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
-
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import java.util.EventObject;
 
 public class CommandEvent extends EventObject {
-  private final Runnable myCommand;
+  private final Command myCommand;
   private final Project myProject;
   private final String myCommandName;
   private final Object myCommandGroupId;
@@ -20,12 +20,12 @@ public class CommandEvent extends EventObject {
   private final boolean myShouldRecordActionForActiveDocument;
   private final Document myDocument;
 
-  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Runnable command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+  public CommandEvent(@Nonnull CommandProcessor processor, @Nonnull Command command, Project project, @Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
     this(processor, command, null, null, project, undoConfirmationPolicy);
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Runnable command,
+                      @Nonnull Command command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -34,7 +34,7 @@ public class CommandEvent extends EventObject {
   }
 
   public CommandEvent(@Nonnull CommandProcessor processor,
-                      @Nonnull Runnable command,
+                      @Nonnull Command command,
                       String commandName,
                       Object commandGroupId,
                       Project project,
@@ -57,7 +57,7 @@ public class CommandEvent extends EventObject {
   }
 
   @Nonnull
-  public Runnable getCommand() {
+  public Command getCommand() {
     return myCommand;
   }
 

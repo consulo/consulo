@@ -30,7 +30,10 @@ import java.util.List;
  */
 public interface FileEditorComposite extends Disposable {
   @Nonnull
-  FileEditorWithProvider getSelectedEditorWithProvider();
+  @Deprecated
+  default FileEditor getSelectedEditorWithProvider() {
+    return getSelectedEditor();
+  }
 
   VirtualFile getFile();
 

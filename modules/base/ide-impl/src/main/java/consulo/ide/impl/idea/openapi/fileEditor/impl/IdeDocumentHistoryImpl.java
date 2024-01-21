@@ -45,6 +45,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.Pair;
@@ -53,16 +54,18 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
+@Singleton
 @State(name = "IdeDocumentHistory", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
@@ -138,7 +141,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
       public void documentChanged(@Nonnull DocumentEvent e) {
         Document document = e.getDocument();
         final VirtualFile file = getFileDocumentManager().getFile(document);
-        if (file != null && !(file instanceof LightVirtualFile) && !ApplicationManager.getApplication().hasWriteAction(ExternalChangeAction.class)) {
+        if (file != null && !(file instanceof LightVirtualFile) && !ApplicationManager.getApplication()
+                                                                                      .hasWriteAction(ExternalChangeAction.class)) {
           if (!ApplicationManager.getApplication().isDispatchThread()) {
             LOG.error("Document update for physical file not in EDT: " + file);
           }
@@ -275,11 +279,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
   @Nullable
   private PlaceInfo getCurrentPlaceInfo() {
-    FileEditorWithProvider selectedEditorWithProvider = getSelectedEditor();
-    if (selectedEditorWithProvider == null) {
+    FileEditor selectedEditor = getSelectedEditor();
+    if (selectedEditor == null) {
       return null;
     }
-    return createPlaceInfo(selectedEditorWithProvider.getFileEditor(), selectedEditorWithProvider.getProvider());
+    return createPlaceInfo(selectedEditor);
   }
 
   @Nullable
@@ -288,7 +292,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     if (fileEditor instanceof TextEditor && fileEditor.isValid()) {
       VirtualFile file = fileEditor.getFile();
       if (file != null) {
-        return new PlaceInfo(file, fileEditor.getState(FileEditorStateLevel.NAVIGATION), TextEditorProvider.getInstance().getEditorTypeId(), null, getCaretPosition(fileEditor),
+        return new PlaceInfo(file,
+                             fileEditor.getState(FileEditorStateLevel.NAVIGATION),
+                             TextEditorProvider.getInstance().getEditorTypeId(),
+                             null,
+                             getCaretPosition(fileEditor),
                              System.currentTimeMillis());
       }
     }
@@ -543,7 +551,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     FileEditorWindow wnd = info.getWindow();
     FileEditorManagerEx editorManager = getFileEditorManager();
     final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders =
-            wnd != null && wnd.isValid() ? editorManager.openFileWithProviders(info.getFile(), wasActive, wnd) : editorManager.openFileWithProviders(info.getFile(), wasActive, false);
+      wnd != null && wnd.isValid() ? editorManager.openFileWithProviders(info.getFile(),
+                                                                         wasActive,
+                                                                         wnd) : editorManager.openFileWithProviders(info.getFile(),
+                                                                                                                    wasActive,
+                                                                                                                    false);
 
     editorManager.setSelectedEditor(info.getFile(), info.getEditorTypeId());
 
@@ -561,13 +573,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
    * @return currently selected FileEditor or null.
    */
   @Nullable
-  protected FileEditorWithProvider getSelectedEditor() {
+  protected FileEditor getSelectedEditor() {
     FileEditorManagerEx editorManager = getFileEditorManager();
     VirtualFile file = editorManager.getCurrentFile();
-    return file == null ? null : editorManager.getSelectedEditorWithProvider(file);
+    return file == null ? null : editorManager.getSelectedEditor(file);
   }
 
-  protected PlaceInfo createPlaceInfo(@Nonnull final FileEditor fileEditor, final FileEditorProvider fileProvider) {
+  protected PlaceInfo createPlaceInfo(@Nonnull final FileEditor fileEditor) {
     if (!fileEditor.isValid()) {
       return null;
     }
@@ -577,7 +589,12 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     LOG.assertTrue(file != null);
     FileEditorState state = fileEditor.getState(FileEditorStateLevel.NAVIGATION);
 
-    return new PlaceInfo(file, state, fileProvider.getEditorTypeId(), editorManager.getCurrentWindow(), getCaretPosition(fileEditor), System.currentTimeMillis());
+    return new PlaceInfo(file,
+                         state,
+                         fileEditor.getProvider().getEditorTypeId(),
+                         editorManager.getCurrentWindow(),
+                         getCaretPosition(fileEditor),
+                         System.currentTimeMillis());
   }
 
   @Nullable
@@ -628,7 +645,11 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     private final RangeMarker myCaretPosition;
     private final long myTimeStamp;
 
-    public PlaceInfo(@Nonnull VirtualFile file, @Nonnull FileEditorState navigationState, @Nonnull String editorTypeId, @Nullable FileEditorWindow window, @Nullable RangeMarker caretPosition) {
+    public PlaceInfo(@Nonnull VirtualFile file,
+                     @Nonnull FileEditorState navigationState,
+                     @Nonnull String editorTypeId,
+                     @Nullable FileEditorWindow window,
+                     @Nullable RangeMarker caretPosition) {
       myNavigationState = navigationState;
       myFile = file;
       myEditorTypeId = editorTypeId;
@@ -690,7 +711,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     myLastGroupId = null;
   }
 
-  protected void executeCommand(Runnable runnable, String name, Object groupId) {
+  protected void executeCommand(CommandRunnable runnable, String name, Object groupId) {
     CommandProcessor.getInstance().executeCommand(myProject, runnable, name, groupId);
   }
 

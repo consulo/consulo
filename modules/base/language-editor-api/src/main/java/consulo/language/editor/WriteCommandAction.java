@@ -22,6 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
@@ -211,7 +212,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
   }
 
   private void doExecuteCommand(final Runnable runnable) {
-    Runnable wrappedRunnable = () -> {
+    CommandRunnable wrappedRunnable = () -> {
       if (isGlobalUndoAction()) CommandProcessor.getInstance().markCurrentCommandAsGlobal(getProject());
       runnable.run();
     };

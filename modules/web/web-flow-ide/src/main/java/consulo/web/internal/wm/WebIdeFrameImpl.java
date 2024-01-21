@@ -92,6 +92,12 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
     return (Window)Objects.requireNonNull(myRootLayout).toUIComponent();
   }
 
+  @Nonnull
+  @Override
+  public UIAccess getUIAccess() {
+    return myProject.getUIAccess();
+  }
+
   public void close() {
     WebApplication.invokeOnCurrentSession(() -> {
       UI.getCurrent().getPage().executeJs("window.close();");

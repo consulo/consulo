@@ -115,7 +115,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     uiAccess.give(() -> {
       final CompilerManager manager = CompilerManager.getInstance(myProject);
       manager.make(ArtifactCompileScope.createArtifactsScope(myProject, artifacts), compilerFilter, callback);
-    }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+    });
 
     return result;
   }

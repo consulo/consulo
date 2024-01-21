@@ -90,7 +90,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
 
     FileEditorsSplitters splitters = fileEditorManager.getSplitters();
 
-    FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
+    FileEditorProvider[] providers = FileEditorProviderManager.getInstance(project).getProviders(project, file);
     if (providers.length == 0) {
       if (element != null) {
         element.navigate(requestFocus);

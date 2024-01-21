@@ -3,7 +3,7 @@ package consulo.desktop.awt.data.impl;
 
 import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.ide.impl.idea.openapi.actionSystem.BackgroundableDataProvider;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdateExecutor;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
@@ -18,6 +18,7 @@ import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -27,7 +28,7 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
   private static final Logger LOG = Logger.getInstance(AsyncDataContext.class);
   private final List<WeakReference<Component>> myHierarchy;
 
-  private final Map<Component, DataProvider> myProviders = ConcurrentFactoryMap.create(key -> ActionUpdateEdtExecutor.computeOnEdt(() -> {
+  private final Map<Component, DataProvider> myProviders = ConcurrentFactoryMap.create(key -> ActionUpdateExecutor.compute(() -> {
                                                                                          DataProvider provider = getDataManager().getDataProviderEx(key);
                                                                                          if (provider == null) return null;
 
@@ -36,7 +37,7 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
                                                                                          }
                                                                                          return dataKey -> {
                                                                                            boolean bg = !ApplicationManager.getApplication().isDispatchThread();
-                                                                                           return ActionUpdateEdtExecutor.computeOnEdt(() -> {
+                                                                                           return ActionUpdateExecutor.compute(() -> {
                                                                                              long start = System.currentTimeMillis();
                                                                                              try {
                                                                                                return provider.getData(dataKey);

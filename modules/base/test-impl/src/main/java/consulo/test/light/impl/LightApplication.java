@@ -19,9 +19,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.concurrent.DataLock;
 import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -83,6 +83,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     return myProgressManager;
   }
 
+  @Nonnull
+  @Override
+  public DataLock getLock() {
+    return null;
+  }
+
   @Override
   public int getProfiles() {
     return ComponentProfiles.LIGHT_TEST;
@@ -114,11 +120,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  public void runReadAction(@Nonnull Runnable action) {
-    action.run();
-  }
-
-  @Override
   public <T> T runReadAction(@Nonnull Supplier<T> computation) {
     return computation.get();
   }
@@ -132,12 +133,6 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
     throw new UnsupportedOperationException();
   }
 
@@ -174,7 +169,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
   }
 
-  @RequiredUIAccess
+  @RequiredWriteAction
   @Override
   public void saveAll() {
 
@@ -191,18 +186,13 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
+  public boolean isWriteAccessAllowed() {
+    return false;
+  }
+
+  @Override
   public boolean isReadAccessAllowed() {
     return true;
-  }
-
-  @Override
-  public boolean isDispatchThread() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isWriteThread() {
-    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -309,25 +299,13 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
-  @Override
-  public AccessToken acquireReadActionLock() {
-    throw new UnsupportedOperationException();
-  }
-
-  @RequiredUIAccess
-  @Nonnull
-  @Override
-  public AccessToken acquireWriteActionLock(@Nonnull Class marker) {
-    return AccessToken.EMPTY_ACCESS_TOKEN;
-  }
-
   @RequiredUIAccess
   @Override
   public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     throw new UnsupportedOperationException();
   }
 
+  @RequiredReadAction
   @Override
   public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
     return false;

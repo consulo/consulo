@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.completion;
 
+import consulo.application.concurrent.DataLock;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionSorterImpl;
@@ -508,7 +509,7 @@ public class CompletionProgressIndicator extends ProgressIndicatorBase implement
 
   void disposeIndicator() {
     synchronized (myLock) {
-      Disposer.dispose(this);
+      DataLock.getInstance().readAsync(() -> Disposer.dispose(this));
     }
   }
 

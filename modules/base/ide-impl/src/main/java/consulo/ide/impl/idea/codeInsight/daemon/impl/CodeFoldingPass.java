@@ -24,6 +24,7 @@ import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nonnull;
@@ -54,7 +55,7 @@ class CodeFoldingPass extends EditorBoundHighlightingPass implements PossiblyDum
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     Runnable runnable = myRunnable;
     if (runnable != null){
       try {

@@ -111,10 +111,10 @@ public class ProjectUtil {
       AsyncResult<Integer> result = AsyncResult.undefined();
       uiAccess.give(() -> {
         if (projectToClose != null) {
-          return alert.showAsync(projectToClose).notify(result);
+          alert.showAsync(projectToClose).notify(result);
         }
         else {
-          return alert.showAsync().notify(result);
+          alert.showAsync().notify(result);
         }
       });
       return result;

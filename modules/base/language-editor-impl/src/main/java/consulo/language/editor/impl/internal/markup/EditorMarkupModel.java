@@ -50,6 +50,7 @@ public interface EditorMarkupModel extends MarkupModel {
 
   boolean isErrorStripeVisible();
 
+  @RequiredUIAccess
   default void repaintTrafficLightIcon() {
   }
 }

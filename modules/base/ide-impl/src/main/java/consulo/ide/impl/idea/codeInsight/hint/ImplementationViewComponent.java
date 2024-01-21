@@ -372,7 +372,7 @@ public class ImplementationViewComponent extends JPanel {
     PsiFile psiFile = getContainingFile(elt);
     final VirtualFile vFile = psiFile.getVirtualFile();
     if (vFile == null) return;
-    final FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, vFile);
+    final FileEditorProvider[] providers = FileEditorProviderManager.getInstance(project).getProviders(project, vFile);
     for (FileEditorProvider provider : providers) {
       if (provider instanceof TextEditorProvider) {
         updateTextElement(elt);

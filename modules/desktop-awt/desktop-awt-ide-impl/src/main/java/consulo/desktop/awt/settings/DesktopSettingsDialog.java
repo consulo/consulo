@@ -198,9 +198,9 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements Dat
 
     saveCurrentConfigurable();
 
-    ApplicationManager.getApplication().saveAll();
-
     super.doOKAction();
+
+    ApplicationManager.getApplication().saveAllAsync();
   }
 
   private void saveCurrentConfigurable() {

@@ -78,22 +78,29 @@ public abstract class AbstractToolBeforeRunTask<ToolBeforeRunTask extends Abstra
   public AsyncResult<Void> execute(UIAccess uiAccess, final DataContext context, final long executionId) {
     AsyncResult<Void> result = AsyncResult.undefined();
     uiAccess.give(() -> {
-      boolean runToolResult = ToolAction.runTool(myToolActionId, context, null, executionId, new ProcessAdapter() {
-        @Override
-        public void processTerminated(ProcessEvent event) {
-          if(event.getExitCode() == 0) {
-            result.setDone();
+      boolean runToolResult = false;
+      try {
+        runToolResult = ToolAction.runTool(myToolActionId, context, null, executionId, new ProcessAdapter() {
+          @Override
+          public void processTerminated(ProcessEvent event) {
+            if (event.getExitCode() == 0) {
+              result.setDone();
+            }
+            else {
+              result.setRejected();
+            }
           }
-          else {
-            result.setRejected();
-          }
-        }
-      });
+        });
+      }
+      catch (Throwable e) {
+        result.rejectWithThrowable(e);
+        return;
+      }
 
       if(!runToolResult) {
         result.setRejected();
       }
-    }).doWhenRejectedWithThrowable(result::rejectWithThrowable);
+    });
 
     return result;
   }

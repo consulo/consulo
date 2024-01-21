@@ -16,7 +16,6 @@
 package consulo.application.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -62,12 +61,6 @@ public abstract class PlatformComponentManagerImpl extends BaseComponentManager 
       if (stateStore != null) {
         StateComponentInfo<Object> info = stateStore.loadStateIfStorable(component);
         if (info != null) {
-          if (Application.get().isWriteAccessAllowed()) {
-            LOG.warn(new IllegalArgumentException("Getting service from write-action leads to possible deadlock. Service implementation " + component
-              .getClass()
-              .getName()));
-          }
-
           executeNonCancelableSection(() -> info.getComponent().afterLoadState());
 
           result = true;

@@ -16,19 +16,18 @@
 
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.language.editor.refactoring.copy.CopyHandler;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.copy.CopyHandler;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -47,12 +46,8 @@ public class CopyElementAction extends AnAction {
       return;
     }
 
-    CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        PsiDocumentManager.getInstance(project).commitAllDocuments();
-      }
-    }, "", null);
+    PsiDocumentManager.getInstance(project).commitAllDocuments();
+
     final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
     PsiElement[] elements;
 

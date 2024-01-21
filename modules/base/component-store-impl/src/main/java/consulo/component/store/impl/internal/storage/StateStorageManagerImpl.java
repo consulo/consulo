@@ -15,8 +15,6 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StateSplitterEx;
@@ -34,10 +32,10 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,13 +45,6 @@ import java.util.regex.Pattern;
 
 public abstract class StateStorageManagerImpl implements StateStorageManager, Disposable {
   private static final Logger LOG = Logger.getInstance(StateStorageManagerImpl.class);
-
-  private static final boolean ourHeadlessEnvironment;
-
-  static {
-    final Application app = ApplicationManager.getApplication();
-    ourHeadlessEnvironment = app.isHeadlessEnvironment() || app.isUnitTestMode();
-  }
 
   private final Map<String, String> myMacros = new LinkedHashMap<>();
   private final Lock myStorageLock = new ReentrantLock();
@@ -235,7 +226,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createFileStateStorage(@Nonnull String fileSpec, @Nullable RoamingType roamingType) {
     String filePath = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
 
-    if (!ourHeadlessEnvironment && PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
+    if (PathUtil.getFileName(filePath).lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.application.ui.wm;
 
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
 
 import jakarta.annotation.Nonnull;
@@ -28,12 +29,17 @@ public interface FocusableFrame {
   @Nonnull
   Window getWindow();
 
+  @Nonnull
+  default UIAccess getUIAccess() {
+    throw new AbstractMethodError();
+  }
+
   default boolean hasFocus() {
     return getWindow().isActive();
   }
 
   default JComponent getComponent() {
-    throw new AbstractMethodError(getClass().getName() + " is not implemented");
+    throw new AbstractMethodError();
   }
 
   default boolean isActive() {

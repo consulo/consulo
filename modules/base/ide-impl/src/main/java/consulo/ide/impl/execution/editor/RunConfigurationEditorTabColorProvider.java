@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.execution.editor;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
@@ -31,6 +32,7 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class RunConfigurationEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
+  @RequiredReadAction
   @Nullable
   @Override
   public Color getEditorTabColor(Project project, VirtualFile file) {

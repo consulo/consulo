@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
@@ -51,6 +52,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
 
   @Nonnull
   @Override
+  @RequiredReadAction
   public Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
     PsiFile psiFile = PsiManager.getInstance(myProject).findFile(myFile);
@@ -104,9 +106,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     @Override
     public void dispose() {
       CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(myProject);
-      if (foldingManager != null) {
-        foldingManager.releaseFoldings(getEditor());
-      }
+      foldingManager.releaseFoldings(getEditor());
       super.dispose();
     }
 

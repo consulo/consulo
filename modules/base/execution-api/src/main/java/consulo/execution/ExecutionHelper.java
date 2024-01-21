@@ -215,16 +215,13 @@ public class ExecutionHelper {
 
   private static void openMessagesView(@Nonnull final NewErrorTreeViewPanel errorTreeView, @Nonnull final Project project, @Nonnull final String tabDisplayName) {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(project, new Runnable() {
-      @Override
-      public void run() {
-        final MessageView messageView = MessageView.getInstance(project);
-        final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
-        messageView.getContentManager().addContent(content);
-        Disposer.register(content, errorTreeView);
-        messageView.getContentManager().setSelectedContent(content);
-        removeContents(content, project, tabDisplayName);
-      }
+    commandProcessor.executeCommand(project, () -> {
+      final MessageView messageView = MessageView.getInstance(project);
+      final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
+      messageView.getContentManager().addContent(content);
+      Disposer.register(content, errorTreeView);
+      messageView.getContentManager().setSelectedContent(content);
+      removeContents(content, project, tabDisplayName);
     }, "Open message view", null);
   }
 

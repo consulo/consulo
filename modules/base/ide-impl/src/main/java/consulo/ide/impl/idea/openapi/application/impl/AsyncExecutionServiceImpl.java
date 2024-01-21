@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author peter
@@ -17,7 +18,7 @@ import java.util.concurrent.Callable;
 @Singleton
 @ServiceImpl
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
-  private static long ourWriteActionCounter = 0;
+  private static AtomicLong ourWriteActionCounter = new AtomicLong();
 
   private final Application myApplication;
 
@@ -28,27 +29,21 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
       @Override
       public void writeActionStarted(@Nonnull Object action) {
         //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourWriteActionCounter++;
+        ourWriteActionCounter.incrementAndGet();
       }
     }, app);
   }
 
-  //@NotNull
-  //@Override
-  //protected ExpirableExecutor createExecutor(@NotNull Executor executor) {
-  //  return new ExpirableExecutorImpl(executor);
-  //}
-  //
   @Nonnull
   @Override
   protected AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.EDT);
+    return new AppUIExecutorImpl(myApplication.getLastUIAccess());
   }
 
   @Nonnull
   @Override
-  protected AppUIExecutor createWriteThreadExecutor(@Nonnull ModalityState modalityState) {
-    return new AppUIExecutorImpl(modalityState, ExecutionThread.WT);
+  protected AppUIExecutor createWriteThreadExecutor() {
+    return new AppUIExecutorImpl(myApplication.getLock().writeExecutor());
   }
 
   @Nonnull
@@ -58,7 +53,6 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   }
 
   static long getWriteActionCounter() {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-    return ourWriteActionCounter;
+    return ourWriteActionCounter.get();
   }
 }

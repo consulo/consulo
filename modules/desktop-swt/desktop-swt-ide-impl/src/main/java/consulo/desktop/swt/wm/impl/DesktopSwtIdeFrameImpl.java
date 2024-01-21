@@ -90,6 +90,12 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
     return myWindow;
   }
 
+  @Nonnull
+  @Override
+  public UIAccess getUIAccess() {
+    return myProject.getUIAccess();
+  }
+
   public void close() {
     myProject.getApplication().getLastUIAccess().give(() -> {
       myWindow.close();

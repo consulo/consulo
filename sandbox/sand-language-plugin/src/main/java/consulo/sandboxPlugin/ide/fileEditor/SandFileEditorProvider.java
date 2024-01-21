@@ -43,7 +43,7 @@ public class SandFileEditorProvider implements FileEditorProvider {
   @Nonnull
   @Override
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return new SandFileEditor();
+    return new SandFileEditor(this);
   }
 
   @Override

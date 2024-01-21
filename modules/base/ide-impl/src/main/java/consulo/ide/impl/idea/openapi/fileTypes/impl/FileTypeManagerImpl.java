@@ -1595,17 +1595,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   }
 
   @Override
-  @Nullable
-  public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file) {
-    FileType type = file.getFileType();
-    if (type == UnknownFileType.INSTANCE) {
-      type = FileTypeChooser.associateFileType(file.getName());
-    }
-
-    return type;
-  }
-
-  @Override
   public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull Project project) {
     return FileTypeChooser.getKnownFileTypeOrAssociate(file, project);
   }

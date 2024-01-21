@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
@@ -32,6 +33,7 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbAware {
+  @RequiredReadAction
   @Override
   @Nullable
   public Color getEditorTabColor(Project project, VirtualFile file) {
@@ -39,6 +41,7 @@ public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbA
     return colorManager.isEnabledForTabs() ? colorManager.getFileColor(file) : null;
   }
 
+  @RequiredReadAction
   @Nullable
   @Override
   public Color getProjectViewColor(@Nonnull Project project, @Nonnull VirtualFile file) {

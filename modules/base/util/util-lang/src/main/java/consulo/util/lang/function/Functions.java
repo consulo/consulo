@@ -20,6 +20,7 @@ import consulo.util.lang.Pair;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -31,7 +32,7 @@ public class Functions {
 
   private static final Function NULL = o -> null;
 
-  private static final Function TO_STRING = String::valueOf;
+  private static final Function TO_STRING = Objects::toString;
 
   public static <A> MonoFunction<A> id() {
     return (MonoFunction<A>)ID;

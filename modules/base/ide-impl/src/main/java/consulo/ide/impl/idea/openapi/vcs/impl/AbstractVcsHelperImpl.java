@@ -121,23 +121,20 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
   public void openMessagesView(final NewErrorTreeViewPanel errorTreeView, final String tabDisplayName) {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
-    commandProcessor.executeCommand(myProject, new Runnable() {
-      @Override
-      public void run() {
-        final MessageView messageView = MessageView.getInstance(myProject);
-        messageView.runWhenInitialized(new Runnable() {
-          @Override
-          public void run() {
-            final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
-            messageView.getContentManager().addContent(content);
-            Disposer.register(content, errorTreeView);
-            messageView.getContentManager().setSelectedContent(content);
-            removeContents(content, tabDisplayName);
+    commandProcessor.executeCommand(myProject, () -> {
+      final MessageView messageView = MessageView.getInstance(myProject);
+      messageView.runWhenInitialized(new Runnable() {
+        @Override
+        public void run() {
+          final Content content = ContentFactory.getInstance().createContent(errorTreeView.getComponent(), tabDisplayName, true);
+          messageView.getContentManager().addContent(content);
+          Disposer.register(content, errorTreeView);
+          messageView.getContentManager().setSelectedContent(content);
+          removeContents(content, tabDisplayName);
 
-            ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
-          }
-        });
-      }
+          ToolWindowManager.getInstance(myProject).getToolWindow(ToolWindowId.MESSAGES_WINDOW).activate(null);
+        }
+      });
     }, VcsBundle.message("command.name.open.error.message.view"), null);
   }
 

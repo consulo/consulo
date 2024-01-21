@@ -16,29 +16,48 @@
 package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.concurrent.DataLock;
+import consulo.util.lang.OptionalNull;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 
 @Nonnull
 @Deprecated
 public final class ReadAction<T>  {
   @Deprecated
-  public static AccessToken start() {
-    return ApplicationManager.getApplication().acquireReadActionLock();
-  }
-
-  @Deprecated
   public static <E extends Throwable> void run(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
-    AccessRule.read(action);
+    DataLock locking = Application.get().getLock();
+    locking.readSync(action);
   }
 
   @Deprecated
   public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
-    return AccessRule.read(action);
+    DataLock locking = Application.get().getLock();
+    return locking.readSync(action);
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  public static <T, E extends Throwable> OptionalNull<T> tryCompute(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
+    Application application = Application.get();
+    Object[] ref = new Object[1];
+    boolean successRead = application.tryRunReadAction(() -> {
+      try {
+        ref[0] = action.get();
+      }
+      catch (Throwable e) {
+        throw new RuntimeException(e);
+      }
+    });
+
+    if (successRead) {
+      return OptionalNull.ofNullable((T)ref[0]);
+    }
+    return OptionalNull.empty();
   }
 
   /**

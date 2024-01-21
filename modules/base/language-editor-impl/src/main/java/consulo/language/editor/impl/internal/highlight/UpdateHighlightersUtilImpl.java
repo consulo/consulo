@@ -3,6 +3,7 @@
 package consulo.language.editor.impl.internal.highlight;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.impl.SweepProcessor;
@@ -43,7 +44,7 @@ public class UpdateHighlightersUtilImpl {
   private static boolean isCoveredByOffsets(HighlightInfo info, HighlightInfo coveredBy) {
     return ((HighlightInfoImpl)coveredBy).startOffset <= ((HighlightInfoImpl)info).startOffset &&
            ((HighlightInfoImpl)info).endOffset <= ((HighlightInfoImpl)coveredBy).endOffset &&
-           ((HighlightInfoImpl)info).getGutterIconRenderer() == null;
+           info.getGutterIconRenderer() == null;
   }
 
   public static void addHighlighterToEditorIncrementally(@Nonnull Project project,
@@ -68,7 +69,7 @@ public class UpdateHighlightersUtilImpl {
         return false;
       }
 
-      return ((HighlightInfoImpl)oldInfo).getGroup() != group || !((HighlightInfoImpl)oldInfo).equalsByActualOffset((HighlightInfoImpl)info);
+      return ((HighlightInfoImpl)oldInfo).getGroup() != group || !((HighlightInfoImpl)oldInfo).equalsByActualOffset(info);
     };
     boolean allIsClear = DaemonCodeAnalyzerEx.processHighlights(document, project, null, info.getActualStartOffset(), info.getActualEndOffset(), otherHighlightInTheWayProcessor);
     if (allIsClear) {
@@ -113,8 +114,6 @@ public class UpdateHighlightersUtilImpl {
   public static void setHighlightersInRange(@Nonnull final Project project, @Nonnull final Document document, @Nonnull final TextRange range, @Nullable final EditorColorsScheme colorsScheme,
                                             // if null global scheme will be used
                                             @Nonnull final List<? extends HighlightInfo> infos, @Nonnull final MarkupModelEx markup, final int group) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
-
     final SeverityRegistrar severityRegistrar = SeverityRegistrar.getSeverityRegistrar(project);
     final HighlightersRecycler infosToRemove = new HighlightersRecycler();
     DaemonCodeAnalyzerEx.processHighlights(document, project, null, range.getStartOffset(), range.getEndOffset(), i -> {
@@ -135,7 +134,7 @@ public class UpdateHighlightersUtilImpl {
 
     Lists.quickSort(infos, BY_START_OFFSET_NODUPS);
     final Map<TextRange, RangeMarker> ranges2markersCache = new HashMap<>(10);
-    final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    final PsiFile psiFile = ReadAction.compute(() -> PsiDocumentManager.getInstance(project).getPsiFile(document));
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
     final boolean[] changed = {false};
     SweepProcessor.Generator<HighlightInfo> generator = (Processor<HighlightInfo> processor) -> ContainerUtil.process(infos, processor);
@@ -318,7 +317,7 @@ public class UpdateHighlightersUtilImpl {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     final Document document = e.getDocument();
-    if (document instanceof DocumentEx && ((DocumentEx)document).isInBulkUpdate()) return;
+    if (document instanceof DocumentEx && document.isInBulkUpdate()) return;
 
     final MarkupModel markup = DocumentMarkupModel.forDocument(document, project, true);
     assertMarkupConsistent(markup, project);

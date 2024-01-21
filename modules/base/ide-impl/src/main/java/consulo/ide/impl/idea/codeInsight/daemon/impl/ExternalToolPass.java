@@ -23,6 +23,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Update;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
@@ -109,7 +110,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
   }
 
   @Override
-  public void doApplyInformationToEditor() {
+  public void doApplyInformationToEditor(UIAccess uiAccess, Object snapshot) {
     DaemonCodeAnalyzerEx daemonCodeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(myProject);
     daemonCodeAnalyzer.getFileStatusMap().markFileUpToDate(myDocument, getId());
 

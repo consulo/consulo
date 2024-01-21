@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.application.ApplicationManager;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
@@ -11,17 +10,18 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.document.util.DocumentUtil;
 import consulo.document.internal.DocumentEx;
+import consulo.document.util.DocumentUtil;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +119,7 @@ public class IterationState {
                         boolean useOnlyFontOrForegroundAffectingHighlighters,
                         boolean useFoldRegions,
                         boolean iterateBackwards) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
+    UIAccess.assertIsUIThread();
     myDocument = (DocumentEx)editor.getDocument();
 
     assert !DocumentUtil.isInsideSurrogatePair(myDocument, start);

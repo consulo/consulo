@@ -39,6 +39,8 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
@@ -49,6 +51,7 @@ import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
 import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.CommandRunnable;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
@@ -146,12 +149,13 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
         final VirtualFile oldFile = event.getOldFile();
         final VirtualFile newFile = event.getNewFile();
         if (Comparing.equal(oldFile, newFile) && Comparing.equal(getFile(), newFile)) {
-          Runnable runnable = () -> {
+          CommandRunnable runnable = () -> {
             final FileEditor oldEditor = event.getOldEditor();
             if (oldEditor != null) oldEditor.deselectNotify();
             final FileEditor newEditor = event.getNewEditor();
             if (newEditor != null) newEditor.selectNotify();
-            ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).providerSelected(DesktopEditorComposite.this);
+            Project project = fileEditorManager.getProject();
+            ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance(project)).providerSelected(DesktopEditorComposite.this);
             ((IdeDocumentHistoryImpl)IdeDocumentHistory.getInstance(myFileEditorManager.getProject())).onSelectionChanged();
           };
           if (ApplicationManager.getApplication().isDispatchThread()) {
@@ -391,21 +395,12 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
    */
   @Override
   @Nonnull
-  public FileEditor getSelectedEditor() {
-    return getSelectedEditorWithProvider().getFileEditor();
-  }
+  public abstract FileEditor getSelectedEditor();
 
   @Override
   public boolean isDisposed() {
     return myTabbedPaneWrapper != null && myTabbedPaneWrapper.isDisposed();
   }
-
-  /**
-   * @return currently selected myEditor with its provider.
-   */
-  @Override
-  @Nonnull
-  public abstract FileEditorWithProvider getSelectedEditorWithProvider();
 
   @Override
   public void setSelectedEditor(final int index) {
@@ -520,8 +515,9 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   }
 
   @RequiredUIAccess
-  void addEditor(@Nonnull FileEditor editor) {
-    ApplicationManager.getApplication().assertIsDispatchThread();
+  public void addEditor(@Nonnull FileEditor editor) {
+    UIAccess.assertIsUIThread();
+
     myEditors = ArrayUtil.append(myEditors, editor);
     if (myTabbedPaneWrapper == null) {
       myTabbedPaneWrapper = createTabbedPaneWrapper(myEditors);

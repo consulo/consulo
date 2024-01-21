@@ -2117,7 +2117,7 @@ public class UsageViewImpl implements UsageViewEx {
       close();
 
       try {
-        CommandProcessor.getInstance().executeCommand(myProject, myProcessRunnable, myCommandName, null);
+        CommandProcessor.getInstance().executeCommand(myProject, myProcessRunnable::run, myCommandName, null);
       }
       finally {
         disposeSmartPointers();

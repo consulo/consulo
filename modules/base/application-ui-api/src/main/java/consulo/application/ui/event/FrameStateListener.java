@@ -2,6 +2,7 @@
 package consulo.application.ui.event;
 
 import consulo.application.ui.FrameStateManager;
+import consulo.application.ui.wm.FocusableFrame;
 
 import java.util.EventListener;
 
@@ -15,8 +16,9 @@ import java.util.EventListener;
 public interface FrameStateListener extends EventListener {
   /**
    * Called when the IDE window is deactivated.
+   * @param ideFrame
    */
-  default void onFrameDeactivated() {
+  default void onFrameDeactivated(FocusableFrame ideFrame) {
   }
 
   /**

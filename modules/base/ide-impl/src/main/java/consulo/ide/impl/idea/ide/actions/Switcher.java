@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -1129,13 +1130,12 @@ public class Switcher extends AnAction implements DumbAware {
       AnAction gotoFile = ActionManager.getInstance().getAction("GotoFile");
       if (gotoFile == null || StringUtil.isEmpty(fileName)) return;
       myPopup.cancel();
-      ApplicationManager.getApplication()
-                        .invokeLater(() -> DataManager.getInstance().getDataContextFromFocusAsync().onSuccess(fromFocus -> {
-                          DataContext dataContext =
-                            SimpleDataContext.getSimpleContext(PlatformDataKeys.PREDEFINED_TEXT, fileName, fromFocus);
-                          AnActionEvent event = AnActionEvent.createFromAnAction(gotoFile, e, ActionPlaces.EDITOR_POPUP, dataContext);
-                          gotoFile.actionPerformed(event);
-                        }), IdeaModalityState.current());
+      Application.get().invokeLater(() -> DataManager.getInstance().getDataContextFromFocusAsync().thenAccept(fromFocus -> {
+        DataContext dataContext =
+          SimpleDataContext.getSimpleContext(PlatformDataKeys.PREDEFINED_TEXT, fileName, fromFocus);
+        AnActionEvent event = AnActionEvent.createFromAnAction(gotoFile, e, ActionPlaces.EDITOR_POPUP, dataContext);
+        gotoFile.actionPerformed(event);
+      }), IdeaModalityState.current());
     }
 
     @Nullable

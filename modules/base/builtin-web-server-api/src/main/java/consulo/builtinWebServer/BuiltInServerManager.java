@@ -20,12 +20,12 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.util.io.Url;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.net.URLConnection;
 
-@ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class BuiltInServerManager {
   @Nonnull
   public static BuiltInServerManager getInstance() {

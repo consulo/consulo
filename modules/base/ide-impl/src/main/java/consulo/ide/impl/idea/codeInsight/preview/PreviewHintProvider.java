@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.codeInsight.preview;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.annotation.Nonnull;
 
 import jakarta.annotation.Nullable;
@@ -42,6 +44,7 @@ public interface PreviewHintProvider {
    * @param file the file to check for preview availability
    * @return true if preview is supported, false otherwise.
    */
+  @RequiredReadAction
   boolean isSupportedFile(PsiFile file);
 
   /**
@@ -51,5 +54,6 @@ public interface PreviewHintProvider {
    * @return the component or null if no preview is available for the specified element.
    */
   @Nullable
+  @RequiredUIAccess
   JComponent getPreviewComponent(@Nonnull PsiElement element);
 }

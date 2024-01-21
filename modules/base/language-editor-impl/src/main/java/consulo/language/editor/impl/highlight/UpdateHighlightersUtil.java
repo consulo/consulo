@@ -2,7 +2,7 @@
 
 package consulo.language.editor.impl.highlight;
 
-import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
@@ -16,10 +16,9 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -28,7 +27,6 @@ public class UpdateHighlightersUtil {
     return ((HighlightInfoImpl)info).isFileLevelAnnotation() || info.getGutterIconRenderer() != null;
   }
 
-  @RequiredUIAccess
   public static void setHighlightersToEditor(@Nonnull Project project,
                                              @Nonnull Document document,
                                              int startOffset,
@@ -38,9 +36,8 @@ public class UpdateHighlightersUtil {
                                              @Nullable final EditorColorsScheme colorsScheme,
                                              int group) {
     TextRange range = new TextRange(startOffset, endOffset);
-    ApplicationManager.getApplication().assertIsDispatchThread();
 
-    PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
+    PsiFile psiFile = ReadAction.compute(() -> PsiDocumentManager.getInstance(project).getPsiFile(document));
     final DaemonCodeAnalyzerEx codeAnalyzer = DaemonCodeAnalyzerEx.getInstanceEx(project);
     codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
 
@@ -48,11 +45,5 @@ public class UpdateHighlightersUtil {
     UpdateHighlightersUtilImpl.assertMarkupConsistent(markup, project);
 
     UpdateHighlightersUtilImpl.setHighlightersInRange(project, document, range, colorsScheme, new ArrayList<>(highlights), (MarkupModelEx)markup, group);
-  }
-
-  @Deprecated //for teamcity
-  @RequiredUIAccess
-  public static void setHighlightersToEditor(@Nonnull Project project, @Nonnull Document document, int startOffset, int endOffset, @Nonnull Collection<HighlightInfo> highlights, int group) {
-    setHighlightersToEditor(project, document, startOffset, endOffset, highlights, null, group);
   }
 }

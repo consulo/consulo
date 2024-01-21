@@ -2,6 +2,7 @@
 
 package consulo.language.editor.impl.internal.highlight;
 
+import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -224,7 +225,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     getFile().putUserData(HAS_ERROR_ELEMENT, myHasErrorElement);
 
     if (myUpdateAll) {
-      ((HighlightingSessionImpl)myHighlightingSession).applyInEDT(this::reportErrorsToWolf);
+      reportErrorsToWolf();
     }
   }
 
@@ -520,7 +521,7 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
     List<Problem> problems = convertToProblems(getInfos(), file, myHasErrorElement);
     WolfTheProblemSolver wolf = WolfTheProblemSolver.getInstance(project);
 
-    boolean hasErrors = DaemonCodeAnalyzerEx.hasErrors(project, getDocument());
+    boolean hasErrors = ReadAction.compute(() -> DaemonCodeAnalyzerEx.hasErrors(project, getDocument()));
     if (!hasErrors || isWholeFileHighlighting()) {
       wolf.reportProblems(file, problems);
     }

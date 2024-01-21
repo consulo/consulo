@@ -17,13 +17,17 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.rename.RenameHandler;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -31,13 +35,8 @@ import consulo.module.ModuleWithNameAlreadyExistsException;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ref.Ref;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.rename.RenameHandler;
-import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -84,6 +83,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
   private static class MyInputValidator implements InputValidator {
     private final Project myProject;
     private final Module myModule;
+
     public MyInputValidator(Project project, Module module) {
       myProject = project;
       myModule = module;
@@ -100,17 +100,12 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
       final ModifiableModuleModel modifiableModel = renameModule(inputString);
       if (modifiableModel == null) return false;
       final Ref<Boolean> success = Ref.create(Boolean.TRUE);
-      CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
+      CommandProcessor.getInstance().executeCommand(myProject, () -> ApplicationManager.getApplication().runWriteAction(new Runnable() {
         @Override
         public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              modifiableModel.commit();
-            }
-          });
+          modifiableModel.commit();
         }
-      }, IdeBundle.message("command.renaming.module", oldName), null);
+      }), IdeBundle.message("command.renaming.module", oldName), null);
       return success.get().booleanValue();
     }
 

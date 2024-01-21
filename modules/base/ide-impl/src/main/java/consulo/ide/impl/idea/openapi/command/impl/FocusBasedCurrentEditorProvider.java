@@ -15,25 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.application.Application;
 import consulo.fileEditor.FileEditor;
-
-import java.awt.*;
 
 /**
  * @author max
  */
 public class FocusBasedCurrentEditorProvider implements CurrentEditorProvider {
+  @Override
+  @SuppressWarnings("deprecation")
   public FileEditor getCurrentEditor() {
-    // TODO [VISTALL] not supported for now
-    if(!Application.get().isSwingApplication()) {
-      return null;
-    }
-    // [kirillk] this is a hack, since much of editor-related code was written long before
-    // own focus managenent in the platform, so this method should be strictly synchronous
-    final Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-    return DataManager.getInstance().getDataContext(owner).getData(PlatformDataKeys.FILE_EDITOR);
+    DataContext dataContext = DataManager.getInstance().getDataContext();
+    return dataContext.getData(FileEditor.KEY);
   }
 }

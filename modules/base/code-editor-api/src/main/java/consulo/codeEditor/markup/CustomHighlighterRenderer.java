@@ -21,9 +21,10 @@ package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
 
+import consulo.document.Document;
 import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 public interface CustomHighlighterRenderer {
-  void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g);
+  void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, Document document, @Nonnull Graphics g);
 }

@@ -74,7 +74,7 @@ public class FrameStateManagerImpl extends FrameStateManager {
           public void run() {
             if (!app.isActive()) {
               myShouldSynchronize = true;
-              fireDeactivationEvent();
+              fireDeactivationEvent(ideFrame);
             }
           }
         }, 200);
@@ -87,8 +87,8 @@ public class FrameStateManagerImpl extends FrameStateManager {
     return myActive.getReady(this);
   }
 
-  private void fireDeactivationEvent() {
-    myDispatcher.getMulticaster().onFrameDeactivated();
+  private void fireDeactivationEvent(IdeFrame ideFrame) {
+    myDispatcher.getMulticaster().onFrameDeactivated(ideFrame);
   }
 
   private void fireActivationEvent() {

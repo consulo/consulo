@@ -16,14 +16,12 @@
 package consulo.ide.impl.idea.diff.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
+import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 
 // from kotlin
@@ -34,12 +32,11 @@ public class DiffEditorProvider implements FileEditorProvider, DumbAware {
     return file instanceof DiffVirtualFile;
   }
 
-  @RequiredUIAccess
   @Nonnull
   @Override
   public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
     DiffRequestProcessor processor = ((DiffVirtualFile)file).createProcessor(project);
-    return new DiffRequestProcessorEditor((DiffVirtualFile)file, processor);
+    return new DiffRequestProcessorEditor((DiffVirtualFile)file, processor, this);
   }
 
   @Nonnull

@@ -19,10 +19,11 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ModalityStateListener;
 import consulo.ui.internal.UIInternal;
-import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.internal.ThreadAssertion;
 import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -60,17 +61,12 @@ public interface UIAccess extends Executor {
 
   @RequiredUIAccess
   static void assertIsUIThread() {
-    if (!isUIThread()) {
-      throw new IllegalArgumentException("Call must be wrapped inside UI thread. Current thread: " + Thread.currentThread().getName());
-    }
+    ThreadAssertion.assertTrue(!isUIThread(), "Call must be called inside UI thread");
   }
 
   static void assetIsNotUIThread() {
-    if (isUIThread()) {
-      throw new IllegalArgumentException("Call must be wrapped outside UI thread. Current thread: " + Thread.currentThread().getName());
-    }
+    ThreadAssertion.assertTrue(isUIThread(), "Call must be called outside UI thread");
   }
-
 
   static void addModalityStateListener(@Nonnull ModalityStateListener listener, @Nonnull Disposable parentDisposable) {
     UIInternal.get().addModalityStateListener(listener, parentDisposable);
@@ -96,25 +92,26 @@ public interface UIAccess extends Executor {
     return true;
   }
 
+  void give(@RequiredUIAccess @Nonnull Runnable runnable);
+
   @Nonnull
-  default AsyncResult<Void> give(@RequiredUIAccess @Nonnull Runnable runnable) {
-    return give(() -> {
+  default CompletableFuture<?> giveAsync(@RequiredUIAccess @Nonnull Runnable runnable) {
+    return giveAsync(() -> {
       runnable.run();
       return null;
     });
   }
 
-  /**
-   * prefer {@link #giveAsync(Supplier)}
-   */
-  @Nonnull
-  <T> AsyncResult<T> give(@RequiredUIAccess @Nonnull Supplier<T> supplier);
-
   @Nonnull
   <T> CompletableFuture<T> giveAsync(@RequiredUIAccess @Nonnull Supplier<T> supplier);
 
   default void giveAndWait(@RequiredUIAccess @Nonnull Runnable runnable) {
-    give(runnable).getResultSync();
+    try {
+      giveAsync(runnable).get();
+    }
+    catch (InterruptedException | ExecutionException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @SuppressWarnings("unchecked")

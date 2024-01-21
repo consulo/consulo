@@ -15,6 +15,7 @@
  */
 package consulo.component.store.impl.internal;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
@@ -27,10 +28,11 @@ import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ShutDownTracker;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public final class StoreUtil {
   private static final Logger LOG = Logger.getInstance(StoreUtil.class);
@@ -54,12 +56,18 @@ public final class StoreUtil {
         LOG.warn("Save settings failed", e);
       }
 
-      String messagePostfix = " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + ExceptionUtil.getThrowableText(e) + "</p>" : "");
+      String messagePostfix = " Please restart " + Application.get().getName() + "</p>" + (Application.get()
+                                                                                                      .isInternal() ? "<p>" + ExceptionUtil.getThrowableText(
+        e) + "</p>" : "");
 
       PluginId pluginId = PluginExceptionUtil.findFirstPluginId(e);
 
       if (pluginId == null) {
-        StorageNotificationService.getInstance().notify(NotificationType.ERROR, "Unable to save settings", "<p>Failed to save settings." + messagePostfix, project);
+        StorageNotificationService.getInstance()
+                                  .notify(NotificationType.ERROR,
+                                          "Unable to save settings",
+                                          "<p>Failed to save settings." + messagePostfix,
+                                          project);
       }
       else {
         if (!ApplicationProperties.isInSandbox()) {
@@ -67,8 +75,10 @@ public final class StoreUtil {
         }
 
         StorageNotificationService.getInstance()
-                .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
-                        project);
+                                  .notify(NotificationType.ERROR,
+                                          "Unable to save plugin settings",
+                                          "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
+                                          project);
       }
     }
     finally {
@@ -76,16 +86,20 @@ public final class StoreUtil {
     }
   }
 
-  public static void saveAsync(@Nonnull IComponentStore stateStore, @Nonnull UIAccess uiAccess, @Nullable ComponentManager project) {
-    ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
-    try {
-      stateStore.saveAsync(uiAccess, new ArrayList<>());
-    }
-    catch (IComponentStore.SaveCancelledException e) {
-      LOG.info(e);
-    }
-    catch (Throwable e) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
+  @Nonnull
+  @RequiredWriteAction
+  public static CompletableFuture<?> saveAsync(@Nonnull IComponentStore stateStore,
+                                               @Nonnull UIAccess uiAccess,
+                                               boolean force,
+                                               @Nullable ComponentManager project) {
+    CompletableFuture<?> future = stateStore.saveAsync(force, uiAccess, new ArrayList<>());
+    future.whenComplete((o, e) -> {
+      if (e == null) {
+        return;
+      }
+
+      boolean inSandbox = ApplicationProperties.isInSandbox();
+      if (inSandbox) {
         LOG.error("Save settings failed", e);
       }
       else {
@@ -93,26 +107,31 @@ public final class StoreUtil {
       }
 
       uiAccess.give(() -> {
-        String messagePostfix = " Please restart " + Application.get().getName() + "</p>" + (Application.get().isInternal() ? "<p>" + ExceptionUtil.getThrowableText(e) + "</p>" : "");
+        String messagePostfix =
+          " Please restart " + Application.get().getName() + "</p>" + (inSandbox ? "<p>" + ExceptionUtil.getThrowableText(e) + "</p>" : "");
 
         PluginId pluginId = PluginExceptionUtil.findFirstPluginId(e);
 
         if (pluginId == null) {
-          StorageNotificationService.getInstance().notify(NotificationType.ERROR, "Unable to save settings", "<p>Failed to save settings." + messagePostfix, project);
+          StorageNotificationService.getInstance()
+                                    .notify(NotificationType.ERROR,
+                                            "Unable to save settings",
+                                            "<p>Failed to save settings." + messagePostfix,
+                                            project);
         }
         else {
-          if (!ApplicationProperties.isInSandbox()) {
+          if (!inSandbox) {
             PluginManager.disablePlugin(pluginId);
           }
 
           StorageNotificationService.getInstance()
-                  .notify(NotificationType.ERROR, "Unable to save plugin settings", "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
-                          project);
+                                    .notify(NotificationType.ERROR,
+                                            "Unable to save plugin settings",
+                                            "<p>The plugin <i>" + pluginId + "</i> failed to save settings and has been " + "disabled." + messagePostfix,
+                                            project);
         }
       });
-    }
-    finally {
-      ShutDownTracker.getInstance().unregisterStopperThread(Thread.currentThread());
-    }
+    });
+    return future;
   }
 }

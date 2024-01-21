@@ -13,8 +13,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
-import consulo.ui.ex.CopyPasteSupport;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
@@ -29,13 +27,13 @@ import consulo.ide.impl.idea.ui.ListenerUtil;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
-import java.util.function.Consumer;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -47,9 +45,9 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
-import consulo.language.content.ProjectRootsUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -67,11 +65,12 @@ import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
@@ -82,6 +81,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -863,7 +863,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(ctx);
         }
         else {
-          dataManager.getDataContextFromFocus().doWhenDone((Consumer<DataContext>)dataContext -> {
+          dataManager.getDataContextFromFocus().thenAccept(dataContext -> {
             myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             DataContext ctx = dataManager.getDataContext(myContextComponent);
             myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(ctx);
