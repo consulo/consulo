@@ -21,6 +21,7 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.Size;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.action.*;
@@ -147,7 +148,7 @@ public class MasterDetailPopupBuilder implements MasterController {
     if (myActions != null) {
       myActionToolbar = ActionManager.getInstance().createActionToolbar("", myActions, true);
       myActionToolbar.setReservePlaceAutoPopupIcon(false);
-      myActionToolbar.setMinimumButtonSize(new Dimension(20, 20));
+      myActionToolbar.setMinimumButtonSize(new Size(20, 20));
       toolBar = myActionToolbar.getComponent();
       toolBar.setOpaque(false);
     }
