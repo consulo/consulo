@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,57 +15,32 @@
  */
 package consulo.ide.impl.language.codeStyle.arrangement;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.codeStyle.arrangement.ArrangementEntry;
-import consulo.language.codeStyle.arrangement.ArrangementSettings;
-import consulo.language.codeStyle.arrangement.ArrangementUtil;
-import consulo.language.codeStyle.arrangement.Rearranger;
+import consulo.language.codeStyle.arrangement.*;
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.*;
 
 /**
- * The whole arrangement idea is to allow to change file entries order according to the user-provided rules.
- * <p/>
- * That means that we can re-use the same mechanism during, say, new members generation - arrangement rules can be used to
- * determine position where a new element should be inserted.
- * <p/>
- * This service provides utility methods for that.
- *
- * @author Denis Zhdanov
- * @since 9/4/12 11:12 AM
+ * @author VISTALL
+ * @since 2024-02-10
  */
-@Singleton
-@ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
-public class MemberOrderService {
-
-  /**
-   * Tries to find an element at the given context which should be the previous sibling for the given 'member'element according to the
-   * {@link CommonCodeStyleSettings#getArrangementSettings() user-defined arrangement rules}.
-   * <p/>
-   * E.g. the IDE might generate given 'member' element and wants to know element after which it should be inserted
-   *
-   * @param member   target member which anchor should be calculated
-   * @param settings code style settings to use
-   * @param context  given member's context
-   * @return given member's anchor if the one can be computed;
-   * given 'context' element if given member should be the first child
-   * <code>null</code> otherwise
-   */
-  @SuppressWarnings("MethodMayBeStatic")
+@Singleton
+public class MemberOrderServiceImpl implements MemberOrderService {
+  @RequiredReadAction
+  @Override
   @Nullable
   public PsiElement getAnchor(@Nonnull PsiElement member, @Nonnull CommonCodeStyleSettings settings, @Nonnull PsiElement context) {
     Language language = context.getLanguage();
@@ -84,7 +59,7 @@ public class MemberOrderService {
     }
 
     Pair<? extends ArrangementEntry, ? extends List<? extends ArrangementEntry>> pair =
-            rearranger.parseWithNew(context, null, Collections.singleton(context.getTextRange()), member, arrangementSettings);
+      rearranger.parseWithNew(context, null, Collections.singleton(context.getTextRange()), member, arrangementSettings);
     if (pair == null || pair.second.isEmpty()) {
       return null;
     }
