@@ -15,17 +15,15 @@
  */
 package consulo.language.editor.refactoring.action;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.refactoring.ElementsHandler;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.util.lang.function.Condition;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,9 +32,9 @@ import jakarta.annotation.Nullable;
  */
 public abstract class BasePlatformRefactoringAction extends BaseRefactoringAction {
   private Boolean myHidden = null;
-  private final Condition<RefactoringSupportProvider> myCondition = provider -> getRefactoringHandler(provider) != null;
 
   @Override
+  @RequiredReadAction
   protected final RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
     PsiElement element = null;
     Editor editor = dataContext.getData(Editor.KEY);
@@ -51,7 +49,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       }
     }
 
-    PsiElement referenced = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    PsiElement referenced = dataContext.getData(PsiElement.KEY);
     if (referenced != null) {
       RefactoringActionHandler handler = getHandler(referenced.getLanguage(), referenced);
       if (handler != null) {
@@ -59,7 +57,7 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
       }
     }
 
-    PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] psiElements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null && psiElements.length > 1) {
       RefactoringActionHandler handler = getHandler(psiElements[0].getLanguage(), psiElements[0]);
       if (handler != null && isEnabledOnElements(psiElements)) {
@@ -69,6 +67,10 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
 
     if (element == null) {
       element = referenced;
+    }
+
+    if (element == null) {
+      return null;
     }
 
     final Language[] languages = dataContext.getData(LangDataKeys.CONTEXT_LANGUAGES);
