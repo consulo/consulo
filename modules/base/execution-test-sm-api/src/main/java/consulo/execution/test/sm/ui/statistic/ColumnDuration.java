@@ -15,13 +15,12 @@
  */
 package consulo.execution.test.sm.ui.statistic;
 
-import consulo.execution.test.sm.ui.statistic.BaseColumn;
-import consulo.execution.test.sm.ui.statistic.ColumnTest;
-import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.test.sm.runner.SMTestProxy;
-import consulo.execution.test.sm.ui.TestsPresentationUtil;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
+import consulo.execution.test.sm.ui.TestsPresentationUtil;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredTableCellRenderer;
+import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -35,15 +34,18 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
     super(SMTestsRunnerBundle.message("sm.test.runner.ui.tabs.statistics.columns.duration.title"));
   }
 
+  @Override
   public String valueOf(final SMTestProxy testProxy) {
     return TestsPresentationUtil.getDurationPresentation(testProxy);
   }
 
-  @jakarta.annotation.Nullable
+  @Override
+  @Nullable
   public Comparator<SMTestProxy> getComparator(){
     return this;
   }
 
+  @Override
   public int compare(final SMTestProxy proxy1, final SMTestProxy proxy2) {
     final Long duration1 = proxy1.getDuration();
     final Long duration2 = proxy2.getDuration();
@@ -70,12 +72,13 @@ public class ColumnDuration extends BaseColumn implements Comparator<SMTestProxy
       myProxy = proxy;
     }
 
+    @Override
     public void customizeCellRenderer(final JTable table,
-                                         final Object value,
-                                         final boolean selected,
-                                         final boolean hasFocus,
-                                         final int row,
-                                         final int column) {
+                                      final Object value,
+                                      final boolean selected,
+                                      final boolean hasFocus,
+                                      final int row,
+                                      final int column) {
       assert value != null;
 
       final String title = value.toString();

@@ -18,6 +18,7 @@ package consulo.execution.test.sm.ui;
 import consulo.application.AllIcons;
 import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.execution.test.*;
+import consulo.execution.test.sm.SmRunnerBundle;
 import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.runner.SMTestsRunnerBundle;
 import consulo.execution.ui.console.ConsoleViewContentType;
@@ -39,27 +40,39 @@ import java.util.Set;
  * @author Roman Chernyatchik
  */
 public class TestsPresentationUtil {
-  @NonNls private static final String DOUBLE_SPACE = "  ";
-  @NonNls private static final String DURATION_UNKNOWN = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.duration.unknown");
-  @NonNls private static final String DURATION_NO_TESTS = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.duration.no.tests");
-  @NonNls private static final String DURATION_NOT_RUN = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.duration.not.run");
-  @NonNls private static final String DURATION_RUNNING_PREFIX = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.duration.prefix.running");
-  @NonNls private static final String DURATION_TERMINATED_PREFIX = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.duration.prefix.terminated");
-  @NonNls private static final String COLON = ": ";
-  public static final SimpleTextAttributes PASSED_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, TestsUIUtil.PASSED_COLOR);
+  @NonNls
+  private static final String DOUBLE_SPACE = "  ";
+  @NonNls
+  private static final String DURATION_UNKNOWN = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.duration.unknown");
+  @NonNls
+  private static final String DURATION_NO_TESTS = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.duration.no.tests");
+  @NonNls
+  private static final String DURATION_NOT_RUN = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.duration.not.run");
+  @NonNls
+  private static final String DURATION_RUNNING_PREFIX = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.duration.prefix.running");
+  @NonNls
+  private static final String DURATION_TERMINATED_PREFIX = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.duration.prefix.terminated");
+  @NonNls
+  private static final String COLON = ": ";
+  public static final SimpleTextAttributes PASSED_ATTRIBUTES =
+    new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, TestsUIUtil.PASSED_COLOR);
   public static final SimpleTextAttributes DEFFECT_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, Color.RED);
   public static final SimpleTextAttributes TERMINATED_ATTRIBUTES = new SimpleTextAttributes(SimpleTextAttributes.STYLE_BOLD, Color.ORANGE);
-  @NonNls private static final String RESULTS_NO_TESTS = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tabs.statistics.columns.results.no.tests");
-  @NonNls private static final String NO_NAME_TEST = SMTestsRunnerBundle.message(
-          "sm.test.runner.ui.tests.tree.presentation.labels.test.noname");
-  @NonNls private static final String UNKNOWN_TESTS_COUNT = "<...>";
-  @NonNls static final String DEFAULT_TESTS_CATEGORY = "Tests";
+  @NonNls
+  private static final String RESULTS_NO_TESTS = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tabs.statistics.columns.results.no.tests");
+  @NonNls
+  private static final String NO_NAME_TEST = SMTestsRunnerBundle.message(
+    "sm.test.runner.ui.tests.tree.presentation.labels.test.noname");
+  @NonNls
+  private static final String UNKNOWN_TESTS_COUNT = "<...>";
+  @NonNls
+  static final String DEFAULT_TESTS_CATEGORY = "Tests";
 
 
   private TestsPresentationUtil() {
@@ -75,7 +88,8 @@ public class TestsPresentationUtil {
     final StringBuilder sb = new StringBuilder();
     if (endTime == 0) {
       sb.append(SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.running"));
-    } else {
+    }
+    else {
       sb.append(SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.done"));
     }
 
@@ -110,7 +124,7 @@ public class TestsPresentationUtil {
     sb.append(' ').append(testsCount).append(' ');
     sb.append(SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.of"));
     sb.append(' ').append(testsTotal != 0 ? testsTotal
-                                          : !isFinished ? UNKNOWN_TESTS_COUNT : 0);
+                            : !isFinished ? UNKNOWN_TESTS_COUNT : 0);
 
     if (failuresCount > 0) {
       sb.append(DOUBLE_SPACE);
@@ -136,7 +150,8 @@ public class TestsPresentationUtil {
 
   public static void formatRootNodeWithChildren(final SMTestProxy.SMRootTestProxy testProxy,
                                                 final TestTreeRenderer renderer) {
-    renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()));
+    IconInfo iconInfo = getIcon(testProxy, renderer.getConsoleProperties());
+    renderer.setIcon(iconInfo.icon());
 
     final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
@@ -144,11 +159,14 @@ public class TestsPresentationUtil {
     final String presentableName = testProxy.getPresentation();
     if (presentableName != null) {
       text = presentableName;
-    } else if (magnitude == TestStateInfo.Magnitude.RUNNING_INDEX) {
+    }
+    else if (magnitude == TestStateInfo.Magnitude.RUNNING_INDEX) {
       text = SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.running.tests");
-    } else if (magnitude == TestStateInfo.Magnitude.TERMINATED_INDEX) {
+    }
+    else if (magnitude == TestStateInfo.Magnitude.TERMINATED_INDEX) {
       text = SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.was.terminated");
-    } else {
+    }
+    else {
       text = SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.test.results");
     }
     renderer.append(text, SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -164,25 +182,29 @@ public class TestsPresentationUtil {
     if (magnitude == TestStateInfo.Magnitude.RUNNING_INDEX) {
       if (!testProxy.getChildren().isEmpty()) {
         formatRootNodeWithChildren(testProxy, renderer);
-      } else {
-        renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()));
+      }
+      else {
+        renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()).icon());
         renderer.append(SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.instantiating.tests"),
                         SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
-    } else if (magnitude == TestStateInfo.Magnitude.NOT_RUN_INDEX) {
+    }
+    else if (magnitude == TestStateInfo.Magnitude.NOT_RUN_INDEX) {
       renderer.setIcon(PoolOfTestIcons.NOT_RAN);
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tests.tree.presentation.labels.not.test.results"),
+                        "sm.test.runner.ui.tests.tree.presentation.labels.not.test.results"),
                       SimpleTextAttributes.ERROR_ATTRIBUTES);
-    } else if (magnitude == TestStateInfo.Magnitude.TERMINATED_INDEX) {
+    }
+    else if (magnitude == TestStateInfo.Magnitude.TERMINATED_INDEX) {
       renderer.setIcon(PoolOfTestIcons.TERMINATED_ICON);
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tests.tree.presentation.labels.was.terminated"),
+                        "sm.test.runner.ui.tests.tree.presentation.labels.was.terminated"),
                       SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    } else if (magnitude == TestStateInfo.Magnitude.PASSED_INDEX) {
+    }
+    else if (magnitude == TestStateInfo.Magnitude.PASSED_INDEX) {
       renderer.setIcon(PoolOfTestIcons.PASSED_ICON);
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tests.tree.presentation.labels.all.tests.passed"),
+                        "sm.test.runner.ui.tests.tree.presentation.labels.all.tests.passed"),
                       SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
     else {
@@ -194,8 +216,8 @@ public class TestsPresentationUtil {
       else {
         renderer.setIcon(PoolOfTestIcons.NOT_RAN);
         renderer.append(testProxy.isTestsReporterAttached()
-                        ? SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.no.tests.were.found")
-                        : SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.test.reporter.not.attached"),
+                          ? SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.no.tests.were.found")
+                          : SMTestsRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.labels.test.reporter.not.attached"),
                         SimpleTextAttributes.ERROR_ATTRIBUTES);
       }
     }
@@ -203,7 +225,7 @@ public class TestsPresentationUtil {
 
   public static void formatTestProxy(final SMTestProxy testProxy,
                                      final TestTreeRenderer renderer) {
-    renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()));
+    renderer.setIcon(getIcon(testProxy, renderer.getConsoleProperties()).icon());
     renderer.append(testProxy.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
   }
 
@@ -262,38 +284,64 @@ public class TestsPresentationUtil {
     return name;
   }
 
-  @Nullable
-  private static Image getIcon(final SMTestProxy testProxy,
-                               final TestConsoleProperties consoleProperties) {
+  @Nonnull
+  private static IconInfo getIcon(final SMTestProxy testProxy,
+                                  final TestConsoleProperties consoleProperties) {
     final TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
     final boolean hasErrors = testProxy.hasErrors();
+    final boolean hasPassedTests = testProxy.hasPassedTests();
 
-    switch (magnitude) {
-      case ERROR_INDEX:
-        return PoolOfTestIcons.ERROR_ICON;
-      case FAILED_INDEX:
-        return hasErrors ? SMPoolOfTestIcons.FAILED_E_ICON : PoolOfTestIcons.FAILED_ICON;
-      case IGNORED_INDEX:
-        return hasErrors ? SMPoolOfTestIcons.IGNORED_E_ICON : PoolOfTestIcons.IGNORED_ICON;
-      case NOT_RUN_INDEX:
-        return PoolOfTestIcons.NOT_RAN;
-      case COMPLETE_INDEX:
-      case PASSED_INDEX:
-        return hasErrors ? SMPoolOfTestIcons.PASSED_E_ICON : PoolOfTestIcons.PASSED_ICON;
-      case RUNNING_INDEX:
+    return switch (magnitude) {
+      case ERROR_INDEX -> IconInfo.wrap(SMPoolOfTestIcons.ERROR_ICON,
+                                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.error"));
+      case FAILED_INDEX -> hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.FAILED_E_ICON,
+                                                     SmRunnerBundle.message(
+                                                       "sm.test.runner.ui.tests.tree.presentation.accessible.status.failed.with.errors"))
+        : IconInfo.wrap(SMPoolOfTestIcons.FAILED_ICON,
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.failed"));
+      case IGNORED_INDEX -> hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.IGNORED_E_ICON,
+                                                      SmRunnerBundle.message(
+                                                        "sm.test.runner.ui.tests.tree.presentation.accessible.status.ignored.with.errors"))
+        : (hasPassedTests ? IconInfo.wrap(SMPoolOfTestIcons.PASSED_IGNORED,
+                                          SmRunnerBundle.message(
+                                            "sm.test.runner.ui.tests.tree.presentation.accessible.status.passed.with.ignored"))
+        : IconInfo.wrap(SMPoolOfTestIcons.IGNORED_ICON,
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.ignored")));
+      case NOT_RUN_INDEX -> IconInfo.wrap(SMPoolOfTestIcons.NOT_RAN,
+                                          SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.not.ran"));
+      case COMPLETE_INDEX, PASSED_INDEX -> hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.PASSED_E_ICON,
+                                                                     SmRunnerBundle.message(
+                                                                       "sm.test.runner.ui.tests.tree.presentation.accessible.status.passed.with.errors"))
+        : IconInfo.wrap(SMPoolOfTestIcons.PASSED_ICON,
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.passed"));
+      case RUNNING_INDEX -> {
         if (consoleProperties.isPaused()) {
-          return hasErrors ? SMPoolOfTestIcons.PAUSED_E_ICON : AllIcons.RunConfigurations.TestPaused;
+          yield hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.PAUSED_E_ICON,
+                                          SmRunnerBundle.message(
+                                            "sm.test.runner.ui.tests.tree.presentation.accessible.status.paused.with.errors"))
+            : IconInfo.wrap(AllIcons.RunConfigurations.TestPaused,
+                            SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.paused"));
         }
         else {
-          return hasErrors ? SMPoolOfTestIcons.RUNNING_E_ICON : SMPoolOfTestIcons.RUNNING_ICON;
+          yield hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.RUNNING_E_ICON,
+                                          SmRunnerBundle.message(
+                                            "sm.test.runner.ui.tests.tree.presentation.accessible.status.running.with.errors"))
+            : IconInfo.wrap(SMPoolOfTestIcons.RUNNING_ICON,
+                            SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.running"));
         }
-      case SKIPPED_INDEX:
-        return hasErrors ? SMPoolOfTestIcons.SKIPPED_E_ICON : PoolOfTestIcons.SKIPPED_ICON;
-      case TERMINATED_INDEX:
-        return hasErrors ? SMPoolOfTestIcons.TERMINATED_E_ICON : PoolOfTestIcons.TERMINATED_ICON;
-    }
-    return null;
+      }
+      case SKIPPED_INDEX -> hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.SKIPPED_E_ICON,
+                                                      SmRunnerBundle.message(
+                                                        "sm.test.runner.ui.tests.tree.presentation.accessible.status.skipped.with.errors"))
+        : IconInfo.wrap(SMPoolOfTestIcons.SKIPPED_ICON,
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.skipped"));
+      case TERMINATED_INDEX -> hasErrors ? IconInfo.wrap(SMPoolOfTestIcons.TERMINATED_E_ICON,
+                                                         SmRunnerBundle.message(
+                                                           "sm.test.runner.ui.tests.tree.presentation.accessible.status.terminated.with.errors"))
+        : IconInfo.wrap(SMPoolOfTestIcons.TERMINATED_ICON,
+                        SmRunnerBundle.message("sm.test.runner.ui.tests.tree.presentation.accessible.status.terminated"));
+    };
   }
 
   @Nullable
@@ -348,29 +396,29 @@ public class TestsPresentationUtil {
 
     if (failedCount > 0) {
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.failed",
-              failedCount) + separator,
+                        "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.failed",
+                        failedCount) + separator,
                       DEFFECT_ATTRIBUTES);
     }
 
     if (errorsCount > 0) {
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.errors",
-              errorsCount) + separator,
+                        "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.errors",
+                        errorsCount) + separator,
                       DEFFECT_ATTRIBUTES);
     }
 
     if (ignoredCount > 0) {
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.ignored",
-              ignoredCount) + separator,
+                        "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.ignored",
+                        ignoredCount) + separator,
                       SimpleTextAttributes.GRAYED_BOLD_ATTRIBUTES);
     }
 
     if (passedCount > 0) {
       renderer.append(SMTestsRunnerBundle.message(
-              "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.passed",
-              passedCount),
+                        "sm.test.runner.ui.tabs.statistics.columns.results.count.msg.passed",
+                        passedCount),
                       PASSED_ATTRIBUTES);
     }
   }
@@ -420,9 +468,10 @@ public class TestsPresentationUtil {
     if (duration == null) {
       // if suite without children
       return proxy.isSuite() && proxy.isLeaf()
-             ? DURATION_NO_TESTS
-             : DURATION_UNKNOWN;
-    } else {
+        ? DURATION_NO_TESTS
+        : DURATION_UNKNOWN;
+    }
+    else {
       return StringUtil.formatDuration(duration.longValue());
     }
   }
@@ -469,5 +518,21 @@ public class TestsPresentationUtil {
         printer.print(text, contentType);
       }
     });
+  }
+
+  private static record IconInfo(Image icon, String statusText) {
+    @Deprecated
+    private Image getIcon() {
+      return icon();
+    }
+
+    @Deprecated
+    private String getStatusText() {
+      return statusText();
+    }
+
+    static IconInfo wrap(Image icon, String statusText) {
+      return new IconInfo(icon, statusText);
+    }
   }
 }

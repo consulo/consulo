@@ -16,6 +16,7 @@
 package consulo.execution.test;
 
 import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
@@ -29,4 +30,5 @@ public interface PoolOfTestIcons {
   Image IGNORED_ICON = AllIcons.RunConfigurations.TestIgnored;
   Image ERROR_ICON_MARK = AllIcons.Nodes.ErrorMark;
   Image TEAR_DOWN_FAILURE = ImageEffects.layered(PASSED_ICON, ERROR_ICON_MARK);
+  Image PASSED_IGNORED = PlatformIconGroup.runconfigurationsTestpassedignored();
 }
