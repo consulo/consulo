@@ -125,10 +125,15 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
       width -= myDurationWidth + myDurationLeftInset + myDurationRightInset;
       if (width > 0 && height > 0) {
         g.setColor(myDurationColor);
-        g.setFont(RelativeFont.SMALL.derive(getFont()));
-        g.drawString(myDurationText, width + myDurationLeftInset, getTextBaseLine(g.getFontMetrics(), height));
-        clip = g.getClip();
-        g.clipRect(0, 0, width, height);
+        Font oldFont = g.getFont();
+        try {
+          g.setFont(RelativeFont.SMALL.derive(oldFont));
+          g.drawString(myDurationText, width + myDurationLeftInset, getTextBaseLine(g.getFontMetrics(), height));
+          clip = g.getClip();
+          g.clipRect(0, 0, width, height);
+        } finally {
+          g.setFont(oldFont);
+        }
       }
     }
     super.paintComponent(g);
