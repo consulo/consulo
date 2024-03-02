@@ -24,6 +24,8 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
@@ -481,6 +483,12 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
     catch (Exception e) {
       LOG.warn(e);
+      return;
+    }
+
+    if (inputStream == null) {
+      PluginDescriptor plugin = PluginManager.getPlugin(provider.getClass());
+      LOG.error("Template by path " + xmlFilePath + " not found in plugin: " + plugin.getPluginClassLoader());
       return;
     }
 
