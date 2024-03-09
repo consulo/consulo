@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author Alexey Kudravtsev
  */
+@Deprecated
 public final class QuickFixAction {
   private QuickFixAction() {
   }

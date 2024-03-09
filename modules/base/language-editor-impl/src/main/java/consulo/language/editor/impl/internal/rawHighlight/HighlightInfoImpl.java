@@ -5,7 +5,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
-import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.codeEditor.markup.RangeHighlighterEx;
@@ -16,19 +15,18 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.ast.ASTNode;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.editor.annotation.SuppressableProblemGroup;
 import consulo.language.editor.impl.inspection.scheme.GlobalInspectionToolWrapper;
+import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.impl.internal.inspection.AnnotatorBasedInspection;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.impl.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
@@ -39,7 +37,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.BitUtil;
@@ -47,10 +44,10 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import org.intellij.lang.annotations.MagicConstant;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -289,7 +286,7 @@ public class HighlightInfoImpl implements HighlightInfo {
   }
 
   @Nullable
-  private static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
+  static String htmlEscapeToolTip(@Nullable String unescapedTooltip) {
     return unescapedTooltip == null ? null : XmlStringUtil.wrapInHtml(XmlStringUtil.escapeString(unescapedTooltip));
   }
 
@@ -402,14 +399,14 @@ public class HighlightInfoImpl implements HighlightInfo {
 
   @Nonnull
   public static Builder newHighlightInfo(@Nonnull HighlightInfoType type) {
-    return new B(type);
+    return new HighlightInfoBuilder(type);
   }
 
   public void setGroup(int group) {
     this.group = group;
   }
 
-  private static boolean isAcceptedByFilters(@Nonnull HighlightInfoImpl info, @Nullable PsiElement psiElement) {
+  static boolean isAcceptedByFilters(@Nonnull HighlightInfoImpl info, @Nullable PsiElement psiElement) {
     PsiFile file = psiElement == null ? null : psiElement.getContainingFile();
     for (HighlightInfoFilter filter : HighlightInfoFilter.EXTENSION_POINT_NAME.getExtensionList()) {
       if (!filter.accept(info, file)) {
@@ -418,236 +415,6 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
     info.psiElement = psiElement;
     return true;
-  }
-
-  private static class B implements Builder {
-    private Boolean myNeedsUpdateOnTyping;
-    private TextAttributes forcedTextAttributes;
-    private TextAttributesKey forcedTextAttributesKey;
-
-    private final HighlightInfoType type;
-    private int startOffset = -1;
-    private int endOffset = -1;
-
-    private String escapedDescription;
-    private String escapedToolTip;
-    private HighlightSeverity severity;
-
-    private boolean isAfterEndOfLine;
-    private boolean isFileLevelAnnotation;
-    private int navigationShift;
-
-    private GutterIconRenderer gutterIconRenderer;
-    private ProblemGroup problemGroup;
-    private String inspectionToolId;
-    private PsiElement psiElement;
-    private int group;
-
-    private B(@Nonnull HighlightInfoType type) {
-      this.type = type;
-    }
-
-    @Nonnull
-    @Override
-    public Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
-      assert this.gutterIconRenderer == null : "gutterIconRenderer already set";
-      this.gutterIconRenderer = gutterIconRenderer;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder problemGroup(@Nonnull ProblemGroup problemGroup) {
-      assert this.problemGroup == null : "problemGroup already set";
-      this.problemGroup = problemGroup;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder inspectionToolId(@Nonnull String inspectionToolId) {
-      assert this.inspectionToolId == null : "inspectionToolId already set";
-      this.inspectionToolId = inspectionToolId;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder description(@Nonnull String description) {
-      assert escapedDescription == null : "description already set";
-      escapedDescription = description;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder descriptionAndTooltip(@Nonnull String description) {
-      return description(description).unescapedToolTip(description);
-    }
-
-    @Nonnull
-    @Override
-    public Builder textAttributes(@Nonnull TextAttributes attributes) {
-      assert forcedTextAttributes == null : "textAttributes already set";
-      forcedTextAttributes = attributes;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder textAttributes(@Nonnull TextAttributesKey attributesKey) {
-      assert forcedTextAttributesKey == null : "textAttributesKey already set";
-      forcedTextAttributesKey = attributesKey;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
-      assert escapedToolTip == null : "Tooltip was already set";
-      escapedToolTip = htmlEscapeToolTip(unescapedToolTip);
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder escapedToolTip(@Nonnull String escapedToolTip) {
-      assert this.escapedToolTip == null : "Tooltip was already set";
-      this.escapedToolTip = escapedToolTip;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(int start, int end) {
-      assert startOffset == -1 && endOffset == -1 : "Offsets already set";
-
-      startOffset = start;
-      endOffset = end;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(@Nonnull TextRange textRange) {
-      assert startOffset == -1 && endOffset == -1 : "Offsets already set";
-      startOffset = textRange.getStartOffset();
-      endOffset = textRange.getEndOffset();
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(@Nonnull ASTNode node) {
-      return range(node.getPsi());
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(@Nonnull PsiElement element) {
-      assert psiElement == null : " psiElement already set";
-      psiElement = element;
-      return range(element.getTextRange());
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement) {
-      TextRange absoluteRange = rangeInElement.shiftRight(element.getTextRange().getStartOffset());
-      return range(element, absoluteRange.getStartOffset(), absoluteRange.getEndOffset());
-    }
-
-    @Nonnull
-    @Override
-    public Builder range(@Nonnull PsiElement element, int start, int end) {
-      assert psiElement == null : " psiElement already set";
-      psiElement = element;
-      return range(start, end);
-    }
-
-    @Nonnull
-    @Override
-    public Builder endOfLine() {
-      isAfterEndOfLine = true;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder needsUpdateOnTyping(boolean update) {
-      assert myNeedsUpdateOnTyping == null : " needsUpdateOnTyping already set";
-      myNeedsUpdateOnTyping = update;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder severity(@Nonnull HighlightSeverity severity) {
-      assert this.severity == null : " severity already set";
-      this.severity = severity;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder fileLevelAnnotation() {
-      isFileLevelAnnotation = true;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder navigationShift(int navigationShift) {
-      this.navigationShift = navigationShift;
-      return this;
-    }
-
-    @Nonnull
-    @Override
-    public Builder group(int group) {
-      this.group = group;
-      return this;
-    }
-
-    @Nullable
-    @Override
-    public HighlightInfoImpl create() {
-      HighlightInfoImpl info = createUnconditionally();
-      LOG.assertTrue(psiElement != null ||
-                       severity == HighlightInfoType.SYMBOL_TYPE_SEVERITY ||
-                       severity == HighlightInfoType.INJECTED_FRAGMENT_SEVERITY ||
-                       ArrayUtil.find(HighlightSeverity.DEFAULT_SEVERITIES, severity) != -1,
-                     "Custom type requires not-null element to detect its text attributes");
-
-      if (!isAcceptedByFilters(info, psiElement)) return null;
-
-      return info;
-    }
-
-    @Nonnull
-    @Override
-    public HighlightInfoImpl createUnconditionally() {
-      if (severity == null) {
-        severity = type.getSeverity(psiElement);
-      }
-
-      return new HighlightInfoImpl(forcedTextAttributes,
-                                   forcedTextAttributesKey,
-                                   type,
-                                   startOffset,
-                                   endOffset,
-                                   escapedDescription,
-                                   escapedToolTip,
-                                   severity,
-                                   isAfterEndOfLine,
-                                   myNeedsUpdateOnTyping,
-                                   isFileLevelAnnotation,
-                                   navigationShift,
-                                   problemGroup,
-                                   inspectionToolId,
-                                   gutterIconRenderer,
-                                   group);
-    }
   }
 
   public GutterMark getGutterIconRenderer() {

@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.rawHighlight;
 
+import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
@@ -30,9 +32,10 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.HighlightInfoFactory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -45,16 +48,26 @@ public interface HighlightInfo extends Segment {
   public interface Builder {
     // only one 'range' call allowed
     @Nonnull
-    Builder range(@Nonnull TextRange textRange);
+    default Builder range(@Nonnull TextRange textRange) {
+      return range(textRange.getStartOffset(), textRange.getEndOffset());
+    }
 
     @Nonnull
-    Builder range(@Nonnull ASTNode node);
+    @RequiredReadAction
+    default Builder range(@Nonnull ASTNode node) {
+      return range(node.getPsi());
+    }
 
     @Nonnull
+    @RequiredReadAction
     Builder range(@Nonnull PsiElement element);
 
     @Nonnull
-    Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement);
+    @RequiredReadAction
+    default HighlightInfo.Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement) {
+      TextRange absoluteRange = rangeInElement.shiftRight(element.getTextRange().getStartOffset());
+      return range(element, absoluteRange.getStartOffset(), absoluteRange.getEndOffset());
+    }
 
     @Nonnull
     Builder range(@Nonnull PsiElement element, int start, int end);
@@ -76,7 +89,9 @@ public interface HighlightInfo extends Segment {
     Builder description(@Nonnull String description);
 
     @Nonnull
-    Builder descriptionAndTooltip(@Nonnull String description);
+    default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
+      return description(description).unescapedToolTip(description);
+    }
 
     @Nonnull
     default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
@@ -114,6 +129,13 @@ public interface HighlightInfo extends Segment {
 
     @Nonnull
     Builder group(int group);
+
+    @Nonnull
+    Builder registerFix(@Nonnull IntentionAction action,
+                        @Nullable List<IntentionAction> options,
+                        @Nullable @Nls String displayName,
+                        @Nullable TextRange fixRange,
+                        @Nullable HighlightDisplayKey key);
 
     /**
      * @return null means filtered out
@@ -162,7 +184,13 @@ public interface HighlightInfo extends Segment {
   @Nullable
   GutterMark getGutterIconRenderer();
 
-  void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key);
+  @Deprecated
+  @DeprecationInfo("HighlightInfo.Builder#registerFix")
+  void registerFix(@Nullable IntentionAction action,
+                   @Nullable List<IntentionAction> options,
+                   @Nullable String displayName,
+                   @Nullable TextRange fixRange,
+                   @Nullable HighlightDisplayKey key);
 
   void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition);
 
