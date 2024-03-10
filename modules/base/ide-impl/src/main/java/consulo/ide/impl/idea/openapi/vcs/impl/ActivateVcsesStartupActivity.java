@@ -16,23 +16,30 @@
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.project.Project;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
 import jakarta.inject.Inject;
-
-import jakarta.annotation.Nonnull;
+import jakarta.inject.Provider;
 
 @ExtensionImpl
 final class ActivateVcsesStartupActivity implements VcsStartupActivity {
+  private final Project myProject;
+  private final Provider<VcsDirectoryMappingStorage> myDirectoryMappingStorageProvider;
+
   @Inject
-  ActivateVcsesStartupActivity() {
+  ActivateVcsesStartupActivity(Project project, Provider<VcsDirectoryMappingStorage> directoryMappingStorageProvider) {
+    myProject = project;
+    myDirectoryMappingStorageProvider = directoryMappingStorageProvider;
   }
 
   @Override
-  public void runActivity(@Nonnull Project project) {
-    ProjectLevelVcsManagerImpl projectLevelVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(project);
+  public void runActivity() {
+    // init VcsDirectoryMappingStorage, and load data
+    myDirectoryMappingStorageProvider.get();
+
+    ProjectLevelVcsManagerImpl projectLevelVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(myProject);
     projectLevelVcsManager.activateActiveVcses();
   }
 

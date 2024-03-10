@@ -5,28 +5,30 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
+import consulo.application.concurrent.ApplicationConcurrency;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsRootChecker;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsRootChecker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -44,10 +46,10 @@ public final class VcsRootScanner implements Disposable {
   private final VcsRootProblemNotifier myRootProblemNotifier;
   @Nonnull
   private final Project myProject;
+  private final ApplicationConcurrency myApplicationConcurrency;
 
   @Nonnull
-  private final Alarm myAlarm;
-  private static final long WAIT_BEFORE_SCAN = TimeUnit.SECONDS.toMillis(1);
+  private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
 
   @Nonnull
   public static VcsRootScanner getInstance(@Nonnull Project project) {
@@ -55,18 +57,21 @@ public final class VcsRootScanner implements Disposable {
   }
 
   @Inject
-  public VcsRootScanner(@Nonnull Project project) {
+  public VcsRootScanner(@Nonnull Project project,
+                        @Nonnull AsyncVfsEventsPostProcessor processor,
+                        ApplicationConcurrency applicationConcurrency) {
     myProject = project;
+    myApplicationConcurrency = applicationConcurrency;
     myRootProblemNotifier = VcsRootProblemNotifier.createInstance(project);
-    myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
 
-    AsyncVfsEventsPostProcessor.getInstance().addListener(this::filesChanged, this);
+    processor.addListener(this::filesChanged, this);
     //VcsRootChecker.EXTENSION_POINT_NAME.addChangeListener(this::scheduleScan, this);
     //VcsEP.EP_NAME.addChangeListener(this::scheduleScan, this);
   }
 
   @Override
   public void dispose() {
+    myUpdateFuture.cancel(false);
   }
 
   private void filesChanged(@Nonnull List<? extends VFileEvent> events) {
@@ -137,13 +142,15 @@ public final class VcsRootScanner implements Disposable {
   }
 
   public void scheduleScan() {
-    if (myAlarm.isDisposed()) return;
     if (VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList().isEmpty()) return;
 
-    myAlarm.cancelAllRequests(); // one scan is enough, no need to queue, they all do the same
-    myAlarm.addRequest(() -> BackgroundTaskUtil.runUnderDisposeAwareIndicator(myAlarm, () -> {
-      myRootProblemNotifier.rescanAndNotifyIfNeeded();
-    }), WAIT_BEFORE_SCAN);
+    myUpdateFuture.cancel(false); // one scan is enough, no need to queue, they all do the same
+    myUpdateFuture =
+      myApplicationConcurrency.getScheduledExecutorService().schedule(() ->
+                                                                        BackgroundTaskUtil.runUnderDisposeAwareIndicator(myProject,
+                                                                                                                         myRootProblemNotifier::rescanAndNotifyIfNeeded),
+                                                                      1,
+                                                                      TimeUnit.SECONDS);
   }
 
 

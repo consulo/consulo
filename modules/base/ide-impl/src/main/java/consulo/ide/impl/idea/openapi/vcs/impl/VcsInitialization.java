@@ -4,27 +4,25 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.concurrent.QueueProcessor;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.TimeoutUtil;
-import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,15 +36,17 @@ import java.util.function.Predicate;
 @ServiceImpl
 public final class VcsInitialization {
   private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
+
   @Nonnull
   public static VcsInitialization getInstance(Project project) {
     return project.getInstance(VcsInitialization.class);
   }
-  
+
   private final Object myLock = new Object();
 
   @Nonnull
   private final Project myProject;
+
   private enum Status {
     PENDING,
     RUNNING_INIT,
@@ -54,6 +54,7 @@ public final class VcsInitialization {
     FINISHED
 
   }
+
   // guarded by myLock
   private Status myStatus = Status.PENDING;
   private final List<VcsStartupActivity> myInitActivities = new ArrayList<>();
@@ -69,7 +70,9 @@ public final class VcsInitialization {
   }
 
   protected void startInitialization() {
-    myFuture = ((CoreProgressManager)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject, VcsBundle.message("impl.vcs.initialization")) {
+    myFuture = ((CoreProgressManager)ProgressManager.getInstance()).runProcessWithProgressAsynchronously(new Task.Backgroundable(myProject,
+                                                                                                                                 VcsBundle.message(
+                                                                                                                                   "impl.vcs.initialization")) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         execute();
@@ -126,8 +129,12 @@ public final class VcsInitialization {
     }
   }
 
-  private void runInitStep(@Nonnull Status current, @Nonnull Status next, @Nonnull Condition<VcsStartupActivity> extensionFilter, @Nonnull List<VcsStartupActivity> pendingActivities) {
-    List<VcsStartupActivity> epActivities = ContainerUtil.filter(VcsStartupActivity.EP.getExtensionList(myProject.getApplication()), extensionFilter);
+  private void runInitStep(@Nonnull Status current,
+                           @Nonnull Status next,
+                           @Nonnull Predicate<VcsStartupActivity> extensionFilter,
+                           @Nonnull List<VcsStartupActivity> pendingActivities) {
+    List<VcsStartupActivity> extensionList = myProject.getExtensionList(VcsStartupActivity.class);
+    List<VcsStartupActivity> epActivities = ContainerUtil.filter(extensionList, extensionFilter);
 
     List<VcsStartupActivity> activities = new ArrayList<>();
     synchronized (myLock) {
@@ -154,7 +161,7 @@ public final class VcsInitialization {
         LOG.debug(String.format("running activity: %s", activity));
       }
 
-      QueueProcessor.runSafely(() -> activity.runActivity(myProject));
+      QueueProcessor.runSafely(activity::runActivity);
     }
   }
 
@@ -163,10 +170,13 @@ public final class VcsInitialization {
 
     // do not leave VCS initialization run in background when the project is closed
     Future<?> future = myFuture;
-    LOG.debug(String.format("cancelBackgroundInitialization() future=%s from %s with write access=%s", future, Thread.currentThread(), ApplicationManager.getApplication().isWriteAccessAllowed()));
+    LOG.debug(String.format("cancelBackgroundInitialization() future=%s from %s with write access=%s",
+                            future,
+                            Thread.currentThread(),
+                            myProject.getApplication().isWriteAccessAllowed()));
     if (future != null) {
       future.cancel(false);
-      if (ApplicationManager.getApplication().isWriteAccessAllowed()) {
+      if (myProject.getApplication().isWriteAccessAllowed()) {
         // dispose happens without prior project close (most likely light project case in tests)
         // get out of write action and wait there
         SwingUtilities.invokeLater(this::waitNotRunning);
@@ -222,7 +232,7 @@ public final class VcsInitialization {
     }
 
     @Override
-    public void runActivity(@Nonnull Project project) {
+    public void runActivity() {
       myRunnable.run();
     }
 

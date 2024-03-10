@@ -762,7 +762,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         probableVcs = vcsDescriptor;
       }
     }
-    return probableVcs == null ? null : findVcsByName(probableVcs.getName());
+    return probableVcs == null ? null : findVcsByName(probableVcs.getId());
   }
 
   @Override

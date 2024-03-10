@@ -24,11 +24,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -38,7 +33,12 @@ import consulo.module.event.ModuleAdapter;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -150,7 +150,7 @@ public class ModuleVcsDetector implements Disposable {
             iterator.remove();
           }
         }
-        vcsManager.setAutoDirectoryMapping("", abstractVcses[0].getName());
+        vcsManager.setAutoDirectoryMapping("", abstractVcses[0].getId());
         for (VcsDirectoryMapping mapping : vcsDirectoryMappings) {
           vcsManager.removeDirectoryMapping(mapping);
         }
@@ -159,7 +159,7 @@ public class ModuleVcsDetector implements Disposable {
     }
     else if (tryMapPieces) {
       for (Map.Entry<VirtualFile, AbstractVcs> entry : vcsMap.entrySet()) {
-        vcsManager.setAutoDirectoryMapping(entry.getKey().getPath(), entry.getValue() == null ? "" : entry.getValue().getName());
+        vcsManager.setAutoDirectoryMapping(entry.getKey().getPath(), entry.getValue() == null ? "" : entry.getValue().getId());
       }
       vcsManager.cleanupMappings();
     }
@@ -173,7 +173,7 @@ public class ModuleVcsDetector implements Disposable {
     for (VirtualFile file : files) {
       AbstractVcs vcs = vcsManager.findVersioningVcs(file);
       if (vcs != null && vcs != vcsManager.getVcsFor(file)) {
-        vcsManager.setAutoDirectoryMapping(file.getPath(), vcs.getName());
+        vcsManager.setAutoDirectoryMapping(file.getPath(), vcs.getId());
         mappingsUpdated = true;
       }
     }

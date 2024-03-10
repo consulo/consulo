@@ -19,13 +19,8 @@ package consulo.ide.impl.idea.openapi.vcs.configurable;
 import consulo.application.util.registry.Registry;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsRootChecker;
-import consulo.versionControlSystem.VcsRootError;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
-import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.project.Project;
@@ -35,20 +30,20 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
+import consulo.util.io.FileUtil;
 import consulo.util.io.UriUtil;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.List;
 import java.util.*;
@@ -256,7 +251,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
         @Override
         public Object getCellEditorValue() {
           final VcsDescriptor selectedVcs = (VcsDescriptor)myVcsComboBox.getSelectedItem();
-          return ((selectedVcs == null) || selectedVcs.isNone()) ? "" : selectedVcs.getName();
+          return ((selectedVcs == null) || selectedVcs.isNone()) ? "" : selectedVcs.getId();
         }
 
         @Override
@@ -296,7 +291,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     final VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
     myAllVcss = new HashMap<>();
     for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
-      myAllVcss.put(vcsDescriptor.getName(), vcsDescriptor);
+      myAllVcss.put(vcsDescriptor.getId(), vcsDescriptor);
     }
 
     myDirectoryMappingTable = new TableView<>();
@@ -327,12 +322,9 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
     initializeModel();
 
     myVcsComboBox.setModel(buildVcsWrappersModel(myProject));
-    myVcsComboBox.addItemListener(new ItemListener() {
-      @Override
-      public void itemStateChanged(final ItemEvent e) {
-        if (myDirectoryMappingTable.isEditing()) {
-          myDirectoryMappingTable.stopEditing();
-        }
+    myVcsComboBox.addItemListener(e -> {
+      if (myDirectoryMappingTable.isEditing()) {
+        myDirectoryMappingTable.stopEditing();
       }
     });
 
@@ -384,12 +376,8 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
 
   @Nonnull
   private Collection<VcsRootError> findUnregisteredRoots() {
-    return ContainerUtil.filter(VcsRootErrorsFinder.getInstance(myProject).find(), new Condition<>() {
-      @Override
-      public boolean value(VcsRootError error) {
-        return error.getType() == VcsRootError.Type.UNREGISTERED_ROOT;
-      }
-    });
+    return ContainerUtil.filter(VcsRootErrorsFinder.getInstance(myProject).find(),
+                                error -> error.getType() == VcsRootError.Type.UNREGISTERED_ROOT);
   }
 
   private boolean isMappingValid(@Nonnull VcsDirectoryMapping mapping) {
@@ -558,12 +546,7 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
   @Nonnull
   private List<MapInfo> getSelectedRegisteredRoots() {
     Collection<MapInfo> selection = myDirectoryMappingTable.getSelection();
-    return ContainerUtil.filter(selection, new Condition<>() {
-      @Override
-      public boolean value(MapInfo info) {
-        return info.type == MapInfo.Type.NORMAL || info.type == MapInfo.Type.INVALID;
-      }
-    });
+    return ContainerUtil.filter(selection, info -> info.type == MapInfo.Type.NORMAL || info.type == MapInfo.Type.INVALID);
   }
 
   private boolean onlyRegisteredRootsInSelection() {

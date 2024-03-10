@@ -67,7 +67,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     final VcsDescriptor[] vcsDescriptors = myVcsManager.getAllVcss();
     myVcses = new HashMap<>();
     for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
-      myVcses.put(vcsDescriptor.getName(), vcsDescriptor);
+      myVcses.put(vcsDescriptor.getId(), vcsDescriptor);
     }
     myVCSComboBox.setModel(VcsDirectoryConfigurationPanel.buildVcsWrappersModel(project));
     myDirectoryTextField.addActionListener(new MyBrowseFolderListener("Select Directory", "Select directory to map to a VCS",
@@ -107,7 +107,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
   @Nonnull
   public VcsDirectoryMapping getMapping() {
     VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
-    String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getName();
+    String vcs = wrapper == null || wrapper.isNone() ? "" : wrapper.getId();
     String directory = myProjectRadioButton.isSelected() ? "" : FileUtil.toSystemIndependentName(myDirectoryTextField.getText());
     return new VcsDirectoryMapping(directory, vcs, myMappingCopy.getRootSettings());
   }
@@ -120,7 +120,7 @@ public class VcsMappingConfigurationDialog extends DialogWrapper {
     }
     VcsDescriptor wrapper = (VcsDescriptor) myVCSComboBox.getSelectedItem();
     if (wrapper != null && (! wrapper.isNone())) {
-      final AbstractVcs vcs = myVcsManager.findVcsByName(wrapper.getName());
+      final AbstractVcs vcs = myVcsManager.findVcsByName(wrapper.getId());
       if (vcs != null) {
         UnnamedConfigurable configurable = vcs.getRootConfigurable(myMappingCopy);
         if (configurable != null) {

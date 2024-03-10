@@ -3,17 +3,10 @@ package consulo.versionControlSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.application.Application;
-import consulo.component.extension.ExtensionList;
-import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsStartupActivity {
-  ExtensionList<VcsStartupActivity, Application> EP = ExtensionList.of(VcsStartupActivity.class);
-
-  void runActivity(@Nonnull Project project);
+  void runActivity();
 
   /**
    * @see VcsInitObject#getOrder()

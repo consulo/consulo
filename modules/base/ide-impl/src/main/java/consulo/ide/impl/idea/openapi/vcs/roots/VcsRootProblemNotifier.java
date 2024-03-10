@@ -4,43 +4,38 @@ package consulo.ide.impl.idea.openapi.vcs.roots;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.application.internal.BackgroundTaskUtil;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.notification.NotificationAction;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.application.internal.BackgroundTaskUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsNotifier;
-import consulo.versionControlSystem.VcsRootError;
-import java.util.function.Function;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationAction;
 import consulo.ui.ex.action.ActionsBundle;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.VcsDirectoryMapping;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.*;
+import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentName;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.escapeXmlEntities;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
-import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;
 import static consulo.ui.ex.awt.UIUtil.BR;
+import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 
 /**
  * Searches for Vcs roots problems via {@link VcsRootErrorsFinder} and notifies about them.
@@ -79,7 +74,7 @@ public final class VcsRootProblemNotifier {
     myProject = project;
     mySettings = VcsConfiguration.getInstance(myProject);
     myChangeListManager = ChangeListManager.getInstance(project);
-    myProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(myProject);
+    myProjectFileIndex = ProjectFileIndex.getInstance(myProject);
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
     myReportedUnregisteredRoots = new HashSet<>();
   }

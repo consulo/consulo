@@ -16,22 +16,23 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
-import consulo.project.Project;
 import jakarta.inject.Inject;
-
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class VcsDetectRootsStartupActivity implements VcsStartupActivity {
+  private final Project myProject;
+
   @Inject
-  VcsDetectRootsStartupActivity() {
+  VcsDetectRootsStartupActivity(Project project) {
+    myProject = project;
   }
 
   @Override
-  public void runActivity(@Nonnull Project project) {
-    VcsRootScanner.getInstance(project).scheduleScan();
+  public void runActivity() {
+    VcsRootScanner.getInstance(myProject).scheduleScan();
   }
 
   @Override

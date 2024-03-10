@@ -16,12 +16,11 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
-import consulo.project.Project;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
-
-import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author VISTALL
@@ -29,9 +28,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class VcsDirtyScopeManagerVcsStartupActivity implements VcsStartupActivity {
+  private final Project myProject;
+
+  @Inject
+  public VcsDirtyScopeManagerVcsStartupActivity(Project project) {
+    myProject = project;
+  }
+
   @Override
-  public void runActivity(@Nonnull Project project) {
-    VcsDirtyScopeManagerImpl vcsDirtyScopeManager = (VcsDirtyScopeManagerImpl)VcsDirtyScopeManager.getInstance(project);
+  public void runActivity() {
+    VcsDirtyScopeManagerImpl vcsDirtyScopeManager = (VcsDirtyScopeManagerImpl)VcsDirtyScopeManager.getInstance(myProject);
 
     vcsDirtyScopeManager.startListenForChanges();
   }

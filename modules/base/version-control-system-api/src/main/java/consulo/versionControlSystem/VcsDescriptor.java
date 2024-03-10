@@ -22,16 +22,16 @@ import consulo.virtualFileSystem.VirtualFile;
 import java.util.function.Supplier;
 
 public class VcsDescriptor implements Comparable<VcsDescriptor> {
-  private final String myName;
+  private final String myId;
   private final boolean myCrawlUpToCheckUnderVcs;
   private final String myDisplayName;
   private final String myAdministrativePattern;
   private boolean myIsNone;
 
-  public VcsDescriptor(String administrativePattern, String displayName, String name, boolean crawlUpToCheckUnderVcs) {
+  public VcsDescriptor(String administrativePattern, String displayName, String id, boolean crawlUpToCheckUnderVcs) {
     myAdministrativePattern = administrativePattern;
     myDisplayName = displayName;
-    myName = name;
+    myId = id;
     myCrawlUpToCheckUnderVcs = crawlUpToCheckUnderVcs;
   }
 
@@ -63,11 +63,11 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
   }
 
   public String getDisplayName() {
-    return myDisplayName == null ? myName : myDisplayName;
+    return myDisplayName == null ? myId : myDisplayName;
   }
 
-  public String getName() {
-    return myName;
+  public String getId() {
+    return myId;
   }
 
   @Override
@@ -82,7 +82,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
 
     VcsDescriptor that = (VcsDescriptor)o;
 
-    if (myName != null ? !myName.equals(that.myName) : that.myName != null) return false;
+    if (myId != null ? !myId.equals(that.myId) : that.myId != null) return false;
 
     return true;
   }
@@ -99,7 +99,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
 
   @Override
   public int hashCode() {
-    return myName != null ? myName.hashCode() : 0;
+    return myId != null ? myId.hashCode() : 0;
   }
 
   @Override

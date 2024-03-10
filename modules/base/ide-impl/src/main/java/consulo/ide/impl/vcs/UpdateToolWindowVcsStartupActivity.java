@@ -17,17 +17,23 @@ package consulo.ide.impl.vcs;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
+import consulo.project.Project;
 import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
-import consulo.project.Project;
-
-import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 @ExtensionImpl
 public class UpdateToolWindowVcsStartupActivity implements VcsStartupActivity {
+  private final Project myProject;
+
+  @Inject
+  public UpdateToolWindowVcsStartupActivity(Project project) {
+    myProject = project;
+  }
+
   @Override
-  public void runActivity(@Nonnull Project project) {
-    ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(project);
+  public void runActivity() {
+    ChangesViewContentManager manager = (ChangesViewContentManager)ChangesViewContentManager.getInstance(myProject);
 
     manager.update();
   }

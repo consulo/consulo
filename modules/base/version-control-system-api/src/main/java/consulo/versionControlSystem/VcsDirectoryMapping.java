@@ -20,6 +20,7 @@ import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.root.VcsRootSettings;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author yole
@@ -91,7 +92,7 @@ public class VcsDirectoryMapping {
    * @return VCS-specific settings, or null if none have been defined.
    * @see AbstractVcs#getRootConfigurable(VcsDirectoryMapping)
    */
-  @jakarta.annotation.Nullable
+  @Nullable
   public VcsRootSettings getRootSettings() {
     return myRootSettings;
   }

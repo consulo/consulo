@@ -21,17 +21,18 @@ import consulo.versionControlSystem.VcsInitObject;
 import consulo.versionControlSystem.VcsStartupActivity;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-
 @ExtensionImpl
 final class VcsRepositoryManagerStartupActivity implements VcsStartupActivity {
+  private final Project myProject;
+
   @Inject
-  VcsRepositoryManagerStartupActivity() {
+  VcsRepositoryManagerStartupActivity(Project project) {
+    myProject = project;
   }
 
   @Override
-  public void runActivity(@Nonnull Project project) {
-    VcsRepositoryManager.getInstance(project).checkAndUpdateRepositoriesCollection(null);
+  public void runActivity() {
+    VcsRepositoryManager.getInstance(myProject).checkAndUpdateRepositoriesCollection(null);
   }
 
   @Override
