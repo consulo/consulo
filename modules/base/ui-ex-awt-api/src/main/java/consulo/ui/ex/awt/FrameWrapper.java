@@ -27,23 +27,22 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.ProjectWindowStateService;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.internal.*;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -66,7 +65,6 @@ public class FrameWrapper implements Disposable, DataProvider {
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
   private FocusWatcher myFocusWatcher;
 
-  private AsyncResult<Void> myFocusedCallback;
   private boolean myDisposed;
 
   protected StatusBar myStatusBar;
@@ -109,12 +107,6 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   public void show(boolean restoreBounds) {
-    myFocusedCallback = AsyncResult.undefined();
-
-    if (myProject != null) {
-      ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(myFocusedCallback);
-    }
-
     final Window frame = getFrame();
 
     if (myStatusBar != null) {
@@ -142,10 +134,7 @@ public class FrameWrapper implements Disposable, DataProvider {
         }
 
         if (toFocus != null) {
-          fm.requestFocus(toFocus, true).notify(myFocusedCallback);
-        }
-        else {
-          myFocusedCallback.setRejected();
+          fm.requestFocus(toFocus, true);
         }
       }
     };
@@ -204,7 +193,6 @@ public class FrameWrapper implements Disposable, DataProvider {
       myFocusWatcher.deinstall(myComponent);
     }
     myFocusWatcher = null;
-    myFocusedCallback = null;
     myComponent = null;
     myImages = null;
     myDisposed = true;

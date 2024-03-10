@@ -67,7 +67,6 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.WeakList;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -1489,20 +1488,15 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     myMouseOutCanceller = null;
 
     if (myFinalRunnable != null) {
-      final ActionCallback typeAheadDone = new ActionCallback();
-      ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(typeAheadDone, "Abstract Popup Disposal");
-
       IdeaModalityState modalityState = IdeaModalityState.current();
       Runnable finalRunnable = myFinalRunnable;
 
       getFocusManager().doWhenFocusSettlesDown(() -> {
 
         if (IdeaModalityState.current().equals(modalityState)) {
-          typeAheadDone.setDone();
           ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(finalRunnable);
         }
         else {
-          typeAheadDone.setRejected();
           LOG.debug("Final runnable of popup is skipped");
         }
         // Otherwise the UI has changed unexpectedly and the action is likely not applicable.

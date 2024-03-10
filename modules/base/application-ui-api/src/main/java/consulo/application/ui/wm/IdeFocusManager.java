@@ -88,7 +88,6 @@ public interface IdeFocusManager extends FocusRequestor {
   @Deprecated
   // use #typeAheadUntil(ActionCallback, String) instead
   default void typeAheadUntil(AsyncResult<Void> done) {
-    typeAheadUntil(done, "No cause has been provided");
   }
 
   /**
@@ -96,6 +95,7 @@ public interface IdeFocusManager extends FocusRequestor {
    *
    * @param done action callback
    */
+  @Deprecated
   default void typeAheadUntil(ActionCallback done, @Nonnull String cause) {
   }
 
@@ -110,13 +110,6 @@ public interface IdeFocusManager extends FocusRequestor {
    * all focus requests will be either postponed or executed only if <code>FocusCommand</code> can be executed on an inaactive app.
    */
   public abstract boolean isFocusTransferEnabled();
-
-  /**
-   * Enables or disables typeahead
-   *
-   * @see #typeAheadUntil(AsyncResult)
-   */
-  public abstract void setTypeaheadEnabled(boolean enabled);
 
   /**
    * Computes effective focus owner

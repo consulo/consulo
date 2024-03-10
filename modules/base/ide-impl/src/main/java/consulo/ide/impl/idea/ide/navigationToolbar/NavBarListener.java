@@ -316,9 +316,6 @@ public class NavBarListener
         return;
       }
 
-      final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myPanel.getProject());
-      final AsyncResult<Void> firstCharTyped = new AsyncResult<>();
-      focusManager.typeAheadUntil(firstCharTyped);
       myPanel.moveDown();
       //noinspection SSBasedInspection
       SwingUtilities.invokeLater(new Runnable() {
@@ -333,9 +330,6 @@ public class NavBarListener
             }
             robot.keyPress(code);
             robot.keyRelease(code);
-
-            //don't release Shift
-            firstCharTyped.setDone();
           }
           catch (AWTException ignored) {
           }

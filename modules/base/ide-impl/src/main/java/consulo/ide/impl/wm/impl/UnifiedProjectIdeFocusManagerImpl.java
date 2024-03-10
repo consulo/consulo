@@ -24,12 +24,11 @@ import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -83,11 +82,6 @@ public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager
     return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
   }
 
-  @Override
-  public void typeAheadUntil(@Nonnull ActionCallback callback, @Nonnull String cause) {
-    IdeFocusManager.getGlobalInstance().typeAheadUntil(callback, cause);
-  }
-
   @Nonnull
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
@@ -97,11 +91,6 @@ public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager
   @Override
   public boolean isFocusTransferEnabled() {
     return IdeFocusManager.getGlobalInstance().isFocusTransferEnabled();
-  }
-
-  @Override
-  public void setTypeaheadEnabled(boolean enabled) {
-    IdeFocusManager.getGlobalInstance().setTypeaheadEnabled(enabled);
   }
 
   @Override

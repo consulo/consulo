@@ -90,10 +90,6 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   }
 
   @Override
-  public void setTypeaheadEnabled(boolean enabled) {
-  }
-
-  @Override
   public Component getFocusOwner() {
     return null;
   }

@@ -15,7 +15,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.util.concurrent.ActionCallback;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
@@ -243,15 +242,6 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
         if (runnable != null) {
           runnable.run();
         }
-      }
-    });
-  }
-
-  public void queueTypeAheadDone(final ActionCallback done) {
-    queue(new AfterModelUpdate(ID.TYPE_AHEAD_FINISHED) {
-      @Override
-      protected void after() {
-        done.setDone();
       }
     });
   }

@@ -90,10 +90,6 @@ public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeF
   }
 
   @Override
-  public void setTypeaheadEnabled(boolean enabled) {
-  }
-
-  @Override
   public Component getFocusOwner() {
     return null;
   }

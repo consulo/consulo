@@ -16,20 +16,19 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -83,11 +82,6 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
     return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
   }
 
-  @Override
-  public void typeAheadUntil(@Nonnull ActionCallback callback, @Nonnull String cause) {
-    IdeFocusManager.getGlobalInstance().typeAheadUntil(callback, cause);
-  }
-
   @Nonnull
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
@@ -98,11 +92,6 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Override
   public boolean isFocusTransferEnabled() {
     return IdeFocusManager.getGlobalInstance().isFocusTransferEnabled();
-  }
-
-  @Override
-  public void setTypeaheadEnabled(boolean enabled) {
-    IdeFocusManager.getGlobalInstance().setTypeaheadEnabled(enabled);
   }
 
   @Override
