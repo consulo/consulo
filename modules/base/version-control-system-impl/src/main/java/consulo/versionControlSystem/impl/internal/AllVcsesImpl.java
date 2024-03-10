@@ -125,9 +125,9 @@ public class AllVcsesImpl implements AllVcses, Disposable {
   @Override
   public VcsDescriptor[] getAll() {
     final List<VcsDescriptor> result = new ArrayList<>();
-    for (VcsFactory vcsEP : myProject.getExtensionPoint(VcsFactory.class)) {
-      result.add(vcsEP.createDescriptor());
-    }
+    myProject.getExtensionPoint(VcsFactory.class).forEachExtensionSafe(vcsFactory -> {
+      result.add(vcsFactory.createDescriptor());
+    });
     Collections.sort(result);
     return result.toArray(new VcsDescriptor[result.size()]);
   }

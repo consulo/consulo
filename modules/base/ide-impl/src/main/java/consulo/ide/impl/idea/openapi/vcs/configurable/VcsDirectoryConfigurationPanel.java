@@ -23,6 +23,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman.NewMappings;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
@@ -35,6 +36,7 @@ import consulo.util.io.UriUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -227,9 +229,9 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
           }
 
           final String vcsName = info.mapping.getVcs();
-          String text;
+          LocalizeValue text;
           if (vcsName.length() == 0) {
-            text = VcsBundle.message("none.vcs.presentation");
+            text = VcsLocalize.noneVcsPresentation();
           }
           else {
             final VcsDescriptor vcs = myAllVcss.get(vcsName);
@@ -237,10 +239,10 @@ public class VcsDirectoryConfigurationPanel extends JPanel {
               text = vcs.getDisplayName();
             }
             else {
-              text = VcsBundle.message("unknown.vcs.presentation", vcsName);
+              text = VcsLocalize.unknownVcsPresentation(vcsName);
             }
           }
-          append(text, getAttributes(info));
+          append(text.get(), getAttributes(info));
         }
       };
     }

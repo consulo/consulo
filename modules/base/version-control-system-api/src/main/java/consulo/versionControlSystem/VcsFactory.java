@@ -18,6 +18,7 @@ package consulo.versionControlSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
+import consulo.localize.LocalizeValue;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,7 +31,7 @@ public interface VcsFactory {
   String getId();
 
   @Nonnull
-  String getDisplayName();
+  LocalizeValue getDisplayName();
 
   @Nonnull
   String getAdministrativeAreaName();

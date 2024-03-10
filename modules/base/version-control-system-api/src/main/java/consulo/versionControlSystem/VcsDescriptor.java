@@ -16,19 +16,23 @@
 package consulo.versionControlSystem;
 
 import consulo.application.ApplicationManager;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class VcsDescriptor implements Comparable<VcsDescriptor> {
   private final String myId;
   private final boolean myCrawlUpToCheckUnderVcs;
-  private final String myDisplayName;
+  private final LocalizeValue myDisplayName;
   private final String myAdministrativePattern;
   private boolean myIsNone;
 
-  public VcsDescriptor(String administrativePattern, String displayName, String id, boolean crawlUpToCheckUnderVcs) {
+  public VcsDescriptor(String administrativePattern, @Nonnull LocalizeValue displayName, String id, boolean crawlUpToCheckUnderVcs) {
     myAdministrativePattern = administrativePattern;
     myDisplayName = displayName;
     myId = id;
@@ -62,8 +66,9 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     });
   }
 
-  public String getDisplayName() {
-    return myDisplayName == null ? myId : myDisplayName;
+  @Nonnull
+  public LocalizeValue getDisplayName() {
+    return myDisplayName;
   }
 
   public String getId() {
@@ -92,7 +97,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
   }
 
   public static VcsDescriptor createFictive() {
-    final VcsDescriptor vcsDescriptor = new VcsDescriptor(null, VcsBundle.message("none.vcs.presentation"), null, false);
+    final VcsDescriptor vcsDescriptor = new VcsDescriptor(null, VcsLocalize.noneVcsPresentation(), null, false);
     vcsDescriptor.myIsNone = true;
     return vcsDescriptor;
   }
@@ -104,6 +109,6 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
 
   @Override
   public String toString() {
-    return getDisplayName();
+    return Objects.toString(myId, "<none>");
   }
 }
