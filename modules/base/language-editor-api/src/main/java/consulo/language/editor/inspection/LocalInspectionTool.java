@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.persist.PersistentStateComponent;
@@ -101,6 +102,7 @@ public abstract class LocalInspectionTool extends InspectionTool {
    * @return true if the inspection is available for this particular file. If false is returned,
    * {@link #buildVisitor(ProblemsHolder, boolean, LocalInspectionToolSession, Object)} method will not be called by inspection engine.
    */
+  @RequiredReadAction
   public boolean isAvailableForFile(@Nonnull PsiFile file) {
     return true;
   }
