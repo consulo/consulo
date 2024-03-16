@@ -73,6 +73,10 @@ public class InspectionEngine {
                                                                  @Nonnull Set<String> elementDialectIds,
                                                                  @Nullable Set<String> dialectIdsSpecifiedForTool,
                                                                  @Nonnull Object stateObject) {
+    if (!tool.isAvailableForFile(holder.getFile())) {
+      return PsiElementVisitor.EMPTY_VISITOR;
+    }
+
     PsiElementVisitor visitor = tool.buildVisitor(holder, isOnTheFly, session, stateObject);
     //noinspection ConstantConditions
     if(visitor == null) {

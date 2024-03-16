@@ -21,11 +21,11 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.Pattern;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,6 +94,15 @@ public abstract class LocalInspectionTool extends InspectionTool {
   @Nullable
   public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
     return null;
+  }
+
+  /**
+   * @param file file to check
+   * @return true if the inspection is available for this particular file. If false is returned,
+   * {@link #buildVisitor(ProblemsHolder, boolean, LocalInspectionToolSession, Object)} method will not be called by inspection engine.
+   */
+  public boolean isAvailableForFile(@Nonnull PsiFile file) {
+    return true;
   }
 
   /**
