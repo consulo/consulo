@@ -20,24 +20,26 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.internal.QuickFixActionRegistrarImpl;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-
 import jakarta.annotation.Nonnull;
-import java.util.function.Predicate;
+import jakarta.annotation.Nullable;
+
+import java.util.List;
 
 public interface QuickFixActionRegistrar {
   @Nonnull
+  @Deprecated
   static QuickFixActionRegistrar create(@Nonnull HighlightInfo highlightInfo) {
     return new QuickFixActionRegistrarImpl(highlightInfo);
   }
 
-  void register(IntentionAction action);
+  @Nonnull
+  static QuickFixActionRegistrar create(@Nonnull HighlightInfo.Builder builder) {
+    return (fixRange, action, key) -> builder.registerFix(action, List.of(), HighlightDisplayKey.getDisplayNameByKey(key), fixRange, key);
+  }
+
+  default void register(@Nullable IntentionAction action) {
+    register(null, action, null);
+  }
 
   void register(TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
-
-  /**
-   * Allows to replace some of the built-in quickfixes.
-   *
-   * @param condition condition for quickfixes to remove
-   */
-  void unregister(Predicate<IntentionAction> condition);
 }

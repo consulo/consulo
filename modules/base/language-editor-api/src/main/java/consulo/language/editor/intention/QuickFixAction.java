@@ -2,6 +2,7 @@
 
 package consulo.language.editor.intention;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author Alexey Kudravtsev
  */
 @Deprecated
+@DeprecationInfo("Use QuickFix registration via HighlightInfo.Builder")
 public final class QuickFixAction {
   private QuickFixAction() {
   }

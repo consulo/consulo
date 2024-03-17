@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -22,7 +23,6 @@ import consulo.language.LangBundle;
 import consulo.language.Language;
 import consulo.language.editor.intention.ErrorQuickFixProvider;
 import consulo.language.editor.intention.IntentionAction;
-import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.editor.intention.SyntheticIntentionAction;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
@@ -34,30 +34,29 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 @ExtensionImpl
-public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider{
+public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider {
 
+  @RequiredReadAction
   @Override
-  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfo highlightInfo) {
+  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfo.Builder builder) {
     final PsiFile psiFile = errorElement.getContainingFile();
     final FileViewProvider provider = psiFile.getViewProvider();
     if (!(provider instanceof TemplateLanguageFileViewProvider)) return;
-    if (psiFile.getLanguage() != ((TemplateLanguageFileViewProvider) provider).getTemplateDataLanguage()) return;
+    if (psiFile.getLanguage() != ((TemplateLanguageFileViewProvider)provider).getTemplateDataLanguage()) return;
 
-    QuickFixAction.registerQuickFixAction(highlightInfo, createChangeTemplateDataLanguageFix(errorElement));
-
+    builder.registerFix(createChangeTemplateDataLanguageFix(errorElement), null, null, null, null);
   }
 
   public static IntentionAction createChangeTemplateDataLanguageFix(final PsiElement errorElement) {
     final PsiFile containingFile = errorElement.getContainingFile();
     final VirtualFile virtualFile = containingFile.getVirtualFile();
-    final Language language = ((TemplateLanguageFileViewProvider) containingFile.getViewProvider()).getTemplateDataLanguage();
+    final Language language = ((TemplateLanguageFileViewProvider)containingFile.getViewProvider()).getTemplateDataLanguage();
     return new SyntheticIntentionAction() {
 
       @Override

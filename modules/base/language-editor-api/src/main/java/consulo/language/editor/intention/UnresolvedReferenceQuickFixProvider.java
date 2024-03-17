@@ -15,26 +15,26 @@
  */
 package consulo.language.editor.intention;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiReference;
 import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import jakarta.annotation.Nonnull;
 
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
-  private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME = ExtensionPointName.create(UnresolvedReferenceQuickFixProvider.class);
-
   @RequiredReadAction
+  @Deprecated
+  @DeprecationInfo("Use UnresolvedReferenceQuickFixUpdater")
   public static <T extends PsiReference> void registerReferenceFixes(T ref, QuickFixActionRegistrar registrar) {
-
-    final boolean dumb = DumbService.getInstance(ref.getElement().getProject()).isDumb();
+    Project project = ref.getElement().getProject();
+    final boolean dumb = DumbService.getInstance(project).isDumb();
     Class<? extends PsiReference> referenceClass = ref.getClass();
-    for (UnresolvedReferenceQuickFixProvider each : EXTENSION_NAME.getExtensionList()) {
+    for (UnresolvedReferenceQuickFixProvider each : project.getExtensionPoint(UnresolvedReferenceQuickFixProvider.class)) {
       if (dumb && !DumbService.isDumbAware(each)) {
         continue;
       }

@@ -16,19 +16,22 @@
 
 package consulo.language.editor.intention;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.document.util.TextRange;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiErrorElement;
 
+import java.util.List;
+
 /**
  * @author yole
- * @see QuickFixAction#registerQuickFixAction(HighlightInfo, IntentionAction)
+ * @see HighlightInfo.Builder#registerFix(IntentionAction, List, String, TextRange, HighlightDisplayKey)
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface ErrorQuickFixProvider {
-  ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create(ErrorQuickFixProvider.class);
-
-  void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo highlightInfo);
+  @RequiredReadAction
+  void registerErrorQuickFix(PsiErrorElement errorElement, HighlightInfo.Builder builder);
 }

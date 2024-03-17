@@ -15,26 +15,25 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.codeEditor.Editor;
+import consulo.colorScheme.TextAttributes;
+import consulo.document.util.TextRange;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.editor.impl.highlight.UpdateHighlightersUtil;
-import consulo.language.editor.intention.QuickFixAction;
-import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.application.progress.ProgressIndicator;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.TextAttributes;
-import consulo.document.util.TextRange;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,14 +48,15 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
   @Override
   public TextEditorHighlightingPass createHighlightingPass(@Nonnull final PsiFile file, @Nonnull final Editor editor) {
     LanguageChangeSignatureDetector<ChangeInfo> detector =
-            LanguageChangeSignatureDetector.forLanguage(file.getLanguage());
+      LanguageChangeSignatureDetector.forLanguage(file.getLanguage());
     if (detector == null) return null;
 
     return new ChangeSignaturePass(file.getProject(), file, editor);
   }
 
   private static class ChangeSignaturePass extends TextEditorHighlightingPass {
-    @NonNls private static final String SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED = "Signature change was detected";
+    @NonNls
+    private static final String SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED = "Signature change was detected";
     private final Project myProject;
     private final PsiFile myFile;
     private final Editor myEditor;
@@ -70,7 +70,8 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
 
     @RequiredReadAction
     @Override
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {}
+    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    }
 
     @Override
     public void doApplyInformationToEditor() {
@@ -92,8 +93,8 @@ public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFac
         HighlightInfo.Builder builder = HighlightInfo.newHighlightInfo(HighlightInfoType.INFORMATION).range(range);
         builder.textAttributes(attributes);
         builder.descriptionAndTooltip(SIGNATURE_SHOULD_BE_POSSIBLY_CHANGED);
+        builder.registerFix(new ApplyChangeSignatureAction(currentRefactoring.getInitialName()), null, null, null, null);
         info = builder.createUnconditionally();
-        QuickFixAction.registerQuickFixAction(info, new ApplyChangeSignatureAction(currentRefactoring.getInitialName()));
       }
       Collection<HighlightInfo> infos = info != null ? Collections.singletonList(info) : Collections.emptyList();
       UpdateHighlightersUtil.setHighlightersToEditor(myProject, myDocument, 0, myFile.getTextLength(), infos, getColorsScheme(), getId());

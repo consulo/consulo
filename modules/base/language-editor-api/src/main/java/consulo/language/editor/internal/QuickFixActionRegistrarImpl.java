@@ -22,11 +22,10 @@ import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.editor.intention.QuickFixActionRegistrar;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.function.Predicate;
 
+@Deprecated
 public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   private final HighlightInfo myInfo;
 
@@ -35,19 +34,7 @@ public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   }
 
   @Override
-  public void register(@Nonnull IntentionAction action) {
-    QuickFixAction.registerQuickFixAction(myInfo, action);
-  }
-
-  @Override
   public void register(@Nonnull TextRange fixRange, @Nonnull IntentionAction action, HighlightDisplayKey key) {
     QuickFixAction.registerQuickFixAction(myInfo, fixRange, action, key);
-  }
-
-  @Override
-  public void unregister(@Nonnull Predicate<IntentionAction> condition) {
-    if (myInfo != null) {
-      myInfo.unregisterQuickFix(condition);
-    }
   }
 }

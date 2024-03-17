@@ -12,6 +12,7 @@ import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.annotation.AnnotatorFactory;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.language.editor.intention.ErrorQuickFixProvider;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.HighlightVisitor;
@@ -24,9 +25,9 @@ import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -130,20 +131,22 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
   }
 
   @RequiredReadAction
-  private static HighlightInfoImpl createErrorElementInfo(@Nonnull PsiErrorElement element) {
-    HighlightInfoImpl info = createInfoWithoutFixes(element);
-    if (info != null) {
-      ErrorQuickFixProvider.EP_NAME.forEachExtensionSafe(provider -> provider.registerErrorQuickFix(element, info));
-    }
-    return info;
+  private static HighlightInfo createErrorElementInfo(@Nonnull PsiErrorElement element) {
+    HighlightInfo.Builder builder = createInfoWithoutFixes(element);
+    element.getProject()
+           .getExtensionPoint(ErrorQuickFixProvider.class)
+           .forEachExtensionSafe(it -> it.registerErrorQuickFix(element, builder));
+
+    return builder.createUnconditionally();
   }
 
   @RequiredReadAction
-  private static HighlightInfoImpl createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
+  @Nonnull
+  private static HighlightInfo.Builder createInfoWithoutFixes(@Nonnull PsiErrorElement element) {
     TextRange range = element.getTextRange();
     LocalizeValue errorDescription = element.getErrorDescriptionValue();
     if (!range.isEmpty()) {
-      return (HighlightInfoImpl)HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription).create();
+      return HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(range).descriptionAndTooltip(errorDescription);
     }
     int offset = range.getStartOffset();
     PsiFile containingFile = element.getContainingFile();
@@ -154,7 +157,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     if (offset < fileLength && text != null && !StringUtil.startsWithChar(text, '\n') && !StringUtil.startsWithChar(text, '\r')) {
       HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(offset, offset + 1);
       builder.descriptionAndTooltip(errorDescription);
-      return (HighlightInfoImpl)builder.create();
+      return builder;
     }
     int start;
     int end;
@@ -169,7 +172,7 @@ public final class DefaultHighlightVisitor implements HighlightVisitor {
     HighlightInfoImpl.Builder builder = HighlightInfoImpl.newHighlightInfo(HighlightInfoType.ERROR).range(element, start, end);
     builder.descriptionAndTooltip(errorDescription);
     builder.endOfLine();
-    return (HighlightInfoImpl)builder.create();
+    return builder;
   }
 
   @Nonnull
