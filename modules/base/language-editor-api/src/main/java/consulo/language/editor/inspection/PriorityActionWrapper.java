@@ -47,6 +47,11 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
     fix.invoke(project, file, editor, startElement, endElement);
   }
 
+  @Override
+  public boolean startInWriteAction() {
+    return fix.startInWriteAction();
+  }
+
   @Nonnull
   @Override
   public String getText() {
