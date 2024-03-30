@@ -72,7 +72,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
     PsiElement psiChild = getFirstChild();
     if (psiChild == null) return PsiElement.EMPTY_ARRAY;
 
-    List<PsiElement> result = new ArrayList<PsiElement>();
+    List<PsiElement> result = new ArrayList<>();
     while (psiChild != null) {
       if (psiChild.getNode() instanceof CompositeElement) {
         result.add(psiChild);
@@ -189,65 +189,70 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Nullable
   @RequiredReadAction
-  protected PsiElement findChildByType(IElementType type) {
+  @SuppressWarnings("unchecked")
+  protected <T extends PsiElement> T findChildByType(IElementType type) {
     ASTNode node = getNode().findChildByType(type);
-    return node == null ? null : node.getPsi();
+    return node == null ? null : (T)node.getPsi();
   }
-
 
   @Nullable
   @RequiredReadAction
-  protected PsiElement findLastChildByType(IElementType type) {
+  @SuppressWarnings("unchecked")
+  protected <T extends PsiElement> T findLastChildByType(IElementType type) {
     PsiElement child = getLastChild();
     while (child != null) {
       final ASTNode node = child.getNode();
-      if (node != null && node.getElementType() == type) return child;
+      if (node != null && node.getElementType() == type) return (T)child;
       child = child.getPrevSibling();
     }
     return null;
   }
 
-
   @Nonnull
   @RequiredReadAction
-  protected PsiElement findNotNullChildByType(IElementType type) {
+  protected <T extends PsiElement> T findNotNullChildByType(IElementType type) {
     return notNullChild(findChildByType(type));
   }
 
   @Nullable
   @RequiredReadAction
-  protected PsiElement findChildByType(TokenSet type) {
+  @SuppressWarnings("unchecked")
+  protected <T extends PsiElement> T findChildByType(TokenSet type) {
     ASTNode node = getNode().findChildByType(type);
-    return node == null ? null : node.getPsi();
+    return node == null ? null : (T)node.getPsi();
   }
 
   @Nonnull
   @RequiredReadAction
-  protected PsiElement findNotNullChildByType(TokenSet type) {
+  @SuppressWarnings("unchecked")
+  protected <T extends PsiElement> T findNotNullChildByType(TokenSet type) {
     return notNullChild(findChildByType(type));
   }
 
   @Nullable
   @RequiredReadAction
-  protected PsiElement findChildByFilter(TokenSet tokenSet) {
+  @SuppressWarnings("unchecked")
+  protected <T extends PsiElement> T findChildByFilter(TokenSet tokenSet) {
     ASTNode[] nodes = getNode().getChildren(tokenSet);
-    return nodes == null || nodes.length == 0 ? null : nodes[0].getPsi();
+    return nodes.length == 0 ? null : (T) nodes[0].getPsi();
   }
 
   @Nonnull
   @RequiredReadAction
-  protected PsiElement findNotNullChildByFilter(TokenSet tokenSet) {
+  protected <T extends PsiElement> T findNotNullChildByFilter(TokenSet tokenSet) {
     return notNullChild(findChildByFilter(tokenSet));
   }
 
   @Nonnull
   @RequiredReadAction
+  @SuppressWarnings("unchecked")
   protected <T extends PsiElement> T[] findChildrenByType(IElementType elementType, Class<T> arrayClass) {
     return ContainerUtil.map2Array(SharedImplUtil.getChildrenOfType(getNode(), elementType), arrayClass, s -> (T)s.getPsi());
   }
 
   @RequiredReadAction
   @Nonnull
+  @SuppressWarnings("unchecked")
   protected <T extends PsiElement> List<T> findChildrenByType(TokenSet elementType) {
     List<T> result = List.of();
     ASTNode child = getNode().getFirstChildNode();
@@ -255,7 +260,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
       final IElementType tt = child.getElementType();
       if (elementType.contains(tt)) {
         if (result == List.<T>of()) {
-          result = new ArrayList<T>();
+          result = new ArrayList<>();
         }
         result.add((T)child.getPsi());
       }
@@ -266,13 +271,14 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Nonnull
   @RequiredReadAction
+  @SuppressWarnings("unchecked")
   protected <T extends PsiElement> List<T> findChildrenByType(IElementType elementType) {
     List<T> result = List.of();
     ASTNode child = getNode().getFirstChildNode();
     while (child != null) {
       if (elementType == child.getElementType()) {
         if (result == List.<T>of()) {
-          result = new ArrayList<T>();
+          result = new ArrayList<>();
         }
         result.add((T)child.getPsi());
       }
@@ -283,6 +289,7 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
 
   @Nonnull
   @RequiredReadAction
+  @SuppressWarnings("unchecked")
   protected <T extends PsiElement> T[] findChildrenByType(TokenSet elementType, Class<T> arrayClass) {
     return ContainerUtil.map2Array(getNode().getChildren(elementType), arrayClass, s -> (T)s.getPsi());
   }
@@ -414,10 +421,10 @@ public abstract class ASTDelegatePsiElement extends PsiElementBase implements Ps
   private ASTNode getAnchorNode(final ASTNode anchor, final Boolean before) {
     ASTNode anchorBefore;
     if (anchor != null) {
-      anchorBefore = before.booleanValue() ? anchor : anchor.getTreeNext();
+      anchorBefore = before ? anchor : anchor.getTreeNext();
     }
     else {
-      if (before != null && !before.booleanValue()) {
+      if (before != null && !before) {
         anchorBefore = getNode().getFirstChildNode();
       }
       else {
