@@ -309,10 +309,8 @@ class UpdateFoldRegionsOperation implements Runnable {
   }
 
   private static class FoldingMap extends MultiMap<PsiElement, FoldingUpdate.RegionInfo> {
-    @Nonnull
-    @Override
-    protected Map<PsiElement, Collection<FoldingUpdate.RegionInfo>> createMap() {
-      return new TreeMap<>(COMPARE_BY_OFFSET_REVERSED);
+    public FoldingMap() {
+      super(new TreeMap<>(COMPARE_BY_OFFSET_REVERSED));
     }
 
     @Nonnull

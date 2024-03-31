@@ -1411,22 +1411,12 @@ public class ContainerUtil {
   private static class KeyOrderedMultiMap<K, V> extends MultiMap<K, V> {
 
     public KeyOrderedMultiMap() {
+      super(new TreeMap<K, Collection<V>>());
     }
 
     public KeyOrderedMultiMap(@Nonnull MultiMap<? extends K, ? extends V> toCopy) {
-      super(toCopy);
-    }
-
-    @Nonnull
-    @Override
-    protected Map<K, Collection<V>> createMap() {
-      return new TreeMap<K, Collection<V>>();
-    }
-
-    @Nonnull
-    @Override
-    protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
-      return new TreeMap<K, Collection<V>>();
+      super(new TreeMap<K, Collection<V>>());
+      putAllValues(toCopy);
     }
 
     @Nonnull

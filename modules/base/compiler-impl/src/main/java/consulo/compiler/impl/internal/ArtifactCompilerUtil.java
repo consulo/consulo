@@ -118,13 +118,7 @@ public class ArtifactCompilerUtil {
   }
 
   public static MultiMap<String, Artifact> createOutputToArtifactMap(final Project project) {
-    final MultiMap<String, Artifact> result = new MultiMap<>() {
-      @Nonnull
-      @Override
-      protected Map<String, Collection<Artifact>> createMap() {
-        return Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
-      }
-    };
+    final MultiMap<String, Artifact> result = new MultiMap<>(Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY));
     AccessRule.read(() -> {
       for (Artifact artifact : ArtifactManager.getInstance(project).getArtifacts()) {
         String outputPath = artifact.getOutputFilePath();

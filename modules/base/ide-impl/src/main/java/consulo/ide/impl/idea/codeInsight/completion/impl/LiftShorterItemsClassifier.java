@@ -36,7 +36,7 @@ import static consulo.ide.impl.idea.util.containers.ContainerUtil.newIdentityTro
  * @author peter
  */
 public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
-  private final TreeSet<String> mySortedStrings = new TreeSet<String>();
+  private final TreeSet<String> mySortedStrings = new TreeSet<>();
   private final MultiMap<String, LookupElement> myElements = createMultiMap(false);
   private final MultiMap<LookupElement, LookupElement> myToLift = createMultiMap(true);
   private final MultiMap<LookupElement, LookupElement> myReversedToLift = createMultiMap(true);
@@ -202,7 +202,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
             for (LookupElement shorterElement : from) {
               if (mySrcSet.contains(shorterElement) && processed.add(shorterElement)) {
                 if (toLift == null) {
-                  toLift = new ArrayList<LookupElement>();
+                  toLift = new ArrayList<>();
                 }
                 toLift.add(shorterElement);
               }
@@ -218,13 +218,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
 
   @Nonnull
   private static <K, V> MultiMap<K, V> createMultiMap(final boolean identityKeys) {
-    return new MultiMap<K, V>() {
-      @Nonnull
-      @Override
-      protected Map<K, Collection<V>> createMap() {
-        if (identityKeys) return newIdentityHashMap();
-        return new HashMap<K, Collection<V>>();
-      }
+    return new MultiMap<K, V>(identityKeys ? newIdentityHashMap() : new HashMap<>()) {
 
       @Override
       public boolean remove(K key, V value) {

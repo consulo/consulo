@@ -16,24 +16,13 @@
 
 package consulo.util.collection;
 
-import jakarta.annotation.Nonnull;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Evgeny Gerashchenko
  */
 public class LinkedMultiMap<K, V> extends MultiMap<K, V> {
-    @Nonnull
-    @Override
-    protected Map<K, Collection<V>> createMap() {
-        return new LinkedHashMap<>();
-    }
-
-    @Nonnull
-    @Override
-    protected Map<K, Collection<V>> createMap(int initialCapacity, float loadFactor) {
-        return new LinkedHashMap<>(initialCapacity, loadFactor);
+    public LinkedMultiMap() {
+        super(new LinkedHashMap<>());
     }
 }

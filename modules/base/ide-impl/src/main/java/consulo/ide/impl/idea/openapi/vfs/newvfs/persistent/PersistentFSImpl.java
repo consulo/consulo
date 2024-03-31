@@ -862,13 +862,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
       VFileCreateEvent event = (VFileCreateEvent)e;
       VirtualDirectoryImpl parent = (VirtualDirectoryImpl)event.getParent();
       if (grouped == null) {
-        grouped = new MultiMap<VirtualDirectoryImpl, VFileCreateEvent>() {
-          @Nonnull
-          @Override
-          protected Map<VirtualDirectoryImpl, Collection<VFileCreateEvent>> createMap() {
-            return new HashMap<>(end - start);
-          }
-        };
+        grouped = new MultiMap<>(new HashMap<>(end - start));
       }
       grouped.putValue(parent, event);
     }
@@ -910,13 +904,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
       VFileDeleteEvent de = (VFileDeleteEvent)event;
       @Nullable VirtualDirectoryImpl parent = (VirtualDirectoryImpl)de.getFile().getParent();
       if (grouped == null) {
-        grouped = new MultiMap<VirtualDirectoryImpl, VFileDeleteEvent>() {
-          @Nonnull
-          @Override
-          protected Map<VirtualDirectoryImpl, Collection<VFileDeleteEvent>> createMap() {
-            return new HashMap<>(end - start); // can be null keys
-          }
-        };
+        grouped = new MultiMap<>(new HashMap<>(end - start)) ;
       }
       grouped.putValue(parent, de);
       outValidated.add(event);

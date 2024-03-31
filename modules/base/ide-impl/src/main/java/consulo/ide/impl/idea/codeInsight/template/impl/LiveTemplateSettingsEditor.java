@@ -378,12 +378,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
   private JPanel createPopupContextPanel(final Runnable onChange) {
     JPanel panel = new JPanel(new BorderLayout());
 
-    MultiMap<TemplateContextType, TemplateContextType> hierarchy = new MultiMap<>() {
-      @Override
-      protected Map<TemplateContextType, Collection<TemplateContextType>> createMap() {
-        return new LinkedHashMap<>();
-      }
-    };
+    MultiMap<TemplateContextType, TemplateContextType> hierarchy = MultiMap.createLinked();
     for (TemplateContextType type : myContext.keySet()) {
       hierarchy.putValue(type.getBaseContextType(), type);
     }
