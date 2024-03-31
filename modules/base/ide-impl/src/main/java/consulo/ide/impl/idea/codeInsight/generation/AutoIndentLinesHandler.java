@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.generation;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;

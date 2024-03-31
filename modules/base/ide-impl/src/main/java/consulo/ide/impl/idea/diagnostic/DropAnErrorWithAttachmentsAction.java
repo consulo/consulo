@@ -15,9 +15,10 @@
  */
 package consulo.ide.impl.idea.diagnostic;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 
 import java.awt.event.InputEvent;
@@ -28,14 +29,15 @@ public class DropAnErrorWithAttachmentsAction extends DumbAwareAction {
     super("Drop an error with attachments", "Hold down SHIFT for multiple attachments", null);
   }
 
+  @Override
   public void actionPerformed(AnActionEvent e) {
     final boolean multipleAttachments = (e.getModifiers() & InputEvent.SHIFT_MASK) != 0;
     Attachment[] attachments;
     if (multipleAttachments) {
-      attachments = new Attachment[]{new Attachment("first.txt", "first content"), new Attachment("second.txt", "second content")};
+      attachments = new Attachment[]{AttachmentFactory.get().create("first.txt", "first content"), AttachmentFactory.get().create("second.txt", "second content")};
     }
     else {
-      attachments = new Attachment[]{new Attachment("attachment.txt", "content")};
+      attachments = new Attachment[]{AttachmentFactory.get().create("attachment.txt", "content")};
     }
     Logger.getInstance("test (with attachments)").error(LogMessageEx.createEvent("test", "test details", attachments));
   }

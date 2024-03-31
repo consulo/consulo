@@ -17,16 +17,16 @@ import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -583,7 +583,7 @@ class EditorSizeManager implements PrioritizedDocumentListener, Disposable, Fold
   private void assertValidState() {
     if (myDocument.isInBulkUpdate() || myDirty) return;
     if (myLineWidths.size() != myEditor.getVisibleLineCount()) {
-      LOG.error("Inconsistent state", new Attachment("editor.txt", myEditor.dumpState()));
+      LOG.error("Inconsistent state", AttachmentFactory.get().create("editor.txt", myEditor.dumpState()));
       reset();
     }
     assert myLineWidths.size() == myEditor.getVisibleLineCount();

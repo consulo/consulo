@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.tasks.timeTracking;
 
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;

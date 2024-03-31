@@ -38,6 +38,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
+import consulo.desktop.awt.progress.PotemkinProgress;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
@@ -45,13 +46,16 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.LogEventException;
-import consulo.ide.impl.idea.ide.*;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.desktop.awt.progress.PotemkinProgress;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
+import consulo.ide.impl.idea.ide.CommandLineProcessor;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
 import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
@@ -96,7 +100,9 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private volatile boolean myDisposeInProgress;
 
-  public DesktopApplicationImpl(ComponentBinding componentBinding, boolean isHeadless, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+  public DesktopApplicationImpl(ComponentBinding componentBinding,
+                                boolean isHeadless,
+                                @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
     super(componentBinding, splashRef);
 
     ApplicationManager.setApplication(this);
@@ -234,7 +240,9 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
+  public void invokeLater(@Nonnull final Runnable runnable,
+                          @Nonnull final consulo.ui.ModalityState state,
+                          @Nonnull final BooleanSupplier expired) {
     Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
     LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null);
   }
@@ -263,9 +271,11 @@ public class DesktopApplicationImpl extends BaseApplication {
       return true;
     }
 
-    CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
+    CompletableFuture<ProgressWindow> progress =
+      createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
 
-    ProgressRunner<?> progressRunner = new ProgressRunner<>(process).sync().onThread(ProgressRunner.ThreadToUse.POOLED).modal().withProgress(progress);
+    ProgressRunner<?> progressRunner =
+      new ProgressRunner<>(process).sync().onThread(ProgressRunner.ThreadToUse.POOLED).modal().withProgress(progress);
 
     ProgressResult<?> result = progressRunner.submitAndGet();
 
@@ -284,9 +294,19 @@ public class DesktopApplicationImpl extends BaseApplication {
                                                                                    @Nullable JComponent parentComponent,
                                                                                    @Nullable String cancelText) {
     if (SwingUtilities.isEventDispatchThread()) {
-      return CompletableFuture.completedFuture(createProgressWindow(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText));
+      return CompletableFuture.completedFuture(createProgressWindow(progressTitle,
+                                                                    canBeCanceled,
+                                                                    shouldShowModalWindow,
+                                                                    project,
+                                                                    parentComponent,
+                                                                    cancelText));
     }
-    return CompletableFuture.supplyAsync(() -> createProgressWindow(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText), this::invokeLater);
+    return CompletableFuture.supplyAsync(() -> createProgressWindow(progressTitle,
+                                                                    canBeCanceled,
+                                                                    shouldShowModalWindow,
+                                                                    project,
+                                                                    parentComponent,
+                                                                    cancelText), this::invokeLater);
   }
 
   @Override
@@ -462,10 +482,14 @@ public class DesktopApplicationImpl extends BaseApplication {
     };
 
     if (hasUnsafeBgTasks || option.isToBeShown()) {
-      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt", ApplicationNamesInfo.getInstance().getFullProductName());
+      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt",
+                                                 ApplicationNamesInfo.getInstance().getFullProductName());
 
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message).yesText(ApplicationBundle.message("command.exit")).noText(CommonBundle.message("button.cancel"))
-                  .doNotAsk(option).show() != Messages.YES) {
+      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message)
+                              .yesText(ApplicationBundle.message("command.exit"))
+                              .noText(CommonBundle.message("button.cancel"))
+                              .doNotAsk(option)
+                              .show() != Messages.YES) {
         return false;
       }
     }
@@ -521,7 +545,8 @@ public class DesktopApplicationImpl extends BaseApplication {
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
       LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
-                "Current thread: " + describe(Thread.currentThread()), "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
+                "Current thread: " + describe(Thread.currentThread()),
+                "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
                 "SystemEventQueueThread: " + describe(getEventQueueThread()));
     }
   }
@@ -545,17 +570,17 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private void assertIsDispatchThread(@Nonnull String message) {
     if (isDispatchThread()) return;
-    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    final Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
     throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-                                         EventQueue.isDispatchThread() +
-                                         " isDispatchThread()=" +
-                                         isDispatchThread() +
-                                         " Toolkit.getEventQueue()=" +
-                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                                         " Current thread: " +
-                                         describe(Thread.currentThread()) +
-                                         " SystemEventQueueThread: " +
-                                         describe(getEventQueueThread()), dump);
+      EventQueue.isDispatchThread() +
+      " isDispatchThread()=" +
+      isDispatchThread() +
+      " Toolkit.getEventQueue()=" +
+      Toolkit.getDefaultToolkit().getSystemEventQueue() +
+      " Current thread: " +
+      describe(Thread.currentThread()) +
+      " SystemEventQueueThread: " +
+      describe(getEventQueueThread()), dump);
   }
 
   @RequiredUIAccess
@@ -568,19 +593,19 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private void assertIsIsWriteThread(@Nonnull String message) {
     if (isWriteThread()) return;
-    final Attachment dump = new Attachment("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    final consulo.logging.attachment.Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
     throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-                                         EventQueue.isDispatchThread() +
-                                         " isDispatchThread()=" +
-                                         isDispatchThread() +
-                                         " Toolkit.getEventQueue()=" +
-                                         Toolkit.getDefaultToolkit().getSystemEventQueue() +
-                                         " Write Thread=" +
-                                         myLock.writeThread +
-                                         " Current thread: " +
-                                         describe(Thread.currentThread()) +
-                                         " SystemEventQueueThread: " +
-                                         describe(getEventQueueThread()), dump);
+      EventQueue.isDispatchThread() +
+      " isDispatchThread()=" +
+      isDispatchThread() +
+      " Toolkit.getEventQueue()=" +
+      Toolkit.getDefaultToolkit().getSystemEventQueue() +
+      " Write Thread=" +
+      myLock.writeThread +
+      " Current thread: " +
+      describe(Thread.currentThread()) +
+      " SystemEventQueueThread: " +
+      describe(getEventQueueThread()), dump);
   }
 
   @Override

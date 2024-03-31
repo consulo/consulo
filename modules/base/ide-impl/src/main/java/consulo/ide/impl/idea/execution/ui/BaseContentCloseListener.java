@@ -6,7 +6,7 @@ import consulo.ide.impl.idea.execution.TerminateRemoteProcessDialog;
 import consulo.process.ProcessHandler;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;

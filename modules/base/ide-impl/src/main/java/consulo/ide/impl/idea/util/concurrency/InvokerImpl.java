@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.util.concurrency;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;

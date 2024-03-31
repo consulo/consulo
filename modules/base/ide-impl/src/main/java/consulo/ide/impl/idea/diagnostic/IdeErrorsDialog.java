@@ -31,8 +31,6 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.dataContext.DataSink;
-import consulo.dataContext.TypeSafeDataProvider;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.ide.ServiceManager;
@@ -59,13 +57,12 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SimpleReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -81,11 +78,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.*;
 
-public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener, TypeSafeDataProvider {
+public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListener {
   private static final Logger LOG = Logger.getInstance(IdeErrorsDialog.class);
   private final boolean myInternalMode;
   private static final String ACTIVE_TAB_OPTION = IdeErrorsDialog.class.getName() + "activeTab";
-  public static Key<String> CURRENT_TRACE_KEY = Key.create("current_stack_trace_key");
 
   public static final int COMPONENTS_WIDTH = 670;
 
@@ -894,16 +890,6 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
   protected void updateOnSubmit() {
     updateControls();
-  }
-
-  @Override
-  public void calcData(Key<?> key, DataSink sink) {
-    if (CURRENT_TRACE_KEY == key) {
-      final AbstractMessage message = getSelectedMessage();
-      if (message != null) {
-        sink.put(CURRENT_TRACE_KEY, getDetailsText(message));
-      }
-    }
   }
 
   @Nullable

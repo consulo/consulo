@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.tasks.actions;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.options.binding.BindControl;
 import consulo.ide.impl.idea.openapi.options.binding.ControlBinder;
 import consulo.task.impl.internal.TaskManagerImpl;

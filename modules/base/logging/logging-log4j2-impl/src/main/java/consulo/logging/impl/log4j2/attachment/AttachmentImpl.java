@@ -15,10 +15,10 @@
  */
 package consulo.logging.impl.log4j2.attachment;
 
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.attachment.Attachment;
 
+import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -77,5 +77,11 @@ public class AttachmentImpl implements Attachment {
   @Override
   public void setIncluded(Boolean included) {
     myIncluded = included;
+  }
+
+  @Nonnull
+  @Override
+  public Attachment copy(String newPath) {
+    return new AttachmentImpl(newPath, myBytes, myDisplayText);
   }
 }

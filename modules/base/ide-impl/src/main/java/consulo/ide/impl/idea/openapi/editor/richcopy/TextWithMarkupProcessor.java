@@ -11,7 +11,6 @@ import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.editorActions.CopyPastePostProcessor;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.Context;
 import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.MyMarkupIterator;
@@ -20,13 +19,15 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
-import consulo.util.lang.ObjectUtil;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -118,7 +119,8 @@ public class TextWithMarkupProcessor extends CopyPastePostProcessor<RawTextWithM
     }
     catch (Throwable t) {
       // catching the exception so that the rest of copy/paste functionality can still work fine
-      LOG.error("Error generating text with markup", new Attachment("exception", t), new Attachment("highlighter.txt", String.valueOf(highlighter)));
+      LOG.error(new RuntimeExceptionWithAttachments("Error generating text with markup", t,
+                                                    AttachmentFactory.get().create("highlighter.txt", String.valueOf(highlighter))));
     }
     return Collections.emptyList();
   }

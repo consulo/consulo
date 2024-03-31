@@ -9,11 +9,11 @@ import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.desktop.awt.editor.impl.SoftWrapModelImpl;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.logging.Logger;
-
+import consulo.logging.attachment.AttachmentFactory;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -102,8 +102,8 @@ class EditorCoordinateMapper {
       }
       else {
         LOG.error("Error converting " + pos + " to visual position",
-                  new Attachment("details.txt", String.format("offset: %d, visual line: %d, max logical column: %d, max visual column: %d", offset, visualLine, maxLogicalColumn, maxVisualColumn)),
-                  new Attachment("dump.txt", myView.getEditor().dumpState()));
+                  AttachmentFactory.get().create("details.txt", String.format("offset: %d, visual line: %d, max logical column: %d, max visual column: %d", offset, visualLine, maxLogicalColumn, maxVisualColumn)),
+                  AttachmentFactory.get().create("dump.txt", myView.getEditor().dumpState()));
         resultColumn = 0;
       }
     }

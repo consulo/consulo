@@ -14,7 +14,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
+import consulo.application.internal.FrequentEventDetector;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;

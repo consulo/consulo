@@ -504,7 +504,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.command.impl;
   exports consulo.ide.impl.idea.openapi.command.undo;
   exports consulo.ide.impl.idea.openapi.deployment;
-  exports consulo.ide.impl.idea.openapi.diagnostic;
   exports consulo.ide.impl.idea.openapi.diff;
   exports consulo.ide.impl.idea.openapi.diff.ex;
   exports consulo.ide.impl.idea.openapi.diff.impl;

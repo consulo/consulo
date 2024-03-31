@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.diagnostic;
+package consulo.application.internal;
 
-import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
+import consulo.util.lang.ExceptionUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
@@ -37,7 +37,7 @@ public class FrequentEventDetector {
   private long myStartedCounting = System.currentTimeMillis();
   private final AtomicInteger myEventsPosted = new AtomicInteger();
   private final AtomicInteger myLastTraceId = new AtomicInteger();
-  private final Map<String, Integer> myRecentTraces = new LinkedHashMap<String, Integer>() {
+  private final Map<String, Integer> myRecentTraces = new LinkedHashMap<>() {
     @Override
     protected boolean removeEldestEntry(Map.Entry<String, Integer> eldest) {
       return size() > 50;
@@ -104,11 +104,6 @@ public class FrequentEventDetector {
 
   public static void disableUntil(@Nonnull Disposable reenable) {
     enabled = false;
-    Disposer.register(reenable, new Disposable() {
-      @Override
-      public void dispose() {
-        enabled = true;
-      }
-    });
+    Disposer.register(reenable, () -> enabled = true);
   }
 }

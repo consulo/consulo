@@ -43,7 +43,7 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.AWTIdleHolder;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
-import consulo.ide.impl.idea.openapi.diagnostic.FrequentEventDetector;
+import consulo.application.internal.FrequentEventDetector;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

@@ -15,21 +15,21 @@
  */
 package consulo.desktop.awt.editor.impl.view;
 
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.internal.EditorDocumentPriorities;
-import consulo.ui.ex.update.Activatable;
+import consulo.document.internal.PrioritizedDocumentListener;
+import consulo.logging.Logger;
+import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.update.Activatable;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Editor text layout storage. Layout is stored on a per-logical-line basis, 
@@ -95,7 +95,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
 
     if (myLines.size() != myDocument.getLineCount()) {
       LOG.error("Error updating text layout cache after " + event,
-                new Attachment("editorState.txt", myView.getEditor().dumpState()));
+                AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
       resetToDocumentSize(true);
     }
   }
@@ -115,7 +115,7 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
     invalidateLines(0, myLines.size() - 1, myDocument.getLineCount() - 1,
                     documentChangedWithoutNotification, documentChangedWithoutNotification);
     if (myLines.size() != myDocument.getLineCount()) {
-      LOG.error("Error resetting text layout cache", new Attachment("editorState.txt", myView.getEditor().dumpState()));
+      LOG.error("Error resetting text layout cache", AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
     }
   }
 
@@ -156,7 +156,8 @@ class TextLayoutCache implements PrioritizedDocumentListener, Disposable {
   @Nonnull
   LineLayout getLineLayout(int line) {
     checkDisposed();
-    if (line >= myLines.size()) LOG.error("Unexpected cache state", new Attachment("editorState.txt", myView.getEditor().dumpState()));
+    if (line >= myLines.size()) LOG.error("Unexpected cache state",
+                                          AttachmentFactory.get().create("editorState.txt", myView.getEditor().dumpState()));
     LineLayout result = myLines.get(line);
     if (result == null || result == myBidiNotRequiredMarker) {
       result = LineLayout.create(myView, line, result == myBidiNotRequiredMarker);

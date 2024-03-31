@@ -5,7 +5,7 @@ import consulo.language.LangBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DefaultActionGroup;

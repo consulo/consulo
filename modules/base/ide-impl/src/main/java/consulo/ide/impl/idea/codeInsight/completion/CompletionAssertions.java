@@ -1,11 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.ide.impl.idea.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
@@ -13,9 +8,11 @@ import consulo.document.internal.RangeMarkerEx;
 import consulo.document.util.TextRange;
 import consulo.language.ast.FileASTNode;
 import consulo.language.editor.completion.CompletionInitializationContext;
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.OffsetMap;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.DebugUtil;
@@ -24,7 +21,11 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.util.lang.ImmutableCharSequence;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 
@@ -75,8 +76,10 @@ class CompletionAssertions {
     message += "\nvirtualFile.class=" + virtualFile.getClass();
     message += "\n" + DebugUtil.currentStackTrace();
 
-    throw new RuntimeExceptionWithAttachments("Commit unsuccessful", message, new Attachment(virtualFile.getPath() + "_file.txt", StringUtil.notNullize(fileText)), createAstAttachment(psiFile, psiFile),
-                                              new Attachment("docText.txt", document.getText()));
+    throw new RuntimeExceptionWithAttachments("Commit unsuccessful", message,
+                                              AttachmentFactory.get()
+                                                               .create(virtualFile.getPath() + "_file.txt", StringUtil.notNullize(fileText)), createAstAttachment(psiFile, psiFile),
+                                              AttachmentFactory.get().create("docText.txt", document.getText()));
   }
 
   static void checkEditorValid(Editor editor) {
@@ -90,11 +93,11 @@ class CompletionAssertions {
   }
 
   private static Attachment createAstAttachment(PsiFile fileCopy, final PsiFile originalFile) {
-    return new Attachment(originalFile.getViewProvider().getVirtualFile().getPath() + " syntactic tree.txt", DebugUtil.psiToString(fileCopy, false, true));
+    return AttachmentFactory.get().create(originalFile.getViewProvider().getVirtualFile().getPath() + " syntactic tree.txt", DebugUtil.psiToString(fileCopy, false, true));
   }
 
   private static Attachment createFileTextAttachment(PsiFile fileCopy, final PsiFile originalFile) {
-    return new Attachment(originalFile.getViewProvider().getVirtualFile().getPath(), fileCopy.getText());
+    return AttachmentFactory.get().create(originalFile.getViewProvider().getVirtualFile().getPath(), fileCopy.getText());
   }
 
   static void assertInjectedOffsets(int hostStartOffset, PsiFile injected, DocumentWindow documentWindow) {
@@ -126,7 +129,7 @@ class CompletionAssertions {
     CharSequence fileCopyText = fileCopy.getViewProvider().getContents();
     if ((range.getEndOffset() > fileCopyText.length()) || !isEquals(fileCopyText.subSequence(range.getStartOffset(), range.getEndOffset()), insertedElement.getNode().getChars())) {
       throw new RuntimeExceptionWithAttachments("Inconsistent completion tree", "range=" + range, createFileTextAttachment(fileCopy, originalFile), createAstAttachment(fileCopy, originalFile),
-                                                new Attachment("Element at caret.txt", insertedElement.getText()));
+                                                AttachmentFactory.get().create("Element at caret.txt", insertedElement.getText()));
     }
   }
 
@@ -193,7 +196,7 @@ class CompletionAssertions {
     @Override
     public int getTailOffset() {
       if (!getOffsetMap().containsOffset(TAIL_OFFSET) && invalidateTrace != null) {
-        throw new RuntimeExceptionWithAttachments("Tail offset invalid", new Attachment("invalidated", invalidateTrace));
+        throw new RuntimeExceptionWithAttachments("Tail offset invalid", AttachmentFactory.get().create("invalidated", invalidateTrace));
       }
 
       int offset = super.getTailOffset();

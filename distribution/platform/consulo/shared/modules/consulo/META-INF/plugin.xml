@@ -2364,10 +2364,6 @@
       <add-to-group group-id="ToolbarRunGroup" relative-to-action="RunConfiguration" anchor="before"/>
     </group>
 
-
-    <action id="AnalyzeStacktraceOnError" class="consulo.ide.impl.idea.unscramble.AnalyzeStacktraceOnErrorAction"
-            text="Analyze _Stacktrace"/>
-
     <reference ref="Compile">
       <add-to-group group-id="EditorPopupMenu.Run" anchor="first"/>
     </reference>

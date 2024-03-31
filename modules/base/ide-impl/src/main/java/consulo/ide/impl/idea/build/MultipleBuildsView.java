@@ -11,7 +11,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
