@@ -829,6 +829,11 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
   }
 
   @Override
+  public boolean isWhitespaceOrCommentType(@Nonnull IElementType elementType) {
+    return whitespaceOrComment(elementType);
+  }
+
+  @Override
   public void advanceLexer() {
     ProgressIndicatorProvider.checkCanceled();
 

@@ -73,6 +73,11 @@ public class PsiBuilderAdapter implements PsiBuilder {
   }
 
   @Override
+  public boolean isWhitespaceOrCommentType(@Nonnull IElementType elementType) {
+    return myDelegate.isWhitespaceOrCommentType(elementType);
+  }
+
+  @Override
   public void remapCurrentToken(IElementType type) {
     myDelegate.remapCurrentToken(type);
   }

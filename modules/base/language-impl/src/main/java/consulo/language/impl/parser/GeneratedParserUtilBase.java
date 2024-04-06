@@ -23,7 +23,6 @@ import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.*;
 import consulo.language.impl.internal.parser.PsiBuilderImpl;
 import consulo.language.impl.psi.CompositePsiElement;
-import consulo.language.lexer.Lexer;
 import consulo.language.parser.*;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
@@ -418,7 +417,7 @@ public class GeneratedParserUtilBase {
   }
 
   public static boolean isWhitespaceOrComment(@Nonnull PsiBuilder builder, @Nullable IElementType type) {
-    return ((PsiBuilderImpl)((Builder)builder).getDelegate()).whitespaceOrComment(type);
+    return ((Builder)builder).getDelegate().isWhitespaceOrCommentType(type);
   }
 
   private static boolean wasAutoSkipped(@Nonnull PsiBuilder builder, int steps) {

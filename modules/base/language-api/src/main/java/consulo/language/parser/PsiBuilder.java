@@ -91,6 +91,11 @@ public interface PsiBuilder extends UserDataHolder {
   void setWhitespaceSkippedCallback(@Nullable WhitespaceSkippedCallback callback);
 
   /**
+   * @return true of elementType registered as comment/whitespace in parser definition
+   */
+  boolean isWhitespaceOrCommentType(@Nonnull IElementType elementType);
+
+  /**
    * See what token type is in <code>steps</code> ahead
    *
    * @param steps 0 is current token (i.e. the same {@link PsiBuilder#getTokenType()} returns)
