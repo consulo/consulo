@@ -47,18 +47,21 @@ import java.util.Map;
  */
 public class InvalidateCacheDialog extends DialogWrapper {
 
+  @Nonnull
+  private final Application myApplication;
   private Map<CachesInvalidator, Boolean> myStates = new LinkedHashMap<>();
 
   private Action myJustRestartAction;
 
-  public InvalidateCacheDialog(@Nullable Project project) {
+  public InvalidateCacheDialog(@Nonnull Application application, @Nullable Project project) {
     super(project);
+    myApplication = application;
 
-    boolean restartCapable = Application.get().isRestartCapable();
+    boolean restartCapable = application.isRestartCapable();
 
-    setTitle(restartCapable ? "Invalidate Caches / Restart" : "Invalidate Caches");
+    setTitle(restartCapable ? "Invalidate Caches and Restart" : "Invalidate Caches");
 
-    setOKButtonText(restartCapable ? "Invalidate & Restart" : "Invalidate");
+    setOKButtonText(restartCapable ? "Invalidate and Restart" : "Invalidate");
     setOKButtonIcon(TargetAWT.to(PlatformIconGroup.generalWarning()));
 
     if (restartCapable) {
@@ -67,8 +70,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
         protected void doAction(ActionEvent e) {
           close(OK_EXIT_CODE);
 
-          ApplicationEx application = (ApplicationEx)Application.get();
-          application.restart(true);
+          myApplication.restart(true);
         }
       };
     }
@@ -87,7 +89,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
     VerticalLayout optionalLayout = VerticalLayout.create();
     root.add(LabeledLayout.create(LocalizeValue.localizeTODO("Optional:"), optionalLayout));
 
-    Application.get().getExtensionPoint(CachesInvalidator.class).forEachExtensionSafe(invalidator -> {
+    myApplication.getExtensionPoint(CachesInvalidator.class).forEachExtensionSafe(invalidator -> {
       CheckBox checkBox = CheckBox.create(invalidator.getDescription());
       checkBox.setValue(invalidator.isEnabledByDefault());
       checkBox.addValueListener(event -> myStates.put(invalidator, event.getValue()));
@@ -112,8 +114,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
       }
     }
 
-    ApplicationEx application = (ApplicationEx)Application.get();
-    application.restart(true);
+    myApplication.restart(true);
   }
 
   @Nonnull

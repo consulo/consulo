@@ -46,7 +46,7 @@ public class VcsLogCachesInvalidator extends CachesInvalidator {
   @Nonnull
   @Override
   public LocalizeValue getDescription() {
-    return LocalizeValue.localizeTODO("Invalidate vcs log");
+    return LocalizeValue.localizeTODO("Invalidate VCS log");
   }
 
   @Override
