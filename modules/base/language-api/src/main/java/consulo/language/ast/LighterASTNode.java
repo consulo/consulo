@@ -31,4 +31,8 @@ public interface LighterASTNode {
   int getStartOffset();
 
   int getEndOffset();
+
+  default int getTextLength() {
+    return getEndOffset() - getStartOffset();
+  }
 }

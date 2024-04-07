@@ -15,9 +15,8 @@
  */
 package consulo.language.ast;
 
-import consulo.language.ast.*;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +84,11 @@ public class TreeBackedLighterAST extends LighterAST {
     @Override
     public int getEndOffset() {
       return myNode.getStartOffset() + myNode.getTextLength();
+    }
+
+    @Override
+    public int getTextLength() {
+      return myNode.getTextLength();
     }
 
     @Override
