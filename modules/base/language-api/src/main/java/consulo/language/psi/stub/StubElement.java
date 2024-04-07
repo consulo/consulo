@@ -22,6 +22,9 @@ public interface StubElement<T extends PsiElement> extends Stub {
   @Override
   StubElement getParentStub();
 
+  @Nullable
+  PsiFileStub<?> getContainingFileStub();
+
   @Override
   @Nonnull
   List<StubElement> getChildrenStubs();

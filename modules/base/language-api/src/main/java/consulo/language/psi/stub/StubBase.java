@@ -51,6 +51,15 @@ public abstract class StubBase<T extends PsiElement> extends ObjectStubBase<Stub
     return myParent;
   }
 
+  @Override
+  public PsiFileStub<?> getContainingFileStub() {
+    StubBase<?> rootStub = myStubList.get(0);
+    if (!(rootStub instanceof PsiFileStub)) {
+      return null;
+    }
+    return (PsiFileStub<?>)rootStub;
+  }
+
   @Nonnull
   @Override
   @SuppressWarnings("unchecked")

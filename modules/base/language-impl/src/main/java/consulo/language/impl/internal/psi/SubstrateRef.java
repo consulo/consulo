@@ -15,22 +15,21 @@
  */
 package consulo.language.impl.internal.psi;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.ast.FileASTNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.FileASTNode;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.StubBasedPsiElement;
-import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.stub.PsiFileStub;
-import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubElement;
 import consulo.logging.Logger;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -127,34 +126,37 @@ public abstract class SubstrateRef {
 
     @Override
     public boolean isValid() {
-      StubElement parent = myStub.getParentStub();
-      if (parent == null) {
-        LOG.error("No parent for stub " + myStub + " of class " + myStub.getClass());
-        return false;
-      }
-      PsiElement psi = parent.getPsi();
+      PsiFileStub<?> fileStub = myStub.getContainingFileStub();
+      if (fileStub == null) return false;
+      PsiFile psi = fileStub.getPsi();
       return psi != null && psi.isValid();
     }
 
     @Nonnull
     @Override
     public PsiFile getContainingFile() {
-      StubElement stub = myStub;
-      while (!(stub instanceof PsiFileStub)) {
-        stub = stub.getParentStub();
+      PsiFileStub<?> stub = myStub.getContainingFileStub();
+      if (stub == null) {
+        throw new PsiInvalidElementAccessException(myStub.getPsi(),
+                                                   "stub hierarchy is invalid: " + this + " (" + getClass() + ")" +
+                                                     " has null containing file stub", null);
       }
-      PsiFile psi = (PsiFile)stub.getPsi();
+      PsiFile psi = stub.getPsi();
       if (psi != null) {
         return psi;
       }
-      return reportError(stub);
+      return reportFileInvalidError(stub);
     }
 
-    private PsiFile reportError(StubElement stub) {
+    @RequiredReadAction
+    private PsiFile reportFileInvalidError(@Nonnull PsiFileStub<?> stub) {
       ApplicationManager.getApplication().assertReadAccessAllowed();
 
-      String reason = ((PsiFileStubImpl<?>)stub).getInvalidationReason();
-      PsiInvalidElementAccessException exception = new PsiInvalidElementAccessException(myStub.getPsi(), "no psi for file stub " + stub + ", invalidation reason=" + reason, null);
+      String reason = stub.getInvalidationReason();
+      PsiInvalidElementAccessException exception =
+        new PsiInvalidElementAccessException(myStub.getPsi(),
+                                             "no psi for file stub " + stub + " (" + stub.getClass() + "), invalidation reason=" + reason,
+                                             null);
       if (PsiFileImpl.STUB_PSI_MISMATCH.equals(reason)) {
         // we're between finding stub-psi mismatch and the next EDT spot where the file is reparsed and stub rebuilt
         //    see com.intellij.psi.impl.source.PsiFileImpl.rebuildStub()
