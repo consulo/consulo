@@ -328,6 +328,10 @@ action.EditorToggleUseSoftWraps.text:
   text: Use Soft Wraps
 action.EditorToggleUseSoftWraps.description:
   text: Toggle using soft wraps in current editor
+action.EditorToggleUseSoftWrapsInPreview.text:
+  text: Soft-Wrap Preview Editor
+action.EditorToggleUseSoftWrapsInPreview.description:
+  text: Toggle using soft wraps in preview editors
 action.EditorConsoleScrollToTheEnd.text:
   text: Scroll to the end
 action.EditorIncreaseFontSize.text:
