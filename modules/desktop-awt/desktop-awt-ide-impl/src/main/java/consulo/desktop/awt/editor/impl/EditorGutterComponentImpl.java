@@ -22,6 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
@@ -30,7 +31,6 @@ import consulo.document.util.Segment;
 import consulo.ide.impl.idea.codeInsight.daemon.NonHideableIconGutterMark;
 import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
 import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
@@ -78,13 +78,12 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
-
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
@@ -368,7 +367,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     // paint all backgrounds
     int gutterSeparatorX = getWhitespaceSeparatorOffset();
     paintBackground(g, clip, 0, gutterSeparatorX, TargetAWT.from(backgroundColor));
-    paintBackground(g, clip, gutterSeparatorX, getFoldingAreaWidth(), myEditor.getBackgroundColor());
+    paintBackground(g, clip, gutterSeparatorX, getWidth() - gutterSeparatorX, myEditor.getBackgroundColor());
 
     paintEditorBackgrounds(g, firstVisibleOffset, lastVisibleOffset);
 
