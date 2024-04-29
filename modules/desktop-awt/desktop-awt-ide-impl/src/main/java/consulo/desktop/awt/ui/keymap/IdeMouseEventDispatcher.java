@@ -148,7 +148,7 @@ public final class IdeMouseEventDispatcher {
 
         consulo.ui.Window uiWindow = TargetAWT.from(awtWindow);
 
-        IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+        IdeFrame ideFrame = uiWindow == null ? null : uiWindow.getUserData(IdeFrame.KEY);
         if (ideFrame != null) {
           IdeFocusManager focusManager = IdeFocusManager.getGlobalInstance();
           if (focusManager instanceof FocusManagerImpl) {
