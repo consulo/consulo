@@ -10,10 +10,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.*;
 import consulo.ui.UIAccessScheduler;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ClickListener;
@@ -31,21 +28,22 @@ import java.awt.event.MouseEvent;
 import java.util.concurrent.TimeUnit;
 
 public final class IdeMessagePanel extends NonOpaquePanel implements MessagePoolListener, IconLikeCustomStatusBarWidget {
-  public static final String FATAL_ERROR = "FatalError";
-
   private final IdeErrorsIcon myIcon;
   private final IdeFrame myFrame;
   private final MessagePool myMessagePool;
   private final Project myProject;
+  @Nonnull
+  private final StatusBarWidgetFactory myFactory;
 
   private Balloon myBalloon;
   private IdeErrorsDialog myDialog;
   private boolean myOpeningInProgress;
   private boolean myNotificationPopupAlreadyShown;
 
-  public IdeMessagePanel(Project project, @Nullable IdeFrame frame, @Nonnull MessagePool messagePool) {
+  public IdeMessagePanel(Project project, @Nonnull StatusBarWidgetFactory factory, @Nullable IdeFrame frame, @Nonnull MessagePool messagePool) {
     super(new BorderLayout());
     myProject = project;
+    myFactory = factory;
 
     myIcon = new IdeErrorsIcon(frame != null);
     myIcon.setVerticalAlignment(SwingConstants.CENTER);
@@ -66,10 +64,10 @@ public final class IdeMessagePanel extends NonOpaquePanel implements MessagePool
     updateIconAndNotify();
   }
 
-  @Override
   @Nonnull
-  public String ID() {
-    return FATAL_ERROR;
+  @Override
+  public String getId() {
+    return myFactory.getId();
   }
 
   @Override

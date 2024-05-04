@@ -16,10 +16,11 @@
 package consulo.ide.impl.idea.ide.actionMacro.actions;
 
 import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager;
-import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -28,7 +29,29 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author max
  */
 public class StartStopMacroRecordingAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
+    if (project == null) {
+      return;
+    }
+
+    if (!ActionMacroManager.getInstance().isRecording()) {
+      final ActionMacroManager manager = ActionMacroManager.getInstance();
+      manager.startRecording(project, IdeBundle.message("macro.noname"));
+    }
+    else {
+      ActionMacroManager.getInstance().stopRecording(project);
+    }
+  }
+
+  @RequiredUIAccess
+  @Override
   public void update(AnActionEvent e) {
+    Project project = e.getData(Project.KEY);
+    e.getPresentation().setEnabledAndVisible(project != null);
+
     boolean isRecording = ActionMacroManager.getInstance().isRecording();
 
     e.getPresentation().setText(isRecording
@@ -40,16 +63,6 @@ public class StartStopMacroRecordingAction extends AnAction implements DumbAware
     }
     else {
       e.getPresentation().setIcon(null);
-    }
-  }
-
-  public void actionPerformed(AnActionEvent e) {
-    if (!ActionMacroManager.getInstance().isRecording()) {
-      final ActionMacroManager manager = ActionMacroManager.getInstance();
-      manager.startRecording(IdeBundle.message("macro.noname"));
-    }
-    else {
-      ActionMacroManager.getInstance().stopRecording(e.getData(CommonDataKeys.PROJECT));
     }
   }
 }

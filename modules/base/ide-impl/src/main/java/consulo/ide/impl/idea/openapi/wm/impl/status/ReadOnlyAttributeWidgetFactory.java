@@ -2,24 +2,15 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.project.Project;
-import consulo.disposer.Disposer;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "readOnlyWidget", order = "after codeStyleWidget")
 public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-  @Override
-  public
-  @Nonnull
-  String getId() {
-    return StatusBar.StandardWidgets.READONLY_ATTRIBUTE_PANEL;
-  }
-
   @Override
   public
   @Nls
@@ -32,11 +23,6 @@ public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFa
   public
   @Nonnull
   StatusBarWidget createWidget(@Nonnull Project project) {
-    return new ToggleReadOnlyAttributePanel();
-  }
-
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
+    return new ToggleReadOnlyAttributePanel(this);
   }
 }

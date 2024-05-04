@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.diagnostic.IdeMessagePanel;
 import consulo.ide.impl.idea.diagnostic.MessagePool;
 import consulo.project.Project;
@@ -16,13 +15,6 @@ import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "fatalErrorWidget", order = "after notificationsWidget")
 public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
-  @Override
-  public
-  @Nonnull
-  String getId() {
-    return IdeMessagePanel.FATAL_ERROR;
-  }
-
   @Override
   public
   @Nls
@@ -39,12 +31,7 @@ public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
   @Override
   @Nonnull
   public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new IdeMessagePanel(project, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
-  }
-
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
+    return new IdeMessagePanel(project, this, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
   }
 
   @Override

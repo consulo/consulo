@@ -19,9 +19,9 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
@@ -30,12 +30,22 @@ import java.util.function.Consumer;
  */
 public interface StatusBarWidget extends Disposable {
   @Nonnull
-  String ID();
+  @Deprecated
+  default String ID() {
+    return getId();
+  }
+
+  @Nonnull
+  String getId();
 
   @Nullable
   WidgetPresentation getPresentation();
 
   void install(@Nonnull final StatusBar statusBar);
+
+  @RequiredUIAccess
+  default void beforeUpdate() {
+  }
 
   interface Multiframe extends StatusBarWidget {
     StatusBarWidget copy();

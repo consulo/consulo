@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
-import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsWidget;
+import consulo.ide.impl.wm.statusBar.UnifiedToolWindowsSwicher;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.CustomStatusBarWidget;
@@ -53,6 +53,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -80,14 +82,12 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     PseudoComponent component;
     Position position;
     StatusBarWidget widget;
-    String anchor;
 
-    static WidgetBean create(@Nonnull final StatusBarWidget widget, @Nonnull final Position position, @Nonnull final PseudoComponent component, @Nonnull String anchor) {
+    static WidgetBean create(@Nonnull final StatusBarWidget widget, @Nonnull final Position position, @Nonnull final PseudoComponent component) {
       final WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
       bean.component = component;
-      bean.anchor = anchor;
       return bean;
     }
   }
@@ -105,10 +105,16 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myApplication = application;
 
     myInfoAndProgressPanel = new UnifiedInfoAndProgressPanel();
-    addWidget(myInfoAndProgressPanel, Position.CENTER, "__IGNORED__");
+    Disposer.register(this, myInfoAndProgressPanel);
+
+    centerPanel().add(myInfoAndProgressPanel.getUIComponent());
 
     if (master == null) {
-      addWidget(new UnifiedToolWindowsWidget(this), Position.LEFT);
+      UnifiedToolWindowsSwicher swicher = new UnifiedToolWindowsSwicher(this);
+      swicher.update();
+
+      Disposer.register(this, swicher);
+      leftPanel().add(swicher.getUIComponent());
     }
 
     myComponent.addUserDataProvider(Project.KEY, this::getProject);
@@ -136,40 +142,23 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     return myInfoText;
   }
 
-  @Override
-  public void addWidget(@Nonnull final StatusBarWidget widget) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
-
-    uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, "__AUTODETECT__"));
-  }
-
-  @Override
-  public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final String anchor) {
-    UIAccess uiAccess = myApplication.getLastUIAccess();
-
-    uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, anchor));
-  }
-
   private void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Position pos) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
-    uiAccess.giveIfNeed(() -> addWidget(widget, pos, "__IGNORED__"));
+    uiAccess.giveIfNeed(() -> addWidget(widget, pos, List.of()));
   }
 
   @Override
-  public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull final Disposable parentDisposable) {
-    addWidget(widget);
-    Disposer.register(parentDisposable, () -> removeWidget(widget.ID()));
-  }
+  public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull List<String> order, @Nonnull final Disposable parentDisposable) {
+    UIAccess uiAccess = myApplication.getLastUIAccess();
 
-  @Override
-  public void addWidget(@Nonnull final StatusBarWidget widget, @Nonnull String anchor, @Nonnull final Disposable parentDisposable) {
-    addWidget(widget, anchor);
-    Disposer.register(parentDisposable, () -> removeWidget(widget.ID()));
+    uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, order));
+
+    Disposer.register(parentDisposable, () -> removeWidget(widget.getId()));
   }
 
   @RequiredUIAccess
-  private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull String anchor) {
+  private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull List<String> order) {
     myApplication.assertIsDispatchThread();
     PseudoComponent c = wrap(widget);
     HorizontalLayout panel = getTargetPanel(position);
@@ -177,7 +166,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     //  c.setBorder(SystemInfo.isMac ? JBUI.Borders.empty(2, 0, 2, 4) : JBUI.Borders.empty());
     //}
     panel.add(c/*, getPositionIndex(position, anchor)*/);
-    myWidgetMap.put(widget.ID(), WidgetBean.create(widget, position, c, anchor));
+    myWidgetMap.put(widget.getId(), WidgetBean.create(widget, position, c));
     if (c instanceof StatusBarWidgetWrapper) {
       ((StatusBarWidgetWrapper)c).beforeUpdate();
     }
@@ -197,7 +186,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
       return () -> {
         consulo.ui.Component component = ((CustomStatusBarWidget)widget).getUIComponent();
         if (component == null) {
-          String id = widget.ID();
+          String id = widget.getId();
           component = Label.create(id.substring(0, 2));
         }
 
@@ -296,13 +285,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     };
   }
 
-  @Nullable
-  @Override
-  public StatusBarWidget getWidget(String id) {
-    WidgetBean bean = myWidgetMap.get(id);
-    return bean == null ? null : bean.widget;
-  }
-
   @Override
   public void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor) {
 
@@ -384,6 +366,27 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
 
       //updateChildren(child -> child.updateWidget(id));
     });
+  }
+
+  @Nonnull
+  @Override
+  @SuppressWarnings("unchecked")
+  public <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate) {
+    return myWidgetMap
+      .values()
+      .stream()
+      .filter(widgetBean -> predicate.test(widgetBean.widget))
+      .map(widgetBean -> (W)widgetBean.widget)
+      .findFirst();
+  }
+
+  @Override
+  public void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate) {
+    myWidgetMap
+      .entrySet()
+      .stream()
+      .filter(it -> widgetPredicate.test(it.getValue().widget))
+      .forEach(it -> updateWidget(it.getKey()));
   }
 
   private PseudoComponent getWidgetComponent(String id) {

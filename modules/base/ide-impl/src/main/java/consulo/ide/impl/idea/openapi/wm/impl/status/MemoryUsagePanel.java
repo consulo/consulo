@@ -6,6 +6,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.UIBundle;
@@ -37,14 +38,16 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
   private final String mySample;
   private final Project myProject;
+  private final StatusBarWidgetFactory myFactory;
   private long myLastAllocated = -1;
   private long myLastUsed = -1;
   private BufferedImage myBufferedImage;
   private boolean myWasPressed;
   private ScheduledFuture<?> myFuture;
 
-  public MemoryUsagePanel(Project project) {
+  public MemoryUsagePanel(Project project, StatusBarWidgetFactory factory) {
     myProject = project;
+    myFactory = factory;
     long max = Math.min(Runtime.getRuntime().maxMemory() / MEGABYTE, 9999);
     mySample = UIBundle.message("memory.usage.panel.message.text", max, max);
 
@@ -92,8 +95,8 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
 
   @Nonnull
   @Override
-  public String ID() {
-    return WIDGET_ID;
+  public String getId() {
+    return myFactory.getId();
   }
 
   public void setShowing(boolean showing) {

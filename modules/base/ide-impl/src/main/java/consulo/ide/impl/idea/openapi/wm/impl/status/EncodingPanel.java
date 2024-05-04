@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -27,8 +28,8 @@ import jakarta.annotation.Nullable;
 import java.nio.charset.Charset;
 
 public class EncodingPanel extends EditorBasedStatusBarPopup {
-  public EncodingPanel(@Nonnull Project project) {
-    super(project, true);
+  public EncodingPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory, true);
   }
 
   @Nonnull
@@ -81,12 +82,6 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
   @Nonnull
   @Override
   protected StatusBarWidget createInstance(@Nonnull Project project) {
-    return new EncodingPanel(project);
-  }
-
-  @Override
-  @Nonnull
-  public String ID() {
-    return StatusBar.StandardWidgets.ENCODING_PANEL;
+    return new EncodingPanel(project, myFactory);
   }
 }

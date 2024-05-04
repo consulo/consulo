@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,43 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.wm.impl.status;
+package consulo.ide.impl.idea.ide.actionMacro;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
+import org.jetbrains.annotations.Nls;
 
 /**
  * @author VISTALL
- * @since 2020-11-01
+ * @since 03.05.2024
  */
-@ExtensionImpl(id = "moduleLayerWidget", order = "after encodingWidget")
-public class ModuleLayerWidgetFactory implements StatusBarWidgetFactory {
+@ExtensionImpl(id = "actionMacroWidget", order = "after readOnlyWidget")
+public class ActionMacroWidgetFactory implements StatusBarWidgetFactory {
+  private final ActionMacroManager myActionMacroManager;
+
+  @Inject
+  public ActionMacroWidgetFactory(ActionMacroManager actionMacroManager) {
+    myActionMacroManager = actionMacroManager;
+  }
+
   @Nls
   @Nonnull
   @Override
   public String getDisplayName() {
-    return "Module Layer";
+    return "Action Macro";
   }
 
   @Override
   public boolean isAvailable(@Nonnull Project project) {
-    return true;
+    return myActionMacroManager.isRecording();
   }
 
   @Nonnull
   @Override
   public StatusBarWidget createWidget(@Nonnull Project project) {
-    return new ModuleLayerWidget(project, this);
+    return new ActionMacroWidget();
   }
 
   @Override
   public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
-    return true;
+    return false;
   }
 }

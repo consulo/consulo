@@ -3,29 +3,18 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
+import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
-import consulo.disposer.Disposer;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.ui.ex.UIBundle;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "selectionModeWidget", order = "after moduleLayerWidget")
 public class ColumnSelectionModeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
   @Override
-  public
   @Nonnull
-  String getId() {
-    return StatusBar.StandardWidgets.COLUMN_SELECTION_MODE_PANEL;
-  }
-
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
+  public String getDisplayName() {
     return UIBundle.message("status.bar.selection.mode.widget.name");
   }
 
@@ -36,14 +25,8 @@ public class ColumnSelectionModeWidgetFactory extends StatusBarEditorBasedWidget
   }
 
   @Override
-  public
   @Nonnull
-  StatusBarWidget createWidget(@Nonnull Project project) {
-    return new ColumnSelectionModePanel(project);
-  }
-
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
+  public StatusBarWidget createWidget(@Nonnull Project project) {
+    return new ColumnSelectionModePanel(project, this);
   }
 }

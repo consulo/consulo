@@ -24,13 +24,15 @@ import consulo.project.startup.StartupManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
-
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
 import java.awt.*;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author spleaner
@@ -50,7 +52,10 @@ public interface StatusBar extends StatusBarInfo, Disposable {
       if (project != null) {
         if (project.isDisposed()) return;
         if (!project.isInitialized()) {
-          StartupManager.getInstance(project).runWhenProjectIsInitialized((p, ui) -> p.getMessageBus().syncPublisher(StatusBarInfo.class).setInfo(text, requestor));
+          StartupManager.getInstance(project)
+                        .runWhenProjectIsInitialized((p, ui) -> p.getMessageBus()
+                                                                 .syncPublisher(StatusBarInfo.class)
+                                                                 .setInfo(text, requestor));
           return;
         }
       }
@@ -60,41 +65,12 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     }
   }
 
-
-  final class Anchors {
-    public static final String DEFAULT_ANCHOR = after(StandardWidgets.COLUMN_SELECTION_MODE_PANEL);
-
-    public static String before(String widgetId) {
-      return "before " + widgetId;
-    }
-
-    public static String after(String widgetId) {
-      return "after " + widgetId;
-    }
-  }
-
-  final class StandardWidgets {
-    public static final String ENCODING_PANEL = "Encoding";
-    public static final String COLUMN_SELECTION_MODE_PANEL = "InsertOverwrite"; // Keep the old ID for backwards compatibility
-    public static final String READONLY_ATTRIBUTE_PANEL = "ReadOnlyAttribute";
-    public static final String POSITION_PANEL = "Position2D";
-    public static final String LINE_SEPARATOR_PANEL = "LineSeparator";
-  }
-
-  void addWidget(@Nonnull StatusBarWidget widget);
-
-  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor);
-
-  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Disposable parentDisposable);
-
-  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull String anchor, @Nonnull Disposable parentDisposable);
-
-  void removeWidget(@Nonnull String id);
-
   void updateWidget(@Nonnull String id);
 
-  @Nullable
-  StatusBarWidget getWidget(String id);
+  void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate);
+
+  @Nonnull
+  <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate);
 
   void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor);
 
@@ -132,5 +108,8 @@ public interface StatusBar extends StatusBarInfo, Disposable {
     return notifyProgressByBalloon(type, htmlBody, null, null);
   }
 
-  BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener);
+  BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type,
+                                         @Nonnull String htmlBody,
+                                         @Nullable Image icon,
+                                         @Nullable HyperlinkListener listener);
 }

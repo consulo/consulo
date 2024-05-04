@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.DateFormatUtil;
 import consulo.component.messagebus.MessageBusConnection;
@@ -45,6 +48,8 @@ import java.util.List;
  * todo: use EditorNotifications
  */
 @Singleton
+@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class OutdatedVersionNotifier {
   private static final Logger LOG = Logger.getInstance(OutdatedVersionNotifier.class);
 
@@ -113,10 +118,10 @@ public class OutdatedVersionNotifier {
     }
     debug("Updating editors");
     final VirtualFile[] files = myFileEditorManager.get().getOpenFiles();
-    for(VirtualFile file: files) {
-      final Pair<CommittedChangeList,Change> pair = myCache.getIncomingChangeList(file);
+    for (VirtualFile file : files) {
+      final Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
       final FileEditor[] fileEditors = myFileEditorManager.get().getEditors(file);
-      for(FileEditor editor: fileEditors) {
+      for (FileEditor editor : fileEditors) {
         final OutdatedRevisionPanel oldPanel = editor.getUserData(PANEL_KEY);
         if (pair != null) {
           if (oldPanel != null) {
@@ -153,7 +158,7 @@ public class OutdatedVersionNotifier {
         final Pair<CommittedChangeList, Change> pair = myCache.getIncomingChangeList(file);
         if (pair != null) {
           final FileEditor[] fileEditors = source.getEditors(file);
-          for(FileEditor editor: fileEditors) {
+          for (FileEditor editor : fileEditors) {
             initPanel(pair.first, pair.second, editor);
           }
         }
@@ -179,9 +184,9 @@ public class OutdatedVersionNotifier {
         comment = comment.substring(0, pos).trim() + "...";
       }
       final String formattedDate = DateFormatUtil.formatPrettyDateTime(myChangeList.getCommitDate());
-      final boolean dateIsPretty = ! formattedDate.contains("/");
+      final boolean dateIsPretty = !formattedDate.contains("/");
       final String key = c.getType() == Change.Type.DELETED ? "outdated.version.text.deleted" :
-                         (dateIsPretty ? "outdated.version.pretty.date.text" : "outdated.version.text");
+        (dateIsPretty ? "outdated.version.pretty.date.text" : "outdated.version.text");
       myLabel.setText(VcsBundle.message(key, myChangeList.getCommitterName(), formattedDate, comment));
     }
 

@@ -71,8 +71,8 @@ public class UnifiedStatusBarWidgetWrapper {
     private WrappedLayout myWrappedLayout;
 
     @RequiredUIAccess
-    public TextPresentationWidget(StatusBarWidget.TextPresentation widget) {
-      myWidgetPresentation = widget;
+    public TextPresentationWidget(StatusBarWidget.TextPresentation textPresentation) {
+      myWidgetPresentation = textPresentation;
       myLabel = Label.create("");
 
       myWrappedLayout = WrappedLayout.create(myLabel);

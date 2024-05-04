@@ -3,11 +3,10 @@ package consulo.project.ui.wm;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.disposer.Disposer;
 import consulo.project.Project;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -16,23 +15,29 @@ import jakarta.annotation.Nonnull;
  * By default, a widget would be available only in the main IDE, but not in Light Edit.
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
+@ExtensionAPI(ComponentScope.PROJECT)
 public interface StatusBarWidgetFactory {
-  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = ExtensionPointName.create(StatusBarWidgetFactory.class);
-
   /**
    * @return Widget identifier. Used to store visibility settings.
    */
-  @NonNls
   @Nonnull
-  String getId();
+  default String getId() {
+    ExtensionImpl extension = getClass().getAnnotation(ExtensionImpl.class);
+    if (extension == null) {
+      throw new IllegalArgumentException(getClass() + " is not annotated by @ExtensionImpl");
+    }
+    String id = extension.id();
+    if (StringUtil.isEmpty(id)) {
+      throw new IllegalArgumentException(getClass() + " @ExtensionImpl#id() is empty");
+    }
+    return id;
+  }
 
   /**
    * @return Widget's display name. Used to refer a widget in UI,
    * e.g. for "Enable/disable &lt;display name>" action names
    * or for checkbox texts in settings.
    */
-  @Nls
   @Nonnull
   String getDisplayName();
 
@@ -48,7 +53,7 @@ public interface StatusBarWidgetFactory {
    * <li>git widget if there are no git repos in a project</li>
    * </ul>
    * <p>
-   * Whenever availability is changed, you need to call {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
+   * Whenever availability is changed, you need to call {@link StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
    * explicitly to get status bar updated.
    */
   boolean isAvailable(@Nonnull Project project);
@@ -70,7 +75,9 @@ public interface StatusBarWidgetFactory {
   @Nonnull
   StatusBarWidget createWidget(@Nonnull Project project);
 
-  void disposeWidget(@Nonnull StatusBarWidget widget);
+  default void disposeWidget(@Nonnull StatusBarWidget widget) {
+    Disposer.dispose(widget);
+  }
 
   /**
    * @return Returns whether the widget can be enabled on the given status bar right now.
@@ -82,7 +89,7 @@ public interface StatusBarWidgetFactory {
    * <p>
    * E.g. {@link consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedWidget} are available if editor is opened in a frame that given status bar is attached to
    * <p>
-   * For creating editor based widgets see also {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory}
+   * For creating editor based widgets see also {@link StatusBarEditorBasedWidgetFactory}
    */
   boolean canBeEnabledOn(@Nonnull StatusBar statusBar);
 

@@ -20,6 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -38,9 +39,17 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   protected StatusBar myStatusBar;
   protected MessageBusConnection myConnection;
   private volatile boolean myDisposed;
+  protected final StatusBarWidgetFactory myFactory;
 
-  protected EditorBasedWidget(@Nonnull Project project) {
+  protected EditorBasedWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
     myProject = project;
+    myFactory = factory;
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return myFactory.getId();
   }
 
   @Nullable

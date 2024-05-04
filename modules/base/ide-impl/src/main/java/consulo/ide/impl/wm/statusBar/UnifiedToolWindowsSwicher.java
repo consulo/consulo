@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.wm.statusBar;
 
-import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
+import consulo.project.ui.wm.StatusBar;
 
 /**
  * @author VISTALL
  * @since 2023-11-13
  */
-public class UnifiedToolWindowsWidget extends BaseToolWindowsWidget {
-  public UnifiedToolWindowsWidget(@Nonnull Disposable parent) {
-    super();
+public class UnifiedToolWindowsSwicher extends BaseToolWindowsSwitcher {
+  public UnifiedToolWindowsSwicher(StatusBar statusBar) {
+    super(statusBar);
   }
 }

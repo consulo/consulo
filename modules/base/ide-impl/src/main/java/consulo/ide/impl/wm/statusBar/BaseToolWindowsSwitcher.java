@@ -15,16 +15,13 @@
  */
 package consulo.ide.impl.wm.statusBar;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.project.ui.wm.CustomStatusBarWidget;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.Component;
 import consulo.ui.FocusManager;
 import consulo.ui.Label;
@@ -32,29 +29,30 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2023-11-13
  */
-public class BaseToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget, Disposable, UISettingsListener {
-  private StatusBar myStatusBar;
+public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
+  private final StatusBar myStatusBar;
   protected JBPopup popup;
   protected boolean wasExited = false;
   protected Label myLabel;
 
-  public BaseToolWindowsWidget() {
+  public BaseToolWindowsSwitcher(StatusBar statusBar) {
+    myStatusBar = statusBar;
+
     myLabel = Label.create();
 
-    Disposer.register(this, FocusManager.get().addListener(this::updateIcon));
+    Disposer.register(this, FocusManager.get().addListener(this::update));
 
     Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.class, this);
   }
 
   @Override
   public void uiSettingsChanged(UISettings uiSettings) {
-    updateIcon();
+    update();
   }
 
   public void performAction() {
@@ -65,7 +63,7 @@ public class BaseToolWindowsWidget implements CustomStatusBarWidget, StatusBarWi
   }
 
   @RequiredUIAccess
-  private void updateIcon() {
+  public void update() {
     myLabel.setToolTipText(null);
     if (isActive()) {
       boolean changes = false;
@@ -75,7 +73,7 @@ public class BaseToolWindowsWidget implements CustomStatusBarWidget, StatusBarWi
         changes = true;
       }
 
-      Image icon = UISettings.getInstance().getHideToolStripes() ? AllIcons.General.TbShown : AllIcons.General.TbHidden;
+      Image icon = UISettings.getInstance().getHideToolStripes() ? PlatformIconGroup.generalTbshown() : PlatformIconGroup.generalTbhidden();
       if (icon != myLabel.getImage()) {
         myLabel.setImage(icon);
         changes = true;
@@ -92,41 +90,17 @@ public class BaseToolWindowsWidget implements CustomStatusBarWidget, StatusBarWi
   }
 
   public boolean isActive() {
-    return myStatusBar != null && myStatusBar.getProject() != null && Registry.is("ide.windowSystem.showTooWindowButtonsSwitcher");
+    return myStatusBar != null && myStatusBar.getProject() != null;
   }
 
-  @Nullable
-  @Override
+  @Nonnull
   public Component getUIComponent() {
     return myLabel;
   }
 
   @Override
-  public boolean isUnified() {
-    return true;
-  }
-
-  @Nonnull
-  @Override
-  public String ID() {
-    return "ToolWindows Widget";
-  }
-
-  @Override
-  public WidgetPresentation getPresentation() {
-    return null;
-  }
-
-  @Override
-  public void install(@Nonnull StatusBar statusBar) {
-    myStatusBar = statusBar;
-    updateIcon();
-  }
-
-  @Override
   public void dispose() {
     Disposer.dispose(this);
-    myStatusBar = null;
     popup = null;
   }
 }

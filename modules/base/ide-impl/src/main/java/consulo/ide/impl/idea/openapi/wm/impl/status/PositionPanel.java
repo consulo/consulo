@@ -18,6 +18,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
@@ -46,8 +47,8 @@ public final class PositionPanel extends EditorBasedWidget
 
   private String myText;
 
-  public PositionPanel(@Nonnull Project project) {
-    super(project);
+  public PositionPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory);
   }
 
   @Override
@@ -56,14 +57,8 @@ public final class PositionPanel extends EditorBasedWidget
   }
 
   @Override
-  @Nonnull
-  public String ID() {
-    return StatusBar.StandardWidgets.POSITION_PANEL;
-  }
-
-  @Override
   public StatusBarWidget copy() {
-    return new PositionPanel(getProject());
+    return new PositionPanel(getProject(), myFactory);
   }
 
   @Override

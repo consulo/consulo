@@ -2,21 +2,20 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
+import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
-
+import consulo.util.collection.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -26,10 +25,10 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
   @Override
   @Nonnull
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
-    Project project = e != null ? e.getData(CommonDataKeys.PROJECT) : null;
+    Project project = e != null ? e.getData(Project.KEY) : null;
     if (project == null) return AnAction.EMPTY_ARRAY;
 
-    StatusBarWidgetsManager manager = StatusBarWidgetsManager.getInstance(project);
+    StatusBarWidgetsManagerImpl manager = (StatusBarWidgetsManagerImpl)StatusBarWidgetsManager.getInstance(project);
     Collection<AnAction> toggleActions = new ArrayList<>(ContainerUtil.map(manager.getWidgetFactories(), ToggleWidgetAction::new));
     toggleActions.add(AnSeparator.getInstance());
     toggleActions.add(new HideCurrentWidgetAction());
@@ -47,7 +46,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -56,8 +55,10 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
         e.getPresentation().setEnabledAndVisible(myWidgetFactory.isConfigurable() && myWidgetFactory.isAvailable(project));
         return;
       }
-      StatusBar statusBar = e.getData(PlatformDataKeys.STATUS_BAR);
-      e.getPresentation().setEnabledAndVisible(statusBar != null && StatusBarWidgetsManager.getInstance(project).canBeEnabledOnStatusBar(myWidgetFactory, statusBar));
+      StatusBar statusBar = e.getData(StatusBar.KEY);
+      e.getPresentation()
+       .setEnabledAndVisible(statusBar != null && ((StatusBarWidgetsManagerImpl)StatusBarWidgetsManager.getInstance(project)).canBeEnabledOnStatusBar(
+         myWidgetFactory, statusBar));
     }
 
     @Override
@@ -100,11 +101,11 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
 
     @Nullable
     private static StatusBarWidgetFactory getFactory(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       String hoveredWidgetId = e.getData(StatusBarEx.HOVERED_WIDGET_ID);
-      StatusBar statusBar = e.getData(PlatformDataKeys.STATUS_BAR);
+      StatusBar statusBar = e.getData(StatusBar.KEY);
       if (project != null && hoveredWidgetId != null && statusBar != null) {
-        return StatusBarWidgetsManager.getInstance(project).findWidgetFactory(hoveredWidgetId);
+        return ((StatusBarWidgetsManagerImpl)StatusBarWidgetsManager.getInstance(project)).findWidgetFactory(hoveredWidgetId);
       }
       return null;
     }

@@ -85,7 +85,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
 
     myContentPane.addMouseMotionListener(new MouseMotionAdapter() {}); // listen to mouse motion events for a11y
 
-    createStatusBar(frame);
+    createStatusBar(application, frame);
 
     updateStatusBarVisibility();
 
@@ -221,8 +221,8 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
     return toolBar.getComponent();
   }
 
-  private void createStatusBar(IdeFrame frame) {
-    myStatusBar = new IdeStatusBarImpl();
+  private void createStatusBar(Application application, IdeFrame frame) {
+    myStatusBar = new IdeStatusBarImpl(application);
     Disposer.register(this, myStatusBar);
     myStatusBar.install(frame);
   }

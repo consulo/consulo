@@ -26,9 +26,7 @@ import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.CustomStatusBarWidget;
-import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
-import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.*;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -49,18 +47,25 @@ import java.util.List;
  * @author spleaner
  */
 public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCustomStatusBarWidget {
-  public static final String WIDGET_ID = "Notifications";
+  private final StatusBarWidgetFactory myFactory;
   private StatusBar myStatusBar;
 
   private Label myLabel;
 
-  public IdeNotificationArea() {
+  public IdeNotificationArea(StatusBarWidgetFactory factory) {
+    myFactory = factory;
     myLabel = Label.create();
     myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
 
     MessageBusConnection connection = Application.get().getMessageBus().connect(this);
     connection.subscribe(UISettingsListener.class, source -> updateStatus());
     connection.subscribe(LogModelListener.class, () -> Application.get().invokeLater(IdeNotificationArea.this::updateStatus));
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return myFactory.getId();
   }
 
   @Override
@@ -81,12 +86,6 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
   @Nullable
   private Project getProject() {
     return myStatusBar == null ? null : myStatusBar.getProject();
-  }
-
-  @Override
-  @Nonnull
-  public String ID() {
-    return WIDGET_ID;
   }
 
   @RequiredUIAccess

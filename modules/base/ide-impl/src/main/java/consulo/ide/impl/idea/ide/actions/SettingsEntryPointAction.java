@@ -8,12 +8,10 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.disposer.Disposer;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.TooltipDescriptionProvider;
-import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
 import consulo.ide.impl.updateSettings.UpdateSettingsImpl;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
@@ -30,10 +28,10 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -201,7 +199,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
       if (frame != null) {
         StatusBar statusBar = frame.getStatusBar();
         if (statusBar != null) {
-          statusBar.updateWidget(WIDGET_ID);
+          statusBar.updateWidget(it -> it instanceof MyStatusBarWidget);
         }
       }
     }
@@ -213,16 +211,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     return false;
   }
 
-  private static final String WIDGET_ID = "settingsEntryPointWidget";
-
   public static class StatusBarManager implements StatusBarWidgetFactory {
-    @Override
-    public
-    @Nonnull
-    String getId() {
-      return WIDGET_ID;
-    }
-
     @Override
     @Nls
     @Nonnull
@@ -238,12 +227,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     @Override
     @Nonnull
     public StatusBarWidget createWidget(@Nonnull Project project) {
-      return new MyStatusBarWidget();
-    }
-
-    @Override
-    public void disposeWidget(@Nonnull StatusBarWidget widget) {
-      Disposer.dispose(widget);
+      return new MyStatusBarWidget(this);
     }
 
     @Override
@@ -253,14 +237,18 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   }
 
   private static class MyStatusBarWidget implements StatusBarWidget, StatusBarWidget.IconPresentation {
+    private final StatusBarWidgetFactory myFactory;
     private StatusBar myStatusBar;
     private boolean myShowPopup = true;
 
-    @Override
-    public
+    public MyStatusBarWidget(StatusBarWidgetFactory factory) {
+      myFactory = factory;
+    }
+
     @Nonnull
-    String ID() {
-      return WIDGET_ID;
+    @Override
+    public String getId() {
+      return myFactory.getId();
     }
 
     @Override
@@ -285,7 +273,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     public Consumer<MouseEvent> getClickConsumer() {
       return event -> {
         // why? resetActionIcon();
-        myStatusBar.updateWidget(WIDGET_ID);
+        myStatusBar.updateWidget(it -> it instanceof MyStatusBarWidget);
 
         if (!myShowPopup) {
           return;

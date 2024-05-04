@@ -2,40 +2,32 @@
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable;
-import consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.Language;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
+import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
+import consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable;
+import consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.language.Language;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.UIBundle;
-import consulo.disposer.Disposer;
-import org.jetbrains.annotations.Nls;
+import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
 
 @ExtensionImpl(id = "codeStyleWidget", order = "after selectionModeWidget")
 public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetFactory {
   @Override
   public
   @Nonnull
-  String getId() {
-    return CodeStyleStatusBarWidget.WIDGET_ID;
-  }
-
-  @Override
-  public
-  @Nonnull
   StatusBarWidget createWidget(@Nonnull Project project) {
-    return new CodeStyleStatusBarWidget(project);
+    return new CodeStyleStatusBarWidget(project, this);
   }
 
   @Override
@@ -46,11 +38,6 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
     return UIBundle.message("status.bar.code.style.widget.name");
   }
 
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
-  }
-
   @Nonnull
   public static DumbAwareAction createDefaultIndentConfigureAction(@Nonnull PsiFile psiFile) {
     String langName = getLangName(psiFile);
@@ -58,7 +45,10 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
       Configurable configurable = findCodeStyleConfigurableId(psiFile.getProject(), langName);
       if (configurable instanceof CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper) {
         ShowSettingsUtil.getInstance()
-                .editConfigurable(event.getData(CommonDataKeys.PROJECT), configurable, () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable).selectTab(ApplicationBundle.message("title.tabs.and.indents")));
+                        .editConfigurable(event.getData(CommonDataKeys.PROJECT),
+                                          configurable,
+                                          () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable).selectTab(
+                                            ApplicationBundle.message("title.tabs.and.indents")));
       }
     });
   }

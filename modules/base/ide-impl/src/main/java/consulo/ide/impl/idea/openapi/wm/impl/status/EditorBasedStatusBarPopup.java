@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -64,8 +65,8 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
   // store editor here to avoid expensive and EDT-only getSelectedEditor() retrievals
   private volatile Reference<Editor> myEditor = new WeakReference<>(null);
 
-  public EditorBasedStatusBarPopup(@Nonnull Project project, boolean writeableFileRequired) {
-    super(project);
+  public EditorBasedStatusBarPopup(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, boolean writeableFileRequired) {
+    super(project, factory);
     myWriteableFileRequired = writeableFileRequired;
     update = new Alarm(this);
     myComponent = createComponent();

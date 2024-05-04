@@ -12,20 +12,32 @@ import consulo.ide.impl.idea.util.io.ReadOnlyAttributeUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.function.Consumer;
 
 public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
+  private final StatusBarWidgetFactory myFactory;
   private StatusBar myStatusBar;
+
+  public ToggleReadOnlyAttributePanel(StatusBarWidgetFactory factory) {
+    myFactory = factory;
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return myFactory.getId();
+  }
 
   @Override
   @Nullable
@@ -38,14 +50,8 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
   }
 
   @Override
-  @Nonnull
-  public String ID() {
-    return StatusBar.StandardWidgets.READONLY_ATTRIBUTE_PANEL;
-  }
-
-  @Override
   public StatusBarWidget copy() {
-    return new ToggleReadOnlyAttributePanel();
+    return new ToggleReadOnlyAttributePanel(myFactory);
   }
 
   @Override

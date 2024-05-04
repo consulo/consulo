@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.wm.impl.status;
 
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -48,8 +49,8 @@ import java.util.Map;
  * @since 30.07.14
  */
 public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements CustomStatusBarWidget {
-  public ModuleLayerWidget(@Nonnull Project project) {
-    super(project, false);
+  public ModuleLayerWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory, false);
   }
 
   @Nonnull
@@ -76,7 +77,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
   @Nonnull
   @Override
   protected StatusBarWidget createInstance(@Nonnull Project project) {
-    return new ModuleLayerWidget(project);
+    return new ModuleLayerWidget(project, myFactory);
   }
 
   @Override
@@ -155,11 +156,5 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
     String currentLayerName = moduleRootManager.getCurrentLayerName();
 
     return new ListWithSelection<>(layers.keySet(), currentLayerName);
-  }
-
-  @Nonnull
-  @Override
-  public String ID() {
-    return "ModuleLayerWidget";
   }
 }

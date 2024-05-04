@@ -18,42 +18,34 @@ package consulo.ide.impl.idea.ide.actionMacro;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
-import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
+import consulo.project.ui.wm.StatusBarWidgetsManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.PositionTracker;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
-import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ui.image.Image;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -62,18 +54,13 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -90,24 +77,17 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
   private static final Logger LOG = Logger.getInstance(ActionMacroManager.class);
 
-  private static final String TYPING_SAMPLE = "WWWWWWWWWWWWWWWWWWWW";
-  private static final String RECORDED = "Recorded: ";
-
   private boolean myIsRecording;
   private final ActionManager myActionManager;
   private ActionMacro myLastMacro;
   private ActionMacro myRecordingMacro;
-  private ArrayList<ActionMacro> myMacros = new ArrayList<ActionMacro>();
+  private ArrayList<ActionMacro> myMacros = new ArrayList<>();
   private String myLastMacroName = null;
   private boolean myIsPlaying = false;
-  @NonNls
   private static final String ELEMENT_MACRO = "macro";
   private final Predicate<AWTEvent> myKeyProcessor;
 
-  private Set<InputEvent> myLastActionInputEvent = new HashSet<InputEvent>();
-  private ActionMacroManager.Widget myWidget;
-
-  private String myLastTyping = "";
+  private Set<InputEvent> myLastActionInputEvent = new HashSet<>();
 
   @Inject
   public ActionMacroManager(Application application, ActionManager actionManager) {
@@ -127,7 +107,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
           if (event.getInputEvent() instanceof KeyEvent) {
             shortcut = KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent((KeyEvent)event.getInputEvent()));
           }
-          notifyUser(id + (shortcut != null ? " (" + shortcut + ")" : ""), false);
+          notifyUser(dataContext, id + (shortcut != null ? " (" + shortcut + ")" : ""), false);
           myLastActionInputEvent.add(event.getInputEvent());
         }
       }
@@ -140,7 +120,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
   @Override
   public void readExternal(Element element) throws InvalidDataException {
-    myMacros = new ArrayList<ActionMacro>();
+    myMacros = new ArrayList<>();
     final List macros = element.getChildren(ELEMENT_MACRO);
     for (final Object o : macros) {
       Element macroElement = (Element)o;
@@ -161,162 +141,26 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     }
   }
 
-  public void startRecording(String macroName) {
+  @RequiredUIAccess
+  public void startRecording(Project project, String macroName) {
     LOG.assertTrue(!myIsRecording);
     myIsRecording = true;
     myRecordingMacro = new ActionMacro(macroName);
 
-    final StatusBar statusBar = WindowManager.getInstance().getIdeFrame(null).getStatusBar();
-    myWidget = new Widget(statusBar);
-    statusBar.addWidget(myWidget);
+    StatusBarWidgetsManager.getInstance(project).updateWidget(ActionMacroWidgetFactory.class, UIAccess.current());
   }
 
-  private class Widget implements CustomStatusBarWidget, Consumer<MouseEvent> {
-
-    private AnimatedIconComponent myIcon =
-            new AnimatedIconComponent("Macro recording", new Image[]{AllIcons.Ide.Macro.Recording_1, AllIcons.Ide.Macro.Recording_2, AllIcons.Ide.Macro.Recording_3, AllIcons.Ide.Macro.Recording_4},
-                                      AllIcons.Ide.Macro.Recording_1, 1000);
-    private StatusBar myStatusBar;
-    private final WidgetPresentation myPresentation;
-
-    private JPanel myBalloonComponent;
-    private Balloon myBalloon;
-    private final JLabel myText;
-
-    private Widget(StatusBar statusBar) {
-      myStatusBar = statusBar;
-      myPresentation = new WidgetPresentation() {
-        @Override
-        public String getTooltipText() {
-          return "Macro is being recorded now";
-        }
-
-        @Override
-        public Consumer<MouseEvent> getClickConsumer() {
-          return Widget.this;
-        }
-      };
-
-
-      new BaseButtonBehavior(myIcon) {
-        @Override
-        protected void execute(MouseEvent e) {
-          showBalloon();
-        }
-      };
-
-      myBalloonComponent = new NonOpaquePanel(new BorderLayout());
-
-      final AnAction stopAction = ActionManager.getInstance().getAction("StartStopMacroRecording");
-      final DefaultActionGroup group = new DefaultActionGroup();
-      group.add(stopAction);
-      final ActionToolbar tb = ActionManager.getInstance().createActionToolbar(ActionPlaces.STATUS_BAR_PLACE, group, true);
-      tb.setMiniMode(true);
-
-      final NonOpaquePanel top = new NonOpaquePanel(new BorderLayout());
-      top.add(tb.getComponent(), BorderLayout.WEST);
-      myText = new JLabel(RECORDED + "..." + TYPING_SAMPLE, SwingConstants.LEFT);
-      final Dimension preferredSize = myText.getPreferredSize();
-      myText.setPreferredSize(preferredSize);
-      myText.setText("Macro recording started...");
-      myLastTyping = "";
-      top.add(myText, BorderLayout.CENTER);
-      myBalloonComponent.add(top, BorderLayout.CENTER);
-    }
-
-    private void showBalloon() {
-      if (myBalloon != null) {
-        Disposer.dispose(myBalloon);
-        return;
-      }
-
-      myBalloon = JBPopupFactory.getInstance().createBalloonBuilder(myBalloonComponent).setAnimationCycle(200).setCloseButtonEnabled(true).setHideOnAction(false).setHideOnClickOutside(false)
-              .setHideOnFrameResize(false).setHideOnKeyOutside(false).setSmallVariant(true).setShadow(true).createBalloon();
-
-      Disposer.register(myBalloon, new Disposable() {
-        @Override
-        public void dispose() {
-          myBalloon = null;
-        }
-      });
-
-      myBalloon.addListener(new JBPopupAdapter() {
-        @Override
-        public void onClosed(LightweightWindowEvent event) {
-          if (myBalloon != null) {
-            Disposer.dispose(myBalloon);
-          }
-        }
-      });
-
-      myBalloon.show(new PositionTracker<Balloon>(myIcon) {
-        @Override
-        public RelativePoint recalculateLocation(Balloon object) {
-          return new RelativePoint(myIcon, new Point(myIcon.getSize().width / 2, 4));
-        }
-      }, Balloon.Position.above);
-    }
-
-    @Override
-    public JComponent getComponent() {
-      return myIcon;
-    }
-
-    @Nonnull
-    @Override
-    public String ID() {
-      return "MacroRecording";
-    }
-
-    @Override
-    public void accept(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public WidgetPresentation getPresentation() {
-      return myPresentation;
-    }
-
-    @Override
-    public void install(@Nonnull StatusBar statusBar) {
-      showBalloon();
-    }
-
-    @Override
-    public void dispose() {
-      myIcon.dispose();
-      if (myBalloon != null) {
-        Disposer.dispose(myBalloon);
-      }
-    }
-
-    public void delete() {
-      if (myBalloon != null) {
-        Disposer.dispose(myBalloon);
-      }
-      myStatusBar.removeWidget(ID());
-    }
-
-    public void notifyUser(String text) {
-      myText.setText(text);
-      myText.revalidate();
-      myText.repaint();
-    }
-  }
-
-  public void stopRecording(@Nullable Project project) {
+  public void stopRecording(@Nonnull Project project) {
     LOG.assertTrue(myIsRecording);
-
-    if (myWidget != null) {
-      myWidget.delete();
-      myWidget = null;
-    }
 
     myIsRecording = false;
     myLastActionInputEvent.clear();
     String macroName;
     do {
-      macroName = Messages.showInputDialog(project, IdeBundle.message("prompt.enter.macro.name"), IdeBundle.message("title.enter.macro.name"), Messages.getQuestionIcon());
+      macroName = Messages.showInputDialog(project,
+                                           IdeBundle.message("prompt.enter.macro.name"),
+                                           IdeBundle.message("title.enter.macro.name"),
+                                           Messages.getQuestionIcon());
       if (macroName == null) {
         myRecordingMacro = null;
         return;
@@ -329,6 +173,8 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     myLastMacro = myRecordingMacro;
     addRecordedMacroWithName(macroName);
     registerActions();
+
+    StatusBarWidgetsManager.getInstance(project).updateWidget(ActionMacroWidgetFactory.class, UIAccess.current());
   }
 
   private void addRecordedMacroWithName(@Nullable String macroName) {
@@ -417,7 +263,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
       myLastMacroName = myLastMacro.getName();
       myLastMacro = null;
     }
-    myMacros = new ArrayList<ActionMacro>();
+    myMacros = new ArrayList<>();
   }
 
   public void addMacro(ActionMacro macro) {
@@ -439,7 +285,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
   public void registerActions() {
     unregisterActions();
-    HashSet<String> registeredIds = new HashSet<String>(); // to prevent exception if 2 or more targets have the same name
+    HashSet<String> registeredIds = new HashSet<>(); // to prevent exception if 2 or more targets have the same name
 
     ActionMacro[] macros = getAllMacros();
     for (final ActionMacro macro : macros) {
@@ -465,7 +311,9 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
     final ActionManagerEx actionManager = (ActionManagerEx)ActionManager.getInstance();
     final String actionId = ActionMacro.MACRO_ACTION_PREFIX + name;
     if (actionManager.getAction(actionId) != null) {
-      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name), IdeBundle.message("title.macro.name.already.used"), Messages.getWarningIcon()) != 0) {
+      if (Messages.showYesNoDialog(IdeBundle.message("message.macro.exists", name),
+                                   IdeBundle.message("title.macro.name.already.used"),
+                                   Messages.getWarningIcon()) != 0) {
         return false;
       }
       actionManager.unregisterAction(actionId);
@@ -527,7 +375,8 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
         myLastActionInputEvent.remove(e);
         return;
       }
-      final boolean modifierKeyIsPressed = e.getKeyCode() == KeyEvent.VK_CONTROL || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_META || e.getKeyCode() == KeyEvent.VK_SHIFT;
+      final boolean modifierKeyIsPressed =
+        e.getKeyCode() == KeyEvent.VK_CONTROL || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_META || e.getKeyCode() == KeyEvent.VK_SHIFT;
       if (modifierKeyIsPressed) return;
 
       final boolean ready = IdeEventQueueProxy.getInstance().isKeyEventDispatcherReady();
@@ -538,7 +387,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
 
       if (plainType && ready && !isEnter) {
         myRecordingMacro.appendKeytyped(e.getKeyChar(), e.getKeyCode(), e.getModifiers());
-        notifyUser(Character.valueOf(e.getKeyChar()).toString(), true);
+        notifyUser(DataManager.getInstance().getDataContext(e.getComponent()), Character.valueOf(e.getKeyChar()).toString(), true);
       }
       else if ((!plainType && ready) || isEnter) {
         final String stroke = KeyStroke.getKeyStrokeForEvent(e).toString();
@@ -550,27 +399,27 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
         String shortcut = (modifiers.replaceAll("ctrl", "control").trim() + " " + key.trim()).trim();
 
         myRecordingMacro.appendShortcut(shortcut);
-        notifyUser(KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent(e)), false);
+        notifyUser(DataManager.getInstance().getDataContext(e.getComponent()),
+                   KeymapUtil.getKeystrokeText(KeyStroke.getKeyStrokeForEvent(e)),
+                   false);
       }
     }
   }
 
-  private void notifyUser(String text, boolean typing) {
-    String actualText = text;
-    if (typing) {
-      int maxLength = TYPING_SAMPLE.length();
-      myLastTyping += text;
-      if (myLastTyping.length() > maxLength) {
-        myLastTyping = "..." + myLastTyping.substring(myLastTyping.length() - maxLength);
-      }
-      actualText = myLastTyping;
-    }
-    else {
-      myLastTyping = "";
+  private void notifyUser(DataContext dataContext, String text, boolean typing) {
+    Project project = dataContext.getData(Project.KEY);
+    if (project == null) {
+      return;
     }
 
-    if (myWidget != null) {
-      myWidget.notifyUser(RECORDED + actualText);
+    StatusBar statusBar = WindowManager.getInstance().getStatusBar(project);
+    if (statusBar == null) {
+      return;
     }
+
+    Optional<ActionMacroWidget> optional = statusBar.findWidget(widget -> widget instanceof ActionMacroWidget);
+    optional.ifPresent(actionMacroWidget -> {
+      actionMacroWidget.notifyUser(text, typing);
+    });
   }
 }

@@ -22,6 +22,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
@@ -35,13 +36,11 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
-  public static final String ID = "InspectionProfile";
-
   private Image myCurrentIcon;
   private String myToolTipText;
 
-  public TogglePopupHintsPanel(@Nonnull Project project) {
-    super(project);
+  public TogglePopupHintsPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory);
     myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
   }
 
@@ -58,7 +57,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
 
   @Override
   public StatusBarWidget copy() {
-    return new TogglePopupHintsPanel(getProject());
+    return new TogglePopupHintsPanel(getProject(), myFactory);
   }
 
   @Override

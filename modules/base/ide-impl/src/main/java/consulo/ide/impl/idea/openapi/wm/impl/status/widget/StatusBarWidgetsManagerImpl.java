@@ -1,50 +1,41 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.component.util.SimpleModificationTracker;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
-import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.project.ui.wm.WindowManager;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.internal.StatusBarEx;
+import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
-@ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public final class StatusBarWidgetsManager extends SimpleModificationTracker implements Disposable {
-  @Nonnull
-  public static StatusBarWidgetsManager getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, StatusBarWidgetsManager.class);
-  }
+public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker implements Disposable, StatusBarWidgetsManager {
 
   private static final Logger LOG = Logger.getInstance(StatusBar.class);
 
   private final Map<StatusBarWidgetFactory, StatusBarWidget> myWidgetFactories = new LinkedHashMap<>();
-  private final Map<String, StatusBarWidgetFactory> myWidgetIdsMap = new HashMap<>();
 
   private final Project myProject;
+  @Nonnull
+  private final WindowManager myWindowManager;
 
   @Inject
-  public StatusBarWidgetsManager(@Nonnull Project project) {
+  public StatusBarWidgetsManagerImpl(@Nonnull Project project, @Nonnull WindowManager windowManager) {
     myProject = project;
+    myWindowManager = windowManager;
 
-    StatusBarWidgetFactory.EP_NAME.forEachExtensionSafe(project.getApplication(), this::addWidgetFactory);
-    
+    project.getExtensionPoint(StatusBarWidgetFactory.class).forEachExtensionSafe(this::addWidgetFactory);
+
     //StatusBarWidgetFactory.EP_NAME.getPoint().addExtensionPointListener(new ExtensionPointListener<StatusBarWidgetFactory>() {
     //  @Override
     //  public void extensionAdded(@NotNull StatusBarWidgetFactory factory, @NotNull PluginDescriptor pluginDescriptor) {
@@ -57,20 +48,14 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
     //  }
     //}, true, this);
     //
-    ////noinspection deprecation
-    //StatusBarWidgetProvider.EP_NAME.getPoint().addExtensionPointListener(new ExtensionPointListener<StatusBarWidgetProvider>() {
-    //  @Override
-    //  public void extensionAdded(@NotNull StatusBarWidgetProvider provider, @NotNull PluginDescriptor pluginDescriptor) {
-    //    addWidgetFactory(new StatusBarWidgetProviderToFactoryAdapter(myProject, provider));
-    //  }
-    //
-    //  @Override
-    //  public void extensionRemoved(@NotNull StatusBarWidgetProvider provider, @NotNull PluginDescriptor pluginDescriptor) {
-    //    removeWidgetFactory(new StatusBarWidgetProviderToFactoryAdapter(myProject, provider));
-    //  }
-    //}, true, this);
   }
 
+  @Nonnull
+  private StatusBarWidgetsCache getCache() {
+    return myProject.getExtensionPoint(StatusBarWidgetFactory.class).getOrBuildCache(StatusBarWidgetsCache.CACHE_KEY);
+  }
+
+  @Override
   public void updateAllWidgets(@Nonnull UIAccess uiAccess) {
     synchronized (myWidgetFactories) {
       for (StatusBarWidgetFactory factory : myWidgetFactories.keySet()) {
@@ -87,17 +72,19 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
     }
   }
 
+  @Override
   public void updateWidget(@Nonnull Class<? extends StatusBarWidgetFactory> factoryExtension, @Nonnull UIAccess uiAccess) {
-    StatusBarWidgetFactory factory = StatusBarWidgetFactory.EP_NAME.findExtension(factoryExtension);
+    StatusBarWidgetFactory factory = myProject.getExtensionPoint(StatusBarWidgetFactory.class).findExtension(factoryExtension);
     synchronized (myWidgetFactories) {
       if (factory == null || !myWidgetFactories.containsKey(factory)) {
-        LOG.info("Factory is not registered as `com.intellij.statusBarWidgetFactory` extension: " + factoryExtension.getName());
+        LOG.info("Factory is not registered as `StatusBarWidgetFactory` extension: " + factoryExtension.getName());
         return;
       }
       updateWidget(factory, uiAccess);
     }
   }
 
+  @Override
   public void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess) {
     if (factory.isAvailable(myProject) && (!factory.isConfigurable() || StatusBarWidgetSettings.getInstance().isEnabled(factory))) {
       enableWidget(factory, uiAccess);
@@ -123,7 +110,7 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
 
   @Nullable
   public StatusBarWidgetFactory findWidgetFactory(@Nonnull String widgetId) {
-    return myWidgetIdsMap.get(widgetId);
+    return getCache().keyMap().get(widgetId);
   }
 
   @Nonnull
@@ -134,10 +121,11 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
   }
 
   private void enableWidget(@Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
-    List<StatusBarWidgetFactory> availableFactories = StatusBarWidgetFactory.EP_NAME.getExtensionList();
+    List<String> order = getCache().order();
+    
     synchronized (myWidgetFactories) {
       if (!myWidgetFactories.containsKey(factory)) {
-        LOG.error("Factory is not registered as `com.intellij.statusBarWidgetFactory` extension: " + factory.getId());
+        LOG.error("Factory is not registered as `StatusBarWidgetFactory` extension: " + factory.getId());
         return;
       }
 
@@ -149,56 +137,31 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
 
       StatusBarWidget widget = factory.createWidget(myProject);
       myWidgetFactories.put(factory, widget);
-      myWidgetIdsMap.put(widget.ID(), factory);
-      String anchor = getAnchor(factory, availableFactories);
 
       uiAccess.giveIfNeed(() -> {
         if (!myProject.isDisposed()) {
-          StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+          StatusBarEx statusBar = (StatusBarEx)myWindowManager.getStatusBar(myProject);
           if (statusBar == null) {
             LOG.error("Cannot add a widget for project without root status bar: " + factory.getId());
             return;
           }
-          statusBar.addWidget(widget, anchor, this);
+
+          statusBar.addWidget(widget, order, this);
         }
       });
     }
-  }
-
-  @Nonnull
-  private String getAnchor(@Nonnull StatusBarWidgetFactory factory, @Nonnull List<StatusBarWidgetFactory> availableFactories) {
-    if (factory instanceof StatusBarWidgetProviderToFactoryAdapter) {
-      return ((StatusBarWidgetProviderToFactoryAdapter)factory).getAnchor();
-    }
-    int indexOf = availableFactories.indexOf(factory);
-    for (int i = indexOf + 1; i < availableFactories.size(); i++) {
-      StatusBarWidgetFactory nextFactory = availableFactories.get(i);
-      StatusBarWidget widget = myWidgetFactories.get(nextFactory);
-      if (widget != null) {
-        return StatusBar.Anchors.before(widget.ID());
-      }
-    }
-    for (int i = indexOf - 1; i >= 0; i--) {
-      StatusBarWidgetFactory prevFactory = availableFactories.get(i);
-      StatusBarWidget widget = myWidgetFactories.get(prevFactory);
-      if (widget != null) {
-        return StatusBar.Anchors.after(widget.ID());
-      }
-    }
-    return StatusBar.Anchors.DEFAULT_ANCHOR;
   }
 
   private void disableWidget(@Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
     synchronized (myWidgetFactories) {
       StatusBarWidget createdWidget = myWidgetFactories.put(factory, null);
       if (createdWidget != null) {
-        myWidgetIdsMap.remove(createdWidget.ID());
         factory.disposeWidget(createdWidget);
         uiAccess.giveIfNeed(() -> {
           if (!myProject.isDisposed()) {
-            StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+            StatusBarEx statusBar = (StatusBarEx)myWindowManager.getStatusBar(myProject);
             if (statusBar != null) {
-              statusBar.removeWidget(createdWidget.ID());
+              statusBar.removeWidget(createdWidget.getId());
             }
           }
         });
@@ -217,7 +180,7 @@ public final class StatusBarWidgetsManager extends SimpleModificationTracker imp
         return;
       }
       myWidgetFactories.put(factory, null);
-      ApplicationManager.getApplication().invokeLater(() -> {
+      myProject.getApplication().invokeLater(() -> {
         if (!myProject.isDisposed()) {
           updateWidget(factory, UIAccess.current());
         }

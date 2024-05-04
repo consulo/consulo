@@ -9,28 +9,17 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
-import consulo.disposer.Disposer;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
 
-@ExtensionImpl(id = "notificationsWidget", order = "after inspectionProfileWidget")
+@ExtensionImpl(id = "notificationsWidget", order = "after readOnlyWidget")
 public class NotificationWidgetFactory implements StatusBarWidgetFactory {
   public static boolean isAvailable() {
     return UISettings.getInstance().getHideToolStripes() || UISettings.getInstance().getPresentationMode();
   }
 
   @Override
-  public
   @Nonnull
-  String getId() {
-    return IdeNotificationArea.WIDGET_ID;
-  }
-
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
+  public String getDisplayName() {
     return UIBundle.message("status.bar.notifications.widget.name");
   }
 
@@ -40,15 +29,9 @@ public class NotificationWidgetFactory implements StatusBarWidgetFactory {
   }
 
   @Override
-  public
   @Nonnull
-  StatusBarWidget createWidget(@Nonnull Project project) {
-    return new IdeNotificationArea();
-  }
-
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
+  public StatusBarWidget createWidget(@Nonnull Project project) {
+    return new IdeNotificationArea(this);
   }
 
   @Override

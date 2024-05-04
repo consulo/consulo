@@ -4,15 +4,15 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.disposer.Disposable;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.idea.util.ui.TimedDeadzone;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.ide.impl.wm.statusBar.BaseToolWindowsWidget;
+import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
 import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -38,11 +38,13 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class ToolWindowsWidget extends BaseToolWindowsWidget {
+public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
   private final Alarm myAlarm;
 
-  public ToolWindowsWidget(@Nonnull Disposable parent) {
-    myAlarm = new Alarm(parent);
+  public DesktopToolWindowsSwicher(StatusBar statusBar) {
+    super(statusBar);
+
+    myAlarm = new Alarm(this);
 
     JComponent awtLabel = (JComponent)TargetAWT.to(myLabel);
 
@@ -80,7 +82,7 @@ public class ToolWindowsWidget extends BaseToolWindowsWidget {
         }
       }
       return false;
-    }, parent);
+    }, this);
   }
 
   public boolean mouseExited(Point currentLocationOnScreen) {

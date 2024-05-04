@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -12,12 +13,9 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.UIBundle;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
-import consulo.application.impl.internal.BaseApplication;
-import consulo.disposer.Disposer;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Deque;
@@ -25,22 +23,11 @@ import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
-@ExtensionImpl(id = "writeActionWidget", order = "after fatalErrorWidget")
+@ExtensionImpl(id = "writeActionWidget", order = "before memoryIndicatorWidget, last")
 public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory {
-  private static final String ID = "WriteThread";
-
   @Override
-  public
   @Nonnull
-  String getId() {
-    return ID;
-  }
-
-  @Override
-  public
-  @Nls
-  @Nonnull
-  String getDisplayName() {
+  public String getDisplayName() {
     return UIBundle.message("status.bar.write.thread.widget.name");
   }
 
@@ -53,12 +40,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
   public
   @Nonnull
   StatusBarWidget createWidget(@Nonnull Project project) {
-    return new WriteThreadWidget();
-  }
-
-  @Override
-  public void disposeWidget(@Nonnull StatusBarWidget widget) {
-    Disposer.dispose(widget);
+    return new WriteThreadWidget(this);
   }
 
   @Override
@@ -80,6 +62,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
     private static final Dimension WIDGET_SIZE = new Dimension(100, 20);
     private final JPanel myComponent = new MyComponent();
     private final Deque<AtomicIntegerArray> myStatsDeque = new LinkedBlockingDeque<>();
+    private final StatusBarWidgetFactory myFactory;
     private volatile AtomicIntegerArray myCurrentStats = new AtomicIntegerArray(4);
 
     private final Timer myTimer = new Timer(500, e -> {
@@ -92,6 +75,15 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
     });
     private final java.util.Timer ourTimer2 = new java.util.Timer("Write Thread Widget Timer");
 
+    public WriteThreadWidget(StatusBarWidgetFactory factory) {
+      myFactory = factory;
+    }
+
+    @Nonnull
+    @Override
+    public String getId() {
+      return myFactory.getId();
+    }
 
     @Override
     public JComponent getComponent() {
@@ -104,11 +96,6 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
       return null;
     }
 
-    @Nonnull
-    @Override
-    public String ID() {
-      return ID;
-    }
 
     @Override
     public void install(@Nonnull StatusBar statusBar) {

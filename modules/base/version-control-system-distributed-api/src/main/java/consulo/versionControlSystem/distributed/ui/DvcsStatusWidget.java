@@ -9,6 +9,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
@@ -40,16 +41,13 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
   @Nullable
   private Image myIcon;
 
-  protected DvcsStatusWidget(@Nonnull Project project, @Nonnull @Nls String vcsName) {
-    super(project);
+  protected DvcsStatusWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory, @Nonnull @Nls String vcsName) {
+    super(project, factory);
     myVcsName = vcsName;
 
-    project.getMessageBus().connect(this).subscribe(VcsRepositoryMappingListener.class, new VcsRepositoryMappingListener() {
-      @Override
-      public void mappingChanged() {
-        LOG.debug("repository mappings changed");
-        updateLater();
-      }
+    project.getMessageBus().connect(this).subscribe(VcsRepositoryMappingListener.class, () -> {
+      LOG.debug("repository mappings changed");
+      updateLater();
     });
   }
 
@@ -169,7 +167,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     myTooltip = getToolTip(repository);
     myIcon = getIcon(repository);
     if (myStatusBar != null) {
-      myStatusBar.updateWidget(ID());
+      myStatusBar.updateWidget(getId());
     }
     rememberRecentRoot(repository.getRoot().getPath());
   }

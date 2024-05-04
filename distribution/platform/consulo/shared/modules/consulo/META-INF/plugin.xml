@@ -219,10 +219,6 @@
     <!--order="before hide-search"/>-->
 
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
-
-
   </extensions>
 
   <actions>

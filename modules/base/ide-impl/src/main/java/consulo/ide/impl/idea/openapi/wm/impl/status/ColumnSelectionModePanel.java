@@ -13,6 +13,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.FocusUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,15 +29,9 @@ import javax.swing.*;
 public class ColumnSelectionModePanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, CustomStatusBarWidget, PropertyChangeListener {
   private final TextPanel myTextPanel = new TextPanel();
 
-  public ColumnSelectionModePanel(@Nonnull Project project) {
-    super(project);
+  public ColumnSelectionModePanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory);
     myTextPanel.setVisible(false);
-  }
-
-  @Override
-  @Nonnull
-  public String ID() {
-    return StatusBar.StandardWidgets.COLUMN_SELECTION_MODE_PANEL;
   }
 
   @Override
@@ -46,7 +41,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget implements Statu
 
   @Override
   public StatusBarWidget copy() {
-    return new ColumnSelectionModePanel(getProject());
+    return new ColumnSelectionModePanel(getProject(), myFactory);
   }
 
   @Nonnull

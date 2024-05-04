@@ -18,6 +18,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
+import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -35,12 +36,10 @@ import java.util.List;
 import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implements CodeStyleSettingsListener {
-  public static final String WIDGET_ID = CodeStyleStatusBarWidget.class.getName();
-
   private CodeStyleStatusBarPanel myPanel;
 
-  public CodeStyleStatusBarWidget(@Nonnull Project project) {
-    super(project, true);
+  public CodeStyleStatusBarWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    super(project, factory, true);
   }
 
   @Nonnull
@@ -182,13 +181,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   @Nonnull
   @Override
   protected StatusBarWidget createInstance(@Nonnull Project project) {
-    return new CodeStyleStatusBarWidget(project);
-  }
-
-  @Nonnull
-  @Override
-  public String ID() {
-    return WIDGET_ID;
+    return new CodeStyleStatusBarWidget(project, myFactory);
   }
 
   private static class MyWidgetState extends WidgetState {

@@ -466,7 +466,7 @@ public class PluginsLoader {
     // this magic ensures that the dependent plugins always follow their dependencies in lexicographic order
     // needed to make sure that extensions are always in the same order
     Collections.sort(ids, (o1, o2) -> o2.getIdString().compareTo(o1.getIdString()));
-    return GraphGenerator.generate(CachingSemiGraph.cache(new InboundSemiGraph<PluginId>() {
+    return GraphGenerator.generate(new InboundSemiGraph<PluginId>() {
       @Override
       public Collection<PluginId> getNodes() {
         return ids;
@@ -489,7 +489,7 @@ public class PluginsLoader {
         }
         return plugins.iterator();
       }
-    }));
+    });
   }
 
   @Nonnull

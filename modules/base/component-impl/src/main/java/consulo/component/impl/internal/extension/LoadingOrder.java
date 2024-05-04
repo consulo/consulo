@@ -9,10 +9,9 @@ import consulo.component.util.graph.InboundSemiGraph;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 
 /**
@@ -28,82 +27,24 @@ import java.util.*;
  *
  * @author Alexander Kireyev
  */
-public class LoadingOrder {
+public record LoadingOrder(String name, boolean first, boolean last, Set<String> before, Set<String> after) {
   public static final String FIRST_STR = "first";
   public static final String LAST_STR = "last";
   public static final String BEFORE_STR = "before ";
-  public static final String BEFORE_STR_OLD = "before:";
   public static final String AFTER_STR = "after ";
-  public static final String AFTER_STR_OLD = "after:";
 
   public static final String ORDER_RULE_SEPARATOR = ",";
 
-  public static final LoadingOrder ANY = new LoadingOrder();
-  public static final LoadingOrder FIRST = new LoadingOrder(FIRST_STR);
-  public static final LoadingOrder LAST = new LoadingOrder(LAST_STR);
+  public static final LoadingOrder ANY = new LoadingOrder("ANY", false, false, Set.of(), Set.of());
+  public static final LoadingOrder FIRST = new LoadingOrder(FIRST_STR, true, false, Set.of(), Set.of());
+  public static final LoadingOrder LAST = new LoadingOrder(LAST_STR, false, true, Set.of(), Set.of());
 
-  private final String myName; // for debug only
-  private final boolean myFirst;
-  private final boolean myLast;
-  private final Set<String> myBefore = new LinkedHashSet<>(2);
-  private final Set<String> myAfter = new LinkedHashSet<>(2);
-
-  private LoadingOrder() {
-    myName = "ANY";
-    myFirst = false;
-    myLast = false;
+  public static LoadingOrder before(final String id) {
+    return parse(BEFORE_STR + id);
   }
 
-  private LoadingOrder(@Nonnull String text) {
-    myName = text;
-    boolean last = false;
-    boolean first = false;
-    for (final String string : StringUtil.split(text, ORDER_RULE_SEPARATOR)) {
-      String trimmed = string.trim();
-      if (trimmed.equalsIgnoreCase(FIRST_STR)) first = true;
-      else if (trimmed.equalsIgnoreCase(LAST_STR)) last = true;
-      else if (StringUtil.startsWithIgnoreCase(trimmed, BEFORE_STR)) myBefore.add(trimmed.substring(BEFORE_STR.length()).trim());
-      else if (StringUtil.startsWithIgnoreCase(trimmed, BEFORE_STR_OLD)) myBefore.add(trimmed.substring(BEFORE_STR_OLD.length()).trim());
-      else if (StringUtil.startsWithIgnoreCase(trimmed, AFTER_STR)) myAfter.add(trimmed.substring(AFTER_STR.length()).trim());
-      else if (StringUtil.startsWithIgnoreCase(trimmed, AFTER_STR_OLD)) myAfter.add(trimmed.substring(AFTER_STR_OLD.length()).trim());
-      else throw new AssertionError("Invalid specification: " + trimmed + "; should be one of FIRST, LAST, BEFORE <id> or AFTER <id>");
-    }
-    myFirst = first;
-    myLast = last;
-  }
-
-  public String toString() {
-    return myName;
-  }
-
-  public boolean equals(final Object o) {
-    if (this == o) return true;
-    if (!(o instanceof LoadingOrder)) return false;
-
-    final LoadingOrder that = (LoadingOrder)o;
-
-    if (myFirst != that.myFirst) return false;
-    if (myLast != that.myLast) return false;
-    if (!myAfter.equals(that.myAfter)) return false;
-    if (!myBefore.equals(that.myBefore)) return false;
-
-    return true;
-  }
-
-  public int hashCode() {
-    int result = myFirst ? 1 : 0;
-    result = 31 * result + (myLast ? 1 : 0);
-    result = 31 * result + myBefore.hashCode();
-    result = 31 * result + myAfter.hashCode();
-    return result;
-  }
-
-  public static LoadingOrder before(@NonNls final String id) {
-    return new LoadingOrder(BEFORE_STR + id);
-  }
-
-  public static LoadingOrder after(@NonNls final String id) {
-    return new LoadingOrder(AFTER_STR + id);
+  public static LoadingOrder after(final String id) {
+    return parse(AFTER_STR + id);
   }
 
   public static void sort(@Nonnull Orderable[] orderable) {
@@ -127,13 +68,18 @@ public class LoadingOrder {
       if (order == ANY) continue;
 
       cachedMap.put(o, order);
-      if (order.myFirst) first.add(o);
-      if (!order.myBefore.isEmpty()) hasBefore.add(o);
+      if (order.first()) {
+        first.add(o);
+      }
+      
+      if (!order.before().isEmpty()) {
+        hasBefore.add(o);
+      }
     }
 
     if (cachedMap.isEmpty()) return;
 
-    InboundSemiGraph<Orderable> graph = new InboundSemiGraph<Orderable>() {
+    InboundSemiGraph<Orderable> graph = new InboundSemiGraph<>() {
       @Nonnull
       @Override
       public Collection<Orderable> getNodes() {
@@ -148,7 +94,7 @@ public class LoadingOrder {
         LoadingOrder order = cachedMap.getOrDefault(n, ANY);
 
         Set<Orderable> predecessors = new LinkedHashSet<>();
-        for (String id : order.myAfter) {
+        for (String id : order.after()) {
           Orderable o = map.get(id);
           if (o != null) {
             predecessors.add(o);
@@ -159,22 +105,22 @@ public class LoadingOrder {
         if (StringUtil.isNotEmpty(id)) {
           for (Orderable o : hasBefore) {
             LoadingOrder hisOrder = cachedMap.getOrDefault(o, ANY);
-            if (hisOrder.myBefore.contains(id)) {
+            if (hisOrder.before().contains(id)) {
               predecessors.add(o);
             }
           }
         }
 
-        if (order.myLast) {
+        if (order.last()) {
           for (Orderable o : orderable) {
             LoadingOrder hisOrder = cachedMap.getOrDefault(o, ANY);
-            if (!hisOrder.myLast) {
+            if (!hisOrder.last()) {
               predecessors.add(o);
             }
           }
         }
 
-        if (!order.myFirst) {
+        if (!order.first()) {
           predecessors.addAll(first);
         }
 
@@ -204,8 +150,45 @@ public class LoadingOrder {
       return LAST;
     }
     else {
-      return new LoadingOrder(orderAttr);
+      return parse(orderAttr);
     }
+  }
+
+  private static LoadingOrder parse(String text) {
+    boolean last = false;
+    boolean first = false;
+
+    Set<String> before = Set.of();
+    Set<String> after = Set.of();
+
+    for (final String string : StringUtil.split(text, ORDER_RULE_SEPARATOR)) {
+      String trimmed = string.trim();
+      if (trimmed.equalsIgnoreCase(FIRST_STR)) {
+        first = true;
+      }
+      else if (trimmed.equalsIgnoreCase(LAST_STR)) {
+        last = true;
+      }
+      else if (StringUtil.startsWithIgnoreCase(trimmed, BEFORE_STR)) {
+        if (before.isEmpty()) {
+          before = new LinkedHashSet<>();
+        }
+
+        before.add(trimmed.substring(BEFORE_STR.length()).trim());
+      }
+      else if (StringUtil.startsWithIgnoreCase(trimmed, AFTER_STR)) {
+        if (after.isEmpty()) {
+          after = new LinkedHashSet<>();
+        }
+
+        after.add(trimmed.substring(AFTER_STR.length()).trim());
+      }
+      else {
+        throw new AssertionError("Invalid specification: " + trimmed + "; should be one of FIRST, LAST, BEFORE <id> or AFTER <id>");
+      }
+    }
+
+    return new LoadingOrder(text, first, last, before, after);
   }
 
   public interface Orderable {

@@ -34,9 +34,7 @@ import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -74,13 +72,13 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidget {
+public class InfoAndProgressPanel extends JPanel implements Disposable {
   private static final Logger LOG = Logger.getInstance(InfoAndProgressPanel.class);
   private final ProcessPopup myPopup;
 
   private final StatusPanel myInfoPanel;
   private final JPanel myRefreshAndInfoPanel = new JPanel();
-  private final NotNullLazyValue<AsyncProcessIcon> myProgressIcon = new NotNullLazyValue<AsyncProcessIcon>() {
+  private final NotNullLazyValue<AsyncProcessIcon> myProgressIcon = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected AsyncProcessIcon compute() {
@@ -197,21 +195,6 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Override
-  @Nonnull
-  public String ID() {
-    return "InfoAndProgress";
-  }
-
-  @Override
-  public WidgetPresentation getPresentation() {
-    return null;
-  }
-
-  @Override
-  public void install(@Nonnull StatusBar statusBar) {
-  }
-
-  @Override
   public void dispose() {
     setRefreshVisible(false);
     synchronized (myOriginals) {
@@ -226,7 +209,6 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     }
   }
 
-  @Override
   public JComponent getComponent() {
     return this;
   }

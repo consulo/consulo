@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ide.HelpTooltipManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
@@ -15,6 +14,7 @@ import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -25,15 +25,15 @@ import java.util.function.Consumer;
 
 public interface StatusBarWidgetWrapper {
   @Nonnull
-  static JComponent wrap(@Nonnull StatusBarWidget.WidgetPresentation presentation) {
+  static JComponent wrap(@Nonnull StatusBarWidget widget, @Nonnull StatusBarWidget.WidgetPresentation presentation) {
     if (presentation instanceof StatusBarWidget.IconPresentation) {
-      return new StatusBarWidgetWrapper.Icon((StatusBarWidget.IconPresentation)presentation);
+      return new StatusBarWidgetWrapper.Icon(widget, (StatusBarWidget.IconPresentation)presentation);
     }
     else if (presentation instanceof StatusBarWidget.TextPresentation) {
-      return new StatusBarWidgetWrapper.Text((StatusBarWidget.TextPresentation)presentation);
+      return new StatusBarWidgetWrapper.Text(widget, (StatusBarWidget.TextPresentation)presentation);
     }
     else if (presentation instanceof StatusBarWidget.MultipleTextValuesPresentation) {
-      return new StatusBarWidgetWrapper.MultipleTextValues((StatusBarWidget.MultipleTextValuesPresentation)presentation);
+      return new StatusBarWidgetWrapper.MultipleTextValues(widget, (StatusBarWidget.MultipleTextValuesPresentation)presentation);
     }
     else {
       throw new IllegalArgumentException("Unable to find a wrapper for presentation: " + presentation.getClass().getSimpleName());
@@ -52,9 +52,11 @@ public interface StatusBarWidgetWrapper {
   }
 
   final class MultipleTextValues extends TextPanel.WithIconAndArrows implements StatusBarWidgetWrapper {
+    private final StatusBarWidget myWidget;
     private final StatusBarWidget.MultipleTextValuesPresentation myPresentation;
 
-    public MultipleTextValues(@Nonnull final StatusBarWidget.MultipleTextValuesPresentation presentation) {
+    public MultipleTextValues(StatusBarWidget widget, @Nonnull final StatusBarWidget.MultipleTextValuesPresentation presentation) {
+      myWidget = widget;
       myPresentation = presentation;
       setVisible(StringUtil.isNotEmpty(myPresentation.getSelectedValue()));
       setTextAlignment(Component.CENTER_ALIGNMENT);
@@ -84,6 +86,8 @@ public interface StatusBarWidgetWrapper {
     @RequiredUIAccess
     @Override
     public void beforeUpdate() {
+      myWidget.beforeUpdate();
+
       String value = myPresentation.getSelectedValue();
       setText(value);
       setIcon(myPresentation.getIcon());
@@ -99,9 +103,11 @@ public interface StatusBarWidgetWrapper {
   }
 
   final class Text extends TextPanel implements StatusBarWidgetWrapper {
+    private final StatusBarWidget myWidget;
     private final StatusBarWidget.TextPresentation myPresentation;
 
-    public Text(@Nonnull final StatusBarWidget.TextPresentation presentation) {
+    public Text(StatusBarWidget widget, @Nonnull final StatusBarWidget.TextPresentation presentation) {
+      myWidget = widget;
       myPresentation = presentation;
       setTextAlignment(presentation.getAlignment());
       setVisible(!myPresentation.getText().isEmpty());
@@ -121,6 +127,8 @@ public interface StatusBarWidgetWrapper {
     @RequiredUIAccess
     @Override
     public void beforeUpdate() {
+      myWidget.beforeUpdate();
+
       String text = myPresentation.getText();
       setText(text);
       setVisible(!text.isEmpty());
@@ -129,9 +137,11 @@ public interface StatusBarWidgetWrapper {
   }
 
   final class Icon extends TextPanel.WithIconAndArrows implements StatusBarWidgetWrapper {
+    private final StatusBarWidget myWidget;
     private final StatusBarWidget.IconPresentation myPresentation;
 
-    public Icon(@Nonnull final StatusBarWidget.IconPresentation presentation) {
+    public Icon(StatusBarWidget widget, @Nonnull final StatusBarWidget.IconPresentation presentation) {
+      myWidget = widget;
       myPresentation = presentation;
       setTextAlignment(Component.CENTER_ALIGNMENT);
       setIcon(myPresentation.getIcon());
@@ -152,6 +162,8 @@ public interface StatusBarWidgetWrapper {
     @RequiredUIAccess
     @Override
     public void beforeUpdate() {
+      myWidget.beforeUpdate();
+
       setIcon(myPresentation.getIcon());
       setVisible(hasIcon());
       setWidgetTooltip(this, myPresentation.getTooltipText(), myPresentation.getShortcutText());
