@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="sandbox-desktop-swt [17] [MODULES]" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
+  <configuration default="false" name="sandbox-desktop-swt [21] [MODULES]" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Consulo In Sandbox" singleton="true">
     <option name="VM_PARAMETERS" value="-Dconsulo.maven.console.log=true -Dconsulo.log4j2.enabled=true -Dconsulo.enable.byte.buddy.proxy=true -ea --add-opens=java.desktop/sun.awt=consulo.container.impl --add-opens=java.desktop/sun.swing=consulo.container.impl --add-opens=java.desktop/sun.awt.image=consulo.container.impl --add-opens=java.desktop/sun.java2d=consulo.container.impl --add-opens=java.desktop/sun.font=consulo.container.impl --add-opens=java.desktop/java.awt=consulo.container.impl --add-opens=java.desktop/javax.swing=consulo.container.impl --add-opens=java.desktop/javax.swing.plaf.basic=consulo.container.impl --add-opens=java.base/java.lang=consulo.container.impl --add-opens=java.desktop/javax.swing.text.html=consulo.container.impl --add-opens=java.desktop/java.awt.peer=consulo.container.impl --add-opens=java.desktop/java.awt.event=consulo.container.impl -Dconsulo.synchronize.api=http://localhost:8080/api/storage/ -Dconsulo.statistics.api=http://localhost:8080/api/statistics/ -Dconsulo.module.path.boot=true -Didea.ProcessCanceledException=disabled" />
     <option name="ENABLED_JAVA9_MODULES" value="true" />
     <option name="PROGRAM_PARAMETERS" value="" />
     <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop-swt/target/consulo-sandbox-desktop-swt-3-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop-swt/target/consulo-sandbox-desktop-swt-3-SNAPSHOT-main/Consulo" />
-    <java-sdk name="17" />
+    <java-sdk name="21.0" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <method>

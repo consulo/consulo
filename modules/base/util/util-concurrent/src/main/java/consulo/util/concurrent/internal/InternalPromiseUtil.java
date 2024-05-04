@@ -150,9 +150,9 @@ public class InternalPromiseUtil {
 
     @Nonnull
     @Override
-    public final State getState() {
+    public final Promise.State getState() {
       PromiseValue<T> value = getValue();
-      return value == null ? State.PENDING : value.getState();
+      return value == null ? Promise.State.PENDING : value.getState();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class InternalPromiseUtil {
 
     @Override
     public final boolean cancel(boolean mayInterruptIfRunning) {
-      if (getState() == State.PENDING) {
+      if (getState() == Promise.State.PENDING) {
         cancel();
         return true;
       }

@@ -61,7 +61,7 @@
     <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
     <maven.source.plugin>3.2.1</maven.source.plugin>
 
-    <default.java.level>17</default.java.level>
+    <default.java.level>21</default.java.level>
 
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>

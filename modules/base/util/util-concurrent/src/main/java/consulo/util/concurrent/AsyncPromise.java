@@ -93,15 +93,15 @@ public class AsyncPromise<T> implements CancellablePromise<T>, InternalPromiseUt
 
   @Nonnull
   @Override
-  public State getState() {
+  public Promise.State getState() {
     if (!f.isDone()) {
-      return State.PENDING;
+      return Promise.State.PENDING;
     }
     else if (f.isCompletedExceptionally()) {
-      return State.REJECTED;
+      return Promise.State.REJECTED;
     }
     else {
-      return State.SUCCEEDED;
+      return Promise.State.SUCCEEDED;
     }
   }
 
