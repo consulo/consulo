@@ -927,7 +927,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.remoteServer.ui;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
-  exports consulo.ide.impl.roots.ui;
   exports consulo.ide.impl.roots.ui.configuration;
   exports consulo.ide.impl.roots.ui.configuration.classpath;
   exports consulo.ide.impl.roots.ui.configuration.extension;
