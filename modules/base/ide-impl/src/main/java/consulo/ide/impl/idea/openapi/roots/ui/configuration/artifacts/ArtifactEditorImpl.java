@@ -247,6 +247,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     JComponent toolbarComponent = toolbar.getComponent();
     toolbarComponent.setBorder(new CustomLineBorder(0, 0, 1, 0));
     leftPanel.add(toolbarComponent, BorderLayout.NORTH);
+    toolbar.setTargetComponent(leftPanel);
     toolbar.updateActionsImmediately();
     rightTopPanel.setPreferredSize(new Dimension(-1, toolbarComponent.getPreferredSize().height));
 
