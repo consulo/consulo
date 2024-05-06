@@ -102,11 +102,6 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     myConnection.subscribe(FileHighlightingSettingListener.class, (r, s) -> updateStatus());
   }
 
-  @Override
-  @Nonnull
-  public String ID() {
-    return "InspectionProfile";
-  }
 
   @Override
   public WidgetPresentation getPresentation() {
@@ -116,7 +111,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   public void clear() {
     myCurrentIcon = ImageEffects.grayed(AllIcons.Ide.HectorOff);
     myToolTipText = null;
-    myStatusBar.updateWidget(ID());
+    myStatusBar.updateWidget(getId());
   }
 
   public void updateStatus() {
@@ -152,7 +147,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     }
 
     if (!ApplicationManager.getApplication().isUnitTestMode() && myStatusBar != null) {
-      myStatusBar.updateWidget(ID());
+      myStatusBar.updateWidget(getId());
     }
   }
 

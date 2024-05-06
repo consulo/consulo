@@ -71,7 +71,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
   private void update(@Nonnull final Image icon, @Nullable final String toolTipText) {
     myCurrentIcon = icon;
     myToolTipText = toolTipText;
-    if (myStatusBar != null) myStatusBar.updateWidget(ID());
+    if (myStatusBar != null) myStatusBar.updateWidget(getId());
   }
 
   @Override

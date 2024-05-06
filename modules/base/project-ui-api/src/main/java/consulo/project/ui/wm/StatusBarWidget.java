@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  */
 public interface StatusBarWidget extends Disposable {
   @Nonnull
-  @Deprecated
+  @Deprecated(forRemoval = true)
   default String ID() {
     return getId();
   }

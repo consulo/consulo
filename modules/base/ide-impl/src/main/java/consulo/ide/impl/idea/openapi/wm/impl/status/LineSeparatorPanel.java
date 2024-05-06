@@ -53,10 +53,4 @@ public final class LineSeparatorPanel extends EditorBasedStatusBarPopup {
   protected StatusBarWidget createInstance(@Nonnull Project project) {
     return new LineSeparatorPanel(project, myFactory);
   }
-
-  @Nonnull
-  @Override
-  public String ID() {
-    return "LineSeparator";
-  }
 }

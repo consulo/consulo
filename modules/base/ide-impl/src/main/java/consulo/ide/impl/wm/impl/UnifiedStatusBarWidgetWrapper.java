@@ -47,7 +47,7 @@ public class UnifiedStatusBarWidgetWrapper {
 
     @RequiredUIAccess
     public DummyWidget(StatusBarWidget widget) {
-      String id = widget.ID();
+      String id = widget.getId();
 
       Label label = Label.create(id.substring(0, 2));
       myLayout = WrappedLayout.create(label);

@@ -97,7 +97,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     int count = notifications.size();
     myLabel.setToolTipText(count > 0 ? String.format("%s notification%s pending", count, count == 1 ? "" : "s") : "No new notifications");
 
-    myStatusBar.updateWidget(ID());
+    myStatusBar.updateWidget(getId());
   }
 
   @RequiredUIAccess

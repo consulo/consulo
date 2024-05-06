@@ -292,7 +292,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
       updateComponent(state);
 
       if (myStatusBar != null && !myComponent.isValid()) {
-        myStatusBar.updateWidget(ID());
+        myStatusBar.updateWidget(getId());
       }
 
       if (finishUpdate != null) {

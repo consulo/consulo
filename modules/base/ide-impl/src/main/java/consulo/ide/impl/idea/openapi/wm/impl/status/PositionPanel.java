@@ -165,7 +165,7 @@ public final class PositionPanel extends EditorBasedWidget
       myText = getPositionText(editor);
     }
     if (myStatusBar != null) {
-      myStatusBar.updateWidget(ID());
+      myStatusBar.updateWidget(getId());
     }
   }
 
@@ -173,7 +173,7 @@ public final class PositionPanel extends EditorBasedWidget
     if (myText != null) {
       myText = myText.replace(CHAR_COUNT_UNKNOWN, Integer.toString(codePointCount));
       if (myStatusBar != null) {
-        myStatusBar.updateWidget(ID());
+        myStatusBar.updateWidget(getId());
       }
     }
   }

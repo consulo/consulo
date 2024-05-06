@@ -76,7 +76,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (myStatusBar != null) {
-          myStatusBar.updateWidget(ID());
+          myStatusBar.updateWidget(getId());
         }
       }
     });
@@ -101,7 +101,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
 
       try {
         WriteAction.run(() -> ReadOnlyAttributeUtil.setReadOnlyAttribute(file, file.isWritable()));
-        myStatusBar.updateWidget(ID());
+        myStatusBar.updateWidget(getId());
       }
       catch (IOException e) {
         Messages.showMessageDialog(getProject(), e.getMessage(), UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
