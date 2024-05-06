@@ -31,7 +31,7 @@ import consulo.disposer.Disposer;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.status.ClockPanel;
+import consulo.desktop.awt.wm.impl.status.ClockPanel;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.util.ScreenUtil;
