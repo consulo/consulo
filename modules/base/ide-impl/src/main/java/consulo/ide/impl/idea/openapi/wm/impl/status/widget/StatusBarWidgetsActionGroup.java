@@ -29,7 +29,8 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
     if (project == null) return AnAction.EMPTY_ARRAY;
 
     StatusBarWidgetsManagerImpl manager = (StatusBarWidgetsManagerImpl)StatusBarWidgetsManager.getInstance(project);
-    Collection<AnAction> toggleActions = new ArrayList<>(ContainerUtil.map(manager.getWidgetFactories(), ToggleWidgetAction::new));
+    Collection<AnAction> toggleActions =
+      new ArrayList<>(ContainerUtil.map(manager.getWidgetFactories(), factory -> new ToggleWidgetAction(factory, manager)));
     toggleActions.add(AnSeparator.getInstance());
     toggleActions.add(new HideCurrentWidgetAction());
     return toggleActions.toArray(AnAction.EMPTY_ARRAY);
@@ -37,10 +38,12 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
 
   private static final class ToggleWidgetAction extends DumbAwareToggleAction {
     private final StatusBarWidgetFactory myWidgetFactory;
+    private final StatusBarWidgetsManagerImpl myManager;
 
-    private ToggleWidgetAction(@Nonnull StatusBarWidgetFactory widgetFactory) {
+    private ToggleWidgetAction(@Nonnull StatusBarWidgetFactory widgetFactory, StatusBarWidgetsManagerImpl manager) {
       super(widgetFactory.getDisplayName());
       myWidgetFactory = widgetFactory;
+      myManager = manager;
     }
 
     @Override
@@ -57,8 +60,7 @@ public class StatusBarWidgetsActionGroup extends ActionGroup {
       }
       StatusBar statusBar = e.getData(StatusBar.KEY);
       e.getPresentation()
-       .setEnabledAndVisible(statusBar != null && ((StatusBarWidgetsManagerImpl)StatusBarWidgetsManager.getInstance(project)).canBeEnabledOnStatusBar(
-         myWidgetFactory, statusBar));
+       .setEnabledAndVisible(statusBar != null && myManager.canBeEnabledOnStatusBar( myWidgetFactory, statusBar));
     }
 
     @Override

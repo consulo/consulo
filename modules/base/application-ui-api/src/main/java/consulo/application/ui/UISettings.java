@@ -100,9 +100,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean LEFT_HORIZONTAL_SPLIT = false;
   public boolean RIGHT_HORIZONTAL_SPLIT = false;
   public boolean SHOW_EDITOR_TOOLTIP = true;
-  @Deprecated
-  @DeprecationInfo("see StatusBarWidgetSettings")
-  public boolean SHOW_MEMORY_INDICATOR = false;
   public boolean ALLOW_MERGE_BUTTONS = true;
   public boolean SHOW_MAIN_TOOLBAR = false;
   public boolean SHOW_STATUS_BAR = true;
@@ -290,10 +287,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public void setShowMainToolbar(boolean value) {
     SHOW_MAIN_TOOLBAR = value;
-  }
-
-  public boolean getShowMemoryIndicator() {
-    return SHOW_MEMORY_INDICATOR;
   }
 
   public boolean getShowStatusBar() {

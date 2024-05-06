@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.MEGABYTE;
 
 public final class MemoryUsagePanel extends JButton implements CustomStatusBarWidget, UISettingsListener, Activatable {
-  public static final String WIDGET_ID = "Memory";
-
   private static final int INDENT = 6;
   private static final Color USED_COLOR = JBColor.namedColor("MemoryIndicator.usedBackground", new JBColor(Gray._185, Gray._110));
   private static final Color UNUSED_COLOR = JBColor.namedColor("MemoryIndicator.allocatedBackground", new JBColor(Gray._215, Gray._90));

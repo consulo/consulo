@@ -18,17 +18,15 @@ package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -73,15 +71,5 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
   @Override
   public void loadState(StatusBarState state) {
     XmlSerializerUtil.copyBean(state, myState);
-  }
-
-  @Override
-  public void afterLoadState() {
-    UISettings uiSettings = UISettings.getInstance();
-    if (uiSettings.SHOW_MEMORY_INDICATOR) {
-      uiSettings.SHOW_MEMORY_INDICATOR = false;
-
-      myState.widgets.put(MemoryUsagePanel.WIDGET_ID, true);
-    }
   }
 }
