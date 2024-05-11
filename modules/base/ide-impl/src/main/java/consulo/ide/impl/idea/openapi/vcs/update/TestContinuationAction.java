@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.util.continuation.*;
-import jakarta.annotation.Nonnull;
+import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -36,7 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
  */
 public class TestContinuationAction extends AnAction {
   public TestContinuationAction() {
-    super("Test Continuation", "Test Continuation", AllIcons.Nodes.Advice);
+    super("Test Continuation", "Test Continuation", PlatformIconGroup.nodesTag());
   }
 
   @Override

@@ -62,8 +62,6 @@ public interface PlatformIcons {
   Icon VARIABLE_RW_ACCESS = (Icon)AllIcons.Nodes.Rw_access;
   Icon CUSTOM_FILE_ICON = (Icon)AllIcons.FileTypes.Custom;
   Icon PROPERTY_ICON = (Icon)AllIcons.Nodes.Property;
-  Icon ASPECT_ICON = (Icon)AllIcons.Nodes.Aspect;
-  Icon ADVICE_ICON = (Icon)AllIcons.Nodes.Advice;
   Icon ERROR_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalError();
   Icon WARNING_INTRODUCTION_ICON = (Icon)PlatformIconGroup.generalWarning();
   Icon EXCLUDED_FROM_COMPILE_ICON = (Icon)AllIcons.Nodes.ExcludedFromCompile;

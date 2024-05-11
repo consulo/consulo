@@ -30,6 +30,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -349,7 +350,6 @@ public class PathEditor {
 
   /**
    * @return icon for displaying parameter (ProjectRoot or VirtualFile)
-   *         If parameter is not ProjectRoot or VirtualFile, returns empty icon "/nodes/emptyNode.png"
    */
   private static consulo.ui.image.Image getIconForRoot(Object projectRoot) {
     if (projectRoot instanceof VirtualFile) {
@@ -371,7 +371,7 @@ public class PathEditor {
         return file.getFileType().getIcon();
       }
     }
-    return AllIcons.Nodes.EmptyNode;
+    return Image.empty(Image.DEFAULT_ICON_SIZE);
   }
 
   private static boolean isHttpRoot(VirtualFile virtualFileOrProjectRoot) {
