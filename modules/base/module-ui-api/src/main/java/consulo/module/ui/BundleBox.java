@@ -24,6 +24,7 @@ import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
@@ -291,7 +292,7 @@ public class BundleBox implements PseudoComponent {
         render.append(((InvalidModuleBundleBoxItem)value).getModuleName(), TextAttribute.ERROR_BOLD);
       }
       else if (value == null || value instanceof NullBundleBoxItem) {
-        render.withIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
+        render.withIcon(ObjectUtil.notNull(nullIcon, Image.empty(Image.DEFAULT_ICON_SIZE)));
         String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
         render.append(name, TextAttribute.REGULAR);
       }

@@ -87,7 +87,6 @@ public interface PlatformIcons {
 
   Icon OPEN_EDIT_DIALOG_ICON = (Icon)AllIcons.Actions.ShowViewer;
   Icon FLATTEN_PACKAGES_ICON = (Icon)AllIcons.ObjectBrowser.FlattenPackages;
-  Icon EDIT_IN_SECTION_ICON = (Icon)AllIcons.General.EditItemInSection;
 
   Icon CLASS_INITIALIZER = (Icon)AllIcons.Nodes.ClassInitializer;
 

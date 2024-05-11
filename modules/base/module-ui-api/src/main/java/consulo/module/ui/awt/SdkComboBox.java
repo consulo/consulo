@@ -124,7 +124,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
           append(((InvalidModuleComboBoxItem)value).getModuleName(), SimpleTextAttributes.ERROR_BOLD_ATTRIBUTES);
         }
         else if (value == null || value instanceof NullSdkComboBoxItem) {
-          setIcon(ObjectUtil.notNull(nullIcon, AllIcons.Ide.EmptyFatalError));
+          setIcon(ObjectUtil.notNull(nullIcon, Image.empty(Image.DEFAULT_ICON_SIZE)));
           String name = ObjectUtil.notNull(nullItemName, ProjectBundle.message("sdk.combo.box.item"));
           append(name, SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }

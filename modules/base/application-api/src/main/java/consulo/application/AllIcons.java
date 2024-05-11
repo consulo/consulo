@@ -24,7 +24,6 @@ import consulo.ui.image.Image;
 public class AllIcons {
 
   public static class Actions {
-    public static final Image AddFacesSupport = PlatformIconGroup.actionsAddfacessupport(); // 16x16
     public static final Image AddMulticaret = PlatformIconGroup.actionsAddmulticaret(); // 16x16
     public static final Image AllLeft = PlatformIconGroup.actionsAllleft(); // 16x16
     public static final Image AllRight = PlatformIconGroup.actionsAllright(); // 16x16
@@ -418,11 +417,9 @@ public class AllIcons {
     public static final Image DownloadPlugin = PlatformIconGroup.generalDownloadplugin(); // 16x16
     public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
     public static final Image EditColors = PlatformIconGroup.generalEditcolors(); // 16x16
-    public static final Image EditItemInSection = PlatformIconGroup.generalEdititeminsection(); // 16x16
     public static final Image Ellipsis = PlatformIconGroup.generalEllipsis(); // 9x9
     public static final Image Error = PlatformIconGroup.generalError(); // 16x16
     public static final Image ErrorDialog = PlatformIconGroup.generalErrordialog(); // 32x32
-    public static final Image ErrorsInProgress = PlatformIconGroup.generalErrorsinprogress(); // 12x12
     public static final Image ExclMark = PlatformIconGroup.generalExclmark(); // 16x16
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandcomponent();
     public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandcomponenthover();
@@ -579,8 +576,6 @@ public class AllIcons {
       public static final Image Top = PlatformIconGroup.ideDndTop(); // 16x16
     }
 
-    public static final Image EmptyFatalError = PlatformIconGroup.ideEmptyfatalerror(); // 16x16
-    public static final Image Error = PlatformIconGroup.ideError(); // 16x16
     public static final Image ErrorPoint = PlatformIconGroup.ideErrorpoint(); // 6x6
     public static final Image FatalError_read = PlatformIconGroup.ideFatalerror_read(); // 16x16
     public static final Image FatalError = PlatformIconGroup.ideFatalerror(); // 16x16
@@ -668,7 +663,6 @@ public class AllIcons {
     public static final Image ExcludeRoot = PlatformIconGroup.modulesExcluderoot(); // 16x16
     public static final Image GeneratedMark = PlatformIconGroup.modulesGeneratedmark(); // 16x16
     public static final Image Library = PlatformIconGroup.modulesLibrary(); // 16x16
-    public static final Image ModulesNode = PlatformIconGroup.modulesModulesnode(); // 16x16
     public static final Image SourceRoot = PlatformIconGroup.modulesSourceroot(); // 16x16
     public static final Image ResourcesRoot = PlatformIconGroup.modulesResourcesroot(); // 16x16
     public static final Image TestResourcesRoot = PlatformIconGroup.modulesTestresourcesroot(); // 16x16
@@ -757,7 +751,6 @@ public class AllIcons {
     public static final Image ResourceBundle = PlatformIconGroup.nodesResourcebundle(); // 16x16
     public static final Image RunnableMark = PlatformIconGroup.nodesRunnablemark(); // 16x16
     public static final Image Rw_access = PlatformIconGroup.nodesRw_access(); // 13x9
-    public static final Image SecurityRole = PlatformIconGroup.nodesSecurityrole(); // 16x16
     public static final Image Servlet = PlatformIconGroup.nodesServlet(); // 16x16
     public static final Image SortBySeverity = PlatformIconGroup.nodesSortbyseverity(); // 16x16
     public static final Image Static = PlatformIconGroup.nodesStatic(); // 16x16
