@@ -2822,4 +2822,51 @@ action.RunDashboard.AddType.text:
   text: Run Configuration Type…
 action.UpdateRunningApplication.text:
   text: Update Running Application
+group.TouchBar.text:
+  text: Touchbar
+group.TodoMainGroup.text:
+  text: TODO
+group.TodoViewGroupByGroup.text:
+  text: Group By
+group.TouchBarDebug.ForceStepButtons.text:
+  text: Debugger ForceStep Actions
+group.TouchBarDebug_alt.text:
+  text: Debugger with Alt Key
+group.TouchBarDebug.StepButtons.text:
+  text: Debugger Step Actions
+group.TouchBarDebug.text:
+  text: Debugger
+group.TouchBarDefault_shift.text:
+  text: Default with Shift Key
+group.TouchBarDefault_cmd.alt.text:
+  text: Default with Alt+Cmd Key
+group.TouchBarDefault_cmd.text:
+  text: Default with Cmd Key
+group.TouchBarDefault_alt.text:
+  text: Default with Alt Key
+group.TouchBarDefault_ctrl.text:
+  text: Default with Ctrl Key
+group.TouchBarDefaultOptionalGroup.text:
+  text: Optional Actions
+group.RunnerActionsTouchbar.text:
+  text: Touchbar Run/Debug Actions
+group.TouchBarDefault.text:
+  text: Default
+group.RunDashboard.Filter.text:
+  text: Configuration Status
+group.RunDashboard.GroupBy.text:
+  text: Configuration
+group.ServiceView.AddService.text:
+  text: Add Service
+group.ServiceView.OpenInNewTabGroup.text:
+  text: Open in New Tab
+group.ServiceView.Filter.text:
+  text: Filter
+group.ServiceView.GroupBy.text:
+  text: Group By
+group.ShowAnnotateOperationsPopupGroup.text:
+  text: Annotated Line
+action.serviceview.groupbyservicegroup.text:
+  text: Service Groups
+
 
