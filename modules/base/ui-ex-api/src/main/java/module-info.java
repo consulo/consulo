@@ -43,6 +43,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.internal to
     consulo.ide.impl,
     consulo.desktop.awt.ide.impl,
+    consulo.desktop.swt.ide.impl,
     consulo.ui.ex.awt.api,
     consulo.execution.impl;
 
