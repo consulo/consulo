@@ -22,8 +22,8 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.ui.tabs.JBTabsPosition;
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.JBTabsPosition;
+import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.util.Axis;
 
 import jakarta.annotation.Nullable;

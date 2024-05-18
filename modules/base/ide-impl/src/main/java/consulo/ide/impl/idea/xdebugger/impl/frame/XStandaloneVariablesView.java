@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XStackFrame;

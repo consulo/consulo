@@ -15,43 +15,41 @@
  */
 package consulo.ide.impl.ui.docking;
 
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.project.ui.wm.dock.DockContainer;
-import consulo.project.ui.wm.dock.DockContainerFactory;
-import consulo.project.ui.wm.dock.DockManager;
-import consulo.project.ui.wm.dock.DockableContent;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.project.ui.wm.dock.DockManager;
+import consulo.project.ui.wm.dock.DockableContent;
 import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.collection.MutualMap;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.*;
 
 /**
  * @author VISTALL
  * @since 2020-11-21
  * <p>
- * Internal - indendent impl
+ * Internal - independent impl
  */
-public abstract class BaseDockManager extends DockManager implements PersistentStateComponent<Element> {
+public abstract class BaseDockManager implements DockManager, PersistentStateComponent<Element> {
   public interface DockWindow {
     void show();
 
     String getId();
   }
 
-  protected final Map<String, DockContainerFactory> myFactories = new HashMap<>();
   protected final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();
   protected final Set<DockContainer> myContainers = new HashSet<>();
   protected final Project myProject;
@@ -66,14 +64,6 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
   public void register(final DockContainer container) {
     myContainers.add(container);
     Disposer.register(container, () -> myContainers.remove(container));
-  }
-
-  @Override
-  public void register(final String id, DockContainerFactory factory) {
-    myFactories.put(id, factory);
-    Disposer.register(factory, () -> myFactories.remove(id));
-
-    readStateFor(id);
   }
 
   @Nullable
@@ -100,9 +90,9 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
   }
 
   public void readState() {
-    for (String id : myFactories.keySet()) {
-      readStateFor(id);
-    }
+    myProject.getExtensionPoint(DockContainerFactory.class).forEachExtensionSafe(factory -> {
+      readStateFor(factory.getId());
+    });
   }
 
   private void readStateFor(String type) {
@@ -116,18 +106,22 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
       if (eachContent == null) continue;
 
       String eachType = eachContent.getAttributeValue("type");
-      if (eachType == null || !type.equals(eachType) || !myFactories.containsKey(eachType)) continue;
+      if (eachType == null || !type.equals(eachType)) continue;
 
-      DockContainerFactory factory = myFactories.get(eachType);
-      if (!(factory instanceof DockContainerFactory.Persistent)) continue;
+      DockContainerFactory factory = findFactory(eachType);
+      if (!(factory instanceof DockContainerFactory.Persistent persistentFactory)) continue;
 
-      DockContainerFactory.Persistent persistentFactory = (DockContainerFactory.Persistent)factory;
-      DockContainer container = persistentFactory.loadContainerFrom(eachContent);
+      DockContainer container = persistentFactory.loadContainerFrom(this, eachContent);
       register(container);
 
       final DockWindow window = createWindowFor(eachId, container);
-      myProject.getApplication().getLastUIAccess().giveIfNeed(window::show);
+      myProject.getUIAccess().giveIfNeed(window::show);
     }
+  }
+
+  @Nullable
+  protected DockContainerFactory findFactory(String id) {
+    return myProject.getExtensionPoint(DockContainerFactory.class).findFirstSafe(factory -> Objects.equals(factory.getId(), id));
   }
 
   protected abstract DockWindow createWindowFor(@Nullable String id, DockContainer container);
@@ -143,8 +137,7 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
     for (DockContainer each : myContainers) {
       DockWindow eachWindow = myWindows.getValue(each);
       if (eachWindow != null) {
-        if (each instanceof DockContainer.Persistent) {
-          DockContainer.Persistent eachContainer = (DockContainer.Persistent)each;
+        if (each instanceof DockContainer.Persistent eachContainer) {
           Element eachWindowElement = new Element("window");
           eachWindowElement.setAttribute("id", eachWindow.getId());
           Element content = new Element("content");
@@ -161,7 +154,7 @@ public abstract class BaseDockManager extends DockManager implements PersistentS
 
   @Override
   public Set<DockContainer> getContainers() {
-    return Collections.unmodifiableSet(ContainerUtil.newHashSet(myContainers));
+    return Collections.unmodifiableSet(new HashSet<>(myContainers));
   }
 
   public void createNewDockContainerFor(DockableContent content, RelativePoint point) {

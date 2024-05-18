@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewCom
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;

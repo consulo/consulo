@@ -39,6 +39,12 @@ public class DarkIconLibraryDescriptor implements IconLibraryDescriptor {
     return IconLibraryManager.LIGHT_LIBRARY_ID;
   }
 
+  @Nullable
+  @Override
+  public String getInverseLibraryId() {
+    return IconLibraryManager.LIGHT_LIBRARY_ID;
+  }
+
   @Nonnull
   @Override
   public LocalizeValue getName() {

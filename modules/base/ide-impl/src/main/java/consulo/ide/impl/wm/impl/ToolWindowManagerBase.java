@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -24,40 +23,40 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
-import consulo.project.ui.internal.ToolWindowLayout;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
-import consulo.project.ui.internal.WindowInfoImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.externalService.statistic.UsageTrigger;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.project.ui.internal.ToolWindowLayout;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -525,9 +524,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   /**
    * @param dirtyMode if <code>true</code> then all UI operations are performed in dirty mode.
    */
+  @RequiredUIAccess
   protected void showToolWindowImpl(final String id, final boolean dirtyMode) {
     final WindowInfoImpl toBeShownInfo = getInfo(id);
-    if (toBeShownInfo.isVisible() || !getToolWindow(id).isAvailable()) {
+    ToolWindow toolWindow = getToolWindow(id);
+    if (toBeShownInfo.isVisible() || !toolWindow.isAvailable()) {
       return;
     }
 
@@ -576,6 +577,8 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     }
 
     applyWindowInfo(toBeShownInfo);
+
+    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowShown(toolWindow);
   }
 
   protected void applyWindowInfo(final WindowInfoImpl info) {
@@ -1082,7 +1085,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable) {
-    Application.get().invokeLater(runnable, myProject.getDisposed());
+    myProject.getApplication().invokeLater(runnable, myProject.getDisposed());
   }
 
   @RequiredUIAccess

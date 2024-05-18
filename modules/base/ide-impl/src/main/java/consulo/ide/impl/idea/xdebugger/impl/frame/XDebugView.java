@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.ide.impl.idea.execution.ui.layout.ViewContext;
+import consulo.execution.impl.internal.ui.layout.ViewContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataContext;

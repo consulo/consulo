@@ -42,7 +42,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
-import consulo.util.concurrent.ActionCallback;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
@@ -294,7 +293,7 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
         if (myUseDarkIcons) {
           Style currentStyle = StyleManager.get().getCurrentStyle();
           if (icon != null && !currentStyle.isDark()) {
-            icon = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, icon);
+            icon = IconLibraryManager.get().inverseIcon(icon);
           }
         }
 

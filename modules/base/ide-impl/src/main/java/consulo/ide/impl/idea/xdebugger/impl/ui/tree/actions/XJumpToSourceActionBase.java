@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XNavigatable;
 import consulo.execution.debug.frame.XValue;

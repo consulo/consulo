@@ -48,7 +48,7 @@ public abstract class RunManager {
   public static final String UNNAMED = "Unnamed";
 
   public static RunManager getInstance(final Project project) {
-    return project.getComponent(RunManager.class);
+    return project.getInstance(RunManager.class);
   }
 
   /**
@@ -310,6 +310,9 @@ public abstract class RunManager {
   public abstract boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment);
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
+
+  @Nullable
+  public abstract RunnerAndConfigurationSettings findSettings(RunConfiguration configuration);
 
   @Nullable
   public RunnerAndConfigurationSettings findConfigurationByTypeAndName(@Nonnull String typeId, @Nonnull String name) {

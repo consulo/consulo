@@ -109,8 +109,8 @@ public class HelpTooltipImpl implements HelpTooltip {
   private static final String PARAGRAPH_SPLITTER = "<p/?>";
   private static final String TOOLTIP_PROPERTY = "JComponent.helpTooltip";
 
-  private int myInitialDelay = Registry.intValue("ide.tooltip.initialReshowDelay");
-  private int myHideDelay = Registry.intValue("ide.tooltip.initialDelay.highlighter");
+  private int myInitialDelay = 500;
+  private int myHideDelay = 150;
   private boolean initialShowScheduled;
 
   private String title;

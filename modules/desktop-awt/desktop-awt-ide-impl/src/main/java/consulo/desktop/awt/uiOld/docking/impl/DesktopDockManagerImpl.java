@@ -23,12 +23,12 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.util.BusyObject;
 import consulo.desktop.awt.fileEditor.impl.DesktopAWTEditorTabbedContainer;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
@@ -43,7 +43,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
-import consulo.project.ui.wm.dock.DockContainerFactory;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.ui.UIAccess;
@@ -344,15 +343,9 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     return null;
   }
 
-
-  private DockContainerFactory getFactory(String type) {
-    assert myFactories.containsKey(type) : "No factory for content type=" + type;
-    return myFactories.get(type);
-  }
-
   @Override
   public void createNewDockContainerFor(DockableContent content, RelativePoint point) {
-    DockContainer container = getFactory(content.getDockContainerType()).createContainer(content);
+    DockContainer container = findFactory(content.getDockContainerType()).createContainer(this, content);
     register(container);
 
     final DockWindow window = createWindowFor(null, container);
@@ -381,7 +374,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
   @Override
   @Nonnull
   public Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file, @Nonnull FileEditorManagerImpl fileEditorManager) {
-    DockContainer container = getFactory(DockableEditorContainerFactory.TYPE).createContainer(null);
+    DockContainer container = findFactory(DockableEditorContainerFactory.TYPE).createContainer(this, null);
     register(container);
 
     final DockWindow window = createWindowFor(null, container);

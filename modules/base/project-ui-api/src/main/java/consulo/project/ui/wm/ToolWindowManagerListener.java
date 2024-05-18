@@ -18,8 +18,9 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
+
 import java.util.EventListener;
 
 @TopicAPI(ComponentScope.PROJECT)
@@ -40,5 +41,8 @@ public interface ToolWindowManagerListener extends EventListener {
   @Deprecated(forRemoval = true)
   @DeprecationInfo("Use with ToolWindowManager parameter")
   default void stateChanged() {
+  }
+
+  default void toolWindowShown(@Nonnull ToolWindow toolWindow) {
   }
 }

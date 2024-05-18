@@ -16,24 +16,6 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.execution.ProgramRunnerUtil;
-import consulo.execution.internal.RunManagerConfig;
-import consulo.execution.internal.RunManagerEx;
-import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
-import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
-import consulo.localize.LocalizeValue;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.ActionLink;
-import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.config.StorageAccessors;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ui.ex.awt.GridBag;
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.BaseConfigurable;
@@ -43,42 +25,48 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.BeforeRunTask;
-import consulo.execution.ExecutionBundle;
-import consulo.execution.RunManager;
-import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.execution.executor.Executor;
-import consulo.ui.ex.awt.dnd.RowsDnDSupport;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.execution.impl.internal.RunConfigurationSelector;
+import consulo.execution.impl.internal.configuration.*;
+import consulo.execution.internal.RunManagerConfig;
+import consulo.execution.internal.RunManagerEx;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ide.impl.idea.util.config.StorageAccessors;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
@@ -702,49 +690,56 @@ public class RunConfigurable extends BaseConfigurable {
     updateActiveConfigurationFromSelected();
 
     final RunManagerImpl manager = getRunManager();
-    final List<ConfigurationType> types = manager.getConfigurationFactories();
-    List<ConfigurationType> configurationTypes = new ArrayList<>();
-    for (int i = 0; i < myRoot.getChildCount(); i++) {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
-      Object userObject = node.getUserObject();
-      if (userObject instanceof ConfigurationType) {
-        configurationTypes.add((ConfigurationType)userObject);
-      }
-    }
-    for (ConfigurationType type : types) {
-      if (!configurationTypes.contains(type))
-        configurationTypes.add(type);
-    }
-
-    for (ConfigurationType configurationType : configurationTypes) {
-      applyByType(configurationType);
-    }
-
     try {
-      int i = Math.max(RunManagerConfig.MIN_RECENT_LIMIT, Integer.parseInt(myRecentsLimit.getText()));
-      int oldLimit = manager.getConfig().getRecentsLimit();
-      if (oldLimit != i) {
-        manager.getConfig().setRecentsLimit(i);
-        manager.checkRecentsLimit();
+      manager.fireBeginUpdate();
+      
+      final List<ConfigurationType> types = manager.getConfigurationFactories();
+      List<ConfigurationType> configurationTypes = new ArrayList<>();
+      for (int i = 0; i < myRoot.getChildCount(); i++) {
+        final DefaultMutableTreeNode node = (DefaultMutableTreeNode)myRoot.getChildAt(i);
+        Object userObject = node.getUserObject();
+        if (userObject instanceof ConfigurationType) {
+          configurationTypes.add((ConfigurationType)userObject);
+        }
       }
-    }
-    catch (NumberFormatException e) {
-      // ignore
-    }
-    manager.getConfig().setRestartRequiresConfirmation(myConfirmation.isSelected());
-
-    for (Configurable configurable : myStoredComponents.values()) {
-      if (configurable.isModified()){
-        configurable.apply();
+      for (ConfigurationType type : types) {
+        if (!configurationTypes.contains(type))
+          configurationTypes.add(type);
       }
-    }
 
-    for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
-      each.first.apply();
-    }
+      for (ConfigurationType configurationType : configurationTypes) {
+        applyByType(configurationType);
+      }
 
-    manager.saveOrder();
-    setModified(false);
+      try {
+        int i = Math.max(RunManagerConfig.MIN_RECENT_LIMIT, Integer.parseInt(myRecentsLimit.getText()));
+        int oldLimit = manager.getConfig().getRecentsLimit();
+        if (oldLimit != i) {
+          manager.getConfig().setRecentsLimit(i);
+          manager.checkRecentsLimit();
+        }
+      }
+      catch (NumberFormatException e) {
+        // ignore
+      }
+      manager.getConfig().setRestartRequiresConfirmation(myConfirmation.isSelected());
+
+      for (Configurable configurable : myStoredComponents.values()) {
+        if (configurable.isModified()){
+          configurable.apply();
+        }
+      }
+
+      for (Pair<UnnamedConfigurable, JComponent> each : myAdditionalSettings) {
+        each.first.apply();
+      }
+
+      manager.saveOrder();
+      setModified(false);
+    }
+    finally {
+      manager.fireEndUpdate();
+    }
     myTree.repaint();
   }
 
@@ -1177,7 +1172,7 @@ public class RunConfigurable extends BaseConfigurable {
 
     private void showAddPopup(final boolean showApplicableTypesOnly) {
       List<ConfigurationType> allTypes = getRunManager().getConfigurationFactories(false);
-      final List<ConfigurationType> configurationTypes = getTypesToShow(showApplicableTypesOnly, allTypes);
+      final List<ConfigurationType> configurationTypes = ConfigurationTypeSelector.getTypesToShow(myProject, showApplicableTypesOnly, allTypes);
       Collections.sort(configurationTypes, (type1, type2) -> type1.getDisplayName().compareIgnoreCase(type2.getDisplayName()));
       final int hiddenCount = allTypes.size() - configurationTypes.size();
       if (hiddenCount > 0) {
@@ -1264,28 +1259,6 @@ public class RunConfigurable extends BaseConfigurable {
       });
       //new TreeSpeedSearch(myTree);
       popup.showUnderneathOf(myToolbarDecorator.getActionsPanel());
-    }
-
-    private List<ConfigurationType> getTypesToShow(boolean showApplicableTypesOnly, List<ConfigurationType> allTypes) {
-      if (showApplicableTypesOnly) {
-        List<ConfigurationType> applicableTypes = new ArrayList<>();
-        for (ConfigurationType type : allTypes) {
-          if (isApplicable(type)) {
-            applicableTypes.add(type);
-          }
-        }
-        return applicableTypes;
-      }
-      return new ArrayList<ConfigurationType>(allTypes);
-    }
-
-    private boolean isApplicable(ConfigurationType type) {
-      for (ConfigurationFactory factory : type.getConfigurationFactories()) {
-        if (factory.isApplicable(myProject)) {
-          return true;
-        }
-      }
-      return false;
     }
   }
 

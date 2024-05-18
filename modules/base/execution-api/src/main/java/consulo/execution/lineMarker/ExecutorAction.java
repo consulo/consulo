@@ -19,6 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
@@ -28,16 +29,15 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.execution.internal.RunManagerEx;
-import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;

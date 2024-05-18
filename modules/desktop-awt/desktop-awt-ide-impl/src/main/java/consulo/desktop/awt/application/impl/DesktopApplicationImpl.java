@@ -52,7 +52,7 @@ import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
-import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;

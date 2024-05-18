@@ -33,7 +33,7 @@ import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import consulo.ide.impl.idea.ui.tabs.UiDecorator;
+import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;

@@ -19,7 +19,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ui.ex.content.ContentManager;
 

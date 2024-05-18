@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2012 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ui.ex.awt.tree;
 
 import consulo.colorScheme.EditorColorsManager;
@@ -20,84 +6,114 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.navigation.ItemPresentation;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.navigation.NavigationItem;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.List;
 
 public class NodeRenderer extends ColoredTreeCellRenderer {
-  @RequiredUIAccess
+  private boolean myLightTheme;
+
+  protected Image fixIconIfNeeded(Image icon, boolean selected, boolean hasFocus) {
+//    if (icon != null && myLightTheme && selected && hasFocus) {
+//      return IconLibraryManager.get().inverseIcon(icon);
+//    }
+
+    return icon;
+  }
+
   @Override
-  public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-    ColorValue color = null;
-    NodeDescriptor descriptor = null;
-    if (value instanceof DefaultMutableTreeNode) {
-      DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-      Object userObject = node.getUserObject();
-      if (userObject instanceof NodeDescriptor) {
-        descriptor = (NodeDescriptor)userObject;
-        color = descriptor.getColor();
-        setIcon(descriptor.getIcon());
-      }
+  public void customizeCellRenderer(@Nonnull JTree tree,
+                                    Object value,
+                                    boolean selected,
+                                    boolean expanded,
+                                    boolean leaf,
+                                    int row,
+                                    boolean hasFocus) {
+    myLightTheme = !StyleManager.get().getCurrentStyle().isDark();
+
+    Object node = TreeUtil.getUserObject(value);
+
+    if (node instanceof NodeDescriptor<?> descriptor) {
+      // TODO: use this color somewhere
+      ColorValue color = descriptor.getColor();
+      setIcon(fixIconIfNeeded(descriptor.getIcon(), selected, hasFocus));
     }
 
-    if (descriptor instanceof PresentableNodeDescriptor) {
-      final PresentableNodeDescriptor node = (PresentableNodeDescriptor)descriptor;
-      final PresentationData presentation = node.getPresentation();
+    ItemPresentation p0 = getPresentation(node);
+
+    if (p0 instanceof PresentationData presentation) {
+      ColorValue color = node instanceof NodeDescriptor ? ((NodeDescriptor<?>)node).getColor() : null;
+      setIcon(fixIconIfNeeded(presentation.getIcon(), selected, hasFocus));
 
       final List<PresentableNodeDescriptor.ColoredFragment> coloredText = presentation.getColoredText();
+      ColorValue forcedForeground = presentation.getForcedTextForeground();
       if (coloredText.isEmpty()) {
-        String text = tree.convertValueToText(value.toString(), selected, expanded, leaf, row, hasFocus);
-        SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(node, presentation.getForcedTextForeground() != null ? presentation.getForcedTextForeground() : color);
+        String text = presentation.getPresentableText();
+        if (StringUtil.isEmpty(text)) {
+          String valueSting = value.toString();
+          text = valueSting;
+        }
+        text = tree.convertValueToText(text, selected, expanded, leaf, row, hasFocus);
+        SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(
+          presentation, forcedForeground != null ? forcedForeground : color, node);
         append(text, simpleTextAttributes);
+        String location = presentation.getLocationString();
+        if (!StringUtil.isEmpty(location)) {
+          SimpleTextAttributes attributes = SimpleTextAttributes.merge(simpleTextAttributes, SimpleTextAttributes.GRAYED_ATTRIBUTES);
+          append(presentation.getLocationPrefix() + location + presentation.getLocationSuffix(), attributes, false);
+        }
       }
       else {
         boolean first = true;
+        boolean isMain = true;
         for (PresentableNodeDescriptor.ColoredFragment each : coloredText) {
           SimpleTextAttributes simpleTextAttributes = each.getAttributes();
-          if (each.getAttributes().getFgColor() == null && presentation.getForcedTextForeground() != null) {
-            simpleTextAttributes = addColorToSimpleTextAttributes(each.getAttributes(),
-                                                                  presentation.getForcedTextForeground() != null ? presentation.getForcedTextForeground() : color);
+          if (each.getAttributes().getFgColor() == null && forcedForeground != null) {
+            simpleTextAttributes = addColorToSimpleTextAttributes(each.getAttributes(), forcedForeground);
           }
           if (first) {
             final TextAttributesKey textAttributesKey = presentation.getTextAttributesKey();
             if (textAttributesKey != null) {
-              final TextAttributes forcedAttributes = getColorsScheme().getAttributes(textAttributesKey);
+              TextAttributes forcedAttributes = getScheme().getAttributes(textAttributesKey);
               if (forcedAttributes != null) {
-                simpleTextAttributes = SimpleTextAttributes.merge(TextAttributesUtil.fromTextAttributes(forcedAttributes), simpleTextAttributes);
+                simpleTextAttributes =
+                  SimpleTextAttributes.merge(simpleTextAttributes, TextAttributesUtil.fromTextAttributes(forcedAttributes));
               }
             }
             first = false;
           }
-          // treat grayed text as non-main
-          boolean isMain = simpleTextAttributes != SimpleTextAttributes.GRAYED_ATTRIBUTES;
+          // the first grayed text (inactive foreground, regular or small) ends main speed-searchable text
+          isMain = isMain && !Comparing.equal(simpleTextAttributes.getFgColor(), SimpleTextAttributes.GRAYED_ATTRIBUTES.getFgColor());
           append(each.getText(), simpleTextAttributes, isMain);
         }
-      }
-
-      final String location = presentation.getLocationString();
-      if (!StringUtil.isEmpty(location)) {
-        append(presentation.getLocationPrefix() + location + presentation.getLocationSuffix(), SimpleTextAttributes.GRAY_ATTRIBUTES, false);
+        String location = presentation.getLocationString();
+        if (!StringUtil.isEmpty(location)) {
+          append(presentation.getLocationPrefix() + location + presentation.getLocationSuffix(),
+                 SimpleTextAttributes.GRAYED_ATTRIBUTES,
+                 false);
+        }
       }
 
       setToolTipText(presentation.getTooltip());
     }
     else if (value != null) {
       String text = value.toString();
-      if (descriptor != null) {
-        text = descriptor.getName();
+      if (node instanceof NodeDescriptor) {
+        text = node.toString();
       }
       text = tree.convertValueToText(text, selected, expanded, leaf, row, hasFocus);
       if (text == null) {
@@ -106,23 +122,29 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
       append(text);
       setToolTipText(null);
     }
-    if (!AbstractTreeUi.isLoadingNode(value)) {
-      SpeedSearchUtilBase.applySpeedSearchHighlighting(tree, this, true, selected);
-    }
+  }
+
+  protected @Nullable ItemPresentation getPresentation(Object node) {
+    return node instanceof PresentableNodeDescriptor ? ((PresentableNodeDescriptor<?>)node).getPresentation() :
+      node instanceof NavigationItem ? ((NavigationItem)node).getPresentation() :
+        null;
   }
 
   @Nonnull
-  protected EditorColorsScheme getColorsScheme() {
-    return EditorColorsManager.getInstance().getGlobalScheme();
+  private static EditorColorsScheme getScheme() {
+    return EditorColorsManager.getInstance().getSchemeForCurrentUITheme();
   }
 
-  protected SimpleTextAttributes getSimpleTextAttributes(final PresentableNodeDescriptor node, final ColorValue color) {
-    SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(node.getPresentation(), getColorsScheme());
+  @Nonnull
+  protected SimpleTextAttributes getSimpleTextAttributes(@Nonnull PresentationData presentation,
+                                                         ColorValue color,
+                                                         @Nonnull Object node) {
+    SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(presentation, getScheme());
 
     return addColorToSimpleTextAttributes(simpleTextAttributes, color);
   }
 
-  private SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, ColorValue color) {
+  private static SimpleTextAttributes addColorToSimpleTextAttributes(SimpleTextAttributes simpleTextAttributes, ColorValue color) {
     if (color != null) {
       final TextAttributes textAttributes = TextAttributesUtil.toTextAttributes(simpleTextAttributes);
       textAttributes.setForegroundColor(color);
@@ -131,15 +153,14 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
     return simpleTextAttributes;
   }
 
-  public static SimpleTextAttributes getSimpleTextAttributes(@Nullable final ItemPresentation presentation) {
-    return getSimpleTextAttributes(presentation, EditorColorsManager.getInstance().getGlobalScheme());
+  public static SimpleTextAttributes getSimpleTextAttributes(final @Nullable ItemPresentation presentation) {
+    return getSimpleTextAttributes(presentation, getScheme());
   }
 
-  public static SimpleTextAttributes getSimpleTextAttributes(@Nullable final ItemPresentation presentation,
-                                                             @Nonnull EditorColorsScheme colorsScheme)
-  {
+  private static SimpleTextAttributes getSimpleTextAttributes(final @Nullable ItemPresentation presentation,
+                                                              @Nonnull EditorColorsScheme colorsScheme) {
     if (presentation instanceof ColoredItemPresentation) {
-      final TextAttributesKey textAttributesKey = ((ColoredItemPresentation) presentation).getTextAttributesKey();
+      final TextAttributesKey textAttributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
       if (textAttributesKey == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;
       final TextAttributes textAttributes = colorsScheme.getAttributes(textAttributesKey);
       return textAttributes == null ? SimpleTextAttributes.REGULAR_ATTRIBUTES : TextAttributesUtil.fromTextAttributes(textAttributes);

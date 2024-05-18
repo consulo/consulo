@@ -23,7 +23,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 
 public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware {

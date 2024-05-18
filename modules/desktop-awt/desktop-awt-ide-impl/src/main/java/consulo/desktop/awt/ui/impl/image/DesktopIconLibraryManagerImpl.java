@@ -36,10 +36,18 @@ public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
 
   @Nonnull
   @Override
-  public Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
-    if(image instanceof DesktopImage) {
-      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(libraryId, it -> forceChangeLibrary(libraryId, image));
+  public Image inverseIcon(@Nonnull Image image) {
+    if (image instanceof DesktopImage) {
+      BaseIconLibraryImpl library = getActiveLibrary();
+
+      String inverseId = library.getInverseId();
+      if (inverseId == null) {
+        return image;
+      }
+
+      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(inverseId, it -> inverseIcon(image));
     }
+
     return image;
   }
 }

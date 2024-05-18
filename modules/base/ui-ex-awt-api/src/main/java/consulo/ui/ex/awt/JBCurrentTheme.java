@@ -19,8 +19,8 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ColorUtil;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.border.Border;
 import java.awt.*;
 
@@ -307,24 +307,33 @@ public class JBCurrentTheme {
   }
 
   public static class Link {
+    public interface Foreground {
+      Color DISABLED = JBColor.namedColor("Link.disabledForeground", Label.disabledForeground());
+      Color ENABLED = JBColor.namedColor("Link.activeForeground", JBColor.namedColor("link.foreground", 0x589DF6));
+      Color HOVERED = JBColor.namedColor("Link.hoverForeground", JBColor.namedColor("link.hover.foreground", ENABLED));
+      Color PRESSED = JBColor.namedColor("Link.pressedForeground", JBColor.namedColor("link.pressed.foreground", 0xF00000, 0xBA6F25));
+      Color VISITED = JBColor.namedColor("Link.visitedForeground", JBColor.namedColor("link.visited.foreground", 0x800080, 0x9776A9));
+      Color SECONDARY = JBColor.namedColor("Link.secondaryForeground", 0x779DBD, 0x5676A0);
+    }
+
     @Nonnull
     public static Color linkColor() {
-      return JBColor.namedColor("Link.activeForeground", JBColor.namedColor("link.foreground", 0x589df6));
+      return Foreground.ENABLED;
     }
 
     @Nonnull
     public static Color linkHoverColor() {
-      return JBColor.namedColor("Link.hoverForeground", JBColor.namedColor("link.hover.foreground", linkColor()));
+      return Foreground.HOVERED;
     }
 
     @Nonnull
     public static Color linkPressedColor() {
-      return JBColor.namedColor("Link.pressedForeground", JBColor.namedColor("link.pressed.foreground", new JBColor(0xf00000, 0xba6f25)));
+      return Foreground.PRESSED;
     }
 
     @Nonnull
     public static Color linkVisitedColor() {
-      return JBColor.namedColor("Link.visitedForeground", JBColor.namedColor("link.visited.foreground", new JBColor(0x800080, 0x9776a9)));
+      return Foreground.VISITED;
     }
   }
 

@@ -5,6 +5,7 @@ import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.logging.Logger;
 import consulo.application.util.ColoredItem;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.BackgroundSupplier;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandlerBase;
 import consulo.ui.ex.awt.UIUtil;
@@ -17,6 +18,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.RenderingHelper;
 import consulo.ui.ex.awt.util.RenderingUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
@@ -79,8 +81,8 @@ public final class DefaultTreeUI extends BasicTreeUI {
     }
     Object node = TreeUtil.getLastUserObject(path);
     if (node instanceof ColoredItem) {
-      Color background = ((ColoredItem)node).getColor();
-      if (background != null) return background;
+      ColorValue background = ((ColoredItem)node).getColor();
+      if (background != null) return TargetAWT.to(background);
     }
     if (node instanceof BackgroundSupplier) {
       BackgroundSupplier supplier = (BackgroundSupplier)node;

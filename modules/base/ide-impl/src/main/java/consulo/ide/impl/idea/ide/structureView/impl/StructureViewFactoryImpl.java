@@ -28,7 +28,7 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewWrapper;
 import consulo.ide.impl.idea.ide.impl.StructureViewWrapperImpl;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.language.editor.structureView.StructureViewExtension;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
 import consulo.language.psi.PsiElement;

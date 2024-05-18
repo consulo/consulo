@@ -8,6 +8,5 @@ import consulo.execution.configuration.ui.SettingsEditor;
  * User: michael.golubev
  */
 public interface RunConfigurationSettingsEditor {
-
   void setOwner(SettingsEditor<RunnerAndConfigurationSettings> owner);
 }

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl.table;
 
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.TabInfo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl.singleRow;
 
-import consulo.ide.impl.idea.ui.tabs.JBTabsPosition;
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.JBTabsPosition;
+import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ui.ex.awt.util.GraphicsUtil;

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
+import consulo.ui.ex.awt.LinkMouseListenerBase;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;

@@ -29,6 +29,8 @@ module consulo.execution.api {
   exports consulo.execution.configuration.log.ui;
   exports consulo.execution.configuration.ui;
   exports consulo.execution.configuration.ui.event;
+  exports consulo.execution.dashboard;
+  exports consulo.execution.service;
   exports consulo.execution.event;
   exports consulo.execution.executor;
   exports consulo.execution.lineMarker;
@@ -47,11 +49,13 @@ module consulo.execution.api {
   exports consulo.execution.ui.terminal;
 
   exports consulo.execution.internal.action to
-          consulo.ide.impl,
-          consulo.desktop.awt.ide.impl;
+    consulo.execution.impl,
+    consulo.ide.impl,
+    consulo.desktop.awt.ide.impl;
+
   exports consulo.execution.internal to consulo.ide.impl,
-          consulo.execution.impl,
-          consulo.execution.test.sm.api,
-          consulo.desktop.awt.ide.impl,
-          consulo.execution.test.api;
+    consulo.execution.impl,
+    consulo.execution.test.sm.api,
+    consulo.desktop.awt.ide.impl,
+    consulo.execution.test.api;
 }

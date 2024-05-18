@@ -15,26 +15,29 @@
  */
 package consulo.execution;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.
  */
-@ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
-public abstract class ExecutionManager {
+@ServiceAPI(value = ComponentScope.PROJECT)
+public interface ExecutionManager {
   public static ExecutionManager getInstance(@Nonnull Project project) {
     return project.getInstance(ExecutionManager.class);
   }
@@ -45,7 +48,9 @@ public abstract class ExecutionManager {
    * @return the run content manager instance.
    */
   @Nonnull
-  public abstract RunContentManager getContentManager();
+  @Deprecated
+  @DeprecationInfo("RunContentManager is project service, use constructor injection")
+  RunContentManager getContentManager();
 
   /**
    * Returns the list of processes managed by all open run and debug tabs.
@@ -53,45 +58,43 @@ public abstract class ExecutionManager {
    * @return the list of processes.
    */
   @Nonnull
-  public abstract ProcessHandler[] getRunningProcesses();
+  ProcessHandler[] getRunningProcesses();
+
+  @Nonnull
+  List<RunContentDescriptor> getRunningDescriptors(Predicate<? super RunnerAndConfigurationSettings> condition);
+
+  @Nonnull
+  List<RunContentDescriptor> getDescriptors(@Nonnull Predicate<? super RunnerAndConfigurationSettings> condition);
 
   /**
    * Prepares the run or debug tab for running the specified process and calls a callback to start it.
    *
-   * @param starter the callback to start the process execution.
-   * @param state   the ready-to-start process
-   * @param environment     the execution environment describing the process to be started.
+   * @param starter     the callback to start the process execution.
+   * @param state       the ready-to-start process
+   * @param environment the execution environment describing the process to be started.
    */
   @RequiredUIAccess
-  public abstract void startRunProfile(@Nonnull RunProfileStarter starter,
-                                       @Nonnull RunProfileState state,
-                                       @Nonnull ExecutionEnvironment environment);
+  void startRunProfile(@Nonnull RunProfileStarter starter,
+                       @Nonnull RunProfileState state,
+                       @Nonnull ExecutionEnvironment environment);
 
-  public abstract void restartRunProfile(@Nonnull Project project,
-                                         @Nonnull Executor executor,
-                                         @Nonnull ExecutionTarget target,
-                                         @Nullable RunnerAndConfigurationSettings configuration,
-                                         @Nullable ProcessHandler processHandler);
+  default void restartRunProfile(@Nonnull Project project,
+                                 @Nonnull Executor executor,
+                                 @Nonnull ExecutionTarget target,
+                                 @Nullable RunnerAndConfigurationSettings configuration,
+                                 @Nullable ProcessHandler processHandler) {
+    restartRunProfile(project, executor, target, configuration, processHandler, executionEnvironment -> {
+    });
+  }
 
-  /**
-   * currentDescriptor is null for toolbar/popup action and not null for actions in run/debug toolwindows
-   * @deprecated use {@link #restartRunProfile(consulo.ide.impl.idea.execution.runners.ExecutionEnvironment)}
-   * to remove in IDEA 15
-   */
-  public abstract void restartRunProfile(@Nonnull Project project,
-                                         @Nonnull Executor executor,
-                                         @Nonnull ExecutionTarget target,
-                                         @Nullable RunnerAndConfigurationSettings configuration,
-                                         @Nullable RunContentDescriptor currentDescriptor);
+  void restartRunProfile(@Nonnull Project project,
+                         @Nonnull Executor executor,
+                         @Nonnull ExecutionTarget target,
+                         @Nullable RunnerAndConfigurationSettings configuration,
+                         @Nullable ProcessHandler processHandler,
+                         @Nonnull Consumer<ExecutionEnvironment> envCustomizer);
 
-  /**
-   * currentDescriptor is null for toolbar/popup action and not null for actions in run/debug toolwindows
-   * @deprecated use {@link #restartRunProfile(consulo.ide.impl.idea.execution.runners.ExecutionEnvironment)}
-   * to remove in IDEA 15
-   */
-  public abstract void restartRunProfile(@Nullable ProgramRunner runner,
-                                         @Nonnull ExecutionEnvironment environment,
-                                         @Nullable RunContentDescriptor currentDescriptor);
+  void restartRunProfile(@Nonnull ExecutionEnvironment environment);
 
-  public abstract void restartRunProfile(@Nonnull ExecutionEnvironment environment);
+  boolean isStarting(String exectutorId, String runnerId);
 }

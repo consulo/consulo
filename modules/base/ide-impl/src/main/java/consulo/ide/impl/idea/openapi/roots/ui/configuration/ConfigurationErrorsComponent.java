@@ -24,6 +24,7 @@ import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ui.*;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

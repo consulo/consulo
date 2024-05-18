@@ -76,12 +76,6 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
 
   @Nonnull
   @Override
-  protected DockableEditorContainerFactory createDockContainerFactory() {
-    return new DesktopAWTDockableEditorContainerFactory(myApplicationConcurrency, myProject, this, myDockManager);
-  }
-
-  @Nonnull
-  @Override
   public JComponent getComponent() {
     initUI();
     return myPanels;

@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.ide.impl.idea.ui.ErrorLabel;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ide.impl.idea.ui.popup.list.IconListPopupRenderer;

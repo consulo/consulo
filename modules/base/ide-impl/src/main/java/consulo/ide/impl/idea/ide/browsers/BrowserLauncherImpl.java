@@ -24,7 +24,7 @@ import consulo.application.ApplicationManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.DefaultBrowserPolicy;

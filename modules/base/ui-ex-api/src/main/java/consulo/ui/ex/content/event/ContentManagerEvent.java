@@ -57,6 +57,8 @@ public class ContentManagerEvent extends EventObject {
   }
 
   public static enum ContentOperation {
-    add, remove, undefined
+    add,
+    remove,
+    undefined
   }
 }

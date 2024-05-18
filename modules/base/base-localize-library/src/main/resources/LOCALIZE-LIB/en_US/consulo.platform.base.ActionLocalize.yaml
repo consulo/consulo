@@ -373,15 +373,15 @@ action.FullyExpandTreeNode.text:
 group.GenerateGroup.text:
   text: _Generate
 action.OverrideMethods.text:
-  text: _Override Members...
+  text: _Override Members…
 action.OverrideMethods.description:
   text: Override base class members in the current class
 action.ImplementMethods.text:
-  text: _Implement Members...
+  text: _Implement Members…
 action.ImplementMethods.description:
   text: Implement base interface/class members in the current class
 action.DelegateMethods.text:
-  text: _Delegate Methods...
+  text: _Delegate Methods…
 action.DelegateMethods.description:
   text: Generate delegate method to a field/getter
 action.GenerateSuperMethodCall.text:
@@ -413,7 +413,7 @@ action.Compare.SameVersion.text:
 action.Compare.LastVersion.text:
   text: Compare with Latest Repository _Version
 action.Compare.Selected.text:
-  text: _Compare with...
+  text: _Compare with…
 group.NewGroup.text:
   text: _New
 group.WeighingNewGroup.text:
@@ -443,7 +443,7 @@ action.LocalHistory.ShowHistory.text:
 action.LocalHistory.ShowSelectionHistory.text:
   text: Show History for Selection
 action.LocalHistory.PutLabel.text:
-  text: Put _Label...
+  text: Put _Label…
 group.VcsGroups.text:
   text: VC_S
 group.VcsGlobalGroup.text:
@@ -469,11 +469,11 @@ group.FileMenu.text:
 group.ProjectImport.text:
   text: Import _Projects
 action.NewProject.text:
-  text: _New Project...
+  text: _New Project…
 action.NewProject.description:
   text: Create a new project from scratch
 action.NewModule.text:
-  text: New _Module...
+  text: New _Module…
 action.NewModule.description:
   text: Create new module from scratch and add it to the project
 action.ImportProject.description:
@@ -481,11 +481,11 @@ action.ImportProject.description:
 action.ImportModule.description:
   text: Import module from directory with existing sources or from existing project model
 action.OpenProject.text:
-  text: Open Project...
+  text: Open Project…
 action.OpenProject.description:
   text: Open an existing project
 action.OpenFile.text:
-  text: _Open...
+  text: _Open…
 action.OpenFile.description:
   text: Open a project or a file in editor
 group.reopen.win.text:
@@ -497,15 +497,15 @@ action.CloseProject.text:
 action.CloseProject.description:
   text: Close current project
 action.ShowProjectStructureSettings.text:
-  text: Project Structure...
+  text: Project Structure…
 action.ShowProjectStructureSettings.description:
   text: Configure project structure
 action.TemplateProjectProperties.text:
-  text: Def_ault Settings...
+  text: Def_ault Settings…
 action.TemplateProjectProperties.description:
   text: Configure default settings for all new projects
 action.TemplateProjectStructure.text:
-  text: Default Project Structure...
+  text: Default Project Structure…
 action.TemplateProjectStructure.description:
   text: Configure default structure for all new projects
 action.SaveAll.text:
@@ -513,23 +513,23 @@ action.SaveAll.text:
 action.SaveAll.description:
   text: Save all files and settings
 action.ExportSettings.text:
-  text: _Export Settings...
+  text: _Export Settings…
 action.ExportSettings.description:
   text: Export global settings
 action.ImportSettings.text:
-  text: Import Settings...
+  text: Import Settings…
 action.ImportSettings.description:
   text: Import global settings
 action.ImportFromJBuilder.text:
-  text: Import _From JBuilder...
+  text: Import _From JBuilder…
 action.ImportFromJBuilder.description:
   text: Load Modules From JBuilder Project
 action.ImportFromEclipse.text:
-  text: Import From Eclipse...
+  text: Import From Eclipse…
 action.ImportFromEclipse.description:
   text: Create project from Eclipse projects
 action.ExportToEclipse.text:
-  text: Export To Eclipse...
+  text: Export To Eclipse…
 action.ExportToEclipse.description:
   text: Create Eclipse projects for each module
 action.Synchronize.text:
@@ -543,11 +543,11 @@ action.ReloadFromDisk.description:
 group.Vcs.Checkout.text:
   text: Check_out from Version Control
 action.ExportToHTML.text:
-  text: Export to _HTML...
+  text: Export to _HTML…
 action.ExportToHTML.description:
   text: Save file content in HTML format with syntax coloring
 action.Print.text:
-  text: _Print...
+  text: _Print…
 action.Print.description:
   text: Print file
 action.Exit.text:
@@ -595,7 +595,7 @@ action.$Paste.text:
 action.$Paste.description:
   text: Paste from clipboard
 action.PasteMultiple.text:
-  text: Past_e from History...
+  text: Past_e from History…
 action.PasteMultiple.description:
   text: Paste from recent clipboards
 action.$SelectAll.text:
@@ -603,11 +603,11 @@ action.$SelectAll.text:
 action.$SelectAll.description:
   text: Select all
 action.NewElement.text:
-  text: _New...
+  text: _New…
 action.NewElement.description:
   text: Create new class, interface, file or directory
 action.NewElementSamePlace.text:
-  text: _New...
+  text: _New…
 action.NewElementSamePlace.description:
   text: Create new class, interface, file or directory
 action.$Delete.text:
@@ -623,15 +623,15 @@ action.ShowBookmarks.text:
 action.ShowBookmarks.description:
   text: Show list of all bookmarks
 action.Find.text:
-  text: _Find...
+  text: _Find…
 action.Find.description:
   text: Find a string in active editor
 action.FindModal.text:
-  text: _Find...
+  text: _Find…
 action.FindModal.description:
   text: Find a string in active editor, shows modal dialog
 action.Replace.text:
-  text: _Replace...
+  text: _Replace…
 action.Replace.description:
   text: Replace a string in active editor with another string
 action.FindNext.text:
@@ -659,7 +659,7 @@ action.ShowUsages.text:
 action.ShowUsages.description:
   text: Show usages of the symbol at caret
 action.ShowSettingsAndFindUsages.text:
-  text: Find Usages Settings...
+  text: Find Usages Settings…
 action.ShowSettingsAndFindUsages.description:
   text: Choose scope and edit options for the Find Usages action
 action.FindUsagesInFile.text:
@@ -677,11 +677,11 @@ action.FindJoinpointsByPointcutAction.text:
 action.FindJoinpointsByPointcutAction.description:
   text: Find join point identified by pointcut
 action.FindInPath.text:
-  text: Find in _Path...
+  text: Find in _Path…
 action.FindInPath.description:
   text: Find a string in multiple files
 action.ReplaceInPath.text:
-  text: Repl_ace in Path...
+  text: Repl_ace in Path…
 action.ReplaceInPath.description:
   text: Replace a string in multiple files with another string
 group.ViewMenu.text:
@@ -713,7 +713,7 @@ action.ShowFilePath.description:
 action.ShowFilePath.tuned:
   text: '{0,choice,0#File|1#Directory} _Path'
 action.SelectIn.text:
-  text: Se_lect In...
+  text: Se_lect In…
 action.SelectIn.description:
   text: Select the current class or method in any view
 action.FixDocComment.text:
@@ -745,7 +745,7 @@ action.ShowErrorDescription.text:
 action.ShowErrorDescription.description:
   text: Show description of error or warning at caret
 action.ProjectViewChangeView.text:
-  text: Change View...
+  text: Change View…
 action.ProjectViewChangeView.description:
   text: Choose Project, Sourcepath or Classpath tree in the Project View window
 action.EditSource.text:
@@ -773,7 +773,7 @@ action.RecentChangedFiles.text:
 action.RecentChangedFiles.description:
   text: Show list of recently changed files
 action.QuickChangeScheme.text:
-  text: _Quick Switch Scheme...
+  text: _Quick Switch Scheme…
 action.QuickChangeScheme.description:
   text: Change current code style scheme, color\&fonts scheme, keymap or Look\&Feel
 action.TypeHierarchy.text:
@@ -827,23 +827,23 @@ action.RecentChanges.text:
 group.GoToMenu.text:
   text: _Navigate
 action.GotoClass.text:
-  text: _Class...
+  text: _Class…
 action.GotoClass.description:
   text: Quickly navigate to a class by name
 action.GotoFile.text:
-  text: _File...
+  text: _File…
 action.GotoFile.description:
   text: Quickly navigate to a file by name
 action.GotoSymbol.text:
-  text: _Symbol...
+  text: _Symbol…
 action.GotoSymbol.description:
   text: Quickly navigate to any symbol by name
 action.GotoAction.text:
-  text: F_ind Action...
+  text: F_ind Action…
 action.GotoAction.description:
   text: Quickly navigate to action by name
 action.GotoLine.text:
-  text: _Line...
+  text: _Line…
 action.GotoLine.description:
   text: Navigate to a line in editor by its number
 action.GotoDeclaration.text:
@@ -883,7 +883,7 @@ action.GotoPreviousError.text:
 action.GotoPreviousError.description:
   text: Navigate to the previous highlighted error in the active editor
 action.GotoRelated.text:
-  text: _Related File...
+  text: _Related File…
 action.GotoRelated.description:
   text: Navigate to one of the related or linked files
 action.MethodDown.text:
@@ -933,15 +933,15 @@ action.VcsShowPrevChangeMarker.description:
 group.CodeMenu.text:
   text: _Code
 action.SurroundWith.text:
-  text: _Surround With...
+  text: _Surround With…
 action.SurroundWith.description:
   text: Surround selected code fragment with if, while, try/catch or other construct
 action.Generate.text:
-  text: Generate...
+  text: Generate…
 action.Generate.description:
   text: Generate constructor, getter or setter method, etc.
 action.Unwrap.text:
-  text: Un_wrap/Remove...
+  text: Un_wrap/Remove…
 action.Unwrap.description:
   text: Safely unwraps or removes the selected scope
 group.CodeCompletionGroup.text:
@@ -969,11 +969,11 @@ action.ClassNameCompletion.text:
 action.ClassNameCompletion.description:
   text: Complete class name and add import for it
 action.InsertLiveTemplate.text:
-  text: Insert Live _Template...
+  text: Insert Live _Template…
 action.InsertLiveTemplate.description:
   text: Show popup list of live templates starting with the specified prefix
 action.SurroundWithLiveTemplate.text:
-  text: Surround with Live Tem_plate...
+  text: Surround with Live Tem_plate…
 action.SurroundWithLiveTemplate.description:
   text: Surrounds the selection with one of the template
 action.CommentByLineComment.text:
@@ -985,7 +985,7 @@ action.CommentByBlockComment.text:
 action.CommentByBlockComment.description:
   text: Comment/uncomment code with block comments
 action.ReformatCode.text:
-  text: _Reformat Code...
+  text: _Reformat Code…
 action.ReformatCode.description:
   text: Reformat code
 action.AutoIndentLines.text:
@@ -993,7 +993,7 @@ action.AutoIndentLines.text:
 action.AutoIndentLines.description:
   text: Indent current line or selected block according to the code style settings
 not.action.OptimizeImports.text:
-  text: Optimi_ze Imports...
+  text: Optimi_ze Imports…
 not.action.OptimizeImports.description:
   text: Remove unused imports and reorder/reorganize imports
 action.RearrangeCode.text:
@@ -1027,33 +1027,33 @@ action.MoveLineUp.description:
 group.AnalyzeMenu.text:
   text: Analy_ze
 action.InspectCode.text:
-  text: _Inspect Code...
+  text: _Inspect Code…
 action.InspectCode.description:
   text: Inspect code
 action.ViewOfflineInspection.text:
-  text: View _Offline Inspection Results...
+  text: View _Offline Inspection Results…
 action.ViewOfflineInspection.description:
   text: Load offline inspection results
 action.ShowPackageDeps.text:
-  text: _Dependencies...
+  text: _Dependencies…
 action.ShowPackageDeps.description:
   text: Browse code chosen analysis item depends on
 action.ShowBackwardPackageDeps.text:
-  text: _Backward Dependencies...
+  text: _Backward Dependencies…
 action.ShowBackwardPackageDeps.description:
   text: Browse code chosen analysis item used in
 action.ShowModulesDependencies.text:
-  text: _Module Dependencies...
+  text: _Module Dependencies…
 action.ShowModulesDependencies.description:
   text: Show dependencies between modules in project
 group.RefactoringMenu.text:
   text: _Refactor
 action.RenameElement.text:
-  text: _Rename...
+  text: _Rename…
 action.RenameElement.description:
   text: Rename the selected symbol and correct all references
 action.ChangeSignature.text:
-  text: Change Si_gnature...
+  text: Change Si_gnature…
 action.ChangeSignature.description:
   text: Change signature of the selected method or class and correct all references
 action.MoveToTheLeft.text:
@@ -1065,85 +1065,85 @@ action.MoveToTheRight.text:
 action.MoveToTheRight.description:
   text: Move parameter right
 action.ChangeTypeSignature.text:
-  text: T_ype Migration...
+  text: T_ype Migration…
 action.ChangeTypeSignature.description:
   text: Change type of the return type of the method, field, parameter, variable or class type arguments and correct all references
 action.Move.text:
-  text: _Move...
+  text: _Move…
 action.Move.description:
   text: Move the selected class, method, package or static member to another package or class and correct all references
 action.CopyElement.text:
-  text: C_opy...
+  text: C_opy…
 action.CopyElement.description:
   text: Create a copy of the selected class, file(s) or directory(es)
 action.CloneElement.text:
-  text: Clo_ne...
+  text: Clo_ne…
 action.CloneElement.description:
   text: Create a copy of the selected class, file or directory in the same package/directory
 action.SafeDelete.text:
-  text: Safe _Delete...
+  text: Safe _Delete…
 action.SafeDelete.description:
   text: Delete the selected class, method or field, checking for usages
 action.ExtractMethod.text:
-  text: _Method...
+  text: _Method…
 action.ExtractMethod.description:
   text: Turn the selected code fragment into a method
 action.IntroduceParameterObject.text:
-  text: Parameter Ob_ject...
+  text: Parameter Ob_ject…
 action.IntroduceParameterObject.description:
   text: Replaces method parameters list with object
 action.ExtractClass.text:
-  text: Cla_ss...
+  text: Cla_ss…
 action.ExtractClass.description:
   text: Extract Delegate
 action.IntroduceVariable.text:
-  text: _Variable...
+  text: _Variable…
 action.IntroduceVariable.description:
   text: Put a result of the selected expression into a variable
 action.IntroduceField.text:
-  text: _Field...
+  text: _Field…
 action.IntroduceField.description:
   text: Put a result of the selected expression into a field
 action.IntroduceConstant.text:
-  text: _Constant...
+  text: _Constant…
 action.IntroduceConstant.description:
   text: Replace selected expression with a constant (static final field)
 action.IntroduceParameter.text:
-  text: _Parameter...
+  text: _Parameter…
 action.IntroduceParameter.description:
   text: Turn the selected expression into method parameter
 action.ExtractInterface.text:
-  text: _Interface...
+  text: _Interface…
 action.ExtractInterface.description:
   text: Extract interface from the selected class
 action.ExtractModule.text:
-  text: _Module...
+  text: _Module…
 action.ExtractModule.description:
   text: Extract module from the selected class
 action.ExtractSuperclass.text:
-  text: S_uperclass...
+  text: S_uperclass…
 action.ExtractSuperclass.description:
   text: Extract superclass from the selected class
 group.IntroduceActionsGroup.text:
   text: E_xtract
 action.MembersPullUp.text:
-  text: Pu_ll Members Up...
+  text: Pu_ll Members Up…
 action.MembersPullUp.description:
   text: Pull class members to superclass or implemented interface
 action.MemberPushDown.text:
-  text: Pu_sh Members Down...
+  text: Pu_sh Members Down…
 action.MemberPushDown.description:
   text: Push class members down to directly inheriting subclasses
 action.Inline.text:
-  text: I_nline...
+  text: I_nline…
 action.Inline.description:
   text: Inline the selected method or variable
 action.Type Migration.text:
-  text: Type Migration...
+  text: Type Migration…
 action.Type Migration.description:
   text: Migrate one type to another
 action.ExtractInclude.text:
-  text: _Include File...
+  text: _Include File…
 action.ExtractInclude.description:
   text: Turn the selected code fragment into included file
 group.BuildMenu.text:
@@ -1171,7 +1171,7 @@ action.RunAPT.1.text:
 action.RunAPT.description:
   text: Run Annotation Processors on the selected scope
 action.GenerateAntBuild.text:
-  text: _Generate Ant Build...
+  text: _Generate Ant Build…
 action.GenerateAntBuild.description:
   text: Generate Ant Build File from the Project
 action.BuildAllArtifacts.text:
@@ -1183,7 +1183,7 @@ group.RunMenu.text:
 group.RunnerActions.text:
   text: Run/Debug
 action.editRunConfigurations.text:
-  text: Edit Configu_rations...
+  text: Edit Configu_rations…
 action.editRunConfigurations.description:
   text: Open edit Run/Debug configurations dialog
 action.Stop.text:
@@ -1231,7 +1231,7 @@ action.Resume.text:
 action.Resume.description:
   text: Resume program execution
 action.EvaluateExpression.text:
-  text: _Evaluate Expression...
+  text: _Evaluate Expression…
 action.EvaluateExpression.description:
   text: Evaluate arbitrary expression
 action.QuickEvaluateExpression.text:
@@ -1255,13 +1255,13 @@ action.ToggleTemporaryLineBreakpoint.text:
 action.ToggleTemporaryLineBreakpoint.description:
   text: Toggle temporary line breakpoint at caret
 action.ViewBreakpoints.text:
-  text: View Brea_kpoints...
+  text: View Brea_kpoints…
 action.ViewBreakpoints.description:
   text: View and manage all breakpoints and watchpoints
 action.EditBreakpoint.text:
   text: Edit
 action.ExportThreads.text:
-  text: Export T_hreads...
+  text: Export T_hreads…
 action.ExportThreads.description:
   text: Save all threads information to a text file or clipboard
 action.Runner.RestoreLayout.text:
@@ -1327,11 +1327,11 @@ action.Debugger.FocusOnBreakpoint.description:
 group.ToolsMenu.text:
   text: _Tools
 action.SaveAsTemplate.text:
-  text: Save as L_ive Template...
+  text: Save as L_ive Template…
 action.SaveAsTemplate.description:
   text: Save the selected text as live template
 action.SaveFileAsTemplate.text:
-  text: Save File as Temp_late...
+  text: Save File as Temp_late…
 action.SaveFileAsTemplate.description:
   text: Save current file as template
 group.Macros.text:
@@ -1353,7 +1353,7 @@ action.EditMacros.text:
 action.EditMacros.description:
   text: Configure existing macros
 action.PlaySavedMacrosAction.text:
-  text: Play Saved Macros...
+  text: Play Saved Macros…
 action.PlaySavedMacrosAction.description:
   text: Play Saved Macros
 group.MacrosGroup.text:
@@ -1367,9 +1367,9 @@ action.GenerateDTD.text:
 group.ExternalToolsGroup.text:
   text: External Tools
 action.PsiViewer.text:
-  text: _View PSI Structure...
+  text: _View PSI Structure…
 action.PsiViewerForContext.text:
-  text: View PSI Structure of Cu_rrent File...
+  text: View PSI Structure of Cu_rrent File…
 action.DebugListen.text:
   text: Throw Debug Exception
 action.VirtualFileInfo.text:
@@ -1387,7 +1387,7 @@ action.DecodeBytesAction.text:
 action.ReloadProjectAction.text:
   text: Reload project
 action.LocalVcs.ShowStatistics.text:
-  text: Show Local VCS Statistics...
+  text: Show Local VCS Statistics…
 action.LocalVcs.ShowStatistics.description:
   text: Show Local VCS statistics
 action.LocalVcs.ShowRepHistory.text:
@@ -1639,7 +1639,7 @@ action.Help.Youtube.text:
 action.Help.Youtube.description:
   text: View short live demos introducing features of Consulo.
 action.CheckForUpdate.text:
-  text: _Check for Update...
+  text: _Check for Update…
 action.CheckForUpdate.description:
   text: Check for available update
 action.About.text:
@@ -1695,7 +1695,7 @@ action.GotoBookmark8.text:
 action.GotoBookmark9.text:
   text: Go to Bookmark 9
 action.XDebugger.SetValue.text:
-  text: Set Value...
+  text: Set Value…
 action.XDebugger.SetValue.description:
   text: Modify value of selected node
 action.XDebugger.CopyValue.text:
@@ -1719,7 +1719,7 @@ action.XDebugger.JumpToTypeSource.text:
 action.XDebugger.JumpToTypeSource.description:
   text: Open source of the selected value's type
 action.XDebugger.Inspect.text:
-  text: Inspect...
+  text: Inspect…
 action.Debugger.Tree.AddToWatches.text:
   text: Add to Watches
 action.Debugger.Tree.EvaluateInConsole.text:
@@ -1729,9 +1729,9 @@ action.XDebugger.RemoveWatch.text:
 action.XDebugger.RemoveAllWatches.text:
   text: Remove All Watches
 action.XDebugger.NewWatch.text:
-  text: New Watch...
+  text: New Watch…
 action.XDebugger.EditWatch.text:
-  text: Edit...
+  text: Edit…
 action.XDebugger.AutoTooltip.text:
   text: Value auto tooltip
 action.XDebugger.AutoTooltip.description:
@@ -1753,7 +1753,7 @@ action.XDebugger.UnmuteOnStop.text:
 group.XDebugger.settings.text:
   text: Settings
 action.Debugger.AdjustArrayRange.text:
-  text: Adjust Range...
+  text: Adjust Range…
 action.Debugger.Inspect.text:
   text: Inspect
 action.Debugger.CopyValue.text:
@@ -1769,11 +1769,11 @@ action.Debugger.CompareValueWithClipboard.text:
 action.Debugger.CompareValueWithClipboard.description:
   text: Compare value of selected node with clipboard text
 action.Debugger.CustomizeContextView.text:
-  text: Customize Data Views...
+  text: Customize Data Views…
 action.Debugger.CustomizeThreadsView.text:
-  text: Customize Threads View...
+  text: Customize Threads View…
 action.Debugger.NewWatch.text:
-  text: New Watch...
+  text: New Watch…
 action.Debugger.EditWatch.text:
   text: Edit Watch
 action.Debugger.EditFrameSource.text:
@@ -1793,7 +1793,7 @@ action.Debugger.RemoveWatch.text:
 action.Debugger.ViewAsGroup.text:
   text: View as
 action.Debugger.SetValue.text:
-  text: Set Value...
+  text: Set Value…
 action.Debugger.ShowFrame.text:
   text: Show Frame
 action.Debugger.ResumeThread.text:
@@ -1807,7 +1807,7 @@ action.Debugger.MuteBreakpoints.text:
 action.Debugger.MuteBreakpoints.description:
   text: Mute/unmute all breakpoints in a debug session.
 action.Debugger.MarkObject.text:
-  text: Mark Object...
+  text: Mark Object…
 action.Debugger.MarkObject.unmark.text:
   text: Unmark Object
 action.Debugger.MarkObject.description:
@@ -1821,7 +1821,7 @@ action.Debugger.UnmuteOnStop.text:
 action.Debugger.AutoRenderer.text:
   text: Auto
 action.BuildArtifact.text:
-  text: Build Artifacts...
+  text: Build Artifacts…
 action.BuildArtifact.description:
   text: Select and build artifacts configured in the project
 group.EditorPopupMenu.text:
@@ -2025,7 +2025,7 @@ action.Graph.show.edge.label:
 action.Graph.show.selected.node.dependencies.label:
   text: Show selected nodes with dependencies
 action.Graph.export.to.file:
-  text: Export to file...
+  text: Export to file…
 action.Graph.export.to.file.dialog.caption:
   text: Export to file
 action.Graph.choose.directory:
@@ -2105,19 +2105,19 @@ action.ChangesView.RemoveDeleted.text:
 action.ChangesView.RemoveDeleted.description:
   text: Schedule selected files to be removed from VCS
 action.ChangesView.Rename.text:
-  text: Edit Changelist...
+  text: Edit Changelist…
 action.ChangesView.Rename.description:
   text: Edit name and description of selected changelist
 action.ChangesView.CreatePatch.text:
-  text: Create Patch...
+  text: Create Patch…
 action.ChangesView.CreatePatch.description:
   text: Create a patch from the selected changes
 action.ChangesView.ApplyPatch.text:
-  text: Apply Patch...
+  text: Apply Patch…
 action.ChangesView.ApplyPatch.description:
   text: Apply a patch to the sources of the project
 action.ChangesView.Shelve.text:
-  text: Shelve Changes...
+  text: Shelve Changes…
 action.ChangesView.Shelve.description:
   text: Save changes to an external patch file and remove them from the code
 action.ShelvedChanges.Unshelve.text:
@@ -2125,11 +2125,11 @@ action.ShelvedChanges.Unshelve.text:
 action.ShelvedChanges.Unshelve.description:
   text: Apply saved changes to current codebase
 action.ShelvedChanges.Rename.text:
-  text: Rename...
+  text: Rename…
 action.ShelvedChanges.Rename.description:
   text: Rename shelved changelist
 action.ChangesView.Browse.text:
-  text: Browse Changes...
+  text: Browse Changes…
 action.ChangesView.Browse.description:
   text: View history of committed changes
 action.ChangesView.Edit.text:
@@ -2137,11 +2137,11 @@ action.ChangesView.Edit.text:
 action.ChangesView.Edit.description:
   text: Check out selected files for editing
 action.ChangesView.Ignore.text:
-  text: Ignore...
+  text: Ignore…
 action.ChangesView.Ignore.description:
   text: Do not show selected files as unversioned
 action.ChangesView.CreatePatchFromChanges.text:
-  text: Create Patch...
+  text: Create Patch…
 action.ChangesView.CreatePatchFromChanges.description:
   text: Create a patch from the selected changes
 action.CommittedChanges.Refresh.text:
@@ -2171,7 +2171,7 @@ action.ChangeFileEncodingAction.text:
 action.ChangeFileEncodingAction.description:
   text: Change file encoding
 action.ConfigureFileDefaultEncoding.text:
-  text: Configure Default Encoding...
+  text: Configure Default Encoding…
 action.ConfigureFileDefaultEncoding.description:
   text: Configure default encoding for files, files in directories or in the whole project
 action.ChangeFileEncodingGroupAction.text:
@@ -2183,7 +2183,7 @@ action.VcsHistory.ShowAllAffected.text:
 action.VcsHistory.ShowAllAffected.description:
   text: Show all changes made in the chosen revision
 action.AddFrameworkSupport.text:
-  text: Add Framework Support...
+  text: Add Framework Support…
 action.Diff.FocusOppositePane.text:
   text: Select opposite pane in diff view
 action.Diff.PrevChange.text:
@@ -2201,15 +2201,15 @@ action.FileChooser.Refresh.text:
 action.FileChooser.Refresh.description:
   text: Refresh the file system tree
 action.FileChooser.Delete.text:
-  text: Delete...
+  text: Delete…
 action.FileChooser.Delete.text.description:
   text: Delete
 action.FileChooser.NewFolder.text:
-  text: New Folder...
+  text: New Folder…
 action.FileChooser.NewFolder.description:
   text: Create new folder
 action.FileChooser.NewFile.text:
-  text: New File...
+  text: New File…
 action.FileChooser.NewFile.description:
   text: Create new file
 action.FileChooser.GotoHome.text:
@@ -2275,7 +2275,7 @@ action.CommittedChanges.Revert.text:
 action.CommittedChanges.Revert.description:
   text: Apply the reverse of the selected changes to the working copy
 action.OpenDirectoryProject.text:
-  text: Open Directory...
+  text: Open Directory…
 action.OpenDirectoryProject.description:
   text: Start editing code in the specified directory
 action.WelcomeScreen.OpenDirectoryProject.text:
@@ -2287,7 +2287,7 @@ action.WelcomeScreen.CreateDirectoryProject.text:
 action.WelcomeScreen.CreateDirectoryProject.description:
   text: Create a new project.
 action.NewDirectoryProject.text:
-  text: New Project...
+  text: New Project…
 action.NewDirectoryProject.description:
   text: Create a new project
 action.ShelvedChanges.Diff.text:
@@ -2423,11 +2423,11 @@ action.Graph.Current.Node.Dependencies.Filter.text:
 group.VcsToobarActions.text:
   text: VCS Actions
 action.StartupWizard.text:
-  text: Configure Plugins...
+  text: Configure Plugins…
 action.StartupWizard.description:
   text: Run a wizard for selecting the set of enabled plugins
 action.PopupHector.text:
-  text: Configure Current File Analysis...
+  text: Configure Current File Analysis…
 action.PopupHector.description:
   text: Show panel to configure highlighting mode for the current file
 group.EditorTabPopupMenu.text:
@@ -2455,7 +2455,7 @@ group.AnalyzeJavaMenu.text:
 group.AnalyzeJavaMenu.description:
   text: Analyze Java Menu
 action.InvalidateCaches.text:
-  text: Invalidate Caches / Restart...
+  text: Invalidate Caches / Restart…
 action.InvalidateCaches.description:
   text: Force rebuild of all caches and indices on next startup
 group.ToolsBasicGroup.text:
@@ -2469,7 +2469,7 @@ action.NewElementToolbarAction.text:
 action.ShowRegistry.text:
   text: Registry
 action.ExportTestResults.text:
-  text: Export Test Results...
+  text: Export Test Results…
 action.ExportTestResults.description:
   text: Export test results to the file
 action.TogglePowerSave.text:
@@ -2497,7 +2497,7 @@ action.UnmarkRoot.text:
 action.mark.as.excluded.confirm.message:
   text: Are you sure you would like to exclude {0} from the project? You can restore excluded directories later using the Project Structure dialog.
 action.CreateLibraryFromFile.text:
-  text: Add as Library...
+  text: Add as Library…
 action.ImportModuleFromImlFile.text:
   text: Import Module
 action.ImportModuleFromImlFile.description:
@@ -2505,17 +2505,17 @@ action.ImportModuleFromImlFile.description:
 group.MarkRootGroup.text:
   text: Mark Directory As
 action.CreateLauncherScript.text:
-  text: Create Command-line Launcher...
+  text: Create Command-line Launcher…
 action.CreateLauncherScript.description:
   text: Create a script for opening files and projects from the command line
 action.CreateDesktopEntry.text:
-  text: Create Desktop Entry...
+  text: Create Desktop Entry…
 action.CreateDesktopEntry.description:
   text: Create a desktop entry for integration with system application menu
 group.EditorGutterPopupMenu.text:
   text: Editor Gutter Popup Menu
 action.ExcludeFromProject.text:
-  text: Exclude From Project...
+  text: Exclude From Project…
 group.MarkFileAs.text:
   text: Mark File As
 action.MarkAsPlainTextAction.text:
@@ -2607,7 +2607,7 @@ action.Console.SplitLine.text:
 group.$LRU.text:
   text: Open _Recent
 action.ManageRecentProjects.text:
-  text: Manage Projects...
+  text: Manage Projects…
 group.$LRU.description:
   text: List of recently opened projects
 action.RecentLocations.text:
@@ -2647,7 +2647,7 @@ action.CopySourceRootPath.text:
 action.CopyFileName.text:
   text: File Name
 group.CopyReferencePopupGroup.text:
-  text: Copy Path...
+  text: Copy Path…
 group.RevealGroup.text:
   text: Open In
 group.FilePropertiesGroup.text:
@@ -2661,7 +2661,7 @@ group.ViewStatusBarWidgetsGroup.text:
 group.ViewStatusBarWidgetsGroup.description:
   text: Show/hide status bar widgets
 action.StopBackgroundProcesses.text:
-  text: Stop Background Processes...
+  text: Stop Background Processes…
 action.StopBackgroundProcesses.description:
   text: Stop Background processes
 action.IdeScriptingConsole.text:
@@ -2669,11 +2669,11 @@ action.IdeScriptingConsole.text:
 action.IdeScriptingConsole.description:
   text: Open IDE scripting console
 action.Vcs.QuickListPopupAction.text:
-  text: VCS Operations Popup...
+  text: VCS Operations Popup…
 action.Vcs.QuickListPopupAction.description:
   text: Context aware popup with list of commonly used VCS actions
 action.ChangesView.ApplyPatchFromClipboard.text:
-  text: Apply Patch from Clipboard...
+  text: Apply Patch from Clipboard…
 action.ChangesView.ApplyPatchFromClipboard.description:
   text: Apply a patch to the sources of the project
 action.SearchEverywhere.text:
@@ -2763,4 +2763,63 @@ group.OverrideFileTypeAction.fromNamedPlugin:
 action.ChangeToThisFileTypeAction.description:
   text: Override File Type to ''{0}''
 action.AnalyzeStacktrace.text:
-  text: _Stack Trace or Thread Dump...
+  text: _Stack Trace or Thread Dump…
+action.RunDashboard.AddType.text:
+  text: Run Configuration Type…
+group.ServiceView.AddService.text:
+  text: Add Service
+action.RunDashboard.Run.text:
+  text: Run
+action.RunDashboard.Debug.text:
+  text: Debug
+action.RunDashboard.Stop.text:
+  text: Stop
+action.RunDashboard.EditConfiguration.text:
+  text: Edit Configuration
+action.RunDashboard.CopyConfiguration.text:
+  text: Copy Configuration
+action.RunDashboard.HideConfiguration.text:
+  text: Hide Configuration
+action.RunDashboard.RestoreHiddenConfigurations.text:
+  text: Restore Hidden Configurations
+action.RunDashboard.RemoveType.text:
+  text: Remove Configuration Type from Services
+action.RunDashboard.OpenRunningConfigInNewTab.text:
+  text: Open Running Configuration in New Tab
+action.RunDashboard.ClearContent.text:
+  text: Clear Content
+action.RunDashboard.RestoreConfiguration.text:
+  text: Restore Configuration
+action.RunDashboard.GroupConfigurations.text:
+  text: Group Configurations
+action.RunDashboard.UngroupConfigurations.text:
+  text: Ungroup Configurations
+action.ServiceView.GroupByContributor.text:
+  text: Service Type
+action.ServiceView.GroupByServiceGroups.text:
+  text: Service Groups
+action.ServiceView.OpenInNewTab.text:
+  text: Open in New Tab
+action.ServiceView.OpenEachInNewTab.text:
+  text: Open Each in New Tab
+action.ServiceView.SplitByType.text:
+  text: Open Each Type in New Tab
+action.ServiceView.OpenInToolWindow.text:
+  text: Open in Separate Tool Window
+action.ServiceView.JumpToServices.text:
+  text: Jump to Services
+action.ServiceView.ShowServices.text:
+  text: Show Services Tree
+action.ServiceView.SelectActiveService.text:
+  text: Always Select Active Service
+action.ServiceView.ConfigureServices.text:
+  text: Configure Services Tool Window
+action.RunDashboard.GroupByType.text:
+  text: Type
+action.RunDashboard.GroupByStatus.text:
+  text: Status
+action.RunDashboard.AddType.text:
+  text: Run Configuration Type…
+action.UpdateRunningApplication.text:
+  text: Update Running Application
+

@@ -35,6 +35,7 @@ import java.util.function.Supplier;
 
 public class RunContentDescriptor implements Disposable {
   public static final Key<RunContentDescriptor> KEY = Key.create("Descriptor");
+  public static final Key<String> CONTENT_TOOL_WINDOW_ID_KEY = Key.create("ContentToolWindowId");
 
   private ExecutionConsole myExecutionConsole;
   private ProcessHandler myProcessHandler;
@@ -83,6 +84,10 @@ public class RunContentDescriptor implements Disposable {
     myActivationCallback = activationCallback;
     if (myExecutionConsole != null) {
       Disposer.register(this, myExecutionConsole);
+    }
+
+    if (processHandler != null) {
+      setContentToolWindowId(processHandler.getUserData(CONTENT_TOOL_WINDOW_ID_KEY));
     }
 
     myRestartActions = restartActions == null ? AnAction.EMPTY_ARRAY : restartActions;

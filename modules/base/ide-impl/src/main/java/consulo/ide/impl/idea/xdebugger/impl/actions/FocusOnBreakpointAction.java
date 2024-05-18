@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import consulo.ide.impl.idea.execution.ui.actions.AbstractFocusOnAction;
+import consulo.execution.impl.internal.ui.layout.action.AbstractFocusOnAction;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 
 public class FocusOnBreakpointAction extends AbstractFocusOnAction {

@@ -23,7 +23,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 import consulo.localize.LocalizeValue;

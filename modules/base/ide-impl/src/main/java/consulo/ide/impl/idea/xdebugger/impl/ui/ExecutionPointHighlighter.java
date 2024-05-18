@@ -25,7 +25,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;

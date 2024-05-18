@@ -19,10 +19,11 @@ module consulo.project.api {
   exports consulo.project.localize;
 
   exports consulo.project.internal to consulo.ide.impl,
-                                      consulo.desktop.awt.ide.impl,
-                                      consulo.sand.language.plugin,
-                                      consulo.application.impl,
-                                      consulo.component.impl,
-                                      consulo.version.control.system.api,
-                                      consulo.project.impl;
+    consulo.desktop.awt.ide.impl,
+    consulo.sand.language.plugin,
+    consulo.application.impl,
+    consulo.component.impl,
+    consulo.version.control.system.api,
+    consulo.project.impl,
+    consulo.execution.impl;
 }

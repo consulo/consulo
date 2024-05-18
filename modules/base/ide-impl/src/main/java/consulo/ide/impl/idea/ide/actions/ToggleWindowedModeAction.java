@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 
 public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {

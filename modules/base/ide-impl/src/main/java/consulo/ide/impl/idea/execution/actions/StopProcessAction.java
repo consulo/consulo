@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.execution.actions;
 
+import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.KillableProcessHandler;
 import consulo.process.ProcessHandler;
-import consulo.application.AllIcons;
 import consulo.process.ProcessHandlerStopper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -59,7 +59,7 @@ public class StopProcessAction extends DumbAwareAction implements AnAction.Trans
         KillableProcessHandler killableProcess = (KillableProcessHandler) processHandler;
         if (killableProcess.canKillProcess()) {
           // 'force quite' action presentation
-          icon = AllIcons.Debugger.KillProcess;
+          icon = PlatformIconGroup.debuggerKillprocess();
           description = "Kill process";
         }
       }

@@ -172,9 +172,9 @@ public abstract class TreeTraversal {
   }
 
   public static abstract class It<T> extends JBIterator<T> {
-    protected final Function<T, ? extends Iterable<? extends T>> tree;
+    protected final Function<? super T, ? extends Iterable<? extends T>> tree;
 
-    protected It(Function<T, ? extends Iterable<? extends T>> tree) {
+    protected It(Function<? super T, ? extends Iterable<? extends T>> tree) {
       this.tree = tree;
     }
   }
@@ -191,7 +191,7 @@ public abstract class TreeTraversal {
       throw new UnsupportedOperationException();
     }
 
-    protected TracingIt(Function<T, ? extends Iterable<? extends T>> tree) {
+    protected TracingIt(Function<? super T, ? extends Iterable<? extends T>> tree) {
       super(tree);
     }
 
@@ -364,7 +364,7 @@ public abstract class TreeTraversal {
 
     H last;
 
-    protected DfsIt(Function<T, ? extends Iterable<? extends T>> tree) {
+    protected DfsIt(Function<? super T, ? extends Iterable<? extends T>> tree) {
       super(tree);
     }
 
@@ -385,7 +385,7 @@ public abstract class TreeTraversal {
 
   private final static class PreOrderIt<T> extends DfsIt<T, P1<T>> {
 
-    PreOrderIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
+    PreOrderIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
       super(tree);
       last = P1.create(roots);
     }
@@ -463,7 +463,7 @@ public abstract class TreeTraversal {
 
     P2<T> cur, max;
 
-    InterleavedIt(@Nonnull Iterable<? extends T> roots, Function<T, ? extends Iterable<? extends T>> tree) {
+    InterleavedIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
       super(tree);
       last = P2.create(roots);
       cur = max = last;
@@ -662,14 +662,14 @@ public abstract class TreeTraversal {
     }
 
 
-    final Iterator<? extends T> iterator(@Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
+    final Iterator<? extends T> iterator(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
       if (it != null) return it;
       it = iterable(tree).iterator();
       empty = itle == null || !it.hasNext();
       return it;
     }
 
-    final Iterable<? extends T> iterable(@Nonnull Function<T, ? extends Iterable<? extends T>> tree) {
+    final Iterable<? extends T> iterable(@Nonnull Function<? super T, ? extends Iterable<? extends T>> tree) {
       return itle != null ? itle : JBIterable.from(itle = tree.apply(node));
     }
 

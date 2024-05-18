@@ -26,7 +26,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -67,11 +66,30 @@ public interface ToolWindow extends BusyObject {
   boolean isVisible();
 
   /**
+   * @throws IllegalStateException if tool window isn't installed.
+   */
+  @RequiredUIAccess
+  default void show() {
+    show(null);
+  }
+
+  /**
    * @param runnable A command to execute right after the window shows up.  The call is asynchronous since it may require animation.
    * @throws IllegalStateException if tool window isn't installed.
    */
   @RequiredUIAccess
   void show(@Nullable Runnable runnable);
+
+  /**
+   * Hides tool window. If the window is active then the method deactivates it.
+   * Does nothing if tool window isn't visible.
+   *
+   * @throws IllegalStateException if tool window isn't installed.
+   */
+  @RequiredUIAccess
+  default void hide() {
+    hide(null);
+  }
 
   /**
    * Hides tool window. If the window is active then the method deactivates it.

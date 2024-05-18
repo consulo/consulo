@@ -17,10 +17,10 @@ package consulo.execution.configuration;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.application.dumb.PossiblyDumbAware;
 import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
  * @see ConfigurationTypeBase
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ConfigurationType {
+public interface ConfigurationType extends PossiblyDumbAware {
   ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
 
   /**

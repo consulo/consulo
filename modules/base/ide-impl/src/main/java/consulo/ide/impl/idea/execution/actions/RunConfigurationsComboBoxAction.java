@@ -25,7 +25,7 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
+import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;

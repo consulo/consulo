@@ -25,7 +25,7 @@ import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.ui.ErrorLabel;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ide.impl.idea.ui.popup.ActionPopupStep;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;

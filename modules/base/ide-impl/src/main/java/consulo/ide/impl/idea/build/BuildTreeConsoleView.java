@@ -47,6 +47,7 @@ import consulo.navigation.NonNavigatable;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -1258,6 +1259,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
     private int myDurationWidth;
     private int myDurationOffset;
 
+    @RequiredUIAccess
     @Override
     public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       super.customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);

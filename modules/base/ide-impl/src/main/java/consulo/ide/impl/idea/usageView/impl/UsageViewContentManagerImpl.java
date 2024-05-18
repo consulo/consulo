@@ -8,7 +8,7 @@ import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;

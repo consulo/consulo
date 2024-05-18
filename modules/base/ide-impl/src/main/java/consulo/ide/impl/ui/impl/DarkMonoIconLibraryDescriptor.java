@@ -17,6 +17,7 @@ package consulo.ide.impl.ui.impl;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.IconLibraryDescriptor;
+import consulo.ui.image.IconLibraryManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -25,6 +26,8 @@ import jakarta.annotation.Nullable;
  * @since 24/08/2023
  */
 public class DarkMonoIconLibraryDescriptor implements IconLibraryDescriptor {
+  public static final String ID = "dark_mono";
+
   @Nonnull
   @Override
   public String getLibraryId() {
@@ -34,6 +37,12 @@ public class DarkMonoIconLibraryDescriptor implements IconLibraryDescriptor {
   @Nullable
   @Override
   public String getBaseLibraryId() {
+    return IconLibraryManager.DARK_LIBRARY_ID;
+  }
+
+  @Nullable
+  @Override
+  public String getInverseLibraryId() {
     return LightMonoIconLibraryDescriptor.ID;
   }
 

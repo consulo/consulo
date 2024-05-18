@@ -15,14 +15,19 @@
  */
 package consulo.project.ui.wm.dock;
 
-import consulo.disposer.Disposable;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
-public interface DockContainerFactory extends Disposable {
+@ExtensionAPI(ComponentScope.PROJECT)
+public interface DockContainerFactory {
+  @Nonnull
+  String getId();
 
-  DockContainer createContainer(DockableContent content);
+  DockContainer createContainer(DockManager dockManager, DockableContent content);
 
   interface Persistent extends DockContainerFactory {
-    DockContainer loadContainerFrom(Element element);
+    DockContainer loadContainerFrom(DockManager dockManager, Element element);
   }
 }

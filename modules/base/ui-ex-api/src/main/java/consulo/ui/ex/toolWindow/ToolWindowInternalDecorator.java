@@ -18,7 +18,6 @@ package consulo.ui.ex.toolWindow;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -70,5 +69,9 @@ public interface ToolWindowInternalDecorator extends Disposable {
   }
 
   default void setAdditionalGearActions(@Nullable ActionGroup gearActions) {
+  }
+
+  default int getHeaderHeight() {
+    throw new AbstractMethodError("Desktop Only");
   }
 }

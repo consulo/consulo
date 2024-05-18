@@ -21,10 +21,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.AsyncDataContext;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
+import consulo.dataContext.*;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ide.impl.dataContext.BaseDataManager;
@@ -147,7 +144,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
       dataProvider = new TypeSafeDataProviderAdapter((TypeSafeDataProvider)component);
     }
     else if (component instanceof JComponent) {
-      dataProvider = getDataProvider((JComponent)component);
+      dataProvider = DataManager.getDataProvider((JComponent)component);
     }
     // special case for desktop impl. Later removed since we don't want use AWT
     else if (component instanceof FromSwingComponentWrapper) {

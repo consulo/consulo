@@ -24,7 +24,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;

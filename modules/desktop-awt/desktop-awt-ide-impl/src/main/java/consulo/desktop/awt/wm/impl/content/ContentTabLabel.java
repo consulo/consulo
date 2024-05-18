@@ -18,7 +18,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ide.impl.idea.util.ui.TimedDeadzone;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;

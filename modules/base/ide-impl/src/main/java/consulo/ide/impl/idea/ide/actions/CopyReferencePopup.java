@@ -14,7 +14,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.ui.ErrorLabel;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.ui.ex.awt.JBUIScale;

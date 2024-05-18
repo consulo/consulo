@@ -356,7 +356,7 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   @Nonnull
   @Override
   public String getAlternativeBrowserPath() {
-    return GeneralSettings.getInstance().getBrowserPath();
+    return GeneralSettings.getInstance().getBrowserPathOrDefault();
   }
 
   /**

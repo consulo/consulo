@@ -26,7 +26,7 @@ import consulo.project.event.ProjectManagerAdapter;
 import consulo.ide.impl.idea.openapi.ui.ShadowAction;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.wm.*;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;

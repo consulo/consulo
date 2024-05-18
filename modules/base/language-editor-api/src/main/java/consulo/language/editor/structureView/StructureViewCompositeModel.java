@@ -183,7 +183,7 @@ public class StructureViewCompositeModel extends StructureViewModelBase implemen
 
           @Nullable
           @Override
-          public Image getIcon(boolean unused) {
+          public Image getIcon() {
             return view.icon;
           }
         };

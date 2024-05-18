@@ -16,7 +16,7 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 
 import javax.swing.*;
 import java.awt.*;

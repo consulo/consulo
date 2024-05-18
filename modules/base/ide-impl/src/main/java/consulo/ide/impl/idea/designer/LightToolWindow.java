@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ide.impl.idea.ui.InplaceButton;

@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
+import consulo.ui.ex.awt.LinkMouseListenerBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

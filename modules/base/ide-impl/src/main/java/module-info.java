@@ -341,14 +341,10 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.dvcs.push.ui;
   exports consulo.ide.impl.idea.dvcs.ui;
   exports consulo.ide.impl.idea.errorreport;
-  exports consulo.ide.impl.idea.execution;
   exports consulo.ide.impl.idea.execution.actions;
-  exports consulo.ide.impl.idea.execution.compound;
   exports consulo.ide.impl.idea.execution.configuration;
   exports consulo.ide.impl.idea.execution.configurations;
   exports consulo.ide.impl.idea.execution.console;
-  exports consulo.ide.impl.idea.execution.dashboard;
-  exports consulo.ide.impl.idea.execution.dashboard.tree;
   exports consulo.ide.impl.idea.execution.filters;
   exports consulo.ide.impl.idea.execution.filters.impl;
   exports consulo.ide.impl.idea.execution.impl;
@@ -356,13 +352,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.execution.lineMarker;
   exports consulo.ide.impl.idea.execution.process;
   exports consulo.ide.impl.idea.execution.rmi;
-  exports consulo.ide.impl.idea.execution.runners;
   exports consulo.ide.impl.idea.execution.testframework.actions;
   exports consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics;
   exports consulo.ide.impl.idea.execution.ui;
-  exports consulo.ide.impl.idea.execution.ui.actions;
-  exports consulo.ide.impl.idea.execution.ui.layout;
-  exports consulo.ide.impl.idea.execution.ui.layout.actions;
   exports consulo.ide.impl.idea.execution.ui.layout.impl;
   exports consulo.ide.impl.idea.execution.util;
   exports consulo.ide.impl.idea.execution.wsl;

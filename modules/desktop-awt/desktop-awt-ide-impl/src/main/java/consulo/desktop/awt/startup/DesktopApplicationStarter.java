@@ -40,7 +40,7 @@ import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.ui.IdeEventQueue;
-import consulo.desktop.awt.uiOld.DesktopAppUIUtil;
+import consulo.desktop.awt.uiOld.DesktopAWTFontRegistry;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
@@ -134,7 +134,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
 
     // execute it in parallel
-    ForkJoinPool.commonPool().execute(DesktopAppUIUtil::registerBundledFonts);
+    ForkJoinPool.commonPool().execute(DesktopAWTFontRegistry::registerBundledFonts);
 
     SwingUtilities.invokeLater(() -> {
       if (myPlatform.os().isXWindow()) {

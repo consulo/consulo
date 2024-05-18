@@ -51,12 +51,6 @@ public interface MessageBus {
   @Nonnull
   MessageBusConnection connect(@Nonnull Disposable parentDisposable);
 
-  @Deprecated
-  @Nonnull
-  default <L> L syncPublisher(@Nonnull Topic<L> topic) {
-    return syncPublisher(topic.getListenerClass());
-  }
-
   /**
    * Allows to retrieve an interface for publishing messages to the target topic.
    * <p/>

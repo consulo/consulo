@@ -28,7 +28,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class DataManager {
+public interface DataManager {
   @Nonnull
   public static DataManager getInstance() {
     return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
@@ -39,32 +39,32 @@ public abstract class DataManager {
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
   @Nonnull
-  public abstract DataContext getDataContext();
+  DataContext getDataContext();
 
   @Nonnull
-  public abstract AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext);
+  AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext);
 
   /**
    * @return {@link DataContext} constructed by the currently focused component.
    */
   @Nonnull
-  public abstract Promise<DataContext> getDataContextFromFocusAsync();
+  Promise<DataContext> getDataContextFromFocusAsync();
 
   @Nonnull
-  public abstract AsyncResult<DataContext> getDataContextFromFocus();
+  AsyncResult<DataContext> getDataContextFromFocus();
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
   @Nonnull
-  public abstract DataContext getDataContext(@Nullable consulo.ui.Component component);
+  DataContext getDataContext(@Nullable consulo.ui.Component component);
 
   /**
    * @param dataContext should be instance of {@link UserDataHolder}
    * @param dataKey     key to store value
    * @param data        value to store
    */
-  public abstract <T> void saveInDataContext(@Nullable DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data);
+  <T> void saveInDataContext(@Nullable DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data);
 
   /**
    * @param dataContext find by key if instance of {@link UserDataHolder}
@@ -72,7 +72,7 @@ public abstract class DataManager {
    * @return value stored by {@link #saveInDataContext(DataContext, Key, Object)}
    */
   @Nullable
-  public abstract <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);
+  <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey);
 
   // TODO [VISTALL] region AWT & Swing dependency
 
@@ -85,7 +85,7 @@ public abstract class DataManager {
    * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
    *                                            component's bounds
    */
-  public DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y) {
+  default DataContext getDataContext(@Nonnull java.awt.Component component, int x, int y) {
     throw new UnsupportedOperationException();
   }
 
@@ -99,7 +99,7 @@ public abstract class DataManager {
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
-  public DataContext getDataContext(@Nullable java.awt.Component component) {
+  default DataContext getDataContext(@Nullable java.awt.Component component) {
     throw new UnsupportedOperationException();
   }
 

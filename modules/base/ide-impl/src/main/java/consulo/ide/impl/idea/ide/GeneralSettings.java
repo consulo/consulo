@@ -21,16 +21,16 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.execution.ProcessCloseConfirmation;
 import consulo.ide.ServiceManager;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
-
-import jakarta.annotation.Nullable;
 
 @Singleton
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -40,14 +40,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
   public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";
   public static final String PROP_INACTIVE_TIMEOUT = "inactiveTimeout";
 
-  public enum ProcessCloseConfirmation {
-    ASK,
-    TERMINATE,
-    DISCONNECT
-  }
-
-  @NonNls
-  private String myBrowserPath = BrowserUtil.getDefaultAlternativeBrowserPath();
+  private String myBrowserPath;
 
   private boolean myShowTipsOnStartup = true;
   private int myLastTip = 0;
@@ -76,6 +69,14 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
 
   public void removePropertyChangeListener(PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
+  }
+
+  public String getBrowserPathOrDefault() {
+    if (!StringUtil.isEmpty(myBrowserPath)) {
+      return myBrowserPath;
+    }
+
+    return BrowserUtil.getDefaultAlternativeBrowserPath();
   }
 
   public String getBrowserPath() {

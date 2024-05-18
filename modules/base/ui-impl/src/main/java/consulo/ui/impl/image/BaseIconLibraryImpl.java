@@ -86,6 +86,8 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
   private String myBaseId;
 
+  private String myInverseId;
+
   private LocalizeValue myName;
 
   private final BaseIconLibraryManager myIconLibraryManager;
@@ -107,6 +109,14 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
   public void setName(LocalizeValue name) {
     myName = name;
+  }
+
+  public void setInverseId(String inverseId) {
+    myInverseId = inverseId;
+  }
+
+  public String getInverseId() {
+    return myInverseId;
   }
 
   @Override

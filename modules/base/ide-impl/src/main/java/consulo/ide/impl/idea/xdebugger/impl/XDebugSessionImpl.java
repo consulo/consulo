@@ -43,7 +43,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.OpenFileHyperlinkInfo;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.*;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter;

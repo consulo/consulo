@@ -19,6 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.impl.internal.configuration.ProjectRunConfigurationManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;

@@ -18,9 +18,8 @@ package consulo.util.collection;
 import consulo.util.collection.impl.EmptyIterator;
 import consulo.util.collection.impl.SingletonIterator;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
 import consulo.util.lang.function.Functions;
+import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -400,7 +399,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Returns the elements from this iterable that satisfy a condition.
    */
   @Nonnull
-  public final JBIterable<E> filter(@Nonnull final Condition<? super E> condition) {
+  public final JBIterable<E> filter(@Nonnull final Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).filter(Stateful.copy(condition)));
   }
 
@@ -411,7 +410,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
    */
   @Nonnull
   public final <T> JBIterable<T> filter(@Nonnull Class<T> type) {
-    return (JBIterable<T>)filter(Conditions.instanceOf(type));
+    return (JBIterable<T>)filter(Predicates.instanceOf(type));
   }
 
   @Nonnull
@@ -420,7 +419,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   }
 
   @Nonnull
-  public final JBIterable<E> takeWhile(@Nonnull final Condition<? super E> condition) {
+  public final JBIterable<E> takeWhile(@Nonnull final Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).takeWhile(Stateful.copy(condition)));
   }
 
@@ -430,7 +429,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
   }
 
   @Nonnull
-  public final JBIterable<E> skipWhile(@Nonnull final Condition<? super E> condition) {
+  public final JBIterable<E> skipWhile(@Nonnull final Predicate<? super E> condition) {
     return intercept(iterator -> JBIterator.from(iterator).skipWhile(Stateful.copy(condition)));
   }
 
@@ -514,7 +513,7 @@ public abstract class JBIterable<E> implements Iterable<E> {
       HashSet<Object> visited;
 
       @Override
-      public boolean value(E e) {
+      public boolean test(E e) {
         if (visited == null) visited = new HashSet<Object>();
         return visited.add(identity.apply(e));
       }
@@ -580,9 +579,9 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Returns the first element if it satisfies the condition, otherwise null.
    */
   @Nullable
-  public final E first(@Nonnull Condition<? super E> condition) {
+  public final E first(@Nonnull Predicate<? super E> condition) {
     E first = first();
-    return condition.value(first) ? first : null;
+    return condition.test(first) ? first : null;
   }
 
   /**
@@ -637,17 +636,17 @@ public abstract class JBIterable<E> implements Iterable<E> {
   /**
    * Returns the index of the first matching element.
    */
-  public final E find(@Nonnull Condition<? super E> condition) {
+  public final E find(@Nonnull Predicate<? super E> condition) {
     return filter(condition).first();
   }
 
   /**
    * Returns the index of the matching element.
    */
-  public final int indexOf(@Nonnull Condition<? super E> condition) {
+  public final int indexOf(@Nonnull Predicate<? super E> condition) {
     int index = 0;
     for (E e : this) {
-      if (condition.value(e)) {
+      if (condition.test(e)) {
         return index;
       }
       index++;
@@ -659,11 +658,11 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * Synonym for map(..).filter(notNull()).
    *
    * @see JBIterable#map(Function)
-   * @see JBIterable#filter(Condition)
+   * @see JBIterable#filter(Predicate)
    */
   @Nonnull
   public final <T> JBIterable<T> filterMap(@Nonnull Function<? super E, T> function) {
-    return map(function).filter(Conditions.<T>notNull());
+    return map(function).filter(Predicates.<T>notNull());
   }
 
   /**
@@ -745,10 +744,10 @@ public abstract class JBIterable<E> implements Iterable<E> {
    * All iterations are performed in-place without data copying.
    */
   @Nonnull
-  public final JBIterable<JBIterable<E>> split(final Split mode, final Condition<? super E> separator) {
+  public final JBIterable<JBIterable<E>> split(final Split mode, final Predicate<? super E> separator) {
     return intercept(iterator -> {
       final Iterator<E> orig = iterator;
-      final Condition<? super E> condition = Stateful.copy(separator);
+      final Predicate<? super E> condition = Stateful.copy(separator);
       return new JBIterator<JBIterable<E>>() {
         JBIterator<E> it;
         E stored;
@@ -774,10 +773,10 @@ public abstract class JBIterable<E> implements Iterable<E> {
           }
           E tmp = stored;
           stored = null;
-          return of(tmp).append(once((it = JBIterator.wrap(orig)).takeWhile(new Condition<E>() {
+          return of(tmp).append(once((it = JBIterator.wrap(orig)).takeWhile(new Predicate<E>() {
             @Override
-            public boolean value(E e) {
-              boolean sep = condition.value(e);
+            public boolean test(E e) {
+              boolean sep = condition.test(e);
               int st0 = st;
               st = st0 < 0 && sep ? -2 : st0 > 0 && !sep ? 2 : sep ? -1 : 1;
               boolean result;
@@ -992,9 +991,9 @@ public abstract class JBIterable<E> implements Iterable<E> {
   }
 
   /**
-   * Stateful {@link Conditions}: a separate cloned instance is used for each iterator.
+   * Stateful {@link Predicates}: a separate cloned instance is used for each iterator.
    */
-  public abstract static class SCond<T> extends Stateful<SCond> implements Condition<T> {
+  public abstract static class SCond<T> extends Stateful<SCond> implements Predicate<T> {
   }
 
   /**

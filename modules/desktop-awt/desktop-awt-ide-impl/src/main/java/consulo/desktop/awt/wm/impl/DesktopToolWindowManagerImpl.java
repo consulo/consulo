@@ -40,7 +40,7 @@ import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;

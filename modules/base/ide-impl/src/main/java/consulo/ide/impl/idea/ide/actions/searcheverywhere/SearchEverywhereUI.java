@@ -7,6 +7,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.internal.TooManyUsagesStatus;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -27,16 +28,12 @@ import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
 import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
-import consulo.ui.ex.awt.ElementsChooser;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenuUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
-import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.ui.ex.awt.CellRendererPanel;
 import consulo.ide.impl.idea.ui.IdeUICustomization;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
@@ -50,9 +47,9 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
-import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.ex.JBColor;
@@ -60,15 +57,16 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -896,7 +894,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
       if (component instanceof JComponent) {
         ((JComponent)component).setBorder(JBUI.Borders.empty(1, 2));
       }
-      AppUIUtil.targetToDevice(component, list);
+      GuiUtils.targetToDevice(component, list);
       component.setPreferredSize(UIUtil.updateListRowHeight(component.getPreferredSize()));
       if (isAllTabSelected() && myListModel.isGroupFirstItem(index)) {
         component = myGroupTitleRenderer.withDisplayedData(contributor.getFullGroupName(), component);

@@ -45,8 +45,6 @@ public class OpenFilesActivity implements PostStartupActivity, DumbAware {
     }
 
     final FileEditorManagerImpl manager = (FileEditorManagerImpl)fileEditorManager;
-    manager.getMainSplitters().openFilesAsync(uiAccess).whenCompleteAsync((o, throwable) -> {
-      manager.initDockableContentFactory();
-    }, uiAccess);
+    manager.getMainSplitters().openFilesAsync(uiAccess);
   }
 }

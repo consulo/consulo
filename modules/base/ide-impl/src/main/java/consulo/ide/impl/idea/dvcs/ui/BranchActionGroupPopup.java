@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
-import consulo.ide.impl.idea.ui.ErrorLabel;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ide.impl.idea.ui.popup.KeepingPopupOpenAction;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;

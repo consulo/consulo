@@ -15,7 +15,9 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
-import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
+import consulo.execution.impl.internal.RunConfigurationBeforeRunProvider;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;

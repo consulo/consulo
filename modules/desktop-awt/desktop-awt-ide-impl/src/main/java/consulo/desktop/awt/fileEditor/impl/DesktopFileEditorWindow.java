@@ -35,7 +35,7 @@ import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ide.impl.idea.ui.tabs.JBTabs;
+import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;

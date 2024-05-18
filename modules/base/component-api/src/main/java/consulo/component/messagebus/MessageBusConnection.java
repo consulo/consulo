@@ -27,12 +27,6 @@ import jakarta.annotation.Nonnull;
  * to particular endpoint.
  */
 public interface MessageBusConnection {
-
-  @Deprecated
-  default <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) throws IllegalStateException {
-    subscribe(topic.getListenerClass(), handler);
-  }
-
   /**
    * Subscribes given handler to the target endpoint within the current connection.
    *

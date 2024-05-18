@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

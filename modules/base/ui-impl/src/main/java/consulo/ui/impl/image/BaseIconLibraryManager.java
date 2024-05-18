@@ -15,7 +15,6 @@
  */
 package consulo.ui.impl.image;
 
-import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
@@ -28,9 +27,9 @@ import consulo.ui.style.StyleManager;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -176,6 +175,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         IconLibraryDescriptor descriptor = descriptors.get(libraryId);
         if (descriptor != null) {
           iconLibrary.setBaseId(descriptor.getBaseLibraryId());
+          iconLibrary.setInverseId(descriptor.getInverseLibraryId());
           iconLibrary.setName(descriptor.getName());
         }
       }

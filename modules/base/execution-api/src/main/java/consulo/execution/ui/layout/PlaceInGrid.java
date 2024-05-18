@@ -17,5 +17,8 @@
 package consulo.execution.ui.layout;
 
 public enum PlaceInGrid {
-  left, center, right, bottom
+  left,
+  center,
+  right,
+  bottom
 }

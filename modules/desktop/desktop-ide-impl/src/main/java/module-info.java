@@ -5,10 +5,10 @@
 module consulo.desktop.ide.impl {
   requires consulo.platform.impl;
   requires consulo.ide.impl;
+  requires consulo.builtin.web.server.impl;
 
   requires com.sun.jna;
   requires com.sun.jna.platform;
-  requires consulo.builtin.web.server.impl;
 
   requires consulo.container.api;
 

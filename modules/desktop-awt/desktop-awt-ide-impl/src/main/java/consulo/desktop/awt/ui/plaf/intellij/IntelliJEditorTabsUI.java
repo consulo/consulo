@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import consulo.ide.impl.idea.ui.tabs.JBTabsPosition;
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.JBTabsPosition;
+import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.ui.tabs.impl.ShapeTransform;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;

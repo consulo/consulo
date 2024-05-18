@@ -16,10 +16,9 @@
 package consulo.ui.image;
 
 import consulo.ui.internal.UIInternal;
-import consulo.ui.style.Style;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -45,7 +44,7 @@ public interface IconLibraryManager {
   IconLibrary getActiveLibrary();
 
   @Nonnull
-  default Image forceChangeLibrary(@Nonnull String libraryId, @Nonnull Image image) {
+  default Image inverseIcon(@Nonnull Image image) {
     return image;
   }
 

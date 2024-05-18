@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import org.jdom.Element;
 
@@ -24,19 +26,16 @@ import org.jdom.Element;
  * @author VISTALL
  * @since 02/06/2023
  */
+@ExtensionImpl
 public class UnifiedDockableEditorContainerFactory implements DockableEditorContainerFactory {
+
   @Override
-  public DockContainer loadContainerFrom(Element element) {
-    return null;
+  public DockContainer loadContainerFrom(DockManager dockManager, Element element) {
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public DockContainer createContainer(DockableContent content) {
-    return null;
-  }
-
-  @Override
-  public void dispose() {
-
+  public DockContainer createContainer(DockManager dockManager, DockableContent content) {
+    throw new UnsupportedOperationException();
   }
 }

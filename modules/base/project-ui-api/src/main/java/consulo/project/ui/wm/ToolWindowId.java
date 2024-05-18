@@ -38,5 +38,5 @@ public interface ToolWindowId {
   String TASKS = "Time Tracking";
   @Deprecated
   String PREVIEW = "Preview";
-  String RUN_DASHBOARD = "Run Dashboard";
+  String SERVICES = "Services";
 }

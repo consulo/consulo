@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.issueLinks;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.ex.awt.LinkMouseListenerBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

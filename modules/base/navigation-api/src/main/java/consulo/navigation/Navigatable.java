@@ -18,6 +18,8 @@ package consulo.navigation;
 import consulo.util.dataholder.Key;
 
 public interface Navigatable {
+  Navigatable[] EMPTY_ARRAY = new Navigatable[0];
+
   static Key<Navigatable> KEY = Key.create(Navigatable.class);
 
   static Key<Navigatable[]> KEY_OF_ARRAY = Key.create(Navigatable[].class);

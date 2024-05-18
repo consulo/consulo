@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.ui.impl.ShadowBorderPainter;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.idea.util.ui.TimedDeadzone;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;

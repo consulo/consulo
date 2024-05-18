@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ui.ex.SimpleColoredText;
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
-import consulo.ide.impl.idea.ui.tabs.UiDecorator;
+import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.ui.Centerizer;
 import consulo.application.ui.UISettings;

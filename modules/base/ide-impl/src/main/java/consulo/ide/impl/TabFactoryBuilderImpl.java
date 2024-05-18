@@ -18,7 +18,7 @@ package consulo.ide.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ui.JBTabsPaneImpl;
 import consulo.ide.impl.idea.ui.TabbedPaneImpl;
-import consulo.ide.impl.idea.ui.tabs.JBTabs;
+import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.ex.PrevNextActionsDescriptor;

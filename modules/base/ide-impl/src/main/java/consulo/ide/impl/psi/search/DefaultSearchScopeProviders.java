@@ -10,6 +10,8 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.project.Project;
 
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.awt.*;
@@ -29,14 +31,14 @@ public class DefaultSearchScopeProviders {
     Color color = !colored ? null :
                   //namedScope instanceof ColoredItem ? ((ColoredItem)namedScope).getColor() :
                   FileColorManager.getInstance(project).getScopeColor(namedScope.getScopeId());
-    return new MyWeightedScope(scope, weight, color);
+    return new MyWeightedScope(scope, weight, TargetAWT.from(color));
   }
 
   private static class MyWeightedScope extends DelegatingGlobalSearchScope implements WeighedItem, ColoredItem {
     final int weight;
-    final Color color;
+    final ColorValue color;
 
-    MyWeightedScope(@Nonnull GlobalSearchScope scope, int weight, Color color) {
+    MyWeightedScope(@Nonnull GlobalSearchScope scope, int weight, ColorValue color) {
       super(scope);
       this.weight = weight;
       this.color = color;
@@ -49,7 +51,7 @@ public class DefaultSearchScopeProviders {
 
     @Nullable
     @Override
-    public Color getColor() {
+    public ColorValue getColor() {
       return color;
     }
   }

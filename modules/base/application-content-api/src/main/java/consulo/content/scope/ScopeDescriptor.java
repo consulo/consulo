@@ -2,11 +2,10 @@
 package consulo.content.scope;
 
 import consulo.application.util.ColoredItem;
+import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
-
 import jakarta.annotation.Nullable;
-import java.awt.*;
 
 /**
  * @author anna
@@ -38,7 +37,7 @@ public class ScopeDescriptor implements ColoredItem {
 
   @Nullable
   @Override
-  public Color getColor() {
+  public ColorValue getColor() {
     return myScope instanceof ColoredItem ? ((ColoredItem)myScope).getColor() : null;
   }
 }

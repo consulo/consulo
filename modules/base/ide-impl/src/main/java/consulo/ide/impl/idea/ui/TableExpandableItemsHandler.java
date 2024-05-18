@@ -1,11 +1,12 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui;
 
-import consulo.util.lang.Pair;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.TableCell;
-
+import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -101,7 +102,7 @@ public class TableExpandableItemsHandler extends AbstractExpandableItemsHandler<
 
     Rectangle cellRect = getCellRect(key);
     Component renderer = myComponent.prepareRenderer(myComponent.getCellRenderer(key.row, key.column), key.row, key.column);
-    AppUIUtil.targetToDevice(renderer, myComponent);
+    GuiUtils.targetToDevice(renderer, myComponent);
     cellRect.width = renderer.getPreferredSize().width;
 
     return Pair.create(renderer, cellRect);

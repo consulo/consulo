@@ -992,7 +992,7 @@
               icon="consulo.platform.base.PlatformIconGroup@actions.togglesoftwrap"/>
       <separator/>
     </group>
-    <action id="Rerun" class="consulo.ide.impl.idea.execution.runners.FakeRerunAction" text="Rerun"/>
+    <action id="Rerun" class="consulo.execution.impl.internal.action.FakeRerunAction" text="Rerun"/>
 
     <action id="IncrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementWidth"
             use-shortcut-of="ResizeToolWindowRight"/>
@@ -1624,9 +1624,9 @@
       <reference ref="ChooseRunConfiguration"/>
       <reference ref="ChooseDebugConfiguration"/>
       <action id="editRunConfigurations" class="consulo.ide.impl.idea.execution.actions.EditRunConfigurationsAction"/>
-      <action id="Stop" class="consulo.ide.impl.idea.execution.actions.StopAction"
+      <action id="Stop" class="consulo.execution.impl.internal.action.StopAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.suspend"/>
-      <action id="StopBackgroundProcesses" class="consulo.ide.impl.idea.execution.actions.StopBackgroundProcessesAction"/>
+      <action id="StopBackgroundProcesses" class="consulo.execution.impl.internal.action.StopBackgroundProcessesAction"/>
       <action id="ShowLiveRunConfigurations" class="consulo.ide.impl.idea.execution.actions.ShowRunningListAction"/>
 
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
@@ -2159,23 +2159,23 @@
 
     <group id="RunnerLayoutActions">
       <group id="Runner.Layout">
-        <action id="Runner.RestoreLayout" class="consulo.ide.impl.idea.execution.ui.layout.actions.RestoreLayoutAction"
+        <action id="Runner.RestoreLayout" class="consulo.execution.impl.internal.ui.layout.action.RestoreLayoutAction"
                 icon="consulo.platform.base.PlatformIconGroup@debugger.restorelayout"/>
       </group>
 
       <group id="Runner.View.Popup">
-        <action id="Runner.MinimizeView" class="consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction"
+        <action id="Runner.MinimizeView" class="consulo.execution.impl.internal.ui.layout.action.MinimizeViewAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.minimize"/>
         <separator/>
-        <action id="Runner.CloseView" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseViewAction"
+        <action id="Runner.CloseView" class="consulo.execution.impl.internal.ui.layout.action.CloseViewAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
-        <action id="Runner.CloseOtherViews" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseOtherViewsAction"
+        <action id="Runner.CloseOtherViews" class="consulo.execution.impl.internal.ui.layout.action.CloseOtherViewsAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
-        <action id="Runner.CloseAllViews" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseAllViewsAction"
+        <action id="Runner.CloseAllViews" class="consulo.execution.impl.internal.ui.layout.action.CloseAllViewsAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
         <separator/>
         <group id="Runner.Focus">
-          <action id="Runner.FocusOnStartup" class="consulo.ide.impl.idea.execution.ui.actions.FocusOnStartAction"/>
+          <action id="Runner.FocusOnStartup" class="consulo.execution.impl.internal.ui.layout.action.FocusOnStartAction"/>
         </group>
       </group>
 
@@ -2599,7 +2599,7 @@
       <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
     </reference>
 
-    <action id="SendEOF" class="consulo.ide.impl.idea.execution.actions.EOFAction" text="Send EOF"/>
+    <action id="SendEOF" class="consulo.execution.impl.internal.action.EOFAction" text="Send EOF"/>
 
     <action id="ShowReformatFileDialog" class="consulo.ide.impl.idea.codeInsight.actions.ShowReformatFileDialog"/>
 

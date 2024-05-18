@@ -37,6 +37,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
@@ -475,7 +476,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       e.getPresentation().setDescription("Choose scope (" + shortcutText + ")\n" + "Toggle scope (" + shortcutText2 + ")");
       JComponent button = e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
       if (button != null) {
-        button.setBackground(selection.getColor());
+        button.setBackground(TargetAWT.to(selection.getColor()));
       }
     }
 

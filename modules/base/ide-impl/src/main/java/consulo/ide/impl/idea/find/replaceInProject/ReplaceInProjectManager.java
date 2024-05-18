@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewImpl;

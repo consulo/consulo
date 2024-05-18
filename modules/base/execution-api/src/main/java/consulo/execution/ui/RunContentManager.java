@@ -15,17 +15,23 @@
  */
 package consulo.execution.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
+@ServiceAPI(ComponentScope.PROJECT)
 public interface RunContentManager {
   @Nullable
   RunContentDescriptor getSelectedContent();
@@ -36,11 +42,12 @@ public interface RunContentManager {
   @Nonnull
   List<RunContentDescriptor> getAllDescriptors();
 
-  @Nullable
   /**
    * To reduce number of open contents RunContentManager reuses
    * some of them during showRunContent (for ex. if a process was stopped)
    */
+  @RequiredUIAccess
+  @Nullable
   RunContentDescriptor getReuseContent(@Nonnull ExecutionEnvironment executionEnvironment);
 
   @Nullable
@@ -67,7 +74,20 @@ public interface RunContentManager {
    * @return Tool window id where content should be shown. Null if content tool window is determined by executor.
    */
   @Nullable
-  String getContentDescriptorToolWindowId(@Nullable RunnerAndConfigurationSettings settings);
+  default String getContentDescriptorToolWindowId(@Nonnull ExecutionEnvironment environment) {
+    RunProfile runProfile = environment.getRunProfile();
+    if (runProfile instanceof RunConfiguration) {
+      return getContentDescriptorToolWindowId((RunConfiguration)runProfile);
+    }
+
+    RunnerAndConfigurationSettings settings = environment.getRunnerAndConfigurationSettings();
+    if (settings != null) {
+      return getContentDescriptorToolWindowId(settings.getConfiguration());
+    }
+    return null;
+  }
+
+  String getContentDescriptorToolWindowId(@Nullable RunConfiguration settings);
 
   @Nonnull
   String getToolWindowIdByEnvironment(@Nonnull ExecutionEnvironment executionEnvironment);

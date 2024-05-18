@@ -24,7 +24,7 @@ import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.ide.impl.idea.execution.impl.RunDialog;
-import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.ui.ex.action.Presentation;
 
 import jakarta.annotation.Nonnull;

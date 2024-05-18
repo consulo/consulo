@@ -273,7 +273,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     }
     else {
       Object value = comboBox.getSelectedItem();
-      Color coloredItemColor = value instanceof ColoredItem ? ((ColoredItem)value).getColor() : null;
+      Color coloredItemColor = value instanceof ColoredItem ? TargetAWT.to(((ColoredItem)value).getColor()) : null;
       return ObjectUtil
               .notNull(coloredItemColor, comboBox.isBackgroundSet() && !(bg instanceof UIResource) ? bg : comboBox.isEnabled() ? NON_EDITABLE_BACKGROUND : UIUtil.getComboBoxDisabledBackground());
     }

@@ -25,7 +25,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsListener;
 import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.project.DumbService;
@@ -112,7 +112,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   public void initToolWindow(@Nonnull ToolWindow toolWindow) {
     // Create panels
-    ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+    ContentFactory contentFactory = ContentFactory.getInstance();
     Content allTodosContent = contentFactory.createContent(null, IdeBundle.message("title.project"), false);
     myAllTodos = new TodoPanel(myProject, state.all, false, allTodosContent) {
       @Override
@@ -288,7 +288,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
   }
 
   public void addCustomTodoView(final TodoTreeBuilderFactory factory, final String title, final TodoPanelSettings settings) {
-    Content content = ContentFactory.SERVICE.getInstance().createContent(null, title, true);
+    Content content = ContentFactory.getInstance().createContent(null, title, true);
     final ChangeListTodosPanel panel = new ChangeListTodosPanel(myProject, settings, content) {
       @Override
       protected TodoTreeBuilder createTreeBuilder(JTree tree, Project project) {

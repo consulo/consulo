@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.tabs.impl;
 
-import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ui.ex.awt.tab.TabInfo;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;

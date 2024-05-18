@@ -25,7 +25,8 @@ import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowLayout;
 import consulo.ide.impl.idea.ui.tabs.impl.singleRow.SingleRowPassInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.table.TableLayout;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.TimedDeadzone;
+import consulo.ui.ex.awt.tab.*;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ide.impl.idea.util.ui.update.LazyUiDisposable;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -115,6 +116,7 @@ public abstract class JBTabsImpl extends JComponent
   private boolean myStealthTabMode = false;
 
   private boolean mySideComponentOnTabs = true;
+  private boolean mySideComponentBefore = true;
 
   private DataProvider myDataProvider;
 
@@ -2144,6 +2146,13 @@ public abstract class JBTabsImpl extends JComponent
 
     relayout(true, false);
 
+    return this;
+  }
+
+  @Override
+  public JBTabsPresentation setSideComponentBefore(boolean before) {
+    mySideComponentBefore = before;
+    relayout(true, false);
     return this;
   }
 

@@ -14,6 +14,7 @@ import consulo.desktop.awt.ui.plaf.darcula.DarculaComboBoxUI;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaJBPopupComboPopup;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaUIUtil;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -191,7 +192,7 @@ public class WinIntelliJComboBoxUI extends DarculaComboBoxUI {
         return bg;
       }
       else if (value instanceof ColoredItem) {
-        return ((ColoredItem)value).getColor();
+        return TargetAWT.to(((ColoredItem)value).getColor());
       }
       else if (!comboBox.isEditable()) {
         if (isPressed() || popup.isVisible()) {

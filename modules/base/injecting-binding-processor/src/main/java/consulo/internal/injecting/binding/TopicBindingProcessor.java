@@ -37,7 +37,7 @@ import java.util.*;
  * @since 25/01/2023
  */
 @SupportedAnnotationTypes({TopicBindingProcessor.TOPIC_API})
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class TopicBindingProcessor extends BindingProcessor {
   public static final String TOPIC_API = "consulo.annotation.component.TopicAPI";
 

@@ -19,36 +19,34 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
 @ServiceAPI(ComponentScope.PROJECT)
-public abstract class DockManager {
+public interface DockManager {
   public static DockManager getInstance(Project project) {
     return project.getInstance(DockManager.class);
   }
 
-  public abstract void register(DockContainer container);
+  void register(DockContainer container);
 
-  public abstract void register(String id, DockContainerFactory factory);
+  DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content);
 
-  public abstract DragSession createDragSession(MouseEvent mouseEvent, @Nonnull DockableContent content);
+  Set<DockContainer> getContainers();
 
-  public abstract Set<DockContainer> getContainers();
+  IdeFrame getIdeFrame(DockContainer container);
 
-  public abstract IdeFrame getIdeFrame(DockContainer container);
-
-  public abstract String getDimensionKeyForFocus(@Nonnull String key);
+  String getDimensionKeyForFocus(@Nonnull String key);
 
   @Nullable
-  public DockContainer getContainerFor(Component c) {
+  DockContainer getContainerFor(consulo.ui.Component c);
+
+  @Nullable
+  default DockContainer getContainerFor(Component c) {
     throw new UnsupportedOperationException("desktop only");
   }
-
-  @Nullable
-  public abstract DockContainer getContainerFor(consulo.ui.Component c);
 }

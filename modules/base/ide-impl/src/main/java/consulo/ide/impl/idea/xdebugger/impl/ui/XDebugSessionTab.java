@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.ide.impl.idea.execution.ui.layout.impl.RunnerContentUi;
-import consulo.ide.impl.idea.execution.ui.layout.impl.ViewImpl;
+import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
+import consulo.execution.impl.internal.ui.layout.ViewImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;

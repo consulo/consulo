@@ -12,7 +12,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.color.ColorValue;
@@ -24,6 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ComponentUtil;
@@ -655,7 +655,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
           Dimension size;
           if (lp != null) {
-            AppUIUtil.targetToDevice(this, lp);
+            GuiUtils.targetToDevice(this, lp);
             size = lp.getSize();
             prefSizeWasComputed[0] = true;
           }
@@ -748,7 +748,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     pane.setOpaque(opaque);
     pane.setBackground(hintHint.getTextBackground());
 
-    if (!limitWidthToScreen) AppUIUtil.targetToDevice(pane, layeredPane);
+    if (!limitWidthToScreen) GuiUtils.targetToDevice(pane, layeredPane);
 
     return pane;
   }

@@ -13,8 +13,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -129,7 +129,8 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(mySearch.isPopupActive() && myTree.getSelectionModel().getSelectionMode() == DISCONTIGUOUS_TREE_SELECTION);
+      e.getPresentation()
+       .setEnabled(mySearch.isPopupActive() && myTree.getSelectionModel().getSelectionMode() == DISCONTIGUOUS_TREE_SELECTION);
     }
 
     @Override

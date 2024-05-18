@@ -1405,8 +1405,26 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     return myPresentationFactory.getPresentation(action);
   }
 
-  public void clearPresentationCache() {
+  /**
+   * Clear internal caches.
+   * <p>
+   * This method can be called after updating {@link ActionToolbarImpl#myActionGroup}
+   * to make sure toolbar does not reference old {@link AnAction} instances.
+   */
+  @Override
+  @RequiredUIAccess
+  public void reset() {
+    cancelCurrentUpdate();
+
     myPresentationFactory.reset();
+    myVisibleActions.clear();
+    removeAll();
+  }
+
+  private void cancelCurrentUpdate() {
+    CancellablePromise<List<AnAction>> lastUpdate = myLastUpdate;
+    myLastUpdate = null;
+    if (lastUpdate != null) lastUpdate.cancel();
   }
 
   @Override

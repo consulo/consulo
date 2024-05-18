@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.ui.tabs.*;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.disposer.Disposable;
@@ -25,6 +24,7 @@ import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.awt.TabbedPane;
 
+import consulo.ui.ex.awt.tab.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;

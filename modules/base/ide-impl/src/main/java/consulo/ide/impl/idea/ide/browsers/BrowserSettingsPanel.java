@@ -309,7 +309,7 @@ final class BrowserSettingsPanel {
       return true;
     }
 
-    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE && !Comparing.strEqual(generalSettings.getBrowserPath(), myAlternativeBrowserPathBox.getValue())) {
+    if (defaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE && !Comparing.strEqual(generalSettings.getBrowserPathOrDefault(), myAlternativeBrowserPathBox.getValue())) {
       return true;
     }
 
@@ -355,7 +355,7 @@ final class BrowserSettingsPanel {
     myShowBrowserPopupCheckBox.setValue(browserManager.isShowBrowserHover());
     browsersEditor.reset(browserManager.getList());
 
-    customPathValue = settings.getBrowserPath();
+    customPathValue = settings.getBrowserPathOrDefault();
     myAlternativeBrowserPathBox.getComponent().setEnabled(effectiveDefaultBrowserPolicy == DefaultBrowserPolicy.ALTERNATIVE);
     updateCustomPathTextFieldValue(effectiveDefaultBrowserPolicy);
 

@@ -41,7 +41,7 @@ import java.util.*;
  * @since 16-Jun-22
  */
 @SupportedAnnotationTypes({InjectingBindingProcessor.SERVICE_IMPL, InjectingBindingProcessor.EXTENSION_IMPL, InjectingBindingProcessor.TOPIC_IMPL, InjectingBindingProcessor.ACTION_IMPL})
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class InjectingBindingProcessor extends BindingProcessor {
   private static record AnnotationResolveInfo(Annotation annotation, TypeElement typeElement) {
   }

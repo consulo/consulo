@@ -24,7 +24,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;

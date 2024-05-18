@@ -21,7 +21,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.FocusChangeListenerImpl;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.Language;
 import consulo.language.editor.completion.CompletionConfidence;

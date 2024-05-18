@@ -79,7 +79,6 @@ import consulo.project.ui.wm.MergingQueue;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.dock.DockContainer;
-import consulo.project.ui.wm.dock.DockContainerFactory;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -148,7 +147,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
    */
   private final PropertyChangeListener myEditorPropertyChangeListener = new MyEditorPropertyChangeListener();
   protected final DockManager myDockManager;
-  private DockContainerFactory.Persistent myContentFactory;
   private static final AtomicInteger ourOpenFilesSetModificationCount = new AtomicInteger();
 
   static final ModificationTracker OPEN_FILE_SET_MODIFICATION_COUNT = ourOpenFilesSetModificationCount::get;
@@ -238,17 +236,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       }
     }
   }
-
-  public void initDockableContentFactory() {
-    if (myContentFactory != null) return;
-
-    myContentFactory = createDockContainerFactory();
-    myDockManager.register(DockableEditorContainerFactory.TYPE, myContentFactory);
-    Disposer.register(myProject, myContentFactory);
-  }
-
-  @Nonnull
-  protected abstract DockableEditorContainerFactory createDockContainerFactory();
 
   public static boolean isDumbAware(@Nonnull FileEditor editor) {
     return Boolean.TRUE.equals(editor.getUserData(DUMB_AWARE)) && (!(editor instanceof PossiblyDumbAware) || ((PossiblyDumbAware)editor).isDumbAware());

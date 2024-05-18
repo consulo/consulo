@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
@@ -169,6 +170,22 @@ public interface Content extends UserDataHolder, ComponentContainer {
   void setExecutionId(long executionId);
 
   long getExecutionId();
+
+  default void setHelpId(String helpId) {
+  }
+
+  @Nullable
+  default String getHelpId() {
+    return null;
+  }
+
+  default void setTabColor(@Nullable ColorValue color) {
+  }
+
+  @Nullable
+  default ColorValue getTabColor() {
+    return null;
+  }
 
   // TODO [VISTALL] AWT & Swing dependency
 

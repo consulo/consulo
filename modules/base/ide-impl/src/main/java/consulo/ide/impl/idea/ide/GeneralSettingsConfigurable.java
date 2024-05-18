@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
+import consulo.execution.ProcessCloseConfirmation;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
@@ -324,15 +325,15 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
   }
 
-  private static GeneralSettings.ProcessCloseConfirmation getProcessCloseConfirmation(MyComponent component) {
+  private static ProcessCloseConfirmation getProcessCloseConfirmation(MyComponent component) {
     if (component.myTerminateProcessRadioButton.getValue()) {
-      return GeneralSettings.ProcessCloseConfirmation.TERMINATE;
+      return ProcessCloseConfirmation.TERMINATE;
     }
     else if (component.myDisconnectRadioButton.getValue()) {
-      return GeneralSettings.ProcessCloseConfirmation.DISCONNECT;
+      return ProcessCloseConfirmation.DISCONNECT;
     }
     else {
-      return GeneralSettings.ProcessCloseConfirmation.ASK;
+      return ProcessCloseConfirmation.ASK;
     }
   }
 

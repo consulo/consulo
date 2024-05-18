@@ -211,7 +211,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
                 moreImage = PlatformIconGroup.actionsMore();
               }
               else {
-                moreImage = IconLibraryManager.get().forceChangeLibrary(IconLibraryManager.DARK_LIBRARY_ID, PlatformIconGroup.actionsMore());
+                moreImage = IconLibraryManager.get().inverseIcon(PlatformIconGroup.actionsMore());
               }
             }
             else {

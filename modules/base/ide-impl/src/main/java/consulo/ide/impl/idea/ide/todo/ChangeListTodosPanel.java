@@ -27,7 +27,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListAdapter;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;

@@ -28,6 +28,12 @@ import jakarta.annotation.Nullable;
 public class LightMonoIconLibraryDescriptor implements IconLibraryDescriptor {
   public static final String ID = "light_mono";
 
+  @Nullable
+  @Override
+  public String getInverseLibraryId() {
+    return DarkMonoIconLibraryDescriptor.ID;
+  }
+
   @Nonnull
   @Override
   public String getLibraryId() {

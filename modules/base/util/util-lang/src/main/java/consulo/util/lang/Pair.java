@@ -16,6 +16,8 @@
 package consulo.util.lang;
 
 import jakarta.annotation.Nonnull;
+
+import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -111,5 +113,23 @@ public class Pair<A, B> implements Map.Entry<A, B> {
     public NonNull(@Nonnull A first, @Nonnull B second) {
       super(first, second);
     }
+  }
+
+  /**
+   * @param <A> first value type (Comparable)
+   * @param <B> second value type
+   * @return a comparator that compares pair values by first value
+   */
+  public static <A extends Comparable<? super A>, B> Comparator<Pair<A, B>> comparingByFirst() {
+    return (o1, o2) -> o1.first.compareTo(o2.first);
+  }
+
+  /**
+   * @param <A> first value type
+   * @param <B> second value type (Comparable)
+   * @return a comparator that compares pair values by second value
+   */
+  public static <A, B extends Comparable<? super B>> Comparator<Pair<A, B>> comparingBySecond() {
+    return (o1, o2) -> o1.second.compareTo(o2.second);
   }
 }

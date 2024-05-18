@@ -10,7 +10,7 @@ import consulo.bookmark.Bookmark;
 import consulo.bookmark.event.BookmarksListener;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneSelectionHelper.SelectionDescriptor;
-import consulo.ide.impl.idea.ui.tree.RestoreSelectionListener;
+import consulo.ui.ex.awt.tree.RestoreSelectionListener;
 import consulo.ide.impl.idea.ui.tree.TreeCollector;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNodeUpdater;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;

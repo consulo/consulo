@@ -35,7 +35,7 @@ import consulo.execution.debug.frame.XValueModifier;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValueTextProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;

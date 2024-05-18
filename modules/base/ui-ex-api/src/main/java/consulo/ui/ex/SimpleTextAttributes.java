@@ -17,10 +17,10 @@ package consulo.ui.ex;
 
 import consulo.ui.ex.util.LafProperty;
 import consulo.util.lang.Comparing;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nullable;
 import java.awt.*;
 
 /**
@@ -30,7 +30,8 @@ import java.awt.*;
 public final class SimpleTextAttributes {
 
   @MagicConstant(flags = {STYLE_PLAIN, STYLE_BOLD, STYLE_ITALIC, STYLE_STRIKEOUT, STYLE_WAVED, STYLE_UNDERLINE, STYLE_BOLD_DOTTED_LINE, STYLE_SEARCH_MATCH, STYLE_SMALLER, STYLE_OPAQUE})
-  public @interface StyleAttributeConstant { }
+  public @interface StyleAttributeConstant {
+  }
 
   public static final int STYLE_PLAIN = Font.PLAIN;
   public static final int STYLE_BOLD = Font.BOLD;
@@ -51,9 +52,12 @@ public final class SimpleTextAttributes {
   public static final SimpleTextAttributes ERROR_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, JBColor.red);
 
   public static final SimpleTextAttributes GRAYED_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_BOLD, LafProperty.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, LafProperty.getInactiveTextColor());
-  public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES = new SimpleTextAttributes(STYLE_SMALLER, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_BOLD_ATTRIBUTES =
+    new SimpleTextAttributes(STYLE_BOLD, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_ITALIC_ATTRIBUTES =
+    new SimpleTextAttributes(STYLE_ITALIC, LafProperty.getInactiveTextColor());
+  public static final SimpleTextAttributes GRAYED_SMALL_ATTRIBUTES =
+    new SimpleTextAttributes(STYLE_SMALLER, LafProperty.getInactiveTextColor());
 
   public static final SimpleTextAttributes SYNTHETIC_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
   public static final SimpleTextAttributes GRAY_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, Color.GRAY);
@@ -61,9 +65,10 @@ public final class SimpleTextAttributes {
   public static final SimpleTextAttributes DARK_TEXT = new SimpleTextAttributes(STYLE_PLAIN, new Color(112, 112, 164));
   public static final SimpleTextAttributes SIMPLE_CELL_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, new JBColor(Gray._0, Gray._187));
   public static final SimpleTextAttributes SELECTED_SIMPLE_CELL_ATTRIBUTES =
-          new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getListSelectionForeground());
+    new SimpleTextAttributes(STYLE_PLAIN, LafProperty.getListSelectionForeground());
   public static final SimpleTextAttributes EXCLUDED_ATTRIBUTES = new SimpleTextAttributes(STYLE_ITALIC, Color.GRAY);
 
+  public static final SimpleTextAttributes LINK_PLAIN_ATTRIBUTES = new SimpleTextAttributes(STYLE_PLAIN, JBColor.blue);
   public static final SimpleTextAttributes LINK_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE, JBColor.blue);
   public static final SimpleTextAttributes LINK_BOLD_ATTRIBUTES = new SimpleTextAttributes(STYLE_UNDERLINE | STYLE_BOLD, JBColor.blue);
 
@@ -87,17 +92,20 @@ public final class SimpleTextAttributes {
     this(null, fgColor, waveColor, style);
   }
 
-  public SimpleTextAttributes(@Nullable final Color bgColor, final Color fgColor, @Nullable final Color waveColor, @StyleAttributeConstant int style) {
+  public SimpleTextAttributes(@Nullable final Color bgColor,
+                              final Color fgColor,
+                              @Nullable final Color waveColor,
+                              @StyleAttributeConstant int style) {
     if ((~(STYLE_PLAIN |
-           STYLE_BOLD |
-           STYLE_ITALIC |
-           STYLE_STRIKEOUT |
-           STYLE_WAVED |
-           STYLE_UNDERLINE |
-           STYLE_BOLD_DOTTED_LINE |
-           STYLE_SEARCH_MATCH |
-           STYLE_SMALLER |
-           STYLE_OPAQUE) & style) != 0) {
+      STYLE_BOLD |
+      STYLE_ITALIC |
+      STYLE_STRIKEOUT |
+      STYLE_WAVED |
+      STYLE_UNDERLINE |
+      STYLE_BOLD_DOTTED_LINE |
+      STYLE_SEARCH_MATCH |
+      STYLE_SMALLER |
+      STYLE_OPAQUE) & style) != 0) {
       throw new IllegalArgumentException("Wrong style: " + style);
     }
 
@@ -125,7 +133,7 @@ public final class SimpleTextAttributes {
 
   /**
    * @return wave color. The method can return <code>null</code>. <code>null</code>
-   *         means that color of wave is the same as foreground color.
+   * means that color of wave is the same as foreground color.
    */
   @Nullable
   public Color getWaveColor() {

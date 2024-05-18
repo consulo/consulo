@@ -33,4 +33,9 @@ public interface IconLibraryDescriptor {
 
   @Nonnull
   LocalizeValue getName();
+
+  @Nullable
+  default String getInverseLibraryId() {
+    return null;
+  }
 }

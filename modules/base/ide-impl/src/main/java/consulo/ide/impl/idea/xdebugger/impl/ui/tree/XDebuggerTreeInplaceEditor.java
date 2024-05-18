@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.breakpoint.XExpression;

@@ -15,8 +15,10 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.Project;
@@ -26,33 +28,33 @@ import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 
+@ExtensionImpl
 public class DesktopAWTDockableEditorContainerFactory implements DockableEditorContainerFactory {
   private final ApplicationConcurrency myApplicationConcurrency;
   private final Project myProject;
   private final FileEditorManagerImpl myFileEditorManager;
-  private final DockManager myDockManager;
 
+  @Inject
   public DesktopAWTDockableEditorContainerFactory(ApplicationConcurrency applicationConcurrency,
                                                   Project project,
-                                                  FileEditorManagerImpl fileEditorManager,
-                                                  DockManager dockManager) {
+                                                  FileEditorManager fileEditorManager) {
     myApplicationConcurrency = applicationConcurrency;
-    this.myProject = project;
-    myFileEditorManager = fileEditorManager;
-    myDockManager = dockManager;
+    myProject = project;
+    myFileEditorManager = (FileEditorManagerImpl)fileEditorManager;
   }
 
   @Override
-  public DockContainer createContainer(DockableContent content) {
-    return createContainer(false);
+  public DockContainer createContainer(DockManager dockManager, DockableContent content) {
+    return createContainer(dockManager, false);
   }
 
-  private DockContainer createContainer(boolean loadingState) {
+  private DockContainer createContainer(DockManager dockManager, boolean loadingState) {
     final SimpleReference<DesktopDockableEditorTabbedContainer> containerRef = SimpleReference.create();
     DesktopFileEditorsSplitters splitters =
-      new DesktopFileEditorsSplitters(myProject, myApplicationConcurrency, myFileEditorManager, myDockManager, false) {
+      new DesktopFileEditorsSplitters(myProject, myApplicationConcurrency, myFileEditorManager, dockManager, false) {
         @Override
         public void afterFileClosed(VirtualFile file) {
           containerRef.get().fireContentClosed(file);
@@ -84,13 +86,9 @@ public class DesktopAWTDockableEditorContainerFactory implements DockableEditorC
   }
 
   @Override
-  public DockContainer loadContainerFrom(Element element) {
-    DesktopDockableEditorTabbedContainer container = (DesktopDockableEditorTabbedContainer)createContainer(true);
+  public DockContainer loadContainerFrom(DockManager dockManager, Element element) {
+    DesktopDockableEditorTabbedContainer container = (DesktopDockableEditorTabbedContainer)createContainer(dockManager, true);
     container.getSplitters().readExternal(element.getChild("state"));
     return container;
-  }
-
-  @Override
-  public void dispose() {
   }
 }

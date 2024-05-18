@@ -41,6 +41,10 @@ public class Key<T> {
     myIndex = ourRegistry.register(this);
   }
 
+  public boolean is(Key<?> key) {
+    return this == key;
+  }
+
   // made final because many classes depend on one-to-one key index <-> key instance relationship. See e.g. UserDataHolderBase
   @Override
   public final int hashCode() {

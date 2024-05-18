@@ -19,9 +19,9 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
+import consulo.dataContext.internal.DataManagerEx;
 import consulo.dataContext.internal.DataRuleHoler;
 import consulo.ide.impl.idea.ide.impl.dataRules.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -58,7 +58,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author VISTALL
  * @since 2019-02-16
  */
-public abstract class BaseDataManager extends DataManager implements DataRuleHoler {
+public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
   public static interface DataContextWithEventCount extends DataContext {
     void setEventCount(int eventCount, Object caller);
   }
@@ -323,10 +323,6 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
   }
 
   public DataContext getDataContextTest(java.awt.Component component) {
-    throw new UnsupportedOperationException();
-  }
-
-  public DataProvider getDataProviderEx(java.awt.Component component) {
     throw new UnsupportedOperationException();
   }
 }

@@ -18,11 +18,11 @@ package consulo.ide.impl.idea.execution.actions;
 
 import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.internal.RunManagerEx;
-import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
+import consulo.execution.impl.internal.configuration.UnknownConfigurationType;
 import consulo.ide.impl.idea.execution.impl.EditConfigurationsDialog;
 import consulo.ide.impl.idea.execution.impl.RunDialog;
-import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
-import consulo.ide.impl.idea.execution.impl.RunnerAndConfigurationSettingsImpl;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.impl.internal.configuration.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.ExecutionUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;

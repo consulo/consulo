@@ -139,7 +139,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
       }
     }
 
-    browseUsingPath(uri.toString(), settings.getBrowserPath(), null, null, ArrayUtil.EMPTY_STRING_ARRAY);
+    browseUsingPath(uri.toString(), settings.getBrowserPathOrDefault(), null, null, ArrayUtil.EMPTY_STRING_ARRAY);
   }
 
   private void openOrBrowse(@Nonnull String url, boolean browse) {

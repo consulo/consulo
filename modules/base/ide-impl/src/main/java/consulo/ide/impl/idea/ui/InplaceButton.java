@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ide.impl.idea.util.ui.TimedDeadzone;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.CenteredIcon;

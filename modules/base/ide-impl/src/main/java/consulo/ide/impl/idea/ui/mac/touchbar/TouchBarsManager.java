@@ -15,16 +15,13 @@
  */
 package consulo.ide.impl.idea.ui.mac.touchbar;
 
-import consulo.execution.ui.RunContentDescriptor;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.disposer.Disposable;
-import consulo.util.lang.Pair;
-
+import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  * TODO [VISTALL] stub
@@ -32,9 +29,6 @@ import java.util.List;
 public class TouchBarsManager {
   public static boolean isTouchBarEnabled() {
     return false;
-  }
-
-  public static void showStopRunningBar(List<? extends Pair<RunContentDescriptor, Runnable>> stoppableDescriptors) {
   }
 
   public static void onFocusEvent(AWTEvent e) {

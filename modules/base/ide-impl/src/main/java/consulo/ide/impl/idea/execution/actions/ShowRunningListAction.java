@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.executor.Executor;
 import consulo.process.KillableProcessHandler;
-import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
+import consulo.execution.impl.internal.ExecutionManagerImpl;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;

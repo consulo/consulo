@@ -43,4 +43,6 @@ public interface ActionToolbarEx extends ActionToolbar {
   ActionButton getSecondaryActionsButton();
 
   void forEachButton(Consumer<ActionButton> buttonConsumer);
+
+  void reset();
 }

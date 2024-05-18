@@ -70,4 +70,10 @@ public interface RunManagerListener extends EventListener {
   @Deprecated
   default void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
   }
+
+  default void beginUpdate() {
+  }
+
+  default void endUpdate() {
+  }
 }

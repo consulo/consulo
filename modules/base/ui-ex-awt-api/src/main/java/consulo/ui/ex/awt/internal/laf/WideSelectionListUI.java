@@ -2,12 +2,14 @@
 package consulo.ui.ex.awt.internal.laf;
 
 import consulo.application.util.ColoredItem;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.BackgroundSupplier;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ListCellBackgroundSupplier;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -56,8 +58,8 @@ public final class WideSelectionListUI extends BasicListUI {
   @Nullable
   private static Color getBackground(@Nonnull JList<Object> list, @Nullable Object value, int row) {
     if (value instanceof ColoredItem) {
-      Color background = ((ColoredItem)value).getColor();
-      if (background != null) return background;
+      ColorValue background = ((ColoredItem)value).getColor();
+      if (background != null) return TargetAWT.to(background);
     }
     if (value instanceof BackgroundSupplier) {
       BackgroundSupplier supplier = (BackgroundSupplier)value;

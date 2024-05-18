@@ -18,9 +18,9 @@ package consulo.execution;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**
@@ -119,9 +119,9 @@ public interface RunnerAndConfigurationSettings {
    * Checks whether the run configuration settings are valid.
    *
    * @throws RuntimeConfigurationException if the configuration settings contain a non-fatal problem which the user should be warned about
-   * but the execution should still be allowed
-   * @throws RuntimeConfigurationError if the configuration settings contain a fatal problem which makes it impossible to execute the run
-   * configuration.
+   *                                       but the execution should still be allowed
+   * @throws RuntimeConfigurationError     if the configuration settings contain a fatal problem which makes it impossible to execute the run
+   *                                       configuration.
    */
   void checkSettings() throws RuntimeConfigurationException;
 
@@ -130,9 +130,9 @@ public interface RunnerAndConfigurationSettings {
    *
    * @param executor the executor which will be used to run the configuration, or null if the check is not specific to an executor.
    * @throws RuntimeConfigurationException if the configuration settings contain a non-fatal problem which the user should be warned about
-   * but the execution should still be allowed
-   * @throws RuntimeConfigurationError if the configuration settings contain a fatal problem which makes it impossible to execute the run
-   * configuration.
+   *                                       but the execution should still be allowed
+   * @throws RuntimeConfigurationError     if the configuration settings contain a fatal problem which makes it impossible to execute the run
+   *                                       configuration.
    */
   void checkSettings(@Nullable Executor executor) throws RuntimeConfigurationException;
 
@@ -185,5 +185,24 @@ public interface RunnerAndConfigurationSettings {
    *
    * @return the folder name, or null if the configuration is displayed on the top level.
    */
-  @Nullable String getFolderName();
+  @Nullable
+  String getFolderName();
+
+  /**
+   * Returns the "Before launch: Activate tool window" flag (for activation tool window Run/Debug etc.)
+   *
+   * @return if true (it's default value), the tool window will be activated before launching this configuration.
+   */
+  default boolean isActivateToolWindowBeforeRun() {
+    return true;
+  }
+
+  /**
+   * Returns the "Before launch: Focus tool window" flag
+   *
+   * @return if true (it's default value), the tool window will be focused before launching this configuration.
+   */
+  default boolean isFocusToolWindowBeforeRun() {
+    return true;
+  }
 }

@@ -42,7 +42,8 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.*;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ide.impl.idea.util.ui.TimedDeadzone;
+import consulo.ui.ex.awt.tab.*;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
@@ -109,11 +110,11 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     });
     myTabs.setTransferHandler(new MyTransferHandler());
     myTabs.setDataProvider(new MyDataProvider())
-            .setPopupGroup(() -> (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP), ActionPlaces.EDITOR_TAB_POPUP, false)
-            .addTabMouseListener(new TabMouseListener()).getPresentation().setTabDraggingEnabled(true)
-            .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 8))).setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
-            .setTabLabelActionsAutoHide(false).setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground())).setPaintFocus(true).getJBTabs()
-            .addListener(new TabsListener.Adapter() {
+          .setPopupGroup(() -> (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP), ActionPlaces.EDITOR_TAB_POPUP, false)
+          .addTabMouseListener(new TabMouseListener()).getPresentation().setTabDraggingEnabled(true)
+          .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 8))).setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
+          .setTabLabelActionsAutoHide(false).setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground())).setPaintFocus(true).getJBTabs()
+          .addListener(new TabsListener.Adapter() {
               @Override
               public void selectionChanged(final TabInfo oldSelection, final TabInfo newSelection) {
                 final FileEditorManager editorManager = FileEditorManager.getInstance(myProject);

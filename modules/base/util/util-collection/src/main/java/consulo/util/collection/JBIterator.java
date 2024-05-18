@@ -16,17 +16,17 @@
 package consulo.util.collection;
 
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Functions;
 import consulo.util.lang.function.MonoFunction;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Iterator that accumulates transformations and filters keeping its instance.
@@ -42,7 +42,7 @@ import java.util.function.Function;
  * Implementors should provide nextImpl() method which can call stop()/skip().
  *
  * @see JBIterable#map(Function)
- * @see JBIterable#filter(Condition)
+ * @see JBIterable#filter(Predicate)
  * @see TreeTraversal.TracingIt
  *
  * @author gregsh
@@ -170,7 +170,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   @Nonnull
-  public final JBIterator<E> filter(@Nonnull Condition<? super E> condition) {
+  public final JBIterator<E> filter(@Nonnull Predicate<? super E> condition) {
     return addOp(true, new FilterOp<E>(condition));
   }
 
@@ -181,7 +181,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   @Nonnull
-  public final JBIterator<E> takeWhile(@Nonnull Condition<? super E> condition) {
+  public final JBIterator<E> takeWhile(@Nonnull Predicate<? super E> condition) {
     return addOp(true, new WhileOp<E>(condition));
   }
 
@@ -191,7 +191,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
   }
 
   @Nonnull
-  public final JBIterator<E> skipWhile(@Nonnull final Condition<? super E> condition) {
+  public final JBIterator<E> skipWhile(@Nonnull final Predicate<? super E> condition) {
     return addOp(true, new SkipOp<E>(condition));
   }
 
@@ -272,7 +272,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
   }
 
-  private static class CountDown<A> implements Condition<A> {
+  private static class CountDown<A> implements Predicate<A> {
     int cur;
 
     public CountDown(int count) {
@@ -280,7 +280,7 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
 
     @Override
-    public boolean value(A a) {
+    public boolean test(A a) {
       return cur > 0 && cur-- != 0;
     }
   }
@@ -296,38 +296,38 @@ public abstract class JBIterator<E> implements Iterator<E> {
     }
   }
 
-  private class FilterOp<E> extends Op<Condition<? super E>> {
-    FilterOp(Condition<? super E> condition) {
+  private class FilterOp<E> extends Op<Predicate<? super E>> {
+    FilterOp(Predicate<? super E> condition) {
       super(condition);
     }
 
     @Override
     Object apply(Object o) {
-      return impl.value((E)o) ? o : skip();
+      return impl.test((E)o) ? o : skip();
     }
   }
 
-  private class WhileOp<E> extends Op<Condition<? super E>> {
+  private class WhileOp<E> extends Op<Predicate<? super E>> {
 
-    WhileOp(Condition<? super E> condition) {
+    WhileOp(Predicate<? super E> condition) {
       super(condition);
     }
     @Override
     Object apply(Object o) {
-      return impl.value((E)o) ? o : stop();
+      return impl.test((E)o) ? o : stop();
     }
   }
 
-  private class SkipOp<E> extends Op<Condition<? super E>> {
+  private class SkipOp<E> extends Op<Predicate<? super E>> {
     boolean active = true;
 
-    SkipOp(Condition<? super E> condition) {
+    SkipOp(Predicate<? super E> condition) {
       super(condition);
     }
 
     @Override
     Object apply(Object o) {
-      if (active && impl.value((E)o)) return skip();
+      if (active && impl.test((E)o)) return skip();
       active = false;
       return o;
     }

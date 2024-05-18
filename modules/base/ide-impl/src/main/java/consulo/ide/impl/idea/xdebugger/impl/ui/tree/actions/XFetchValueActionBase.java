@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions;
 
 import consulo.execution.debug.frame.HeadlessValueEvaluationCallback;
 import consulo.execution.debug.frame.XFullValueEvaluator;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.util.containers.IntIntHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;

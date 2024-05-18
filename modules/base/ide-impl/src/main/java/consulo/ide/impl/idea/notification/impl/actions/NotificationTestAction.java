@@ -26,7 +26,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;

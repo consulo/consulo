@@ -75,12 +75,6 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
     return new UnifiedFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 
-  @Nonnull
-  @Override
-  protected DockableEditorContainerFactory createDockContainerFactory() {
-    return new UnifiedDockableEditorContainerFactory();
-  }
-
   @Override
   public void dispose() {
   }

@@ -22,6 +22,9 @@ import java.awt.Image;
  * @author Konstantin Bulenkov
  */
 public interface DnDTarget extends DnDDropHandler, DnDTargetChecker {
-  void cleanUpOnLeave();
-  void updateDraggedImage(Image image, Point dropPoint, Point imageOffset);
+  default void cleanUpOnLeave() {
+  }
+
+  default void updateDraggedImage(Image image, Point dropPoint, Point imageOffset) {
+  }
 }

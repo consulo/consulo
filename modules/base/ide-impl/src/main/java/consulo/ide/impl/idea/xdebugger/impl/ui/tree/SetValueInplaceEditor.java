@@ -21,7 +21,7 @@ import consulo.execution.debug.frame.XValueModifier;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.language.editor.hint.HintManager;

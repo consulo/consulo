@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.RunManagerEx;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationFactory;
@@ -42,7 +43,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
-
 
 public abstract class BaseExecuteBeforeRunDialog<T extends BeforeRunTask> extends DialogWrapper {
   private final Project myProject;
