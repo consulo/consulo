@@ -31,7 +31,8 @@ import javax.swing.*;
  * @since 12.05.2024
  */
 public interface RunnerContentUi extends ContentUI, CellTransform.Facade, ViewContext, Disposable, PropertyChangeListener, QuickActionProvider, DockContainer, DockContainer.Dialog {
-  public static final Key<RunnerContentUi> KEY = Key.create("DebuggerContentUI");
+  Key<RunnerContentUi> KEY = Key.create("DebuggerContentUI");
+  Key<Boolean> LIGHTWEIGHT_CONTENT_MARKER = Key.create("LightweightContent");
 
   @Override
   default JComponent getComponent() {

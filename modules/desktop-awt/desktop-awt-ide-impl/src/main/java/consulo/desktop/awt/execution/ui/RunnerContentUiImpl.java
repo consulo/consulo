@@ -86,8 +86,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, PropertyChangeListener, QuickActionProvider, SwingDockContainer, DockContainer.Dialog {
-  public static final Key<Boolean> LIGHTWEIGHT_CONTENT_MARKER = Key.create("LightweightContent");
-
   private static final String LAYOUT = "Runner.Layout";
   private static final String SETTINGS = "XDebugger.Settings";
   private static final String VIEW_POPUP = "Runner.View.Popup";
