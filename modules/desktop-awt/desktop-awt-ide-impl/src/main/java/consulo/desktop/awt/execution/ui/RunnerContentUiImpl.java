@@ -23,6 +23,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.impl.internal.ui.layout.*;
+import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.execution.ui.layout.LayoutViewOptions;
 import consulo.execution.ui.layout.PlaceInGrid;
@@ -684,7 +685,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
       @Override
       public void contentAdded(final ContentManagerEvent event) {
         initUi();
-        if (event.getContent().getUserData(LIGHTWEIGHT_CONTENT_MARKER) == Boolean.TRUE) {
+        if (event.getContent().getUserData(RunContentManager.LIGHTWEIGHT_CONTENT_MARKER) == Boolean.TRUE) {
           myLayoutSettings.setLightWeight(event.getContent());
           Disposer.register(event.getContent(), new Disposable() {
             @Override

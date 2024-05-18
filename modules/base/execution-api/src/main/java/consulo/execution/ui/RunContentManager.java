@@ -26,6 +26,7 @@ import consulo.process.ProcessHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,6 +34,8 @@ import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunContentManager {
+  Key<Boolean> LIGHTWEIGHT_CONTENT_MARKER = Key.create("LightweightContent");
+
   @Nullable
   RunContentDescriptor getSelectedContent();
 
