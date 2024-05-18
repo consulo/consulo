@@ -91,13 +91,11 @@ public class AllIcons {
     public static final Image LoginAvator = PlatformIconGroup.actionsLoginavatar(); // 16x16
     public static final Image Lightning = PlatformIconGroup.actionsLightning(); // 16x16
     public static final Image Menu_cut = PlatformIconGroup.actionsMenu_cut(); // 16x16
-    public static final Image Menu_find = PlatformIconGroup.actionsMenu_find(); // 16x16
     public static final Image Menu_help = PlatformIconGroup.actionsMenu_help(); // 16x16
     public static final Image Menu_open = PlatformIconGroup.actionsMenu_open(); // 16x16
     public static final Image Menu_paste = PlatformIconGroup.actionsMenu_paste(); // 16x16
     public static final Image Menu_replace = PlatformIconGroup.actionsMenu_replace(); // 16x16
     public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
-    public static final Image Minimize = PlatformIconGroup.actionsMinimize(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
     public static final Image More = PlatformIconGroup.actionsMore();
     public static final Image Move_to_button = PlatformIconGroup.actionsMove_to_button(); // 11x10

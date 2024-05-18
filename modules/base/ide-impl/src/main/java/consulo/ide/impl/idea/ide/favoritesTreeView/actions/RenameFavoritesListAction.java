@@ -16,16 +16,15 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView.actions;
 
-import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManagerImpl;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 
 /**
  * User: anna
@@ -33,8 +32,7 @@ import consulo.project.Project;
  */
 public class RenameFavoritesListAction extends AnAction implements DumbAware {
   public RenameFavoritesListAction() {
-    super(IdeBundle.message("action.rename.favorites.list"), IdeBundle.message("action.rename.favorites.list"),
-          AllIcons.Actions.Menu_replace);
+    super(IdeBundle.message("action.rename.favorites.list"), IdeBundle.message("action.rename.favorites.list"), null);
   }
 
   @Override
