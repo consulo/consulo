@@ -6,7 +6,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.execution.impl.internal.service.ServiceView;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import org.jetbrains.annotations.NotNull;
+import jakarta.annotation.Nonnull;
 
 import static consulo.execution.impl.internal.service.ServiceViewActionProvider.getSelectedView;
 
@@ -19,19 +19,19 @@ public final class GroupByServiceGroupsAction extends ToggleAction implements Du
 //  }
 
   @Override
-  public void update(@NotNull AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     super.update(e);
     e.getPresentation().setEnabled(getSelectedView(e) != null);
   }
 
   @Override
-  public boolean isSelected(@NotNull AnActionEvent e) {
+  public boolean isSelected(@Nonnull AnActionEvent e) {
     ServiceView selectedView = getSelectedView(e);
     return selectedView != null && selectedView.isGroupByServiceGroups();
   }
 
   @Override
-  public void setSelected(@NotNull AnActionEvent e, boolean state) {
+  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
     ServiceView selectedView = getSelectedView(e);
     if (selectedView != null) {
       selectedView.setGroupByServiceGroups(state);
