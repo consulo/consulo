@@ -56,7 +56,7 @@ import java.util.*;
 public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 
-  public static final String RUNNERS_GROUP = "RunnerActions";
+  public static final String RUNNERS_GROUP = IdeActions.GROUP_RUNNER_ACTIONS;
   public static final String RUN_CONTEXT_GROUP = "RunContextGroupInner";
 
   private List<Executor> myExecutors = new ArrayList<>();

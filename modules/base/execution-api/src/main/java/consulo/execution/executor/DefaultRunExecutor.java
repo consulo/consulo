@@ -17,11 +17,10 @@
 package consulo.execution.executor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.execution.ExecutionBundle;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -44,13 +43,13 @@ public class DefaultRunExecutor extends Executor {
 
   @Override
   public Image getToolWindowIcon() {
-    return AllIcons.Toolwindows.ToolWindowRun;
+    return PlatformIconGroup.toolwindowsToolwindowrun();
   }
 
   @Override
   @Nonnull
   public Image getIcon() {
-    return AllIcons.Actions.Execute;
+    return PlatformIconGroup.actionsExecute();
   }
 
   @Override

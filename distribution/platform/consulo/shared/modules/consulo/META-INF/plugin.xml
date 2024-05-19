@@ -1294,7 +1294,7 @@
 
     <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
     <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
-            description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"/>
+            description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@actions.execute"/>
     <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction"
             text="Debug..."
             description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
