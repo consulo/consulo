@@ -413,7 +413,6 @@ public abstract class ToolWindowBase implements ToolWindowEx {
 
   public void setContentFactory(ToolWindowFactory contentFactory) {
     myContentFactory = contentFactory;
-    contentFactory.init(this);
   }
 
   public void ensureContentInitialized() {

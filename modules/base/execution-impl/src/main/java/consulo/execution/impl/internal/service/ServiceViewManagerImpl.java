@@ -2,6 +2,7 @@
 package consulo.execution.impl.internal.service;
 
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.AppUIExecutor;
@@ -22,6 +23,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ModalityState;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
@@ -79,7 +81,6 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
   private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
 
   private final Set<String> myActiveToolWindowIds = new SmartHashSet<>();
-  private boolean myRegisteringToolWindowAvailable;
 
   @Inject
   public ServiceViewManagerImpl(@Nonnull Project project) {
@@ -145,6 +146,36 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     return null;
   }
 
+  @RequiredUIAccess
+  public void initToolWindow(ToolWindow toolWindow) {
+    String toolWindowId = toolWindow.getId();
+
+    Collection<ServiceViewContributor<?>> contributors = myGroups.getOrDefault(toolWindowId, Set.of());
+    if (contributors.isEmpty()) {
+      toolWindow.setAvailable(false);
+      return;
+    }
+
+    if (!myActivationActionsRegistered && ToolWindowId.SERVICES.equals(toolWindowId)) {
+      myActivationActionsRegistered = true;
+      registerActivateByContributorActions(myProject, contributors);
+    }
+
+    Set<? extends ServiceViewContributor<?>> activeContributors = getActiveContributors();
+
+    boolean active = !Collections.disjoint(activeContributors, contributors);
+
+    toolWindow.setAvailable(true);
+
+    if (active) {
+      myActiveToolWindowIds.add(toolWindowId);
+    }
+
+    restoreBrokenToolWindowIfNeeded(toolWindow);
+  }
+
+  @Deprecated
+  @DeprecationInfo("@see initToolWindow()")
   private void registerToolWindows(Collection<String> toolWindowIds) {
     Set<? extends ServiceViewContributor<?>> activeContributors = getActiveContributors();
     for (Map.Entry<String, Collection<ServiceViewContributor<?>>> entry : myGroups.entrySet()) {
@@ -178,23 +209,17 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
         }
       }
 
-      myRegisteringToolWindowAvailable = active;
-      try {
-        ToolWindow toolWindow = toolWindowManager.getToolWindow(toolWindowId);
-        if (toolWindow == null) {
-          throw new IllegalArgumentException("There no toolWindow registered for id: " + toolWindowId);
-        }
-        
-        toolWindow.setAvailable(true);
+      ToolWindow toolWindow = toolWindowManager.getToolWindow(toolWindowId);
+      if (toolWindow == null) {
+        throw new IllegalArgumentException("There no toolWindow registered for id: " + toolWindowId);
+      }
 
-        if (active) {
-          myActiveToolWindowIds.add(toolWindowId);
-        }
-        restoreBrokenToolWindowIfNeeded(toolWindow);
+      toolWindow.setAvailable(true);
+
+      if (active) {
+        myActiveToolWindowIds.add(toolWindowId);
       }
-      finally {
-        myRegisteringToolWindowAvailable = false;
-      }
+      restoreBrokenToolWindowIfNeeded(toolWindow);
     });
   }
 
@@ -234,11 +259,8 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
     }, ModalityState.nonModal(), myProject.getDisposed());
   }
 
-  boolean shouldBeAvailable() {
-    return myRegisteringToolWindowAvailable;
-  }
 
-  void createToolWindowContent(@Nonnull ToolWindow toolWindow) {
+  public void createToolWindowContent(@Nonnull ToolWindow toolWindow) {
     String toolWindowId = toolWindow.getId();
     Collection<ServiceViewContributor<?>> contributors = myGroups.get(toolWindowId);
     if (contributors == null) return;
@@ -763,8 +785,6 @@ public final class ServiceViewManagerImpl implements ServiceViewManager, Persist
       addToGroup(contributor);
       myNotInitializedContributors.add(contributor);
     }
-
-    registerToolWindows(myGroups.keySet());
 
     Disposable disposable = Disposable.newDisposable();
     Disposer.register(myProject, disposable);

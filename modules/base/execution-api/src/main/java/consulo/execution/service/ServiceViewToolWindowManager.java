@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.execution.impl.internal.service;
+package consulo.execution.service;
 
-import consulo.annotation.component.ExtensionImpl;
-import consulo.application.dumb.DumbAware;
-import consulo.execution.service.ServiceViewManager;
-import consulo.project.Project;
-import consulo.project.startup.PostStartupActivity;
-import consulo.ui.UIAccess;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 13.05.2024
+ * @since 19.05.2024
+ *
+ * @see BaseServiceToolWindowFactory
  */
-@ExtensionImpl
-public class ServicesStartupActivity implements PostStartupActivity, DumbAware {
-  @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-    ServiceViewManagerImpl manager = (ServiceViewManagerImpl)ServiceViewManager.getInstance(project);
+@ServiceAPI(ComponentScope.PROJECT)
+public interface ServiceViewToolWindowManager {
 
-    manager.loadGroups();
-  }
+  @RequiredUIAccess
+  void initToolWindow(@Nonnull ToolWindow toolWindow);
+
+  @RequiredUIAccess
+  void createToolWindowContent(@Nonnull ToolWindow toolWindow);
 }

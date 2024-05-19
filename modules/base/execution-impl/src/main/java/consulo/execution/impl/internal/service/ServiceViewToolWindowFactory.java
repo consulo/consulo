@@ -16,14 +16,10 @@
 package consulo.execution.impl.internal.service;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.service.ServiceViewManager;
+import consulo.execution.service.BaseServiceToolWindowFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
@@ -33,22 +29,11 @@ import jakarta.annotation.Nonnull;
  * @since 12.05.2024
  */
 @ExtensionImpl
-public class ServiceViewToolWindowFactory implements ToolWindowFactory {
+public class ServiceViewToolWindowFactory extends BaseServiceToolWindowFactory {
   @Nonnull
   @Override
   public String getId() {
     return ToolWindowId.SERVICES;
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    ((ServiceViewManagerImpl)ServiceViewManager.getInstance(project)).createToolWindowContent(toolWindow);
-  }
-
-  @Override
-  public boolean shouldBeAvailable(@Nonnull Project project) {
-    return false;
   }
 
   @Nonnull

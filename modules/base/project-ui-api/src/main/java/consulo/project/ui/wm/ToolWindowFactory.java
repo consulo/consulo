@@ -64,8 +64,14 @@ public interface ToolWindowFactory {
   /**
    * Perform additional initialisation routine here
    *
-   * @param window Tool Window
+   * @param toolWindow Tool Window
    */
+  @RequiredUIAccess
+  default void init(Project project, ToolWindow toolWindow) {
+    init(toolWindow);
+  }
+
+  @Deprecated
   default void init(ToolWindow window) {
   }
 

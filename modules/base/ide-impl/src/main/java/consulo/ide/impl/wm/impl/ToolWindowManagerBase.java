@@ -920,8 +920,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     ToolWindowAnchor toolWindowAnchor = factory.getAnchor();
     ToolWindow window = registerToolWindow(factory.getId(), factory.getDisplayName(), label, toolWindowAnchor, factory.isSecondary(), factory.canCloseContents(), DumbService.isDumbAware(factory),
                                            factory.shouldBeAvailable(myProject));
-    final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(factory.getId(), myProject, window);
+    ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(factory.getId(), myProject, window);
+
     toolWindow.setContentFactory(factory);
+
+    factory.init(myProject, toolWindow);
 
     if (toolWindow.getIcon() == null) {
       toolWindow.setIcon(factory.getIcon());
