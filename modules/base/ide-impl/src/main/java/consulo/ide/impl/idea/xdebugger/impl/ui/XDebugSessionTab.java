@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui;
 import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
 import consulo.execution.impl.internal.ui.layout.ViewImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.util.AppUIUtil;
 import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -206,7 +207,8 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
     myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
     registerView(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView);
     Content watchesContent =
-            myUi.createContent(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView.getPanel(), XDebuggerBundle.message("debugger.session.tab.watches.title"), AllIcons.Debugger.Watches, null);
+            myUi.createContent(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView.getPanel(), XDebuggerBundle.message("debugger.session.tab.watches.title"),
+                               PlatformIconGroup.debuggerWatch(), null);
     watchesContent.setCloseable(false);
     return watchesContent;
   }

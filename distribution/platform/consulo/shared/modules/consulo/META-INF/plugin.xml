@@ -2049,7 +2049,7 @@
               class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
 
       <action id="XDebugger.NewWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XNewWatchAction"
-              icon="consulo.platform.base.PlatformIconGroup@general.add"/>
+              icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
       <action id="XDebugger.EditWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XEditWatchAction"/>
       <action id="XDebugger.CopyWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XCopyWatchAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>

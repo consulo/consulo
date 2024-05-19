@@ -16,13 +16,12 @@
 
 package consulo.execution.debug.frame;
 
-import consulo.application.AllIcons;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -69,7 +68,7 @@ public abstract class XStackFrame extends XValueContainer {
     if (position != null) {
       component.append(position.getFile().getName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       component.append(":" + (position.getLine() + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES);
-      component.setIcon(AllIcons.Debugger.StackFrame);
+      component.setIcon(PlatformIconGroup.debuggerFrame());
     }
     else {
       component.append(XDebuggerBundle.message("invalid.frame"), SimpleTextAttributes.ERROR_ATTRIBUTES);

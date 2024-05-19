@@ -292,12 +292,10 @@ public class AllIcons {
     }
 
     public static final Image MuteBreakpoints = PlatformIconGroup.debuggerMutebreakpoints(); // 16x16
-    public static final Image NewWatch = PlatformIconGroup.debuggerNewwatch(); // 16x16
     public static final Image Question_badge = PlatformIconGroup.debuggerQuestion_badge(); // 6x9
     public static final Image RestoreLayout = PlatformIconGroup.debuggerRestorelayout(); // 16x16
     public static final Image Selfreference = PlatformIconGroup.debuggerSelfreference(); // 16x16
     public static final Image ShowCurrentFrame = PlatformIconGroup.debuggerShowcurrentframe(); // 16x16
-    public static final Image StackFrame = PlatformIconGroup.debuggerStackframe(); // 16x16
     public static final Image ThreadAtBreakpoint = PlatformIconGroup.debuggerThreadatbreakpoint(); // 16x16
     public static final Image ThreadCurrent = PlatformIconGroup.debuggerThreadcurrent(); // 16x16
     public static final Image ThreadFrozen = PlatformIconGroup.debuggerThreadfrozen(); // 16x16
@@ -321,11 +319,9 @@ public class AllIcons {
     }
 
     public static final Image ThreadSuspended = PlatformIconGroup.debuggerThreadsuspended(); // 16x16
-    public static final Image ToolConsole = PlatformIconGroup.debuggerToolconsole(); // 16x16
     public static final Image Value = PlatformIconGroup.debuggerValue(); // 16x16
     public static final Image ViewBreakpoints = PlatformIconGroup.debuggerViewbreakpoints(); // 16x16
     public static final Image Watch = PlatformIconGroup.debuggerWatch(); // 16x16
-    public static final Image Watches = PlatformIconGroup.debuggerWatches(); // 16x16
     public static final Image WatchLastReturnValue = PlatformIconGroup.debuggerWatchlastreturnvalue(); // 16x16
 
   }
@@ -405,14 +401,9 @@ public class AllIcons {
     public static final Image ComboArrowRight = PlatformIconGroup.generalComboarrowright(); // 5x9
     public static final Image ComboArrowRightPassive = PlatformIconGroup.generalComboarrowrightpassive(); // 5x9
     public static final Image ComboUpPassive = PlatformIconGroup.generalCombouppassive(); // 16x16
-    public static final Image ConfigurableDefault = PlatformIconGroup.generalConfigurabledefault(); // 32x32
-    public static final Image Configure = PlatformIconGroup.generalConfigure(); // 32x32
     public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
     public static final Image CreateNewProject = PlatformIconGroup.generalCreatenewproject(); // 32x32
-    public static final Image CreateNewProjectfromExistingFiles = PlatformIconGroup.generalCreatenewprojectfromexistingfiles(); // 32x32
-    public static final Image DefaultKeymap = PlatformIconGroup.generalDefaultkeymap(); // 32x32
     public static final Image Divider = PlatformIconGroup.generalDivider(); // 2x19
-    public static final Image DownloadPlugin = PlatformIconGroup.generalDownloadplugin(); // 16x16
     public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
     public static final Image EditColors = PlatformIconGroup.generalEditcolors(); // 16x16
     public static final Image Ellipsis = PlatformIconGroup.generalEllipsis(); // 9x9
@@ -425,8 +416,6 @@ public class AllIcons {
     public static final Image ExternalTools = PlatformIconGroup.generalExternaltools(); // 32x32
     public static final Image ExternalToolsSmall = PlatformIconGroup.generalExternaltoolssmall(); // 16x16
     public static final Image Filter = PlatformIconGroup.generalFilter(); // 16x16
-    public static final Image Floating = PlatformIconGroup.generalFloating(); // 14x14
-    public static final Image Gear = PlatformIconGroup.generalGear(); // 21x16
     public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
     public static final Image GetProjectfromVCS = PlatformIconGroup.generalGetprojectfromvcs(); // 32x32
     public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16
@@ -586,8 +575,6 @@ public class AllIcons {
     public static final Image Info_notifications = PlatformIconGroup.ideInfo_notifications(); // 16x16
     public static final Image Link = PlatformIconGroup.ideLink(); // 12x12
     public static final Image LocalScope = PlatformIconGroup.ideLocalscope(); // 16x16
-    public static final Image LookupAlphanumeric = PlatformIconGroup.ideLookupalphanumeric(); // 12x12
-    public static final Image LookupRelevance = PlatformIconGroup.ideLookuprelevance(); // 12x12
 
     public static class Macro {
       public static final Image Recording_1 = PlatformIconGroup.ideMacroRecording_1(); // 16x16

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.dumb.DumbAware;
@@ -29,6 +28,7 @@ import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.ex.action.AnAction;
@@ -330,7 +330,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
   private class SwitchDuplexConsoleViewAction extends ToggleAction implements DumbAware {
 
     public SwitchDuplexConsoleViewAction() {
-      super(ExecutionBundle.message("run.configuration.show.command.line.action.name"), null, AllIcons.Debugger.ToolConsole);
+      super(ExecutionBundle.message("run.configuration.show.command.line.action.name"), null, PlatformIconGroup.debuggerConsole());
     }
 
     @Override

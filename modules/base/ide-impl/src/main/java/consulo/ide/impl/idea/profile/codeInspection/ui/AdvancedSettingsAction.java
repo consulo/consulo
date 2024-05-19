@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.profile.codeInspection.ui;
 
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -31,6 +32,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
@@ -46,7 +48,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
   public AdvancedSettingsAction(final Project project, InspectionConfigTreeNode root) {
     super("Advanced Settings");
-    getTemplatePresentation().setIcon(AllIcons.General.Gear);
+    getTemplatePresentation().setIcon(PlatformIconGroup.generalGearplain());
     myProject = project;
     myRoot = root;
     myCheckBoxIndent = calculateCheckBoxIndent();
@@ -57,7 +59,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
   public void update(AnActionEvent e) {
     super.update(e);
     final InspectionProfileImpl inspectionProfile = getInspectionProfile();
-    final consulo.ui.image.Image icon = AllIcons.General.Gear;
+    final Image icon = PlatformIconGroup.generalGearplain();
     e.getPresentation().setIcon((inspectionProfile != null && inspectionProfile.isProfileLocked()) ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon);
   }
 

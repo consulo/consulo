@@ -23,26 +23,27 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;
 import consulo.ide.impl.idea.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -358,7 +359,7 @@ public class LightToolWindow extends JPanel {
   private class GearAction extends AnAction {
     public GearAction() {
       Presentation presentation = getTemplatePresentation();
-      presentation.setIcon(AllIcons.General.Gear);
+      presentation.setIcon(PlatformIconGroup.generalGearplain());
     }
 
     @Override
