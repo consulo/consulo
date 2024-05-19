@@ -212,22 +212,18 @@
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jogg</artifactId>
-      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>jvorbis</artifactId>
-      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.jlayer</artifactId>
-      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>consulo.internal.sound</groupId>
       <artifactId>javazoom.mp3</artifactId>
-      <version>2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
