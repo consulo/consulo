@@ -558,7 +558,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   private RunContentDescriptor getDescriptorBy(ProcessHandler handler, Executor runnerInfo) {
     List<Content> contents = new ArrayList<>();
     ContainerUtil.addAll(contents, getContentManagerForRunner(runnerInfo, null).getContents());
-    ContainerUtil.addAll(contents, myRunToolWindowManager.get(myRunDashboardManager.getToolWindowId()).getContents());
+    ContainerUtil.addAll(contents, myRunDashboardManager.getDashboardContentManager().getContents());
     for (Content content : contents) {
       RunContentDescriptor runContentDescriptor = getRunContentDescriptorByContent(content);
       assert runContentDescriptor != null;
