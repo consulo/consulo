@@ -26,7 +26,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -36,7 +35,6 @@ public final class PositionPanel extends EditorBasedWidget
 
   public static final Key<Object> DISABLE_FOR_EDITOR = Key.create("positionPanel.disableForEditor");
 
-  public static final String SPACE = "     ";
   public static final String SEPARATOR = ":";
 
   private static final int CHAR_COUNT_SYNC_LIMIT = 500_000;
@@ -180,48 +178,57 @@ public final class PositionPanel extends EditorBasedWidget
 
   private String getPositionText(@Nonnull Editor editor) {
     myCountTask = null;
-    if (!editor.isDisposed() && !myAlarm.isDisposed()) {
-      StringBuilder message = new StringBuilder();
 
-      SelectionModel selectionModel = editor.getSelectionModel();
-      int caretCount = editor.getCaretModel().getCaretCount();
-      if (caretCount > 1) {
-        message.append(UIBundle.message("position.panel.caret.count", caretCount));
-      }
-      else {
-        if (selectionModel.hasSelection()) {
-          int selectionStart = selectionModel.getSelectionStart();
-          int selectionEnd = selectionModel.getSelectionEnd();
-          if (selectionEnd > selectionStart) {
-            CodePointCountTask countTask = new CodePointCountTask(editor.getDocument().getImmutableCharSequence(), selectionStart, selectionEnd);
-            if (countTask.isQuick()) {
-              int charCount = countTask.calculate();
-              message.append(charCount).append(' ').append(UIBundle.message("position.panel.selected.chars.count", charCount));
-            }
-            else {
-              message.append(CHAR_COUNT_UNKNOWN).append(' ').append(UIBundle.message("position.panel.selected.chars.count", 2));
-              myCountTask = countTask;
-              myAlarm.cancelAllRequests();
-              myAlarm.addRequest(countTask, 0);
-            }
-            int selectionStartLine = editor.getDocument().getLineNumber(selectionStart);
-            int selectionEndLine = editor.getDocument().getLineNumber(selectionEnd);
-            if (selectionEndLine > selectionStartLine) {
-              message.append(", ");
-              message.append(UIBundle.message("position.panel.selected.line.breaks.count", selectionEndLine - selectionStartLine));
-            }
-            message.append(SPACE);
-          }
-        }
-        LogicalPosition caret = editor.getCaretModel().getLogicalPosition();
-        message.append(caret.line + 1).append(SEPARATOR).append(caret.column + 1);
-      }
-
-      return message.toString();
-    }
-    else {
+    if (editor.isDisposed() || myAlarm.isDisposed()) {
       return "";
     }
+
+    int caretCount = editor.getCaretModel().getCaretCount();
+    if (caretCount > 1) {
+      return UIBundle.message("position.panel.caret.count", caretCount);
+    }
+
+    StringBuilder message = new StringBuilder();
+    LogicalPosition caret = editor.getCaretModel().getLogicalPosition();
+    message.append(caret.line + 1).append(SEPARATOR).append(caret.column + 1);
+    
+    SelectionModel selectionModel = editor.getSelectionModel();
+    if (!selectionModel.hasSelection()) {
+      return message.toString();
+    }
+
+    int selectionStart = selectionModel.getSelectionStart();
+    int selectionEnd = selectionModel.getSelectionEnd();
+    if (selectionEnd <= selectionStart) {
+      return message.toString();
+    }
+
+    CodePointCountTask
+      countTask = new CodePointCountTask(editor.getDocument().getImmutableCharSequence(), selectionStart, selectionEnd);
+
+    message.append(" (");
+    if (countTask.isQuick()) {
+      int charCount = countTask.calculate();
+      message.append(charCount).append(" ").append(UIBundle.message("position.panel.selected.chars.count", charCount));
+    }
+    else {
+      message.append(CHAR_COUNT_UNKNOWN).append(" ").append(UIBundle.message("position.panel.selected.chars.count", 2));
+
+      myCountTask = countTask;
+      myAlarm.cancelAllRequests();
+      myAlarm.addRequest(countTask, 0);
+    }
+
+    int selectionStartLine = editor.getDocument().getLineNumber(selectionStart);
+    int selectionEndLine = editor.getDocument().getLineNumber(selectionEnd);
+    if (selectionEndLine > selectionStartLine) {
+      message.append(", ");
+      message.append(UIBundle.message("position.panel.selected.line.breaks.count", selectionEndLine - selectionStartLine));
+    }
+
+    message.append(")");
+
+    return message.toString();
   }
 
   private class CodePointCountTask implements Runnable {
@@ -247,7 +254,7 @@ public final class PositionPanel extends EditorBasedWidget
     public void run() {
       int count = calculate();
       //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(() -> {
+      myProject.getUIAccess().give(() -> {
         if (this == myCountTask) {
           updateTextWithCodePointCount(count);
           myCountTask = null;
