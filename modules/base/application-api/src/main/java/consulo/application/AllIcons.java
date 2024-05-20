@@ -391,16 +391,6 @@ public class AllIcons {
     public static final Image CollapseComponent = PlatformIconGroup.generalCollapsecomponent();
     public static final Image CollapseComponentHover = PlatformIconGroup.generalCollapsecomponenthover();
     public static final Image CollapseAll = PlatformIconGroup.generalCollapseall(); // 11x16
-    public static final Image Combo = PlatformIconGroup.generalCombo(); // 16x16
-    public static final Image Combo3 = PlatformIconGroup.generalCombo3(); // 16x16
-    public static final Image ComboArrow = PlatformIconGroup.generalComboarrow(); // 16x16
-    public static final Image ComboBoxButtonArrow = PlatformIconGroup.generalComboboxbuttonarrow(); // 8x8
-    public static final Image ComboArrowDown = PlatformIconGroup.generalComboarrowdown(); // 9x5
-    public static final Image ComboArrowLeft = PlatformIconGroup.generalComboarrowleft(); // 5x9
-    public static final Image ComboArrowLeftPassive = PlatformIconGroup.generalComboarrowleftpassive(); // 5x9
-    public static final Image ComboArrowRight = PlatformIconGroup.generalComboarrowright(); // 5x9
-    public static final Image ComboArrowRightPassive = PlatformIconGroup.generalComboarrowrightpassive(); // 5x9
-    public static final Image ComboUpPassive = PlatformIconGroup.generalCombouppassive(); // 16x16
     public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
     public static final Image CreateNewProject = PlatformIconGroup.generalCreatenewproject(); // 32x32
     public static final Image Divider = PlatformIconGroup.generalDivider(); // 2x19

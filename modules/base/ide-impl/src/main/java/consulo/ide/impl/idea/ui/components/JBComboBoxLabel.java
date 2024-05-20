@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.components;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class JBComboBoxLabel extends JPanel {
-  private final JLabel myIcon = new JLabel(TargetAWT.to(AllIcons.General.ComboArrow));
+  private final JLabel myIcon = new JLabel(TargetAWT.to(PlatformIconGroup.generalArrowdown()));
   private final JLabel myText = new JLabel();
 
   public JBComboBoxLabel() {
@@ -51,11 +51,11 @@ public class JBComboBoxLabel extends JPanel {
   }
 
   public void setRegularIcon() {
-    myIcon.setIcon(TargetAWT.to(AllIcons.General.ComboArrow));
+    myIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalArrowdown()));
   }
 
   public void setSelectionIcon() {
-    myIcon.setIcon(TargetAWT.to(AllIcons.General.Combo));
+    myIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalArrowdown()));
   }
 
   @Override

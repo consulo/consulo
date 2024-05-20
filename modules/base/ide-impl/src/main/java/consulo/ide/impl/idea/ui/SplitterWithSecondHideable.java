@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.awt.Divider;
 import consulo.ide.impl.idea.openapi.ui.PseudoSplitter;
-import consulo.ui.ex.awt.Splitter;
 import consulo.ide.impl.idea.openapi.vcs.changes.RefreshablePanel;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.Divider;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Splitter;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,12 +53,12 @@ public abstract class SplitterWithSecondHideable {
     Image icon;
     Image openIcon;
     if (vertical) {
-      icon = AllIcons.General.ComboArrowRight;
-      openIcon = AllIcons.General.ComboArrowDown;
+      icon = PlatformIconGroup.generalArrowright();
+      openIcon = PlatformIconGroup.generalArrowdown();
     }
     else {
-      icon = AllIcons.General.ComboArrowRight;
-      openIcon = AllIcons.General.ComboArrowRightPassive;
+      icon = PlatformIconGroup.generalArrowright();
+      openIcon = ImageEffects.grayed(PlatformIconGroup.generalArrowright());
     }
 
     myTitledSeparator = new AbstractTitledSeparatorWithIcon(icon, openIcon, separatorText) {

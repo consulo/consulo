@@ -106,8 +106,6 @@ public interface PlatformIcons {
 
   Icon UP_DOWN_ARROWS = (Icon)AllIcons.Ide.UpDown;
 
-  Icon COMBOBOX_ARROW_ICON = (Icon)AllIcons.General.ComboArrow;
-  
   Icon EXPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Export;
   Icon IMPORT_ICON = (Icon)AllIcons.ToolbarDecorator.Import;
 }
