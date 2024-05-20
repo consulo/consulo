@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl;
 
+import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.swt.ui.impl.font.DesktopSwtFontManagerImpl;
 import consulo.desktop.swt.ui.impl.image.*;
 import consulo.desktop.swt.ui.impl.layout.*;
@@ -60,6 +61,12 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Override
   public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
     return new DesktopSwtImageKeyImpl(groupId, imageId, width, height);
+  }
+
+  @Override
+  public Image _ImageEffects_colorize(Image baseImage, ColorValue colorValue) {
+    // TODO impl it
+    return baseImage;
   }
 
   @Override
@@ -339,5 +346,17 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   @Override
   public <E> Tree<E> _Components_tree(E rootValue, TreeModel<E> model, Disposable disposable) {
     return new DesktopSwtTreeImpl<E>(rootValue, model);
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState _ModalityState_any() {
+    return ModalityStateImpl.ANY;
+  }
+
+  @Nonnull
+  @Override
+  public ModalityState _ModalityState_nonModal() {
+    return ModalityStateImpl.NON_MODAL;
   }
 }
