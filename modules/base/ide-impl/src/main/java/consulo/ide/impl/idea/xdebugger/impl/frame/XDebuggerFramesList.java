@@ -20,29 +20,39 @@ import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStackFrameWithSeparatorAbove;
-import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
-import consulo.language.editor.FileColorManager;
-import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.language.content.ContentFoldersSupportUtil;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.FileColorManager;
 import consulo.language.psi.PsiManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.popup.GroupedItemsListRenderer;
+import consulo.ui.ex.awt.popup.ListItemDescriptorAdapter;
+import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -154,11 +164,11 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     }
   }
 
-  private class XDebuggerGroupedFrameListRenderer extends GroupedItemsListRenderer {
+  private class XDebuggerGroupedFrameListRenderer extends GroupedItemsListRenderer<Object> {
     private final XDebuggerFrameListRenderer myOriginalRenderer = new XDebuggerFrameListRenderer(myProject);
 
     public XDebuggerGroupedFrameListRenderer() {
-      super(new ListItemDescriptorAdapter() {
+      super(new ListItemDescriptorAdapter<>() {
         @Nullable
         @Override
         public String getTextFor(Object value) {
@@ -229,6 +239,41 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         }
       }
       stackFrame.customizePresentation(this);
+      
+      // override icon - fully ignored, from provider
+      setIcon(getSourceIcon(stackFrame));
+    }
+
+    @SuppressWarnings("unchecked")
+    Image getSourceIcon(XStackFrame stackFrame) {
+      VirtualFile virtualFile = getFile(stackFrame);
+      if (virtualFile == null) {
+        return PlatformIconGroup.actionsHelp();
+      }
+
+      ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
+      if (index.isInLibrary(virtualFile)) {
+        List<OrderEntry> entries = index.getOrderEntriesForFile(virtualFile);
+        for (OrderEntry entry : entries) {
+          OrderEntryTypeEditor<OrderEntry> editor = OrderEntryTypeEditor.getEditor(entry.getType().getId());
+
+          Consumer<ColoredTextContainer> render = editor.getRender(entry);
+          ColoredStringBuilder builder = new ColoredStringBuilder();
+          render.accept(builder);
+          Image icon = builder.getIcon();
+          if (icon != null) {
+            return icon;
+          }
+        }
+      }
+      else {
+        ContentFolder contentFolder = index.getContentFolder(virtualFile);
+        if (contentFolder != null) {
+          return ContentFoldersSupportUtil.getContentFolderIcon(contentFolder.getType(), contentFolder.getProperties());
+        }
+      }
+
+      return PlatformIconGroup.nodesFolder();
     }
 
     Color getFrameBgColor(XStackFrame stackFrame) {
