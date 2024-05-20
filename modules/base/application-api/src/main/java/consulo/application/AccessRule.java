@@ -25,6 +25,8 @@ import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author VISTALL
  * @since 2018-04-24
@@ -70,7 +72,7 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static AsyncResult<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
+  public static CompletableFuture<Void> writeAsync(@RequiredWriteAction @Nonnull ThrowableRunnable<Throwable> action) {
     return writeAsync(() -> {
       action.run();
       return null;
@@ -78,16 +80,15 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
-    AsyncResult<T> result = AsyncResult.undefined();
+  public static <T> CompletableFuture<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
+    CompletableFuture<T> result = new CompletableFuture<>();
     AppUIExecutor.onWriteThread().later().execute(() -> {
       try {
-        result.setDone(action.get());
+        result.complete(action.get());
       }
       catch (Throwable throwable) {
         LOG.error(throwable);
-
-        result.rejectWithThrowable(throwable);
+        result.completeExceptionally(throwable);
       }
     });
     return result;

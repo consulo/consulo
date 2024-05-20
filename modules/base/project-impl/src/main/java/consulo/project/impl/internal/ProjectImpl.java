@@ -16,7 +16,6 @@
 package consulo.project.impl.internal;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.BaseApplication;
@@ -44,18 +43,18 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -306,8 +305,8 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Nonnull
   @Override
-  public AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess) {
-    return AccessRule.writeAsync(() -> saveAsyncImpl(uiAccess));
+  public CompletableFuture<Void> saveAsync(@Nonnull UIAccess uiAccess) {
+    return CompletableFuture.runAsync(() -> saveAsyncImpl(uiAccess));
   }
 
   private void saveAsyncImpl(@Nonnull UIAccess uiAccess) {

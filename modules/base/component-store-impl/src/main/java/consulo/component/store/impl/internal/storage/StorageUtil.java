@@ -29,7 +29,6 @@ import consulo.logging.Logger;
 import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.jdom.JDOMUtil;
@@ -38,14 +37,15 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Parent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author mike
@@ -135,11 +135,11 @@ public class StorageUtil {
   }
 
   @Nonnull
-  public static AsyncResult<VirtualFile> writeFileAsync(@Nullable File file,
-                                                        @Nonnull Object requestor,
-                                                        @Nullable final VirtualFile fileRef,
-                                                        @Nonnull byte[] content,
-                                                        @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
+  public static CompletableFuture<VirtualFile> writeFileAsync(@Nullable File file,
+                                                              @Nonnull Object requestor,
+                                                              @Nullable final VirtualFile fileRef,
+                                                              @Nonnull byte[] content,
+                                                              @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) {
     return AccessRule.writeAsync(() -> {
       VirtualFile virtualFile = fileRef;
 

@@ -98,7 +98,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
 
       myReady = true;
       stat.dump("ModulesManager", LOG::info);
-    }).doWhenDone((Runnable)result::setDone);
+    }).whenComplete((unused, throwable) -> result.setDone());
   }
 
   @Override

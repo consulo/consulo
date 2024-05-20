@@ -20,11 +20,12 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
-import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Project interface class.
@@ -120,7 +121,9 @@ public interface Project extends ComponentManager, WindowOwner {
   void save();
 
   @Nonnull
-  AsyncResult<Void> saveAsync(@Nonnull UIAccess uiAccess);
+  default CompletableFuture<Void> saveAsync(UIAccess uiAccess) {
+    return CompletableFuture.completedFuture(null);
+  }
 
   boolean isOpen();
 
