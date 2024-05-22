@@ -14,7 +14,8 @@ public interface PriorityAction {
     TOP,
     HIGH,
     NORMAL,
-    LOW
+    LOW,
+    BOTTOM
   }
 
   @Nonnull

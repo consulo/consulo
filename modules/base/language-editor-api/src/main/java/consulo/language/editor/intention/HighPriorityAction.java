@@ -16,6 +16,8 @@
 package consulo.language.editor.intention;
 
 import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.PriorityAction;
+import jakarta.annotation.Nonnull;
 
 /**
  * Marker interface for intentions and quick fixes.
@@ -25,5 +27,10 @@ import consulo.language.editor.inspection.LocalQuickFix;
  * @see IntentionAction
  * @see LocalQuickFix
  */
-public interface HighPriorityAction {
+public interface HighPriorityAction extends PriorityAction {
+  @Nonnull
+  @Override
+  default Priority getPriority() {
+    return Priority.HIGH;
+  }
 }

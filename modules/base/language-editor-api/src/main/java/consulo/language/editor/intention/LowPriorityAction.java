@@ -15,10 +15,18 @@
  */
 package consulo.language.editor.intention;
 
+import consulo.language.editor.inspection.PriorityAction;
+import jakarta.annotation.Nonnull;
+
 /**
  * @author Max Ishchenko
  * Marker interface for intentions and quick fixes.
  * Marked actions are shown lower in the list of available quick fixes.
  */
-public interface LowPriorityAction {
+public interface LowPriorityAction extends PriorityAction {
+  @Nonnull
+  @Override
+  default Priority getPriority() {
+    return Priority.LOW;
+  }
 }
