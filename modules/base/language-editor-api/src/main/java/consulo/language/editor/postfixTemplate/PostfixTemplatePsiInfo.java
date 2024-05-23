@@ -15,23 +15,18 @@
  */
 package consulo.language.editor.postfixTemplate;
 
-
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 public interface PostfixTemplatePsiInfo {
-
   @Nonnull
-  PsiElement createStatement(@Nonnull PsiElement context, @Nonnull String prefix, @Nonnull String suffix);
+  public abstract PsiElement createExpression(@Nonnull PsiElement context,
+                                              @Nonnull String prefix,
+                                              @Nonnull String suffix);
 
+  /**
+   * You can assume that {@code element} is an element produced by {@code createExpression}
+   */
   @Nonnull
-  PsiElement createExpression(@Nonnull PsiElement context, @Nonnull String prefix, @Nonnull String suffix);
-
-  @Nullable
-  PsiElement getTopmostExpression(@Nonnull PsiElement element);
-
-  @Nonnull
-  PsiElement getNegatedExpression(@Nonnull PsiElement element);
+  public abstract PsiElement getNegatedExpression(@Nonnull PsiElement element);
 }

@@ -43,7 +43,7 @@ import java.util.Set;
 
 @ExtensionImpl
 public class PostfixLiveTemplate extends CustomLiveTemplateBase {
-  public static final String POSTFIX_TEMPLATE_ID = "POSTFIX_TEMPLATE_ID";
+  public static final String POSTFIX_TEMPLATE_ID = PostfixTemplate.POSTFIX_TEMPLATE_CUSTOM_TEMPLATE_ID;
   private static final Logger LOG = Logger.getInstance(PostfixLiveTemplate.class);
 
   @Nonnull

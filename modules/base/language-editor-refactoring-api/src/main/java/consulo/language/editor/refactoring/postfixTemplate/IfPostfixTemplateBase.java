@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.postfixTemplate;
+package consulo.language.editor.refactoring.postfixTemplate;
 
-
-import consulo.language.psi.PsiElement;
-
+import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
 import jakarta.annotation.Nonnull;
-import java.util.function.Predicate;
 
 public abstract class IfPostfixTemplateBase extends SurroundPostfixTemplateBase {
 
   protected IfPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo,
-                                  @Nonnull Predicate<PsiElement> typeChecker) {
-    super("if", "if (expr)", psiInfo, typeChecker);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected IfPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo) {
-    super("if", "if (expr)", psiInfo, (element) -> true);
+                                  @Nonnull PostfixTemplateExpressionSelector selector) {
+    super("if", "if (expr)", psiInfo, selector);
   }
 }

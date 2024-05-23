@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.postfixTemplate;
+package consulo.language.editor.refactoring.postfixTemplate;
 
+import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
 import consulo.language.psi.PsiElement;
-
 import jakarta.annotation.Nonnull;
-import java.util.function.Predicate;
 
-public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixTemplateBase
-{
+public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixTemplateBase {
   protected ElseExpressionPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo,
-                                              @Nonnull Predicate<PsiElement> typeChecker) {
-    super("else", "if (!exp)", psiInfo, typeChecker);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected ElseExpressionPostfixTemplateBase(@Nonnull PostfixTemplatePsiInfo psiInfo) {
-    super("else", "if (!exp)", psiInfo, (element) -> true);
+                                              @Nonnull PostfixTemplateExpressionSelector selector) {
+    super("else", "if (!expr)", psiInfo, selector);
   }
 
 
@@ -38,4 +31,3 @@ public abstract class ElseExpressionPostfixTemplateBase extends SurroundPostfixT
     return myPsiInfo.getNegatedExpression(expression);
   }
 }
-                                                                                                         

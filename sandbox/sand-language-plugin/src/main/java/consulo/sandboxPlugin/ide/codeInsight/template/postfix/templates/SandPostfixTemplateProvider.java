@@ -35,7 +35,7 @@ public class SandPostfixTemplateProvider extends PostfixTemplateProvider {
   @Nonnull
   @Override
   public Set<PostfixTemplate> buildTemplates() {
-    return Set.of(new TestTemplate(), new DDTemplate());
+    return Set.of(new TestTemplate(this), new DDTemplate(this));
   }
 
   @Override

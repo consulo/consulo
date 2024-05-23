@@ -18,6 +18,7 @@ package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.psi.PsiElement;
 import jakarta.annotation.Nonnull;
 
@@ -26,8 +27,8 @@ import jakarta.annotation.Nonnull;
 * @since 16.08.14
 */
 public class TestTemplate extends PostfixTemplate {
-  public TestTemplate() {
-    super("Test 1", "test", "testt dsadas dsa");
+  public TestTemplate(PostfixTemplateProvider postfixTemplateProvider) {
+    super("Test 1", "test", "testt dsadas dsa", postfixTemplateProvider);
   }
 
   @Override
