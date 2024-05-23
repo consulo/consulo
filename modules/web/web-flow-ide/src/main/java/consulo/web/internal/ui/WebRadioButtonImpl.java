@@ -17,7 +17,7 @@ package consulo.web.internal.ui;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Input;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.NativeLabel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
@@ -38,13 +38,13 @@ public class WebRadioButtonImpl extends VaadinComponentDelegate<WebRadioButtonIm
 
   public class Vaadin extends Div implements FromVaadinComponentWrapper {
     private final Input myInput;
-    private final Span myLabel;
+    private final NativeLabel myLabel;
 
     public Vaadin() {
       myInput = new Input();
       myInput.setId(UUID.randomUUID().toString());
       myInput.setType("radio");
-      myLabel = new Span();
+      myLabel = new NativeLabel();
       myLabel.setFor(myInput);
 
       add(myInput, myLabel);
