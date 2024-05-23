@@ -32,10 +32,10 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * The common base interface for all elements of the PSI tree.
@@ -176,6 +176,16 @@ public interface PsiElement extends UserDataHolder {
   @RequiredReadAction
   @Nonnull
   TextRange getTextRange();
+
+  /**
+   * @return text range of this element relative to its parent
+   */
+  @RequiredReadAction
+  @Nonnull
+  @Contract(pure = true)
+  default TextRange getTextRangeInParent() {
+    return TextRange.from(getStartOffsetInParent(), getTextLength());
+  }
 
   /**
    * Returns the text offset of the PSI element relative to its parent.
