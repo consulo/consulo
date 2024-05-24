@@ -342,7 +342,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
   }
 
   private void moveRemovedContent(Predicate<? super RunnerAndConfigurationSettings> condition) {
-    RunContentManagerImpl runContentManager = (RunContentManagerImpl)myProject.getInstance(RunContentManagerImpl.class);
+    RunContentManagerImpl runContentManager = (RunContentManagerImpl)myProject.getInstance(RunContentManager.class);
     for (RunDashboardService service : getRunConfigurations()) {
       Content content = service.getContent();
       if (content == null || !condition.test(service.getSettings())) continue;
