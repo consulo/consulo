@@ -282,6 +282,7 @@ public class TemplateImpl extends TemplateEx implements SchemeElement {
     return mySegments.size();
   }
 
+  @Override
   public void parseSegments() {
     if (!toParseSegments) {
       return;

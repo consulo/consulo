@@ -86,6 +86,8 @@ public abstract class Template {
 
   public abstract int getSegmentsCount();
 
+  public abstract void parseSegments();
+
   public abstract String getSegmentName(int segmentIndex);
 
   public abstract int getSegmentOffset(int segmentIndex);
