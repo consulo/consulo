@@ -31,6 +31,7 @@ module consulo.language.editor.refactoring.api {
   exports consulo.language.editor.refactoring.introduce.inplace;
   exports consulo.language.editor.refactoring.changeSignature;
   exports consulo.language.editor.refactoring.move;
+  exports consulo.language.editor.refactoring.postfixTemplate;
   exports consulo.language.editor.refactoring.move.fileOrDirectory;
   exports consulo.language.editor.refactoring.safeDelete;
   exports consulo.language.editor.refactoring.safeDelete.usageInfo;
