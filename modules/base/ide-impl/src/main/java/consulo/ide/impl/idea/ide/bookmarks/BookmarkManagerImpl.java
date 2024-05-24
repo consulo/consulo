@@ -41,20 +41,18 @@ import consulo.ide.IdeBundle;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.project.startup.StartupActivity;
-import consulo.project.startup.StartupManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -224,13 +222,11 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
 
   @Override
   public void loadState(final Element state) {
-    List<BookmarkImpl> bookmarks = readExternal(state);
+    myPendingBookmarks.set(readExternal(state));
+  }
 
-    myPendingBookmarks.set(bookmarks);
-
-    StartupManager.getInstance(myProject).runAfterOpened((StartupActivity.DumbAware)(project, uiAccess) -> {
-      uiAccess.give(() -> registerAll(myPendingBookmarks.getAndSet(null)));
-    });
+  public void registerAllFromState() {
+    registerAll(myPendingBookmarks.getAndSet(null));
   }
 
   private void registerAll(@Nullable List<BookmarkImpl> bookmarksForUpdate) {
@@ -327,6 +323,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
    *
    * @return bookmark list after moving
    */
+  @Override
   @Nonnull
   public List<? extends Bookmark> moveBookmarkUp(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);
@@ -346,6 +343,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
    *
    * @return bookmark list after moving
    */
+  @Override
   @Nonnull
   public List<? extends Bookmark> moveBookmarkDown(@Nonnull Bookmark bookmark) {
     final int index = myBookmarks.indexOf(bookmark);

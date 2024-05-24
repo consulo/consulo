@@ -31,7 +31,8 @@ public class BookmarkManagerStartupActivity implements PostStartupActivity, Dumb
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManagerImpl::documentCreated);
 
-    // init
-    BookmarkManager.getInstance(project);
+    BookmarkManagerImpl manager = (BookmarkManagerImpl)BookmarkManager.getInstance(project);
+
+    uiAccess.give(manager::registerAllFromState);
   }
 }
