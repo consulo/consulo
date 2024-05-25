@@ -37,6 +37,7 @@ import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.internal.*;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -156,7 +157,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       frame.setIconImages(ContainerUtil.map(myImages, ImageUtil::toBufferedImage));
     }
     else {
-      AppIconUtil.updateWindowIcon(myFrame);
+      getPeerFactory().updateWindowIcon(myFrame, StyleManager.get().getCurrentStyle().isDark());
     }
 
     WindowState state = myDimensionKey == null ? null : getWindowStateService(myProject).getState(myDimensionKey, frame);
@@ -251,14 +252,16 @@ public class FrameWrapper implements Disposable, DataProvider {
     return myFrame;
   }
 
+  private FrameWrapperPeerFactory getPeerFactory() {
+    return Application.get().getInstance(FrameWrapperPeerFactory.class);
+  }
+
   protected JFrame createJFrame(IdeFrame parent) {
-    FrameWrapperPeerFactory service = Application.get().getInstance(FrameWrapperPeerFactory.class);
-    return service.createJFrame(this, parent);
+    return getPeerFactory().createJFrame(this, parent);
   }
 
   protected JDialog createJDialog(IdeFrame parent) {
-    FrameWrapperPeerFactory service = Application.get().getInstance(FrameWrapperPeerFactory.class);
-    return service.createJDialog(this, parent);
+    return getPeerFactory().createJDialog(this, parent);
   }
 
   public IdeRootPaneNorthExtension getNorthExtension(String key) {

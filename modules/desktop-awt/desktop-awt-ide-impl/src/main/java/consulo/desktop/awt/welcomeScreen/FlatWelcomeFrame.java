@@ -18,7 +18,7 @@ package consulo.desktop.awt.welcomeScreen;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.ui.Coordinate2D;
-import consulo.ui.ex.awt.internal.AppIconUtil;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

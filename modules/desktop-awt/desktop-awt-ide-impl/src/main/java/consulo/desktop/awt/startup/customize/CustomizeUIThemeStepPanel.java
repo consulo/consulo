@@ -15,18 +15,17 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.application.CommonBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
-import consulo.desktop.awt.ui.util.AWTIconLoader;
+import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -40,9 +39,11 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   public CustomizeUIThemeStepPanel(boolean darkTheme) {
     setLayout(new BorderLayout(10, 10));
 
+
     Map<String, Image> lafNames = new LinkedHashMap<>();
-    lafNames.put(LIGHT, AWTIconLoader.INSTANCE.getIcon("/ICON-LIB/light/consulo.platform.base.PlatformIconGroup/lafs/LightPreview.png", PlatformIconGroup.class));
-    lafNames.put(DARK, AWTIconLoader.INSTANCE.getIcon("/ICON-LIB/light/consulo.platform.base.PlatformIconGroup/lafs/DarkPreview.png", PlatformIconGroup.class));
+
+    lafNames.put(LIGHT, PlatformIconGroup.lafsLightpreview());
+    lafNames.put(DARK, PlatformIconGroup.lafsDarkpreview());
 
     myColumnMode = true;
     

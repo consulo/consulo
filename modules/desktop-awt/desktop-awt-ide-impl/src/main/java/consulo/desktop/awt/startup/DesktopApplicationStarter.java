@@ -65,7 +65,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.internal.AppIconUtil;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -131,8 +131,6 @@ public class DesktopApplicationStarter extends ApplicationStarter {
 
     invokeAtUIAndWait(IdeEventQueue::initialize);// replace system event queue
 
-    stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
-
     // execute it in parallel
     ForkJoinPool.commonPool().execute(DesktopAWTFontRegistry::registerBundledFonts);
 
@@ -143,6 +141,9 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     });
 
     super.initializeEnviroment(isHeadlessMode, args, stat);
+
+    // wait until icon library loaded
+    stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame()));
   }
 
   @Override

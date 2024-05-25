@@ -45,7 +45,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.AppIconUtil;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;

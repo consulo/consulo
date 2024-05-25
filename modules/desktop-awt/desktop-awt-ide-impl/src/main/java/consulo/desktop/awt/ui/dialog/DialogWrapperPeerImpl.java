@@ -376,11 +376,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
   }
 
   @Override
-  public void setAppIcons() {
-    AppIconUtil.updateWindowIcon(getWindow());
-  }
-
-  @Override
   public Dimension getPreferredSize() {
     return myDialog.getPreferredSize();
   }

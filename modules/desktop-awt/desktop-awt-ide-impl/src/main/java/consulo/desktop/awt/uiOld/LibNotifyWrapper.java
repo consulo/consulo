@@ -23,7 +23,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.container.boot.ContainerPathManager;
-import consulo.ui.ex.awt.internal.AppIconUtil;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 
 import jakarta.annotation.Nonnull;
 

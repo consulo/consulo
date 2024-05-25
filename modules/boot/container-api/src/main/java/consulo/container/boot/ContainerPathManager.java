@@ -16,11 +16,14 @@
 package consulo.container.boot;
 
 import consulo.container.internal.PathManagerHolder;
+import consulo.util.nodep.io.FileUtilRt;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -58,6 +61,42 @@ public abstract class ContainerPathManager {
 
   public String getBinPath() {
     return getHomePath() + File.separator + BIN_FOLDER;
+  }
+
+  public Path findIconInAppHomeDirectory() {
+    File appHomeDirectory = getAppHomeDirectory();
+    if (!appHomeDirectory.exists()) {
+      return null;
+    }
+
+    Path[] svgIcon = new Path[1];
+    Path[] pngIcon = new Path[1];
+    try {
+
+      Files.walkFileTree(appHomeDirectory.toPath(), Set.of(), 1, new SimpleFileVisitor<>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          String fileName = file.getFileName().toString();
+          String extension = FileUtilRt.getExtension(fileName);
+          if ("svg".equals(extension)) {
+            svgIcon[0] = file;
+          }
+
+          if ("png".equals(extension)) {
+            pngIcon[0] = file;
+          }
+          return FileVisitResult.CONTINUE;
+        }
+      });
+    }
+    catch (IOException ignored) {
+    }
+
+    if (svgIcon[0] != null) {
+      return svgIcon[0];
+    }
+
+    return pngIcon[0];
   }
 
   public abstract String getConfigPath();

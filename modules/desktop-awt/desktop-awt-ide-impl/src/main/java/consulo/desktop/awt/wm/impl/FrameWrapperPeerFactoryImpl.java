@@ -18,6 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.project.Project;
@@ -289,5 +290,10 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
   @Override
   public JDialog createJDialog(FrameWrapper owner, IdeFrame parent) {
     return new MyJDialog(owner, parent);
+  }
+
+  @Override
+  public void updateWindowIcon(@Nonnull java.awt.Window window, boolean dark) {
+    AppIconUtil.updateWindowIcon(window);
   }
 }

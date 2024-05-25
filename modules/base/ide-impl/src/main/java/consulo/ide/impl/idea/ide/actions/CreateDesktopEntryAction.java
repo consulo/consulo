@@ -40,7 +40,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -49,6 +48,7 @@ import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 public class CreateDesktopEntryAction extends DumbAwareAction {
@@ -140,7 +140,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
     String name = Application.get().getName().toString();
 
-    final String iconPath = AppIconUtil.findIcon(distributionDirectory.getPath());
+    final Path iconPath = ContainerPathManager.get().findIconInAppHomeDirectory();
     if (iconPath == null) {
       throw new RuntimeException(ApplicationBundle.message("desktop.entry.icon.missing", distributionDirectory.getPath()));
     }
@@ -153,7 +153,8 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     final String wmClass = ApplicationStarter.getFrameClass();
 
     final String content = ExecUtil.loadTemplate(CreateDesktopEntryAction.class.getClassLoader(), "entry.desktop", ContainerUtil
-      .newHashMap(Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"), Arrays.asList(name, execPath.getPath(), iconPath, wmClass)));
+      .newHashMap(Arrays.asList("$NAME$", "$SCRIPT$", "$ICON$", "$WM_CLASS$"),
+                  Arrays.asList(name, execPath.getPath(), iconPath.toAbsolutePath().toString(), wmClass)));
 
     final String entryName = wmClass + ".desktop";
     final File entryFile = new File(FileUtil.getTempDirectory(), entryName);

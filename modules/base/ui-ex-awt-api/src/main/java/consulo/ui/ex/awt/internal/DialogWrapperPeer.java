@@ -172,8 +172,6 @@ public abstract class DialogWrapperPeer {
 
   public abstract void pack();
 
-  public abstract void setAppIcons();
-
   public abstract boolean isHeadless();
 
   public Object[] getCurrentModalEntities() {

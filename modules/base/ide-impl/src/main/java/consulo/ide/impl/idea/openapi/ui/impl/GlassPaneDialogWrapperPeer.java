@@ -358,11 +358,6 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
   }
 
   @Override
-  public void setAppIcons() {
-    throw new UnsupportedOperationException("Not implemented in " + getClass().getCanonicalName());
-  }
-
-  @Override
   public boolean isHeadless() {
     return DialogWrapperPeer.isHeadlessEnv();
   }
