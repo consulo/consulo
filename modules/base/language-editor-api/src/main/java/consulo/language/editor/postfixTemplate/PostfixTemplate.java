@@ -1,19 +1,30 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.postfixTemplate;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.application.util.NotNullLazyValue;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.internal.postfixTemplate.PostfixTemplateMetaData;
+import consulo.language.internal.PsiFileInternal;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.template.TemplateLanguageUtil;
+import consulo.language.util.LanguageUtil;
+import consulo.undoRedo.util.UndoUtil;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Represents a postfix template.
@@ -45,7 +56,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   private final String myId;
   private final String myPresentableName;
   private final String myKey;
-  private final NotNullLazyValue<String> myLazyDescription = NotNullLazyValue.createValue(() -> calcDescription());
+  private final Supplier<String> myLazyDescription = LazyValue.notNull(this::calcDescription);
 
   private final @Nonnull
   String myExample;
@@ -120,7 +131,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
    */
   @Nonnull
   public String getDescription() {
-    return myLazyDescription.getValue();
+    return myLazyDescription.get();
   }
 
   /**
@@ -202,5 +213,25 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   @Override
   public int hashCode() {
     return Objects.hash(myId, myPresentableName, myKey, getDescription(), myExample, myProvider);
+  }
+
+  @Nonnull
+  @RequiredReadAction
+  public static PsiFile copyFile(@Nonnull PsiFile file, @Nonnull StringBuilder fileContentWithoutKey) {
+    PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());
+    FileType fileType = file.getFileType();
+    Language language = LanguageUtil.getLanguageForPsi(file.getProject(), file.getVirtualFile(), fileType);
+    PsiFile copy = language != null ? psiFileFactory.createFileFromText(file.getName(), language, fileContentWithoutKey, false, true)
+      : psiFileFactory.createFileFromText(file.getName(), fileType, fileContentWithoutKey);
+
+    if (copy instanceof PsiFileInternal psiFileInternal) {
+      psiFileInternal.setOriginalFile(TemplateLanguageUtil.getBaseFile(file));
+    }
+
+    VirtualFile vFile = copy.getVirtualFile();
+    if (vFile != null) {
+      UndoUtil.disableUndoFor(vFile);
+    }
+    return copy;
   }
 }

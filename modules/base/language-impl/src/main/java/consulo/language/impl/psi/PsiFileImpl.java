@@ -20,24 +20,20 @@ import consulo.language.file.light.ReadOnlyLightVirtualFile;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.*;
-import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
 import consulo.language.internal.LanguageModuleUtilInternal;
-import consulo.language.psi.stub.StubTreeLoader;
-import consulo.language.psi.PsiFileEx;
+import consulo.language.internal.PsiFileInternal;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;
-import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.*;
-import consulo.language.psi.stub.StubbedSpine;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
@@ -58,16 +54,16 @@ import consulo.util.lang.ref.PatchedWeakReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileEx, PsiFileWithStubSupport, Queryable, PsiElementWithSubtreeChangeNotifier, Cloneable {
+public abstract class PsiFileImpl extends UserDataHolderBase implements PsiFileInternal, PsiFileWithStubSupport, Queryable, PsiElementWithSubtreeChangeNotifier, Cloneable {
   private static final Logger LOG = Logger.getInstance(PsiFileImpl.class);
   public static final String STUB_PSI_MISMATCH = "stub-psi mismatch";
   private static VarHandle ourTreeUpdater;
