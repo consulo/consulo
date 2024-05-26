@@ -15,37 +15,22 @@
  */
 package consulo.web.internal.ui.image;
 
-import consulo.ui.image.Image;
-
+import consulo.ui.impl.image.ImageReference;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-10-03
  */
-public class WebDataImageImpl implements Image {
+public class WebImageReference implements ImageReference {
   private final byte[] myX1Data;
   private final byte[] myX2Data;
   private final boolean myIsSVG;
-  private final int myWidth;
-  private final int myHeight;
 
-  public WebDataImageImpl(byte[] x1Data, byte[] x2Data, boolean isSVG, int width, int height) {
+  public WebImageReference(byte[] x1Data, byte[] x2Data, boolean isSVG) {
     myX1Data = x1Data;
     myX2Data = x2Data;
     myIsSVG = isSVG;
-    myWidth = width;
-    myHeight = height;
-  }
-
-  @Override
-  public int getHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return myWidth;
   }
 
   public boolean isSVG() {
@@ -54,7 +39,7 @@ public class WebDataImageImpl implements Image {
 
   @Nonnull
   public byte[] getData() {
-    if(myX2Data != null) {
+    if (myX2Data != null) {
       return myX2Data;
     }
 

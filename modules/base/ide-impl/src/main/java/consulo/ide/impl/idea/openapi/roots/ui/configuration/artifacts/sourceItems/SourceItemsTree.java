@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems;
 
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
+import consulo.application.ApplicationManager;
+import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.compiler.artifact.ui.PackagingSourceItem;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.SimpleDnDAwareTree;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.SourceItemsDraggingObject;
@@ -25,23 +27,13 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItem
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PackAndPutIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PutSourceItemIntoDefaultLocationAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.actions.SourceItemNavigateAction;
-import consulo.ui.ex.awt.tree.SimpleTreeBuilder;
-import consulo.ui.ex.awt.tree.SimpleTreeStructure;
-import consulo.ui.ex.awt.tree.WeightBasedComparator;
-import consulo.application.ApplicationManager;
-import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import consulo.compiler.artifact.ui.PackagingSourceItem;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.dnd.AdvancedDnDSource;
-import consulo.ui.ex.awt.dnd.DnDAction;
-import consulo.ui.ex.awt.dnd.DnDDragStartBean;
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.dnd.*;
+import consulo.ui.ex.awt.tree.*;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
@@ -143,7 +135,7 @@ public class SourceItemsTree extends SimpleDnDAwareTree implements AdvancedDnDSo
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
     final DefaultMutableTreeNode[] nodes = getSelectedTreeNodes();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(this, TreeUtil.getPathFromRoot(nodes[0]), dragOrigin);

@@ -15,25 +15,20 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.eclipse.nebula.cwt.svg.SvgDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
-
-import jakarta.annotation.Nonnull;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author VISTALL
  * @since 10/07/2021
  */
-public class DesktopSwtSvgLibraryImageImpl implements Image, DesktopSwtImage {
-  private final int myWidth;
-  private final int myHeight;
+public class DesktopSwtSvgLibraryImageImpl implements DesktopSwtImageReference {
   private final SvgDocument mySvgDocument;
 
-  public DesktopSwtSvgLibraryImageImpl(int width, int height, SvgDocument svgDocument) {
-    myWidth = width;
-    myHeight = height;
+  public DesktopSwtSvgLibraryImageImpl(SvgDocument svgDocument) {
     mySvgDocument = svgDocument;
   }
 
@@ -41,26 +36,16 @@ public class DesktopSwtSvgLibraryImageImpl implements Image, DesktopSwtImage {
     return mySvgDocument;
   }
 
-  @Override
-  public int getHeight() {
-    return myHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return myWidth;
-  }
-
   @Nonnull
   @Override
-  public org.eclipse.swt.graphics.Image toSWTImage() {
+  public Image toSWTImage(int width, int height) {
 
-    org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, myWidth, myHeight);
+    Image swtImage = new Image(null, width, height);
 
     GC gc = new GC(swtImage);
 
     gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_TRANSPARENT));
-    gc.fillRectangle(0, 0, myWidth, myHeight);
+    gc.fillRectangle(0, 0, width, height);
 
     mySvgDocument.apply(gc, swtImage.getBounds());
     gc.dispose();

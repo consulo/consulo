@@ -1,18 +1,17 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.ui.impl;
+package consulo.desktop.awt.ui.shadow;
 
 import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.ui.ex.awt.internal.JreHiDpiUtil;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUI.ScaleContext;
 import consulo.ui.ex.awt.JBUI.ScaleContextAware;
 import consulo.ui.ex.awt.JBUI.ScaleContextSupport;
+import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
@@ -75,14 +74,19 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
   }
 
   private void updateIcons(ScaleContext ctx) {
-    updateIcon(TargetAWT.to(myTop), ctx, () -> myCroppedTop = IconUtil.cropIcon(TargetAWT.to(myTop), 1, Integer.MAX_VALUE));
+    updateIcon(TargetAWT.to(myTop), ctx, () -> myCroppedTop = cropIcon(TargetAWT.to(myTop), 1, Integer.MAX_VALUE));
     updateIcon(TargetAWT.to(myTopRight), ctx, null);
-    updateIcon(TargetAWT.to(myRight), ctx, () -> myCroppedRight = IconUtil.cropIcon(TargetAWT.to(myRight), Integer.MAX_VALUE, 1));
+    updateIcon(TargetAWT.to(myRight), ctx, () -> myCroppedRight = cropIcon(TargetAWT.to(myRight), Integer.MAX_VALUE, 1));
     updateIcon(TargetAWT.to(myBottomRight), ctx, null);
-    updateIcon(TargetAWT.to(myBottom), ctx, () -> myCroppedBottom = IconUtil.cropIcon(TargetAWT.to(myBottom), 1, Integer.MAX_VALUE));
+    updateIcon(TargetAWT.to(myBottom), ctx, () -> myCroppedBottom = cropIcon(TargetAWT.to(myBottom), 1, Integer.MAX_VALUE));
     updateIcon(TargetAWT.to(myBottomLeft), ctx, null);
-    updateIcon(TargetAWT.to(myLeft), ctx, () -> myCroppedLeft = IconUtil.cropIcon(TargetAWT.to(myLeft), Integer.MAX_VALUE, 1));
+    updateIcon(TargetAWT.to(myLeft), ctx, () -> myCroppedLeft = cropIcon(TargetAWT.to(myLeft), Integer.MAX_VALUE, 1));
     updateIcon(TargetAWT.to(myTopLeft), ctx, null);
+  }
+
+  private Icon cropIcon(Icon icon, int maxWidth, int maxHeight) {
+    // TODO  impl!
+    throw new UnsupportedOperationException();
   }
 
   private static void updateIcon(Icon icon, ScaleContext ctx, Runnable r) {
@@ -148,7 +152,7 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
     double scale = JBUI.sysScale((Graphics2D)g);
     if (JreHiDpiUtil.isJreHiDPIEnabled() && Math.ceil(scale) > scale) {
       // Direct painting for fractional scale
-      BufferedImage img = ImageUtil.toBufferedImage(IconUtil.toImage(pattern));
+      BufferedImage img = ImageUtil.toBufferedImage(toImage(pattern));
       int patternSize = horizontally ? img.getWidth() : img.getHeight();
       Graphics2D g2d = (Graphics2D)g.create();
       try {
@@ -177,5 +181,11 @@ public class ShadowPainter extends ScaleContextSupport<ScaleContext> {
         }
       }
     }
+  }
+
+  private  static java.awt.Image toImage(Icon icon) {
+    // TODO use ?AppIconUtil.toImage();
+    // TODO not implemented !
+    throw new UnsupportedOperationException();
   }
 }

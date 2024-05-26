@@ -17,9 +17,9 @@ package consulo.web.internal.ui.image;
 
 import consulo.ui.ex.UIModificationTracker;
 import consulo.ui.image.IconLibraryManager;
-import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
+import consulo.ui.impl.image.ImageReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -49,14 +49,15 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
     return myGroupId;
   }
 
+  @Nonnull
   @Override
   public String getImageURL() {
     return "/image?groupId=" + myGroupId + "&imageId=" + myImageId;
   }
 
   @Nullable
-  public Image calcImage() {
-    return ourLibraryManager.getIcon(null, myGroupId, myImageId, myWidth, myHeight);
+  public ImageReference calcImage() {
+    return ourLibraryManager.resolveImage(null, myGroupId, myImageId);
   }
 
   @Nonnull

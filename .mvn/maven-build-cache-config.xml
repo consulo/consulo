@@ -26,7 +26,7 @@
   </configuration>
   <input>
     <global>
-      <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml}</glob>
+      <glob>{*.java,*.groovy,*.yaml,*.svcd,*.proto,*.trift,*assembly.xml,assembly*.xml,*logback.xml,*.vm,*.ini,*.jks,*.properties,*.sh,*.bat,*.svg,*.png,*.yaml,*.yml,*.xml}</glob>
       <includes>
         <include>src/</include>
       </includes>

@@ -15,15 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl.taskBar;
 
-import consulo.ui.ex.awt.ImageUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.ImageKey;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -124,9 +125,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
       BufferedImage icon = null;
       if (visible) {
         if (myOkImage == null) {
-          ImageKey okIcon = PlatformIconGroup.macAppiconok512();
-          Image imageKeyImage = TargetAWT.toImage(okIcon, null);
-          myOkImage = ImageUtil.toBufferedImage(imageKeyImage);
+          myOkImage = ImageUtil.toBufferedImage(AppIconUtil.toImage(PlatformIconGroup.macAppiconok512()));
         }
 
         icon = myOkImage;

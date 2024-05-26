@@ -8,7 +8,7 @@ open module consulo.desktop.awt.ide.impl {
 
   requires miglayout;
   requires com.google.common;
-  requires svg.salamander;
+  requires com.github.weisj.jsvg;
   requires com.google.gson;
 
   requires io.netty.buffer;

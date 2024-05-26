@@ -80,7 +80,7 @@ public class XDebuggerTreePanel implements DnDSource {
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin) {
+  public Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin, @Nonnull DnDDragStartBean bean) {
     XValueNodeImpl[] nodes = getNodesToDrag();
     if (nodes.length == 1) {
       return DnDAwareTree.getDragImage(myTree, nodes[0].getPath(), dragOrigin);

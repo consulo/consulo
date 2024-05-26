@@ -1,3 +1,4 @@
+<!-- Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
   <defs>
     <circle id="chrome-a" cx="7" cy="7" r="7"/>
@@ -16,7 +17,8 @@
       <stop offset="66%" stop-color="#EA6100" stop-opacity="0"/>
     </linearGradient>
     <circle id="chrome-j" cx="7" cy="7" r="7"/>
-    <radialGradient id="chrome-k" cx="-4.872%" cy="-.248%" r="401.327%" fx="-4.872%" fy="-.248%" gradientTransform="matrix(.26722 0 0 1 -.036 0)">
+    <radialGradient id="chrome-k" cx="-4.872%" cy="-.248%" r="401.327%" fx="-4.872%" fy="-.248%"
+                    gradientTransform="matrix(.26722 0 0 1 -.036 0)">
       <stop offset="0%" stop-color="#3E2723" stop-opacity=".2"/>
       <stop offset="100%" stop-color="#3E2723" stop-opacity="0"/>
     </radialGradient>
@@ -26,7 +28,8 @@
       <stop offset="100%" stop-color="#3E2723" stop-opacity="0"/>
     </radialGradient>
     <circle id="chrome-p" cx="7" cy="7" r="7"/>
-    <radialGradient id="chrome-q" cx="10.33%" cy="-12.215%" r="226.352%" fx="10.33%" fy="-12.215%" gradientTransform="matrix(1 0 0 .49642 0 -.062)">
+    <radialGradient id="chrome-q" cx="10.33%" cy="-12.215%" r="226.352%" fx="10.33%" fy="-12.215%"
+                    gradientTransform="matrix(1 0 0 .49642 0 -.062)">
       <stop offset="0%" stop-color="#263238" stop-opacity=".2"/>
       <stop offset="100%" stop-color="#263238" stop-opacity="0"/>
     </radialGradient>
@@ -71,7 +74,8 @@
     <mask id="chrome-o" fill="#fff">
       <use xlink:href="#chrome-m"/>
     </mask>
-    <polygon fill="url(#chrome-n)" fill-rule="nonzero" points="1.102 2.772 5.656 7.325 4.235 8.145" mask="url(#chrome-o)" transform="rotate(2 3.379 5.458)"/>
+    <polygon fill="url(#chrome-n)" fill-rule="nonzero" points="1.102 2.772 5.656 7.325 4.235 8.145" mask="url(#chrome-o)"
+             transform="rotate(2 3.379 5.458)"/>
     <mask id="chrome-r" fill="#fff">
       <use xlink:href="#chrome-p"/>
     </mask>

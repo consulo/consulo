@@ -16,13 +16,12 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-import org.eclipse.nebula.cwt.svg.SvgDocument;
-
+import consulo.ui.impl.image.ImageReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.eclipse.nebula.cwt.svg.SvgDocument;
 
 /**
  * @author VISTALL
@@ -33,20 +32,24 @@ public class DesktopSwtIconLibraryImpl extends BaseIconLibraryImpl {
     super(id, baseIconLibraryManager);
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
-    if(isSVG) {
+  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+                                                @Nullable byte[] _2xdata,
+                                                boolean isSVG,
+                                                String groupId,
+                                                String imageId) {
+    if (isSVG) {
       SvgDocument svgDocument;
-      if(_2xdata != null) {
+      if (_2xdata != null) {
         svgDocument = SvgDocument.load(new UnsyncByteArrayInputStream(_1xData));
       }
       else {
         svgDocument = SvgDocument.load(new UnsyncByteArrayInputStream(_1xData));
       }
 
-      return new DesktopSwtSvgLibraryImageImpl(width, height, svgDocument);
+      return new DesktopSwtSvgLibraryImageImpl(svgDocument);
     }
-    return new DesktopSwtEmptyImageImpl(width, height);
+    return ImageReference.INVALID;
   }
 }

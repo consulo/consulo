@@ -19,15 +19,13 @@ import consulo.desktop.awt.uiOld.RowIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nonnull;
-import java.util.function.Function;
 
 /**
  * @author VISTALL
  * @since 2018-05-07
  */
-public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopImage<DesktopAppendImageImpl> {
+public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopAWTImage {
   private final Image myImg1;
   private final Image myImg2;
 
@@ -35,7 +33,7 @@ public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopIma
     super(2, Alignment.CENTER);
     myImg1 = img1;
     setIcon(TargetAWT.to(img1), 0);
-    myImg2 = img2;             
+    myImg2 = img2;
     setIcon(TargetAWT.to(img2), 1);
   }
 
@@ -51,13 +49,14 @@ public class DesktopAppendImageImpl extends RowIcon implements Image, DesktopIma
 
   @Nonnull
   @Override
-  public DesktopAppendImageImpl copyWithScale(float scale) {
-    return new DesktopAppendImageImpl(ImageEffects.resize(myImg1, scale), ImageEffects.resize(myImg2, scale));
+  public DesktopAWTImage copyWithNewSize(int width, int height) {
+    return new DesktopAppendImageImpl(ImageEffects.resize(myImg1, width, height), ImageEffects.resize(myImg2, width, height));
   }
 
   @Nonnull
   @Override
-  public DesktopAppendImageImpl copyWithTargetIconLibrary(@Nonnull String iconLibraryId, @Nonnull Function<Image, Image> converter) {
-    return new DesktopAppendImageImpl(converter.apply(myImg1), converter.apply(myImg2));
+  public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
+    return new DesktopAppendImageImpl(DesktopAWTImage.copyWithForceLibraryId(myImg1, libraryId),
+                                      DesktopAWTImage.copyWithForceLibraryId(myImg2, libraryId));
   }
 }

@@ -16,9 +16,9 @@
 package consulo.ui.ex.awtUnsafe;
 
 import consulo.container.plugin.util.PlatformServiceLoader;
-import consulo.ui.*;
 import consulo.ui.Component;
 import consulo.ui.Window;
+import consulo.ui.*;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
@@ -26,10 +26,10 @@ import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ServiceLoader;
@@ -141,9 +141,5 @@ public final class TargetAWT {
   @Nonnull
   public static java.awt.Font to(@Nonnull Font font) {
     return ourFacade.to(font);
-  }
-
-  public static java.awt.Image toImage(@Nonnull ImageKey key, Object ctx) {
-    return ourFacade.toImage(key, ctx);
   }
 }

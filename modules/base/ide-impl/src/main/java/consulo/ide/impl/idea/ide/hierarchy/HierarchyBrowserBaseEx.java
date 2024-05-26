@@ -24,14 +24,13 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.scopeChooser.EditScopesDialog;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -48,10 +47,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.ui.ex.awt.dnd.DnDAction;
-import consulo.ui.ex.awt.dnd.DnDDragStartBean;
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ui.ex.awt.dnd.DnDSource;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -60,10 +56,10 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -282,7 +278,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
           }
 
           @Override
-          public consulo.util.lang.Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin) {
+          public consulo.util.lang.Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin,
+                                                                         @Nonnull DnDDragStartBean bean) {
             return null;
           }
 
@@ -400,7 +397,8 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     }
 
     if (requestFocus) {
-      IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(getCurrentTree(), true));
+      IdeFocusManager.getGlobalInstance()
+                     .doWhenFocusSettlesDown(() -> IdeFocusManager.getGlobalInstance().requestFocus(getCurrentTree(), true));
     }
   }
 
@@ -548,7 +546,9 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
   protected class AlphaSortAction extends ToggleAction {
     public AlphaSortAction() {
-      super(IdeBundle.message("action.sort.alphabetically"), IdeBundle.message("action.sort.alphabetically"), AllIcons.ObjectBrowser.Sorted);
+      super(IdeBundle.message("action.sort.alphabetically"),
+            IdeBundle.message("action.sort.alphabetically"),
+            AllIcons.ObjectBrowser.Sorted);
     }
 
     @Override
@@ -582,7 +582,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Nonnull
     private final Class<H> myHierarchyProviderClass;
 
-    BaseOnThisElementAction(@Nonnull String text, @Nonnull String actionId, @Nonnull Key<?> browserDataKey, @Nonnull Class<H> hierarchyProviderClass) {
+    BaseOnThisElementAction(@Nonnull String text,
+                            @Nonnull String actionId,
+                            @Nonnull Key<?> browserDataKey,
+                            @Nonnull Class<H> hierarchyProviderClass) {
       super(text);
       myActionId = actionId;
       myBrowserDataKey = browserDataKey;
@@ -601,9 +604,14 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
 
       final String currentViewType = browser.myCurrentViewType;
       Disposer.dispose(browser);
-      final H provider = BrowseHierarchyActionBase.findProvider(myHierarchyProviderClass, selectedElement, selectedElement.getContainingFile(), event.getDataContext());
-      final HierarchyBrowser newBrowser = BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
-      ApplicationManager.getApplication().invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
+      final H provider = BrowseHierarchyActionBase.findProvider(myHierarchyProviderClass,
+                                                                selectedElement,
+                                                                selectedElement.getContainingFile(),
+                                                                event.getDataContext());
+      final HierarchyBrowser newBrowser =
+        BrowseHierarchyActionBase.createAndAddToPanel(selectedElement.getProject(), provider, selectedElement);
+      ApplicationManager.getApplication()
+                        .invokeLater(() -> ((HierarchyBrowserBaseEx)newBrowser).changeView(correctViewType(browser, currentViewType)));
     }
 
     protected String correctViewType(HierarchyBrowserBaseEx browser, String viewType) {
@@ -731,8 +739,10 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
     @Override
     public final JComponent createCustomComponent(final Presentation presentation, String place) {
       final JPanel panel = new JPanel(new GridBagLayout());
-      panel.add(new JLabel(IdeBundle.message("label.scope")), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
-      panel.add(super.createCustomComponent(presentation, place), new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      panel.add(new JLabel(IdeBundle.message("label.scope")),
+                new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 0), 0, 0));
+      panel.add(super.createCustomComponent(presentation, place),
+                new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
       return panel;
     }
 

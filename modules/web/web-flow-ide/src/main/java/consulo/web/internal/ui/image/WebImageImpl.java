@@ -16,12 +16,12 @@
 package consulo.web.internal.ui.image;
 
 import ar.com.hjg.pngj.PngReader;
-import com.kitfox.svg.SVGCache;
-import com.kitfox.svg.SVGDiagram;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.ui.image.Image;
 import jakarta.annotation.Nonnull;
 
-import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -59,8 +59,8 @@ public class WebImageImpl implements Image, WebImageWithURL {
 
     try {
       if (urlText.endsWith(".svg")) {
-        SVGDiagram diagram = SVGCache.getSVGUniverse().getDiagram(url.toURI());
-        Rectangle2D viewRect = diagram.getViewRect();
+        SVGDocument diagram = new SVGLoader().load(url);
+        FloatSize viewRect = diagram.size();
         myWidth = (int)viewRect.getWidth();
         myHeight = (int)viewRect.getHeight();
       }

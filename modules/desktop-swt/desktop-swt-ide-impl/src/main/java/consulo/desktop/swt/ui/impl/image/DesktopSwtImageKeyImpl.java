@@ -16,12 +16,12 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.IconLibraryManager;
-import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-
+import consulo.ui.impl.image.ImageReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author VISTALL
@@ -43,8 +43,8 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
   }
 
   @Nullable
-  private Image resolveImage() {
-    return ourLibraryManager.getIcon(null, myGroupId, myImageId, myWidth, myHeight);
+  private ImageReference resolveImage() {
+    return ourLibraryManager.resolveImage(null, myGroupId, myImageId);
   }
 
   @Nonnull
@@ -72,10 +72,10 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
   @Nonnull
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
-    Image image = resolveImage();
-    if(image == null) {
-      image = Image.empty(myWidth, myHeight);
+    ImageReference ref = resolveImage();
+    if(ref == null) {
+      return new Image(null, getWidth(), getHeight());
     }
-    return ((DesktopSwtImage)image).toSWTImage();
+    return ((DesktopSwtImageReference)ref).toSWTImage(getWidth(), getHeight());
   }
 }

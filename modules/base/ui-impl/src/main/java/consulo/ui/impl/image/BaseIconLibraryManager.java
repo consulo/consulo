@@ -20,7 +20,6 @@ import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
-import consulo.ui.image.Image;
 import consulo.ui.image.internal.IconLibraryDescriptorLoader;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
@@ -55,7 +54,6 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   public static final String ICON_DIRECTORY = "ICON-LIB/";
   public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY;
-  public static final String ICON_LIBRARY_MARKER = ICON_DIRECTORY + "marker.txt";
 
   private final AtomicLong myModificationCount = new AtomicLong();
   private final AtomicBoolean myInitialized = new AtomicBoolean();
@@ -317,17 +315,17 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nullable
-  public Image getIcon(@Nullable String forceIconLibraryId, String libraryId, String imageId, int width, int height) {
+  public ImageReference resolveImage(@Nullable String forceIconLibraryId, String libraryId, String imageId) {
     if (forceIconLibraryId != null) {
       BaseIconLibraryImpl targetIconLibrary = (BaseIconLibraryImpl)myLibraries.get(forceIconLibraryId);
       if (targetIconLibrary != null) {
-        Image icon = targetIconLibrary.getIcon(libraryId, imageId, width, height);
+        ImageReference icon = targetIconLibrary.resolveImage(libraryId, imageId);
         if (icon != null) {
           return icon;
         }
       }
     }
     BaseIconLibraryImpl iconLibrary = getActiveLibrary();
-    return iconLibrary.getIcon(libraryId, imageId, width, height);
+    return iconLibrary.resolveImage(libraryId, imageId);
   }
 }

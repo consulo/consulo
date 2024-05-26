@@ -15,30 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts;
 
-import consulo.ui.ex.awt.dnd.AdvancedDnDSource;
-import consulo.ui.ex.awt.dnd.DnDAction;
-import consulo.ui.ex.awt.dnd.DnDDragStartBean;
-import consulo.ui.ex.awt.dnd.DnDManager;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.TreeUIHelper;
-import consulo.ui.ex.awt.tree.SimpleNode;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.application.ApplicationManager;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.awt.dnd.*;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.SimpleNode;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.Pair;
-
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -101,7 +98,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
     final List<PackagingElementNode<?>> nodes = getNodesToDrag();
     if (nodes.size() == 1) {
       return DnDAwareTree.getDragImage(this, getPathFor(nodes.get(0)), dragOrigin);

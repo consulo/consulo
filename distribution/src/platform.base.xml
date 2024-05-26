@@ -173,7 +173,6 @@
         <include>org.jdom:jdom-core</include>
         <include>org.jdom:jdom-xpath-jaxen</include>
         <include>consulo.internal:forms_rt</include>
-        <include>consulo.internal:svg-salamander</include>
         <include>consulo.internal:pty4j</include>
         <include>consulo.internal:jediterm</include>
         <include>consulo.internal:build.serviceMessages</include>
@@ -227,6 +226,7 @@
         <include>com.sun.istack:istack-commons-runtime</include>
         <include>jakarta.activation:jakarta.activation-api</include>
         <include>com.ibm.icu:icu4j</include>
+        <include>com.github.weisj:jsvg</include>
       </includes>
     </dependencySet>
   </dependencySets>

@@ -18,7 +18,6 @@ package consulo.application.impl.internal;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.concurrent.ApplicationConcurrency;
@@ -475,13 +474,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Image getIcon() {
-    return ApplicationProperties.isInSandbox() ? AllIcons.Icon16_Sandbox : AllIcons.Icon16;
+    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();
   }
 
   @Nonnull
   @Override
   public Image getBigIcon() {
-    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.consulobigsandbox() : PlatformIconGroup.consulobig();
+    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.icon32_sandbox() : PlatformIconGroup.icon32();
   }
 
   @Nonnull

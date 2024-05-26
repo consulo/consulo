@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.style;
 
+import consulo.desktop.awt.ui.impl.image.DesktopAWTImage;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
@@ -25,7 +26,6 @@ import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.impl.style.StyleImpl;
@@ -123,8 +123,8 @@ public class DesktopStyleImpl extends StyleImpl {
   @Nonnull
   @Override
   public Image getImage(@Nonnull Image image) {
-    if (image instanceof DesktopImage) {
-      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(getIconLibraryId(), this::getImage);
+    if (image instanceof DesktopAWTImage awtImage) {
+      return ((DesktopAWTImage)image).copyWithForceLibraryId(getIconLibraryId());
     }
     return image;
   }

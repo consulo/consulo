@@ -16,20 +16,23 @@
 package consulo.desktop.awt.ui.util;
 
 import consulo.application.ApplicationProperties;
-import consulo.desktop.awt.ui.impl.image.DesktopImage;
+import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageReference;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
-import consulo.util.collection.ContainerUtil;
+import consulo.ui.impl.image.BaseIconLibraryManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BaseMultiResolutionImage;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 
@@ -38,6 +41,15 @@ import java.util.List;
  * @since 04-Apr-22
  */
 public class AppIconUtil {
+  private static class FakeHolder {
+    private static final JComponent fake = new JComponent() {
+      @Override
+      public String toString() {
+        return "fake";
+      }
+    };
+  }
+
   private static final int MIN_ICON_SIZE = 32;
 
   public static void updateWindowIcon(@Nonnull Window window) {
@@ -52,17 +64,58 @@ public class AppIconUtil {
   private static List<Image> loadWindowImages() {
     boolean sandbox = ApplicationProperties.isInSandbox();
 
-    ImageKey x16 = sandbox ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();
-    ImageKey x32 = sandbox ? PlatformIconGroup.icon32_sandbox() : PlatformIconGroup.icon32();
+    ImageKey x16Key = sandbox ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();
+    ImageKey x32Key = sandbox ? PlatformIconGroup.icon32_sandbox() : PlatformIconGroup.icon32();
 
-    // force light theme - we don't need call #getActiveLibrary while loading
-    x16 = (ImageKey)((DesktopImage)x16).copyWithTargetIconLibrary(IconLibraryManager.LIGHT_LIBRARY_ID, image -> image);
-    x32 = (ImageKey)((DesktopImage)x32).copyWithTargetIconLibrary(IconLibraryManager.LIGHT_LIBRARY_ID, image -> image);
+    BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
 
-    // reset scale to default
-    JBUI.ScaleContext ctx = JBUI.ScaleContext.create(JBUI.Scale.create(1, JBUI.ScaleType.SYS_SCALE));
+    DesktopAWTImageReference x16Ref = (DesktopAWTImageReference)iconLibraryManager.resolveImage(IconLibraryManager.LIGHT_LIBRARY_ID,
+                                                                                                x16Key.getGroupId(),
+                                                                                                x16Key.getImageId());
+    DesktopAWTImageReference x32Ref = (DesktopAWTImageReference)iconLibraryManager.resolveImage(IconLibraryManager.LIGHT_LIBRARY_ID,
+                                                                                                x32Key.getGroupId(),
+                                                                                                x32Key.getImageId());
+    assert x16Ref != null;
+    assert x32Ref != null;
+    return List.of(toImage(x16Ref, x16Key.getWidth(), x16Key.getHeight()), toImage(x32Ref, x32Key.getWidth(), x32Key.getHeight()));
+  }
 
-    return ContainerUtil.map(List.of(TargetAWT.toImage(x16, ctx), TargetAWT.toImage(x32, ctx)), ImageUtil::toBufferedImage);
+  public static Image toImage(consulo.ui.image.Image image) {
+    if (image instanceof ImageKey imageKey) {
+      BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
+
+      DesktopAWTImageReference ref =
+        (DesktopAWTImageReference)iconLibraryManager.resolveImage(null, imageKey.getGroupId(), imageKey.getImageId());
+
+      assert ref != null;
+
+      return toImage(ref, imageKey.getWidth(), imageKey.getHeight());
+    }
+    else {
+      Icon icon = TargetAWT.to(image);
+
+      BufferedImage bufferedImage = UIUtil.createImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+
+      Graphics2D graphics = bufferedImage.createGraphics();
+      GraphicsUtil.setupAntialiasing(graphics);
+      icon.paintIcon(FakeHolder.fake, graphics, 0, 0);
+      graphics.dispose();
+      return bufferedImage;
+    }
+  }
+
+  private static Image toImage(DesktopAWTImageReference ref, int width, int height) {
+    return toImage(ref, JBUI.ScaleContext.create(JBUI.Scale.create(1, JBUI.ScaleType.SYS_SCALE)), width, height);
+  }
+
+  @Nonnull
+  private static Image toImage(DesktopAWTImageReference ref, JBUI.ScaleContext ctx, int width, int height) {
+    BufferedImage x16Img = ImageUtil.createImage((int)width, (int)height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D graphics = x16Img.createGraphics();
+    GraphicsUtil.setupAntialiasing(graphics);
+    ref.draw(ctx, graphics, 0, 0, (int)width, (int)height);
+    graphics.dispose();
+    return x16Img;
   }
 
   @Nullable

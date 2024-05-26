@@ -17,7 +17,6 @@ package consulo.desktop.awt.facade;
 
 import consulo.container.StartupError;
 import consulo.desktop.awt.ui.impl.DesktopFontImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
 import consulo.desktop.awt.ui.impl.window.DummyWindow;
 import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import consulo.logging.Logger;
@@ -34,12 +33,11 @@ import consulo.ui.ex.awt.MorphColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
 import consulo.util.lang.BitUtil;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -286,12 +284,6 @@ public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
       return ((DesktopFontImpl)font).getFont();
     }
     throw new UnsupportedOperationException(font + " unsupported");
-  }
-
-  @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key, @Nullable Object ctx) {
-    DesktopImageKeyImpl desktopImageKey = (DesktopImageKeyImpl)key;
-    return desktopImageKey.toAWTImage((JBUI.ScaleContext)ctx);
   }
 
   @Override

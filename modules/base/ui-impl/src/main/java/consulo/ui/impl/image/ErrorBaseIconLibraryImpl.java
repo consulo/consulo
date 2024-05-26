@@ -15,10 +15,6 @@
  */
 package consulo.ui.impl.image;
 
-import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.style.StandardColors;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -33,9 +29,13 @@ class ErrorBaseIconLibraryImpl extends BaseIconLibraryImpl {
     super("", baseIconLibraryManager);
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
-    return ImageEffects.colorFilled(width, height, StandardColors.RED);
+  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+                                                @Nullable byte[] _2xdata,
+                                                boolean isSVG,
+                                                String groupId,
+                                                String imageId) {
+    return ImageReference.INVALID;
   }
 }

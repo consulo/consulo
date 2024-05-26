@@ -1,3 +1,4 @@
+<!-- Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
   <defs>
     <circle id="chromium-a" cx="7" cy="7" r="7"/>
@@ -12,7 +13,8 @@
       <stop offset="100%" stop-color="#A1C1FC"/>
     </linearGradient>
     <circle id="chromium-i" cx="7" cy="7" r="7"/>
-    <radialGradient id="chromium-j" cx="-4.872%" cy="-.248%" r="401.327%" fx="-4.872%" fy="-.248%" gradientTransform="matrix(.26722 0 0 1 -.036 0)">
+    <radialGradient id="chromium-j" cx="-4.872%" cy="-.248%" r="401.327%" fx="-4.872%" fy="-.248%"
+                    gradientTransform="matrix(.26722 0 0 1 -.036 0)">
       <stop offset="0%" stop-color="#7894DD" stop-opacity=".176"/>
       <stop offset="100%" stop-color="#3E2723" stop-opacity="0"/>
     </radialGradient>
@@ -64,7 +66,8 @@
     <mask id="chromium-n" fill="#fff">
       <use xlink:href="#chromium-l"/>
     </mask>
-    <polygon fill="url(#chromium-m)" fill-rule="nonzero" points="1.102 2.772 5.656 7.325 4.235 8.145" mask="url(#chromium-n)" transform="rotate(2 3.379 5.458)"/>
+    <polygon fill="url(#chromium-m)" fill-rule="nonzero" points="1.102 2.772 5.656 7.325 4.235 8.145" mask="url(#chromium-n)"
+             transform="rotate(2 3.379 5.458)"/>
     <mask id="chromium-q" fill="#fff">
       <use xlink:href="#chromium-o"/>
     </mask>

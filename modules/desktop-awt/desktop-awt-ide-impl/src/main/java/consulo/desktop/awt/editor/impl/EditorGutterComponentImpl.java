@@ -10,7 +10,6 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
@@ -24,6 +23,7 @@ import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
@@ -229,66 +228,64 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
   private void installDnD() {
     DnDSupport.createBuilder(this).setBeanProvider(info -> {
-      final GutterMark renderer = getGutterRenderer(info.getPoint());
-      if (renderer instanceof GutterIconRenderer && ((GutterIconRenderer)renderer).getDraggableObject() != null && (info.isCopy() || info
-        .isMove())) {
-        myDnDInProgress = true;
-        return new DnDDragStartBean(renderer);
-      }
-      return null;
-    }).setDropHandler(e -> {
-      final Object attachedObject = e.getAttachedObject();
-      if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
-        final GutterDraggableObject draggableObject = ((GutterIconRenderer)attachedObject).getDraggableObject();
-        if (draggableObject != null) {
-          final int line = convertPointToLineNumber(e.getPoint());
-          if (line != -1) {
-            draggableObject.copy(line, myEditor.getVirtualFile(), e.getAction().getActionId());
-          }
-        }
-      }
-      else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
-        Transferable transferable = ((DnDNativeTarget.EventInfo)attachedObject).getTransferable();
-        if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-          DesktopEditorImpl.handleDrop(myEditor, transferable, e.getAction().getActionId());
-        }
-      }
-      myDnDInProgress = false;
-    }).setTargetChecker(e -> {
-      final Object attachedObject = e.getAttachedObject();
-      if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
-        final GutterDraggableObject draggableObject = ((GutterIconRenderer)attachedObject).getDraggableObject();
-        if (draggableObject != null) {
-          final int line = convertPointToLineNumber(e.getPoint());
-          if (line != -1) {
-            e.setDropPossible(true);
-            e.setCursor(draggableObject.getCursor(line, e.getAction().getActionId()));
-          }
-        }
-      }
-      else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
-        Transferable transferable = ((DnDNativeTarget.EventInfo)attachedObject).getTransferable();
-        if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-          final int line = convertPointToLineNumber(e.getPoint());
-          if (line != -1) {
-            e.setDropPossible(true);
-            myEditor.getCaretModel().moveToOffset(myEditor.getDocument().getLineStartOffset(line));
-          }
-        }
-      }
-      return true;
-    }).setImageProvider(info -> {
-      // [tav] temp workaround for JRE-224
-      boolean inUserScale = !SystemInfo.isWindows || !UIUtil.isJreHiDPI(myEditor.getComponent());
-      Image image = ImageUtil.toBufferedImage(getDragImage(getGutterRenderer(info.getPoint())), inUserScale);
-      return new DnDImage(image, new Point(image.getWidth(null) / 2, image.getHeight(null) / 2));
-    })
+                final GutterMark renderer = getGutterRenderer(info.getPoint());
+                if (renderer instanceof GutterIconRenderer && ((GutterIconRenderer)renderer).getDraggableObject() != null && (info.isCopy() || info
+                  .isMove())) {
+                  myDnDInProgress = true;
+                  return new DnDDragStartBean(renderer);
+                }
+                return null;
+              }).setDropHandler(e -> {
+                final Object attachedObject = e.getAttachedObject();
+                if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
+                  final GutterDraggableObject draggableObject = ((GutterIconRenderer)attachedObject).getDraggableObject();
+                  if (draggableObject != null) {
+                    final int line = convertPointToLineNumber(e.getPoint());
+                    if (line != -1) {
+                      draggableObject.copy(line, myEditor.getVirtualFile(), e.getAction().getActionId());
+                    }
+                  }
+                }
+                else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
+                  Transferable transferable = ((DnDNativeTarget.EventInfo)attachedObject).getTransferable();
+                  if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    DesktopEditorImpl.handleDrop(myEditor, transferable, e.getAction().getActionId());
+                  }
+                }
+                myDnDInProgress = false;
+              }).setTargetChecker(e -> {
+                final Object attachedObject = e.getAttachedObject();
+                if (attachedObject instanceof GutterIconRenderer && checkDumbAware(attachedObject)) {
+                  final GutterDraggableObject draggableObject = ((GutterIconRenderer)attachedObject).getDraggableObject();
+                  if (draggableObject != null) {
+                    final int line = convertPointToLineNumber(e.getPoint());
+                    if (line != -1) {
+                      e.setDropPossible(true);
+                      e.setCursor(draggableObject.getCursor(line, e.getAction().getActionId()));
+                    }
+                  }
+                }
+                else if (attachedObject instanceof DnDNativeTarget.EventInfo && myEditor.getSettings().isDndEnabled()) {
+                  Transferable transferable = ((DnDNativeTarget.EventInfo)attachedObject).getTransferable();
+                  if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    final int line = convertPointToLineNumber(e.getPoint());
+                    if (line != -1) {
+                      e.setDropPossible(true);
+                      myEditor.getCaretModel().moveToOffset(myEditor.getDocument().getLineStartOffset(line));
+                    }
+                  }
+                }
+                return true;
+              }).setImageProvider(info -> {
+                Image image = ImageUtil.toBufferedImage(getDragImage(getGutterRenderer(info.getPoint())));
+                return new DnDImage(image, new Point(image.getWidth(null) / 2, image.getHeight(null) / 2));
+              })
               .enableAsNativeTarget() // required to accept dragging from editor (as editor component doesn't use DnDSupport to implement drag'n'drop)
               .install();
   }
 
   Image getDragImage(GutterMark renderer) {
-    return IconUtil.toImage(scaleIcon(renderer.getIcon()));
+    return AppIconUtil.toImage(scaleImage(renderer.getIcon()));
   }
 
   private void fireResized() {
@@ -1216,16 +1213,16 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
         alignment = GutterIconRenderer.Alignment.LEFT;
       }
       switch (alignment) {
-        case LEFT ->{
+        case LEFT -> {
           processor.process(x, y + getTextAlignmentShift(icon), r);
           x += icon.getIconWidth() + getGapBetweenIcons();
         }
-        case CENTER ->{
+        case CENTER -> {
           middleCount++;
           middleSize += icon.getIconWidth() + getGapBetweenIcons();
         }
-        case LINE_NUMBERS ->processor.process(getLineNumberAreaOffset() + getLineNumberAreaWidth() - icon.getIconWidth(),
-                                              y + getTextAlignmentShift(icon), r);
+        case LINE_NUMBERS -> processor.process(getLineNumberAreaOffset() + getLineNumberAreaWidth() - icon.getIconWidth(),
+                                               y + getTextAlignmentShift(icon), r);
       }
     }
 
@@ -1336,22 +1333,22 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     // need to have the same sub-device-pixel offset as centerX for the square_with_plus rect to have equal dev width/height
     double centerY = PaintUtil.alignToInt(y + width / 2, g) + strokeOff;
     switch (type) {
-      case COLLAPSED, COLLAPSED_SINGLE_LINE ->{
+      case COLLAPSED, COLLAPSED_SINGLE_LINE -> {
         if (y <= clip.y + clip.height && y + height >= clip.y) {
           drawSquareWithPlusOrMinus(g, centerX, centerY, width, true, active, visualLine);
         }
       }
-      case EXPANDED_SINGLE_LINE ->{
+      case EXPANDED_SINGLE_LINE -> {
         if (y <= clip.y + clip.height && y + height >= clip.y) {
           drawSquareWithPlusOrMinus(g, centerX, centerY, width, false, active, visualLine);
         }
       }
-      case EXPANDED_TOP ->{
+      case EXPANDED_TOP -> {
         if (y <= clip.y + clip.height && y + height >= clip.y) {
           drawDirectedBox(g, centerX, centerY, width, height, baseHeight, active, visualLine);
         }
       }
-      case EXPANDED_BOTTOM ->{
+      case EXPANDED_BOTTOM -> {
         y += width;
         if (y - height <= clip.y + clip.height && y >= clip.y) {
           drawDirectedBox(g, centerX, centerY, width, -height, -baseHeight, active, visualLine);

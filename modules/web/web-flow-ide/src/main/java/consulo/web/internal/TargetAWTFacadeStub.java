@@ -146,9 +146,4 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   public Font to(@Nonnull consulo.ui.font.Font font) {
     throw new UnsupportedOperationException();
   }
-
-  @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key, Object ctx) {
-    throw new UnsupportedOperationException();
-  }
 }

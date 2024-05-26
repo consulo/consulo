@@ -15,10 +15,9 @@
  */
 package consulo.web.internal.ui.image;
 
-import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
-
+import consulo.ui.impl.image.ImageReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -31,9 +30,13 @@ public class WebIconLibrary extends BaseIconLibraryImpl {
     super(id, baseIconLibraryManager);
   }
 
-  @Nullable
+  @Nonnull
   @Override
-  protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
-    return new WebDataImageImpl(_1xData, _2xdata, isSVG, width, height);
+  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+                                                @Nullable byte[] _2xdata,
+                                                boolean isSVG,
+                                                String groupId,
+                                                String imageId) {
+    return new WebImageReference(_1xData, _2xdata, isSVG);
   }
 }

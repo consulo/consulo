@@ -26,7 +26,6 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
-import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.PaintingParent;
 import consulo.ide.impl.idea.ui.RetrievableIcon;
@@ -38,7 +37,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
@@ -55,7 +53,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 
 public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<DesktopDeferredIconImpl<T>>
-        implements DeferredIcon, DesktopImage<DesktopDeferredIconImpl<T>>, RetrievableIcon, consulo.ui.image.Image {
+  implements DeferredIcon, RetrievableIcon, consulo.ui.image.Image {
   private static final consulo.ui.image.Image EMPTY_ICON = Image.empty(16);
 
   private static final Logger LOG = Logger.getInstance(DesktopDeferredIconImpl.class);
@@ -68,15 +66,14 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   private volatile boolean myIsScheduled;
   private final T myParam;
 
-  protected float myEvaluateScale = 1f;
-
   private final boolean myNeedReadAction;
   private boolean myDone;
   private final boolean myAutoUpdatable;
   private long myLastCalcTime;
   private long myLastTimeSpent;
 
-  private static final ExecutorService ourIconCalculatingExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("OurIconCalculating Pool", 1);
+  private static final ExecutorService ourIconCalculatingExecutor =
+    AppExecutorUtil.createBoundedApplicationPoolExecutor("OurIconCalculating Pool", 1);
 
   private final IconListener<T> myEvalListener;
 
@@ -111,24 +108,6 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     return this;
   }
 
-  @Nonnull
-  @Override
-  // special case - we don't return copy of that icon
-  public DesktopDeferredIconImpl<T> copyWithScale(float scale) {
-    if (scale == 1f) {
-      return this;
-    }
-
-    // one time scale only
-    if(myEvaluateScale == 1f) {
-      Image delegate = ImageEffects.resize(myDelegateIcon, scale);
-      myDelegateIcon = delegate;
-      myScaledDelegateIcon = delegate;
-      myEvaluateScale = scale;
-    }
-    return this;
-  }
-
   @Override
   public int getHeight() {
     return getIconHeight();
@@ -143,11 +122,18 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
     private static final boolean CHECK_CONSISTENCY = ApplicationManager.getApplication().isUnitTestMode();
   }
 
-  DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, @Nonnull Function<T, Image> evaluator, @Nonnull IconListener<T> listener, boolean autoUpdatable) {
+  DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon,
+                          T param,
+                          @Nonnull Function<T, Image> evaluator,
+                          @Nonnull IconListener<T> listener,
+                          boolean autoUpdatable) {
     this(baseIcon, param, true, evaluator, listener, autoUpdatable);
   }
 
-  public DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon, T param, final boolean needReadAction, @Nonnull Function<T, consulo.ui.image.Image> evaluator) {
+  public DesktopDeferredIconImpl(consulo.ui.image.Image baseIcon,
+                                 T param,
+                                 final boolean needReadAction,
+                                 @Nonnull Function<T, consulo.ui.image.Image> evaluator) {
     this(baseIcon, param, needReadAction, evaluator, null, false);
   }
 
@@ -233,7 +219,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
       myScaledDelegateIcon = result;
       checkDelegationDepth();
 
-      final boolean shouldRevalidate = Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
+      final boolean shouldRevalidate =
+        Registry.is("ide.tree.deferred.icon.invalidates.cache") && myScaledDelegateIcon.getWidth() != oldWidth;
 
       SwingUtilities.invokeLater(() -> {
         setDone(result);
@@ -321,20 +308,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   @Nonnull
   @Override
   public Icon evaluate() {
-    consulo.ui.image.Image result;
-    try {
-      result = nonNull(myEvaluator.apply(myParam));
-    }
-    catch (IndexNotReadyException e) {
-      result = EMPTY_ICON;
-    }
-
-    if (Holder.CHECK_CONSISTENCY) {
-      checkDoesntReferenceThis(result);
-    }
-
-    result = ImageEffects.resize(result, myEvaluateScale);
-    return TargetAWT.to(result);
+    return TargetAWT.to(evaluateImage());
   }
 
   @Nonnull
@@ -351,7 +325,7 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
       checkDoesntReferenceThis(result);
     }
 
-    return ImageEffects.resize(result, myEvaluateScale);
+    return result;
   }
 
   private void checkDoesntReferenceThis(final consulo.ui.image.Image icon) {
@@ -387,7 +361,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
   }
 
   public boolean isDone() {
-    if (myAutoUpdatable && myDone && myLastCalcTime > 0 && System.currentTimeMillis() - myLastCalcTime > Math.max(MIN_AUTO_UPDATE_MILLIS, 10 * myLastTimeSpent)) {
+    if (myAutoUpdatable && myDone && myLastCalcTime > 0 && System.currentTimeMillis() - myLastCalcTime > Math.max(MIN_AUTO_UPDATE_MILLIS,
+                                                                                                                  10 * myLastTimeSpent)) {
       myDone = false;
       myIsScheduled = false;
     }
@@ -454,8 +429,8 @@ public class DesktopDeferredIconImpl<T> extends JBUI.CachingScalableJBIcon<Deskt
 
   private boolean isDeferredAndEqual(consulo.ui.image.Image icon) {
     return icon instanceof DesktopDeferredIconImpl &&
-           Comparing.equal(myParam, ((DesktopDeferredIconImpl)icon).myParam) &&
-           equalIcons(myScaledDelegateIcon, ((DesktopDeferredIconImpl)icon).myScaledDelegateIcon);
+      Comparing.equal(myParam, ((DesktopDeferredIconImpl)icon).myParam) &&
+      equalIcons(myScaledDelegateIcon, ((DesktopDeferredIconImpl)icon).myScaledDelegateIcon);
   }
 
   @Override

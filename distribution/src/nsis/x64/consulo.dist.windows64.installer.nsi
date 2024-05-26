@@ -63,7 +63,7 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
   SectionIn 2
-	
+
   CreateDirectory "$SMPROGRAMS\Consulo"
   CreateShortcut "$SMPROGRAMS\Consulo\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortcut "$SMPROGRAMS\Consulo\Consulo (x64).lnk" "$INSTDIR\consulo64.exe" "" "$INSTDIR\consulo64.exe" 0

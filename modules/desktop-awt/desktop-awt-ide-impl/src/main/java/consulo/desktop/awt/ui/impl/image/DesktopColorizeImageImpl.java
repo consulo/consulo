@@ -15,15 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.ui.color.ColorValue;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author VISTALL
@@ -46,7 +47,33 @@ public class DesktopColorizeImageImpl extends JBUI.CachingScalableJBIcon<Desktop
 
   @Override
   public void paintIcon(Component c, Graphics g, int x, int y) {
-    IconUtil.colorize(myBaseImage, TargetAWT.to(myColorValue)).paintIcon(c, g, x, y);
+    UIUtil.drawImage(g, colorize(myBaseImage, TargetAWT.to(myColorValue), false), x, y, null);
+  }
+
+  @Nonnull
+  private BufferedImage colorize(@Nonnull final Icon source, @Nonnull Color color, boolean keepGray) {
+    float[] base = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+
+    final BufferedImage image = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    final Graphics2D g = image.createGraphics();
+    source.paintIcon(null, g, 0, 0);
+    g.dispose();
+
+    final BufferedImage img = UIUtil.createImage(source.getIconWidth(), source.getIconHeight(), Transparency.TRANSLUCENT);
+    int[] rgba = new int[4];
+    float[] hsb = new float[3];
+    for (int y = 0; y < image.getRaster().getHeight(); y++) {
+      for (int x = 0; x < image.getRaster().getWidth(); x++) {
+        image.getRaster().getPixel(x, y, rgba);
+        if (rgba[3] != 0) {
+          Color.RGBtoHSB(rgba[0], rgba[1], rgba[2], hsb);
+          int rgb = Color.HSBtoRGB(base[0], base[1] * (keepGray ? hsb[1] : 1f), base[2] * hsb[2]);
+          img.getRaster().setPixel(x, y, new int[]{rgb >> 16 & 0xff, rgb >> 8 & 0xff, rgb & 0xff, rgba[3]});
+        }
+      }
+    }
+
+    return img;
   }
 
   @Override

@@ -31,21 +31,21 @@ public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
   @Nonnull
   @Override
   protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
-    return new DesktopIconLibrary(id, this);
+    return new DesktopAWTIconLibrary(id, this);
   }
 
   @Nonnull
   @Override
   public Image inverseIcon(@Nonnull Image image) {
-    if (image instanceof DesktopImage) {
+    if (image instanceof DesktopAWTImage awtImage) {
       BaseIconLibraryImpl library = getActiveLibrary();
 
-      String inverseId = library.getInverseId();
-      if (inverseId == null) {
+      String inverseLibraryId = library.getInverseId();
+      if (inverseLibraryId == null) {
         return image;
       }
 
-      return ((DesktopImage<?>)image).copyWithTargetIconLibrary(inverseId, it -> inverseIcon(image));
+      return awtImage.copyWithForceLibraryId(inverseLibraryId);
     }
 
     return image;

@@ -15,16 +15,16 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGUniverse;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.desktop.awt.ui.impl.alert.DesktopAlertFactory;
 import consulo.desktop.awt.ui.impl.image.*;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopAWTImageImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopSvgImageImpl;
+import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTImageKey;
+import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTPNGImageReference;
+import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTSVGImageReference;
 import consulo.desktop.awt.ui.impl.layout.*;
 import consulo.desktop.awt.ui.impl.style.DesktopStyleManagerImpl;
 import consulo.desktop.awt.ui.impl.textBox.*;
@@ -69,8 +69,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
@@ -91,15 +89,10 @@ public class DesktopUIInternalImpl extends UIInternal {
   @Override
   public Image _Image_fromUrl(URL url) throws IOException {
     if (url.toString().endsWith(".svg")) {
-      SVGUniverse svgUniverse = new SVGUniverse();
-
-      try {
-        SVGDiagram diagram = svgUniverse.getDiagram(url.toURI());
-        return new DesktopSvgImageImpl(diagram, null, (int)diagram.getWidth(), (int)diagram.getHeight(), null, null, null);
-      }
-      catch (URISyntaxException e) {
-        throw new IOException(e);
-      }
+      SVGLoader loader = new SVGLoader();
+      SVGDocument document = loader.load(url);
+      FloatSize size = document.size();
+      return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference(document, null), (int)size.getWidth(), (int)size.getHeight());
     }
     else {
       BufferedImage image;
@@ -107,7 +100,11 @@ public class DesktopUIInternalImpl extends UIInternal {
         image = ImageIO.read(stream);
       }
 
-      return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, image.getWidth(), image.getHeight(), null);
+      int width = image.getWidth(null);
+      int height = image.getHeight(null);
+      return new DesktopAWTSimpleImageImpl(new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
+                                           width,
+                                           height);
     }
   }
 
@@ -115,29 +112,17 @@ public class DesktopUIInternalImpl extends UIInternal {
   public Image _Image_fromStream(Image.ImageType imageType, InputStream stream) throws IOException {
     switch (imageType) {
       case SVG:
-        SVGUniverse svgUniverse = new SVGUniverse();
-
-        URI uri = svgUniverse.loadSVG(stream, "dummy" + System.currentTimeMillis() + ".svg");
-
-        SVGDiagram diagram = svgUniverse.getDiagram(uri, false);
-
-        if (diagram == null) {
-          throw new IOException("Wrong svg bytes");
-        }
-
-        return new DesktopSvgImageImpl(diagram,
-                                       null,
-                                       (int)diagram.getViewRect().getWidth(),
-                                       (int)diagram.getViewRect().getHeight(),
-                                       1f,
-                                       null,
-                                       null,
-                                       null);
+        SVGLoader loader = new SVGLoader();
+        SVGDocument document = loader.load(stream);
+        FloatSize size = document.size();
+        return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference(document, null), (int)size.getWidth(), (int)size.getHeight());
       default:
         BufferedImage image = ImageIO.read(stream);
         int width = image.getWidth(null);
         int height = image.getHeight(null);
-        return new DesktopAWTImageImpl(new DesktopAWTImageImpl.ImageBytes(null, image), null, width, height, null);
+        return new DesktopAWTSimpleImageImpl(new DesktopAWTPNGImageReference(new DesktopAWTPNGImageReference.ImageBytes(null, image), null),
+                                             width,
+                                             height);
     }
   }
 
@@ -197,19 +182,10 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public Image _ImageEffects_resize(Image original, int width, int height) {
-    float scale = height / (float)original.getHeight();
-    return _ImageEffects_resize(original, scale);
-  }
-
-  @Override
-  public Image _ImageEffects_resize(Image original, float scale) {
-    if (original instanceof DesktopImage) {
-      return ((DesktopImage)original).copyWithScale(scale);
+    if (original instanceof DesktopAWTImage resizableImage) {
+      return resizableImage.copyWithNewSize(width, height);
     }
 
-    if (original instanceof DesktopLibraryInnerImage) {
-      return ((DesktopLibraryInnerImage)original).copyWithScale(scale);
-    }
     return original;
   }
 
@@ -465,7 +441,7 @@ public class DesktopUIInternalImpl extends UIInternal {
 
   @Override
   public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
-    return new DesktopImageKeyImpl(null, groupId, imageId, width, height);
+    return new DesktopAWTImageKey(null, groupId, imageId, width, height);
   }
 
   @Nonnull

@@ -16,7 +16,7 @@
 package consulo.web.internal.servlet;
 
 import consulo.ui.image.ImageKey;
-import consulo.web.internal.ui.image.WebDataImageImpl;
+import consulo.web.internal.ui.image.WebImageReference;
 import consulo.web.internal.ui.image.WebImageKeyImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
@@ -44,20 +44,20 @@ public class UIIconServlet extends HttpServlet {
 
     WebImageKeyImpl imageKey = (WebImageKeyImpl)ImageKey.of(groupId, imageId, 0, 0);
 
-    WebDataImageImpl image = (WebDataImageImpl)imageKey.calcImage();
-    if(image == null) {
+    WebImageReference ref = (WebImageReference)imageKey.calcImage();
+    if(ref == null) {
       resp.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 
-    if (image.isSVG()) {
+    if (ref.isSVG()) {
       resp.setContentType("image/svg+xml");
     }
     else {
       resp.setContentType("image/png");
     }
 
-    byte[] bytes = image.getData();
+    byte[] bytes = ref.getData();
 
     resp.setContentLength(bytes.length);
 

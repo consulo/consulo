@@ -29,7 +29,6 @@ import consulo.ide.impl.idea.notification.EventLog;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
-import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.ui.impl.BalloonLayoutEx;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -56,6 +55,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -967,7 +967,9 @@ public class NotificationsManagerImpl extends NotificationsManager {
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
           int lineY = getUI().getBaseline(DropDownAction.this, getWidth(), getHeight()) - getIconHeight();
-          IconUtil.colorize(TargetAWT.to(myIcon), getTextColor()).paintIcon(c, g, x - 1, lineY);
+
+          Icon icon = TargetAWT.to(ImageEffects.colorize(myIcon, TargetAWT.from(getTextColor())));
+          icon.paintIcon(c, g, x - 1, lineY);
         }
 
         @Override

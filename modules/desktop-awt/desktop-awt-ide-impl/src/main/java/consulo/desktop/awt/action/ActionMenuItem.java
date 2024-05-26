@@ -290,19 +290,28 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
     else {
       if (UISettings.getInstance().SHOW_ICONS_IN_MENUS) {
         Image icon = myPresentation.getIcon();
-        if (myUseDarkIcons) {
-          Style currentStyle = StyleManager.get().getCurrentStyle();
-          if (icon != null && !currentStyle.isDark()) {
-            icon = IconLibraryManager.get().inverseIcon(icon);
-          }
+
+        Style currentStyle = StyleManager.get().getCurrentStyle();
+        IconLibraryManager iconLibraryManager = IconLibraryManager.get();
+
+        Image selectedIcon = null;
+
+        if (icon != null && myUseDarkIcons && !currentStyle.isDark()) {
+          icon = iconLibraryManager.inverseIcon(icon);
+        }
+
+        if (icon != null && !myUseDarkIcons && shouldConvertIconToDarkVariant(currentStyle)) {
+          selectedIcon = iconLibraryManager.inverseIcon(icon);
         }
 
         if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
           icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }
+
         setIcon(TargetAWT.to(icon));
-        setSelectedIcon(TargetAWT.to(icon));
-        
+
+        setSelectedIcon(selectedIcon != null ? TargetAWT.to(selectedIcon) : TargetAWT.to(icon));
+
         if (myPresentation.getDisabledIcon() != null) {
           setDisabledIcon(TargetAWT.to(myPresentation.getDisabledIcon()));
         }
@@ -311,6 +320,10 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
         }
       }
     }
+  }
+
+  private static boolean shouldConvertIconToDarkVariant(Style currentStyle) {
+    return currentStyle.isLight() /*&& ColorUtil.isDark(JBColor.namedColor("MenuItem.background", 0xffffff))*/;
   }
 
   public boolean isToggleable() {

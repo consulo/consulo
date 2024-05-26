@@ -15,16 +15,17 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.application.util.NotNullLazyValue;
-import consulo.ui.ex.IconDeferrer;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
-
+import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -39,7 +40,7 @@ public class PluginIconHolder {
 
   private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
-  private static final Supplier<Image> ourDecoratedDefaultImage = NotNullLazyValue.createValue(() -> decorateIcon(PlatformIconGroup.nodesPluginbig()));
+  private static final Supplier<Image> ourDecoratedDefaultImage = LazyValue.notNull(() -> decorateIcon(PlatformIconGroup.nodesPlugin()));
 
   @Nonnull
   public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
@@ -70,17 +71,16 @@ public class PluginIconHolder {
   private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
     byte[] iconBytes = pluginDescriptor.getIconBytes(StyleManager.get().getCurrentStyle().isDark());
     if (iconBytes.length == 0) {
-      return decorateIcon(PlatformIconGroup.nodesPluginbig());
+      return decorateIcon(PlatformIconGroup.nodesPlugin());
     }
 
     try {
-      Image image = Image.fromBytes(Image.ImageType.SVG, iconBytes, ICON_SIZE, ICON_SIZE);
-      return decorateIcon(image);
+      return decorateIcon(Image.fromStream(Image.ImageType.SVG, new UnsyncByteArrayInputStream(iconBytes)));
     }
     catch (Throwable e) {
       LOG.warn(e);
     }
 
-    return decorateIcon(PlatformIconGroup.nodesPluginbig());
+    return decorateIcon(PlatformIconGroup.nodesPlugin());
   }
 }

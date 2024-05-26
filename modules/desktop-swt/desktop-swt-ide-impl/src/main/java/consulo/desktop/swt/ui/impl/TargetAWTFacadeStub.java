@@ -21,10 +21,9 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -144,11 +143,6 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   @Nonnull
   @Override
   public Font to(@Nonnull consulo.ui.font.Font font) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public java.awt.Image toImage(@Nonnull ImageKey key, Object ctx) {
     throw new UnsupportedOperationException();
   }
 }

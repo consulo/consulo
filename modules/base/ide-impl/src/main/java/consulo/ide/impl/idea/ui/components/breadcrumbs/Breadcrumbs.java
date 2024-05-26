@@ -1,26 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.components.breadcrumbs;
 
+import consulo.application.util.registry.Registry;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.awt.AbstractLayoutManager;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.JBPanelWithEmptyText;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
-import consulo.ui.ex.awt.paint.RectanglePainter;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.impl.idea.util.ui.*;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.impl.idea.util.ui.MouseEventHandler;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.paint.RectanglePainter;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants.FontStyle;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -401,9 +396,6 @@ public class Breadcrumbs extends JBPanelWithEmptyText {
       // use shared foreground and font if not set
       if (foreground == null) foreground = getForeground();
       if (font == null) font = getFont();
-
-      // scale loaded icon by font
-      if (icon != null) icon = IconUtil.scaleByFont(icon, Breadcrumbs.this, getFontSize(font));
 
       // calculate preferred size
       int scale = getScale();

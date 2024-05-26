@@ -171,7 +171,9 @@ public abstract class UIInternal {
   public abstract Image _ImageEffects_resize(Image original, int width, int height);
 
   public Image _ImageEffects_resize(Image original, float scale) {
-    return original;
+    int width = (int)Math.ceil(original.getWidth() * scale);
+    int height = (int)Math.ceil(original.getHeight() * scale);
+    return _ImageEffects_resize(original, width, height);
   }
 
   public abstract MenuItem _MenuItem_create(String text);

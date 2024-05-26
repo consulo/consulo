@@ -24,11 +24,10 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageKey;
-import org.jetbrains.annotations.Contract;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
+
 import javax.swing.*;
 
 /**
@@ -79,8 +78,6 @@ public interface TargetAWTFacade {
 
   @Nonnull
   java.awt.Font to(@Nonnull Font font);
-
-  java.awt.Image toImage(@Nonnull ImageKey key, @Nullable Object ctx);
 
   default java.awt.Cursor to(Cursor cursor) {
     throw new AbstractMethodError();

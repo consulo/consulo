@@ -18,12 +18,11 @@ package consulo.ui.impl.image;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
-import consulo.ui.image.Image;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -41,7 +40,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
     private final AtomicBoolean myInitialized = new AtomicBoolean();
 
-    private SimpleReference<Image> myImageRef;
+    private SimpleReference<ImageReference> myImageRef;
 
     public ImageState(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG) {
       my1xData = _1xData;
@@ -50,13 +49,13 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     }
 
     @Nullable
-    public Image getOrCreateImage(@Nonnull BaseIconLibraryImpl library, int width, int height, String groupId, String imageId) {
+    public ImageReference getOrCreateImage(@Nonnull BaseIconLibraryImpl library, String groupId, String imageId) {
       if (myInitialized.get()) {
         return Objects.requireNonNull(SoftReference.deref(myImageRef));
       }
 
       if (myInitialized.compareAndSet(false, true)) {
-        Image image = library.createImage(my1xData, my2xData, myIsSVG, width, height, groupId, imageId);
+        ImageReference image = library.createImageReference(my1xData, my2xData, myIsSVG, groupId, imageId);
         myImageRef = SimpleReference.create(image);
 
         // reset data
@@ -134,12 +133,16 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     return myId;
   }
 
-  @Nullable
-  protected abstract Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId);
+  @Nonnull
+  protected abstract ImageReference createImageReference(@Nonnull byte[] _1xData,
+                                                         @Nullable byte[] _2xdata,
+                                                         boolean isSVG,
+                                                         String groupId,
+                                                         String imageId);
 
   @Nullable
-  public Image getIcon(String groupId, String imageId, int width, int height) {
-    Image image = getIconNoLog(groupId, imageId, width, height);
+  public ImageReference resolveImage(String groupId, String imageId) {
+    ImageReference image = resolveImageNoLog(groupId, imageId);
     if (image != null) {
       return image;
     }
@@ -148,12 +151,12 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
   }
 
   @Nullable
-  protected Image getIconNoLog(String groupId, String imageId, int width, int height) {
+  protected ImageReference resolveImageNoLog(String groupId, String imageId) {
     IconGroup iconGroup = myRegisteredGroups.get(groupId);
     if (iconGroup != null) {
       ImageState imageState = iconGroup.myRegisteredIcons.get(imageId);
       if (imageState != null) {
-        return imageState.getOrCreateImage(this, width, height, groupId, imageId);
+        return imageState.getOrCreateImage(this, groupId, imageId);
       }
     }
 
@@ -161,7 +164,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     if (baseId != null) {
       BaseIconLibraryImpl library = myIconLibraryManager.getLibrary(baseId);
       if (library != null) {
-        Image image = library.getIconNoLog(groupId, imageId, width, height);
+        ImageReference image = library.resolveImageNoLog(groupId, imageId);
         if (image != null) {
           return image;
         }

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.desktop.awt.facade.ToSwingIconWrapper;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopLibraryInnerImage;
 import consulo.ide.impl.idea.util.ui.JBImageIcon;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -43,9 +42,6 @@ import java.awt.image.RGBImageFilter;
  */
 public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image {
   public static Image of(@Nonnull Image original) {
-    if (original instanceof DesktopLibraryInnerImage) {
-      return ((DesktopLibraryInnerImage)original).makeGrayed();
-    }
     return new DesktopDisabledImageImpl(original);
   }
 

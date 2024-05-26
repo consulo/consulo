@@ -254,8 +254,9 @@ public class JBUIScale {
    * @return the result
    */
   public static float setUserScaleFactor(float scale) {
-    if (DEBUG_USER_SCALE_FACTOR.get() == null) {
-      float debugScale = ObjectUtil.notNull(DEBUG_USER_SCALE_FACTOR.get());
+    Float debugUserScale = DEBUG_USER_SCALE_FACTOR.get();
+    if (debugUserScale != null) {
+      float debugScale = ObjectUtil.notNull(debugUserScale);
       if (scale == debugScale) {
         setUserScaleFactorProperty(debugScale); // set the debug value as is, or otherwise ignore
       }

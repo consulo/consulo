@@ -253,8 +253,8 @@
       <artifactId>imgscalr-lib</artifactId>
     </dependency>
     <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>svg-salamander</artifactId>
+      <groupId>com.github.weisj</groupId>
+      <artifactId>jsvg</artifactId>
     </dependency>
     <dependency>
       <groupId>consulo</groupId>
