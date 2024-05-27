@@ -22,7 +22,6 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
-import consulo.application.AllIcons;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
@@ -50,6 +49,7 @@ import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -62,12 +62,12 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -162,8 +162,7 @@ public abstract class InspectionToolsConfigurable implements ErrorsConfigurable,
                                            boolean selected,
                                            boolean hasFocus) {
         final SingleInspectionProfilePanel singleInspectionProfilePanel = myPanels.get(value);
-        final boolean isShared = singleInspectionProfilePanel.isProfileShared();
-        setIcon(isShared ? AllIcons.General.ProjectSettings : AllIcons.General.Settings);
+        setIcon(PlatformIconGroup.generalGearplain());
         append(singleInspectionProfilePanel.getCurrentProfileName());
       }
     }) {

@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.util.concurrent.ResultConsumer;
 import consulo.application.AllIcons;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.execution.debug.XDebuggerBundle;
-import jakarta.annotation.Nonnull;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.util.concurrent.ResultConsumer;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -78,7 +79,8 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     if (myCurrentIndex < HISTORY_SIZE) {
       if (myCurrentIndex != -1) {
         myCurrentIndex += 1;
-      } else {
+      }
+      else {
         myCurrentIndex = 1;
       }
       myHistory.add(myCurrentIndex, item);
@@ -108,8 +110,8 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     @RequiredUIAccess
     @Override
     public void actionPerformed(AnActionEvent e) {
-      if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1){
-        myCurrentIndex ++;
+      if (myHistory.size() > 1 && myCurrentIndex < myHistory.size() - 1) {
+        myCurrentIndex++;
         updateTree();
       }
     }
@@ -147,8 +149,7 @@ abstract class DebuggerTreeWithHistoryContainer<D> {
     private final Tree myTree;
 
     public SetAsRootAction(Tree tree) {
-      super(XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"),
-            XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), AllIcons.Modules.DeleteContentFolder);
+      super(XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), XDebuggerBundle.message("xdebugger.popup.value.tree.set.root.action.tooltip"), PlatformIconGroup.actionsClose());
       myTree = tree;
     }
 

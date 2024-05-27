@@ -16,30 +16,26 @@
 
 package consulo.ide.impl.idea.codeInspection.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextImpl;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionManagerEx;
-import consulo.application.AllIcons;
-import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.project.Project;
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.inspection.scheme.ProfileManager;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.annotation.RequiredUIAccess;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -110,7 +106,7 @@ public class CodeInspectionAction extends BaseAnalysisAction {
         if (value instanceof Profile) {
           Profile profile = (Profile)value;
           setText(profile.getName());
-          setIcon(TargetAWT.to(profile.isProjectLevel() ? AllIcons.General.ProjectSettings : AllIcons.General.Settings));
+          setIcon(TargetAWT.to(PlatformIconGroup.generalGearplain()));
         }
       }
     });

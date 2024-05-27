@@ -425,27 +425,20 @@ public class AllIcons {
     public static final Image LinkDropTriangle = PlatformIconGroup.generalLinkdroptriangle();
     public static final Image Jdk = PlatformIconGroup.generalJdk(); // 16x16
     public static final Image Youtube = PlatformIconGroup.generalYoutube(); // 32x32
-    public static final Image KeyboardShortcut = PlatformIconGroup.generalKeyboardshortcut(); // 13x13
-    public static final Image Keymap = PlatformIconGroup.generalKeymap(); // 32x32
     public static final Image Locate = PlatformIconGroup.generalLocate(); // 14x16
-    public static final Image MacCorner = PlatformIconGroup.generalMaccorner(); // 16x16
     public static final Image Mdot_empty = PlatformIconGroup.generalMdot_empty(); // 8x8
     public static final Image Mdot_white = PlatformIconGroup.generalMdot_white(); // 8x8
     public static final Image Mdot = PlatformIconGroup.generalMdot(); // 8x8
     public static final Image Modified = PlatformIconGroup.generalModified(); // 24x16
     public static final Image MoreTabs = PlatformIconGroup.generalMoretabs(); // 16x16
     public static final Image Mouse = PlatformIconGroup.generalMouse(); // 32x32
-    public static final Image MouseShortcut = PlatformIconGroup.generalMouseshortcut(); // 13x13
     public static final Image NotificationError = PlatformIconGroup.generalNotificationerror(); // 24x24
     public static final Image NotificationInfo = PlatformIconGroup.generalNotificationinfo(); // 24x24
     public static final Image NotificationWarning = PlatformIconGroup.generalNotificationwarning(); // 24x24
-    public static final Image OpenProject = PlatformIconGroup.generalOpenproject(); // 32x32
     public static final Image OverridenMethod = PlatformIconGroup.generalOverridenmethod(); // 10x14
     public static final Image OverridingMethod = PlatformIconGroup.generalOverridingmethod(); // 10x14
-    public static final Image PathVariables = PlatformIconGroup.generalPathvariables(); // 32x32
     public static final Image Pin_tab = PlatformIconGroup.generalPin_tab(); // 16x16
     public static final Image ProjectConfigurable = PlatformIconGroup.generalProjectconfigurable(); // 9x9
-    public static final Image ProjectSettings = PlatformIconGroup.generalProjectsettings(); // 16x16
     public static final Image ProjectStructure = PlatformIconGroup.generalProjectstructure(); // 16x16
     public static final Image ProjectTab = PlatformIconGroup.generalProjecttab(); // 16x16
     public static final Image QuestionDialog = PlatformIconGroup.generalQuestiondialog(); // 32x32
@@ -466,14 +459,6 @@ public class AllIcons {
     public static final Image SplitLeft = PlatformIconGroup.generalSplitleft(); // 7x7
     public static final Image SplitRight = PlatformIconGroup.generalSplitright(); // 7x7
     public static final Image SplitUp = PlatformIconGroup.generalSplitup(); // 7x7
-    public static final Image Tab_white_center = PlatformIconGroup.generalTab_white_center(); // 1x17
-    public static final Image Tab_white_left = PlatformIconGroup.generalTab_white_left(); // 4x17
-    public static final Image Tab_white_right = PlatformIconGroup.generalTab_white_right(); // 4x17
-    public static final Image Tab_grey_bckgrnd = PlatformIconGroup.generalTab_grey_bckgrnd(); // 1x17
-    public static final Image Tab_grey_left = PlatformIconGroup.generalTab_grey_left(); // 4x17
-    public static final Image Tab_grey_left_inner = PlatformIconGroup.generalTab_grey_left_inner(); // 4x17
-    public static final Image Tab_grey_right = PlatformIconGroup.generalTab_grey_right(); // 4x17
-    public static final Image Tab_grey_right_inner = PlatformIconGroup.generalTab_grey_right_inner(); // 4x17
     public static final Image TbHidden = PlatformIconGroup.generalTbhidden(); // 16x16
     public static final Image TbShown = PlatformIconGroup.generalTbshown(); // 16x16
     public static final Image TemplateProjectSettings = PlatformIconGroup.generalTemplateprojectsettings(); // 32x32
@@ -629,15 +614,8 @@ public class AllIcons {
   public static class Modules {
     public static final Image AddExcludedRoot = PlatformIconGroup.modulesAddexcludedroot(); // 16x16
     public static final Image Annotation = PlatformIconGroup.modulesAnnotation(); // 16x16
-    public static final Image DeleteContentFolder = PlatformIconGroup.modulesDeletecontentfolder(); // 9x9
-    public static final Image ContentFolderOptions = PlatformIconGroup.modulesContentfolderoptions(); // 9x9
-    public static final Image DeleteContentFolderRollover = PlatformIconGroup.modulesDeletecontentfolderrollover(); // 9x9
-    public static final Image DeleteContentRoot = PlatformIconGroup.modulesDeletecontentroot(); // 9x9
-    public static final Image DeleteContentRootRollover = PlatformIconGroup.modulesDeletecontentrootrollover(); // 9x9
-    public static final Image Edit = PlatformIconGroup.modulesEdit(); // 14x14
     public static final Image ExcludeRoot = PlatformIconGroup.modulesExcluderoot(); // 16x16
     public static final Image GeneratedMark = PlatformIconGroup.modulesGeneratedmark(); // 16x16
-    public static final Image Library = PlatformIconGroup.modulesLibrary(); // 16x16
     public static final Image SourceRoot = PlatformIconGroup.modulesSourceroot(); // 16x16
     public static final Image ResourcesRoot = PlatformIconGroup.modulesResourcesroot(); // 16x16
     public static final Image TestResourcesRoot = PlatformIconGroup.modulesTestresourcesroot(); // 16x16
@@ -704,7 +682,6 @@ public class AllIcons {
     public static final Image TestPackage = Package; // 16x16
     public static final Image Padlock = PlatformIconGroup.nodesPadlock(); // 16x16
     public static final Image Parameter = PlatformIconGroup.nodesParameter(); // 16x16
-    public static final Image PinToolWindow = PlatformIconGroup.nodesPintoolwindow(); // 13x13
     public static final Image Plugin = PlatformIconGroup.nodesPlugin(); // 16x16
     public static final Image Pointcut = PlatformIconGroup.nodesPointcut(); // 16x16
     public static final Image PpFile = PlatformIconGroup.nodesPpfile(); // 16x16
@@ -726,7 +703,6 @@ public class AllIcons {
     public static final Image ResourceBundle = PlatformIconGroup.nodesResourcebundle(); // 16x16
     public static final Image RunnableMark = PlatformIconGroup.nodesRunnablemark(); // 16x16
     public static final Image Rw_access = PlatformIconGroup.nodesRw_access(); // 13x9
-    public static final Image Servlet = PlatformIconGroup.nodesServlet(); // 16x16
     public static final Image SortBySeverity = PlatformIconGroup.nodesSortbyseverity(); // 16x16
     public static final Image Static = PlatformIconGroup.nodesStatic(); // 16x16
     public static final Image StaticMark = PlatformIconGroup.nodesStaticmark(); // 16x16
@@ -736,11 +712,7 @@ public class AllIcons {
     public static final Image TabPin = PlatformIconGroup.nodesTabpin(); // 16x16
     public static final Image Tag = PlatformIconGroup.nodesTag(); // 16x16
     public static final Image TreeClosed = PlatformIconGroup.nodesTreeclosed(); // 16x16
-    public static final Image TreeCollapseNode = PlatformIconGroup.nodesTreecollapsenode(); // 16x16
-    public static final Image TreeDownArrow = PlatformIconGroup.nodesTreedownarrow(); // 11x11
-    public static final Image TreeExpandNode = PlatformIconGroup.nodesTreeexpandnode(); // 16x16
     public static final Image TreeOpen = PlatformIconGroup.nodesTreeopen(); // 16x16
-    public static final Image TreeRightArrow = PlatformIconGroup.nodesTreerightarrow(); // 11x11
     public static final Image Undeploy = PlatformIconGroup.nodesUndeploy(); // 16x16
     public static final Image UnknownJdk = PlatformIconGroup.nodesUnknownjdk(); // 16x16
     public static final Image UpFolder = PlatformIconGroup.nodesUpfolder(); // 16x16
@@ -898,7 +870,6 @@ public class AllIcons {
     public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
     public static final Image ToolWindowCommander = PlatformIconGroup.toolwindowsToolwindowcommander(); // 13x13
     public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
-    public static final Image ToolWindowCvs = PlatformIconGroup.toolwindowsToolwindowcvs(); // 13x13
     public static final Image ToolWindowDebugger = PlatformIconGroup.toolwindowsToolwindowdebugger(); // 13x13
     public static final Image ToolWindowFavorites = PlatformIconGroup.toolwindowsToolwindowfavorites(); // 13x13
     public static final Image ToolWindowFind = PlatformIconGroup.toolwindowsToolwindowfind(); // 13x13
@@ -911,7 +882,6 @@ public class AllIcons {
     public static final Image ToolWindowRun = PlatformIconGroup.toolwindowsToolwindowrun(); // 13x13
     public static final Image ToolWindowStructure = PlatformIconGroup.toolwindowsToolwindowstructure(); // 13x13
     public static final Image ToolWindowTodo = PlatformIconGroup.toolwindowsToolwindowtodo(); // 13x13
-    public static final Image VcsSmallTab = PlatformIconGroup.toolwindowsVcssmalltab(); // 13x13
     public static final Image WebToolWindow = PlatformIconGroup.toolwindowsWebtoolwindow(); // 13x13
 
   }

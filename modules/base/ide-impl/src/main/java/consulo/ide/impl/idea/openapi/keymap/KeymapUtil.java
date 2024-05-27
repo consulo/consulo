@@ -21,6 +21,7 @@ import consulo.application.util.registry.RegistryValue;
 import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ShortcutUtil;
 import consulo.ui.ex.keymap.Keymap;
@@ -56,18 +57,6 @@ public class KeymapUtil {
 
   public static String getShortcutText(@Nonnull Shortcut shortcut) {
     return consulo.ui.ex.keymap.util.KeymapUtil.getShortcutText(shortcut);
-  }
-
-  public static Image getShortcutIcon(Shortcut shortcut) {
-    if (shortcut instanceof KeyboardShortcut) {
-      return AllIcons.General.KeyboardShortcut;
-    }
-    else if (shortcut instanceof MouseShortcut) {
-      return AllIcons.General.MouseShortcut;
-    }
-    else {
-      throw new IllegalArgumentException("unknown shortcut class: " + shortcut);
-    }
   }
 
   /**

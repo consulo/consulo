@@ -15,12 +15,11 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.AllIcons;
-
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.JBColor;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -34,7 +33,7 @@ import java.util.Set;
 class Banner extends NonOpaquePanel implements PropertyChangeListener {
   private int myBannerMinHeight;
   private final JComponent myText = new MyText();
-  private final JLabel myProjectIcon = new JBLabel(AllIcons.General.ProjectConfigurable, SwingConstants.LEFT);
+  private final JLabel myProjectIcon = new JBLabel(PlatformIconGroup.generalProjectconfigurable(), SwingConstants.LEFT);
   private final NonOpaquePanel myActionsPanel = new NonOpaquePanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
 
   private final Map<Action, LinkLabel> myActions = new HashMap<>();

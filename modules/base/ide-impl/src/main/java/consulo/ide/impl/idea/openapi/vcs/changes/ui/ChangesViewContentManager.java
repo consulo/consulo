@@ -170,7 +170,7 @@ public class ChangesViewContentManager implements ChangesViewContentI {
     }
     else {
       displayName = LocalizeValue.of(UIBundle.message("tool.window.name.version.control"));
-      image = PlatformIconGroup.toolwindowsVcssmalltab();
+      image = PlatformIconGroup.toolwindowsToolwindowchanges();
     }
 
     if (myToolWindow != null) {

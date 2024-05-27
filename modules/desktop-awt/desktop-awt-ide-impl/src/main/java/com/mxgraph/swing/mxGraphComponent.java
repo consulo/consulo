@@ -4,8 +4,6 @@
  */
 package com.mxgraph.swing;
 
-import consulo.application.AllIcons;
-import consulo.application.ui.wm.IdeFocusManager;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.model.mxGraphModel;
@@ -21,6 +19,9 @@ import com.mxgraph.util.*;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.*;
 import com.mxgraph.view.mxEdgeStyle.mxEdgeStyleFunction;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.desktop.awt.ui.IconLookup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;
@@ -31,8 +32,8 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * For setting the preferred size of the viewport for scrolling, use
@@ -316,17 +317,17 @@ public class mxGraphComponent extends JScrollPane implements Printable {
   /**
    *
    */
-  protected Icon expandedIcon = TargetAWT.to(AllIcons.Nodes.TreeDownArrow);
+  protected Icon expandedIcon = IconLookup.get().getIcon("treeExpanded", false, false, true);
 
   /**
    *
    */
-  protected Icon collapsedIcon = TargetAWT.to(AllIcons.Nodes.TreeRightArrow);
+  protected Icon collapsedIcon = IconLookup.get().getIcon("treeColapsed", false, false, true);
 
   /**
    *
    */
-  protected Icon warningIcon = TargetAWT.to(AllIcons.General.Warning);
+  protected Icon warningIcon = TargetAWT.to(PlatformIconGroup.generalWarning());
 
   /**
    *

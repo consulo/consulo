@@ -15,7 +15,6 @@
  */
 package consulo.webBrowser.action;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -24,6 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
@@ -43,9 +43,9 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.webBrowser.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -201,8 +201,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             setRenderer(new ColoredListCellRenderer() {
               @Override
               protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                // todo icons looks good, but is it really suitable for all URLs providers?
-                setIcon(AllIcons.Nodes.Servlet);
+                setIcon(PlatformIconGroup.generalWeb());
                 append(((Url)value).toDecodedForm());
               }
             }).setItemSelectedCallback(value -> {
