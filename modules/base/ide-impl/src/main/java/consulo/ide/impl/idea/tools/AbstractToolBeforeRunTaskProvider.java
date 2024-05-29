@@ -15,18 +15,17 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -37,7 +36,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
 
   @Override
   public Image getIcon() {
-    return AllIcons.General.ExternalToolsSmall;
+    return PlatformIconGroup.generalExternaltools();
   }
 
   @Nonnull

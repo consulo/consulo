@@ -16,13 +16,12 @@
 package consulo.ide.impl.wm.impl.welcomeScreen;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -35,12 +34,12 @@ public class JoinDiscordChannelAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    BrowserUtil.browse("https://discord.gg/Ab3Ka5gTFv");
+    Platform.current().openInBrowser("https://discord.gg/Ab3Ka5gTFv");
   }
 
   @Nullable
   @Override
   protected Image getTemplateIcon() {
-    return PlatformIconGroup.providersDiscord();
+    return PlatformIconGroup.actionsDiscord();
   }
 }

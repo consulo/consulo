@@ -36,18 +36,6 @@ public class CollapseGraphAction extends CollapseOrExpandGraphAction {
 
   @Nonnull
   @Override
-  protected Image getMergesIcon() {
-    return VcsLogIcons.CollapseMerges;
-  }
-
-  @Nonnull
-  @Override
-  protected Image getBranchesIcon() {
-    return VcsLogIcons.CollapseMerges;
-  }
-
-  @Nonnull
-  @Override
   protected String getPrefix() {
     return COLLAPSE + " ";
   }

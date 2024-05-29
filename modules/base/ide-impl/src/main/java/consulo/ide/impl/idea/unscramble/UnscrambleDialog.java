@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.unscramble;
 
-import consulo.application.AllIcons;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.HelpManager;
@@ -28,6 +27,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.configurable.VcsContentAnnotationConfigurable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
@@ -37,9 +37,9 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -382,18 +382,18 @@ public class UnscrambleDialog extends DialogWrapper {
     String message = IdeBundle.message("unscramble.unscrambled.stacktrace.tab");
     if (!threadDump.isEmpty()) {
       message = IdeBundle.message("unscramble.unscrambled.threaddump.tab");
-      icon = AllIcons.Debugger.ThreadStates.Threaddump;
+      icon = PlatformIconGroup.actionsDump();
     }
     else {
       String name = getAnalyzer().parseAsException(unscrambledTrace);
       if (name != null) {
         message = name;
-        icon = AllIcons.Debugger.ThreadStates.Exception;
+        icon = PlatformIconGroup.actionsLightning();
       }
     }
     if (ContainerUtil.find(threadDump, DEADLOCK_CONDITION) != null) {
       message = IdeBundle.message("unscramble.unscrambled.deadlock.tab");
-      icon = AllIcons.Debugger.KillProcess;
+      icon = PlatformIconGroup.debuggerKillprocess();
     }
     return AnalyzeStacktraceUtil.addConsole(project, threadDump.size() > 1 ? (consoleView, toolbarActions) -> {
       ThreadDumpConsoleFactory factory = new ThreadDumpConsoleFactory(project, threadDump);

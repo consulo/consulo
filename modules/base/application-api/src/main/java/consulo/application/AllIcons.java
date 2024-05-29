@@ -306,15 +306,8 @@ public class AllIcons {
 
     public static class ThreadStates {
       public static final Image Daemon_sign = PlatformIconGroup.debuggerThreadstatesDaemon_sign(); // 16x16
-      public static final Image EdtBusy = PlatformIconGroup.debuggerThreadstatesEdtbusy(); // 16x16
-      public static final Image Exception = PlatformIconGroup.debuggerThreadstatesException(); // 16x16
       public static final Image Idle = PlatformIconGroup.debuggerThreadstatesIdle(); // 16x16
-      public static final Image IO = PlatformIconGroup.debuggerThreadstatesIo(); // 16x16
-      public static final Image Locked = PlatformIconGroup.debuggerThreadstatesLocked(); // 16x16
-      public static final Image Paused = PlatformIconGroup.debuggerThreadstatesPaused(); // 16x16
-      public static final Image Running = PlatformIconGroup.debuggerThreadstatesRunning(); // 16x16
       public static final Image Socket = PlatformIconGroup.debuggerThreadstatesSocket(); // 16x16
-      public static final Image Threaddump = PlatformIconGroup.debuggerThreadstatesThreaddump(); // 16x16
 
     }
 
@@ -392,7 +385,6 @@ public class AllIcons {
     public static final Image CollapseComponentHover = PlatformIconGroup.generalCollapsecomponenthover();
     public static final Image CollapseAll = PlatformIconGroup.generalCollapseall(); // 11x16
     public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
-    public static final Image CreateNewProject = PlatformIconGroup.generalCreatenewproject(); // 32x32
     public static final Image Divider = PlatformIconGroup.generalDivider(); // 2x19
     public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
     public static final Image EditColors = PlatformIconGroup.generalEditcolors(); // 16x16
@@ -403,15 +395,10 @@ public class AllIcons {
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandcomponent();
     public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandcomponenthover();
     public static final Image ExpandAll = PlatformIconGroup.generalExpandall(); // 11x16
-    public static final Image ExternalTools = PlatformIconGroup.generalExternaltools(); // 32x32
-    public static final Image ExternalToolsSmall = PlatformIconGroup.generalExternaltoolssmall(); // 16x16
     public static final Image Filter = PlatformIconGroup.generalFilter(); // 16x16
     public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
-    public static final Image GetProjectfromVCS = PlatformIconGroup.generalGetprojectfromvcs(); // 32x32
     public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16
     public static final Image ImplementingMethod = PlatformIconGroup.generalImplementingmethod(); // 10x14
-    public static final Image ImportProject = PlatformIconGroup.generalImportproject(); // 32x32
-    public static final Image ImportSettings = PlatformIconGroup.generalImportsettings(); // 32x32
     public static final Image Information = PlatformIconGroup.generalInformation(); // 16x16
     public static final Image InformationDialog = PlatformIconGroup.generalInformationdialog(); // 32x32
     public static final Image InheritedMethod = PlatformIconGroup.generalInheritedmethod(); // 11x14
@@ -461,8 +448,6 @@ public class AllIcons {
     public static final Image SplitUp = PlatformIconGroup.generalSplitup(); // 7x7
     public static final Image TbHidden = PlatformIconGroup.generalTbhidden(); // 16x16
     public static final Image TbShown = PlatformIconGroup.generalTbshown(); // 16x16
-    public static final Image TemplateProjectSettings = PlatformIconGroup.generalTemplateprojectsettings(); // 32x32
-    public static final Image TemplateProjectStructure = PlatformIconGroup.generalTemplateprojectstructure(); // 32x32
     public static final Image Tip = PlatformIconGroup.generalTip(); // 32x32
     public static final Image TodoDefault = PlatformIconGroup.generalTododefault(); // 12x12
     public static final Image TodoImportant = PlatformIconGroup.generalTodoimportant(); // 12x12
@@ -470,19 +455,15 @@ public class AllIcons {
     public static final Image Warning = PlatformIconGroup.generalWarning(); // 16x16
     public static final Image WarningDecorator = PlatformIconGroup.generalWarningdecorator(); // 16x16
     public static final Image WarningDialog = PlatformIconGroup.generalWarningdialog(); // 32x32
-    public static final Image Web = PlatformIconGroup.generalWeb(); // 13x13
 
   }
 
   public static class Graph {
     public static final Image ActualZoom = PlatformIconGroup.graphActualzoom(); // 16x16
-    @Deprecated
-    public static final Image Export = PlatformIconGroup.actionsExport();
     public static final Image FitContent = PlatformIconGroup.graphFitcontent(); // 16x16
     public static final Image Grid = PlatformIconGroup.graphGrid(); // 16x16
     public static final Image Layout = PlatformIconGroup.graphLayout(); // 16x16
     public static final Image NodeSelectionMode = PlatformIconGroup.generalPrint(); // 16x16
-    public static final Image Print = PlatformIconGroup.graphPrint(); // 16x16
     public static final Image PrintPreview = PlatformIconGroup.graphPrintpreview(); // 16x16
     public static final Image SnapToGrid = PlatformIconGroup.graphSnaptogrid(); // 16x16
     public static final Image ZoomIn = PlatformIconGroup.graphZoomin(); // 16x16
@@ -795,18 +776,6 @@ public class AllIcons {
 
   }
 
-  public static class Providers {
-    public static final Image Apache = PlatformIconGroup.providersApache(); // 16x16
-    public static final Image Bea = PlatformIconGroup.providersBea(); // 16x16
-    public static final Image Cvs = PlatformIconGroup.providersCvs(); // 16x16
-    public static final Image Eclipse = PlatformIconGroup.providersEclipse(); // 16x16
-    public static final Image Google = PlatformIconGroup.providersGoogle(); // 16x16
-    public static final Image Ibm = PlatformIconGroup.providersIbm(); // 16x16
-    public static final Image Microsoft = PlatformIconGroup.providersMicrosoft(); // 16x16
-    public static final Image Oracle = PlatformIconGroup.providersOracle(); // 16x16
-    public static final Image Sun = PlatformIconGroup.providersSun(); // 16x16
-  }
-
   public static class RunConfigurations {
     public static final Image Application = PlatformIconGroup.runconfigurationsApplication(); // 16x16
     public static final Image HidePassed = PlatformIconGroup.runconfigurationsHidepassed(); // 16x16
@@ -865,8 +834,6 @@ public class AllIcons {
 
   public static class Toolwindows {
     public static final Image Documentation = PlatformIconGroup.toolwindowsDocumentation(); // 13x13
-    public static final Image Problems = PlatformIconGroup.toolwindowsProblems(); // 13x13
-    public static final Image ToolWindowAnt = PlatformIconGroup.toolwindowsToolwindowant(); // 13x13
     public static final Image ToolWindowChanges = PlatformIconGroup.toolwindowsToolwindowchanges(); // 13x13
     public static final Image ToolWindowCommander = PlatformIconGroup.toolwindowsToolwindowcommander(); // 13x13
     public static final Image ToolWindowCoverage = PlatformIconGroup.toolwindowsToolwindowcoverage(); // 13x13
@@ -970,7 +937,5 @@ public class AllIcons {
       public static final Image Yandex16 = PlatformIconGroup.xmlBrowsersYandex16();
 
     }
-
-    public static final Image Html5 = PlatformIconGroup.xmlHtml5(); // 16x16
   }
 }

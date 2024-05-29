@@ -21,6 +21,7 @@ import consulo.execution.unscramble.AnalyzeStacktraceUtil;
 import consulo.execution.unscramble.ThreadDumpPanel;
 import consulo.execution.unscramble.ThreadOperation;
 import consulo.execution.unscramble.ThreadState;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
@@ -51,13 +52,19 @@ import static consulo.application.AllIcons.Debugger.ThreadStates.*;
  * @author Konstantin Bulenkov
  */
 public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
-  private static final Image PAUSE_ICON_DAEMON = ImageEffects.layered(Paused, Daemon_sign);
-  private static final Image LOCKED_ICON_DAEMON = ImageEffects.layered(Locked, Daemon_sign);
-  private static final Image RUNNING_ICON_DAEMON = ImageEffects.layered(Running, Daemon_sign);
-  private static final Image SOCKET_ICON_DAEMON = ImageEffects.layered(Socket, Daemon_sign);
-  private static final Image IDLE_ICON_DAEMON = ImageEffects.layered(Idle, Daemon_sign);
-  private static final Image EDT_BUSY_ICON_DAEMON = ImageEffects.layered(EdtBusy, Daemon_sign);
-  private static final Image IO_ICON_DAEMON = ImageEffects.layered(IO, Daemon_sign);
+  private static final Image PAUSE_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsPause(), PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image LOCKED_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerMutebreakpoints(),
+                                                                       PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image RUNNING_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsResume(),
+                                                                        PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image SOCKET_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerThreadstatesSocket(),
+                                                                       PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image IDLE_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.debuggerThreadstatesIdle(),
+                                                                     PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image EDT_BUSY_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsProfilecpu(),
+                                                                         PlatformIconGroup.debuggerThreadstatesDaemon_sign());
+  private static final Image IO_ICON_DAEMON = ImageEffects.layered(PlatformIconGroup.actionsMenu_saveall(),
+                                                                   PlatformIconGroup.debuggerThreadstatesDaemon_sign());
   private final JBList<ThreadState> myThreadList;
 
   public AWTThreadDumpPanel(Project project, final ConsoleView consoleView, final DefaultActionGroup toolbarActions, final List<ThreadState> threadDump) {
@@ -98,24 +105,24 @@ public class AWTThreadDumpPanel extends JPanel implements ThreadDumpPanel {
   private static Image getThreadStateIcon(final ThreadState threadState) {
     final boolean daemon = threadState.isDaemon();
     if (threadState.isSleeping()) {
-      return daemon ? PAUSE_ICON_DAEMON : Paused;
+      return daemon ? PAUSE_ICON_DAEMON : PlatformIconGroup.actionsPause();
     }
     if (threadState.isWaiting()) {
-      return daemon ? LOCKED_ICON_DAEMON : Locked;
+      return daemon ? LOCKED_ICON_DAEMON : PlatformIconGroup.debuggerMutebreakpoints();
     }
     if (threadState.getOperation() == ThreadOperation.Socket) {
-      return daemon ? SOCKET_ICON_DAEMON : Socket;
+      return daemon ? SOCKET_ICON_DAEMON : PlatformIconGroup.debuggerThreadstatesSocket();
     }
     if (threadState.getOperation() == ThreadOperation.IO) {
-      return daemon ? IO_ICON_DAEMON : IO;
+      return daemon ? IO_ICON_DAEMON : PlatformIconGroup.actionsMenu_saveall();
     }
     if (threadState.isEDT()) {
       if ("idle".equals(threadState.getThreadStateDetail())) {
         return daemon ? IDLE_ICON_DAEMON : Idle;
       }
-      return daemon ? EDT_BUSY_ICON_DAEMON : EdtBusy;
+      return daemon ? EDT_BUSY_ICON_DAEMON : PlatformIconGroup.actionsProfilecpu();
     }
-    return daemon ? RUNNING_ICON_DAEMON : Running;
+    return daemon ? RUNNING_ICON_DAEMON : PlatformIconGroup.actionsResume();
   }
 
   @Nonnull

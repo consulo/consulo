@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
+import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
+import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogUi;
-import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
-import consulo.ide.impl.idea.vcs.log.VcsLogIcons;
 import jakarta.annotation.Nonnull;
 
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
   public ShowLongEdgesAction() {
-    super("Show Long Edges", "Show long branch edges even if commits are invisible in the current view.", VcsLogIcons.ShowHideLongEdges);
+    super("Show Long Edges", "Show long branch edges even if commits are invisible in the current view.", null);
   }
 
   @Override
