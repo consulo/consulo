@@ -49,7 +49,7 @@ public class RunContentExecutor implements Disposable {
   private String myTitle = "Output";
   private String myHelpId = null;
   private boolean myActivateToolWindow = true;
-  private Image myIcon = PlatformIconGroup.generalRun();
+  private Image myIcon = PlatformIconGroup.actionsExecute();
 
   /**
    * User-provided console that has to be used instead of newly created
