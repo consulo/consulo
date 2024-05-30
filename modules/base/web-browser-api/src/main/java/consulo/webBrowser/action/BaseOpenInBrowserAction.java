@@ -201,7 +201,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             setRenderer(new ColoredListCellRenderer() {
               @Override
               protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                setIcon(PlatformIconGroup.generalWeb());
+                setIcon(PlatformIconGroup.nodesPpweb());
                 append(((Url)value).toDecodedForm());
               }
             }).setItemSelectedCallback(value -> {
