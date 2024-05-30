@@ -81,10 +81,7 @@ public class JBComboBoxTableCellEditorComponent extends JBLabel {
     }
 
     private Image getIcon(boolean selected) {
-      final boolean small = "small".equals(JBComboBoxTableCellEditorComponent.this.getClientProperty("JComponent.sizeVariant"));
-      return small
-             ? selected ? AllIcons.Actions.Checked_small_selected :  AllIcons.Actions.Checked_small
-             : selected ? AllIcons.Actions.Checked_selected : AllIcons.Actions.Checked;
+      return selected ? AllIcons.Actions.Checked_selected : AllIcons.Actions.Checked;
     }
   };
 

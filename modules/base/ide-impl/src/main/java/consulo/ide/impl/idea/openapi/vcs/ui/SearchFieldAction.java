@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.ui;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.action.CustomComponentAction;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -70,7 +70,7 @@ public abstract class SearchFieldAction extends AnAction implements CustomCompon
       myField.setBorder(emptyBorder);
     }
 
-    myField.setSearchIcon(AllIcons.Actions.Filter_small);
+    myField.setSearchIcon(PlatformIconGroup.generalFilter());
     myComponent = new JPanel();
     final BoxLayout layout = new BoxLayout(myComponent, BoxLayout.X_AXIS);
     myComponent.setLayout(layout);

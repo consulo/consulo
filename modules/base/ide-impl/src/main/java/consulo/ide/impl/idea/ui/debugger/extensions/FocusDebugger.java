@@ -17,16 +17,16 @@
 package consulo.ide.impl.idea.ui.debugger.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
-import consulo.logging.Logger;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.SimpleColoredText;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.ui.debugger.UiDebuggerExtension;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.SimpleColoredText;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.Splitter;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -95,7 +95,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
 
   class ClearAction extends AnAction {
     ClearAction() {
-      super("Clear", "", AllIcons.Actions.Cross);
+      super("Clear", "", PlatformIconGroup.actionsClose());
     }
 
     @Override

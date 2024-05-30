@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
@@ -146,7 +147,7 @@ public class SearchTextField extends JPanel {
         add(myToggleHistoryLabel, BorderLayout.WEST);
       }
 
-      myClearFieldLabel = new JLabel(TargetAWT.to(UIUtil.isUnderDarcula() ? AllIcons.Actions.Clean : AllIcons.Actions.CleanLight));
+      myClearFieldLabel = new JLabel(TargetAWT.to(PlatformIconGroup.actionsClose()));
       myClearFieldLabel.setOpaque(true);
       add(myClearFieldLabel, BorderLayout.EAST);
       myClearFieldLabel.addMouseListener(new MouseAdapter() {

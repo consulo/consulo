@@ -344,7 +344,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     public CheckboxColorIcon(int size, @Nonnull Color color) {
       super(size, color);
       mySize = size;
-      mySizedIcon = new SizedIcon(TargetAWT.to(AllIcons.Actions.Checked_small), mySize, mySize);
+      mySizedIcon = new SizedIcon(TargetAWT.to(AllIcons.Actions.Checked), mySize, mySize);
     }
 
     public void prepare(boolean selected) {
@@ -427,7 +427,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
     private SelectFromHistoryAction(@Nonnull VcsLogStructureFilter filter) {
       super(getStructureActionText(filter), getTooltipTextForFilePaths(filter.getFiles(), false).replace("\n", " "), null);
       myFilter = filter;
-      myIcon = ImageEffects.resize(AllIcons.Actions.Checked_small, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
+      myIcon = ImageEffects.resize(AllIcons.Actions.Checked, CHECKBOX_ICON_SIZE, CHECKBOX_ICON_SIZE);
       myEmptyIcon = Image.empty(CHECKBOX_ICON_SIZE);
     }
 

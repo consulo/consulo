@@ -32,14 +32,9 @@ public class AllIcons {
     public static final Image Browser_externalJavaDoc = PlatformIconGroup.actionsBrowser_externaljavadoc(); // 16x16
     public static final Image Cancel = PlatformIconGroup.actionsCancel(); // 16x16
     public static final Image Checked = PlatformIconGroup.actionsChecked(); // 12x12
-    public static final Image Checked_selected = PlatformIconGroup.actionsChecked_selected(); // 12x12
-    public static final Image Checked_small = PlatformIconGroup.actionsChecked_small(); // 11x11
-    public static final Image Checked_small_selected = PlatformIconGroup.actionsChecked_small_selected(); // 11x11
+    public static final Image Checked_selected = PlatformIconGroup.actionsChecked_selected();
     public static final Image CheckMulticaret = PlatformIconGroup.actionsCheckmulticaret(); // 16x16
     public static final Image CheckOut = PlatformIconGroup.actionsCheckout(); // 16x16
-    public static final Image Clear = PlatformIconGroup.actionsClear(); // 16x16
-    public static final Image Clean = PlatformIconGroup.actionsClean(); // 16x16
-    public static final Image CleanLight = PlatformIconGroup.actionsCleanlight(); // 16x16
     public static final Image Close = PlatformIconGroup.actionsClose(); // 16x16
     public static final Image CloseHovered = PlatformIconGroup.actionsClosehovered(); // 16x16
     @Deprecated
@@ -51,8 +46,6 @@ public class AllIcons {
     public static final Image Compile = PlatformIconGroup.actionsCompile(); // 16x16
     public static final Image Copy = PlatformIconGroup.actionsCopy(); // 16x16
     public static final Image CreateFromUsage = PlatformIconGroup.actionsCreatefromusage(); // 16x16
-    public static final Image Cross = PlatformIconGroup.actionsCross(); // 12x12
-    public static final Image Delete = Cancel;
     public static final Image Diff = PlatformIconGroup.actionsDiff(); // 16x16
     public static final Image DiffWithCurrent = PlatformIconGroup.actionsDiffwithcurrent(); // 16x16
     public static final Image Down = PlatformIconGroup.actionsDown(); // 16x16
@@ -66,7 +59,6 @@ public class AllIcons {
     public static final Image Exit = PlatformIconGroup.actionsExit(); // 16x16
     public static final Image Expandall = PlatformIconGroup.actionsExpandall(); // 16x16
     public static final Image Export = PlatformIconGroup.actionsExport(); // 16x16
-    public static final Image Filter_small = PlatformIconGroup.actionsFilter_small(); // 16x16
     public static final Image FindAndShowNextMatchesSmall = PlatformIconGroup.actionsFindandshownextmatchessmall();
     public static final Image FindAndShowPrevMatchesSmall = PlatformIconGroup.actionsFindandshowprevmatchessmall();
     public static final Image Find = PlatformIconGroup.actionsFind(); // 16x16
@@ -104,11 +96,9 @@ public class AllIcons {
     public static final Image MoveUp = PlatformIconGroup.actionsMoveup(); // 14x14
     public static final Image New = PlatformIconGroup.actionsNew(); // 16x16
     public static final Image NewFolder = PlatformIconGroup.actionsNewfolder(); // 16x16
-    public static final Image Nextfile = PlatformIconGroup.actionsNextfile(); // 16x16
     public static final Image NextOccurence = PlatformIconGroup.actionsNextoccurence(); // 16x16
     public static final Image Pause = PlatformIconGroup.actionsPause(); // 16x16
     public static final Image PopFrame = PlatformIconGroup.actionsPopframe(); // 16x16
-    public static final Image Prevfile = PlatformIconGroup.actionsPrevfile(); // 16x16
     public static final Image Preview = PlatformIconGroup.actionsPreview(); // 16x16
     public static final Image PreviewDetails = PlatformIconGroup.actionsPreviewdetails(); // 16x16
     public static final Image PreviousOccurence = PlatformIconGroup.actionsPreviousoccurence(); // 14x14

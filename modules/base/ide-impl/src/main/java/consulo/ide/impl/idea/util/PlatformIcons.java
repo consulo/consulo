@@ -82,8 +82,8 @@ public interface PlatformIcons {
 
   Icon CHECK_ICON = (Icon)AllIcons.Actions.Checked;
   Icon CHECK_ICON_SELECTED = (Icon)AllIcons.Actions.Checked_selected;
-  Icon CHECK_ICON_SMALL = (Icon)AllIcons.Actions.Checked_small;
-  Icon CHECK_ICON_SMALL_SELECTED = (Icon)AllIcons.Actions.Checked_small_selected;
+  Icon CHECK_ICON_SMALL = (Icon)AllIcons.Actions.Checked;
+  Icon CHECK_ICON_SMALL_SELECTED = (Icon)AllIcons.Actions.Checked_selected;
 
   Icon OPEN_EDIT_DIALOG_ICON = (Icon)AllIcons.Actions.ShowViewer;
   Icon FLATTEN_PACKAGES_ICON = (Icon)AllIcons.ObjectBrowser.FlattenPackages;
