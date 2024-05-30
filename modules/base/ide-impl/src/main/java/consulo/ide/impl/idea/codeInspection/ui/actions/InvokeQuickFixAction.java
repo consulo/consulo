@@ -16,19 +16,18 @@
 
 package consulo.ide.impl.idea.codeInspection.ui.actions;
 
-import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.application.AllIcons;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.dataContext.DataContext;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -43,8 +42,9 @@ public class InvokeQuickFixAction extends AnAction {
   private final InspectionResultsView myView;
 
   public InvokeQuickFixAction(final InspectionResultsView view) {
-    super(InspectionsBundle.message("inspection.action.apply.quickfix"), InspectionsBundle.message("inspection.action.apply.quickfix.description"),
-          AllIcons.Actions.CreateFromUsage);
+    super(InspectionsBundle.message("inspection.action.apply.quickfix"),
+          InspectionsBundle.message("inspection.action.apply.quickfix.description"),
+          PlatformIconGroup.actionsIntentionbulb());
     myView = view;
     registerCustomShortcutSet(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS).getShortcutSet(),
                               myView.getTree());
@@ -98,11 +98,11 @@ public class InvokeQuickFixAction extends AnAction {
     ActionGroup fixes = getFixes(quickFixes);
     DataContext dataContext = e.getDataContext();
     final ListPopup popup = JBPopupFactory.getInstance()
-      .createActionGroupPopup(InspectionsBundle.message("inspection.tree.popup.title"),
-                              fixes,
-                              dataContext,
-                              JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
-                              false);
+                                          .createActionGroupPopup(InspectionsBundle.message("inspection.tree.popup.title"),
+                                                                  fixes,
+                                                                  dataContext,
+                                                                  JBPopupFactory.ActionSelectionAid.SPEEDSEARCH,
+                                                                  false);
     InspectionResultsView.showPopup(e, popup);
   }
 }

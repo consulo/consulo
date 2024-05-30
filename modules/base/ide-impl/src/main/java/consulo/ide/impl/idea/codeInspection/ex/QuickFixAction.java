@@ -16,38 +16,38 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
+import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.SequentialModalProgressTask;
+import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.language.editor.FileModificationService;
+import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import consulo.language.editor.impl.inspection.reference.RefManagerImpl;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionResultsView;
-import consulo.ide.impl.idea.codeInspection.ui.InspectionTree;
-import consulo.application.AllIcons;
+import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.SymbolPresentationUtil;
-import consulo.ide.impl.idea.util.SequentialModalProgressTask;
-import consulo.ide.impl.idea.util.SequentialTask;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.image.Image;
-
+import consulo.undoRedo.CommandProcessor;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -62,7 +62,7 @@ public class QuickFixAction extends AnAction {
   }
 
   protected QuickFixAction(String text, @Nonnull InspectionToolWrapper toolWrapper) {
-    this(text, AllIcons.Actions.CreateFromUsage, null, toolWrapper);
+    this(text, PlatformIconGroup.actionsIntentionbulb(), null, toolWrapper);
   }
 
   protected QuickFixAction(String text, Image icon, KeyStroke keyStroke, @Nonnull InspectionToolWrapper toolWrapper) {

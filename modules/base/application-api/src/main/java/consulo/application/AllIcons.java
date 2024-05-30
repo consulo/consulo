@@ -37,15 +37,10 @@ public class AllIcons {
     public static final Image CheckOut = PlatformIconGroup.actionsCheckout(); // 16x16
     public static final Image Close = PlatformIconGroup.actionsClose(); // 16x16
     public static final Image CloseHovered = PlatformIconGroup.actionsClosehovered(); // 16x16
-    @Deprecated
-    public static final Image CloseNew = Close; // 16x16
-    @Deprecated
-    public static final Image CloseNewHovered = CloseHovered; // 16x16
     public static final Image Collapseall = PlatformIconGroup.actionsCollapseall(); // 16x16
     public static final Image Commit = PlatformIconGroup.actionsCommit(); // 16x16
     public static final Image Compile = PlatformIconGroup.actionsCompile(); // 16x16
     public static final Image Copy = PlatformIconGroup.actionsCopy(); // 16x16
-    public static final Image CreateFromUsage = PlatformIconGroup.actionsCreatefromusage(); // 16x16
     public static final Image Diff = PlatformIconGroup.actionsDiff(); // 16x16
     public static final Image DiffWithCurrent = PlatformIconGroup.actionsDiffwithcurrent(); // 16x16
     public static final Image Down = PlatformIconGroup.actionsDown(); // 16x16
