@@ -220,14 +220,15 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
           myProject.getUIAccess().giveIfNeed(() -> {
             boolean alive = false;
             ContentManager manager = getContentManagerByToolWindowId(toolWindowId);
-
-            for (Content content1 : manager.getContents()) {
-              RunContentDescriptor descriptor1 = getRunContentDescriptorByContent(content1);
-              if (descriptor1 != null) {
-                ProcessHandler handler = descriptor1.getProcessHandler();
-                if (handler != null && !handler.isProcessTerminated()) {
-                  alive = true;
-                  break;
+            if (manager != null) {
+              for (Content content : manager.getContents()) {
+                RunContentDescriptor descriptor1 = getRunContentDescriptorByContent(content);
+                if (descriptor1 != null) {
+                  ProcessHandler handler = descriptor1.getProcessHandler();
+                  if (handler != null && !handler.isProcessTerminated()) {
+                    alive = true;
+                    break;
+                  }
                 }
               }
             }
@@ -475,7 +476,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  @Nullable
   private ContentManager getContentManagerByToolWindowId(String toolWindowId) {
     if (Objects.equals(myRunDashboardManager.getToolWindowId(), toolWindowId)) {
       return myRunDashboardManager.getDashboardContentManager();

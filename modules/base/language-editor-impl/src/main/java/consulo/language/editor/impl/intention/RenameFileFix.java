@@ -100,7 +100,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
       vFile.rename(file.getManager(), myNewFileName);
     }
     catch(IOException e) {
-      project.getApplication().getLastUIAccess().giveIfNeed(() -> Alerts.okError(e.getLocalizedMessage()).showAsync());
+      project.getUIAccess().giveIfNeed(() -> Alerts.okError(e.getLocalizedMessage()).showAsync());
     }
   }
 
