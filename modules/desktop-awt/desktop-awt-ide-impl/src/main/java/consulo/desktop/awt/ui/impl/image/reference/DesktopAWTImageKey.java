@@ -45,8 +45,8 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
   private final int myWidth;
   private final int myHeight;
 
-  private long myModificationCount = -1;
-  private DesktopAWTImageReference myImageReference;
+  private transient long myModificationCount = -1;
+  private transient ImageReference myImageReference;
 
   public DesktopAWTImageKey(@Nullable String forceIconLibraryId, String groupId, String imageId, int width, int height) {
     myForceIconLibraryId = forceIconLibraryId;
@@ -84,13 +84,13 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
       myImageReference = null;
     }
 
-    DesktopAWTImageReference reference = resolveReference();
+    ImageReference reference = resolveReference();
     if (reference == ImageReference.INVALID) {
       g.setColor(JBColor.YELLOW);
       g.fillRect(x, y, getWidth(), getHeight());
     }
     else {
-      reference.draw(ctx, (Graphics2D) g, x, y, getWidth(), getHeight());
+      ((DesktopAWTImageReference)reference).draw(ctx, (Graphics2D) g, x, y, getWidth(), getHeight());
     }
   }
 
@@ -99,10 +99,13 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
   }
 
   @Nonnull
-  private DesktopAWTImageReference resolveReference() {
+  private ImageReference resolveReference() {
     long l = currentCount();
-    if (l == myModificationCount) {
-      return Objects.requireNonNull(myImageReference);
+    long lastModCount = myModificationCount;
+    ImageReference lastRef = myImageReference;
+
+    if (l == lastModCount && lastRef != null) {
+      return lastRef;
     }
 
     ImageReference ref = ourLibraryManager.resolveImage(myForceIconLibraryId, myGroupId, myImageId);
@@ -111,58 +114,9 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
     }
 
     myModificationCount = l;
-    myImageReference = (DesktopAWTImageReference)ref;
-    return (DesktopAWTImageReference)ref;
+    myImageReference = ref;
+    return ref;
   }
-
-//  @Nonnull
-//  @Override
-//  protected Icon calcIcon() {
-//    Image icon = ourLibraryManager.resolveImage(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
-//    if (icon instanceof DesktopLibraryInnerImage) {
-//      ((DesktopLibraryInnerImage)icon).dropCache();
-//
-//      icon = ((DesktopLibraryInnerImage)icon).copyWithScale(myScale);
-//    }
-//
-//    if (icon == null) {
-//      icon = ImageEffects.colorFilled(getWidth(), getHeight(), StandardColors.RED);
-//    }
-//    return TargetAWT.to(icon);
-//  }
-//
-//  @Nonnull
-//  @Override
-//  public Image makeGrayed() {
-//    Image icon = ourLibraryManager.resolveImage(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
-//
-//    if (icon instanceof DesktopLibraryInnerImage) {
-//      icon = ((DesktopLibraryInnerImage)icon).copyWithScale(myScale);
-//
-//      return ((DesktopLibraryInnerImage)icon).makeGrayed();
-//    }
-//
-//    return ImageEffects.colorFilled(myWidth, myHeight, StandardColors.LIGHT_GRAY);
-//  }
-//
-//  @Nonnull
-//  @Override
-//  @SuppressWarnings("UndesirableClassUsage")
-//  public java.awt.Image toAWTImage(@Nullable JBUI.ScaleContext ctx) {
-//    Image icon = ourLibraryManager.resolveImage(myForceIconLibraryId, myGroupId, myImageId, myWidth, myHeight);
-//    if (icon instanceof DesktopLibraryInnerImage) {
-//      ((DesktopLibraryInnerImage)icon).dropCache();
-//      return ((DesktopLibraryInnerImage)icon).toAWTImage(ctx);
-//    }
-//
-//    BufferedImage b = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-//    Graphics2D g = b.createGraphics();
-//    g.setColor(JBColor.YELLOW);
-//    g.fillRect(0, 0, getWidth(), getHeight());
-//    g.dispose();
-//
-//    return ImageUtil.scaleImage(b, myScale);
-//  }
 
   @Nonnull
   @Override
