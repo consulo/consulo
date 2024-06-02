@@ -23,7 +23,7 @@ import consulo.desktop.awt.editor.impl.view.VisualLinesIterator;
 import consulo.desktop.awt.ui.ExperimentalUI;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.animation.AlphaAnimationContext;
-import consulo.desktop.awt.ui.util.AppIconUtil;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
 import consulo.document.internal.DocumentEx;
@@ -285,7 +285,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
   }
 
   Image getDragImage(GutterMark renderer) {
-    return AppIconUtil.toImage(scaleImage(renderer.getIcon()));
+    return new DesktopAWTScalableImage(scaleImage(renderer.getIcon()));
   }
 
   private void fireResized() {

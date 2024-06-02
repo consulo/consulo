@@ -15,18 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl.taskBar;
 
-import consulo.desktop.awt.ui.util.AppIconUtil;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
-import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.image.ImageKey;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * @author VISTALL
@@ -40,10 +37,11 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
 
   protected Object myCurrentProcessId;
   protected double myLastValue;
-  private BufferedImage myOkImage;
+  private final Image myOkImage;
 
   public DefaultJava9TaskBarImpl() {
     myTaskbar = Taskbar.getTaskbar();
+    myOkImage = new DesktopAWTScalableImage(PlatformIconGroup.macAppiconok512());
   }
 
   @Override
@@ -93,7 +91,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
 
   @Override
   public final void requestFocus(@Nonnull Window window) {
-    if(myTaskbar.isSupported(Taskbar.Feature.USER_ATTENTION_WINDOW)) {
+    if (myTaskbar.isSupported(Taskbar.Feature.USER_ATTENTION_WINDOW)) {
       myTaskbar.requestWindowUserAttention(TargetAWT.to(window));
     }
   }
@@ -122,14 +120,7 @@ public class DefaultJava9TaskBarImpl implements TaskBar {
     }
 
     if (myTaskbar.isSupported(Taskbar.Feature.ICON_BADGE_IMAGE_WINDOW)) {
-      BufferedImage icon = null;
-      if (visible) {
-        if (myOkImage == null) {
-          myOkImage = ImageUtil.toBufferedImage(AppIconUtil.toImage(PlatformIconGroup.macAppiconok512()));
-        }
-
-        icon = myOkImage;
-      }
+      Image icon = visible ? myOkImage : null;
 
       myTaskbar.setWindowIconBadge(TargetAWT.to(window), icon);
     }

@@ -44,7 +44,7 @@ public class DesktopSwtImageKeyImpl implements ImageKey, DesktopSwtImage {
 
   @Nullable
   private ImageReference resolveImage() {
-    return ourLibraryManager.resolveImage(null, myGroupId, myImageId);
+    return ourLibraryManager.resolveImage(null, this);
   }
 
   @Nonnull

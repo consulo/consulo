@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.desktop.awt.ui.util.AppIconUtil;
+import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.language.editor.CommonDataKeys;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
@@ -47,7 +47,7 @@ public class TestDnd extends AnAction {
         JBList list = new JBList(new String[]{"1111111", "222222", "333333", "44444", "555555555555555555555555"});
         DnDSupport.createBuilder(list)
           .setBeanProvider(info -> new DnDDragStartBean("something"))
-          .setImageProvider(info -> new DnDImage(AppIconUtil.toImage(PlatformIconGroup.icon32())))
+          .setImageProvider(info -> new DnDImage(new DesktopAWTScalableImage(PlatformIconGroup.icon32())))
           .install();
 
         return list;

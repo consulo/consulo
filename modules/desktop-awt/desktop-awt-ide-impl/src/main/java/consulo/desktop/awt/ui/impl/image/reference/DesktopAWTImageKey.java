@@ -108,7 +108,7 @@ public class DesktopAWTImageKey extends JBUI.RasterJBIcon implements DesktopAWTI
       return lastRef;
     }
 
-    ImageReference ref = ourLibraryManager.resolveImage(myForceIconLibraryId, myGroupId, myImageId);
+    ImageReference ref = ourLibraryManager.resolveImage(myForceIconLibraryId, this);
     if (ref == null) {
       ref = ImageReference.INVALID;
     }

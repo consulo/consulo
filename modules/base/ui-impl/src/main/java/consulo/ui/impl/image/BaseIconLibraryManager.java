@@ -20,6 +20,7 @@ import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
 import consulo.ui.image.IconLibraryDescriptor;
 import consulo.ui.image.IconLibraryManager;
+import consulo.ui.image.ImageKey;
 import consulo.ui.image.internal.IconLibraryDescriptorLoader;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
@@ -315,17 +316,20 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nullable
-  public ImageReference resolveImage(@Nullable String forceIconLibraryId, String libraryId, String imageId) {
+  public ImageReference resolveImage(@Nullable String forceIconLibraryId, ImageKey imageKey) {
+    String groupId = imageKey.getGroupId();
+    String imageId = imageKey.getImageId();
+
     if (forceIconLibraryId != null) {
       BaseIconLibraryImpl targetIconLibrary = (BaseIconLibraryImpl)myLibraries.get(forceIconLibraryId);
       if (targetIconLibrary != null) {
-        ImageReference icon = targetIconLibrary.resolveImage(libraryId, imageId);
+        ImageReference icon = targetIconLibrary.resolveImage(groupId, imageId);
         if (icon != null) {
           return icon;
         }
       }
     }
     BaseIconLibraryImpl iconLibrary = getActiveLibrary();
-    return iconLibrary.resolveImage(libraryId, imageId);
+    return iconLibrary.resolveImage(groupId, imageId);
   }
 }

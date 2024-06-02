@@ -17,15 +17,11 @@ package consulo.desktop.awt.ui.impl.image.reference;
 
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.attributes.ViewBox;
-import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * @author VISTALL
@@ -48,27 +44,18 @@ public class DesktopAWTSVGImageReference extends DesktopAWTImageReference {
                    int width,
                    int height) {
     GraphicsUtil.setupAntialiasing(graphics);
+    graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    graphics.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-    double sysScale = ctx.getScale(JBUI.ScaleType.SYS_SCALE);
-    double userScale = ctx.getScale(JBUI.ScaleType.USR_SCALE);
-    SVGDocument target;
-    if ((sysScale > 1 || userScale > 1) && myX2Diagram != null) {
-      target = myX2Diagram;
-    }
-    else {
-      target = myX1Diagram;
-    }
-
-    Image image = ImageUtil.createImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g = ((BufferedImage)image).createGraphics();
-    GraphicsUtil.setupAntialiasing(g);
-    target.render(null, g, new ViewBox(0, 0, width, height));
-    g.dispose();
-
-    if (userScale > 1f) {
-      image = RetinaImage.createFrom(image, userScale, null);
+    SVGDocument target = myX1Diagram;
+    if (myX2Diagram != null) {
+      double sysScale = ctx.getScale(JBUI.ScaleType.SYS_SCALE);
+      double userScale = ctx.getScale(JBUI.ScaleType.USR_SCALE);
+      if (sysScale > 1 || userScale > 1) {
+        target = myX2Diagram;
+      }
     }
 
-    UIUtil.drawImage(graphics, image, new Rectangle(x, y, width, height), null);
+    target.render(null, graphics, new ViewBox(x, y, width, height));
   }
 }
