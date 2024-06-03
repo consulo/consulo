@@ -522,7 +522,13 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   private Color convertColor(@Nonnull ColorValue colorValue) {
     RGBColor rgbColor = colorValue.toRGB();
     float[] floatValues = rgbColor.getFloatValues();
-    return new Color(floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
+    try {
+      return new Color(floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
+    }
+    catch (IllegalArgumentException e) {
+      log.warn("Failed to convert color: " + colorValue, e);
+      return Color.BLACK;
+    }
   }
 
   @Override
