@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.wm.impl.status;
+package consulo.desktop.awt.wm.impl.status;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.ide.ClipboardSynchronizer;
 import consulo.ide.impl.idea.notification.EventLog;
+import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;

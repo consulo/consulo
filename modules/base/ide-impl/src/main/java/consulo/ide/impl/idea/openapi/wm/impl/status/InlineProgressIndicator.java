@@ -1,27 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
-import consulo.ide.IdeBundle;
-import consulo.application.progress.TaskInfo;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ui.ex.popup.IconButton;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.Wrapper;
-import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.util.GraphicsUtil;
-import consulo.ui.ex.awt.GridBag;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.popup.IconButton;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.JBIterable;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -120,7 +115,8 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     Image icon = myCompact ? PlatformIconGroup.processStopsmall() : PlatformIconGroup.processStop();
     Image hoveredIcon = myCompact ? PlatformIconGroup.processStopsmallhovered() : PlatformIconGroup.processStopsmallhovered();
 
-    InplaceButton cancelButton = new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), icon, hoveredIcon), e -> cancelRequest()).setFillBg(false);
+    InplaceButton cancelButton =
+      new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), icon, hoveredIcon), e -> cancelRequest()).setFillBg(false);
 
     cancelButton.setVisible(myInfo.isCancellable());
 
@@ -131,11 +127,11 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     cancel();
   }
 
-  protected void updateProgress() {
+  public void updateProgress() {
     queueProgressUpdate();
   }
 
-  protected void updateAndRepaint() {
+  public void updateAndRepaint() {
     if (isDisposed()) return;
 
     updateProgressNow();
@@ -300,12 +296,3 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
   }
 }
 
-class ProgressButton {
-  final InplaceButton button;
-  final Runnable updateAction;
-
-  ProgressButton(InplaceButton button, Runnable updateAction) {
-    this.button = button;
-    this.updateAction = updateAction;
-  }
-}

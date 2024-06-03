@@ -49,6 +49,7 @@
     <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libthrift</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>

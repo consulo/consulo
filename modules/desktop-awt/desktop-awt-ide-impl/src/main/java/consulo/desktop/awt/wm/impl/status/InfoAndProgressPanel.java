@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.openapi.wm.impl.status;
+package consulo.desktop.awt.wm.impl.status;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.impl.status.*;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
