@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrows
 import consulo.ide.impl.idea.openapi.vcs.vfs.ContentRevisionVirtualFile;
 import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.Navigatable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
  */                                                                            
 public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
   public OpenRepositoryVersionAction() {
-    super(VcsBundle.message("open.repository.version.text"), VcsBundle.message("open.repository.version.description"), null);
+    super(VcsBundle.message("open.repository.version.text"), VcsBundle.message("open.repository.version.description"), PlatformIconGroup.nodesPpweb());
   }
 
   public void actionPerformed(AnActionEvent e) {
