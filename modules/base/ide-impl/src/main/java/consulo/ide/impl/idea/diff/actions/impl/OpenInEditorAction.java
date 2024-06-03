@@ -21,11 +21,12 @@ import consulo.ide.impl.idea.diff.tools.util.DiffDataKeys;
 import consulo.diff.DiffUserDataKeys;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.ide.actions.EditSourceAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -37,11 +38,12 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
 
   @Nullable private final Runnable myAfterRunnable;
 
-  public OpenInEditorAction(@jakarta.annotation.Nullable Runnable afterRunnable) {
+  public OpenInEditorAction(@Nullable Runnable afterRunnable) {
     ActionUtil.copyFrom(this, "EditSource");
     myAfterRunnable = afterRunnable;
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     if (!e.isFromActionToolbar()) {
@@ -73,6 +75,7 @@ public class OpenInEditorAction extends EditSourceAction implements DumbAware {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
+  @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
