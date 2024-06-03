@@ -67,7 +67,7 @@ public class DesktopAWTSVGImageReference extends DesktopAWTImageReference {
       target.render(null, graphics, new ViewBox(x, y, width, height));
     }
     catch (Exception e) {
-      LOG.error("Failed to render image %s:%s".formatted(myGroupId, myImageId), e);
+      LOG.error("Failed to render image %s:%s, position %d:%d, size: %d:%d".formatted(myGroupId, myImageId, x, y, width, height), e);
     }
   }
 }
