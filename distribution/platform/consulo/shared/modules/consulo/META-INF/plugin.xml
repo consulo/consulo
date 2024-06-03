@@ -1189,11 +1189,11 @@
     <action id="ChangesView.Browse" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.BrowseChangesAction"/>
 
     <action id="Diff.PrevChange" class="consulo.ui.ex.action.EmptyAction"
-            icon="consulo.platform.base.PlatformIconGroup@actions.prevfile" use-shortcut-of="PreviousTab"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.back" use-shortcut-of="PreviousTab"/>
     <action id="Diff.NextChange" class="consulo.ui.ex.action.EmptyAction"
-            icon="consulo.platform.base.PlatformIconGroup@actions.nextfile" use-shortcut-of="NextTab"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.forward" use-shortcut-of="NextTab"/>
     <action id="Diff.SelectedChange" class="consulo.ui.ex.action.EmptyAction"
-            icon="consulo.platform.base.PlatformIconGroup@actions.showastree" use-shortcut-of="GotoChangedFile"/>
+            icon="consulo.platform.base.PlatformIconGroup@actions.listfiles" use-shortcut-of="GotoChangedFile"/>
 
     <group id="Vcs.CheckinProjectPopup">
       <separator/>

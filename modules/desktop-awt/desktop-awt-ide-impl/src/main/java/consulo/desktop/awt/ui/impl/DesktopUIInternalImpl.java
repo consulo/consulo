@@ -92,7 +92,7 @@ public class DesktopUIInternalImpl extends UIInternal {
       SVGLoader loader = new SVGLoader();
       SVGDocument document = loader.load(url);
       FloatSize size = document.size();
-      return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference(document, null), (int)size.getWidth(), (int)size.getHeight());
+      return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference("url", url.toString(), document, null), (int)size.getWidth(), (int)size.getHeight());
     }
     else {
       BufferedImage image;
@@ -115,7 +115,7 @@ public class DesktopUIInternalImpl extends UIInternal {
         SVGLoader loader = new SVGLoader();
         SVGDocument document = loader.load(stream);
         FloatSize size = document.size();
-        return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference(document, null), (int)size.getWidth(), (int)size.getHeight());
+        return new DesktopAWTSimpleImageImpl(new DesktopAWTSVGImageReference("bytes", "[]", document, null), (int)size.getWidth(), (int)size.getHeight());
       default:
         BufferedImage image = ImageIO.read(stream);
         int width = image.getWidth(null);

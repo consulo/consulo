@@ -58,7 +58,7 @@ public class DesktopAWTIconLibrary extends BaseIconLibraryImpl {
           _x2Diagram = Objects.requireNonNull(mySVGLoader.load(new UnsyncByteArrayInputStream(_2xdata)));
         }
 
-        return new DesktopAWTSVGImageReference(_x1Diagram, _x2Diagram);
+        return new DesktopAWTSVGImageReference(groupId, imageId, _x1Diagram, _x2Diagram);
       }
       catch (Exception e) {
         LOG.warn(e);

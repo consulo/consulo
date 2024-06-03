@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.image.reference;
 
 import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.attributes.ViewBox;
+import consulo.logging.Logger;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import jakarta.annotation.Nonnull;
@@ -28,10 +29,16 @@ import java.awt.*;
  * @since 26.05.2024
  */
 public class DesktopAWTSVGImageReference extends DesktopAWTImageReference {
+  private static final Logger LOG = Logger.getInstance(DesktopAWTSVGImageReference.class);
+
+  private final String myGroupId;
+  private final String myImageId;
   private final SVGDocument myX1Diagram;
   private final SVGDocument myX2Diagram;
 
-  public DesktopAWTSVGImageReference(SVGDocument x1Diagram, SVGDocument x2Diagram) {
+  public DesktopAWTSVGImageReference(String groupId, String imageId, SVGDocument x1Diagram, SVGDocument x2Diagram) {
+    myGroupId = groupId;
+    myImageId = imageId;
     myX1Diagram = x1Diagram;
     myX2Diagram = x2Diagram;
   }
@@ -56,6 +63,11 @@ public class DesktopAWTSVGImageReference extends DesktopAWTImageReference {
       }
     }
 
-    target.render(null, graphics, new ViewBox(x, y, width, height));
+    try {
+      target.render(null, graphics, new ViewBox(x, y, width, height));
+    }
+    catch (Exception e) {
+      LOG.error("Failed to render image %s:%s".formatted(myGroupId, myImageId), e);
+    }
   }
 }
