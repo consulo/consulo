@@ -22,10 +22,12 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -39,6 +41,12 @@ public class OpenModuleSettingsAction extends EditSourceAction {
     if (!isModuleInProjectViewPopup(event)) {
       event.getPresentation().setEnabledAndVisible(false);
     }
+  }
+
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return null;
   }
 
   protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
