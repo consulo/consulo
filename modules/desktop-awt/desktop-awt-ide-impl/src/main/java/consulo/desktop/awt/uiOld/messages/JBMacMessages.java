@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.messages;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.internal.MacMessages;
@@ -31,6 +32,7 @@ import static consulo.desktop.awt.uiOld.messages.SheetMessageUtil.getForemostWin
  * Created by Denis Fokin
  */
 @Singleton
+@ServiceImpl
 public class JBMacMessages extends MacMessages {
 
   @Override

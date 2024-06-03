@@ -115,11 +115,4 @@
       <add-to-group group-id="$LRU"/>
     </group>
   </actions>
-
-
-  <extensions defaultExtensionNs="consulo">
-    <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.awt.internal.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
-  </extensions>
 </consulo-plugin>

@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.ui.Window;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -26,6 +28,7 @@ import jakarta.annotation.Nullable;
 /**
  * @author pegov
  */
+@ServiceAPI(ComponentScope.APPLICATION)
 public abstract class MacMessages {
   @Messages.YesNoCancelResult
   public abstract int showYesNoCancelDialog(@Nonnull String title,

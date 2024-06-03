@@ -19,9 +19,6 @@ package consulo.desktop.awt.uiOld.debugger.extensions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
@@ -50,7 +47,6 @@ import consulo.ide.impl.idea.ui.debugger.extensions.UiScriptFileType;
 import consulo.ide.impl.idea.util.WaitFor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.desktop.awt.wm.impl.DesktopIdeFrameImpl;
 import consulo.logging.Logger;
 import consulo.ui.Window;
@@ -58,7 +54,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.project.ui.wm.IdeFrameUtil;
-import org.jdom.Element;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -520,27 +515,6 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
   public void dispose() {
     disposeUiResources();
-  }
-
-  @State(name = "PlaybackDebugger", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
-  public static class PlaybackDebuggerState implements PersistentStateComponent<Element> {
-    private static final String ATTR_CURRENT_SCRIPT = "currentScript";
-    public String currentScript = "";
-
-    @Override
-    public Element getState() {
-      final Element element = new Element("playback");
-      element.setAttribute(ATTR_CURRENT_SCRIPT, currentScript);
-      return element;
-    }
-
-    @Override
-    public void loadState(Element state) {
-      final String path = state.getAttributeValue(ATTR_CURRENT_SCRIPT);
-      if (path != null) {
-        currentScript = path;
-      }
-    }
   }
 
   @Override
