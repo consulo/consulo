@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.idea.notification.impl.actions;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.project.ui.notification.*;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.MessageDialogBuilder;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.ToolWindowId;
-import consulo.component.messagebus.MessageBus;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -48,9 +48,12 @@ import java.util.List;
  * @author Sergey.Malenkov
  */
 public class NotificationTestAction extends AnAction implements DumbAware {
-  private static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test VcsBranchMappingChangedNotification");
-  private static final NotificationGroup TEST_STICKY_GROUP = new NotificationGroup("Test Sticky VcsBranchMappingChangedNotification", NotificationDisplayType.STICKY_BALLOON, true);
-  private static final NotificationGroup TEST_TOOLWINDOW_GROUP = NotificationGroup.toolWindowGroup("Test ToolWindow VcsBranchMappingChangedNotification", ToolWindowId.TODO_VIEW, true);
+  public static final NotificationGroup TEST_GROUP = NotificationGroup.balloonGroup("Test Ballon");
+  public static final NotificationGroup TEST_STICKY_GROUP =
+    new NotificationGroup("Test Sticky", NotificationDisplayType.STICKY_BALLOON, true);
+  public static final NotificationGroup TEST_TOOLWINDOW_GROUP =
+    NotificationGroup.toolWindowGroup("Test ToolWindow", ToolWindowId.TODO_VIEW, true);
+
   private static final String MESSAGE_KEY = "NotificationTestAction_Message";
 
   @RequiredUIAccess
@@ -61,11 +64,12 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
   private static final class NotificationDialog extends DialogWrapper {
     private final JTextArea myMessage = new JTextArea(10, 50);
-    private final MessageBus myMessageBus;
+    @Nullable
+    private final Project myProject;
 
     private NotificationDialog(@Nullable Project project) {
       super(project, true, IdeModalityType.MODELESS);
-      myMessageBus = project != null ? project.getMessageBus() : Application.get().getMessageBus();
+      myProject = project;
       init();
       setOKButtonText("Notify");
       setTitle("Test VcsBranchMappingChangedNotification");
@@ -160,7 +164,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
 
       ApplicationManager.getApplication().executeOnPooledThread(() -> {
         for (NotificationInfo info : notifications) {
-          Application.get().getInstance(NotificationService.class).notify(info.getNotification());
+          info.getNotification().notify(myProject);
         }
       });
     }

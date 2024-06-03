@@ -50,7 +50,7 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
   @Override
   public String getFontName() {
     String fontName = myState.fontName;
-    if (fontName == null) {
+    if (!myState.overrideFont || fontName == null) {
       return initSystemFontInfo().getFirst();
     }
     return fontName;
@@ -58,7 +58,7 @@ public abstract class UIFontManagerImpl implements UIFontManager, PersistentStat
 
   @Override
   public int getFontSize() {
-    if (myState.fontSize == 0) {
+    if (!myState.overrideFont ||myState.fontSize == 0) {
       return initSystemFontInfo().getSecond();
     }
     return myState.fontSize;

@@ -37,7 +37,6 @@ import consulo.ide.impl.idea.diff.tools.util.base.DiffViewerListener;
 import consulo.ide.impl.idea.diff.tools.util.side.OnesideTextDiffViewer;
 import consulo.ide.impl.idea.diff.tools.util.side.TwosideTextDiffViewer;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
@@ -50,6 +49,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
@@ -60,6 +60,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
@@ -76,9 +77,9 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -369,13 +370,13 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
       IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
 
-      if (ideFrame != null && NotificationsManagerImpl.findWindowForBalloon(viewer.getProject()) == awtWindow) {
+      if (ideFrame != null && NotificationsManager.getNotificationsManager().findWindowForBalloon(viewer.getProject()) == awtWindow) {
         notification.notify(viewer.getProject());
         return;
       }
     }
 
-    Balloon balloon = NotificationsManagerImpl.createBalloon(component, notification, false, true, null, viewer);
+    Balloon balloon = NotificationsManager.getNotificationsManager().createBalloon(component, notification, false, true, new Ref<>(), viewer);
 
     Dimension componentSize = component.getSize();
     Dimension balloonSize = balloon.getPreferredSize();

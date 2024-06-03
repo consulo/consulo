@@ -18,10 +18,10 @@ package consulo.desktop.awt.internal.notification;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
+import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationServiceListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -44,7 +44,8 @@ public class DesktopAWTNotificationServiceImpl implements NotificationService, D
 
   @Override
   public void notify(@Nonnull Notification notification, @Nullable Project project) {
-    NotificationsManagerImpl.doNotify(notification, project);
+    NotificationsManagerImpl manager = (NotificationsManagerImpl)NotificationsManager.getNotificationsManager();
+    manager.doNotify(notification, project);
 
     myNotificationServiceListener.notify(notification, project);
   }

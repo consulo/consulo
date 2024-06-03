@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.ide.impl.idea.notification.*;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.wm.IdeFrame;

@@ -20,16 +20,16 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.notification.NotificationsConfiguration;
 import consulo.ide.impl.project.ui.impl.NotificationGroupRegistrator;
 import consulo.logging.Logger;
+import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -38,13 +38,14 @@ import java.util.*;
 @State(name = "NotificationConfiguration", storages = @Storage("notifications.xml"))
 @Singleton
 @ServiceImpl
-public class NotificationsConfigurationImpl extends NotificationsConfiguration implements Disposable, PersistentStateComponent<Element> {
+public class NotificationsConfigurationImpl implements NotificationsConfiguration, Disposable, PersistentStateComponent<Element> {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);
   private static final String SHOW_BALLOONS_ATTRIBUTE = "showBalloons";
   private static final String SYSTEM_NOTIFICATIONS_ATTRIBUTE = "systemNotifications";
 
-  private static final Comparator<NotificationSettings> NOTIFICATION_SETTINGS_COMPARATOR = (o1, o2) -> o1.getGroupId().compareToIgnoreCase(o2.getGroupId());
+  private static final Comparator<NotificationSettings> NOTIFICATION_SETTINGS_COMPARATOR =
+    (o1, o2) -> o1.getGroupId().compareToIgnoreCase(o2.getGroupId());
 
   private final Map<String, NotificationSettings> myIdToSettingsMap = new HashMap<>();
   private final Map<String, String> myToolWindowCapable = new HashMap<>();
@@ -53,7 +54,7 @@ public class NotificationsConfigurationImpl extends NotificationsConfiguration i
   public boolean SYSTEM_NOTIFICATIONS = true;
 
   public static NotificationsConfigurationImpl getInstanceImpl() {
-    return (NotificationsConfigurationImpl)getNotificationsConfiguration();
+    return (NotificationsConfigurationImpl)NotificationsConfiguration.getNotificationsConfiguration();
   }
 
   public synchronized boolean hasToolWindowCapability(@Nonnull String groupId) {

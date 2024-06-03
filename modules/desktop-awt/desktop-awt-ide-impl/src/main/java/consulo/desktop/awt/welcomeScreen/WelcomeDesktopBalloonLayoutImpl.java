@@ -20,9 +20,9 @@ import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
+import consulo.desktop.awt.internal.notification.NotificationsManagerImpl;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.BalloonLayoutData;
+import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.JBColor;
@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.BORDER_COLOR;
-import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.FILL_COLOR;
+import static consulo.desktop.awt.internal.notification.NotificationsManagerImpl.BORDER_COLOR;
+import static consulo.desktop.awt.internal.notification.NotificationsManagerImpl.FILL_COLOR;
 
 /**
  * @author Alexander Lobas

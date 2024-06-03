@@ -17,13 +17,11 @@ package consulo.desktop.awt.uiOld;
 
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
-import consulo.ide.impl.idea.notification.EventLog;
+import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.project.ui.notification.Notification;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.ide.impl.idea.ui.BalloonLayoutConfiguration;
-import consulo.ide.impl.idea.ui.BalloonLayoutData;
 import consulo.desktop.awt.wm.impl.IdeRootPane;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -31,7 +29,7 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.ui.impl.BalloonLayoutEx;
+import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 
 import jakarta.annotation.Nonnull;
@@ -206,7 +204,6 @@ public class DesktopBalloonLayoutImpl implements BalloonLayoutEx {
     return null;
   }
 
-  @Override
   @Nullable
   public BalloonLayoutData.MergeInfo preMerge(@Nonnull Notification notification) {
     Balloon balloon = merge(notification.getGroupId());

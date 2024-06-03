@@ -57,7 +57,7 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     Platform platform = Platform.current();
-    if (!platform.os().isWindows() || myApplication.isUnitTestMode()) {
+    if (!platform.os().isWindows()) {
       return;
     }
 

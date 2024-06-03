@@ -55,15 +55,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>consulo.maven</groupId>
-        <artifactId>maven-consulo-plugin</artifactId>
-        <configuration>
-          <execution>
-            <buildDirectory>${project.build.directory}/consulo-sandbox-desktop-swt-${project.version}-main</buildDirectory>
-          </execution>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 

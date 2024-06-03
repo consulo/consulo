@@ -513,7 +513,6 @@ public class AllIcons {
     public static final Image HectorSyntax = PlatformIconGroup.ideHectorsyntax(); // 16x16
     public static final Image IncomingChangesOff = PlatformIconGroup.ideIncomingchangesoff(); // 16x16
     public static final Image IncomingChangesOn = PlatformIconGroup.ideIncomingchangeson(); // 16x16
-    public static final Image Info_notifications = PlatformIconGroup.ideInfo_notifications(); // 16x16
     public static final Image Link = PlatformIconGroup.ideLink(); // 12x12
     public static final Image LocalScope = PlatformIconGroup.ideLocalscope(); // 16x16
 
@@ -532,16 +531,10 @@ public class AllIcons {
       public static final Image Collapse = PlatformIconGroup.ideNotificationCollapse(); // 16x16
       public static final Image CollapseHover = PlatformIconGroup.ideNotificationCollapsehover(); // 16x16
       public static final Image DropTriangle = PlatformIconGroup.ideNotificationDroptriangle(); // 11x8
-      public static final Image ErrorEvents = PlatformIconGroup.ideNotificationErrorevents(); // 13x13
       public static final Image Expand = PlatformIconGroup.ideNotificationExpand(); // 16x16
       public static final Image ExpandHover = PlatformIconGroup.ideNotificationExpandhover(); // 16x16
       public static final Image Gear = PlatformIconGroup.ideNotificationGear(); // 16x16
       public static final Image GearHover = PlatformIconGroup.ideNotificationGearhover(); // 16x16
-      public static final Image InfoEvents = PlatformIconGroup.ideNotificationInfoevents(); // 13x13
-      public static final Image NoEvents = PlatformIconGroup.ideNotificationNoevents(); // 13x13
-
-      public static final Image WarningEvents = PlatformIconGroup.ideNotificationWarningevents(); // 13x13
-
     }
 
     public static final Image OutgoingChangesOn = PlatformIconGroup.ideOutgoingchangeson(); // 16x16

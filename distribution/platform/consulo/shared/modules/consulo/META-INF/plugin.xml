@@ -1008,8 +1008,6 @@
 
     <action id="SaveDocument" class="consulo.ide.impl.idea.ide.actions.SaveDocumentAction"/>
 
-    <action id="MarkNotificationsAsRead" class="consulo.ide.impl.idea.notification.impl.actions.MarkAllNotificationsAsReadAction"/>
-
     <action id="Vcs.ShowTabbedFileHistory" class="consulo.ide.impl.idea.openapi.vcs.actions.TabbedShowHistoryAction"
             icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
 

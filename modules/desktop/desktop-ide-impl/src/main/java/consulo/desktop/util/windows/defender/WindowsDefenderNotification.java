@@ -18,7 +18,7 @@ package consulo.desktop.util.windows.defender;
 import consulo.ide.impl.idea.ide.SystemHealthMonitor;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.notification.impl.NotificationFullContent;
+import consulo.project.ui.internal.NotificationFullContent;
 
 import jakarta.annotation.Nonnull;
 import java.nio.file.Path;

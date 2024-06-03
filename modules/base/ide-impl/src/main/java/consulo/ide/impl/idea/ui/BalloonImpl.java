@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
 import consulo.ide.impl.idea.openapi.ui.impl.ShadowBorderPainter;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
@@ -35,6 +34,7 @@ import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.event.JBPopupListener;
@@ -943,7 +943,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     myAnimator.resume();
   }
 
-  void runWithSmartFadeoutPause(@Nonnull Runnable handler) {
+  public void runWithSmartFadeoutPause(@Nonnull Runnable handler) {
     if (mySmartFadeout) {
       mySmartFadeoutPaused = true;
       handler.run();
@@ -1717,7 +1717,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
       }
     }
 
-    boolean hasPaint() {
+    public boolean hasPaint() {
       return getWidth() > 0 && myLastMoveWasInsideBalloon;
     }
 

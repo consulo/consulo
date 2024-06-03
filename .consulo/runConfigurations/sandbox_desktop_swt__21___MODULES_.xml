@@ -6,7 +6,7 @@
     <option name="PLUGINS_HOME_PATH" value="$PROJECT_DIR$/sandbox/desktop-swt/target/consulo-sandbox-desktop-swt-3-SNAPSHOT-main/Consulo/platform/buildSNAPSHOT/plugins" />
     <option name="USE_ALT_CONSULO_SDK" value="true" />
     <option name="ALT_CONSULO_SDK_PATH" value="$PROJECT_DIR$/sandbox/desktop-swt/target/consulo-sandbox-desktop-swt-3-SNAPSHOT-main/Consulo" />
-    <java-sdk name="21.0" />
+    <java-sdk name="21" />
     <predefined_log_file id="CONSULO_LOG" enabled="true" />
     <ConfigurationWrapper RunnerId="ConsuloDebuggerRunner" />
     <method>

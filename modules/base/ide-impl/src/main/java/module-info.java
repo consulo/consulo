@@ -479,11 +479,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.model.search.impl;
   exports consulo.ide.impl.idea.moduleDependencies;
   exports consulo.ide.impl.idea.navigation;
-  exports consulo.ide.impl.idea.notification;
   exports consulo.ide.impl.idea.notification.impl;
   exports consulo.ide.impl.idea.notification.impl.actions;
   exports consulo.ide.impl.idea.notification.impl.ui;
-  exports consulo.ide.impl.idea.notification.impl.widget;
   exports consulo.ide.impl.idea.openapi.actionSystem;
   exports consulo.ide.impl.idea.openapi.actionSystem.ex;
   exports consulo.ide.impl.idea.openapi.actionSystem.impl;

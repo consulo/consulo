@@ -15,23 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.notification.EventLog;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -99,16 +96,13 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     presentation.setTextValue(title);
     presentation.setDescriptionValue(IdeLocalize.actionActivateToolWindow(title));
     Image icon = toolWindow.getIcon();
-    if (EventLog.LOG_TOOL_WINDOW_ID.equals(myToolWindowId)) {
-      icon = AllIcons.Ide.Info_notifications;
-    }
     presentation.setIcon(icon);
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(CommonDataKeys.PROJECT);
     if (project == null) return;
     ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {

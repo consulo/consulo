@@ -16,14 +16,13 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import consulo.application.AllIcons;
 import consulo.application.ApplicationProperties;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.internal.notification.IdeNotificationArea;
 import consulo.desktop.awt.startup.splash.AnimatedLogoLabel;
 import consulo.disposer.Disposable;
 import consulo.externalService.statistic.UsageTrigger;
-import consulo.ide.impl.idea.notification.impl.IdeNotificationArea;
 import consulo.ide.impl.welcomeScreen.BaseWelcomeScreenPanel;
 import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -117,7 +116,7 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
 
   private JComponent createEventsLink() {
     final SimpleReference<ActionLink> actionLinkRef = new SimpleReference<>();
-    final JComponent panel = createActionLink("Events", AllIcons.Ide.Notification.NoEvents, actionLinkRef, new AnAction() {
+    final JComponent panel = createActionLink("Events", PlatformIconGroup.toolwindowsNotifications(), actionLinkRef, new AnAction() {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {

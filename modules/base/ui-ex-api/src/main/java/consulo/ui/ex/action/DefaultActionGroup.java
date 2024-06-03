@@ -7,9 +7,9 @@ import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
