@@ -17,14 +17,12 @@ package consulo.application.impl.internal.start;
 
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.TransactionGuard;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.application.impl.internal.plugin.ConsuloSecurityManagerEnabler;
 import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.internal.TransactionGuardEx;
 import consulo.component.impl.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
@@ -101,8 +99,8 @@ public abstract class ApplicationStarter {
                                boolean newConfigFolder,
                                @Nonnull CommandLineArgs args);
 
-  public boolean needStartInTransaction() {
-    return false;
+  protected boolean needSetVersionChecker() {
+    return true;
   }
 
   @Nullable
@@ -114,7 +112,9 @@ public abstract class ApplicationStarter {
       mySplashRef.set(splash);
     }
 
-    PluginsLoader.setVersionChecker();
+    if (needSetVersionChecker()) {
+      PluginsLoader.setVersionChecker();
+    }
 
     myPluginsInitializeInfo = PluginsLoader.initPlugins(splash, isHeadlessMode);
 
@@ -188,16 +188,7 @@ public abstract class ApplicationStarter {
         ConsuloSecurityManagerEnabler.enableSecurityManager();
       }
 
-      if (needStartInTransaction()) {
-        ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(() -> main(stat,
-                                                                                            appInitalizeMark,
-                                                                                            app,
-                                                                                            newConfigFolder,
-                                                                                            myArgs));
-      }
-      else {
-        main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
-      }
+      main(stat, appInitalizeMark, app, newConfigFolder, myArgs);
 
       ApplicationStarterCore.ourLoaded = true;
     }

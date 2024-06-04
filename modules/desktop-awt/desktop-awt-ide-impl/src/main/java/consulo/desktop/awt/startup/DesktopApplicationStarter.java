@@ -92,6 +92,12 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     super(args, stat);
   }
 
+  @Override
+  protected boolean needSetVersionChecker() {
+    // if inside sandbox - do not check plugin versions
+    return !Boolean.parseBoolean(myPlatform.jvm().getRuntimeProperty(ApplicationProperties.CONSULO_IN_SANDBOX));
+  }
+
   @Nullable
   @Override
   public StartupProgress createSplash(CommandLineArgs args) {
