@@ -28,7 +28,11 @@ module consulo.ui.api {
   exports consulo.ui.util;
 
   exports consulo.ui.image.internal;
-  exports consulo.ui.internal to consulo.desktop.awt.ide.impl, consulo.desktop.swt.ide.impl, consulo.test.impl;
+  exports consulo.ui.internal to
+    consulo.desktop.awt.ide.impl,
+    consulo.desktop.swt.ide.impl,
+    consulo.ide.impl,
+    consulo.test.impl;
 
   uses consulo.ui.image.IconLibraryDescriptor;
   uses consulo.ui.internal.UIInternal;

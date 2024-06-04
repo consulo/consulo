@@ -17,7 +17,7 @@ package consulo.ui.layout;
 
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.internal.UIContant;
+import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public interface DockLayout extends Layout {
   @Nonnull
   static DockLayout create() {
-    return create(UIContant.DEFAULT_SPACING_PX);
+    return create(UIConstant.DEFAULT_SPACING_PX);
   }
 
   @Nonnull
