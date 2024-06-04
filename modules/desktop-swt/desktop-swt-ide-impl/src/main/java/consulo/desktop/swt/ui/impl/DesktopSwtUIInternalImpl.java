@@ -75,8 +75,8 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public DockLayout _Layouts_dock() {
-    return new DesktopSwtDockLayoutImpl();
+  public DockLayout _Layouts_dock(int gapInPixels) {
+    return new DesktopSwtDockLayoutImpl(gapInPixels);
   }
 
   @Override

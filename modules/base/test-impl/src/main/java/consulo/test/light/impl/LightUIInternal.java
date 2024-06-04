@@ -47,7 +47,7 @@ public class LightUIInternal extends UIInternal {
   }
 
   @Override
-  public DockLayout _Layouts_dock() {
+  public DockLayout _Layouts_dock(int gapInPixels) {
     return null;
   }
 
