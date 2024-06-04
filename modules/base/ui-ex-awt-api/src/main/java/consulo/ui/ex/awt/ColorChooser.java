@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -31,21 +30,23 @@ public class ColorChooser {
                                  String caption,
                                  @Nullable Color preselectedColor,
                                  boolean enableOpacity,
-                                 ColorPickerListener[] listeners,
                                  boolean opacityInPercent,
                                  @Nonnull Consumer<Color> colorConsumer) {
-    ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent, colorConsumer);
+    ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
   }
 
-  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity, @Nonnull Consumer<Color> colorConsumer) {
-    chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, false, colorConsumer);
+  public static void chooseColor(Component parent,
+                                 String caption,
+                                 @Nullable Color preselectedColor,
+                                 boolean enableOpacity,
+                                 @Nonnull Consumer<Color> colorConsumer) {
+    chooseColor(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
   }
 
-  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, boolean enableOpacity, boolean opacityInPercent, @Nonnull Consumer<Color> colorConsumer) {
-    chooseColor(parent, caption, preselectedColor, enableOpacity, ColorPickerListener.EMPTY_ARRAY, opacityInPercent, colorConsumer);
-  }
-
-  public static void chooseColor(Component parent, String caption, @Nullable Color preselectedColor, @Nonnull Consumer<Color> colorConsumer) {
+  public static void chooseColor(Component parent,
+                                 String caption,
+                                 @Nullable Color preselectedColor,
+                                 @Nonnull Consumer<Color> colorConsumer) {
     chooseColor(parent, caption, preselectedColor, false, colorConsumer);
   }
 }

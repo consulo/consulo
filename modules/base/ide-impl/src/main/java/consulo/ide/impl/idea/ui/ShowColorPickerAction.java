@@ -15,18 +15,16 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 
 /**
@@ -39,9 +37,7 @@ public class ShowColorPickerAction extends AnAction {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     JComponent root = rootComponent(project);
     if (root != null) {
-      ColorPickerListener[] listeners = ColorPickerListenerFactory.createListenersFor(e.getData(LangDataKeys.PSI_ELEMENT));
-
-      ColorChooser.chooseColor(root, "Color Picker", null, true, listeners, true, color -> {
+      ColorChooser.chooseColor(root, "Color Picker", null, true, true, color -> {
       });
     }
   }

@@ -18,7 +18,6 @@ package consulo.ui.ex.awt;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.annotation.Nonnull;
 
 import java.awt.*;
@@ -37,16 +36,14 @@ public abstract class ColorChooserService {
                          String caption,
                          Color preselectedColor,
                          boolean enableOpacity,
-                         ColorPickerListener[] listeners,
                          @Nonnull Consumer<Color> colorConsumer) {
-    showDialog(parent, caption, preselectedColor, enableOpacity, listeners, false, colorConsumer);
+    showDialog(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
   }
 
   public abstract void showDialog(Component parent,
                                   String caption,
                                   Color preselectedColor,
                                   boolean enableOpacity,
-                                  ColorPickerListener[] listeners,
                                   boolean opacityInPercent,
                                   @Nonnull Consumer<Color> colorConsumer);
 }

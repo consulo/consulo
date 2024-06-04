@@ -140,7 +140,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
               return Pair.create(text, icon);
             }
           }));
-          builder.setItemSelectedCallback(value -> {
+          builder.setItemChosenCallback(value -> {
             if (value != null) {
               final GutterIconNavigationHandler handler = value.getNavigationHandler();
               if (handler != null) {

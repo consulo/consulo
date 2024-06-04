@@ -17,7 +17,6 @@ package consulo.desktop.awt.uiOld;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.ColorChooserService;
-import consulo.ui.ex.awt.event.ColorPickerListener;
 import jakarta.inject.Singleton;
 
 import jakarta.annotation.Nonnull;
@@ -35,9 +34,8 @@ public class DesktopColorChooserServiceImpl extends ColorChooserService {
                          String caption,
                          Color preselectedColor,
                          boolean enableOpacity,
-                         ColorPickerListener[] listeners,
                          boolean opacityInPercent,
                          @Nonnull Consumer<Color> colorConsumer) {
-    DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, listeners, opacityInPercent, colorConsumer);
+    DesktopColorPicker.showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
   }
 }

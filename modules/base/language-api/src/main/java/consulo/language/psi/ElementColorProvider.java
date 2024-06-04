@@ -31,8 +31,6 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ElementColorProvider {
-  ExtensionList<ElementColorProvider, Project> EP = ExtensionList.of(ElementColorProvider.class);
-
   @Nullable
   @RequiredReadAction
   ColorValue getColorFrom(@Nonnull PsiElement element);
