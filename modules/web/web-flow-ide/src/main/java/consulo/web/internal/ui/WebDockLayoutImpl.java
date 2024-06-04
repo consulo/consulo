@@ -30,6 +30,8 @@ import jakarta.annotation.Nullable;
  * @since 27/05/2023
  */
 public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin> implements DockLayout {
+  public WebDockLayoutImpl(int gapInPixels) {
+  }
 
   public class Vaadin extends BorderLayoutEx implements FromVaadinComponentWrapper {
     @Nullable

@@ -32,6 +32,8 @@ import jakarta.annotation.Nullable;
  * @since 29/04/2021
  */
 public class DesktopSwtDockLayoutImpl extends DesktopSwtLayoutComponent<BorderLayout.BorderData> implements DockLayout {
+  public DesktopSwtDockLayoutImpl(int gapInPixels) {
+  }
 
   @Nullable
   @Override

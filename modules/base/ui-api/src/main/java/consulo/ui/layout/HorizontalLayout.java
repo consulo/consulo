@@ -17,6 +17,7 @@ package consulo.ui.layout;
 
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -28,12 +29,12 @@ import jakarta.annotation.Nonnull;
 public interface HorizontalLayout extends Layout {
   @Nonnull
   static HorizontalLayout create() {
-    return create(5);
+    return create(UIConstant.DEFAULT_SPACING_PX);
   }
 
   @Nonnull
-  static HorizontalLayout create(int gapInPixesl) {
-    return UIInternal.get()._Layouts_horizontal(gapInPixesl);
+  static HorizontalLayout create(int gapInPixels) {
+    return UIInternal.get()._Layouts_horizontal(gapInPixels);
   }
 
   @Nonnull

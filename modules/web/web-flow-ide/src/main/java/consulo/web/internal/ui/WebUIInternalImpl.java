@@ -58,8 +58,8 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public DockLayout _Layouts_dock() {
-    return new WebDockLayoutImpl();
+  public DockLayout _Layouts_dock(int gapInPixels) {
+    return new WebDockLayoutImpl(gapInPixels);
   }
 
   @Override

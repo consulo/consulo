@@ -60,7 +60,7 @@ public abstract class UIInternal {
 
   public abstract CheckBox _Components_checkBox();
 
-  public abstract DockLayout _Layouts_dock();
+  public abstract DockLayout _Layouts_dock(int gapInPixels);
 
   public abstract WrappedLayout _Layouts_wrapped();
 

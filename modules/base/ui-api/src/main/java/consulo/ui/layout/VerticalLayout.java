@@ -17,6 +17,7 @@ package consulo.ui.layout;
 
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.internal.UIConstant;
 import consulo.ui.internal.UIInternal;
 
 import jakarta.annotation.Nonnull;
@@ -28,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public interface VerticalLayout extends Layout {
   @Nonnull
   static VerticalLayout create() {
-    return create(5);
+    return create(UIConstant.DEFAULT_SPACING_PX);
   }
 
   @Nonnull

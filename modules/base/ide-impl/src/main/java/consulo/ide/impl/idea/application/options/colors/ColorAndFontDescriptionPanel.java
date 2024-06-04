@@ -20,36 +20,28 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.CollectionComboBoxModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.HyperlinkAdapter;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.HorizontalLayout;
 import consulo.ide.impl.idea.ui.components.panels.VerticalLayout;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ui.ex.awt.FontUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.FormBuilder;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ColorBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.internal.UIConstant;
 import consulo.ui.style.StandardColors;
-
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +66,7 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
   private Map<String, EffectType> myEffectsMap;
 
   {
-    Map<String, EffectType> map = ContainerUtil.newLinkedHashMap();
+    Map<String, EffectType> map = new LinkedHashMap<>();
     map.put(ApplicationBundle.message("combobox.effect.underscored"), EffectType.LINE_UNDERSCORE);
     map.put(ApplicationBundle.message("combobox.effect.boldunderscored"), EffectType.BOLD_LINE_UNDERSCORE);
     map.put(ApplicationBundle.message("combobox.effect.underwaved"), EffectType.WAVE_UNDERSCORE);
@@ -94,12 +86,12 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
   private JBCheckBox myInheritAttributesBox;
 
   public ColorAndFontDescriptionPanel() {
-    myPanel = new JPanel(new VerticalLayout(5));
+    myPanel = new JPanel(new VerticalLayout(UIConstant.DEFAULT_SPACING_PX));
 
     myCbBold = new JBCheckBox(ApplicationBundle.message("checkbox.font.bold"));
     myCbItalic = new JBCheckBox(ApplicationBundle.message("checkbox.font.italic"));
 
-    JPanel leftFontLine = new JPanel(new HorizontalLayout(0));
+    JPanel leftFontLine = new JPanel(new HorizontalLayout(UIConstant.DEFAULT_SPACING_PX * 2));
     leftFontLine.add(myCbBold);
     leftFontLine.add(myCbItalic);
     myPanel.add(new BorderLayoutPanel().addToRight(leftFontLine));
@@ -121,9 +113,9 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
     myPanel.add(fontColorOptions.getPanel());
 
     myEffectsCombo = new ComboBox<>();
-    myEffectsModel = new EffectsComboModel(ContainerUtil.newArrayList(myEffectsMap.keySet()));
+    myEffectsModel = new EffectsComboModel(consulo.util.collection.ContainerUtil.newArrayList(myEffectsMap.keySet()));
     myEffectsCombo.setModel(myEffectsModel);
-    myEffectsCombo.setRenderer(new ColoredListCellRenderer<String>() {
+    myEffectsCombo.setRenderer(new ColoredListCellRenderer<>() {
       @Override
       protected void customizeCellRenderer(@Nonnull JList list, String value, int index, boolean selected, boolean hasFocus) {
         append(value != null ? value : "<invalid>");
@@ -214,14 +206,38 @@ public class ColorAndFontDescriptionPanel implements OptionsPanelImpl.ColorDescr
       myCbItalic.setEnabled(false);
     }
 
-    updateColorChooser(myCbForeground, myForegroundChooser, description.isForegroundEnabled(), description.isForegroundChecked(), description.getForegroundColor());
+    updateColorChooser(
+      myCbForeground,
+      myForegroundChooser,
+      description.isForegroundEnabled(),
+      description.isForegroundChecked(),
+      description.getForegroundColor()
+    );
 
-    updateColorChooser(myCbBackground, myBackgroundChooser, description.isBackgroundEnabled(), description.isBackgroundChecked(), description.getBackgroundColor());
+    updateColorChooser(
+      myCbBackground,
+      myBackgroundChooser,
+      description.isBackgroundEnabled(),
+      description.isBackgroundChecked(),
+      description.getBackgroundColor()
+    );
 
-    updateColorChooser(myCbErrorStripe, myErrorStripeColorChooser, description.isErrorStripeEnabled(), description.isErrorStripeChecked(), description.getErrorStripeColor());
+    updateColorChooser(
+      myCbErrorStripe,
+      myErrorStripeColorChooser,
+      description.isErrorStripeEnabled(),
+      description.isErrorStripeChecked(),
+      description.getErrorStripeColor()
+    );
 
     EffectType effectType = description.getEffectType();
-    updateColorChooser(myCbEffects, myEffectsColorChooser, description.isEffectsColorEnabled(), description.isEffectsColorChecked(), description.getEffectColor());
+    updateColorChooser(
+      myCbEffects,
+      myEffectsColorChooser,
+      description.isEffectsColorEnabled(),
+      description.isEffectsColorChecked(),
+      description.getEffectColor()
+    );
 
     if (description.isEffectsColorEnabled() && description.isEffectsColorChecked()) {
       myEffectsCombo.setEnabled(true);

@@ -267,8 +267,8 @@ public class DesktopUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public DockLayout _Layouts_dock() {
-    return new DesktopDockLayoutImpl();
+  public DockLayout _Layouts_dock(int gapInPixels) {
+    return new DesktopDockLayoutImpl(gapInPixels);
   }
 
   @Override

@@ -24,8 +24,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.BiFunction;
 
 /**
@@ -33,7 +33,8 @@ import java.util.function.BiFunction;
  * @since 2020-08-23
  */
 public class LabeledBuilder {
-  private static final BiFunction<LocalizeManager, String, String> SEMICOLON_APPENDER = (localizeManager, text) -> !StringUtil.endsWithChar(text, ':') ? text + ":" : text;
+  private static final BiFunction<LocalizeManager, String, String> SEMICOLON_APPENDER =
+    (localizeManager, text) -> !StringUtil.endsWithChar(text, ':') ? text + ":" : text;
 
   @RequiredUIAccess
   public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
