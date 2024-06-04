@@ -21,6 +21,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.configurable.OptionsBundle;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -69,14 +70,38 @@ public class ColorSettingsUtil {
   }
 
   private static void addInspectionSeverityAttributes(List<AttributesDescriptor> descriptors) {
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.unknown.symbol"), CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.deprecated.symbol"), CodeInsightColors.DEPRECATED_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.unused.symbol"), CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.error"), CodeInsightColors.ERRORS_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.warning"), CodeInsightColors.WARNINGS_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.weak.warning"), CodeInsightColors.WEAK_WARNING_ATTRIBUTES));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.server.problems"), CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING));
-    descriptors.add(new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.server.duplicate"), CodeInsightColors.DUPLICATE_FROM_SERVER));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorUnknownSymbol(),
+      CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorDeprecatedSymbol(),
+      CodeInsightColors.DEPRECATED_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorUnusedSymbol(),
+      CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorError(),
+      CodeInsightColors.ERRORS_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorWarning(),
+      CodeInsightColors.WARNINGS_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorWeakWarning(),
+      CodeInsightColors.WEAK_WARNING_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorServerProblems(),
+      CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorServerDuplicate(),
+      CodeInsightColors.DUPLICATE_FROM_SERVER
+    ));
 
     for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {

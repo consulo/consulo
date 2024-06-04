@@ -19,17 +19,17 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.configurable.internal.ConfigurableWeight;
-
+import consulo.configurable.localize.ConfigurableLocalize;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.util.collection.ArrayUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,94 +92,176 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
 
   private final static AttributesDescriptor[] ATTRIBUTES_DESCRIPTORS = {
     new AttributesDescriptor(
-      OptionsBundle.message("options.java.attribute.descriptor.bad.character"), HighlighterColors.BAD_CHARACTER),
+      ConfigurableLocalize.optionsJavaAttributeDescriptorBadCharacter(),
+      HighlighterColors.BAD_CHARACTER
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.keyword"), DefaultLanguageHighlighterColors.KEYWORD),
+      ConfigurableLocalize.optionsLanguageDefaultsKeyword(),
+      DefaultLanguageHighlighterColors.KEYWORD
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.macro.keyword"), DefaultLanguageHighlighterColors.MACRO_KEYWORD),
+      ConfigurableLocalize.optionsLanguageDefaultsMacroKeyword(),
+      DefaultLanguageHighlighterColors.MACRO_KEYWORD
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.identifier"), DefaultLanguageHighlighterColors.IDENTIFIER),
+      ConfigurableLocalize.optionsLanguageDefaultsIdentifier(),
+      DefaultLanguageHighlighterColors.IDENTIFIER
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.string"), DefaultLanguageHighlighterColors.STRING),
+      ConfigurableLocalize.optionsLanguageDefaultsString(),
+      DefaultLanguageHighlighterColors.STRING
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.valid.esc.seq"), DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE),
+      ConfigurableLocalize.optionsLanguageDefaultsValidEscSeq(),
+      DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.invalid.esc.seq"), DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE),
+      ConfigurableLocalize.optionsLanguageDefaultsInvalidEscSeq(),
+      DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.number"), DefaultLanguageHighlighterColors.NUMBER),
+      ConfigurableLocalize.optionsLanguageDefaultsNumber(),
+      DefaultLanguageHighlighterColors.NUMBER
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.operation"), DefaultLanguageHighlighterColors.OPERATION_SIGN),
+      ConfigurableLocalize.optionsLanguageDefaultsOperation(),
+      DefaultLanguageHighlighterColors.OPERATION_SIGN
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.braces"), DefaultLanguageHighlighterColors.BRACES),
+      ConfigurableLocalize.optionsLanguageDefaultsBraces(),
+      DefaultLanguageHighlighterColors.BRACES
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.parentheses"), DefaultLanguageHighlighterColors.PARENTHESES),
+      ConfigurableLocalize.optionsLanguageDefaultsParentheses(),
+      DefaultLanguageHighlighterColors.PARENTHESES
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.brackets"), DefaultLanguageHighlighterColors.BRACKETS),
+      ConfigurableLocalize.optionsLanguageDefaultsBrackets(),
+      DefaultLanguageHighlighterColors.BRACKETS
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.dot"), DefaultLanguageHighlighterColors.DOT),
+      ConfigurableLocalize.optionsLanguageDefaultsDot(),
+      DefaultLanguageHighlighterColors.DOT
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.comma"), DefaultLanguageHighlighterColors.COMMA),
+      ConfigurableLocalize.optionsLanguageDefaultsComma(),
+      DefaultLanguageHighlighterColors.COMMA
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.semicolon"), DefaultLanguageHighlighterColors.SEMICOLON),
+      ConfigurableLocalize.optionsLanguageDefaultsSemicolon(),
+      DefaultLanguageHighlighterColors.SEMICOLON
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.line.comment"), DefaultLanguageHighlighterColors.LINE_COMMENT),
+      ConfigurableLocalize.optionsLanguageDefaultsLineComment(),
+      DefaultLanguageHighlighterColors.LINE_COMMENT
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.block.comment"), DefaultLanguageHighlighterColors.BLOCK_COMMENT),
+      ConfigurableLocalize.optionsLanguageDefaultsBlockComment(),
+      DefaultLanguageHighlighterColors.BLOCK_COMMENT
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.doc.comment"), DefaultLanguageHighlighterColors.DOC_COMMENT),
+      ConfigurableLocalize.optionsLanguageDefaultsDocComment(),
+      DefaultLanguageHighlighterColors.DOC_COMMENT
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.doc.markup"), DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP),
+      ConfigurableLocalize.optionsLanguageDefaultsDocMarkup(),
+      DefaultLanguageHighlighterColors.DOC_COMMENT_MARKUP
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.doc.tag"), DefaultLanguageHighlighterColors.DOC_COMMENT_TAG),
+      ConfigurableLocalize.optionsLanguageDefaultsDocTag(),
+      DefaultLanguageHighlighterColors.DOC_COMMENT_TAG
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.label"), DefaultLanguageHighlighterColors.LABEL),
+      ConfigurableLocalize.optionsLanguageDefaultsLabel(),
+      DefaultLanguageHighlighterColors.LABEL
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.constant"), DefaultLanguageHighlighterColors.CONSTANT),
+      ConfigurableLocalize.optionsLanguageDefaultsConstant(),
+      DefaultLanguageHighlighterColors.CONSTANT
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.predefined"), DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL),
+      ConfigurableLocalize.optionsLanguageDefaultsPredefined(),
+      DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.local.variable"), DefaultLanguageHighlighterColors.LOCAL_VARIABLE),
+      ConfigurableLocalize.optionsLanguageDefaultsLocalVariable(),
+      DefaultLanguageHighlighterColors.LOCAL_VARIABLE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.global.variable"), DefaultLanguageHighlighterColors.GLOBAL_VARIABLE),
+      ConfigurableLocalize.optionsLanguageDefaultsGlobalVariable(),
+      DefaultLanguageHighlighterColors.GLOBAL_VARIABLE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.function.declaration"), DefaultLanguageHighlighterColors.FUNCTION_DECLARATION),
+      ConfigurableLocalize.optionsLanguageDefaultsFunctionDeclaration(),
+      DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.function.call"), DefaultLanguageHighlighterColors.FUNCTION_CALL),
+      ConfigurableLocalize.optionsLanguageDefaultsFunctionCall(),
+      DefaultLanguageHighlighterColors.FUNCTION_CALL
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.parameter"), DefaultLanguageHighlighterColors.PARAMETER),
+      ConfigurableLocalize.optionsLanguageDefaultsParameter(),
+      DefaultLanguageHighlighterColors.PARAMETER
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.interface.name"), DefaultLanguageHighlighterColors.INTERFACE_NAME),
+      ConfigurableLocalize.optionsLanguageDefaultsInterfaceName(),
+      DefaultLanguageHighlighterColors.INTERFACE_NAME
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.type.alias.name"), DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME),
+      ConfigurableLocalize.optionsLanguageDefaultsTypeAliasName(),
+      DefaultLanguageHighlighterColors.TYPE_ALIAS_NAME
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.metadata"), DefaultLanguageHighlighterColors.METADATA),
+      ConfigurableLocalize.optionsLanguageDefaultsMetadata(),
+      DefaultLanguageHighlighterColors.METADATA
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.class.name"), DefaultLanguageHighlighterColors.CLASS_NAME),
+      ConfigurableLocalize.optionsLanguageDefaultsClassName(),
+      DefaultLanguageHighlighterColors.CLASS_NAME
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.class.reference"), DefaultLanguageHighlighterColors.CLASS_REFERENCE),
+      ConfigurableLocalize.optionsLanguageDefaultsClassReference(),
+      DefaultLanguageHighlighterColors.CLASS_REFERENCE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.instance.method"), DefaultLanguageHighlighterColors.INSTANCE_METHOD),
+      ConfigurableLocalize.optionsLanguageDefaultsInstanceMethod(),
+      DefaultLanguageHighlighterColors.INSTANCE_METHOD
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.instance.field"), DefaultLanguageHighlighterColors.INSTANCE_FIELD),
+      ConfigurableLocalize.optionsLanguageDefaultsInstanceField(),
+      DefaultLanguageHighlighterColors.INSTANCE_FIELD
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.static.method"), DefaultLanguageHighlighterColors.STATIC_METHOD),
+      ConfigurableLocalize.optionsLanguageDefaultsStaticMethod(),
+      DefaultLanguageHighlighterColors.STATIC_METHOD
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.static.field"), DefaultLanguageHighlighterColors.STATIC_FIELD),
+      ConfigurableLocalize.optionsLanguageDefaultsStaticField(),
+      DefaultLanguageHighlighterColors.STATIC_FIELD
+    ),
 
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.markup.tag"), DefaultLanguageHighlighterColors.MARKUP_TAG),
+      ConfigurableLocalize.optionsLanguageDefaultsMarkupTag(),
+      DefaultLanguageHighlighterColors.MARKUP_TAG
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.markup.attribute"), DefaultLanguageHighlighterColors.MARKUP_ATTRIBUTE),
+      ConfigurableLocalize.optionsLanguageDefaultsMarkupAttribute(),
+      DefaultLanguageHighlighterColors.MARKUP_ATTRIBUTE
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.markup.entity"), DefaultLanguageHighlighterColors.MARKUP_ENTITY),
+      ConfigurableLocalize.optionsLanguageDefaultsMarkupEntity(),
+      DefaultLanguageHighlighterColors.MARKUP_ENTITY
+    ),
     new AttributesDescriptor(
-      OptionsBundle.message("options.language.defaults.template.language"), DefaultLanguageHighlighterColors.TEMPLATE_LANGUAGE_COLOR),
-    
+      ConfigurableLocalize.optionsLanguageDefaultsTemplateLanguage(),
+      DefaultLanguageHighlighterColors.TEMPLATE_LANGUAGE_COLOR
+    )
   };
 
   private static final AttributesDescriptor INLINE_PARAMETER_HINT_DESCRIPTOR = new AttributesDescriptor(
-          OptionsBundle.message("options.java.attribute.descriptor.inline.parameter.hint"),
-          DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT);
+    ConfigurableLocalize.optionsJavaAttributeDescriptorInlineParameterHint(),
+    DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT
+  );
 
   @Nonnull
   @Override
@@ -252,7 +334,7 @@ public class DefaultLanguageColorsPage implements ColorSettingsPage, Configurabl
   @Nonnull
   @Override
   public String getDisplayName() {
-    return OptionsBundle.message("options.language.defaults.display.name");
+    return ConfigurableLocalize.optionsLanguageDefaultsDisplayName().get();
   }
 
   @Override

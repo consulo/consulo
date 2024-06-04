@@ -17,18 +17,18 @@ package consulo.ide.impl.idea.xdebugger.impl.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.configurable.internal.ConfigurableWeight;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.ui.DebuggerColors;
-import consulo.configurable.internal.ConfigurableWeight;
-
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -46,12 +46,30 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     return new AttributesDescriptor[] {
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.breakpoint.line"), DebuggerColors.BREAKPOINT_ATTRIBUTES),
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.execution.point"), DebuggerColors.EXECUTIONPOINT_ATTRIBUTES),
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.not.top.frame"), DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES),
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.inlined.values"), DebuggerColors.INLINED_VALUES),
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.inlined.values.modified"), DebuggerColors.INLINED_VALUES_MODIFIED),
-            new AttributesDescriptor(OptionsBundle.message("options.java.attribute.descriptor.inlined.values.execution.line"), DebuggerColors.INLINED_VALUES_EXECUTION_LINE),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorBreakpointLine(),
+        DebuggerColors.BREAKPOINT_ATTRIBUTES
+      ),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorExecutionPoint(),
+        DebuggerColors.EXECUTIONPOINT_ATTRIBUTES
+      ),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorNotTopFrame(),
+        DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES
+      ),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValues(),
+        DebuggerColors.INLINED_VALUES
+      ),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesModified(),
+        DebuggerColors.INLINED_VALUES_MODIFIED
+      ),
+      new AttributesDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorInlinedValuesExecutionLine(),
+        DebuggerColors.INLINED_VALUES_EXECUTION_LINE
+      ),
     };
   }
 
@@ -59,7 +77,11 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   @Nonnull
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[] {
-            new ColorDescriptor(OptionsBundle.message("options.java.attribute.descriptor.recursive.call"), DebuggerColors.RECURSIVE_CALL_ATTRIBUTES, ColorDescriptor.Kind.BACKGROUND)
+      new ColorDescriptor(
+        ConfigurableLocalize.optionsJavaAttributeDescriptorRecursiveCall(),
+        DebuggerColors.RECURSIVE_CALL_ATTRIBUTES,
+        ColorDescriptor.Kind.BACKGROUND
+      )
     };
   }
 
