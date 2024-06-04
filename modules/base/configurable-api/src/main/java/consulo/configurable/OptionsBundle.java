@@ -15,12 +15,15 @@
  */
 package consulo.configurable;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author lesya
  */
+@Deprecated
+@DeprecationInfo("Use consulo.configurable.localize.ConfigurableLocalize")
 public class OptionsBundle extends AbstractBundle {
   private static final OptionsBundle INSTANCE = new OptionsBundle();
 

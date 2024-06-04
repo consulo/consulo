@@ -1,0 +1,520 @@
+cannot.save.settings.default.dialog.title:
+  text: Cannot Save Settings
+options.custom.attribute.descriptor.keyword1:
+  text: Keyword1
+options.custom.attribute.descriptor.keyword2:
+  text: Keyword2
+options.custom.attribute.descriptor.keyword3:
+  text: Keyword3
+options.custom.attribute.descriptor.keyword4:
+  text: Keyword4
+options.custom.attribute.descriptor.number:
+  text: Number
+options.custom.attribute.descriptor.string:
+  text: String
+options.custom.attribute.descriptor.line.comment:
+  text: Line comment
+options.custom.attribute.descriptor.block.comment:
+  text: Block comment
+options.custom.attribute.descriptor.valid.string.escape:
+  text: Valid string escape
+options.custom.attribute.descriptor.invalid.string.escape:
+  text: Invalid string escape
+options.general.attribute.descriptor.default.text:
+  text: Text//Default text
+options.general.attribute.descriptor.folded.text:
+  text: Text//Folded text
+options.general.attribute.descriptor.deleted.text:
+  text: Text//Deleted text
+options.general.attribute.descriptor.search.result:
+  text: Search Results//Search result
+options.general.attribute.descriptor.search.result.write.access:
+  text: Search Results//Search result (write access)
+options.general.attribute.descriptor.text.search.result:
+  text: Search Results//Text search result
+options.general.attribute.descriptor.template.variable:
+  text: Templates//Template variable
+options.html.attribute.descriptor.comment:
+  text: Comment
+options.html.attribute.descriptor.code:
+  text: HTML code
+options.html.attribute.descriptor.tag:
+  text: Tag
+options.html.attribute.descriptor.tag.name:
+  text: Tag name
+options.html.attribute.descriptor.attribute.name:
+  text: Attribute name
+options.html.attribute.descriptor.attribute.value:
+  text: Attribute value
+options.html.attribute.descriptor.entity.reference:
+  text: Entity reference
+options.html.attribute.descriptor.tag.tree:
+  text: Tag tree (level {0})
+options.jsp.attribute.descriptor.scripting.background:
+  text: Scripting
+options.jsp.attribute.descriptor.directive.background:
+  text: Action and directive content
+options.jsp.attribute.descriptor.directive.name:
+  text: Action and directive name
+options.jsp.attribute.descriptor.attribute.name:
+  text: Attribute name
+options.jsp.attribute.descriptor.attribute.value:
+  text: Attribute value
+options.jsp.attribute.descriptor.el.background:
+  text: Expression language background
+options.jsp.attribute.descriptor.el.keyword:
+  text: Expression language keyword
+options.jsp.attribute.descriptor.el.identifier:
+  text: Expression language identifier
+options.jsp.attribute.descriptor.el.string:
+  text: Expression language string
+options.jsp.attribute.descriptor.el.number:
+  text: Expression language number
+options.jsp.attribute.descriptor.el.parens:
+  text: Expression language parentheses
+options.jsp.attribute.descriptor.el.dot:
+  text: Expression language dot
+options.jsp.attribute.descriptor.el.comma:
+  text: Expression language comma
+options.jsp.attribute.descriptor.el.brackets:
+  text: Expression language brackets
+options.jsp.attribute.descriptor.el.bounds:
+  text: Expression language bounds
+options.general.color.descriptor.breadcrumbs.default:
+  text: Editor//Breadcrumbs//Default
+options.general.color.descriptor.breadcrumbs.hovered:
+  text: Editor//Breadcrumbs//Hovered
+options.general.color.descriptor.breadcrumbs.current:
+  text: Editor//Breadcrumbs//Current
+options.general.color.descriptor.breadcrumbs.inactive:
+  text: Editor//Breadcrumbs//Inactive
+options.java.attribute.descriptor.keyword:
+  text: Keyword
+options.java.attribute.descriptor.number:
+  text: Number
+options.java.attribute.descriptor.string:
+  text: String//String text
+options.java.attribute.descriptor.valid.escape.in.string:
+  text: String//Escape Sequence//Valid
+options.java.attribute.descriptor.invalid.escape.in.string:
+  text: String//Escape Sequence//Invalid
+options.java.attribute.descriptor.operator.sign:
+  text: Braces and Operators//Operator sign
+options.java.attribute.descriptor.parentheses:
+  text: Braces and Operators//Parentheses
+options.java.attribute.descriptor.braces:
+  text: Braces and Operators//Braces
+options.java.attribute.descriptor.brackets:
+  text: Braces and Operators//Brackets
+options.java.attribute.descriptor.comma:
+  text: Braces and Operators//Comma
+options.java.attribute.descriptor.semicolon:
+  text: Braces and Operators//Semicolon
+options.java.attribute.descriptor.dot:
+  text: Braces and Operators//Dot
+options.java.attribute.descriptor.line.comment:
+  text: Comments//Line comment
+options.java.attribute.descriptor.block.comment:
+  text: Comments//Block comment
+options.java.attribute.descriptor.javadoc.comment:
+  text: Comments//JavaDoc//Text
+options.java.attribute.descriptor.javadoc.tag:
+  text: Comments//JavaDoc//Tag
+options.java.attribute.descriptor.javadoc.tag.value:
+  text: Comments//JavaDoc//Tag value
+options.java.attribute.descriptor.javadoc.markup:
+  text: Comments//JavaDoc//Markup
+options.java.attribute.descriptor.errors.group:
+  text: Errors and Warnings//{0}
+options.java.attribute.descriptor.unknown.symbol:
+  text: Errors and Warnings//Unknown symbol
+options.java.attribute.descriptor.error:
+  text: Errors and Warnings//Error
+options.java.attribute.descriptor.warning:
+  text: Errors and Warnings//Warning
+options.java.attribute.descriptor.deprecated.symbol:
+  text: Errors and Warnings//Deprecated symbol
+options.java.attribute.descriptor.marked.for.removal.symbol:
+  text: Errors and Warnings//Deprecated symbol marked for removal
+options.java.attribute.descriptor.unused.symbol:
+  text: Errors and Warnings//Unused symbol
+options.java.attribute.descriptor.class:
+  text: Classes and Interfaces//Class
+options.java.attribute.descriptor.anonymous.class:
+  text: Classes and Interfaces//Anonymous class
+options.java.attribute.descriptor.type.parameter:
+  text: Parameters//Type parameter
+options.java.attribute.descriptor.abstract.class:
+  text: Classes and Interfaces//Abstract class
+options.java.attribute.descriptor.interface:
+  text: Classes and Interfaces//Interface
+options.java.attribute.descriptor.enum:
+  text: Classes and Interfaces//Enum
+options.java.attribute.descriptor.local.variable:
+  text: Variables//Local variable
+options.java.attribute.descriptor.reassigned.local.variable:
+  text: Variables//Reassigned local variable
+options.java.attribute.descriptor.reassigned.parameter:
+  text: Parameters//Reassigned parameter
+options.java.attribute.descriptor.implicit.anonymous.parameter:
+  text: Parameters//Implicit anonymous class parameter
+options.java.attribute.descriptor.inline.parameter.hint.highlighted:
+  text: Inline parameter hint (highlighted)
+options.java.attribute.descriptor.instance.field:
+  text: Class Fields//Instance field
+options.java.attribute.descriptor.instance.final.field:
+  text: Class Fields//Instance final field
+options.java.attribute.descriptor.static.field:
+  text: Class Fields//Static field
+options.java.attribute.descriptor.static.final.field:
+  text: Class Fields//Constant (static final field)
+options.java.attribute.descriptor.parameter:
+  text: Parameters//Parameter
+options.java.attribute.descriptor.lambda.parameter:
+  text: Parameters//Lambda parameter
+options.java.attribute.descriptor.method.call:
+  text: Methods//Method call
+options.java.attribute.descriptor.method.declaration:
+  text: Methods//Method declaration
+options.java.attribute.descriptor.constructor.call:
+  text: Methods//Constructor call
+options.java.attribute.descriptor.constructor.declaration:
+  text: Methods//Constructor declaration
+options.java.attribute.descriptor.static.method:
+  text: Methods//Static method
+options.java.attribute.descriptor.abstract.method:
+  text: Methods//Abstract method
+options.java.attribute.descriptor.inherited.method:
+  text: Methods//Inherited method
+options.java.attribute.descriptor.matched.brace:
+  text: Code//Matched brace
+options.java.attribute.descriptor.unmatched.brace:
+  text: Code//Unmatched brace
+options.java.attribute.descriptor.bad.character:
+  text: Bad character
+options.java.attribute.descriptor.breakpoint.line:
+  text: Breakpoint line
+options.java.attribute.descriptor.execution.point:
+  text: Execution point
+options.java.attribute.descriptor.not.top.frame:
+  text: Not top frame
+options.java.attribute.descriptor.evaluated.expression:
+  text: Evaluated expression text
+options.java.attribute.descriptor.evaluated.expression.execution.line:
+  text: Evaluated expression text for execution line
+options.java.attribute.descriptor.inlined.values:
+  text: Inlined values
+options.java.attribute.descriptor.inlined.values.modified:
+  text: Inlined modified values
+options.java.attribute.descriptor.inlined.values.execution.line:
+  text: Inlined values for execution line
+options.java.attribute.descriptor.recursive.call:
+  text: Recursive calls highlighting
+options.java.attribute.descriptor.annotation.name:
+  text: Annotations//Annotation name
+options.java.attribute.descriptor.annotation.attribute.name:
+  text: Annotations//Annotation attribute name
+options.properties.attribute.descriptor.property.key:
+  text: Property key
+options.properties.attribute.descriptor.property.value:
+  text: Property value
+options.properties.attribute.descriptor.key.value.separator:
+  text: Key/value separator
+options.properties.attribute.descriptor.comment:
+  text: Comment
+options.properties.attribute.descriptor.valid.string.escape:
+  text: Valid string escape
+options.properties.attribute.descriptor.invalid.string.escape:
+  text: Invalid string escape
+options.xml.attribute.descriptor.prologue:
+  text: Prologue
+options.xml.attribute.descriptor.comment:
+  text: Comment
+options.xml.attribute.descriptor.tag:
+  text: Tag
+options.xml.attribute.descriptor.tag.name:
+  text: Tag name
+options.xml.attribute.descriptor.attribute.name:
+  text: Attribute name
+options.xml.attribute.descriptor.attribute.value:
+  text: Attribute value
+options.xml.attribute.descriptor.tag.data:
+  text: Tag data
+options.xml.attribute.descriptor.descriptor.entity.reference:
+  text: Entity reference
+options.general.color.descriptor.background.in.readonly.files:
+  text: Text//Background in readonly files
+options.general.color.descriptor.readonly.fragment.background:
+  text: Text//Readonly fragment background
+options.general.color.descriptor.gutter.background:
+  text: Editor//Gutter background
+options.general.color.descriptor.notification.background:
+  text: Editor//Notification background
+options.general.color.descriptor.selection.background:
+  text: Editor//Selection background
+options.general.color.descriptor.selection.foreground:
+  text: Editor//Selection foreground
+options.general.color.descriptor.caret:
+  text: Editor//Caret
+options.general.color.descriptor.caret.row:
+  text: Editor//Caret row
+options.general.color.descriptor.right.margin:
+  text: Editor//Guides//Hard wrap guide
+options.general.color.descriptor.visual.guides:
+  text: Editor//Guides//Visual guides
+options.general.color.descriptor.whitespaces:
+  text: Text//Whitespaces
+options.general.color.descriptor.indent.guide:
+  text: Editor//Guides//Indent guide
+options.general.color.descriptor.indent.guide.selected:
+  text: Editor//Guides//Indent guide selected
+options.general.color.descriptor.line.number:
+  text: Code//Line number
+options.general.color.descriptor.vcs.annotations:
+  text: VCS Annotations//Foreground
+options.general.color.descriptor.vcs.annotations.color.n:
+  text: 'VCS Annotations//Background color #{0}'
+options.general.color.descriptor.vcs.diff.type.tag.prefix:
+  text: Changed lines//
+options.general.color.descriptor.vcs.diff.separator.background:
+  text: Folded unchanged fragments//Background
+options.general.color.descriptor.vcs.diff.separator.top_border:
+  text: Folded unchanged fragments//Top border
+options.general.color.descriptor.vcs.diff.separator.bottom_border:
+  text: Folded unchanged fragments//Bottom border
+options.general.color.descriptor.tearline:
+  text: Editor//Tear line
+options.general.color.descriptor.tearline.selected:
+  text: Editor//Tear line selection
+options.general.color.descriptor.separator.above:
+  text: Editor//Separator line above
+options.general.color.descriptor.separator.below:
+  text: Editor//Separator line below
+options.general.color.descriptor.added.lines:
+  text: Editor Gutter//Added lines
+options.general.color.descriptor.modified.lines:
+  text: Editor Gutter//Modified lines
+options.general.color.descriptor.deleted.lines:
+  text: Editor Gutter//Deleted lines
+options.general.color.descriptor.whitespaces.modified.lines:
+  text: Editor Gutter//Whitespace-modified lines
+options.general.color.descriptor.border.lines:
+  text: Editor Gutter//Border
+options.general.color.descriptor.console.background:
+  text: Console//Background
+options.general.color.descriptor.console.stdout:
+  text: Console//Standard output
+options.general.color.descriptor.console.stderr:
+  text: Console//Error output
+options.general.color.descriptor.console.expired:
+  text: Log Console//Expired entry
+options.general.color.descriptor.console.warning:
+  text: Log Console//Warning
+options.general.color.descriptor.console.logError:
+  text: Log Console//Error
+options.general.color.descriptor.console.stdin:
+  text: Console//User input
+options.general.color.descriptor.console.system.output:
+  text: Console//System output
+options.general.color.descriptor.hyperlink.new:
+  text: Hyperlinks//Unfollowed
+options.general.color.descriptor.hyperlink.followed:
+  text: Hyperlinks//Followed
+options.general.color.descriptor.reference.hyperlink:
+  text: Hyperlinks//Reference
+options.general.color.descriptor.todo.defaults:
+  text: Code//TODO defaults
+options.general.color.descriptor.bookmarks:
+  text: Editor//Bookmarks
+options.general.color.soft.wrap.sign:
+  text: Text//Soft wrap sign
+options.general.color.descriptor.popups.documentation:
+  text: Popups and Hints//Documentation
+options.general.color.descriptor.popups.information:
+  text: Popups and Hints//Information hint
+options.general.color.descriptor.popups.question:
+  text: Popups and Hints//Question hint
+options.general.color.descriptor.popups.error:
+  text: Popups and Hints//Error hint
+options.general.color.descriptor.popups.tooltip:
+  text: Popups and Hints//Tooltip
+options.language.defaults.display.name:
+  text: Language Defaults
+options.language.defaults.keyword:
+  text: Keyword
+options.language.defaults.macro.keyword:
+  text: Macro Keyword
+options.language.defaults.identifier:
+  text: Identifiers//Default
+options.language.defaults.string:
+  text: String//String text
+options.language.defaults.valid.esc.seq:
+  text: String//Escape Sequence//Valid
+options.language.defaults.invalid.esc.seq:
+  text: String//Escape Sequence//Invalid
+options.language.defaults.number:
+  text: Number
+options.language.defaults.operation:
+  text: Braces and Operators//Operation sign
+options.language.defaults.braces:
+  text: Braces and Operators//Braces
+options.language.defaults.parentheses:
+  text: Braces and Operators//Parentheses
+options.language.defaults.brackets:
+  text: Braces and Operators//Brackets
+options.language.defaults.dot:
+  text: Braces and Operators//Dot
+options.language.defaults.comma:
+  text: Braces and Operators//Comma
+options.language.defaults.semicolon:
+  text: Braces and Operators//Semicolon
+options.language.defaults.line.comment:
+  text: Comments//Line comment
+options.language.defaults.block.comment:
+  text: Comments//Block comment
+options.language.defaults.shebang.comment:
+  text: Comments//Shebang comment
+options.language.defaults.doc.comment:
+  text: Comments//Doc Comment//Text
+options.language.defaults.doc.markup:
+  text: Comments//Doc Comment//Markup
+options.language.defaults.doc.tag:
+  text: Comments//Doc Comment//Tag
+options.language.defaults.doc.tag.value:
+  text: Comments//Doc Comment//Tag value
+options.language.defaults.label:
+  text: Identifiers//Label
+options.language.defaults.constant:
+  text: Identifiers//Constant
+options.language.defaults.local.variable:
+  text: Identifiers//Local variable
+options.language.defaults.global.variable:
+  text: Identifiers//Global variable
+options.language.defaults.function.declaration:
+  text: Identifiers//Function declaration
+options.language.defaults.type.alias.name:
+  text: Identifiers//Type-alias name
+options.language.defaults.function.call:
+  text: Identifiers//Function call
+options.language.defaults.parameter:
+  text: Identifiers//Parameter
+options.language.defaults.interface.name:
+  text: Classes//Interface name
+options.language.defaults.class.name:
+  text: Classes//Class name
+options.language.defaults.class.reference:
+  text: Classes//Class reference
+options.language.defaults.instance.method:
+  text: Classes//Instance method
+options.language.defaults.instance.field:
+  text: Classes//Instance field
+options.language.defaults.static.method:
+  text: Classes//Static method
+options.language.defaults.static.field:
+  text: Classes//Static field
+options.language.defaults.template.language:
+  text: Template language
+options.language.defaults.markup.tag:
+  text: Markup//Tag
+options.language.defaults.markup.attribute:
+  text: Markup//Attribute
+options.language.defaults.markup.entity:
+  text: Markup//Entity
+options.language.defaults.predefined:
+  text: Identifiers//Predefined symbol
+options.language.defaults.metadata:
+  text: Metadata
+options.java.attribute.descriptor.inline.parameter.hint:
+  text: Inline parameter hint
+options.java.color.descriptor.full.coverage:
+  text: Line Coverage//Full
+options.java.color.descriptor.partial.coverage:
+  text: Line Coverage//Partial
+options.java.color.descriptor.none.coverage:
+  text: Line Coverage//Uncovered
+options.java.color.descriptor.method.separator.color:
+  text: Code//Method separator color
+options.custom.display.name:
+  text: Custom
+options.general.display.name:
+  text: General
+options.html.display.name:
+  text: HTML
+options.jsp.display.name:
+  text: JSP
+options.java.display.name:
+  text: Java
+properties.options.display.name:
+  text: Properties
+options.xml.display.name:
+  text: XML
+settings.panel.title:
+  text: Settings
+control.panel.classic.view.button:
+  text: Classic &View
+options.page.modified.save.message.text:
+  text: The page has been modified. Save changes made on this page?
+options.save.changes.message.title:
+  text: Save Changes
+options.apply.button:
+  text: A&pply
+explorer.panel.default.view.button:
+  text: Default &View
+ide.settings.display.name:
+  text: IDE Settings
+ide.settings.short.name:
+  text: IDE
+project.file.read.only.error.message:
+  text: |-
+    The project file is read-only.
+    The settings will not be saved until you make the file writable.
+template.project.settings.display.name:
+  text: Template Project Settings
+project.settings.display.name:
+  text: Project Settings [{0}]
+template.project.settings.short.name:
+  text: Template Project
+project.settings.short.name:
+  text: Project
+options.color.schemes.presentable.name:
+  text: Color schemes
+options.editor.settings.presentable.name:
+  text: Editor settings
+options.java.attribute.descriptor.weak.warning:
+  text: Errors and Warnings//Weak Warning
+options.java.attribute.descriptor.server.problems:
+  text: Errors and Warnings//Problem from server
+options.java.attribute.descriptor.server.duplicate:
+  text: Errors and Warnings//Duplicate from server
+options.general.color.descriptor.injected.language.fragment:
+  text: Code//Injected language fragment
+options.general.attribute.descriptior.identifier.under.caret:
+  text: Code//Identifier under caret
+options.general.attribute.descriptior.identifier.under.caret.write:
+  text: Code//Identifier under caret (write)
+color.settings.console.name:
+  text: Console Colors
+color.settings.console.output:
+  text: IRB Output
+color.settings.console.black:
+  text: ANSI Colors//Black
+color.settings.console.red:
+  text: ANSI Colors//Red
+color.settings.console.green:
+  text: ANSI Colors//Green
+color.settings.console.yellow:
+  text: ANSI Colors//Yellow
+color.settings.console.blue:
+  text: ANSI Colors//Blue
+color.settings.console.magenta:
+  text: ANSI Colors//Magenta
+color.settings.console.cyan:
+  text: ANSI Colors//Cyan
+color.settings.console.gray:
+  text: ANSI Colors//Gray
+options.general.attribute.descriptor.live.template:
+  text: Live Template
+configurable.default.project.tooltip:
+  text: For new projects
+configurable.current.project.tooltip:
+  text: For current project

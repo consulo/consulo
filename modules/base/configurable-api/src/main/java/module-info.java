@@ -13,6 +13,7 @@ module consulo.configurable.api {
   requires static consulo.ui.ex.api;
 
   exports consulo.configurable;
+  exports consulo.configurable.localize;
   exports consulo.configurable.internal to consulo.ide.impl,
                                             consulo.language.editor.api,
                                             consulo.language.code.style.ui.api,
