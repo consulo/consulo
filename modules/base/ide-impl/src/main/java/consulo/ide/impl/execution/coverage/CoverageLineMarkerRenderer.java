@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.execution.coverage;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory;
 import consulo.ide.impl.idea.application.options.colors.NewColorAndFontPanel;
@@ -417,7 +418,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
       final ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions(){
         @Override
         protected List<ColorAndFontPanelFactory> createPanelFactories() {
-          final GeneralColorsPage colorsPage = new GeneralColorsPage();
+          final GeneralColorsPage colorsPage = new GeneralColorsPage(Application.get());
           final ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
             @Nonnull
             @Override

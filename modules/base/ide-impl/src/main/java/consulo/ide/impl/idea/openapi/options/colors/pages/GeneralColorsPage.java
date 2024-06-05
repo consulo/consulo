@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.HighlighterColors;
@@ -33,6 +34,7 @@ import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.editor.template.TemplateColors;
 import consulo.util.io.FileUtil;
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,32 +43,6 @@ import java.util.Map;
 
 @ExtensionImpl(id = "general", order = "first")
 public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, ConfigurableWeight {
-  private static final String ADDITIONAL_DEMO_TEXT = "\n" +
-    "<todo>//TODO: Visit Consulo Web resources:</todo>\n" +
-    "Consulo Home Page: <hyperlink_f>https://consulo.io</hyperlink_f>\n" +
-    "Consulo Developer Community: <hyperlink>https://discuss.consulo.io/</hyperlink>\n" +
-    "\n" +
-    "Search:\n" +
-    "  <search_result_wr>result</search_result_wr> = \"<search_text>text</search_text>, <search_text>text</search_text>, <search_text>text</search_text>\";\n" +
-    "  <identifier_write>i</identifier_write> = <search_result>result</search_result>\n" +
-    "  return <identifier>i;</identifier>\n" +
-    "\n" +
-    "<folded_text>Folded text</folded_text>\n" +
-    "<deleted_text>Deleted text</deleted_text>\n" +
-    "Template <template_var>VARIABLE</template_var>\n" +
-    "Injected language: <injected_lang>\\.(gif|jpg|png)$</injected_lang>\n" +
-    "\n" +
-    "Code Inspections:\n" +
-    "  <error>Error</error>\n" +
-    "  <warning>Warning</warning>\n" +
-    "  <weak_warning>Weak warning</weak_warning>\n" +
-    "  <deprecated>Deprecated symbol</deprecated>\n" +
-    "  <unused>Unused symbol</unused>\n" +
-    "  <wrong_ref>Unknown symbol</wrong_ref>\n" +
-    "  <server_error>Problem from server</server_error>\n" +
-    "  <server_duplicate>Duplicate from server</server_duplicate>\n" +
-    getCustomSeveritiesDemoText();
-
   private static final AttributesDescriptor[] ATT_DESCRIPTORS = {
     new AttributesDescriptor(
       ConfigurableLocalize.optionsGeneralAttributeDescriptorDefaultText(),
@@ -294,47 +270,48 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
     )
   };
 
-  private static final Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<>();
-  public static final String DISPLAY_NAME = ConfigurableLocalize.optionsGeneralDisplayName().get();
+  private static final Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS;
 
   static {
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("folded_text", EditorColors.FOLDED_TEXT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("deleted_text", EditorColors.DELETED_TEXT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("search_result", EditorColors.SEARCH_RESULT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("search_result_wr", EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("search_text", EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("identifier", EditorColors.IDENTIFIER_UNDER_CARET_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("identifier_write", EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
+    Map<String, TextAttributesKey> descriptors = new HashMap<>();
+    descriptors.put("folded_text", EditorColors.FOLDED_TEXT_ATTRIBUTES);
+    descriptors.put("deleted_text", EditorColors.DELETED_TEXT_ATTRIBUTES);
+    descriptors.put("search_result", EditorColors.SEARCH_RESULT_ATTRIBUTES);
+    descriptors.put("search_result_wr", EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+    descriptors.put("search_text", EditorColors.TEXT_SEARCH_RESULT_ATTRIBUTES);
+    descriptors.put("identifier", EditorColors.IDENTIFIER_UNDER_CARET_ATTRIBUTES);
+    descriptors.put("identifier_write", EditorColors.WRITE_IDENTIFIER_UNDER_CARET_ATTRIBUTES);
 
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("template_var", TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("injected_lang", EditorColors.INJECTED_LANGUAGE_FRAGMENT);
+    descriptors.put("template_var", TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
+    descriptors.put("injected_lang", EditorColors.INJECTED_LANGUAGE_FRAGMENT);
 
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("todo", CodeInsightColors.TODO_DEFAULT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("hyperlink", CodeInsightColors.HYPERLINK_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("hyperlink_f", CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES);
+    descriptors.put("todo", CodeInsightColors.TODO_DEFAULT_ATTRIBUTES);
+    descriptors.put("hyperlink", CodeInsightColors.HYPERLINK_ATTRIBUTES);
+    descriptors.put("hyperlink_f", CodeInsightColors.FOLLOWED_HYPERLINK_ATTRIBUTES);
 
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("wrong_ref", CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("deprecated", CodeInsightColors.DEPRECATED_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("unused", CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("error", CodeInsightColors.ERRORS_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("warning", CodeInsightColors.WARNINGS_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("weak_warning", CodeInsightColors.WEAK_WARNING_ATTRIBUTES);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("server_error", CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING);
-    ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("server_duplicate", CodeInsightColors.DUPLICATE_FROM_SERVER);
-    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
-      for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
-        ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put(
-          getHighlightDescTagName(highlightInfoType),
-          highlightInfoType.getAttributesKey()
-        );
-      }
-    }
+    descriptors.put("wrong_ref", CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES);
+    descriptors.put("deprecated", CodeInsightColors.DEPRECATED_ATTRIBUTES);
+    descriptors.put("unused", CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES);
+    descriptors.put("error", CodeInsightColors.ERRORS_ATTRIBUTES);
+    descriptors.put("warning", CodeInsightColors.WARNINGS_ATTRIBUTES);
+    descriptors.put("weak_warning", CodeInsightColors.WEAK_WARNING_ATTRIBUTES);
+    descriptors.put("server_error", CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING);
+    descriptors.put("server_duplicate", CodeInsightColors.DUPLICATE_FROM_SERVER);
+
+    ADDITIONAL_HIGHLIGHT_DESCRIPTORS = Map.copyOf(descriptors);
+  }
+
+  private final Application myApplication;
+
+  @Inject
+  public GeneralColorsPage(Application application) {
+    myApplication = application;
   }
 
   @Override
   @Nonnull
   public String getDisplayName() {
-    return DISPLAY_NAME;
+    return ConfigurableLocalize.optionsGeneralDisplayName().get();
   }
 
   @Override
@@ -369,7 +346,13 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
 
   @Override
   public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return ADDITIONAL_HIGHLIGHT_DESCRIPTORS;
+    Map<String, TextAttributesKey> result = new HashMap<>(ADDITIONAL_HIGHLIGHT_DESCRIPTORS);
+    myApplication.getExtensionPoint(SeveritiesProvider.class).forEachExtensionSafe(provider -> {
+      for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
+        result.put(getHighlightDescTagName(highlightInfoType), highlightInfoType.getAttributesKey());
+      }
+    });
+    return result;
   }
 
   @Override
@@ -377,18 +360,17 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
     return Integer.MAX_VALUE;
   }
 
-  private static String getCustomSeveritiesDemoText() {
+  private String getCustomSeveritiesDemoText() {
     final StringBuilder buff = new StringBuilder();
 
-    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
+    myApplication.getExtensionPoint(SeveritiesProvider.class).forEachExtensionSafe(provider -> {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
         final String tag = getHighlightDescTagName(highlightInfoType);
         buff.append("  <").append(tag).append(">");
         buff.append(tag.toLowerCase());
         buff.append("</").append(tag).append(">").append("\n");
       }
-    }
-
+    });
     return buff.toString();
   }
 
