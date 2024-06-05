@@ -572,7 +572,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.module.impl.scopes;
   exports consulo.ide.impl.idea.openapi.options;
   exports consulo.ide.impl.idea.openapi.options.binding;
-  exports consulo.ide.impl.idea.openapi.options.colors;
   exports consulo.ide.impl.idea.openapi.options.colors.pages;
   exports consulo.ide.impl.idea.openapi.options.ex;
   exports consulo.ide.impl.idea.openapi.paths;
