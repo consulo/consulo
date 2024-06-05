@@ -1,19 +1,19 @@
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.process.ConsoleHighlighter;
-import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.configurable.internal.ConfigurableWeight;
-
+import consulo.configurable.localize.ConfigurableLocalize;
+import consulo.execution.process.ConsoleHighlighter;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,25 +45,46 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
     "<stdsys>Process finished with exit code 1</stdsys>\n";
 
   private static final AttributesDescriptor[] ATTRS = {
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.stdout"), ConsoleViewContentType.NORMAL_OUTPUT_KEY),
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.stderr"), ConsoleViewContentType.ERROR_OUTPUT_KEY),
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.stdin"), ConsoleViewContentType.USER_INPUT_KEY),
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.system.output"), ConsoleViewContentType.SYSTEM_OUTPUT_KEY),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleStdout(),
+      ConsoleViewContentType.NORMAL_OUTPUT_KEY
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleStderr(),
+      ConsoleViewContentType.ERROR_OUTPUT_KEY
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleStdin(),
+      ConsoleViewContentType.USER_INPUT_KEY
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleSystemOutput(),
+      ConsoleViewContentType.SYSTEM_OUTPUT_KEY
+    ),
 
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.logError"), ConsoleViewContentType.LOG_ERROR_OUTPUT_KEY),
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.warning"), ConsoleViewContentType.LOG_WARNING_OUTPUT_KEY),
-    new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.console.expired"), ConsoleViewContentType.LOG_EXPIRED_ENTRY),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleLogerror(),
+      ConsoleViewContentType.LOG_ERROR_OUTPUT_KEY
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleWarning(),
+      ConsoleViewContentType.LOG_WARNING_OUTPUT_KEY
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleExpired(),
+      ConsoleViewContentType.LOG_EXPIRED_ENTRY
+    ),
 
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.red"), ConsoleHighlighter.RED),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.green"), ConsoleHighlighter.GREEN),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.yellow"), ConsoleHighlighter.YELLOW),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.blue"), ConsoleHighlighter.BLUE),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.magenta"), ConsoleHighlighter.MAGENTA),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.cyan"), ConsoleHighlighter.CYAN),
-    new AttributesDescriptor(OptionsBundle.message("color.settings.console.gray"), ConsoleHighlighter.GRAY),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleRed(), ConsoleHighlighter.RED),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleGreen(), ConsoleHighlighter.GREEN),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleYellow(), ConsoleHighlighter.YELLOW),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleBlue(), ConsoleHighlighter.BLUE),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleMagenta(), ConsoleHighlighter.MAGENTA),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleCyan(), ConsoleHighlighter.CYAN),
+    new AttributesDescriptor(ConfigurableLocalize.colorSettingsConsoleGray(), ConsoleHighlighter.GRAY),
   };
 
-  private static final Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<String, TextAttributesKey>();
+  private static final Map<String, TextAttributesKey> ADDITIONAL_HIGHLIGHT_DESCRIPTORS = new HashMap<>();
   static{
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("stdsys", ConsoleViewContentType.SYSTEM_OUTPUT_KEY);
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("stdout", ConsoleViewContentType.NORMAL_OUTPUT_KEY);
@@ -83,7 +104,11 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
   }
 
   private static final ColorDescriptor[] COLORS = {
-    new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.console.background"), ConsoleViewContentType.CONSOLE_BACKGROUND_KEY, ColorDescriptor.Kind.BACKGROUND),
+    new ColorDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorConsoleBackground(),
+      ConsoleViewContentType.CONSOLE_BACKGROUND_KEY,
+      ColorDescriptor.Kind.BACKGROUND
+    ),
   };
 
   @Override
@@ -95,7 +120,7 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
   @Override
   @Nonnull
   public String getDisplayName() {
-    return OptionsBundle.message("color.settings.console.name");
+    return ConfigurableLocalize.colorSettingsConsoleName().get();
   }
 
   @Override

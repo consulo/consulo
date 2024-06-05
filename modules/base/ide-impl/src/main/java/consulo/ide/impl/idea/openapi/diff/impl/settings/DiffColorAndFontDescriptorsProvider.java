@@ -19,12 +19,12 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.configurable.OptionsBundle;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +46,13 @@ public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescript
   @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
     TextDiffTypeFactory.TextDiffTypeImpl[] diffTypes = TextDiffTypeFactory.getInstance().getAllDiffTypes();
-    return ContainerUtil.map2Array(diffTypes, AttributesDescriptor.class,
-                                   type -> new AttributesDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.diff.type.tag.prefix") + type.getName(), type.getKey()));
+    return ContainerUtil.map2Array(
+      diffTypes,
+      AttributesDescriptor.class,
+      type -> new AttributesDescriptor(
+        ConfigurableLocalize.optionsGeneralColorDescriptorVcsDiffTypeTagPrefix().get() + type.getName(),
+        type.getKey()
+      ));
   }
 
   @Override
@@ -55,8 +60,11 @@ public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescript
   public ColorDescriptor[] getColorDescriptors() {
     List<ColorDescriptor> descriptors = new ArrayList<>();
 
-    descriptors
-            .add(new ColorDescriptor(OptionsBundle.message("options.general.color.descriptor.vcs.diff.separator.background"), DiffLineSeparatorRenderer.BACKGROUND, ColorDescriptor.Kind.BACKGROUND));
+    descriptors.add(new ColorDescriptor(
+      ConfigurableLocalize.optionsGeneralColorDescriptorVcsDiffSeparatorBackground(),
+      DiffLineSeparatorRenderer.BACKGROUND,
+      ColorDescriptor.Kind.BACKGROUND
+    ));
 
     return descriptors.toArray(ColorDescriptor.EMPTY_ARRAY);
   }

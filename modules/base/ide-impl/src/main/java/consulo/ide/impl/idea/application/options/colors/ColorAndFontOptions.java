@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
+import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.setting.AttributesDescriptor;
@@ -34,22 +35,19 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleViewUtil;
-import consulo.bookmark.BookmarkManager;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarkManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
 import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.ScopeAttributesUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -61,16 +59,18 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -585,12 +585,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
 
     List<Pair<NamedScope, NamedScopesHolder>> list = new ArrayList<>(namedScopes);
 
-    Collections.sort(list, new Comparator<Pair<NamedScope, NamedScopesHolder>>() {
-      @Override
-      public int compare(@Nonnull final Pair<NamedScope, NamedScopesHolder> o1, @Nonnull final Pair<NamedScope, NamedScopesHolder> o2) {
-        return o1.getFirst().getName().compareToIgnoreCase(o2.getFirst().getName());
-      }
-    });
+    Collections.sort(list, (o1, o2) -> o1.getFirst().getName().compareToIgnoreCase(o2.getFirst().getName()));
     for (Pair<NamedScope, NamedScopesHolder> pair : list) {
       NamedScope namedScope = pair.getFirst();
       LocalizeValue name = namedScope.getPresentableName();
@@ -655,7 +650,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     if (!myRevertChangesCompleted) {
       ensureSchemesPanel();
 
-
       try {
         resetImpl();
       }
@@ -663,7 +657,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         myRevertChangesCompleted = true;
       }
     }
-
   }
 
   private void resetImpl() {
@@ -788,7 +781,6 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
       setInherited(myIsInheritedInitial);
       initCheckedStatus();
     }
-
 
     @Nonnull
     private static TextAttributes getInitialAttributes(@Nonnull MyColorScheme scheme, @Nonnull TextAttributesKey key) {

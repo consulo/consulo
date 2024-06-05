@@ -18,33 +18,64 @@ package consulo.ide.impl.idea.openapi.options.colors.pages;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
-import consulo.configurable.OptionsBundle;
+import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomHighlighterColors;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.internal.custom.SyntaxTable;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 @ExtensionImpl(id = "custom")
 public class CustomColorsPage implements ColorSettingsPage {
   private static final AttributesDescriptor[] ATTRS = {
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword1"), CustomHighlighterColors.CUSTOM_KEYWORD1_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword2"), CustomHighlighterColors.CUSTOM_KEYWORD2_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword3"), CustomHighlighterColors.CUSTOM_KEYWORD3_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.keyword4"), CustomHighlighterColors.CUSTOM_KEYWORD4_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.number"), CustomHighlighterColors.CUSTOM_NUMBER_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.string"), CustomHighlighterColors.CUSTOM_STRING_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.line.comment"), CustomHighlighterColors.CUSTOM_LINE_COMMENT_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.block.comment"), CustomHighlighterColors.CUSTOM_MULTI_LINE_COMMENT_ATTRIBUTES),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.valid.string.escape"), CustomHighlighterColors.CUSTOM_VALID_STRING_ESCAPE),
-    new AttributesDescriptor(OptionsBundle.message("options.custom.attribute.descriptor.invalid.string.escape"), CustomHighlighterColors.CUSTOM_INVALID_STRING_ESCAPE),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorKeyword1(),
+      CustomHighlighterColors.CUSTOM_KEYWORD1_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorKeyword2(),
+      CustomHighlighterColors.CUSTOM_KEYWORD2_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorKeyword3(),
+      CustomHighlighterColors.CUSTOM_KEYWORD3_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorKeyword4(),
+      CustomHighlighterColors.CUSTOM_KEYWORD4_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorNumber(),
+      CustomHighlighterColors.CUSTOM_NUMBER_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorString(),
+      CustomHighlighterColors.CUSTOM_STRING_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorLineComment(),
+      CustomHighlighterColors.CUSTOM_LINE_COMMENT_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorBlockComment(),
+      CustomHighlighterColors.CUSTOM_MULTI_LINE_COMMENT_ATTRIBUTES
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorValidStringEscape(),
+      CustomHighlighterColors.CUSTOM_VALID_STRING_ESCAPE
+    ),
+    new AttributesDescriptor(
+      ConfigurableLocalize.optionsCustomAttributeDescriptorInvalidStringEscape(),
+      CustomHighlighterColors.CUSTOM_INVALID_STRING_ESCAPE
+    ),
   };
 
-  @NonNls private static final SyntaxTable SYNTAX_TABLE = new SyntaxTable();
+  @NonNls
+  private static final SyntaxTable SYNTAX_TABLE = new SyntaxTable();
   static {
     SYNTAX_TABLE.setLineComment("#");
     SYNTAX_TABLE.setStartComment("/*");
@@ -66,7 +97,7 @@ public class CustomColorsPage implements ColorSettingsPage {
   @Override
   @Nonnull
   public String getDisplayName() {
-    return OptionsBundle.message("options.custom.display.name");
+    return ConfigurableLocalize.optionsCustomDisplayName().get();
   }
 
   @Override
