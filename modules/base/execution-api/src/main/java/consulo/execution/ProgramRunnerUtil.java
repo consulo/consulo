@@ -15,7 +15,6 @@
  */
 package consulo.execution;
 
-import consulo.application.AllIcons;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
@@ -27,13 +26,12 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.process.ExecutionException;
-import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -110,7 +108,8 @@ public class ProgramRunnerUtil {
     }
   }
 
-  public static void executeConfiguration(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Executor executor) {
+  public static void executeConfiguration(@Nonnull RunnerAndConfigurationSettings configuration,
+                                          @Nonnull Executor executor) {
     ExecutionEnvironmentBuilder builder;
     try {
       builder = ExecutionEnvironmentBuilder.create(executor, configuration);
@@ -125,28 +124,29 @@ public class ProgramRunnerUtil {
 
   @Nonnull
   public static Image getConfigurationIcon(final RunnerAndConfigurationSettings settings, final boolean invalid) {
-    Image icon = getRawIcon(settings);
+    Image icon = getPrimaryIcon(settings);
 
-    final Image configurationIcon = settings.isTemporary() ? getTemporaryIcon(icon) : icon;
     if (invalid) {
-      return ImageEffects.layered(configurationIcon, AllIcons.RunConfigurations.InvalidConfigurationLayer);
+      return ImageEffects.layered(icon, PlatformIconGroup.runconfigurationsInvalidconfigurationlayer());
     }
 
-    return configurationIcon;
-  }
-
-  @Nonnull
-  public static Image getRawIcon(RunnerAndConfigurationSettings settings) {
-    RunConfiguration configuration = settings.getConfiguration();
-    ConfigurationFactory factory = settings.getFactory();
-    Image icon = factory != null ? factory.getIcon(configuration) : null;
-    if (icon == null) icon = AllIcons.Actions.Help;
     return icon;
   }
 
   @Nonnull
-  public static Image getTemporaryIcon(@Nonnull Image rawIcon) {
-    return ImageEffects.transparent(rawIcon, 0.3f);
+  public static Image getPrimaryIcon(RunnerAndConfigurationSettings settings) {
+    RunConfiguration configuration = settings.getConfiguration();
+    ConfigurationFactory factory = settings.getFactory();
+    Image icon = factory != null ? factory.getIcon(configuration) : null;
+    if (icon == null) {
+      icon = PlatformIconGroup.actionsHelp();
+    }
+
+    if (settings.isTemporary()) {
+      icon = ImageEffects.transparent(icon, 0.3f);
+    }
+
+    return icon;
   }
 
   public static String shortenName(final String name, final int toBeAdded) {

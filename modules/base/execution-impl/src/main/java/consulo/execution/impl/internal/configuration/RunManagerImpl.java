@@ -1039,7 +1039,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
     Image icon = myIdToIcon.get(uniqueID);
     if (icon == null) {
-      icon = IconDeferrer.getInstance().deferAutoUpdatable(settings.getConfiguration().getIcon(), myProject.hashCode() ^ settings.hashCode(), param -> {
+      icon = IconDeferrer.getInstance().deferAutoUpdatable(ProgramRunnerUtil.getPrimaryIcon(settings), myProject.hashCode() ^ settings.hashCode(), param -> {
         if (myProject.isDisposed()) return null;
 
         myIconCalcTime.remove(uniqueID);
