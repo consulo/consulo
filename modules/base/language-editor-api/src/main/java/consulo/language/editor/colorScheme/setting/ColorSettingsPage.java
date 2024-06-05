@@ -19,11 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
-import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.highlight.SyntaxHighlighter;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -31,8 +30,6 @@ import java.util.Map;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ColorSettingsPage extends ColorAndFontDescriptors {
-  ExtensionPointName<ColorSettingsPage> EP_NAME = ExtensionPointName.create(ColorSettingsPage.class);
-
   /**
    * Returns the syntax highlighter which is used to highlight the text shown in the preview
    * pane of the page.

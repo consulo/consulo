@@ -25,25 +25,28 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.localize.ConfigurableLocalize;
-import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.editor.template.TemplateColors;
+import consulo.localize.LocalizeValue;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ExtensionImpl(id = "general", order = "first")
-public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSettingsPage, ConfigurableWeight {
-  private static final AttributesDescriptor[] ATT_DESCRIPTORS = {
+public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight {
+  private static final List<AttributesDescriptor> ATT_DESCRIPTORS = List.of(
     new AttributesDescriptor(
       ConfigurableLocalize.optionsGeneralAttributeDescriptorDefaultText(),
       HighlighterColors.TEXT
@@ -150,7 +153,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
       ConfigurableLocalize.optionsGeneralColorDescriptorBreadcrumbsInactive(),
       EditorColors.BREADCRUMBS_INACTIVE
     )
-  };
+  );
 
   private static final ColorDescriptor[] COLOR_DESCRIPTORS = {
     new ColorDescriptor(
@@ -317,7 +320,55 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   @Override
   @Nonnull
   public AttributesDescriptor[] getAttributeDescriptors() {
-    return ATT_DESCRIPTORS;
+    List<AttributesDescriptor> descriptors = new ArrayList<>(ATT_DESCRIPTORS);
+
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorUnknownSymbol(),
+      CodeInsightColors.WRONG_REFERENCES_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorDeprecatedSymbol(),
+      CodeInsightColors.DEPRECATED_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorUnusedSymbol(),
+      CodeInsightColors.NOT_USED_ELEMENT_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorError(),
+      CodeInsightColors.ERRORS_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorWarning(),
+      CodeInsightColors.WARNINGS_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorWeakWarning(),
+      CodeInsightColors.WEAK_WARNING_ATTRIBUTES
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorServerProblems(),
+      CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING
+    ));
+    descriptors.add(new AttributesDescriptor(
+      ConfigurableLocalize.optionsJavaAttributeDescriptorServerDuplicate(),
+      CodeInsightColors.DUPLICATE_FROM_SERVER
+    ));
+
+    myApplication.getExtensionPoint(SeveritiesProvider.class).forEachExtensionSafe(provider -> {
+      for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
+        final TextAttributesKey attributesKey = highlightInfoType.getAttributesKey();
+        // FIXME [VISTALL] correct? Maybe localized name?
+        descriptors.add(new AttributesDescriptor(LocalizeValue.of(toDisplayName(attributesKey)), attributesKey));
+      }
+    });
+
+    return descriptors.toArray(AttributesDescriptor[]::new);
+  }
+
+  @Nonnull
+  private static String toDisplayName(@Nonnull TextAttributesKey attributesKey) {
+    return StringUtil.capitalize(attributesKey.getExternalName().toLowerCase().replaceAll("_", " "));
   }
 
   @Override

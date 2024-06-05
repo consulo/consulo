@@ -50,7 +50,7 @@ public class DiffColorAndFontDescriptorsProvider implements ColorAndFontDescript
       diffTypes,
       AttributesDescriptor.class,
       type -> new AttributesDescriptor(
-        ConfigurableLocalize.optionsGeneralColorDescriptorVcsDiffTypeTagPrefix().get() + type.getName(),
+        ConfigurableLocalize.optionsGeneralColorDescriptorVcsDiffTypeTagPrefix(type.getName()),
         type.getKey()
       ));
   }

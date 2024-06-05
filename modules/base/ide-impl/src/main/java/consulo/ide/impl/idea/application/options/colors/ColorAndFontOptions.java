@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.bookmark.BookmarkManager;
 import consulo.codeEditor.EditorFactory;
@@ -40,7 +41,7 @@ import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.DefaultColorsScheme;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.EditorColorsSchemeImpl;
 import consulo.ide.impl.idea.openapi.editor.colors.impl.ReadOnlyColorsScheme;
-import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
+import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManagerImpl;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -414,10 +415,11 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
     List<ColorAndFontPanelFactory> result = new ArrayList<>();
     result.add(new FontConfigurableFactory());
 
+    Application application = Application.get();
+
     List<ColorAndFontPanelFactory> extensions = new ArrayList<>();
     extensions.add(new ConsoleFontConfigurableFactory());
-    ColorSettingsPage[] pages = ColorSettingsPages.getInstance().getRegisteredPages();
-    for (final ColorSettingsPage page : pages) {
+    application.getExtensionPoint(ColorSettingsPage.class).forEachExtensionSafe(page -> {
       extensions.add(new ColorAndFontPanelFactoryEx() {
         @Override
         public double getWeight() {
@@ -440,8 +442,10 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
           return page.getDisplayName();
         }
       });
-    }
-    extensions.addAll(ColorAndFontPanelFactory.EP_NAME.getExtensionList());
+    });
+
+    application.getExtensionPoint(ColorAndFontPanelFactory.class).forEachExtensionSafe(extensions::add);
+
     result.addAll(extensions);
     result.add(new FileStatusColorsPageFactory());
     result.add(new ScopeColorsPageFactory());
@@ -529,20 +533,21 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
   }
 
   private static void initPluggedDescriptions(@Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
-    ColorSettingsPage[] pages = ColorSettingsPages.getInstance().getRegisteredPages();
-    for (ColorSettingsPage page : pages) {
+    Application application = Application.get();
+
+    application.getExtensionPoint(ColorSettingsPage.class).forEachExtensionSafe(page -> {
       initDescriptions(page, descriptions, scheme);
-    }
-    for (ColorAndFontDescriptorsProvider provider : ColorAndFontDescriptorsProvider.EP_NAME.getExtensionList()) {
+    });
+
+    application.getExtensionPoint(ColorAndFontDescriptorsProvider.class).forEachExtensionSafe(provider -> {
       initDescriptions(provider, descriptions, scheme);
-    }
+    });
   }
 
   private static void initDescriptions(@Nonnull ColorAndFontDescriptors provider, @Nonnull List<EditorSchemeAttributeDescriptor> descriptions, @Nonnull MyColorScheme scheme) {
     LocalizeValue group = LocalizeValue.of(provider.getDisplayName());
     
-    List<AttributesDescriptor> attributeDescriptors = ColorSettingsUtil.getAllAttributeDescriptors(provider);
-    for (AttributesDescriptor descriptor : attributeDescriptors) {
+    for (AttributesDescriptor descriptor : provider.getAttributeDescriptors()) {
       addSchemedDescription(descriptions, descriptor.getDisplayName(), group, descriptor.getKey(), scheme, null, null);
     }
 
@@ -774,7 +779,7 @@ public class ColorAndFontOptions extends SearchableConfigurable.Parent.Abstract 
         myFallbackAttributes = scheme.getAttributes(fallbackKey);
         myBaseAttributeDescriptor = ColorSettingsPages.getInstance().getAttributeDescriptor(fallbackKey);
         if (myBaseAttributeDescriptor == null) {
-          myBaseAttributeDescriptor = new Pair<>(null, new AttributesDescriptor(fallbackKey.getExternalName(), fallbackKey));
+          myBaseAttributeDescriptor = new Pair<>(null, new AttributesDescriptor(LocalizeValue.of(fallbackKey.getExternalName()), fallbackKey));
         }
       }
       myIsInheritedInitial = isInherited(scheme);

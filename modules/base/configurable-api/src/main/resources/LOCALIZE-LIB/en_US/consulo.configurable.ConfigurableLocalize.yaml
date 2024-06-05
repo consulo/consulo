@@ -275,7 +275,7 @@ options.general.color.descriptor.vcs.annotations:
 options.general.color.descriptor.vcs.annotations.color.n:
   text: 'VCS Annotations//Background color #{0}'
 options.general.color.descriptor.vcs.diff.type.tag.prefix:
-  text: Changed lines//
+  text: Changed lines//{0}
 options.general.color.descriptor.vcs.diff.separator.background:
   text: Folded unchanged fragments//Background
 options.general.color.descriptor.vcs.diff.separator.top_border:

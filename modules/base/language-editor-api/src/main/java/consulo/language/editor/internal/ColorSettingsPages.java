@@ -13,39 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options.colors;
+package consulo.language.editor.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.ServiceManager;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nullable;
 
 /**
  * Registry for custom pages shown in the "Colors and Fonts" settings dialog.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public abstract class ColorSettingsPages {
+public interface ColorSettingsPages {
   /**
    * Gets the global instance of the registry.
    *
    * @return the registry instance.
    */
   public static ColorSettingsPages getInstance() {
-    return ServiceManager.getService(ColorSettingsPages.class);
+    return Application.get().getInstance(ColorSettingsPages.class);
   }
 
-  /**
-   * Returns the list of all registered pages in the "Colors and Fonts" dialog.
-   *
-   * @return the list of registered pages.
-   */
-  public abstract ColorSettingsPage[] getRegisteredPages();
-
   @Nullable
-  public abstract Pair<ColorSettingsPage,AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
+  Pair<ColorSettingsPage, AttributesDescriptor> getAttributeDescriptor(TextAttributesKey key);
 }

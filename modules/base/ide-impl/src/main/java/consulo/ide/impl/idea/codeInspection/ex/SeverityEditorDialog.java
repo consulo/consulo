@@ -16,42 +16,41 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescriptionPanel;
-import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
-import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
-import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.dataContext.DataManager;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.setting.Settings;
-import consulo.project.Project;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.application.options.colors.ColorAndFontDescriptionPanel;
+import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
+import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
+import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.setting.Settings;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -230,7 +229,7 @@ public class SeverityEditorDialog extends DialogWrapper {
     if (optionsEditor != null) {
       final ColorAndFontOptions colorAndFontOptions = optionsEditor.findConfigurable(ColorAndFontOptions.class);
       assert colorAndFontOptions != null;
-      final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(InspectionColorSettingsPage.class);
+      final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
       optionsEditor.clearSearchAndSelect(javaPage).doWhenDone(new Runnable() {
         @Override
@@ -245,7 +244,7 @@ public class SeverityEditorDialog extends DialogWrapper {
     else {
       ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions();
       final Configurable[] configurables = colorAndFontOptions.buildConfigurables();
-      final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(InspectionColorSettingsPage.class);
+      final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
       AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(CommonDataKeys.PROJECT), javaPage);
 

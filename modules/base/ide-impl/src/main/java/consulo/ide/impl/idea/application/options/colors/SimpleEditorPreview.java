@@ -32,6 +32,7 @@ import consulo.language.editor.colorScheme.setting.EditorHighlightingProvidingCo
 import consulo.language.editor.colorScheme.setting.RainbowColorSettingsPage;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.internal.ColorSettingsUtil;
 import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
 import consulo.localize.LocalizeValue;
