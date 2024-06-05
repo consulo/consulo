@@ -16,20 +16,19 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ide.impl.actions.AboutManager;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "About")
 public class AboutAction extends AnAction implements DumbAware {
@@ -54,7 +53,7 @@ public class AboutAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Window window = myWindowManager.get().suggestParentWindow(e.getData(CommonDataKeys.PROJECT));
+    Window window = myWindowManager.get().suggestParentWindow(e.getData(Project.KEY));
 
     myAboutManager.get().showAsync(window);
   }

@@ -33,5 +33,7 @@ public @interface ActionImpl {
 
   ActionRef[] children() default {};
 
+  ActionRef[] shortcutFrom() default {};
+
   int profiles() default ComponentProfiles.DEFAULT;
 }

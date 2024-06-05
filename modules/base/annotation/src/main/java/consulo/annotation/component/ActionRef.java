@@ -24,7 +24,9 @@ package consulo.annotation.component;
  * @since 17-Jul-22
  */
 public @interface ActionRef {
-  String id() default "<not-defined>";
+  String NOT_DEFINED_ID = "<not-defined>";
+
+  String id() default NOT_DEFINED_ID;
 
   Class<?> type() default Object.class;
 }

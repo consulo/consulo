@@ -146,16 +146,20 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   private final ActionToolbarFactory myToolbarFactory;
   private final ActionPopupMenuFactory myPopupMenuFactory;
+  private final KeymapManagerEx myKeymapManager;
 
   @Inject
   ActionManagerImpl(Application application,
                     ActionToolbarFactory toolbarFactory,
                     ActionPopupMenuFactory popupMenuFactory,
-                    ComponentBinding componentBinding) {
+                    ComponentBinding componentBinding,
+                    KeymapManager keymapManager) {
     myToolbarFactory = toolbarFactory;
     myPopupMenuFactory = popupMenuFactory;
+    myKeymapManager = (KeymapManagerEx)keymapManager;
 
     List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
+    List<Map.Entry<String, ActionRef>> shortcutRegisters = new ArrayList<>();
 
     int profiles = application.getProfiles();
 
@@ -187,6 +191,11 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             if (actionImpl.parents().length > 0) {
               bindings.add(actionStub);
             }
+          }
+
+          ActionRef[] shortcutRefs = actionImpl.shortcutFrom();
+          if (shortcutRefs.length > 0) {
+            shortcutRegisters.add(Map.entry(actionImpl.id(), shortcutRefs[0]));
           }
         }
       }
@@ -247,6 +256,16 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
             LOG.error(actionImpl.id() + ": can't add to group which not instance of DefaultActionGroup: " + ref.getFirst().getClass().getName());
           }
         }
+      }
+    });
+
+    injectStat.markWith("shortcut.bind", () -> {
+      for (Map.Entry<String, ActionRef> shortcutRegister : shortcutRegisters) {
+        Pair<AnAction, String> ref = resolveActionRef(shortcutRegister.getValue(), shortcutRegister.getKey());
+        if (ref == null) {
+          continue;
+        }
+        myKeymapManager.bindShortcuts(ref.getValue(), shortcutRegister.getKey());
       }
     });
 
@@ -663,17 +682,16 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     processModuleExtensionOptions(element, stub);
 
-    KeymapManagerEx keymapManager = KeymapManagerEx.getInstanceEx();
     // process all links and key bindings if any
     for (SimpleXmlElement e : element.getChildren()) {
       if (ADD_TO_GROUP_ELEMENT_NAME.equals(e.getName())) {
         processAddToGroupNode(stub, e, pluginId, isSecondary(e));
       }
       else if (SHORTCUT_ELEMENT_NAME.equals(e.getName())) {
-        processKeyboardShortcutNode(e, id, pluginId, keymapManager);
+        processKeyboardShortcutNode(e, id, pluginId, myKeymapManager);
       }
       else if (MOUSE_SHORTCUT_ELEMENT_NAME.equals(e.getName())) {
-        processMouseShortcutNode(e, id, pluginId, keymapManager);
+        processMouseShortcutNode(e, id, pluginId, myKeymapManager);
       }
       else if (ABBREVIATION_ELEMENT_NAME.equals(e.getName())) {
         processAbbreviationNode(e, id);
@@ -684,7 +702,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       }
     }
     if (element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME) != null) {
-      keymapManager.bindShortcuts(element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME), id);
+      myKeymapManager.bindShortcuts(element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME), id);
     }
 
     registerOrReplaceActionInner(element, id, stub, pluginId);
@@ -819,7 +837,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         }
       }
       if (customClass && element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME) != null) {
-        KeymapManagerEx.getInstanceEx().bindShortcuts(element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME), id);
+        myKeymapManager.bindShortcuts(element.getAttributeValue(USE_SHORTCUT_OF_ATTR_NAME), id);
       }
 
       // process all group's children. There are other groups, actions, references and links

@@ -19,14 +19,11 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.util.lang.ref.SoftReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author VISTALL
@@ -38,8 +35,6 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     private byte[] my2xData;
     private final boolean myIsSVG;
 
-    private final AtomicBoolean myInitialized = new AtomicBoolean();
-
     private SimpleReference<ImageReference> myImageRef;
 
     public ImageState(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG) {
@@ -50,21 +45,24 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
     @Nullable
     public ImageReference getOrCreateImage(@Nonnull BaseIconLibraryImpl library, String groupId, String imageId) {
-      if (myInitialized.get()) {
-        return Objects.requireNonNull(SoftReference.deref(myImageRef));
+      SimpleReference<ImageReference> imageRef = myImageRef;
+      if (imageRef != null) {
+        return imageRef.get();
       }
 
-      if (myInitialized.compareAndSet(false, true)) {
-        ImageReference image = library.createImageReference(my1xData, my2xData, myIsSVG, groupId, imageId);
-        myImageRef = SimpleReference.create(image);
+      byte[] x1Data = my1xData;
+      byte[] x2Data = my2xData;
 
-        // reset data
-        my1xData = null;
-        my2xData = null;
-        return image;
+      // already initialized
+      if (x1Data == null) {
+        return myImageRef.get();
       }
 
-      throw new IllegalArgumentException("Image is not initialized");
+      ImageReference image = library.createImageReference(x1Data, x2Data, myIsSVG, groupId, imageId);
+      myImageRef = new SimpleReference<>(image);
+      my1xData = null;
+      my2xData = null;
+      return image;
     }
   }
 
