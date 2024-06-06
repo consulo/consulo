@@ -10,4 +10,6 @@ module consulo.sand.language.plugin {
   requires consulo.ide.impl;
 
   opens consulo.sandboxPlugin.lang.inspection to consulo.util.xml.serializer;
+
+  opens consulo.sandboxPlugin.colorScheme to consulo.ide.impl;
 }

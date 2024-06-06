@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.colorScheme;
+package consulo.sandboxPlugin.colorScheme;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.colorScheme.AdditionalTextAttributesProvider;
+import consulo.colorScheme.EditorColorsScheme;
 import jakarta.annotation.Nonnull;
 
 /**
- * A way to provide additional colors to color schemes.
- * http://youtrack.jetbrains.com/issue/IDEA-98261
- *
  * @author VISTALL
- * @since 18-Jun-22
+ * @since 06/06/2024
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface AdditionalTextAttributesProvider {
-  String THIS_CLASS_NAME = "___this___class___name";
-
+@ExtensionImpl
+public class SandAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
   @Nonnull
-  String getColorSchemeName();
-
-  /**
-   * If method not implemented - used class as name with .xml extension
-   */
-  @Nonnull
-  default String getColorSchemeFile() {
-    return THIS_CLASS_NAME;
+  @Override
+  public String getColorSchemeName() {
+    return EditorColorsScheme.DEFAULT_SCHEME_NAME;
   }
 }
