@@ -30,7 +30,7 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
+import static consulo.util.lang.StringUtil.isEmpty;
 import static consulo.ui.ex.awt.JBUI.scale;
 
 /**

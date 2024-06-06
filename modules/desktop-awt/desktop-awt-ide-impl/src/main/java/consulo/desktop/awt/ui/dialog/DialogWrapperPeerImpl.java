@@ -25,27 +25,26 @@ import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.DialogHacking;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.desktop.awt.startup.splash.DesktopSplash;
+import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.OwnerOptional;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
 import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.desktop.awt.ui.OwnerOptional;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -58,7 +57,10 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.*;
+import consulo.ui.ex.awt.internal.DialogWrapperDialog;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
+import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -70,9 +72,9 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -109,7 +111,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
       if (project == null) {
         //noinspection deprecation
-        project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
+        project = DataManager.getInstance().getDataContext().getData(Project.KEY);
       }
 
       myProject = project;
@@ -558,7 +560,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
   //hopefully this whole code will go away
   private void hidePopupsIfNeeded() {
-    if (!SystemInfo.isMac) return;
+    if (!Platform.current().os().isMac()) return;
 
     StackingPopupDispatcher.getInstance().hidePersistentPopups();
     myDisposeActions.add(() -> StackingPopupDispatcher.getInstance().restorePersistentPopups());
@@ -629,7 +631,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private final ActionCallback myFocusedCallback;
 
     public MyDialog(Window owner, DialogWrapper dialogWrapper, Project project, @Nonnull ActionCallback focused) {
-      super((consulo.ui.Window)TargetAWT.from(owner), null);
+      super(TargetAWT.from(owner), null);
       myDialogWrapper = new WeakReference<>(dialogWrapper);
       myProject = project != null ? new WeakReference<>(project) : null;
 
@@ -738,7 +740,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDimensionServiceKey = dialogWrapper.getDimensionKey();
 
         if (myDimensionServiceKey != null) {
-          final Project projectGuess = DataManager.getInstance().getDataContext((Component)this).getData(CommonDataKeys.PROJECT);
+          final Project projectGuess = DataManager.getInstance().getDataContext(this).getData(Project.KEY);
           location = TargetAWT.to(getWindowStateService(projectGuess).getLocation(myDimensionServiceKey));
           Dimension size = TargetAWT.to(getWindowStateService(projectGuess).getSize(myDimensionServiceKey));
           if (size != null) {
@@ -778,7 +780,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       }
 
       // Workaround for switching workspaces on dialog show
-      if (SystemInfo.isMac && myProject != null && Registry.is("ide.mac.fix.dialog.showing") && !dialogWrapper.isModalProgress()) {
+      if (Platform.current().os().isMac() && myProject != null && Registry.is("ide.mac.fix.dialog.showing") && !dialogWrapper.isModalProgress()) {
         final IdeFrame frame = WindowManager.getInstance().getIdeFrame(myProject.get());
         AppIcon.getInstance().requestFocus(frame.getWindow());
       }
@@ -868,7 +870,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Override
     public void paint(Graphics g) {
-      if (!SystemInfo.isMac || UIUtil.isUnderAquaLookAndFeel()) {  // avoid rendering problems with non-aqua (alloy) LaFs under mac
+      if (!Platform.current().os().isMac() || UIUtil.isUnderAquaLookAndFeel()) {  // avoid rendering problems with non-aqua (alloy) LaFs under mac
         // actually, it's a bad idea to globally enable this for dialog graphics since renderers, for example, may not
         // inherit graphics so rendering hints won't be applied and trees or lists may render ugly.
         UISettingsUtil.setupAntialiasing(g);
@@ -894,7 +896,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
       public void saveSize() {
         if (myDimensionServiceKey != null && myInitialSize != null && myOpened) { // myInitialSize can be null only if dialog is disposed before first showing
-          final Project projectGuess = DataManager.getInstance().getDataContext((Component)MyDialog.this).getData(CommonDataKeys.PROJECT);
+          final Project projectGuess = DataManager.getInstance().getDataContext(MyDialog.this).getData(Project.KEY);
 
           // Save location
           Point location = getLocation();

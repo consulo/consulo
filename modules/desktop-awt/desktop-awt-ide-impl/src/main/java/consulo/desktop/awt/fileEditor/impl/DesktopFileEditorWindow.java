@@ -35,10 +35,8 @@ import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -48,6 +46,7 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.dataholder.Key;
@@ -437,11 +436,11 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
     @Override
     public Object getData(@Nonnull Key<?> dataId) {
-      if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+      if (VirtualFile.KEY == dataId) {
         final VirtualFile virtualFile = myEditor.getFile();
         return virtualFile.isValid() ? virtualFile : null;
       }
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return myEditor.getFileEditorManager().getProject();
       }
       return null;

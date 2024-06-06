@@ -17,25 +17,25 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.ui.ex.awt.MnemonicHelper;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.project.ui.internal.WindowInfoImpl;
+import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import consulo.disposer.Disposer;
-import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.project.ui.internal.WindowManagerEx;
+import consulo.ui.Rectangle2D;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
-import consulo.ui.Rectangle2D;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -82,7 +82,7 @@ public final class DesktopFloatingDecorator extends JDialogAsUIWindow implements
     final JComponent cp = (JComponent)getContentPane();
     cp.setLayout(new BorderLayout());
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       setUndecorated(true);
       cp.add(new BorderItem(ANCHOR_TOP), BorderLayout.NORTH);
       cp.add(new BorderItem(ANCHOR_LEFT), BorderLayout.WEST);

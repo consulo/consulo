@@ -21,9 +21,8 @@ import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionRefAnchor;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.wm.impl.MacMainFrameDecorator;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.action.AnAction;
@@ -54,10 +53,10 @@ public class MinimizeCurrentWindowAction extends AnAction implements DumbAware {
   @Override
   public void update(final AnActionEvent e) {
     final Presentation p = e.getPresentation();
-    p.setVisible(SystemInfo.isMac);
+    p.setVisible(Platform.current().os().isMac());
 
-    if (SystemInfo.isMac) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+    if (Platform.current().os().isMac()) {
+      Project project = e.getData(Project.KEY);
       if (project != null) {
         JFrame frame = (JFrame)TargetAWT.to(WindowManager.getInstance().getWindow(project));
         if (frame != null) {

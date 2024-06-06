@@ -21,7 +21,7 @@ import consulo.desktop.awt.ui.plaf.LafExtendUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.uiOld.components.fields.ExpandableTextField;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.TextBoxWithExpandAction;

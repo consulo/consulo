@@ -33,6 +33,7 @@ import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -836,12 +837,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
 
   @Override
   public boolean isFullScreenSupportedInCurrentOS() {
-    return SystemInfo.isMacOSLion || SystemInfo.isWindows || SystemInfo.isXWindow && X11UiUtil.isFullScreenSupported();
+    return SystemInfo.isMacOSLion || Platform.current().os().isWindows() || Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported();
   }
 
   @Override
   public boolean isFloatingMenuBarSupported() {
-    return !SystemInfo.isMac && getInstance().isFullScreenSupportedInCurrentOS();
+    return !Platform.current().os().isMac() && getInstance().isFullScreenSupportedInCurrentOS();
   }
 
   /**
@@ -892,8 +893,8 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     }
 
     private static boolean shouldConvert() {
-      if (SystemInfo.isLinux || // JRE-managed HiDPI mode is not yet implemented (pending)
-          SystemInfo.isMac)     // JRE-managed HiDPI mode is permanent
+      if (Platform.current().os().isLinux() || // JRE-managed HiDPI mode is not yet implemented (pending)
+        Platform.current().os().isMac())     // JRE-managed HiDPI mode is permanent
       {
         return false;
       }

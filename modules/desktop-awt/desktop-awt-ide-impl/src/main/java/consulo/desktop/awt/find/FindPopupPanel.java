@@ -13,10 +13,11 @@ import consulo.application.impl.internal.progress.ReadTask;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.DimensionService;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
 import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentListener;
@@ -26,7 +27,6 @@ import consulo.find.*;
 import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.ide.impl.idea.find.impl.*;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
 import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
@@ -34,14 +34,16 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.ui.*;
+import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
+import consulo.ide.impl.idea.ui.PopupBorder;
+import consulo.ide.impl.idea.ui.WindowMoveListener;
+import consulo.ide.impl.idea.ui.WindowResizeListener;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
 import consulo.ide.impl.idea.usages.impl.UsagePreviewPanel;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.Producer;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -49,6 +51,7 @@ import consulo.language.psi.scope.GlobalSearchScopeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -114,7 +117,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   private static final Logger LOG = Logger.getInstance(FindPopupPanel.class);
 
   private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-  private static final KeyStroke ENTER_WITH_MODIFIERS = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK);
+  private static final KeyStroke ENTER_WITH_MODIFIERS = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK);
   private static final KeyStroke REPLACE_ALL = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_MASK);
 
   private static final String FIND_TYPE = "FindInPath";
@@ -997,7 +1000,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         getTemplatePresentation().setSelectedIcon(selectedIcon);
         int mnemonic = KeyEvent.getExtendedKeyCodeForChar(TextWithMnemonic.parse(getTemplatePresentation().getTextWithMnemonic()).getMnemonic());
         if (mnemonic != KeyEvent.VK_UNDEFINED) {
-          setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(mnemonic, SystemInfo.isMac ? ALT_DOWN_MASK | CTRL_DOWN_MASK : ALT_DOWN_MASK)));
+          setShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(mnemonic, Platform.current().os().isMac() ? ALT_DOWN_MASK | CTRL_DOWN_MASK : ALT_DOWN_MASK)));
           registerCustomShortcutSet(getShortcutSet(), FindPopupPanel.this);
         }
       }
@@ -1478,7 +1481,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   }
 
   private void navigateToSelectedUsage(@Nullable AnActionEvent e) {
-    Navigatable[] navigatables = e != null ? e.getData(CommonDataKeys.NAVIGATABLE_ARRAY) : null;
+    Navigatable[] navigatables = e != null ? e.getData(Navigatable.KEY_OF_ARRAY) : null;
     if (navigatables != null) {
       if (canBeClosed()) {
         myDialog.doCancelAction();
@@ -1852,7 +1855,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(e.getData(CommonDataKeys.EDITOR) == null || SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField));
+      e.getPresentation().setEnabled(e.getData(Editor.KEY) == null || SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField));
     }
 
     @Override

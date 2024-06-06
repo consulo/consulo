@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.application.util.AtomicNullableLazyValue;
 import consulo.application.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.SystemNotifications;
 import consulo.util.lang.SystemProperties;
 import consulo.logging.Logger;
@@ -65,7 +66,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
 
   private static Notifier getPlatformNotifier() {
     try {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         if (SystemInfo.isMacOSMountainLion && SystemProperties.getBooleanProperty("ide.mac.mountain.lion.notifications.enabled", true)) {
           return MountainLionNotifications.getInstance();
         }
@@ -73,7 +74,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
           return GrowlNotifications.getInstance();
         }
       }
-      else if (SystemInfo.isXWindow) {
+      else if (Platform.current().os().isXWindow()) {
         return LibNotifyWrapper.getInstance();
       }
       else if (SystemInfo.isWin10OrNewer) {

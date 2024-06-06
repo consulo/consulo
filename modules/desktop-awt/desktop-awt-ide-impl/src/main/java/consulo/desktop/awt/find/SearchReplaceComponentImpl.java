@@ -3,7 +3,6 @@ package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -19,7 +18,7 @@ import consulo.ide.impl.idea.ui.ListFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,6 +28,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.internal.ActionToolbarEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -404,7 +404,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
           addTextToRecent(mySearchTextComponent);
         }
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK), JComponent.WHEN_FOCUSED);
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, Platform.current().os().isMac() ? META_DOWN_MASK : CTRL_DOWN_MASK), JComponent.WHEN_FOCUSED);
     // make sure Enter is consumed by search text field, even if 'next occurrence' action is disabled
     // this is needed to e.g. avoid triggering a default button in containing dialog (see IDEA-128057)
     mySearchTextComponent.registerKeyboardAction(new ActionListener() {
