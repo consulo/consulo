@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl.util;
+package consulo.remoteServer.impl.internal.agent;
 
 /**
  * Created by IntelliJ IDEA.

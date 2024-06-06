@@ -5,6 +5,6 @@
 module consulo.remote.servers.agent.rt {
   requires java.rmi;
 
-  exports consulo.remoteServer.agent;
-  exports consulo.remoteServer.agent.annotation;
+  exports consulo.remoteServer.agent.shared;
+  exports consulo.remoteServer.agent.shared.annotation;
 }

@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
 import java.net.URL;
 import java.net.URLClassLoader;

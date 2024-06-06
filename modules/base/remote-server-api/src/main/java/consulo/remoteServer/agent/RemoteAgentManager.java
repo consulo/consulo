@@ -1,9 +1,9 @@
-package consulo.ide.impl.idea.remoteServer.agent;
+package consulo.remoteServer.agent;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.ide.ServiceManager;
-import consulo.remoteServer.agent.RemoteAgent;
+import consulo.application.Application;
+import consulo.remoteServer.agent.shared.RemoteAgent;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class RemoteAgentManager {
 
   public static RemoteAgentManager getInstance() {
-    return ServiceManager.getService(RemoteAgentManager.class);
+    return Application.get().getInstance(RemoteAgentManager.class);
   }
 
   public abstract <T extends RemoteAgent> T createAgent(RemoteAgentProxyFactory agentProxyFactory,

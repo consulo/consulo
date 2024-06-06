@@ -42,5 +42,9 @@
       <artifactId>consulo-execution-debug-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -1,7 +1,6 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
-import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentProxyFactory;
-import consulo.ide.impl.idea.remoteServer.agent.impl.util.UrlCollector;
+import consulo.remoteServer.agent.RemoteAgentProxyFactory;
 
 import java.io.File;
 import java.lang.reflect.InvocationHandler;

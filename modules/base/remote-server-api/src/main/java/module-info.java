@@ -8,7 +8,10 @@ module consulo.remote.server.api {
   requires transitive consulo.execution.api;
   requires transitive consulo.compiler.artifact.api;
 
+  requires consulo.remote.servers.agent.rt;
+
   exports consulo.remoteServer;
+  exports consulo.remoteServer.agent;
   exports consulo.remoteServer.configuration;
   exports consulo.remoteServer.configuration.deployment;
   exports consulo.remoteServer.runtime;

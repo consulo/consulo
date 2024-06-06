@@ -1,6 +1,6 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
-import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentProxyFactory;
+import consulo.remoteServer.agent.RemoteAgentProxyFactory;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;

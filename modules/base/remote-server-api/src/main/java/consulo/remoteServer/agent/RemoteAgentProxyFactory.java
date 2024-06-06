@@ -1,4 +1,4 @@
-package consulo.ide.impl.idea.remoteServer.agent;
+package consulo.remoteServer.agent;
 
 import java.io.File;
 import java.util.List;

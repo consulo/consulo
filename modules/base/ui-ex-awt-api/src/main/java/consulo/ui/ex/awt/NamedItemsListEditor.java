@@ -24,11 +24,14 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.NamedConfigurable;
 import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
@@ -231,10 +234,10 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
     }
 
     @Override
-    public JComponent createOptionsPanel() {
-      return myConfigurable.createComponent();
+    public Component createOptionsPanel(Disposable uiDisposable) {
+      return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
     }
-
+    
     @Override
     public String getDisplayName() {
       return myNamer.getName(myItem);

@@ -16,7 +16,6 @@
 package consulo.remoteServer.impl.internal.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

@@ -1,12 +1,10 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
 import consulo.logging.Logger;
-import consulo.remoteServer.agent.annotation.AsyncCall;
-import consulo.remoteServer.agent.annotation.ChildCall;
-import consulo.remoteServer.agent.annotation.FinalCall;
-import consulo.remoteServer.agent.annotation.ImmediateCall;
-import consulo.ide.impl.idea.remoteServer.agent.impl.util.FinalTask;
-import consulo.ide.impl.idea.remoteServer.agent.impl.util.SequentialTaskExecutor;
+import consulo.remoteServer.agent.shared.annotation.AsyncCall;
+import consulo.remoteServer.agent.shared.annotation.ChildCall;
+import consulo.remoteServer.agent.shared.annotation.FinalCall;
+import consulo.remoteServer.agent.shared.annotation.ImmediateCall;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

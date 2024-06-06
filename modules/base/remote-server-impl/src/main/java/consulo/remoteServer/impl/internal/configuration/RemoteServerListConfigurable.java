@@ -3,19 +3,19 @@ package consulo.remoteServer.impl.internal.configuration;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.configurable.*;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
-import consulo.ide.impl.idea.util.IconUtil;
-import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.image.Image;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,10 +41,6 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent
     myServersManager = manager;
     myServerType = type;
     initTree();
-  }
-
-  public static RemoteServerListConfigurable createConfigurable(@Nonnull ServerType<?> type) {
-    return new RemoteServerListConfigurable(RemoteServersManager.getInstance(), type);
   }
 
   @Nonnull
@@ -139,7 +135,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent
       actions.add(new AddRemoteServerGroup());
     }
     else {
-      actions.add(new AddRemoteServerAction(myServerType, IconUtil.getAddIcon()));
+      actions.add(new AddRemoteServerAction(myServerType, PlatformIconGroup.generalAdd()));
     }
     actions.add(new MyDeleteAction());
     return actions;
@@ -179,7 +175,7 @@ public class RemoteServerListConfigurable extends MasterDetailsComponent
 
   private class AddRemoteServerGroup extends ActionGroup implements ActionGroupWithPreselection {
     private AddRemoteServerGroup() {
-      super("Add", "", IconUtil.getAddIcon());
+      super("Add", "", PlatformIconGroup.generalAdd());
       registerCustomShortcutSet(CommonShortcuts.INSERT, myTree);
     }
 

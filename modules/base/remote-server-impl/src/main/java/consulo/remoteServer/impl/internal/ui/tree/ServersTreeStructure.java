@@ -2,13 +2,12 @@ package consulo.remoteServer.impl.internal.ui.tree;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.configurable.internal.ShowConfigurableService;
+import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
-import consulo.ide.impl.idea.execution.impl.RunDialog;
-import consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServerConfigurable;
-import consulo.remoteServer.impl.internal.ui.RemoteServersViewContributor;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -16,9 +15,11 @@ import consulo.project.ui.view.tree.AbstractTreeStructureBase;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
+import consulo.remoteServer.impl.internal.configuration.RemoteServerListConfigurable;
 import consulo.remoteServer.impl.internal.runtime.deployment.DeploymentTaskImpl;
 import consulo.remoteServer.impl.internal.runtime.log.DeploymentLogManagerImpl;
 import consulo.remoteServer.impl.internal.runtime.log.LoggingHandlerImpl;
+import consulo.remoteServer.impl.internal.ui.RemoteServersViewContributor;
 import consulo.remoteServer.runtime.ConnectionStatus;
 import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.ServerConnection;
@@ -26,6 +27,7 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -171,8 +173,13 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     }
 
     @Override
+    @RequiredUIAccess
     public void editConfiguration() {
-      ShowSettingsUtil.getInstance().editConfigurable(doGetProject(), new RemoteServerConfigurable(getValue(), null, false));
+      ShowConfigurableService configurableService = Application.get().getInstance(ShowConfigurableService.class);
+
+      configurableService.showAndSelect(doGetProject(), RemoteServerListConfigurable.class, remoteServerConfigurable -> {
+        remoteServerConfigurable.selectNodeInTree(getValue());
+      });
     }
 
     @Override
@@ -260,7 +267,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       if (task != null) {
         RunnerAndConfigurationSettings settings = ((DeploymentTaskImpl)task).getExecutionEnvironment().getRunnerAndConfigurationSettings();
         if (settings != null) {
-          RunDialog.editConfiguration(doGetProject(), settings, "Edit Deployment Configuration");
+          RunConfigurationEditor.getInstance(doGetProject()).editConfiguration(doGetProject(), settings, "Edit Deployment Configuration");
         }
       }
     }

@@ -704,16 +704,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.reference;
   exports consulo.ide.impl.idea.remote;
   exports consulo.ide.impl.idea.remote.ext;
-  exports consulo.ide.impl.idea.remoteServer.agent;
-  exports consulo.ide.impl.idea.remoteServer.agent.impl;
-  exports consulo.ide.impl.idea.remoteServer.agent.impl.util;
-  exports consulo.ide.impl.idea.remoteServer.impl.configuration;
-  exports consulo.ide.impl.idea.remoteServer.impl.configuration.deployment;
-  exports consulo.ide.impl.idea.remoteServer.impl.configuration.localServer;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree;
-  exports consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions;
   exports consulo.ide.impl.idea.reporting;
   exports consulo.ide.impl.idea.ssh;
   exports consulo.ide.impl.idea.tasks.actions;
@@ -912,7 +902,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.templateLanguages;
   exports consulo.ide.impl.psi.util;
   exports consulo.ide.impl.psi.util.proximity;
-  exports consulo.ide.impl.remoteServer.ui;
   exports consulo.ide.impl.roots.impl.property;
   exports consulo.ide.impl.roots.orderEntry;
   exports consulo.ide.impl.roots.ui.configuration;

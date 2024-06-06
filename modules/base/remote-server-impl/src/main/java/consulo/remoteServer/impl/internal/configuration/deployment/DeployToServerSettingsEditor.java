@@ -15,7 +15,9 @@
  */
 package consulo.remoteServer.impl.internal.configuration.deployment;
 
+import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
@@ -29,6 +31,8 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.remoteServer.impl.internal.configuration.RemoteServerListConfigurable;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Comparing;
@@ -66,11 +70,17 @@ public class DeployToServerSettingsEditor<S extends ServerConfiguration, D exten
     fillApplicationServersList(null);
     myServerComboBox.addActionListener(new ActionListener() {
       @Override
+      @RequiredUIAccess
       public void actionPerformed(ActionEvent e) {
-        RemoteServerListConfigurable configurable = RemoteServerListConfigurable.createConfigurable(type);
-        ShowSettingsUtil.getInstance().editConfigurable(myServerComboBox, configurable).doWhenDone(() -> {
-          fillApplicationServersList(configurable.getLastSelectedServer());
+        ShowConfigurableService service = Application.get().getInstance(ShowConfigurableService.class);
+
+        service.showAndSelect(project, RemoteServerListConfigurable.class, remoteServerListConfigurable -> {
+
         });
+//        RemoteServerListConfigurable configurable = RemoteServerListConfigurable.createConfigurable(type);
+//        ShowSettingsUtil.getInstance().editConfigurable(myServerComboBox, configurable).doWhenDone(() -> {
+//          fillApplicationServersList(configurable.getLastSelectedServer());
+//        });
       }
     });
     myServerComboBox.getComboBox().setRenderer(new ColoredListCellRenderer<String>() {

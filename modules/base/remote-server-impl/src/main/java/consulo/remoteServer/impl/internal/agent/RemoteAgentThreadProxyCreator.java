@@ -1,6 +1,8 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
-import consulo.ide.impl.idea.remoteServer.agent.impl.util.SequentialTaskExecutor;
+import consulo.remoteServer.impl.internal.agent.CallerClassLoaderProvider;
+import consulo.remoteServer.impl.internal.agent.ChildWrapperCreator;
+import consulo.remoteServer.impl.internal.agent.SequentialTaskExecutor;
 
 import java.lang.reflect.Proxy;
 

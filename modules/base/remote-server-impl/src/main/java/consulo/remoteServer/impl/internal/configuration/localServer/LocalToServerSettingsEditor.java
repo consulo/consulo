@@ -16,28 +16,27 @@
 package consulo.remoteServer.impl.internal.configuration.localServer;
 
 import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
-import consulo.remoteServer.impl.internal.configuration.localServer.LocalServerRunConfiguration;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.disposer.Disposer;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurator;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.SortedComboBoxModel;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.FormBuilder;
+import consulo.ui.ex.awt.SortedComboBoxModel;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * @author nik
@@ -86,7 +85,7 @@ public class LocalToServerSettingsEditor<S extends ServerConfiguration, D extend
 
   private void onDeploymentSourceChanged(@Nullable D configuration) {
     DeploymentSource selected = mySourceListModel.getSelectedItem();
-    if (Comparing.equal(selected, myLastSelection)) {
+    if (Objects.equals(selected, myLastSelection)) {
       if (configuration != null && myDeploymentSettingsEditor != null) {
         myDeploymentSettingsEditor.resetFrom(configuration);
       }

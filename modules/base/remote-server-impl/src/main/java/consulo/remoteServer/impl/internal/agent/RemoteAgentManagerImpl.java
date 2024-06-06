@@ -1,11 +1,11 @@
-package consulo.ide.impl.idea.remoteServer.agent.impl;
+package consulo.remoteServer.impl.internal.agent;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentManager;
-import consulo.ide.impl.idea.remoteServer.agent.RemoteAgentProxyFactory;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.remoteServer.agent.RemoteAgent;
+import consulo.remoteServer.agent.RemoteAgentManager;
+import consulo.remoteServer.agent.RemoteAgentProxyFactory;
+import consulo.remoteServer.agent.shared.RemoteAgent;
+import consulo.util.io.ClassPathUtil;
+import consulo.util.io.FileUtil;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -40,10 +40,10 @@ public class RemoteAgentManagerImpl extends RemoteAgentManager {
     libraries.addAll(instanceLibraries);
 
     for (Class<?> clazz : allCommonJarClasses) {
-      libraries.add(new File(PathUtil.getJarPathForClass(clazz)));
+      libraries.add(new File(ClassPathUtil.getJarPathForClass(clazz)));
     }
 
-    File plugin = new File(PathUtil.getJarPathForClass(pluginClass));
+    File plugin = new File(ClassPathUtil.getJarPathForClass(pluginClass));
     String allPluginsDir = plugin.getParent();
     if (plugin.isDirectory()) {
       // runtime behavior

@@ -1,4 +1,4 @@
-package consulo.remoteServer.agent;
+package consulo.remoteServer.agent.shared;
 
 /**
  * @author michael.golubev

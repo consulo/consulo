@@ -1,27 +1,29 @@
 package consulo.remoteServer.impl.internal.configuration;
 
 import consulo.application.ApplicationManager;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.UnnamedConfigurable;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.application.util.Semaphore;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.NamedConfigurable;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.disposer.Disposable;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.runtime.ConnectionStatus;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
-import consulo.application.util.Semaphore;
-import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposable;
-import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,7 +63,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
 
   @RequiredUIAccess
   @Override
-  public JComponent createOptionsPanel(Disposable parentDisposable) {
+  public Component createOptionsPanel(Disposable parentDisposable) {
     mySettingsPanel.add(BorderLayout.CENTER, ConfigurableUIMigrationUtil.createComponent(myConfigurable, parentDisposable));
     myTestConnectionButton.addActionListener(new ActionListener() {
       @Override
@@ -77,7 +79,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
       }
     });
     myMainPanel.setBorder(JBUI.Borders.empty(0, 10, 0, 10));
-    return myMainPanel;
+    return TargetAWT.wrap(myMainPanel);
   }
 
   private void testConnection() {
@@ -157,7 +159,7 @@ public class RemoteServerConfigurable extends NamedConfigurable<RemoteServer<?>>
 
   @Nullable
   @Override
-  public Image getIcon(boolean expanded) {
+  public Image getIcon() {
     return myServer.getType().getIcon();
   }
 }
