@@ -38,10 +38,11 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.component.internal.inject.InjectingKey;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -82,9 +83,12 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
   public void actionPerformed(@Nullable AnActionEvent e) {
     myApplication.saveSettings();
 
-    ChooseComponentsToExportDialog dialog =
-            new ChooseComponentsToExportDialog(getExportableComponentsMap(myApplication, myApplicationStore, true), true, IdeBundle.message("title.select.components.to.export"),
-                                               IdeBundle.message("prompt.please.check.all.components.to.export"));
+    ChooseComponentsToExportDialog dialog = new ChooseComponentsToExportDialog(
+      getExportableComponentsMap(myApplication, myApplicationStore, true),
+      true,
+      IdeLocalize.titleSelectComponentsToExport().get(),
+      IdeLocalize.promptPleaseCheckAllComponentsToExport().get()
+    );
     if (!dialog.showAndGet()) {
       return;
     }
@@ -126,7 +130,7 @@ public class ExportSettingsAction extends AnAction implements DumbAware {
         ZipUtil.addFileToZip(output, magicFile, ImportSettingsFilenameFilter.SETTINGS_ZIP_MARKER, writtenItemRelativePaths, null);
       }
       ShowFilePathAction
-              .showDialog(e == null ? null : e.getData(CommonDataKeys.PROJECT), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
+              .showDialog(e == null ? null : e.getData(Project.KEY), IdeBundle.message("message.settings.exported.successfully"), IdeBundle.message("title.export.successful"),
                           saveFile, null);
     }
     catch (IOException e1) {

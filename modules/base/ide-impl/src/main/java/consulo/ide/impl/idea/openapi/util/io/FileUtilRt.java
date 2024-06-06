@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.util.io;
 
-import consulo.application.util.SystemInfo;
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
-import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.ArrayUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -757,7 +757,7 @@ public class FileUtilRt {
     Files.walkFileTree(path, new FileVisitor<Path>() {
       @Override
       public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-        if (SystemInfo.isWindows) {
+        if (Platform.current().os().isWindows()) {
           boolean notDirectory = attrs.isOther();
 
           if (notDirectory) {

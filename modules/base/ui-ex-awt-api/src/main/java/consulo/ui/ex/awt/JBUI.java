@@ -1,13 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.util.lang.Pair;
-import kava.beans.PropertyChangeListener;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -509,7 +509,7 @@ public class JBUI {
 
     @Nonnull
     public static JBFont toolbarFont() {
-      return SystemInfo.isMac ? smallFont() : label();
+      return Platform.current().os().isMac() ? smallFont() : label();
     }
   }
 

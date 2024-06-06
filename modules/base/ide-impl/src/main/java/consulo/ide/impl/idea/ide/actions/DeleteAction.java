@@ -17,11 +17,10 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -70,7 +69,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     else
       presentation.setText(IdeBundle.message("action.delete"));
     DataContext dataContext = event.getDataContext();
-    Project project = event.getData(CommonDataKeys.PROJECT);
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

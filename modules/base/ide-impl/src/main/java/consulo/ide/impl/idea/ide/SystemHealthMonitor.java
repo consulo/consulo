@@ -38,6 +38,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.impl.idea.ide.plugins.UninstallPluginAction;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.ide.impl.plugins.PluginActionListener;
@@ -192,7 +193,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   }
 
   private void checkSignalBlocking() {
-    if (SystemInfo.isUnix && JnaLoader.isLoaded()) {
+    if (Platform.current().os().isUnix() && JnaLoader.isLoaded()) {
       try {
         LibC lib = Native.load("c", LibC.class);
         Memory buf = new Memory(1024);
@@ -212,7 +213,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private void checkHiDPIMode() {
     // if switched from JRE-HiDPI to IDE-HiDPI
     boolean switchedHiDPIMode = SystemInfo.isJetBrainsJvm && "true".equalsIgnoreCase(System.getProperty("sun.java2d.uiScale.enabled")) && !UIUtil.isJreHiDPIEnabled();
-    if (SystemInfo.isWindows && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())) {
+    if (Platform.current().os().isWindows() && ((switchedHiDPIMode && JBUI.isHiDPI(JBUI.sysScale())) || RemoteDesktopService.isRemoteSession())) {
       showNotification(new KeyHyperlinkAdapter("ide.set.hidpi.mode"));
     }
   }

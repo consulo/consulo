@@ -2,9 +2,9 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.BasicScrollPaneUIHacking;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.internal.laf.DefaultScrollBarUI;
@@ -17,8 +17,8 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -813,7 +813,7 @@ public class JBScrollPane extends JScrollPane {
     }
 
     private static boolean isAlwaysOpaque(Component view) {
-      return !SystemInfo.isMac && ScrollSettings.isNotSupportedYet(view);
+      return !Platform.current().os().isMac() && ScrollSettings.isNotSupportedYet(view);
     }
 
     private static void updateCornerBounds(Rectangle bounds, int x, int y) {
@@ -905,6 +905,6 @@ public class JBScrollPane extends JScrollPane {
           ~InputEvent.BUTTON1_MASK & ~InputEvent.BUTTON1_DOWN_MASK; // for selection
 
   public static RegionPainter<Float> getThumbPainter(@Nonnull Supplier<? extends Component> supplier) {
-    return new ScrollBarPainter.Thumb(supplier, SystemInfo.isMac);
+    return new ScrollBarPainter.Thumb(supplier, Platform.current().os().isMac());
   }
 }

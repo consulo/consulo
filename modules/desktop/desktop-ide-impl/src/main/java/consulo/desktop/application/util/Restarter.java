@@ -22,7 +22,6 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
-import consulo.application.util.SystemInfo;
 import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
@@ -31,8 +30,8 @@ import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class Restarter {
   }
 
   public static boolean isSupported() {
-    return (getRestartCode() != 0 || SystemInfo.isWindows || SystemInfo.isMac) && !ApplicationProperties.isInSandbox();
+    return (getRestartCode() != 0 || Platform.current().os().isWindows() || Platform.current().os().isMac()) && !ApplicationProperties.isInSandbox();
   }
 
   public static int scheduleRestart(@Nonnull String... beforeRestart) throws IOException {
@@ -72,11 +71,11 @@ public class Restarter {
         runCommand(beforeRestart);
         return restartCode;
       }
-      else if (SystemInfo.isWindows) {
+      else if (Platform.current().os().isWindows()) {
         restartOnWindows(beforeRestart);
         return 0;
       }
-      else if (SystemInfo.isMac) {
+      else if (Platform.current().os().isMac()) {
         restartOnMac(beforeRestart);
         return 0;
       }

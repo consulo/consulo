@@ -19,8 +19,8 @@
  */
 package consulo.process.cmd;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 
@@ -36,7 +36,7 @@ class JdkUtil {
 
   public static GeneralCommandLine setupJVMCommandLine(final String jdkHome, final SimpleJavaParameters javaParameters) {
     final GeneralCommandLine commandLine = new GeneralCommandLine();
-    commandLine.setExePath(getBinPath(jdkHome) + File.separator + (SystemInfo.isWindows ? "java.exe" : "java"));
+    commandLine.setExePath(getBinPath(jdkHome) + File.separator + (Platform.current().os().isWindows() ? "java.exe" : "java"));
 
     final ParametersList vmParametersList = javaParameters.getVMParametersList();
     commandLine.getEnvironment().putAll(javaParameters.getEnv());

@@ -30,6 +30,7 @@ import consulo.credentialStorage.ui.AuthenticationDialog;
 import consulo.disposer.Disposable;
 import consulo.http.HttpProxyManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
@@ -444,7 +445,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
       }
     }
 
-    if (SystemInfo.isWindows && uri.startsWith("file://")) {
+    if (Platform.current().os().isWindows() && uri.startsWith("file://")) {
       int firstSlashIndex = index + "://".length();
       if (uri.charAt(firstSlashIndex) != '/') {
         uri = "file://" + '/' + uri.substring(firstSlashIndex);

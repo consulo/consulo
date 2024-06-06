@@ -22,26 +22,24 @@ package consulo.ide.impl.idea.openapi.editor.colors.impl;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.*;
-import consulo.colorScheme.FontSize;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
 import consulo.colorScheme.impl.FontPreferencesImpl;
-import consulo.util.xml.serializer.WriteExternalException;
-import java.util.HashMap;
-import consulo.ui.ex.awt.JBUI;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.style.StandardColors;
-import org.jdom.Element;
-
+import consulo.util.lang.Comparing;
+import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
 
 public abstract class AbstractColorsScheme implements EditorColorsScheme {
-  private static final String OS_VALUE_PREFIX = SystemInfo.isWindows ? "windows" : SystemInfo.isMac ? "mac" : "linux";
+  private static final String OS_VALUE_PREFIX = Platform.current().os().isWindows() ? "windows" : Platform.current().os().isMac() ? "mac" : "linux";
   private static final int CURR_VERSION = 124;
 
   private static final FontSize DEFAULT_FONT_SIZE = FontSize.SMALL;

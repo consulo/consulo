@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.language.editor.template.Template;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangeListRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.ObjectUtil;

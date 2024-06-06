@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.process.local.ExecUtil;
 import consulo.ide.impl.idea.ide.browsers.BrowserLauncherAppless;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
@@ -110,14 +111,14 @@ public class BrowserUtil {
     if (new File(browserPathOrName).isFile()) {
       return Collections.singletonList(browserPathOrName);
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       List<String> command = newArrayList(ExecUtil.getOpenCommandPath(), "-a", browserPathOrName);
       if (newWindowIfPossible) {
         command.add("-n");
       }
       return command;
     }
-    else if (SystemInfo.isWindows) {
+    else if (Platform.current().os().isWindows()) {
       return Arrays.asList(ExecUtil.getWindowsShellName(), "/c", "start", GeneralCommandLine.inescapableQuote(""), browserPathOrName);
     }
     else {
@@ -131,13 +132,13 @@ public class BrowserUtil {
 
   @Nonnull
   public static String getDefaultAlternativeBrowserPath() {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       return "C:\\Program Files\\Internet Explorer\\IExplore.exe";
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       return "open";
     }
-    else if (SystemInfo.isUnix) {
+    else if (Platform.current().os().isUnix()) {
       return "/usr/bin/firefox";
     }
     else {

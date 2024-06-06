@@ -21,7 +21,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.application.options.SkipSelfSearchComponent;
 import consulo.ide.impl.idea.openapi.options.ex.GlassPanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;

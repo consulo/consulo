@@ -9,7 +9,7 @@ import consulo.build.ui.impl.internal.event.FileMessageEventImpl;
 import consulo.build.ui.impl.internal.event.MessageEventImpl;
 import consulo.compiler.CompilerManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

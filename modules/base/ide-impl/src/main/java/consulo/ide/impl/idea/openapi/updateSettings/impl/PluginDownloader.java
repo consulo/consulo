@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -32,6 +31,7 @@ import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PluginDownloadFailedException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
@@ -49,7 +49,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -178,10 +177,10 @@ public class PluginDownloader {
 
     if (myIsPlatform) {
       if (indicator != null) {
-        indicator.setText2(IdeBundle.message("progress.extracting.platform"));
+        indicator.setText2(IdeLocalize.progressExtractingPlatform().get());
       }
 
-      String prefix = SystemInfo.isMac ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
+      String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
       File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
 

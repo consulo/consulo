@@ -44,7 +44,6 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestP
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -120,7 +119,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     if (viewer.getProject() == null) return null;
     if (viewer.isDisposed()) return null;
 
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor == null) return null;
 
     ViewerAnnotator annotator = getAnnotator(viewer, editor);

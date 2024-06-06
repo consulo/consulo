@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

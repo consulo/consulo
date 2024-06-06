@@ -35,7 +35,7 @@ import static consulo.diff.comparison.ComparisonPolicy.IGNORE_WHITESPACES;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.trimEnd;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.trimStart;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.*;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isWhiteSpace;
+import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 public class ByLine {
   @Nonnull

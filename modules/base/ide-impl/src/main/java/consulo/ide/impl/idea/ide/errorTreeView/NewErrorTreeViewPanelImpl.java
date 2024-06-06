@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.errorTreeView;
 
+import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.actions.ExportToTextFileToolbarAction;
 import consulo.ide.impl.idea.ide.actions.NextOccurenceToolbarAction;
@@ -22,9 +23,9 @@ import consulo.ide.impl.idea.ide.actions.PreviousOccurenceToolbarAction;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorViewTextExporter;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.application.AllIcons;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
@@ -206,7 +207,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
-    if (PlatformDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       final NavigatableMessageElement selectedMessageElement = getSelectedMessageElement();
       return selectedMessageElement != null ? selectedMessageElement.getNavigatable() : null;
     }
@@ -229,12 +230,9 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
   public void selectFirstMessage() {
     final ErrorTreeElement firstError = myErrorViewStructure.getFirstMessage(ErrorTreeElementKind.ERROR);
     if (firstError != null) {
-      selectElement(firstError, new Runnable() {
-        @Override
-        public void run() {
-          if (shouldShowFirstErrorInEditor()) {
-            navigateToSource(false);
-          }
+      selectElement(firstError, () -> {
+        if (shouldShowFirstErrorInEditor()) {
+          navigateToSource(false);
         }
       });
     }
@@ -450,19 +448,16 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
       return;
     }
     myUpdateAlarm.cancelAllRequests();
-    myUpdateAlarm.addRequest(new Runnable() {
-      @Override
-      public void run() {
-        final float fraction = myFraction;
-        final String text = myProgressText;
-        if (fraction > 0.0f) {
-          myProgressLabel.setText((int)(fraction * 100 + 0.5) + "%  " + text);
-        }
-        else {
-          myProgressLabel.setText(text);
-        }
+    myUpdateAlarm.addRequest(() -> {
+      final float fraction = myFraction;
+      final String text = myProgressText;
+      if (fraction > 0.0f) {
+        myProgressLabel.setText((int)(fraction * 100 + 0.5) + "%  " + text);
       }
-    }, 50, IdeaModalityState.NON_MODAL);
+      else {
+        myProgressLabel.setText(text);
+      }
+    }, 50, ModalityStateImpl.NON_MODAL);
 
   }
 
@@ -577,7 +572,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     private final Runnable myRerunAction;
 
     public RerunAction(@Nonnull Runnable rerunAction) {
-      super(IdeBundle.message("action.refresh"), null, AllIcons.Actions.Rerun);
+      super(IdeLocalize.actionRefresh(), null, AllIcons.Actions.Rerun);
       myRerunAction = rerunAction;
     }
 
@@ -599,7 +594,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
 
   private class StopAction extends AnAction {
     public StopAction() {
-      super(IdeBundle.message("action.stop"), null, AllIcons.Actions.Suspend);
+      super(IdeLocalize.actionStop(), null, AllIcons.Actions.Suspend);
     }
 
     @RequiredUIAccess
@@ -651,7 +646,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setText(isSelected(e) ? IdeBundle.message("action.hide.infos") : IdeBundle.message("action.show.infos"));
+      e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideInfos() : IdeLocalize.actionShowInfos());
     }
   }
 
@@ -677,7 +672,7 @@ public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, N
     @Override
     public void update(AnActionEvent e) {
       super.update(e);
-      e.getPresentation().setText(isSelected(e) ? IdeBundle.message("action.hide.warnings") : IdeBundle.message("action.show.warnings"));
+      e.getPresentation().setTextValue(isSelected(e) ? IdeLocalize.actionHideWarnings() : IdeLocalize.actionShowWarnings());
     }
   }
 

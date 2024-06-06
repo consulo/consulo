@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.filters;
 
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

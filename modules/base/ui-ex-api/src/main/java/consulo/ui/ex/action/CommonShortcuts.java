@@ -17,10 +17,10 @@ package consulo.ui.ex.action;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.keymap.KeymapManager;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -33,10 +33,11 @@ public class CommonShortcuts {
 
   public static final ShortcutSet ALT_ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK));
   public static final ShortcutSet ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-  public static final ShortcutSet CTRL_ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
-                                                                                            SystemInfo.isMac
-                                                                                            ? InputEvent.META_DOWN_MASK
-                                                                                            : InputEvent.CTRL_DOWN_MASK));
+  public static final ShortcutSet CTRL_ENTER = new CustomShortcutSet(KeyStroke.getKeyStroke(
+    KeyEvent.VK_ENTER,
+    Platform.current().os().isMac() ?
+      InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK
+  ));
   public static final ShortcutSet INSERT = new CustomShortcutSet(getInsertKeystroke());
 
   /**
@@ -68,7 +69,7 @@ public class CommonShortcuts {
   }
 
   public static KeyStroke getInsertKeystroke() {
-    return SystemInfo.isMac ? KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)
+    return Platform.current().os().isMac() ? KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)
                             : KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0);
   }
 

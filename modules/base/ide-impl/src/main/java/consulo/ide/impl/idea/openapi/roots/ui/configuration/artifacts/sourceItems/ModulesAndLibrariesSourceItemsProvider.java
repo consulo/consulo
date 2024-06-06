@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.Ref;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModuleRootModel;

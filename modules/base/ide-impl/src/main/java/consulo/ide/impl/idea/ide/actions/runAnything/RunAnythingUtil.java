@@ -5,9 +5,8 @@ import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.SeparatorComponent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -87,7 +86,7 @@ public class RunAnythingUtil {
 
   @Nonnull
   public static Project fetchProject(@Nonnull DataContext dataContext) {
-    return ObjectUtil.assertNotNull(dataContext.getData(CommonDataKeys.PROJECT));
+    return ObjectUtil.assertNotNull(dataContext.getData(Project.KEY));
   }
 
   public static boolean executeMatched(@Nonnull DataContext dataContext, @Nonnull String pattern) {

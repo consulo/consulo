@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.MergingCharSequence;
 
 import jakarta.annotation.Nonnull;
@@ -38,7 +38,7 @@ import static consulo.ide.impl.idea.diff.comparison.TrimUtil.trim;
 import static consulo.ide.impl.idea.diff.comparison.TrimUtil.*;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.trim;
 import static consulo.ide.impl.idea.diff.comparison.iterables.DiffIterableUtil.*;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isWhiteSpace;
+import static consulo.util.lang.StringUtil.isWhiteSpace;
 
 public class ByWord {
   @Nonnull

@@ -112,7 +112,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return;
       }
       else {
-        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null) return;
         if (element instanceof PsiDirectoryContainer) {
           dir = ((PsiDirectoryContainer)element).getDirectories()[0];
@@ -267,15 +267,15 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
 
     if (editor != null){
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -317,7 +317,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     else {
       if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null &&
           dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null) {
           presentation.setEnabled(false);
           return;

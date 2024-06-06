@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogProperties;

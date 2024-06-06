@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.application;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import jakarta.annotation.Nullable;

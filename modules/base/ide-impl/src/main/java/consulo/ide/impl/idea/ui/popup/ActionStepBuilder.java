@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.ex.action.*;

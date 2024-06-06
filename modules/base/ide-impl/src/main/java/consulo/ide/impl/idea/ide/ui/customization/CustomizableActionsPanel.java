@@ -38,7 +38,7 @@ import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.internal.IdeFrameEx;

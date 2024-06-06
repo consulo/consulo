@@ -5,7 +5,7 @@ import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.*;

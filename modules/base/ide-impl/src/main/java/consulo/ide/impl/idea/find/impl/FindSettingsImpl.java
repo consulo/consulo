@@ -20,7 +20,7 @@ import consulo.component.persist.*;
 import consulo.find.FindBundle;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;

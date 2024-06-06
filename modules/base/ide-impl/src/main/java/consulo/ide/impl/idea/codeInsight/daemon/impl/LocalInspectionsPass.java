@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.codeInspection.ex.ProblemDescriptorImpl;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixWrapper;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

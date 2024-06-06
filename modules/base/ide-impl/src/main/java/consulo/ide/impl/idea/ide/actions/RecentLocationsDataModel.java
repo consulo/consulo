@@ -42,7 +42,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.util.concurrency.SynchronizedClearableLazy;

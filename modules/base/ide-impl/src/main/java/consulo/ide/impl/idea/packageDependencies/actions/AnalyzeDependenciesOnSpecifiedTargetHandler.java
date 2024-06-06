@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.packageDependencies.actions;
 
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.ForwardDependenciesBuilder;
 import consulo.language.psi.PsiFile;

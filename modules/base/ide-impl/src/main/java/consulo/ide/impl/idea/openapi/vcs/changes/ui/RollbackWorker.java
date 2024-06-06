@@ -22,13 +22,14 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.project.util.WaitForProgressToShow;
@@ -172,7 +173,7 @@ public class RollbackWorker {
         myIndicator.startNonCancelableSection();
         myIndicator.setIndeterminate(true);
         myIndicator.setText2("");
-        myIndicator.setText(VcsBundle.message("progress.text.synchronizing.files"));
+        myIndicator.setTextValue(VcsLocalize.progressTextSynchronizingFiles());
       }
 
       doRefresh(myProject, changesToRefresh);

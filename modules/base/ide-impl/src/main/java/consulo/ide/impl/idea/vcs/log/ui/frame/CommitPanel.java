@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.vcs.log.ui.frame;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import consulo.ide.impl.idea.openapi.vcs.ui.FontUtil;
 import consulo.ui.ex.JBColor;

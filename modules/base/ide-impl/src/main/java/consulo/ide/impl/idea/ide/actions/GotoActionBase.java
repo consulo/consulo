@@ -26,10 +26,9 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.SearchEverywhereManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -84,7 +83,7 @@ public abstract class GotoActionBase extends AnAction {
   public void update(@Nonnull final AnActionEvent event) {
     final Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     presentation.setEnabled(!getClass().equals(myInAction) && (!requiresProject() || project != null) && hasContributors(dataContext));
     presentation.setVisible(hasContributors(dataContext));
   }
@@ -99,9 +98,9 @@ public abstract class GotoActionBase extends AnAction {
 
   @Nullable
   public static PsiElement getPsiContext(final AnActionEvent e) {
-    PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
+    PsiFile file = e.getData(PsiFile.KEY);
     if (file != null) return file;
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     return getPsiContext(project);
   }
 
@@ -129,7 +128,7 @@ public abstract class GotoActionBase extends AnAction {
       return Pair.create(predefined, 0);
     }
     if (useEditorSelection) {
-      final Editor editor = e.getData(CommonDataKeys.EDITOR);
+      final Editor editor = e.getData(Editor.KEY);
       if (editor != null) {
         final String selectedText = editor.getSelectionModel().getSelectedText();
         if (selectedText != null && !selectedText.contains("\n")) {
@@ -143,7 +142,7 @@ public abstract class GotoActionBase extends AnAction {
       return Pair.create(query, 0);
     }
 
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     final Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
     if (focusOwner instanceof JComponent) {
       final SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)focusOwner);
@@ -164,7 +163,7 @@ public abstract class GotoActionBase extends AnAction {
 
   @Nullable
   public static String getInitialTextForNavigation(@Nonnull AnActionEvent e) {
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
     if (selectedText == null) {
       //selectedText = e.getData(JBTerminalWidget.SELECTED_TEXT_DATA_KEY);
@@ -213,7 +212,7 @@ public abstract class GotoActionBase extends AnAction {
                                          boolean useSelectionFromEditor,
                                          final boolean allowMultipleSelection,
                                          final DefaultChooseByNameItemProvider itemProvider) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     boolean mayRequestOpenInCurrentWindow =
       model.willOpenEditor() && FileEditorManagerEx.getInstanceEx(project).hasSplitOrUndockedWindows();
     Pair<String, Integer> start = getInitialText(useSelectionFromEditor, e);

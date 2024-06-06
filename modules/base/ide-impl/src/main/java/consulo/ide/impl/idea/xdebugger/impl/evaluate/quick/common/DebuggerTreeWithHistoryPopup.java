@@ -22,7 +22,7 @@ import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;

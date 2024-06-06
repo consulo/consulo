@@ -10,7 +10,7 @@ import consulo.codeEditor.action.EditorAction;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.language.editor.documentation.DocCommentFixer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
@@ -20,7 +20,6 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.CompositeDocumentationProvider;
@@ -59,12 +58,12 @@ public class FixDocCommentAction extends EditorAction {
 
     @Override
     public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project == null) {
         return;
       }
 
-      PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+      PsiFile psiFile = dataContext.getData(PsiFile.KEY);
       if (psiFile == null) {
         return;
       }

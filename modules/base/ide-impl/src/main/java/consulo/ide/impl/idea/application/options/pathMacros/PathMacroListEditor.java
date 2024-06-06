@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 import consulo.application.ApplicationManager;
 import consulo.application.macro.PathMacros;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.ToolbarDecorator;

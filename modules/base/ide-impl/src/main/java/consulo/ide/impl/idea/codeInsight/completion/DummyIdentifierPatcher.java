@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.completion;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import consulo.document.Document;
 import consulo.language.editor.completion.CompletionInitializationContext;

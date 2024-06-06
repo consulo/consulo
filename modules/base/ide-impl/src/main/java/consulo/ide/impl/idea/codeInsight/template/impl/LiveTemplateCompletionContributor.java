@@ -8,7 +8,7 @@ import consulo.application.util.matcher.PrefixMatcher;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;

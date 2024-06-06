@@ -22,24 +22,27 @@ import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.vcs.vfs.ContentRevisionVirtualFile;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.AbstractVcsHelper;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
 import consulo.versionControlSystem.annotate.AnnotationProviderEx;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -47,10 +50,10 @@ public class AnnotateVcsVirtualFileAction {
   private static final Logger LOG = Logger.getInstance(AnnotateVcsVirtualFileAction.class);
 
   public static boolean isEnabled(AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null || project.isDisposed()) return false;
 
-    VirtualFile[] selectedFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] selectedFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (selectedFiles == null || selectedFiles.length != 1) return false;
 
     VirtualFile file = selectedFiles[0];
@@ -66,20 +69,20 @@ public class AnnotateVcsVirtualFileAction {
   }
 
   public static boolean isSuspended(AnActionEvent e) {
-    VirtualFile file = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE_ARRAY)[0];
-    return VcsAnnotateUtil.getBackgroundableLock(e.getRequiredData(CommonDataKeys.PROJECT), file).isLocked();
+    VirtualFile file = e.getRequiredData(VirtualFile.KEY_OF_ARRAY)[0];
+    return VcsAnnotateUtil.getBackgroundableLock(e.getRequiredData(Project.KEY), file).isLocked();
   }
 
   public static boolean isAnnotated(AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-    VirtualFile file = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE_ARRAY)[0];
+    Project project = e.getRequiredData(Project.KEY);
+    VirtualFile file = e.getRequiredData(VirtualFile.KEY_OF_ARRAY)[0];
     List<Editor> editors = VcsAnnotateUtil.getEditors(project, file);
     return ContainerUtil.exists(editors, editor -> editor.getGutter().isAnnotationsShown());
   }
 
   public static void perform(AnActionEvent e, boolean selected) {
-    final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-    final VirtualFile file = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE_ARRAY)[0];
+    final Project project = e.getRequiredData(Project.KEY);
+    final VirtualFile file = e.getRequiredData(VirtualFile.KEY_OF_ARRAY)[0];
     List<Editor> editors = VcsAnnotateUtil.getEditors(project, file);
 
     if (!selected) {
@@ -106,7 +109,7 @@ public class AnnotateVcsVirtualFileAction {
 
     VcsAnnotateUtil.getBackgroundableLock(project, file).lock();
 
-    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsBundle.message("retrieving.annotations"), true) {
+    final Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
       @Override
       public void run(final @Nonnull ProgressIndicator indicator) {
         try {
@@ -134,7 +137,7 @@ public class AnnotateVcsVirtualFileAction {
 
         if (!exceptionRef.isNull()) {
           LOG.warn(exceptionRef.get());
-          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsBundle.message("message.title.annotate"));
+          AbstractVcsHelper.getInstance(project).showErrors(Collections.singletonList(exceptionRef.get()), VcsLocalize.messageTitleAnnotate().get());
         }
 
         if (!fileAnnotationRef.isNull()) {

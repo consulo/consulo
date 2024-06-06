@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.JBUI;
-
+import consulo.ui.ex.awt.paint.RectanglePainter;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -40,7 +40,7 @@ public interface PopupBorder extends Border {
 
     @Nonnull
     public static PopupBorder create(boolean active, boolean windowWithShadow) {
-      boolean visible = !(SystemInfo.isMac && windowWithShadow) || UIManager.getBoolean("Popup.paintBorder") == Boolean.TRUE;
+      boolean visible = !(Platform.current().os().isMac() && windowWithShadow) || UIManager.getBoolean("Popup.paintBorder") == Boolean.TRUE;
       PopupBorder border = new BaseBorder(visible, JBCurrentTheme.Popup.borderColor(true), JBCurrentTheme.Popup.borderColor(false));
       border.setActive(active);
       return border;

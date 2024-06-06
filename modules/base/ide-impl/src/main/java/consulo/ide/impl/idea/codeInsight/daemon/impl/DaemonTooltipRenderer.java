@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.language.editor.inspection.TooltipLinkHandlers;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionNodeInfo;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.Html;

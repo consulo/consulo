@@ -6,7 +6,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.ui.LocalPathCellEditor;
 import consulo.ui.ex.awt.table.IconTableCellRenderer;

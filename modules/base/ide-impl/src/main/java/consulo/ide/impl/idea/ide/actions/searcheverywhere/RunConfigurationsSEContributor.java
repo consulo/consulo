@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;

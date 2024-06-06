@@ -20,13 +20,13 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.internal.ActionManagerEx;
@@ -100,7 +100,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   public static int getMultiCaretActionModifier() {
-    return SystemInfo.isMac ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
+    return Platform.current().os().isMac() ? KeyEvent.VK_ALT : KeyEvent.VK_CONTROL;
   }
 
   /**

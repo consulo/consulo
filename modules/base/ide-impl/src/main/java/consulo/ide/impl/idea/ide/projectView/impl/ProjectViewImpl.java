@@ -43,6 +43,7 @@ import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.ui.view.ProjectViewPane;
 import consulo.project.ui.view.internal.node.LibraryGroupElement;
 import consulo.project.ui.view.internal.node.NamedLibraryElement;
@@ -51,15 +52,14 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.util.EditorHelper;
@@ -660,7 +660,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @RequiredUIAccess
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -690,7 +690,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
         assert project != null;
         final Presentation presentation = e.getPresentation();
         if (!PsiPackageSupportProviders.isPackageSupported(project)) {
@@ -1051,20 +1051,20 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         if (paneSpecificData != null) return paneSpecificData;
       }
 
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         if (currentProjectViewPane == null) return null;
         final PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
         return elements.length == 1 ? elements[0] : null;
       }
-      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      if (PsiElement.KEY_OF_ARRAY == dataId) {
         if (currentProjectViewPane == null) {
           return null;
         }
         PsiElement[] elements = currentProjectViewPane.getSelectedPSIElements();
         return elements.length == 0 ? null : elements;
       }
-      if (LangDataKeys.MODULE == dataId) {
-        VirtualFile[] virtualFiles = getDataUnchecked(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      if (Module.KEY == dataId) {
+        VirtualFile[] virtualFiles = getDataUnchecked(VirtualFile.KEY_OF_ARRAY);
         if (virtualFiles == null || virtualFiles.length <= 1) return null;
         final Set<Module> modules = new HashSet<>();
         for (VirtualFile virtualFile : virtualFiles) {
@@ -1189,8 +1189,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     private void detachLibrary(@Nonnull final LibraryOrderEntry orderEntry, @Nonnull Project project) {
       final Module module = orderEntry.getOwnerModule();
-      String message = IdeBundle.message("detach.library.from.module", orderEntry.getPresentableName(), module.getName());
-      String title = IdeBundle.message("detach.library");
+      String message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName()).get();
+      String title = IdeLocalize.detachLibrary().get();
       int ret = Messages.showOkCancelDialog(project, message, title, Messages.getQuestionIcon());
       if (ret != Messages.OK) return;
       CommandProcessor.getInstance().executeCommand(module.getProject(), () -> {
@@ -1682,19 +1682,19 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     public void update(AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       assert project != null;
       if (!PsiPackageSupportProviders.isPackageSupported(project)) {
         presentation.setVisible(false);
         return;
       }
       if (isHideEmptyMiddlePackages(myCurrentViewId)) {
-        presentation.setText(IdeBundle.message("action.hide.empty.middle.packages"));
-        presentation.setDescription(IdeBundle.message("action.show.hide.empty.middle.packages"));
+        presentation.setTextValue(IdeLocalize.actionHideEmptyMiddlePackages());
+        presentation.setDescriptionValue(IdeLocalize.actionShowHideEmptyMiddlePackages());
       }
       else {
-        presentation.setText(IdeBundle.message("action.compact.empty.middle.packages"));
-        presentation.setDescription(IdeBundle.message("action.show.compact.empty.middle.packages"));
+        presentation.setTextValue(IdeLocalize.actionCompactEmptyMiddlePackages());
+        presentation.setDescriptionValue(IdeLocalize.actionShowCompactEmptyMiddlePackages());
       }
     }
   }

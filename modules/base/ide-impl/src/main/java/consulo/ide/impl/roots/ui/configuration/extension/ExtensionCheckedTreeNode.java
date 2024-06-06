@@ -16,7 +16,7 @@
 package consulo.ide.impl.roots.ui.configuration.extension;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.ModuleConfigurationState;

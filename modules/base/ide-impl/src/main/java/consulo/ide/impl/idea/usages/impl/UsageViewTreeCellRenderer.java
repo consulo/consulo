@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;

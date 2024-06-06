@@ -15,14 +15,12 @@
  */
 package consulo.ide.impl.idea.notification.impl.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
-import consulo.ui.ex.awt.table.StripeTable;
 import consulo.ide.impl.project.ui.impl.NotificationGroupRegistrator;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.ui.ex.SystemNotifications;
@@ -32,14 +30,16 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.StripeTable;
 import consulo.ui.ex.awt.tree.IndexTreePathState;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -270,7 +270,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
       logColumn.setMaxWidth(logColumn.getPreferredWidth());
       logColumn.setCellRenderer(new BooleanTableCellRenderer());
 
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         final TableColumn readAloudColumn = getColumnModel().getColumn(READ_ALOUD_COLUMN);
         readAloudColumn.setMaxWidth(readAloudColumn.getPreferredWidth());
         readAloudColumn.setCellRenderer(new BooleanTableCellRenderer());
@@ -366,7 +366,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
 
     @Override
     public int getColumnCount() {
-      return SystemInfo.isMac ? 4 : 3;
+      return Platform.current().os().isMac() ? 4 : 3;
     }
 
     @Override

@@ -25,7 +25,7 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
 import consulo.execution.ExecutionBundle;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.setting.ui.MasterDetailsComponent;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;

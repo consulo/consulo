@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.application.ApplicationBundle;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import org.jetbrains.annotations.NonNls;

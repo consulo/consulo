@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -46,7 +45,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     dumpLookupElementWeights(LookupManager.getActiveLookup(editor));
   }
 
@@ -54,7 +53,7 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     presentation.setEnabled(editor != null && LookupManager.getActiveLookup(editor) != null);
   }
 

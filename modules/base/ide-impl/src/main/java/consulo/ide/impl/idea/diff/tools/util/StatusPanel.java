@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.diff.tools.util;
 
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.AsyncProcessIcon;

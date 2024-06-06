@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.popup.list;
 
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.ListSeparator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import jakarta.annotation.Nullable;

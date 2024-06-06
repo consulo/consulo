@@ -27,13 +27,12 @@ import consulo.diff.DiffPlaces;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.ide.impl.idea.ide.diff.DiffElement;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.actions.DirDiffToolbarActions;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.actions.RefreshDirDiffAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
@@ -499,7 +498,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
 
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myModel.getProject();
     }
     else if (DIR_DIFF_MODEL == dataId) {
@@ -556,11 +555,11 @@ public class DirDiffPanel implements Disposable, DataProvider {
   }
 
   private class MyDiffRequestProcessor extends CacheDiffRequestProcessor<ElementWrapper> {
-    public MyDiffRequestProcessor(@jakarta.annotation.Nullable Project project) {
+    public MyDiffRequestProcessor(@Nullable Project project) {
       super(project, DiffPlaces.DIR_DIFF);
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     protected String getRequestName(@Nonnull ElementWrapper element) {
       return null;

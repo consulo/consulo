@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.content.ContentIterator;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

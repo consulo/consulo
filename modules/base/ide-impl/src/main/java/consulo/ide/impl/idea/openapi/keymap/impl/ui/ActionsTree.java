@@ -20,14 +20,13 @@ import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -162,7 +161,7 @@ public class ActionsTree {
     myRoot.removeAllChildren();
 
     ActionManager actionManager = ActionManager.getInstance();
-    Project project = DataManager.getInstance().getDataContext(myComponent).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(myComponent).getData(Project.KEY);
     KeymapGroupImpl mainGroup = ActionsTreeUtil.createMainGroup(project, myKeymap, allQuickLists, filter, true, filter != null && filter.length() > 0 ?
                                                                                                                 ActionsTreeUtil.isActionFiltered(filter, true) :
                                                                                                                 (shortcut != null ? ActionsTreeUtil.isActionFiltered(actionManager, myKeymap, shortcut) : null));
@@ -245,7 +244,7 @@ public class ActionsTree {
   }
 
   private ArrayList<DefaultMutableTreeNode> getNodesByPaths(ArrayList<String> paths){
-    final ArrayList<DefaultMutableTreeNode> result = new ArrayList<DefaultMutableTreeNode>();
+    final ArrayList<DefaultMutableTreeNode> result = new ArrayList<>();
     Enumeration enumeration = ((DefaultMutableTreeNode)myTree.getModel().getRoot()).preorderEnumeration();
     while (enumeration.hasMoreElements()) {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)enumeration.nextElement();
@@ -294,8 +293,8 @@ public class ActionsTree {
     private ArrayList<String> mySelectionPaths;
 
     public void storePaths() {
-      myPathsToExpand = new ArrayList<String>();
-      mySelectionPaths = new ArrayList<String>();
+      myPathsToExpand = new ArrayList<>();
+      mySelectionPaths = new ArrayList<>();
 
       DefaultMutableTreeNode root = (DefaultMutableTreeNode)myTree.getModel().getRoot();
 
@@ -352,7 +351,7 @@ public class ActionsTree {
 
 
     private ArrayList<TreeNode> childrenToArray(DefaultMutableTreeNode node) {
-      ArrayList<TreeNode> arrayList = new ArrayList<TreeNode>();
+      ArrayList<TreeNode> arrayList = new ArrayList<>();
       for(int i = 0; i < node.getChildCount(); i++){
         arrayList.add(node.getChildAt(i));
       }

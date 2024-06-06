@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.actions;
 
-import consulo.application.CommonBundle;
-import consulo.ui.ex.DeleteProvider;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.application.ApplicationBundle;
+import consulo.application.CommonBundle;
 import consulo.application.WriteAction;
-import consulo.undoRedo.CommandProcessor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.UIBundle;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.Messages;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -43,15 +42,15 @@ public final class VirtualFileDeleteProvider implements DeleteProvider {
 
   @Override
   public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     return files != null && files.length > 0;
   }
 
   @Override
   public void deleteElement(@Nonnull DataContext dataContext) {
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null || files.length == 0) return;
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
 
     String message = createConfirmationMessage(files);
     int returnValue = Messages.showOkCancelDialog(message, UIBundle.message("delete.dialog.title"), ApplicationBundle.message("button.delete"),

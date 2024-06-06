@@ -5,7 +5,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.VcsException;

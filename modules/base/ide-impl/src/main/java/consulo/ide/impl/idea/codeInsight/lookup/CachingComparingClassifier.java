@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.lookup;
 
 import consulo.ide.impl.idea.codeInsight.completion.CompletionLookupArranger;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.ForceableComparable;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;

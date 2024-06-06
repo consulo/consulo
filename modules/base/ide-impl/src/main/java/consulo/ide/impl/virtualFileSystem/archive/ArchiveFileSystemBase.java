@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.virtualFileSystem.archive;
 
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.impl.jar.JarHandler;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.VfsImplUtil;
-import consulo.util.lang.SystemProperties;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.platform.Platform;
 import consulo.util.collection.Sets;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -46,7 +46,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
 
   protected ArchiveFileSystemBase(@Nonnull String protocol) {
     myProtocol = protocol;
-    boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !SystemInfo.isWindows);
+    boolean noCopy = SystemProperties.getBooleanProperty("idea.jars.nocopy", !Platform.current().os().isWindows());
     myNoCopyJarPaths = noCopy ? null : Sets.newConcurrentHashSet(FileUtil.PATH_HASHING_STRATEGY);
   }
 

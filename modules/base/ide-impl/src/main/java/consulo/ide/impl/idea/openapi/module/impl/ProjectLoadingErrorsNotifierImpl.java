@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.module.ProjectLoadingErrorsNotifier;
@@ -31,12 +29,13 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import consulo.util.lang.function.Condition;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
 import java.util.Collections;
@@ -104,12 +103,7 @@ public class ProjectLoadingErrorsNotifierImpl extends ProjectLoadingErrorsNotifi
       Notifications.Bus.notify(new Notification(ProjectNotificationGroups.Project, "Error Loading Project", errorText, NotificationType.ERROR, new NotificationListener() {
         @Override
         public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
-          final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, new Condition<ConfigurationErrorDescription>() {
-            @Override
-            public boolean value(ConfigurationErrorDescription errorDescription) {
-              return errorDescription.isValid();
-            }
-          });
+          final List<ConfigurationErrorDescription> validDescriptions = ContainerUtil.findAll(descriptions, errorDescription -> errorDescription.isValid());
           RemoveInvalidElementsDialog.showDialog(myProject, CommonBundle.getErrorTitle(), type, invalidElements, validDescriptions);
 
           notification.expire();

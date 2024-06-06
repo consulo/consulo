@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
@@ -48,6 +48,7 @@ import consulo.versionControlSystem.annotate.LineAnnotationAspect;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 import jakarta.annotation.Nonnull;
@@ -310,7 +311,7 @@ public class AnnotateToggleAction extends ToggleAction implements DumbAware {
       myEditor = editor;
       myShowAnnotations = doShowAnnotations;
 
-      setText(VcsBundle.message("annotation.wrong.line.number.notification.text", vcs.getDisplayName()));
+      setText(VcsLocalize.annotationWrongLineNumberNotificationText(vcs.getDisplayName()).get());
 
       createActionLabel("Display anyway", () -> {
         showAnnotations();

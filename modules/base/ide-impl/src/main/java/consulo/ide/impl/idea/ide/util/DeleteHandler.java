@@ -16,19 +16,19 @@
 
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.refactoring.util.DeleteUtil;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.dataContext.DataManager;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.project.DumbService;
@@ -70,7 +70,7 @@ public class DeleteHandler {
   public static class DefaultDeleteProvider implements DeleteProvider {
     @Override
     public boolean canDeleteElement(@Nonnull DataContext dataContext) {
-      if (dataContext.getData(CommonDataKeys.PROJECT) == null) {
+      if (dataContext.getData(Project.KEY) == null) {
         return false;
       }
       final PsiElement[] elements = getPsiElements(dataContext);
@@ -79,14 +79,14 @@ public class DeleteHandler {
 
     @Nullable
     private static PsiElement[] getPsiElements(DataContext dataContext) {
-      PsiElement[] elements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+      PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
       if (elements == null) {
-        final Object data = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        final Object data = dataContext.getData(PsiElement.KEY);
         if (data != null) {
           elements = new PsiElement[]{(PsiElement)data};
         }
         else {
-          final Object data1 = dataContext.getData(CommonDataKeys.PSI_FILE);
+          final Object data1 = dataContext.getData(PsiFile.KEY);
           if (data1 != null) {
             elements = new PsiElement[]{(PsiFile)data1};
           }
@@ -99,7 +99,7 @@ public class DeleteHandler {
     public void deleteElement(@Nonnull DataContext dataContext) {
       PsiElement[] elements = getPsiElements(dataContext);
       if (elements == null) return;
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       if (project == null) return;
       LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeBundle.message("progress.deleting"));
       try {
@@ -129,18 +129,15 @@ public class DeleteHandler {
     final boolean dumb = DumbService.getInstance(project).isDumb();
     if (safeDeleteApplicable && !dumb) {
       final Ref<Boolean> exit = Ref.create(false);
-      final SafeDeleteDialog dialog = new SafeDeleteDialog(project, elements, new SafeDeleteDialog.Callback() {
-        @Override
-        public void run(final SafeDeleteDialog dialog) {
-          if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, Arrays.asList(elements), true)) return;
+      final SafeDeleteDialog dialog = new SafeDeleteDialog(project, elements, (SafeDeleteDialog.Callback) dialog1 -> {
+        if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, Arrays.asList(elements), true)) return;
 
-          SafeDeleteProcessor processor = SafeDeleteProcessor.createInstance(project, () -> {
-            exit.set(true);
-            dialog.close(DialogWrapper.OK_EXIT_CODE);
-          }, elements, dialog.isSearchInComments(), dialog.isSearchForTextOccurences(), true);
+        SafeDeleteProcessor processor = SafeDeleteProcessor.createInstance(project, () -> {
+          exit.set(true);
+          dialog1.close(DialogWrapper.OK_EXIT_CODE);
+        }, elements, dialog1.isSearchInComments(), dialog1.isSearchForTextOccurences(), true);
 
-          processor.run();
-        }
+        processor.run();
       }) {
         @Override
         protected boolean isDelete() {
@@ -178,14 +175,19 @@ public class DeleteHandler {
 
       if (safeDeleteApplicable && dumb) {
         warningMessage += "\n\nWarning:\n  Safe delete is not available while " +
-                          ApplicationNamesInfo.getInstance().getFullProductName() +
+                          Application.get().getName() +
                           " updates indices,\n  no usages will be checked.";
       }
 
       if (needConfirmation) {
-        int result = Messages.showOkCancelDialog(project, warningMessage, IdeBundle.message("title.delete"),
-                                                 ApplicationBundle.message("button.delete"), CommonBundle.getCancelButtonText(),
-                                                 Messages.getQuestionIcon());
+        int result = Messages.showOkCancelDialog(
+          project,
+          warningMessage,
+          IdeLocalize.titleDelete().get(),
+          ApplicationLocalize.buttonDelete().get(),
+          CommonBundle.getCancelButtonText(),
+          Messages.getQuestionIcon()
+        );
         if (result != Messages.OK) return;
       }
     }
@@ -203,7 +205,7 @@ public class DeleteHandler {
       }
 
       // deleted from project view or something like that.
-      if (DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR) == null) {
+      if (DataManager.getInstance().getDataContext().getData(Editor.KEY) == null) {
         CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
       }
 
@@ -216,8 +218,8 @@ public class DeleteHandler {
             CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
 
             if (!readOnlyFiles.isEmpty()) {
-              String message = IdeBundle.message("prompt.directory.contains.read.only.files", virtualFile.getPresentableUrl());
-              int _result = Messages.showYesNoDialog(project, message, IdeBundle.message("title.delete"), Messages.getQuestionIcon());
+              String message = IdeLocalize.promptDirectoryContainsReadOnlyFiles(virtualFile.getPresentableUrl()).get();
+              int _result = Messages.showYesNoDialog(project, message, IdeLocalize.titleDelete().get(), Messages.getQuestionIcon());
               if (_result != Messages.YES) continue;
 
               boolean success = true;
@@ -236,8 +238,8 @@ public class DeleteHandler {
             final VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile.isInLocalFileSystem()) {
               int _result = MessagesEx.fileIsReadOnly(project, virtualFile)
-                      .setTitle(IdeBundle.message("title.delete"))
-                      .appendMessage(" " + IdeBundle.message("prompt.delete.it.anyway"))
+                      .setTitle(IdeLocalize.titleDelete().get())
+                      .appendMessage(" " + IdeLocalize.promptDeleteItAnyway().get())
                       .askYesNo();
               if (_result != Messages.YES) continue;
 

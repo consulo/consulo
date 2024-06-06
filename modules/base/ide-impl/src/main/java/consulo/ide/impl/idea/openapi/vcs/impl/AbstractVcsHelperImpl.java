@@ -36,7 +36,7 @@ import consulo.ide.impl.idea.openapi.diff.SimpleContent;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
@@ -80,6 +80,7 @@ import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsHistoryProvider;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.merge.MergeDialogCustomizer;
 import consulo.versionControlSystem.merge.MergeProvider;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -734,7 +735,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                                     final RepositoryLocation location,
                                     final ChangeBrowserSettings settings,
                                     final ChangesBrowserDialog dlg) {
-      super(project, VcsBundle.message("browse.changes.progress.title"), true);
+      super(project, VcsLocalize.browseChangesProgressTitle().get(), true);
       myProvider = provider;
       myLocation = location;
       mySettings = settings;

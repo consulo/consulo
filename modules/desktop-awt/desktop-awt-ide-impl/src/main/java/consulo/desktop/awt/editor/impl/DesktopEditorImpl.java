@@ -31,6 +31,8 @@ import consulo.dataContext.DataManager;
 import consulo.desktop.awt.editor.impl.view.EditorView;
 import consulo.desktop.awt.language.editor.LeftHandScrollbarLayout;
 import consulo.desktop.awt.language.editor.StatusComponentContainer;
+import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.*;
@@ -44,7 +46,6 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorTextInsertHandler;
@@ -55,11 +56,10 @@ import consulo.ide.impl.idea.openapi.editor.impl.FoldingPopupManager;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.Platform;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.desktop.awt.ui.keymap.keyGesture.MacGestureSupportForEditor;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -94,6 +94,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -416,7 +417,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
 
     updateCaretCursor();
 
-    if (SystemInfo.isMac && SystemInfo.isJetBrainsJvm) {
+    if (Platform.current().os().isMac() && SystemInfo.isJetBrainsJvm) {
       new MacGestureSupportForEditor(getComponent());
     }
 
@@ -1900,7 +1901,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       if (cursor != Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR) &&
         cursor != Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR) &&
         cursor != EMPTY_CURSOR &&
-        (!SystemInfo.isMac || cursor != MacUIUtil.getInvertedTextCursor())) {
+        (!Platform.current().os().isMac() || cursor != MacUIUtil.getInvertedTextCursor())) {
         // someone else has set cursor, don't touch it
         return;
       }
@@ -2900,7 +2901,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     }
 
     private void replaceInputMethodText(@Nonnull InputMethodEvent e) {
-      if (myNeedToSelectPreviousChar && SystemInfo.isMac &&
+      if (myNeedToSelectPreviousChar && Platform.current().os().isMac() &&
         (Registry.is("ide.mac.pressAndHold.brute.workaround") || Registry.is("ide.mac.pressAndHold.workaround") && (hasRelevantCommittedText(
           e) || e.getCaret() == null))) {
         // This is required to support input of accented characters using press-and-hold method (http://support.apple.com/kb/PH11264).
@@ -3833,7 +3834,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, FileEditorsSplitters.class);
 
       boolean thereIsSomethingAbove =
-        !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance()
+        !Platform.current().os().isMac() || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance()
                                                                                         .getShowNavigationBar() || toolWindowIsNotEmpty();
       //noinspection ConstantConditions
       Component header = myHeaderPanel == null ? null : ArrayUtil.getFirstElement(myHeaderPanel.getComponents());

@@ -47,7 +47,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

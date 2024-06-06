@@ -35,7 +35,7 @@ import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import consulo.util.dataholder.UserDataHolder;

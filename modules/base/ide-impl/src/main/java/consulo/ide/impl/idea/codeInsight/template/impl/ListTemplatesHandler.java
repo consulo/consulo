@@ -25,7 +25,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;

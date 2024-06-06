@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;

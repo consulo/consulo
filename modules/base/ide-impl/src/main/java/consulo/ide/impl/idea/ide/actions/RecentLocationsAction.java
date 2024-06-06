@@ -12,14 +12,13 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.CaptionPanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.Coordinate2D;
@@ -64,7 +63,7 @@ public class RecentLocationsAction extends DumbAwareAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     FeatureUsageTracker.getInstance().triggerFeatureUsed(RECENT_LOCATIONS_ACTION_ID);
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -139,12 +138,7 @@ public class RecentLocationsAction extends DumbAwareAction {
       updateItems(model, listWithFilter, title, checkBox, popup);
     }).registerCustomShortcutSet(showChangedOnlyShortcutSet, list, popup);
 
-    checkBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        updateItems(model, listWithFilter, title, checkBox, popup);
-      }
-    });
+    checkBox.addActionListener(e -> updateItems(model, listWithFilter, title, checkBox, popup));
 
     if (DimensionService.getInstance().getSize(LOCATION_SETTINGS_KEY, project) == null) {
       popup.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
@@ -223,7 +217,7 @@ public class RecentLocationsAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    e.getPresentation().setEnabled((e == null ? null : e.getData(CommonDataKeys.PROJECT)) != null);
+    e.getPresentation().setEnabled((e == null ? null : e.getData(Project.KEY)) != null);
   }
 
   static void clearSelectionInEditor(@Nonnull Editor editor) {

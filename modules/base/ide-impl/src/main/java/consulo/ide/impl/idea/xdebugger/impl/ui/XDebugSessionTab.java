@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui;
 
 import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
 import consulo.execution.impl.internal.ui.layout.ViewImpl;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.util.AppUIUtil;
@@ -32,7 +33,6 @@ import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
@@ -177,7 +177,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
       if (XDebugSession.DATA_KEY == dataId) {
         return mySession;
       }
-      else if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+      else if (ConsoleView.KEY == dataId) {
         return mySession.getConsoleView();
       }
     }

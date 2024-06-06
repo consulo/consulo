@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.Settings;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.content.scope.NamedScope;
@@ -30,6 +30,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -50,16 +51,11 @@ class VcsUpdateInfoScopeFilterConfigurable implements NamedScopesHolder.ScopeLis
   VcsUpdateInfoScopeFilterConfigurable(Project project, VcsConfiguration vcsConfiguration) {
     myProject = project;
     myVcsConfiguration = vcsConfiguration;
-    myCheckbox = new JCheckBox(VcsBundle.message("settings.filter.update.project.info.by.scope"));
+    myCheckbox = new JCheckBox(VcsLocalize.settingsFilterUpdateProjectInfoByScope().get());
     myComboBox = new JComboBox();
     
     myComboBox.setEnabled(myCheckbox.isSelected());
-    myCheckbox.addChangeListener(new ChangeListener() {
-      @Override
-      public void stateChanged(ChangeEvent e) {
-        myComboBox.setEnabled(myCheckbox.isSelected());
-      }
-    });
+    myCheckbox.addChangeListener(e -> myComboBox.setEnabled(myCheckbox.isSelected()));
 
     myNamedScopeHolders = NamedScopesHolder.getAllNamedScopeHolders(myProject);
     for (NamedScopesHolder holder : myNamedScopeHolders) {

@@ -20,9 +20,8 @@ import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.language.editor.CommonDataKeys;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -38,7 +37,7 @@ public class XAddToWatchesFromEditorActionHandler extends XDebuggerActionHandler
 
   @Nullable
   protected static String getTextToEvaluate(DataContext dataContext, XDebugSession session) {
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null) {
       return null;
     }

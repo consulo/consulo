@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.DirectoryAccessChecker;
@@ -12,10 +11,11 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.ChildInfoImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.Queue;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
+import consulo.platform.Platform;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Queue;
 import consulo.util.collection.Sets;
 import consulo.util.interner.Interner;
 import consulo.util.io.FileAttributes;
@@ -23,11 +23,10 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.NewVirtualFile;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -340,7 +339,7 @@ public class RefreshWorker {
 
     myHelper.checkWritableAttributeChange(child, persistence.isWritable(child), childAttributes.isWritable());
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       myHelper.checkHiddenAttributeChange(child, child.is(VFileProperty.HIDDEN), childAttributes.isHidden());
     }
 

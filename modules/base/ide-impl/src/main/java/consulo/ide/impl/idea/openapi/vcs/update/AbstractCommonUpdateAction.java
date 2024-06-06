@@ -49,6 +49,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.change.VcsAnnotationRefresher;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.UpdateOrStatusOptionsDialog;
 import consulo.versionControlSystem.update.*;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -60,9 +61,9 @@ import org.jetbrains.annotations.NonNls;
 import java.io.File;
 import java.util.*;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.notNullize;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.pluralize;
 import static consulo.util.lang.ObjectUtil.notNull;
+import static consulo.util.lang.StringUtil.notNullize;
+import static consulo.util.lang.StringUtil.pluralize;
 import static consulo.versionControlSystem.VcsNotifier.STANDARD_NOTIFICATION;
 
 public abstract class AbstractCommonUpdateAction extends AbstractVcsAction implements UpdateInBackground {
@@ -152,10 +153,10 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
 
   private static String getAllFilesAreUpToDateMessage(FilePath[] roots) {
     if (roots.length == 1 && !roots[0].isDirectory()) {
-      return VcsBundle.message("message.text.file.is.up.to.date");
+      return VcsLocalize.messageTextFileIsUpToDate().get();
     }
     else {
-      return VcsBundle.message("message.text.all.files.are.up.to.date");
+      return VcsLocalize.messageTextAllFilesAreUpToDate().get();
     }
   }
 
@@ -292,7 +293,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
   }
 
   private class Updater extends Task.Backgroundable {
-    private final String LOCAL_HISTORY_ACTION = VcsBundle.message("local.history.update.from.vcs");
+    private final String LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs().get();
 
     private final Project myProject;
     private final ProjectLevelVcsManagerEx myProjectLevelVcsManager;
@@ -377,7 +378,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
         }
       } finally {
         try {
-          ProgressManager.progress(VcsBundle.message("progress.text.synchronizing.files"));
+          ProgressManager.progress(VcsLocalize.progressTextSynchronizingFiles().get());
           doVfsRefresh();
         } finally {
           myProjectLevelVcsManager.stopBackgroundVcsOperation();
@@ -529,14 +530,16 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           if (continueChainFinal) {
             gatherContextInterruptedMessages();
           }
-          AbstractVcsHelper.getInstance(myProject).showErrors(myGroupedExceptions, VcsBundle.message("message.title.vcs.update.errors",
-                                                                                                     getTemplatePresentation().getText()));
+          AbstractVcsHelper.getInstance(myProject).showErrors(
+            myGroupedExceptions,
+            VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText()).get()
+          );
         }
         else if (someSessionWasCancelled) {
-          ProgressManager.progress(VcsBundle.message("progress.text.updating.canceled"));
+          ProgressManager.progress(VcsLocalize.progressTextUpdatingCanceled().get());
         }
         else {
-          ProgressManager.progress(VcsBundle.message("progress.text.updating.done"));
+          ProgressManager.progress(VcsLocalize.progressTextUpdatingDone().get());
         }
 
         final boolean noMerged = myUpdatedFiles.getGroupById(FileGroup.MERGED_WITH_CONFLICT_ID).isEmpty();
@@ -544,7 +547,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
           NotificationType type;
           String content;
           if (someSessionWasCancelled) {
-            content = VcsBundle.message("progress.text.updating.canceled");
+            content = VcsLocalize.progressTextUpdatingCanceled().get();
             type = NotificationType.WARNING;
           }
           else {
@@ -581,8 +584,10 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
 
     private void showContextInterruptedError() {
       gatherContextInterruptedMessages();
-      AbstractVcsHelper.getInstance(myProject).showErrors(myGroupedExceptions,
-                                                          VcsBundle.message("message.title.vcs.update.errors", getTemplatePresentation().getText()));
+      AbstractVcsHelper.getInstance(myProject).showErrors(
+        myGroupedExceptions,
+        VcsLocalize.messageTitleVcsUpdateErrors(getTemplatePresentation().getText()).get()
+      );
     }
 
     private void gatherContextInterruptedMessages() {

@@ -15,14 +15,14 @@
  */
 package consulo.language.editor.refactoring.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.configurable.ConfigurationException;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     if (hasHelpAction ())
       actions.add(getHelpAction());
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       Collections.reverse(actions);
     }
     return actions.toArray(new Action[actions.size()]);
@@ -158,7 +158,7 @@ public abstract class RefactoringDialog extends DialogWrapper {
     public PreviewAction() {
       putValue(Action.NAME, RefactoringBundle.message("preview.button"));
 
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         putValue(FOCUSED_ACTION, Boolean.TRUE);
       }
     }

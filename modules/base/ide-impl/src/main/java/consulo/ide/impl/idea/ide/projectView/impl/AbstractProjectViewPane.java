@@ -14,21 +14,15 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.dnd.DnDEventImpl;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractModuleNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.AbstractProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ModuleGroupNode;
-import consulo.project.ui.view.tree.AbstractTreeStructureBase;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.tree.project.ProjectFileNode;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.move.MoveHandler;
@@ -64,14 +58,16 @@ import consulo.util.concurrent.Promises;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -348,7 +344,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
     if (data != null) {
       return data;
     }
-    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       TreePath[] paths = getSelectionPaths();
       if (paths == null) return null;
       final ArrayList<Navigatable> navigatables = new ArrayList<>();

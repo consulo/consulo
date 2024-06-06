@@ -21,12 +21,11 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -34,7 +33,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -278,7 +276,7 @@ public class ActionMacro implements JDOMExternalizable {
     }
 
     public void playBack(DataContext context) {
-      Editor editor = context.getData(PlatformDataKeys.EDITOR);
+      Editor editor = context.getData(Editor.KEY);
       final TypedAction typedAction = EditorActionManager.getInstance().getTypedAction();
       for (final char aChar : myText.toCharArray()) {
         typedAction.actionPerformed(editor, aChar, context);

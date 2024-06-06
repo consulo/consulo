@@ -690,7 +690,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
         return;
       }
 
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       if (editor != getEditor()) {
         e.getPresentation().setEnabledAndVisible(false);
         return;
@@ -714,7 +714,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase {
       if (isStateIsOutOfDate()) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(CommonDataKeys.PROJECT), title, () -> {
+      DiffUtil.executeWriteCommand(getDocument(myModifiedSide), e.getData(Project.KEY), title, () -> {
         // state is invalidated during apply(), but changes are in reverse order, so they should not conflict with each other
         apply(selectedChanges);
         scheduleRediff();

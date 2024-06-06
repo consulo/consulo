@@ -16,15 +16,14 @@
 package consulo.ide.impl.idea.openapi.ui;
 
 import consulo.component.util.Iconable;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SimpleColoredRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.util.collection.Stack;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
-
+import consulo.util.collection.Stack;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -62,7 +61,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
     myShowRootNode = showRootNode;
     setModel(new TreeModelWrapper(myTreeModel, showRootNode));
     setRenderer(new TreeListCellRenderer(this, showRootNode, defaultText));
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
   public void setTreeModel(@Nonnull final TreeModel model, final boolean showRootNode) {
@@ -186,7 +185,7 @@ public class TreeComboBox extends ComboBoxWithWidePopup {
           SELECTION_PAINTER.paintBorder(this, g, 0, 0, getWidth(), getHeight());
         }
 
-        if (SystemInfo.isMac && myChecked && !myEditable) {
+        if (Platform.current().os().isMac() && myChecked && !myEditable) {
           int i = getHeight() - 4;
           g.setColor(getForeground());
           g.drawString("\u2713", 6, i);

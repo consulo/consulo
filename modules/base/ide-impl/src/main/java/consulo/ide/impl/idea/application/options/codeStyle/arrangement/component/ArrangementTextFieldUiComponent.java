@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.component;
 
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementConstants;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;

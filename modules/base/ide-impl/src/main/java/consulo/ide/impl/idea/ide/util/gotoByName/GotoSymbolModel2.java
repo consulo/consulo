@@ -16,18 +16,18 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.navigation.GotoSymbolContributor;
-import consulo.language.Language;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
-import consulo.navigation.NavigationItem;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
+import consulo.ide.navigation.GotoSymbolContributor;
+import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
-
+import consulo.navigation.NavigationItem;
+import consulo.platform.Platform;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -79,7 +79,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   public char getCheckBoxMnemonic() {
     // Some combination like Alt+N, Ant+O, etc are a dead sysmbols, therefore
     // we have to change mnemonics for Mac users.
-    return SystemInfo.isMac?'P':'n';
+    return Platform.current().os().isMac() ? 'P' : 'n';
   }
 
   @Override

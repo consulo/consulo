@@ -26,7 +26,7 @@ import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl;

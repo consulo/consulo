@@ -25,7 +25,7 @@ import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.service.execution.ExternalSystemSettingsControl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

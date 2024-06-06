@@ -42,7 +42,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

@@ -22,6 +22,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.util.collection.HashingStrategy;
@@ -547,7 +548,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
       case NEVER:
         return false;
       case WINDOWS_ONLY:
-        return SystemInfo.isWindows;
+        return Platform.current().os().isWindows();
       default:
         throw new IllegalStateException(myBomForNewUtf8Files.toString());
     }

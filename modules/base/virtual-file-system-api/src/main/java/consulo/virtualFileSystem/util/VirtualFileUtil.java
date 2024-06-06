@@ -16,7 +16,6 @@
 package consulo.virtualFileSystem.util;
 
 import consulo.application.WriteAction;
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
@@ -32,9 +31,9 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,7 +106,7 @@ public final class VirtualFileUtil {
         throw new RuntimeException(new IOException(VfsBundle.message("url.parse.error", url.toExternalForm())));
       }
     }
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       while (!path.isEmpty() && path.charAt(0) == '/') {
         path = path.substring(1, path.length());
       }
@@ -241,7 +240,7 @@ public final class VirtualFileUtil {
     try {
       String protocol = file.getFileSystem().getProtocol();
       if (file.isInLocalFileSystem()) {
-        if (SystemInfo.isWindows && path.charAt(0) != '/') {
+        if (Platform.current().os().isWindows() && path.charAt(0) != '/') {
           path = '/' + path;
         }
         return new URI(protocol, "", path, null, null);
@@ -363,11 +362,11 @@ public final class VirtualFileUtil {
 
     if (uri.startsWith("file:///")) {
       uri = uri.substring("file:///".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
+      if (!Platform.current().os().isWindows()) uri = "/" + uri;
     }
     else if (uri.startsWith("file:/")) {
       uri = uri.substring("file:/".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
+      if (!Platform.current().os().isWindows()) uri = "/" + uri;
     }
     else {
       uri = StringUtil.trimStart(uri, "file:");
@@ -377,10 +376,10 @@ public final class VirtualFileUtil {
 
     if (uri.startsWith("jar:file:/")) {
       uri = uri.substring("jar:file:/".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
+      if (!Platform.current().os().isWindows()) uri = "/" + uri;
       file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.ZIP_PROTOCOL_PREFIX + uri);
     }
-    else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') || SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
+    else if (!Platform.current().os().isWindows() && StringUtil.startsWithChar(uri, '/') || Platform.current().os().isWindows() && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
       file = StandardFileSystems.local().findFileByPath(uri);
     }
 

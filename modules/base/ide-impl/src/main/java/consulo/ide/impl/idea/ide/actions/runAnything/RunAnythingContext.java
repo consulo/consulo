@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.project.Project;

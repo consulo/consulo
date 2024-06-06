@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.designer;
 
 import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
@@ -29,6 +28,7 @@ import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.ui.ToolwindowPaintUtil;
 import consulo.ide.impl.wm.impl.ToolWindowContentUI;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -485,7 +485,7 @@ public class LightToolWindow extends JPanel {
           return LightToolWindow.this.isActive();
         }
       };
-      button.setHoveringEnabled(!SystemInfo.isMac);
+      button.setHoveringEnabled(!Platform.current().os().isMac());
       setContent(button);
 
       consulo.ui.image.Image icon = presentation.getIcon();

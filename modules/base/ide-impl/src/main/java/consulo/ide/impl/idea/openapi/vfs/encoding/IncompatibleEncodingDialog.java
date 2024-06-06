@@ -1,18 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
+import consulo.application.AllIcons;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.charset.Charset;
@@ -85,7 +85,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
         close(RELOAD_EXIT_CODE);
       }
     };
-    if (!SystemInfo.isMac && safeToReload == EncodingUtil.Magic8.NO_WAY) {
+    if (!Platform.current().os().isMac() && safeToReload == EncodingUtil.Magic8.NO_WAY) {
       reloadAction.putValue(Action.SMALL_ICON, AllIcons.General.Warning);
     }
     reloadAction.putValue(Action.MNEMONIC_KEY, (int)'R');
@@ -114,7 +114,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
         return !RawFileLoader.getInstance().isTooLarge(virtualFile.getLength());
       }
     };
-    if (!SystemInfo.isMac && safeToConvert == EncodingUtil.Magic8.NO_WAY) {
+    if (!Platform.current().os().isMac() && safeToConvert == EncodingUtil.Magic8.NO_WAY) {
       convertAction.putValue(Action.SMALL_ICON, AllIcons.General.Warning);
     }
     convertAction.putValue(Action.MNEMONIC_KEY, (int)'C');

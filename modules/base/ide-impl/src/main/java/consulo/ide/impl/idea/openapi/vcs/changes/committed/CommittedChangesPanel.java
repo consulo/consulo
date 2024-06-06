@@ -32,7 +32,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
 import consulo.ide.impl.idea.util.BufferedListConsumer;
@@ -46,6 +46,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.commited.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
@@ -225,7 +226,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     cache.hasCachesForAnyRoot(notEmpty -> {
       if (!notEmpty) {
         if (cacheOnly) {
-          myBrowser.getEmptyText().setText(VcsBundle.message("committed.changes.not.loaded.message"));
+          myBrowser.getEmptyText().setText(VcsLocalize.committedChangesNotLoadedMessage().get());
           return;
         }
         if (!CacheSettingsDialog.showSettingsDialog(myProject)) return;
@@ -269,10 +270,10 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
     }
     final String emptyText;
     if (reset) {
-      emptyText = VcsBundle.message("committed.changes.not.loaded.message");
+      emptyText = VcsLocalize.committedChangesNotLoadedMessage().get();
     }
     else {
-      emptyText = VcsBundle.message("committed.changes.empty.message");
+      emptyText = VcsLocalize.committedChangesEmptyMessage().get();
     }
     myBrowser.getEmptyText().setText(emptyText);
     myBrowser.setItems(committedChangeLists, CommittedChangesBrowserUseCase.COMMITTED);

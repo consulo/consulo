@@ -5,10 +5,7 @@ package consulo.ide.impl.idea.find;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.event.SelectionEvent;
@@ -29,9 +26,8 @@ import consulo.ide.impl.idea.find.impl.livePreview.LivePreviewController;
 import consulo.ide.impl.idea.find.impl.livePreview.SearchResults;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -266,7 +262,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
     if (SESSION_KEY == dataId) {
       return this;
     }
-    if (CommonDataKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
+    if (EditorKeys.EDITOR_EVEN_IF_INACTIVE == dataId) {
       return myEditor;
     }
     if (PlatformDataKeys.HELP_ID == dataId) {

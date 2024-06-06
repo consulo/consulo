@@ -15,42 +15,42 @@
  */
 package consulo.ide.impl.idea.openapi.diff.impl.dir;
 
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.diff.*;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
-import consulo.externalService.statistic.UsageTrigger;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.MessageDialogBuilder;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.WriteAction;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.externalService.statistic.UsageTrigger;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.ide.impl.idea.ide.diff.*;
+import consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
+import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.MessageDialogBuilder;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -238,7 +238,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         }
         catch (final IOException e) {
           LOG.warn(e);
-          reportException(VcsBundle.message("refresh.failed.message", StringUtil.decapitalize(e.getLocalizedMessage())));
+          reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())).get());
         }
         finally {
           if (myTree != null) {
@@ -265,7 +265,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     }
     catch (final IOException e) {
       LOG.warn(e);
-      reportException(VcsBundle.message("refresh.failed.message", StringUtil.decapitalize(e.getLocalizedMessage())));
+      reportException(VcsLocalize.refreshFailedMessage(StringUtil.decapitalize(e.getLocalizedMessage())).get());
     }
     finally {
       myTree.setSource(mySrc);

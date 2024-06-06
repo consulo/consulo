@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;

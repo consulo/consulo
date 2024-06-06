@@ -2,7 +2,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.Application;
-import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.IdeGlassPane.TopComponent;
@@ -13,9 +12,9 @@ import consulo.ui.ex.awt.internal.laf.WindowsScrollBarUI;
 import consulo.ui.ex.awt.scroll.TouchScrollUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -312,7 +311,7 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
     double rotation = event.getPreciseWheelRotation();
     if (ScrollSettings.isPixelPerfectEnabled()) {
       // calculate an absolute delta if possible
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         // Native code in our JDK for Mac uses 0.1 to convert pixels to units,
         // so we use 10 to restore amount of pixels to scroll.
         return 10 * rotation;

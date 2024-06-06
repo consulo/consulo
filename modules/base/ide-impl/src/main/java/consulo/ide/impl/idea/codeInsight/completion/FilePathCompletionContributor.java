@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.completion;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager;

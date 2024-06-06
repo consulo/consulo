@@ -1,25 +1,21 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.wizard;
 
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.JBCardLayout;
-import consulo.ui.ex.awt.OpaquePanel;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ui.mac.TouchbarDataKeys;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -100,7 +96,7 @@ public abstract class AbstractWizard<T extends Step> extends DialogWrapper {
 
     JPanel buttonPanel = new JPanel();
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       panel.add(buttonPanel, BorderLayout.EAST);
       buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 

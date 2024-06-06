@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.action.*;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.CodeDocumentationAwareCommenter;

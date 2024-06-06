@@ -21,7 +21,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.navigation.Navigatable;
 import consulo.language.impl.psi.ResolveScopeManager;

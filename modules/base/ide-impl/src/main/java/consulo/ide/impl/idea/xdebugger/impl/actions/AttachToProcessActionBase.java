@@ -13,7 +13,6 @@ import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
 import consulo.ide.impl.idea.ui.popup.async.AsyncPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
@@ -73,7 +72,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
 
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     int attachDebuggerProvidersNumber = myAttachProvidersSupplier.get().size();
     boolean enabled = project != null && attachDebuggerProvidersNumber > 0;
     e.getPresentation().setEnabledAndVisible(enabled);
@@ -82,7 +81,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
 

@@ -3,13 +3,13 @@ package consulo.ide.impl.util;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.platform.Platform;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public final class LocalFileFinder {
   }
 
   public static boolean windowsDriveExists(@Nonnull String path) {
-    if (!SystemInfo.isWindows) {
+    if (!Platform.current().os().isWindows()) {
       return true;
     }
 

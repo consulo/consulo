@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.FontInfo;
 
 import javax.swing.*;

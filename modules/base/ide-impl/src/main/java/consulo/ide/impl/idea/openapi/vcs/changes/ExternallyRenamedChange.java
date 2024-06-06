@@ -16,13 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
-
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nullable;
 
 public class ExternallyRenamedChange extends Change {
@@ -63,7 +62,7 @@ public class ExternallyRenamedChange extends Change {
   @Override
   public String getOriginText(final Project project) {
     if (myCopied) {
-      return VcsBundle.message("change.file.copied.from.text", myOriginUrl);
+      return VcsLocalize.changeFileCopiedFromText(myOriginUrl).get();
     }
     return super.getOriginText(project);
   }
@@ -71,7 +70,9 @@ public class ExternallyRenamedChange extends Change {
   @Nullable
   protected String getRenamedText() {
     if (myRenamedTargetName != null) {
-      return VcsBundle.message((getBeforeRevision() != null) ? "change.file.renamed.to.text" : "change.file.renamed.from.text", myRenamedTargetName);
+      return (getBeforeRevision() != null)
+        ? VcsLocalize.changeFileRenamedToText(myRenamedTargetName).get()
+        : VcsLocalize.changeFileRenamedFromText(myRenamedTargetName).get();
     }
     return super.getRenamedText();
   }
@@ -79,7 +80,9 @@ public class ExternallyRenamedChange extends Change {
   @Nullable
   protected String getMovedText(final Project project) {
     if (myRenamedTargetName != null) {
-      return VcsBundle.message((getBeforeRevision() != null) ? "change.file.moved.to.text" : "change.file.moved.from.text", myRenamedTargetName);
+      return (getBeforeRevision() != null)
+        ? VcsLocalize.changeFileMovedToText(myRenamedTargetName).get()
+        : VcsLocalize.changeFileMovedFromText(myRenamedTargetName).get();
     }
     return super.getMovedText(project);
   }

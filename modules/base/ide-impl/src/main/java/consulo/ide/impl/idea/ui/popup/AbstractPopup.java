@@ -10,11 +10,10 @@ import consulo.application.internal.TransactionGuardEx;
 import consulo.application.ui.ApplicationWindowStateService;
 import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
@@ -33,13 +32,12 @@ import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;
 import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ChildFocusWatcher;
 import consulo.ide.impl.idea.util.ui.ScrollUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -66,6 +64,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
@@ -495,7 +494,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   @Nonnull
   @Override
   public Point getBestPositionFor(@Nonnull DataContext dataContext) {
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (editor != null && editor.getComponent().isShowing()) {
       return getBestPositionFor(editor).getScreenPoint();
     }
@@ -504,7 +503,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Override
   public void showInBestPositionFor(@Nonnull DataContext dataContext) {
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    final Editor editor = dataContext.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     if (editor != null && editor.getComponent().isShowing()) {
       showInBestPositionFor(editor);
     }
@@ -595,7 +594,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Nonnull
   private RelativePoint getBestPositionFor(@Nonnull Editor editor) {
-    DataContext context = ((EditorEx)editor).getDataContext();
+    DataContext context = editor.getDataContext();
     Rectangle dominantArea = context.getData(UIExAWTDataKey.DOMINANT_HINT_AREA_RECTANGLE);
     if (dominantArea != null && !myRequestFocus) {
       final JLayeredPane layeredPane = editor.getContentComponent().getRootPane().getLayeredPane();
@@ -928,7 +927,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     myRequestorComponent = owner;
 
-    boolean forcedDialog = myMayBeParent || SystemInfo.isMac && !isIdeFrame(myOwner) && myOwner != null && myOwner.isShowing();
+    boolean forcedDialog = myMayBeParent || Platform.current().os().isMac() && !isIdeFrame(myOwner) && myOwner != null && myOwner.isShowing();
 
     PopupComponent.Factory factory = getFactory(myForcedHeavyweight || myResizable, forcedDialog);
     myNativePopup = factory.isNativePopup();
@@ -1167,7 +1166,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
     final Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (c != null) {
       final DataContext context = DataManager.getInstance().getDataContext(c);
-      final Project project = context.getData(CommonDataKeys.PROJECT);
+      final Project project = context.getData(Project.KEY);
       if (project != null) {
         myProjectDisposable = () -> {
           if (!isDisposed()) {
@@ -1250,7 +1249,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       mySpeedSearchPatternField.getTextEditor().setBorder(JBUI.Borders.empty());
     }
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       RelativeFont.TINY.install(mySpeedSearchPatternField);
     }
   }
@@ -1347,7 +1346,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   private PopupComponent.Factory getFactory(boolean forceHeavyweight, boolean forceDialog) {
     if (Registry.is("allow.dialog.based.popups")) {
       boolean noFocus = !myFocusable || !myRequestFocus;
-      boolean cannotBeDialog = noFocus; // && SystemInfo.isXWindow
+      boolean cannotBeDialog = noFocus; // && Platform.current().os().isXWindow()
 
       if (!cannotBeDialog && (isPersistent() || forceDialog)) {
         return new PopupComponent.Factory.Dialog();
@@ -1395,7 +1394,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
         int delta = screen.width + screen.x - location.x;
         if (size.width > delta) {
           size.width = delta;
-          if (!SystemInfo.isMac || Registry.is("mac.scroll.horizontal.gap")) {
+          if (!Platform.current().os().isMac() || Registry.is("mac.scroll.horizontal.gap")) {
             // we shrank horizontally - need to increase height to fit the horizontal scrollbar
             JScrollPane scrollPane = ScrollUtil.findScrollPane(myContent);
             if (scrollPane != null && scrollPane.getHorizontalScrollBarPolicy() != ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {

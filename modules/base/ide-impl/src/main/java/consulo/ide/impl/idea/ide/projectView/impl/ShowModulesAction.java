@@ -1,7 +1,7 @@
 package consulo.ide.impl.idea.ide.projectView.impl;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;

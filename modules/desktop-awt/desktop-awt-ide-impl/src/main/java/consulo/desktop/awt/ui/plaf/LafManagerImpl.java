@@ -42,8 +42,9 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.desktop.awt.laf.GTKPlusUIUtil;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.Platform;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.ReflectionUtil;
@@ -140,7 +141,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     lafList.add(new IntelliJLookAndFeelInfo());
     lafList.add(new DarculaLookAndFeelInfo());
 
-    if (SystemInfo.isLinux && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
+    if (Platform.current().os().isLinux() && EarlyAccessProgramManager.is(GTKPlusEAPDescriptor.class)) {
       lafList.add(new UIManager.LookAndFeelInfo("GTK+", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
     }
 
@@ -190,7 +191,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
 
     updateUI();
 
-    if (SystemInfo.isXWindow) {
+    if (Platform.current().os().isXWindow()) {
       myThemeChangeListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
@@ -606,7 +607,7 @@ public final class LafManagerImpl extends LafManager implements Disposable, Pers
     }
     else if (property == null) {
       // use defaults if popup weight isn't specified
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         popupWeight = OurPopupFactory.WEIGHT_HEAVY;
       }
     }

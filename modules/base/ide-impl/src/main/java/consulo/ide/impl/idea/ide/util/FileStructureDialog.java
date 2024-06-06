@@ -24,12 +24,11 @@ import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ui.ex.action.IdeActions;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.ui.ex.awt.IdeBorderFactory;
@@ -426,7 +425,7 @@ public class FileStructureDialog extends DialogWrapper {
 
       if (selectedElement instanceof TreeElement) selectedElement = ((StructureViewTreeElement)selectedElement).getValue();
 
-      if (PlatformDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         return selectedElement instanceof Navigatable ? selectedElement : myNavigatable;
       }
 
@@ -469,7 +468,7 @@ public class FileStructureDialog extends DialogWrapper {
         return childElements;
       }
 
-      ArrayList<Object> filteredElements = new ArrayList<Object>(childElements.length);
+      ArrayList<Object> filteredElements = new ArrayList<>(childElements.length);
       SpeedSearchComparator speedSearchComparator = createSpeedSearchComparator();
 
       for (Object child : childElements) {

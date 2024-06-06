@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.stubs.provided;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.psi.stubs.SerializationManagerImpl;
 import consulo.ide.impl.psi.stubs.SerializedStubTree;
 import consulo.ide.impl.psi.stubs.SerializedStubTreeDataExternalizer;

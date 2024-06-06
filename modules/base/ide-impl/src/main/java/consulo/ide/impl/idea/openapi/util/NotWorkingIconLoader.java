@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ui.ex.awt.internal.ImageLoader;

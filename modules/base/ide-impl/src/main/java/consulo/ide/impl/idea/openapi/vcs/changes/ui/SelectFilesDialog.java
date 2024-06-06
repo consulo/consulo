@@ -29,7 +29,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 

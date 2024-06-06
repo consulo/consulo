@@ -16,16 +16,16 @@
 package consulo.desktop.awt.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.BuildInLookAndFeel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
-import consulo.ui.ex.awt.BuildInLookAndFeel;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.style.StyleManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -77,7 +77,7 @@ public class DefaultUIDecorator implements SwingUIDecorator {
    */
   @Override
   public boolean decorateWindowTitle(@Nonnull JRootPane rootPane) {
-    if(SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       rootPane.putClientProperty("jetbrains.awt.windowDarkAppearance", StyleManager.get().getCurrentStyle().isDark());
     }
     return true;

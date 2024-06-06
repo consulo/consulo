@@ -39,7 +39,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionManager;
@@ -49,7 +49,7 @@ import consulo.ui.ex.action.AnSeparator;
 import consulo.util.dataholder.Key;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -535,7 +535,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         return;
       }
 
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       Side side = Side.fromValue(getEditors(), editor);
       if (side == null || !isVisible(side)) {
         e.getPresentation().setEnabledAndVisible(false);
@@ -556,7 +556,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       final Side side = assertNotNull(Side.fromValue(getEditors(), editor));
       final List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
       if (selectedChanges.isEmpty()) return;
@@ -564,7 +564,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
       if (!isEditable(myModifiedSide)) return;
 
       String title = e.getPresentation().getText() + " selected changes";
-      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getData(CommonDataKeys.PROJECT), title, () -> {
+      DiffUtil.executeWriteCommand(getEditor(myModifiedSide).getDocument(), e.getData(Project.KEY), title, () -> {
         apply(selectedChanges);
       });
     }

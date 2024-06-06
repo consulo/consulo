@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.history.core;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.Collections;

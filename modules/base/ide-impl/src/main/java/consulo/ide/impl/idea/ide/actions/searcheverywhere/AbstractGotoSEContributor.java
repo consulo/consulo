@@ -17,11 +17,10 @@ import consulo.ide.impl.idea.ide.actions.SearchEverywherePsiRenderer;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.PsiElement;
@@ -112,7 +111,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   }
 
   private static void processScopes(@Nonnull DataContext dataContext, @Nonnull Processor<? super ScopeDescriptor> processor) {
-    Project project = ObjectUtil.notNull(dataContext.getData(CommonDataKeys.PROJECT));
+    Project project = ObjectUtil.notNull(dataContext.getData(Project.KEY));
     ScopeChooserCombo.processScopes(project, dataContext, ScopeChooserCombo.OPT_LIBRARIES | ScopeChooserCombo.OPT_EMPTY_SCOPES, processor);
   }
 
@@ -312,7 +311,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
 
   @Override
   public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       if (element instanceof PsiElement) {
         return element;
       }
@@ -534,7 +533,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       };
       ScopeDescriptor selection = getSelectedScope();
       step.setDefaultOptionIndex(ContainerUtil.indexOf(items, o -> Comparing.equal(o.getDisplayName(), selection.getDisplayName())));
-      ListPopupImpl popup = new ListPopupImpl(e.getData(CommonDataKeys.PROJECT), step);
+      ListPopupImpl popup = new ListPopupImpl(e.getData(Project.KEY), step);
       popup.setMaxRowCount(10);
       //noinspection unchecked
       popup.getList().setCellRenderer(renderer);

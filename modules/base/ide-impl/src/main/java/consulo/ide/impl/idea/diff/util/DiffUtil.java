@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.openapi.diff.impl.GenericDataProvider;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.ide.impl.idea.util.ArrayUtil;

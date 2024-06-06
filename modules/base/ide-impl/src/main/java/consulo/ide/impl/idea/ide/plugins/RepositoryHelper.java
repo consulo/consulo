@@ -28,7 +28,7 @@ import consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.plugins.PluginJsonNode;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;

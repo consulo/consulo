@@ -19,7 +19,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.ServerConfiguration;

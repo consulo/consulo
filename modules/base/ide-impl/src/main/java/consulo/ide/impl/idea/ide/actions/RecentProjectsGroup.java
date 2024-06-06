@@ -15,14 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.ide.RecentProjectsManagerBase;
+import consulo.platform.Platform;
+import consulo.ui.ex.action.*;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,7 +28,7 @@ public class RecentProjectsGroup extends ActionGroup implements DumbAware {
 
     final Presentation templatePresentation = getTemplatePresentation();
     // Let's make tile more macish
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       templatePresentation.setText(ActionsBundle.message("group.reopen.mac.text"));
     } else {
       templatePresentation.setText(ActionsBundle.message("group.reopen.win.text"));

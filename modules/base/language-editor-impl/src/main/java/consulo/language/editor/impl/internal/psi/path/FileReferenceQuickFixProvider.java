@@ -17,14 +17,13 @@
 package consulo.language.editor.impl.internal.psi.path;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
-import consulo.language.editor.template.EditorFileTemplateUtil;
 import consulo.language.editor.impl.intention.CreateFileFix;
 import consulo.language.editor.impl.intention.RenameFileFix;
 import consulo.language.editor.impl.internal.intention.RenameFileReferenceIntentionAction;
 import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.template.EditorFileTemplateUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.*;
 import consulo.language.psi.path.FileReference;
@@ -32,13 +31,14 @@ import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,7 +61,7 @@ public class FileReferenceQuickFixProvider {
     final String newFileName = reference.getFileNameToCreate();
 
     // check if we could create file
-    if (newFileName.isEmpty() || newFileName.indexOf('\\') != -1 || newFileName.indexOf('*') != -1 || newFileName.indexOf('?') != -1 || SystemInfo.isWindows && newFileName.indexOf(':') != -1) {
+    if (newFileName.isEmpty() || newFileName.indexOf('\\') != -1 || newFileName.indexOf('*') != -1 || newFileName.indexOf('?') != -1 || Platform.current().os().isWindows() && newFileName.indexOf(':') != -1) {
       return Collections.emptyList();
     }
 

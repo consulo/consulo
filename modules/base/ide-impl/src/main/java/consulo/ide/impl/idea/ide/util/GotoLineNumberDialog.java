@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ide.util;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.PatternUtil;
 import consulo.ui.ex.awt.JBUI;

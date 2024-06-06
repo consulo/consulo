@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.ide.actions.GotoFileAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
@@ -44,7 +44,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -285,7 +284,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       if (myCalcElementsThread != null) {
         return null;
       }
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         Object element = getChosenElement();
 
         if (element instanceof PsiElement) {
@@ -296,7 +295,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
           return ((DataProvider)element).getData(dataId);
         }
       }
-      else if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      else if (PsiElement.KEY_OF_ARRAY == dataId) {
         final List<Object> chosenElements = getChosenElements();
         List<PsiElement> result = new ArrayList<>(chosenElements.size());
         for (Object element : chosenElements) {
@@ -389,7 +388,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
     String checkBoxName = myModel.getCheckBoxName();
     Color fg = UIUtil.getLabelDisabledForeground();
-    Color color = UIUtil.isUnderDarcula() ? ColorUtil.shift(fg, 1.2) : ColorUtil.shift(fg, 0.7);
+    Color color = UIUtil.isUnderDarkTheme() ? ColorUtil.shift(fg, 1.2) : ColorUtil.shift(fg, 0.7);
     String text = checkBoxName == null
       ? ""
       : "<html>" + checkBoxName +
@@ -435,7 +434,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             elements.add((PsiElement)object);
           }
           else if (object instanceof DataProvider) {
-            ContainerUtil.addIfNotNull(elements, ((DataProvider)object).getDataUnchecked(CommonDataKeys.PSI_ELEMENT));
+            ContainerUtil.addIfNotNull(elements, ((DataProvider)object).getDataUnchecked(PsiElement.KEY));
           }
         }
         return PsiUtilCore.toPsiElementArray(elements);
@@ -733,7 +732,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         myTextFieldPanel.updateHint((PsiElement)element);
       }
       else if (element instanceof DataProvider) {
-        final Object o = ((DataProvider)element).getData(CommonDataKeys.PSI_ELEMENT);
+        final Object o = ((DataProvider)element).getData(PsiElement.KEY);
         if (o instanceof PsiElement) {
           myTextFieldPanel.updateHint((PsiElement)o);
         }

@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.util.dataholder.UserDataHolder;

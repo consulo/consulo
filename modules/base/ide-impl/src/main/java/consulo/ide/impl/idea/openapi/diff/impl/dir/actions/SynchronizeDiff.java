@@ -17,12 +17,12 @@ package consulo.ide.impl.idea.openapi.diff.impl.dir.actions;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.diff.BackgroundOperatingDiffElement;
+import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffElementImpl;
+import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
-import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffElementImpl;
-import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
-import consulo.application.util.SystemInfo;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class SynchronizeDiff extends DirDiffAction {
 
   @Override
   public ShortcutSet getShortcut() {
-    return CustomShortcutSet.fromString(mySelectedOnly ? "ENTER" : SystemInfo.isMac ? "meta ENTER" : "control ENTER");
+    return CustomShortcutSet.fromString(mySelectedOnly ? "ENTER" : Platform.current().os().isMac() ? "meta ENTER" : "control ENTER");
   }
 
   @Override

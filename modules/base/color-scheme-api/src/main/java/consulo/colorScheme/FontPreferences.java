@@ -79,9 +79,9 @@ public interface FontPreferences {
   }
 
   static String getDefaultFontName() {
-    if (SystemInfo.isWindows) return WINDOWS_DEFAULT_FONT_FAMILY;
+    if (Platform.current().os().isWindows()) return WINDOWS_DEFAULT_FONT_FAMILY;
     if (SystemInfo.isMacOSSnowLeopard) return MAC_OS_DEFAULT_FONT_FAMILY;
-    if (SystemInfo.isXWindow && !GraphicsEnvironment.isHeadless() && !ApplicationManager.getApplication().isCommandLine()) {
+    if (Platform.current().os().isXWindow() && !GraphicsEnvironment.isHeadless() && !ApplicationManager.getApplication().isCommandLine()) {
       for (Font font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
         if (LINUX_DEFAULT_FONT_FAMILY.equals(font.getName())) {
           return font.getFontName();

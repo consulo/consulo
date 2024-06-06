@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.actions.runAnything.items;
 
 import consulo.ide.impl.idea.ide.actions.runAnything.groups.RunAnythingGroup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;

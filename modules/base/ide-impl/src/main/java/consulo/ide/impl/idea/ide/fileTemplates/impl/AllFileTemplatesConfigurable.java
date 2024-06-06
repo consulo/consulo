@@ -29,7 +29,7 @@ import consulo.fileTemplate.impl.internal.FileTemplateRegistratorImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.DefaultCompactActionGroup;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.setting.ShowSettingsUtil;

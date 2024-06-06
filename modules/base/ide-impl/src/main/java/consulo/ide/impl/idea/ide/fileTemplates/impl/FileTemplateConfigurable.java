@@ -49,7 +49,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;

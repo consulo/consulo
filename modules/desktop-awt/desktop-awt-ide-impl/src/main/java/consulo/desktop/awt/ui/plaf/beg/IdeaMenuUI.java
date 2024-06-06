@@ -1,16 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
+import consulo.desktop.awt.ui.plaf.intellij.IdeaPopupMenuUI;
 import consulo.desktop.awt.wm.impl.IdeFrameDecorator;
-import consulo.ui.ex.awt.paint.LinePainter2D;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.Nls;
 
@@ -146,7 +146,7 @@ public class IdeaMenuUI extends BasicMenuUI {
       }
     }
     if (arrowIcon != null) {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         ourArrowIconRect.y += JBUIScale.scale(1);
       }
 

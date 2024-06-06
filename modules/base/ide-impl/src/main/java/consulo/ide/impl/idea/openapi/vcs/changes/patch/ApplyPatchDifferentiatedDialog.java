@@ -15,73 +15,66 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.fileChooser.IdeaFileChooser;
+import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
+import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
+import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.plain.PlainTextFileType;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.collection.MultiMap;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Couple;
+import consulo.util.lang.EmptyRunnable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
-import consulo.util.lang.Couple;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.versionControlSystem.util.ObjectsConvertor;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocalChangeList;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.*;
-import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.util.Alarm;
-import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.dataholder.UserDataHolder;
-import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.EmptyRunnable;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.util.ObjectsConvertor;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultTreeModel;
@@ -92,6 +85,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static consulo.ui.ex.SimpleTextAttributes.STYLE_PLAIN;
 
@@ -164,7 +158,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     setTitle(applyPatchMode.getTitle());
 
     final FileChooserDescriptor descriptor = createSelectPatchDescriptor();
-    descriptor.setTitle(VcsBundle.message("patch.apply.select.title"));
+    descriptor.setTitle(VcsLocalize.patchApplySelectTitle().get());
 
     myProject = project;
     myPatches = new LinkedList<>();
@@ -198,7 +192,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
     myShouldUpdateChangeListName = defaultList == null && externalCommitMessage == null;
     myUpdater = new MyUpdater();
     myPatchFile = new TextFieldWithBrowseButton();
-    myPatchFile.addBrowseFolderListener(VcsBundle.message("patch.apply.select.title"), "", project, descriptor);
+    myPatchFile.addBrowseFolderListener(VcsLocalize.patchApplySelectTitle().get(), "", project, descriptor);
     myPatchFile.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
       protected void textChanged(DocumentEvent e) {
         setPathFileChangeDefault();
@@ -487,7 +481,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
       myCenterPanel = new JPanel(new GridBagLayout());
       final GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, JBUI.insets(1), 0, 0);
 
-      myPatchFileLabel = new JLabel(VcsBundle.message("patch.apply.file.name.field"));
+      myPatchFileLabel = new JLabel(VcsLocalize.patchApplyFileNameField().get());
       myPatchFileLabel.setLabelFor(myPatchFile);
       myCenterPanel.add(myPatchFileLabel, gb);
 

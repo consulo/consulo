@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.editor.impl;
 
 import consulo.document.RangeMarker;
 import consulo.document.impl.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.function.Processor;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.LineIterator;

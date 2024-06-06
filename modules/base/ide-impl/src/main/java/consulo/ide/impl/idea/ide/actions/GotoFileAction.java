@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileConfiguration;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
@@ -59,13 +58,13 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.file");
 
     final GotoFileModel gotoFileModel = new GotoFileModel(project);
-    GotoActionCallback<FileType> callback = new GotoActionCallback<FileType>() {
+    GotoActionCallback<FileType> callback = new GotoActionCallback<>() {
       @Override
       protected ChooseByNameFilter<FileType> createFilter(@Nonnull ChooseByNamePopup popup) {
         return new GotoFileFilter(popup, gotoFileModel, project);

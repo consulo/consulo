@@ -16,29 +16,29 @@
 package consulo.desktop.awt.fileEditor.impl;
 
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.ui.ex.Gray;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.util.MacKeymapUtil;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Couple;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -79,7 +79,7 @@ public class EditorEmptyTextPainter {
   protected void appendSearchEverywhere(@Nonnull UIUtil.TextPainter painter) {
     Shortcut[] shortcuts = KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_SEARCH_EVERYWHERE);
     appendAction(painter, "Search Everywhere",
-                 shortcuts.length == 0 ? "Double " + (SystemInfo.isMac ? MacKeymapUtil.SHIFT : "Shift") : KeymapUtil.getShortcutsText(shortcuts));
+                 shortcuts.length == 0 ? "Double " + (Platform.current().os().isMac() ? MacKeymapUtil.SHIFT : "Shift") : KeymapUtil.getShortcutsText(shortcuts));
   }
 
   protected void appendToolWindow(@Nonnull UIUtil.TextPainter painter, @Nonnull String action, @Nonnull String toolWindowId, @Nonnull JComponent splitters) {

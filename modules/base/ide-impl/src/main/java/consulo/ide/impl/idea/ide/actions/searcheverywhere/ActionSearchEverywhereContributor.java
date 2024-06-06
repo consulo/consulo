@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;

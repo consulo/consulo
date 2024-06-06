@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -47,9 +46,9 @@ public class CopyPathProvider extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     DataContext customDataContext = createCustomDataContext(dataContext);
 
@@ -74,7 +73,7 @@ public class CopyPathProvider extends DumbAwareAction {
       return dataContext;
     }
 
-    return SimpleDataContext.builder().setParent(dataContext).add(LangDataKeys.VIRTUAL_FILE, (VirtualFile)file).add(LangDataKeys.VIRTUAL_FILE_ARRAY, new VirtualFile[]{(VirtualFile)file}).build();
+    return SimpleDataContext.builder().setParent(dataContext).add(LangDataKeys.VIRTUAL_FILE, (VirtualFile)file).add(VirtualFile.KEY_OF_ARRAY, new VirtualFile[]{(VirtualFile)file}).build();
   }
 
   @RequiredUIAccess
@@ -82,9 +81,9 @@ public class CopyPathProvider extends DumbAwareAction {
   public void update(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
 
     e.getPresentation().setEnabledAndVisible(project != null && getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext) != null);
   }
@@ -107,7 +106,7 @@ public class CopyPathProvider extends DumbAwareAction {
       });
 
       if (files.isEmpty()) {
-        VirtualFile[] contextFiles = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+        VirtualFile[] contextFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
         if(contextFiles != null && contextFiles.length > 0) {
           files = List.of(contextFiles);
         }

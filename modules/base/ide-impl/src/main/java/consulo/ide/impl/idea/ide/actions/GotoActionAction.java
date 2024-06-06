@@ -5,7 +5,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -24,9 +23,8 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
@@ -57,7 +55,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    if (e.getData(CommonDataKeys.PROJECT) != null) {
+    if (e.getData(Project.KEY) != null) {
       showInSearchEverywherePopup(ActionSearchEverywhereContributor.class.getSimpleName(), e, false, true);
     }
     else {
@@ -67,13 +65,13 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.action");
     GotoActionModel model = new GotoActionModel(project, component, editor);
-    GotoActionCallback<Object> callback = new GotoActionCallback<Object>() {
+    GotoActionCallback<Object> callback = new GotoActionCallback<>() {
       @Override
       public void elementChosen(@Nonnull ChooseByNamePopup popup, @Nonnull Object element) {
         if (project != null) {
@@ -200,12 +198,9 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
       }
     };
 
-    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(ProgressWindowListener.class, pw -> Disposer.register(pw, new Disposable() {
-      @Override
-      public void dispose() {
-        if (!popup.checkDisposed()) {
-          popup.repaintList();
-        }
+    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(ProgressWindowListener.class, pw -> Disposer.register(pw, (Disposable) () -> {
+      if (!popup.checkDisposed()) {
+        popup.repaintList();
       }
     }));
 

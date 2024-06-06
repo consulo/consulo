@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.IJSwingUtilities;

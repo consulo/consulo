@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
+import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContext;
 import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
 
   protected FilePath[] getRoots(final VcsContext context) {
     Project project = context.getProject();
-    ArrayList<FilePath> virtualFiles = new ArrayList<FilePath>();
+    ArrayList<FilePath> virtualFiles = new ArrayList<>();
     final ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
     for(AbstractVcs vcs: vcsManager.getAllActiveVcss()) {
       if (vcs.getCheckinEnvironment() != null) {
@@ -74,12 +74,12 @@ public class CommonCheckinProjectAction extends AbstractCommonCheckinAction {
   }
 
   protected String getActionName(VcsContext dataContext) {
-    return VcsBundle.message("action.name.commit.project");
+    return VcsLocalize.actionNameCommitProject().get();
   }
 
   @Override
   protected String getMnemonicsFreeActionName(VcsContext context) {
-    return VcsBundle.message("vcs.command.name.checkin.no.mnemonics");
+    return VcsLocalize.vcsCommandNameCheckinNoMnemonics().get();
   }
 
   protected boolean filterRootsBeforeAction() {

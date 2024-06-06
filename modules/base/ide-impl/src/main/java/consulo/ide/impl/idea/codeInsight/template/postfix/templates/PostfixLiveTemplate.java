@@ -14,7 +14,7 @@ import consulo.language.editor.template.CustomLiveTemplateBase;
 import consulo.language.editor.template.CustomTemplateCallback;
 import consulo.language.editor.template.CustomLiveTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupElement;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.postfixTemplate.PostfixTemplate;

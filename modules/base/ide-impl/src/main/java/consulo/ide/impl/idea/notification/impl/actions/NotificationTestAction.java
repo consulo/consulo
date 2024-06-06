@@ -19,8 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.NotWorkingIconLoader;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.util.lang.StringUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
@@ -59,7 +58,7 @@ public class NotificationTestAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent event) {
-    new NotificationDialog(event.getData(CommonDataKeys.PROJECT)).show();
+    new NotificationDialog(event.getData(Project.KEY)).show();
   }
 
   private static final class NotificationDialog extends DialogWrapper {

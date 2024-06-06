@@ -19,7 +19,7 @@ import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.CollectionComboBoxModel;

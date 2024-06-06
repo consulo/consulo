@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 
 import java.util.ArrayList;

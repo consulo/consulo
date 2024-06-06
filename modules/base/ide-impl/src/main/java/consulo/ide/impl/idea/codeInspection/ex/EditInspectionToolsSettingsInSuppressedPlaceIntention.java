@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.application;
 
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.io.URLUtil;
 import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
 import consulo.util.lang.Pair;

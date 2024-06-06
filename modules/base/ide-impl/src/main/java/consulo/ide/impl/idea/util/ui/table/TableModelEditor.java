@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.util.ui.table;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.TableView;

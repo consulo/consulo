@@ -26,6 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.component.util.Iconable;
 import consulo.configurable.ConfigurationException;

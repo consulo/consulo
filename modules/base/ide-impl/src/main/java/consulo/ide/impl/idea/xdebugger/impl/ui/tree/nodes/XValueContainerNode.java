@@ -19,7 +19,7 @@ import consulo.execution.debug.evaluation.InlineDebuggerHelper;
 import consulo.execution.debug.frame.*;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.ex.SimpleTextAttributes;

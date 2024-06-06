@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
@@ -35,6 +35,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
@@ -416,7 +417,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
       myChooser.setEditable(false);
       add(myChooser, BorderLayout.CENTER);
 
-      JLabel label = new JLabel(VcsBundle.message("commit.dialog.changelist.label"));
+      JLabel label = new JLabel(VcsLocalize.commitDialogChangelistLabel().get());
       label.setLabelFor(myChooser);
       add(label, BorderLayout.WEST);
     }

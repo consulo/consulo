@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.presentation.XRegularValuePresentation;

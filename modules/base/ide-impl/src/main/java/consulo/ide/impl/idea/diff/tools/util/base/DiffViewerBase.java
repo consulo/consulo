@@ -25,7 +25,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.dataContext.DataProvider;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.ActionGroup;
@@ -55,7 +54,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   @Nonnull
   private final List<DiffViewerListener> myListeners = new SmartList<>();
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected final Project myProject;
   @Nonnull
   protected final DiffContext myContext;
@@ -166,7 +165,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Getters
   //
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public Project getProject() {
     return myProject;
   }
@@ -213,7 +212,7 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
     return group;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   protected JComponent getStatusPanel() {
     return null;
   }
@@ -295,13 +294,13 @@ public abstract class DiffViewerBase implements DiffViewer, DataProvider {
   // Helpers
   //
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
     if (DiffDataKeys.NAVIGATABLE == dataId) {
       return getNavigatable();
     }
-    else if (CommonDataKeys.PROJECT == dataId) {
+    else if (Project.KEY == dataId) {
       return myProject;
     }
     else {

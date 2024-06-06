@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.ui.TitlePanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ScrollPaneFactory;

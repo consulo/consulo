@@ -15,9 +15,10 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
+import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.action.ActionMenuItem;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
@@ -239,7 +240,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     if (keystroke != null) {
       int j1 = keystroke.getModifiers();
       if (j1 > 0) {
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           try {
             Class appleLaf = Class.forName(AQUA_LOOK_AND_FEEL_CLASS_NAME);
             Method getModifiers = appleLaf.getMethod(GET_KEY_MODIFIERS_TEXT, new Class[]{int.class, boolean.class});

@@ -27,7 +27,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.undoRedo.internal.FinishMarkAction;
 import consulo.undoRedo.internal.StartMarkAction;
 import consulo.virtualFileSystem.VirtualFile;

@@ -47,7 +47,7 @@ import java.util.List;
 import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
+import static consulo.util.lang.StringUtil.naturalCompare;
 import static consulo.ide.impl.idea.util.ReflectionUtil.getDeclaredMethod;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;

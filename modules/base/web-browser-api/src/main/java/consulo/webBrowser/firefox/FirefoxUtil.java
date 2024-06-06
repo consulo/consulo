@@ -15,15 +15,15 @@
  */
 package consulo.webBrowser.firefox;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -165,13 +165,13 @@ public class FirefoxUtil {
 
   private static File[] getProfilesDirs() {
     final String userHome = SystemProperties.getUserHome();
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return new File[] {
         new File(userHome, "Library" + File.separator + "Mozilla" + File.separator + "Firefox"),
         new File(userHome, "Library" + File.separator + "Application Support" + File.separator + "Firefox"),
       };
     }
-    if (SystemInfo.isUnix) {
+    if (Platform.current().os().isUnix()) {
       return new File[] {new File(userHome, ".mozilla" + File.separator + "firefox")};
     }
 

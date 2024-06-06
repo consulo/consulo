@@ -33,10 +33,7 @@ import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
-import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -45,6 +42,7 @@ import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tab.UiDecorator;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StandardColors;
@@ -477,9 +475,9 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     @Override
     public void requestFocus() {
       if (myFocusComponent != null) {
-        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> {
-          IdeFocusManager.getGlobalInstance().requestFocus(myFocusComponent, true);
-        });
+        IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+          () -> IdeFocusManager.getGlobalInstance().requestFocus(myFocusComponent, true)
+        );
       }
     }
 
@@ -490,13 +488,13 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
 
     @Override
     public final Object getData(@Nonnull Key<?> dataId) {
-      if (PlatformDataKeys.FILE_EDITOR == dataId) {
+      if (FileEditor.KEY == dataId) {
         return getSelectedEditor();
       }
-      else if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+      else if (VirtualFile.KEY == dataId) {
         return myFile.isValid() ? myFile : null;
       }
-      else if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+      else if (VirtualFile.KEY_OF_ARRAY == dataId) {
         return myFile.isValid() ? new VirtualFile[]{myFile} : null;
       }
       else {

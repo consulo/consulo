@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.codeInspection.ex.InspectionRVContentProvider;
 import consulo.ide.impl.idea.codeInspection.ex.QuickFixAction;
 import consulo.ide.impl.idea.codeInspection.offline.OfflineProblemDescriptor;
 import consulo.ide.impl.idea.codeInspection.ui.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.QuickFix;

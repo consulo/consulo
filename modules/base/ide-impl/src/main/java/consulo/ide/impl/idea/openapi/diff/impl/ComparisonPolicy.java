@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.highlighting.Util;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.DiffCorrection;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.Formatting;
 import consulo.ide.impl.idea.openapi.diff.impl.processing.Word;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.document.util.TextRange;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;

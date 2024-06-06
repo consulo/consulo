@@ -28,7 +28,7 @@ import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
 import consulo.ui.ex.awt.UIUtil;

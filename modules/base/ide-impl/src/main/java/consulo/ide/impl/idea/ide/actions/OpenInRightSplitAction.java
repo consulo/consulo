@@ -19,8 +19,7 @@ import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -41,21 +40,21 @@ public class OpenInRightSplitAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
-    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     if (file == null) {
       return;
     }
 
-    Navigatable element = ObjectUtil.tryCast(e.getData(CommonDataKeys.PSI_ELEMENT), Navigatable.class);
+    Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
 
     FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
     if (element == null && editorWindow != null) {
-      VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
       if (files != null && files.length > 1) {
         for (VirtualFile virtualFile : files) {
@@ -69,9 +68,9 @@ public class OpenInRightSplitAction extends DumbAwareAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
-    FileEditor fileEditor = e.getData(PlatformDataKeys.FILE_EDITOR);
+    Project project = e.getData(Project.KEY);
+    Editor editor = e.getData(Editor.KEY);
+    FileEditor fileEditor = e.getData(FileEditor.KEY);
 
     String place = e.getPlace();
     if(project == null || fileEditor != null || editor != null || ActionPlaces.EDITOR_TAB_POPUP.equals(place) || ActionPlaces.EDITOR_POPUP.equals(place)) {
@@ -79,7 +78,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
       return;
     }
 
-    VirtualFile contextFile = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile contextFile = e.getData(VirtualFile.KEY);
     e.getPresentation().setEnabledAndVisible(contextFile != null && !contextFile.isDirectory());
   }
 
@@ -107,9 +106,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     }
 
     if (element != null && !(element instanceof PsiFile)) {
-      Application.get().invokeLater(() -> {
-        element.navigate(requestFocus);
-      }, project.getDisposed());
+      Application.get().invokeLater(() -> element.navigate(requestFocus), project.getDisposed());
     }
 
     return editorWindow;

@@ -5,7 +5,6 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingCache;
 import consulo.ide.impl.idea.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -29,7 +28,7 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
   @Nonnull
   @Override
   public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     assert project != null;
 
     Collection<RunAnythingItem> collector = new ArrayList<>();

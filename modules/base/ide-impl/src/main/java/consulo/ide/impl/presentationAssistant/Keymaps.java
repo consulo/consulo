@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.presentationAssistant;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 
@@ -121,10 +121,7 @@ class Keymaps {
   private static final Keymap macKeymap = KeymapManager.getInstance().getKeymap(KeymapKind.MAC.myDefaultKeymapName);
 
   public static KeymapKind getCurrentOSKind() {
-    if (SystemInfo.isMac) {
-      return KeymapKind.MAC;
-    }
-    return KeymapKind.WIN;
+    return Platform.current().os().isMac() ? KeymapKind.MAC : KeymapKind.WIN;
   }
 
   public static KeymapDescription getDefaultMainKeymap() {

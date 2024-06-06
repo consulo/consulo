@@ -9,7 +9,6 @@ import consulo.document.Document;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.actions.PasteAction;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.QualifiedNameProvider;
 import consulo.language.editor.QualifiedNameProviderUtil;
@@ -30,8 +29,8 @@ import java.util.function.Supplier;
 public class PasteReferenceProvider implements CustomPasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Project project = dataContext.getData(Project.KEY);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (project == null || editor == null) return;
 
     final String fqn = getCopiedFqn(dataContext);
@@ -53,14 +52,14 @@ public class PasteReferenceProvider implements CustomPasteProvider {
 
   @Override
   public boolean isPastePossible(@Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Project project = dataContext.getData(Project.KEY);
+    final Editor editor = dataContext.getData(Editor.KEY);
     return project != null && editor != null && getCopiedFqn(dataContext) != null;
   }
 
   @Override
   public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     String fqn = getCopiedFqn(dataContext);
     return project != null && fqn != null && QualifiedNameProviderUtil.qualifiedNameToElement(fqn, project) != null;
   }

@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.webcore.packaging;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.repository.ui.PackageManagementService;

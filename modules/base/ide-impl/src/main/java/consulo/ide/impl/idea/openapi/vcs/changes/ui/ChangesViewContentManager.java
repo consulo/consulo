@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposer;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

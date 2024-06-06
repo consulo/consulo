@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public class EditChangelistDialog extends DialogWrapper {
     myPanel.init(list);
     myPanel.getMakeActiveCheckBox().setSelected(myList.isDefault());
     myPanel.getMakeActiveCheckBox().setEnabled(!myList.isDefault());
-    setTitle(VcsBundle.message("changes.dialog.editchangelist.title"));
+    setTitle(VcsLocalize.changesDialogEditchangelistTitle().get());
     init();
   }
 
@@ -63,9 +63,11 @@ public class EditChangelistDialog extends DialogWrapper {
     String oldComment = myList.getComment();
 
     if (!Comparing.equal(oldName, myPanel.getChangeListName()) && ChangeListManager.getInstance(myProject).findChangeList(myPanel.getChangeListName()) != null) {
-      Messages.showErrorDialog(myPanel.getContent(),
-                               VcsBundle.message("changes.dialog.editchangelist.error.already.exists", myPanel.getChangeListName()),
-                               VcsBundle.message("changes.dialog.editchangelist.title"));
+      Messages.showErrorDialog(
+        myPanel.getContent(),
+        VcsLocalize.changesDialogEditchangelistErrorAlreadyExists(myPanel.getChangeListName()).get(),
+        VcsLocalize.changesDialogEditchangelistTitle().get()
+      );
       return;
     }
 

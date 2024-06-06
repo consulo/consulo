@@ -4,9 +4,9 @@ package consulo.desktop.awt.ui.animation;
 import com.sun.jna.Native;
 import com.sun.jna.win32.StdCallLibrary;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class JBAnimatorHelper {
 
   private static final String PROPERTY_NAME = "WIN_MM_LIB_HIGH_PRECISION_TIMER";
-  private static final boolean DEFAULT_VALUE = ApplicationManager.getApplication().isInternal() && SystemInfo.isWindows;
+  private static final boolean DEFAULT_VALUE = ApplicationManager.getApplication().isInternal() && Platform.current().os().isWindows();
   private static final int PERIOD = 1;
 
   private final @Nonnull
@@ -57,7 +57,7 @@ public final class JBAnimatorHelper {
   }
 
   public static boolean isAvailable() {
-    if (!SystemInfo.isWindows || exceptionInInitialization != null) {
+    if (!Platform.current().os().isWindows() || exceptionInInitialization != null) {
       return false;
     }
     return PropertiesComponent.getInstance().getBoolean(PROPERTY_NAME, DEFAULT_VALUE);
@@ -67,7 +67,7 @@ public final class JBAnimatorHelper {
     if (exceptionInInitialization != null) {
       Logger.getInstance(JBAnimatorHelper.class).error(exceptionInInitialization);
     }
-    if (!SystemInfo.isWindows) {
+    if (!Platform.current().os().isWindows()) {
       throw new IllegalArgumentException("This option can be set only on Windows");
     }
     PropertiesComponent.getInstance().setValue(PROPERTY_NAME, value, DEFAULT_VALUE);
@@ -92,7 +92,7 @@ public final class JBAnimatorHelper {
     requestors = ConcurrentHashMap.newKeySet();
     WinMM library = null;
     try {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         library = Native.load("winmm", WinMM.class);
       }
     }

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.UrlConnectionUtil;

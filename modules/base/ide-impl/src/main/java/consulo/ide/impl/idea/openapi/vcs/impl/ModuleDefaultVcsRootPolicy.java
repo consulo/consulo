@@ -27,7 +27,7 @@ import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;

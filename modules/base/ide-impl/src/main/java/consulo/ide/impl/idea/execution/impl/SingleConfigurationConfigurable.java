@@ -30,7 +30,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.impl.internal.configuration.UnknownRunConfiguration;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;

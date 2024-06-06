@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.virtualFileSystem.VirtualFile;
 

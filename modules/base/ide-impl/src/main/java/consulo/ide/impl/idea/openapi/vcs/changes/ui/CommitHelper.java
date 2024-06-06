@@ -25,11 +25,12 @@ import consulo.application.util.Semaphore;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.ide.impl.idea.ide.util.DelegatingProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.ide.impl.idea.util.NullableFunction;
@@ -448,7 +449,7 @@ public class CommitHelper {
 
     @Override
     public void afterFailedCheckIn() {
-      moveToFailedList(myChangeList, myCommitMessage, getChangesFailedToCommit(), VcsBundle.message("commit.dialog.failed.commit.template", myChangeList.getName()), myProject);
+      moveToFailedList(myChangeList, myCommitMessage, getChangesFailedToCommit(), VcsLocalize.commitDialogFailedCommitTemplate(myChangeList.getName()).get(), myProject);
     }
 
     @Override
@@ -483,7 +484,7 @@ public class CommitHelper {
 
       final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
       if (indicator != null) {
-        indicator.setText(VcsBundle.message("commit.dialog.refresh.files"));
+        indicator.setTextValue(VcsLocalize.commitDialogRefreshFiles());
       }
       RefreshVFsSynchronously.updateChanges(toRefresh);
     }
@@ -617,7 +618,7 @@ public class CommitHelper {
     if ((errorsSize == 0) && (warningsSize == 0)) {
       final ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
       if (indicator != null) {
-        indicator.setText(VcsBundle.message("commit.dialog.completed.successfully"));
+        indicator.setText(VcsLocalize.commitDialogCompletedSuccessfully().get());
       }
     }
     else {
@@ -636,17 +637,17 @@ public class CommitHelper {
       public void run() {
         String message;
         if (errorsSize > 0 && warningsSize > 0) {
-          message = VcsBundle.message("message.text.commit.failed.with.errors.and.warnings");
+          message = VcsLocalize.messageTextCommitFailedWithErrorsAndWarnings().get();
         }
         else if (errorsSize > 0) {
           message = StringUtil.pluralize(VcsBundle.message("message.text.commit.failed.with.error"), errorsSize);
         }
         else {
-          message = StringUtil.pluralize(VcsBundle.message("message.text.commit.finished.with.warning"), warningsSize);
+          message = StringUtil.pluralize(VcsLocalize.messageTextCommitFinishedWithWarnings().get(), warningsSize);
         }
         message += ":\n" + StringUtil.join(errors, e -> e.getMessage(), "\n");
         //new VcsBalloonProblemNotifier(myProject, message, MessageType.ERROR).run();
-        Messages.showErrorDialog(message, VcsBundle.message("message.title.commit"));
+        Messages.showErrorDialog(message, VcsLocalize.messageTitleCommit().get());
 
         if (errorsSize > 0) {
           processor.afterFailedCheckIn();
@@ -677,8 +678,13 @@ public class CommitHelper {
           return true;
         }
       };
-      boolean result = ConfirmationDialog
-              .requestForConfirmation(option, project, VcsBundle.message("commit.failed.confirm.prompt"), VcsBundle.message("commit.failed.confirm.title"), Messages.getQuestionIcon());
+      boolean result = ConfirmationDialog.requestForConfirmation(
+        option,
+        project,
+        VcsLocalize.commitFailedConfirmPrompt().get(),
+        VcsLocalize.commitFailedConfirmTitle().get(),
+        Messages.getQuestionIcon()
+      );
       if (!result) return;
     }
 

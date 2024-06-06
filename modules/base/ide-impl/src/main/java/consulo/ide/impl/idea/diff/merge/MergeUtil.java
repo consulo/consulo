@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.merge.MergeData;

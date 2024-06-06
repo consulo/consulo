@@ -23,7 +23,7 @@ import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.module.*;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;

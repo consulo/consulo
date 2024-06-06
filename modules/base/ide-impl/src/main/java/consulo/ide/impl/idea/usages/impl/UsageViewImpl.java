@@ -9,10 +9,10 @@ import consulo.application.impl.internal.concurent.BoundedTaskExecutor;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.awt.hacking.BasicTreeUIHacking;
+import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -26,18 +26,15 @@ import consulo.ide.impl.idea.ide.OccurenceNavigatorSupport;
 import consulo.ide.impl.idea.ide.TextCopyProvider;
 import consulo.ide.impl.idea.ide.actions.exclusion.ExclusionHandler;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.usages.UsageDataUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -57,12 +54,14 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
 import consulo.usage.internal.UsageViewEx;
 import consulo.usage.rule.*;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.Lists;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -308,7 +307,7 @@ public class UsageViewImpl implements UsageViewEx {
         }
       });
     }
-    myExclusionHandler = new ExclusionHandlerEx<DefaultMutableTreeNode>() {
+    myExclusionHandler = new ExclusionHandlerEx<>() {
       @Override
       public boolean isNodeExclusionAvailable(@Nonnull DefaultMutableTreeNode node) {
         return node instanceof UsageNode;
@@ -1081,7 +1080,7 @@ public class UsageViewImpl implements UsageViewEx {
       }
       getTemplatePresentation().setDescription(description);
       KeyboardShortcut shortcut =
-        configurableUsageTarget == null ? getShowUsagesWithSettingsShortcut() : configurableUsageTarget.getShortcut();
+        configurableUsageTarget == null ? UsageViewUtil.getShowUsagesWithSettingsShortcut() : configurableUsageTarget.getShortcut();
       if (shortcut != null) {
         registerCustomShortcutSet(new CustomShortcutSet(shortcut), getComponent());
       }
@@ -1094,7 +1093,7 @@ public class UsageViewImpl implements UsageViewEx {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(e.getData(CommonDataKeys.EDITOR) == null);
+      e.getPresentation().setEnabled(e.getData(Editor.KEY) == null);
     }
 
     @Override
@@ -1520,7 +1519,7 @@ public class UsageViewImpl implements UsageViewEx {
   public void addButtonToLowerPane(@Nonnull Action action) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     int index = myButtonPanel.getComponentCount();
-    if (!SystemInfo.isMac && index > 0 && myPresentation.isShowCancelButton()) index--;
+    if (!Platform.current().os().isMac() && index > 0 && myPresentation.isShowCancelButton()) index--;
     myButtonPanel.addButtonAction(index, action);
     Object o = action.getValue(Action.ACCELERATOR_KEY);
     if (o instanceof KeyStroke) {
@@ -1907,8 +1906,8 @@ public class UsageViewImpl implements UsageViewEx {
 
     @Override
     public void calcData(@Nonnull final Key key, @Nonnull final DataSink sink) {
-      if (key == CommonDataKeys.PROJECT) {
-        sink.put(CommonDataKeys.PROJECT, myProject);
+      if (key == Project.KEY) {
+        sink.put(Project.KEY, myProject);
       }
       else if (key == USAGE_VIEW_KEY) {
         sink.put(USAGE_VIEW_KEY, UsageViewImpl.this);
@@ -1917,9 +1916,9 @@ public class UsageViewImpl implements UsageViewEx {
         sink.put(ExclusionHandler.EXCLUSION_HANDLER, myExclusionHandler);
       }
 
-      else if (key == CommonDataKeys.NAVIGATABLE_ARRAY) {
+      else if (key == Navigatable.KEY_OF_ARRAY) {
         Node[] nodes = ApplicationManager.getApplication().isDispatchThread() ? getSelectedNodes() : null;
-        sink.put(CommonDataKeys.NAVIGATABLE_ARRAY, getNavigatablesForNodes(nodes));
+        sink.put(Navigatable.KEY_OF_ARRAY, getNavigatablesForNodes(nodes));
       }
 
       else if (key == PlatformDataKeys.EXPORTER_TO_TEXT_FILE) {
@@ -1936,12 +1935,12 @@ public class UsageViewImpl implements UsageViewEx {
         sink.put(USAGE_TARGETS_KEY, targets);
       }
 
-      else if (key == CommonDataKeys.VIRTUAL_FILE_ARRAY) {
+      else if (key == VirtualFile.KEY_OF_ARRAY) {
         final Set<Usage> usages = ApplicationManager.getApplication().isDispatchThread() ? getSelectedUsages() : null;
         Usage[] ua = usages == null ? null : usages.toArray(Usage.EMPTY_ARRAY);
         UsageTarget[] usageTargets = ApplicationManager.getApplication().isDispatchThread() ? getSelectedUsageTargets() : null;
         VirtualFile[] data = UsageDataUtil.provideVirtualFileArray(ua, usageTargets);
-        sink.put(CommonDataKeys.VIRTUAL_FILE_ARRAY, data);
+        sink.put(VirtualFile.KEY_OF_ARRAY, data);
       }
       else if (key == PlatformDataKeys.HELP_ID) {
         sink.put(PlatformDataKeys.HELP_ID, HELP_ID);
@@ -1949,9 +1948,9 @@ public class UsageViewImpl implements UsageViewEx {
       else if (key == PlatformDataKeys.COPY_PROVIDER) {
         sink.put(PlatformDataKeys.COPY_PROVIDER, myCopyProvider);
       }
-      else if (key == LangDataKeys.PSI_ELEMENT_ARRAY) {
+      else if (key == PsiElement.KEY_OF_ARRAY) {
         if (ApplicationManager.getApplication().isDispatchThread()) {
-          sink.put(LangDataKeys.PSI_ELEMENT_ARRAY,
+          sink.put(PsiElement.KEY_OF_ARRAY,
                    getSelectedUsages().stream()
                                       .filter(u -> u instanceof PsiElementUsage)
                                       .map(u -> ((PsiElementUsage)u).getElement())

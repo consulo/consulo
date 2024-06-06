@@ -6,7 +6,7 @@ import consulo.application.ReadAction;
 import consulo.application.impl.internal.concurent.NonUrgentExecutor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier;
 import consulo.ide.impl.psi.codeStyle.modifier.TransientCodeStyleSettings;

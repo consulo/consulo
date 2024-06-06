@@ -31,11 +31,10 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.util.lang.ObjectUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
@@ -221,12 +220,12 @@ public class UndoManagerImpl implements UndoManager, Disposable {
         Editor editor = null;
         final Application application = ApplicationManager.getApplication();
         if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
-          editor = DataManager.getInstance().getDataContext().getData(CommonDataKeys.EDITOR);
+          editor = DataManager.getInstance().getDataContext().getData(Editor.KEY);
         }
         else {
           Component component = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
           if (component != null) {
-            editor = DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.EDITOR);
+            editor = DataManager.getInstance().getDataContext(component).getData(Editor.KEY);
           }
         }
 

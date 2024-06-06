@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;

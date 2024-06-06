@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.fileChooser.FileChooser;
@@ -29,11 +30,11 @@ import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -53,7 +54,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    @Nullable final Project project = e.getData(CommonDataKeys.PROJECT);
+    @Nullable final Project project = e.getData(Project.KEY);
     final boolean showFiles = project != null;
 
     final FileChooserDescriptor descriptor = new OpenProjectFileChooserDescriptor(true) {
@@ -144,8 +145,12 @@ public class OpenFileAction extends AnAction implements DumbAware {
   public static void openFile(final VirtualFile virtualFile, final Project project) {
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
     if (editorProviderManager.getProviders(project, virtualFile).length == 0) {
-      Messages.showMessageDialog(project, IdeBundle.message("error.files.of.this.type.cannot.be.opened", ApplicationNamesInfo.getInstance().getProductName()),
-                                 IdeBundle.message("title.cannot.open.file"), Messages.getErrorIcon());
+      Messages.showMessageDialog(
+        project,
+        IdeLocalize.errorFilesOfThisTypeCannotBeOpened(Application.get().getName()).get(),
+        IdeLocalize.titleCannotOpenFile().get(),
+        Messages.getErrorIcon()
+      );
       return;
     }
 

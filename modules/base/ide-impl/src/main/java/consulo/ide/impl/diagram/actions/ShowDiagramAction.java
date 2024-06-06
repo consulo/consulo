@@ -17,7 +17,6 @@ package consulo.ide.impl.diagram.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.diagram.provider.GraphProvider;
@@ -39,7 +38,7 @@ public class ShowDiagramAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);
     if (state) {
-      PsiElement psiElement = e.getData(CommonDataKeys.PSI_ELEMENT);
+      PsiElement psiElement = e.getData(PsiElement.KEY);
       state = false;
       if (psiElement != null) {
         state = false;

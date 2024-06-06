@@ -35,7 +35,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;

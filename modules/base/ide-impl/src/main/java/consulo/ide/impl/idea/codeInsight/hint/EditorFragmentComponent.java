@@ -9,7 +9,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.language.editor.hint.HintManager;

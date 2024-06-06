@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.navigationToolbar;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -13,8 +12,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeView;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
-import consulo.ui.ex.CopyPasteSupport;
 import consulo.ide.impl.idea.ide.dnd.TransferableWrapper;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUI;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
@@ -22,20 +19,18 @@ import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.ListenerUtil;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupOwner;
-import java.util.function.Consumer;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.navigationToolbar.NavBarModelExtension;
-import consulo.language.editor.CommonDataKeys;
+import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -43,13 +38,14 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.ProjectViewPane;
-import consulo.language.content.ProjectRootsUtil;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -64,14 +60,15 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.util.collection.JBIterable;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.PopupMenuEvent;
@@ -474,14 +471,14 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     ListenerUtil.addMouseListener(component, new MouseAdapter() {
       @Override
       public void mouseReleased(final MouseEvent e) {
-        if (SystemInfo.isWindows) {
+        if (Platform.current().os().isWindows()) {
           click(e);
         }
       }
 
       @Override
       public void mousePressed(final MouseEvent e) {
-        if (!SystemInfo.isWindows) {
+        if (!Platform.current().os().isWindows()) {
           click(e);
         }
       }
@@ -684,10 +681,10 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   }
 
   Object getDataImpl(Key<?> dataId, @Nonnull JComponent source, @Nonnull Getter<? extends JBIterable<?>> selection) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return !myProject.isDisposed() ? myProject : null;
     }
-    if (LangDataKeys.MODULE == dataId) {
+    if (Module.KEY == dataId) {
       Module module = selection.get().filter(Module.class).first();
       if (module != null && !module.isDisposed()) return module;
       PsiElement element = selection.get().filter(PsiElement.class).first();
@@ -706,21 +703,21 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
       }
       return null;
     }
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       PsiElement element = selection.get().filter(PsiElement.class).first();
       return element != null && element.isValid() ? element : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       List<PsiElement> result = selection.get().filter(PsiElement.class).filter(e -> e != null && e.isValid()).toList();
       return result.isEmpty() ? null : result.toArray(PsiElement.EMPTY_ARRAY);
     }
 
-    if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+    if (VirtualFile.KEY_OF_ARRAY == dataId) {
       Set<VirtualFile> files = selection.get().filter(PsiElement.class).filter(e -> e != null && e.isValid()).filterMap(e -> PsiUtilCore.getVirtualFile(e)).toSet();
       return !files.isEmpty() ? VfsUtilCore.toVirtualFileArray(files) : null;
     }
 
-    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
+    if (Navigatable.KEY_OF_ARRAY == dataId) {
       List<Navigatable> elements = selection.get().filter(Navigatable.class).toList();
       return elements.isEmpty() ? null : elements.toArray(new Navigatable[0]);
     }
@@ -822,7 +819,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     myUpdateQueue.rebuildUi();
     if (editor == null) {
       myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)relativePoint -> {
+      getHintContainerShowPoint().doWhenDone(relativePoint -> {
         final Component owner = focusManager.getFocusOwner();
         final Component cmp = relativePoint.getComponent();
         if (cmp instanceof JComponent && cmp.isShowing()) {
@@ -858,7 +855,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(ctx);
         }
         else {
-          dataManager.getDataContextFromFocus().doWhenDone((Consumer<DataContext>)dataContext -> {
+          dataManager.getDataContextFromFocus().doWhenDone(dataContext -> {
             myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             DataContext ctx = dataManager.getDataContext(myContextComponent);
             myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(ctx);

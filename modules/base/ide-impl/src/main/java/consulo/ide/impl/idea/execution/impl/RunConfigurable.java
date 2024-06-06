@@ -35,7 +35,7 @@ import consulo.execution.impl.internal.RunConfigurationSelector;
 import consulo.execution.impl.internal.configuration.*;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ide.impl.idea.util.config.StorageAccessors;

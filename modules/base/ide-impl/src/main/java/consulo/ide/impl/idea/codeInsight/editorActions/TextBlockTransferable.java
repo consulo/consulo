@@ -18,9 +18,9 @@ package consulo.ide.impl.idea.codeInsight.editorActions;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RawText;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.Platform;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -63,7 +63,7 @@ public class TextBlockTransferable implements Transferable {
   @Nonnull
   private static String cleanFromNullsIfNeeded(@Nonnull String text) {
     // Clipboard on Windows and Linux works with null-terminated strings, on Mac nulls are not treated in a special way.
-    return SystemInfo.isMac ? text : text.replace('\000', ' ');
+    return Platform.current().os().isMac() ? text : text.replace('\000', ' ');
   }
 
   @Override

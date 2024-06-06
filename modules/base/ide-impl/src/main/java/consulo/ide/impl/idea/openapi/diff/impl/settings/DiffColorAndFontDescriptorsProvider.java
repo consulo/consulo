@@ -22,7 +22,7 @@ import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.ide.impl.idea.diff.util.DiffLineSeparatorRenderer;
 import consulo.ide.impl.idea.diff.util.TextDiffTypeFactory;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;

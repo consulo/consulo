@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.application.WriteAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;

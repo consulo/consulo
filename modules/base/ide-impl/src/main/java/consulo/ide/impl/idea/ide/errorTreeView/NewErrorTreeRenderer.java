@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.ClickableTreeCellRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeNodePartListener;
 import consulo.ide.impl.idea.ui.CustomizeColoredTreeCellRenderer;

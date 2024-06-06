@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 
 import jakarta.annotation.Nonnull;

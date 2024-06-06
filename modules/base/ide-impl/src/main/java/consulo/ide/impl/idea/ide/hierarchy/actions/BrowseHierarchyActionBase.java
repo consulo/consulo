@@ -42,7 +42,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

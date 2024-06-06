@@ -18,13 +18,13 @@ package consulo.application.impl.internal.util;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.AsyncFileService;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +93,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   private static File renameToTempFileOrDelete(@Nonnull File file) {
     String tempDir = FileUtil.getTempDirectory();
     boolean isSameDrive = true;
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       String tempDirDrive = tempDir.substring(0, 2);
       String fileDrive = file.getAbsolutePath().substring(0, 2);
       isSameDrive = tempDirDrive.equalsIgnoreCase(fileDrive);

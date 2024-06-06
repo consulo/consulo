@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.FilePathChangesTreeList;
 import consulo.ui.ex.awt.ScrollPaneFactory;

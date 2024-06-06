@@ -15,88 +15,83 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
-import consulo.application.CommonBundle;
-import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.action.RefreshAction;
 import consulo.application.ApplicationManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
-import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
-import consulo.undoRedo.CommandProcessor;
-import consulo.language.editor.WriteCommandAction;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.JBColor;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.document.FileDocumentManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.CommonBundle;
+import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.DateFormatUtil;
+import consulo.application.util.function.AsynchConsumer;
+import consulo.codeEditor.Editor;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
-import consulo.util.lang.Clock;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.actions.AnnotateRevisionActionBase;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.ide.impl.idea.openapi.vcs.changes.ByteBackedContentRevision;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import consulo.ide.impl.idea.openapi.vcs.impl.AbstractVcsHelperImpl;
 import consulo.ide.impl.idea.openapi.vcs.ui.ReplaceFileConfirmationDialog;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.history.*;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsFileSystem;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFile;
 import consulo.ide.impl.idea.openapi.vcs.vfs.VcsVirtualFolder;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.dualView.CellWrapper;
 import consulo.ide.impl.idea.ui.dualView.DualView;
 import consulo.ide.impl.idea.ui.dualView.DualViewColumnInfo;
 import consulo.ide.impl.idea.ui.dualView.TreeTableView;
-import consulo.ui.ex.awt.table.TableView;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.application.util.function.AsynchConsumer;
-import consulo.util.lang.TreeItem;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.table.TableViewModel;
-import consulo.disposer.Disposer;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.WriteCommandAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.table.TableView;
+import consulo.ui.ex.awt.table.TableViewModel;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.Clock;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.TreeItem;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.history.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -114,7 +109,7 @@ import java.util.function.Consumer;
  */
 public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton implements EditorColorsListener, CopyProvider {
   private static final Logger LOG = Logger.getInstance(FileHistoryPanelImpl.class);
-  private static final String COMMIT_MESSAGE_TITLE = VcsBundle.message("label.selected.revision.commit.message");
+  private static final String COMMIT_MESSAGE_TITLE = VcsLocalize.labelSelectedRevisionCommitMessage().get();
   private static final String VCS_HISTORY_ACTIONS_GROUP = "VcsHistoryActionsGroup";
 
   @Nonnull
@@ -221,7 +216,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       setIsStaticAndEmbedded(true);
     }
 
-    myHistoryPanelRefresh = new AsynchConsumer<VcsHistorySession>() {
+    myHistoryPanelRefresh = new AsynchConsumer<>() {
       public void finished() {
         if (treeHistoryProvider != null) {
           // scroll tree view to most recent change
@@ -525,7 +520,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     VcsFileRevision firstSelectedRevision = getFirstSelectedRevision();
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       List selectedItems = getSelection();
       if (selectedItems.size() != 1) return null;
       if (!myHistorySession.isContentAvailable(firstSelectedRevision)) {
@@ -539,7 +534,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return null;
       }
     }
-    else if (CommonDataKeys.PROJECT== dataId) {
+    else if (Project.KEY == dataId) {
       return myVcs.getProject();
     }
     else if (VcsDataKeys.VCS_FILE_REVISION== dataId) {
@@ -570,7 +565,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     else if (VcsDataKeys.IO_FILE== dataId) {
       return myFilePath.getIOFile();
     }
-    else if (CommonDataKeys.VIRTUAL_FILE== dataId) {
+    else if (VirtualFile.KEY == dataId) {
       VirtualFile virtualFile = getVirtualFile();
       return virtualFile == null || !virtualFile.isValid() ? null : virtualFile;
     }
@@ -729,7 +724,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private final Comparator<VcsFileRevision> myComparator;
 
     public RevisionColumnInfo(Comparator<VcsFileRevision> comparator) {
-      super(VcsBundle.message("column.name.revision.version"));
+      super(VcsLocalize.columnNameRevisionVersion().get());
       myComparator = comparator;
     }
 
@@ -762,7 +757,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   public static class DateColumnInfo extends VcsColumnInfo<String> {
     public DateColumnInfo() {
-      super(VcsBundle.message("column.name.revision.date"));
+      super(VcsLocalize.columnNameRevisionDate().get());
     }
 
     @Nonnull
@@ -815,7 +810,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private final TableCellRenderer AUTHOR_RENDERER = new AuthorCellRenderer();
 
     public AuthorColumnInfo() {
-      super(VcsBundle.message("column.name.revision.list.author"));
+      super(VcsLocalize.columnNameRevisionListAuthor().get());
     }
 
     static String toString(VcsFileRevision o) {
@@ -927,7 +922,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return VcsHistoryUtil.loadRevisionContentGuessEncoding(myRevision, myFile.getVirtualFile(), myProject);
       }
       catch (IOException e) {
-        throw new VcsException(VcsBundle.message("message.text.cannot.load.revision", e.getLocalizedMessage()));
+        throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()).get());
       }
     }
 
@@ -938,7 +933,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         return VcsHistoryUtil.loadRevisionContent(myRevision);
       }
       catch (IOException e) {
-        throw new VcsException(VcsBundle.message("message.text.cannot.load.revision", e.getLocalizedMessage()));
+        throw new VcsException(VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()).get());
       }
     }
 
@@ -1087,7 +1082,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private VcsException myException;
 
     private FolderPatchCreationTask(@Nonnull AbstractVcs vcs, final TreeNodeOnVcsRevision revision) {
-      super(vcs.getProject(), VcsBundle.message("create.patch.loading.content.progress"), true);
+      super(vcs.getProject(), VcsLocalize.createPatchLoadingContentProgress().get(), true);
       myVcs = vcs;
       myRevision = revision;
     }
@@ -1113,7 +1108,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     public void onSuccess() {
       AbstractVcsHelper helper = AbstractVcsHelper.getInstance((Project)myProject);
       if (myException != null) {
-        helper.showError(myException, VcsBundle.message("create.patch.error.title", myException.getMessage()));
+        helper.showError(myException, VcsLocalize.createPatchErrorTitle(myException.getMessage()).get());
       }
       else if (myList == null) {
         helper.showError(null, "Can not load changelist contents");
@@ -1126,7 +1121,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class MyShowAsTreeAction extends ToggleAction implements DumbAware {
     public MyShowAsTreeAction() {
-      super(VcsBundle.message("action.name.show.files.as.tree"), null, AllIcons.General.SmallConfigurableVcs);
+      super(VcsLocalize.actionNameShowFilesAsTree(), null, AllIcons.General.SmallConfigurableVcs);
     }
 
     public boolean isSelected(AnActionEvent e) {
@@ -1141,7 +1136,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class MyDiffAction extends AbstractActionForSomeSelection {
     public MyDiffAction() {
-      super(VcsBundle.message("action.name.compare"), VcsBundle.message("action.description.compare"), PlatformIconGroup.actionsDiff(), 2, FileHistoryPanelImpl.this);
+      super(
+        VcsLocalize.actionNameCompare().get(),
+        VcsLocalize.actionDescriptionCompare().get(),
+        PlatformIconGroup.actionsDiff(),
+        2,
+        FileHistoryPanelImpl.this
+      );
     }
 
     protected void executeAction(AnActionEvent e) {
@@ -1153,7 +1154,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                 ContainerUtil.sorted(ContainerUtil.map(sel, TreeNodeOnVcsRevision::getRevision), myRevisionsInOrderComparator);
         VcsFileRevision olderRevision = selectedRevisions.get(0);
         VcsFileRevision newestRevision = selectedRevisions.get(sel.size() - 1);
-        myDiffHandler.showDiffForTwo(e.getRequiredData(CommonDataKeys.PROJECT), myFilePath, olderRevision, newestRevision);
+        myDiffHandler.showDiffForTwo(e.getRequiredData(Project.KEY), myFilePath, olderRevision, newestRevision);
       }
       else if (selectionSize == 1) {
         final TableView<TreeNodeOnVcsRevision> flatView = myDualView.getFlatView();
@@ -1170,7 +1171,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
         }
 
         if (revision != null) {
-          myDiffHandler.showDiffForOne(e, e.getRequiredData(CommonDataKeys.PROJECT), myFilePath, previousRevision, revision);
+          myDiffHandler.showDiffForOne(e, e.getRequiredData(Project.KEY), myFilePath, previousRevision, revision);
         }
       }
     }
@@ -1201,8 +1202,13 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class MyGetVersionAction extends AbstractActionForSomeSelection {
     public MyGetVersionAction() {
-      super(VcsBundle.message("action.name.get.file.content.from.repository"),
-            VcsBundle.message("action.description.get.file.content.from.repository"), PlatformIconGroup.actionsGet(), 1, FileHistoryPanelImpl.this);
+      super(
+        VcsLocalize.actionNameGetFileContentFromRepository().get(),
+        VcsLocalize.actionDescriptionGetFileContentFromRepository().get(),
+        PlatformIconGroup.actionsGet(),
+        1,
+        FileHistoryPanelImpl.this
+      );
     }
 
     @Override
@@ -1216,7 +1222,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       final VcsFileRevision revision = getFirstSelectedRevision();
       VirtualFile virtualFile = getVirtualFile();
       if (virtualFile != null) {
-        if (!new ReplaceFileConfirmationDialog(myVcs.getProject(), VcsBundle.message("acton.name.get.revision"))
+        if (!new ReplaceFileConfirmationDialog(myVcs.getProject(), VcsLocalize.actonNameGetRevision().get())
                 .confirmFor(new VirtualFile[]{virtualFile})) {
           return;
         }
@@ -1248,7 +1254,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       final VirtualFile file = getVirtualFile();
       final Project project = myVcs.getProject();
 
-      new Task.Backgroundable(project, VcsBundle.message("show.diff.progress.title")) {
+      new Task.Backgroundable(project, VcsLocalize.showDiffProgressTitle().get()) {
         @Override
         public void run(@Nonnull ProgressIndicator indicator) {
           final LocalHistoryAction action = file != null ? startLocalHistoryAction(revision) : LocalHistoryAction.NULL;
@@ -1258,9 +1264,11 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
           }
           catch (final IOException | VcsException e) {
             LOG.info(e);
-            ApplicationManager.getApplication().invokeLater(
-                    () -> Messages.showMessageDialog(VcsBundle.message("message.text.cannot.load.revision", e.getLocalizedMessage()),
-                                                     VcsBundle.message("message.title.get.revision.content"), Messages.getInformationIcon()));
+            ApplicationManager.getApplication().invokeLater(() -> Messages.showMessageDialog(
+              VcsLocalize.messageTextCannotLoadRevision(e.getLocalizedMessage()).get(),
+              VcsLocalize.messageTitleGetRevisionContent().get(),
+              Messages.getInformationIcon()
+            ));
             return;
           }
           catch (ProcessCanceledException ex) {
@@ -1282,8 +1290,11 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
                     write(revisionContent);
                   }
                   catch (IOException e) {
-                    Messages.showMessageDialog(VcsBundle.message("message.text.cannot.save.content", e.getLocalizedMessage()),
-                                               VcsBundle.message("message.title.get.revision.content"), Messages.getErrorIcon());
+                    Messages.showMessageDialog(
+                      VcsLocalize.messageTextCannotSaveContent(e.getLocalizedMessage()).get(),
+                      VcsLocalize.messageTitleGetRevisionContent().get(),
+                      Messages.getErrorIcon()
+                    );
                   }
                 }
               }.execute();
@@ -1304,7 +1315,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     }
 
     private String createGetActionTitle(final VcsFileRevision revision) {
-      return VcsBundle.message("action.name.for.file.get.version", myFilePath.getPath(), revision.getRevisionNumber());
+      return VcsLocalize.actionNameForFileGetVersion(myFilePath.getPath(), revision.getRevisionNumber()).get();
     }
 
     private void write(byte[] revision) throws IOException {
@@ -1334,7 +1345,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       final String content = StringUtil.convertLineSeparators(new String(revisionContent, myFilePath.getCharset().name()));
 
       CommandProcessor.getInstance().executeCommand(myVcs.getProject(), () -> document.replaceString(0, document.getTextLength(), content),
-                                                    VcsBundle.message("message.title.get.version"), null);
+                                                    VcsLocalize.messageTitleGetVersion().get(), null);
     }
   }
 
@@ -1350,7 +1361,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
       VirtualFile virtualFile = getVirtualFile();
       if (virtualFile == null) return null;
 
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       if (editor != null) {
         VirtualFile editorFile = FileDocumentManager.getInstance().getFile(editor.getDocument());
         if (Comparing.equal(editorFile, virtualFile)) return editor;
@@ -1394,7 +1405,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
   private class RefreshFileHistoryAction extends RefreshAction implements DumbAware {
     public RefreshFileHistoryAction() {
-      super(VcsBundle.message("action.name.refresh"), VcsBundle.message("action.description.refresh"), AllIcons.Actions.Refresh);
+      super(VcsLocalize.actionNameRefresh().get(), VcsLocalize.actionDesctiptionRefresh().get(), AllIcons.Actions.Refresh);
       registerShortcutOn(FileHistoryPanelImpl.this);
     }
 
@@ -1414,8 +1425,11 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     private final CreatePatchFromChangesAction myUsualDelegate;
 
     public MyCreatePatch() {
-      super(VcsBundle.message("action.name.create.patch.for.selected.revisions"),
-            VcsBundle.message("action.description.create.patch.for.selected.revisions"), PlatformIconGroup.filetypesPatch());
+      super(
+        VcsLocalize.actionNameCreatePatchForSelectedRevisions().get(),
+        VcsLocalize.actionDescriptionCreatePatchForSelectedRevisions().get(),
+        PlatformIconGroup.filetypesPatch()
+      );
       myUsualDelegate = new CreatePatchFromChangesAction();
     }
 

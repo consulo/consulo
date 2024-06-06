@@ -28,7 +28,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;

@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;

@@ -25,7 +25,6 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;
@@ -47,11 +46,11 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
 
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
 
     if (myInitialBreakpoint == null) {
-      Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+      Editor editor = dataContext.getData(Editor.KEY);
       if (editor != null) {
         myInitialBreakpoint = XBreakpointUtil.findSelectedBreakpoint(project, editor).second;
       }
@@ -63,7 +62,7 @@ public class ViewBreakpointsAction extends AnAction implements AnAction.Transpar
 
   public void update(AnActionEvent event){
     Presentation presentation = event.getPresentation();
-    Project project = event.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = event.getDataContext().getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;

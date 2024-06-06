@@ -32,7 +32,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
 import java.util.function.Consumer;

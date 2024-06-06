@@ -19,7 +19,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;

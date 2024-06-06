@@ -27,7 +27,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;

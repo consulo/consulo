@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.impl.patch.formove;
 
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.SortByVcsRoots;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;

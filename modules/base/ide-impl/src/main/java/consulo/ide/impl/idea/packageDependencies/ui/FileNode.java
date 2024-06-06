@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.packageDependencies.ui;
 
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

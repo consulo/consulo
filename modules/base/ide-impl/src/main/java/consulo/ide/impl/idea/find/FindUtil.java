@@ -60,7 +60,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.usage.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.LightweightHint;

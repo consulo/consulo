@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util.text;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.HashingStrategy;
 
 /**

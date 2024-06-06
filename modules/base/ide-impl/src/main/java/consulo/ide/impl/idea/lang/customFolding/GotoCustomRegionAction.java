@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.lang.customFolding;
 
 import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.annotation.access.RequiredReadAction;
@@ -30,6 +29,7 @@ import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.language.editor.folding.LanguageFolding;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
@@ -58,8 +58,8 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Project project = e.getData(Project.KEY);
+    final Editor editor = e.getData(Editor.KEY);
     if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
       return;
     }
@@ -86,9 +86,9 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    presentation.setText(IdeBundle.message("goto.custom.region.menu.item"));
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    presentation.setTextValue(IdeLocalize.gotoCustomRegionMenuItem());
+    final Editor editor = e.getData(Editor.KEY);
+    final Project project = e.getData(Project.KEY);
     boolean isAvailable = editor != null && project != null;
     presentation.setEnabled(isAvailable);
     presentation.setVisible(isAvailable);

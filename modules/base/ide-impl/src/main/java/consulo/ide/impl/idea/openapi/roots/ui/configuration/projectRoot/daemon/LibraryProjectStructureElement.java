@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.Existi
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;

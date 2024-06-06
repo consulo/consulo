@@ -20,24 +20,19 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.configuration.RemoteRunProfile;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
+import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ui.ex.awt.dnd.DnDAwareTree;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
-import consulo.ui.ex.awt.util.SingleAlarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
-import consulo.execution.debug.XDebuggerActions;
-import consulo.execution.debug.frame.XValueMarkers;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.*;
 import consulo.language.editor.PlatformDataKeys;
@@ -49,14 +44,18 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.dnd.DnDAwareTree;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.util.SingleAlarm;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -89,18 +88,15 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
     }
   }, 100, this);
 
-  private static final Convertor<TreePath, String> SPEED_SEARCH_CONVERTER = new Convertor<TreePath, String>() {
-    @Override
-    public String convert(TreePath o) {
-      String text = null;
-      if (o != null) {
-        final Object node = o.getLastPathComponent();
-        if (node instanceof XDebuggerTreeNode) {
-          text = ((XDebuggerTreeNode)node).getText().toString();
-        }
+  private static final Convertor<TreePath, String> SPEED_SEARCH_CONVERTER = o -> {
+    String text = null;
+    if (o != null) {
+      final Object node = o.getLastPathComponent();
+      if (node instanceof XDebuggerTreeNode) {
+        text = ((XDebuggerTreeNode)node).getText().toString();
       }
-      return StringUtil.notNullize(text);
     }
+    return StringUtil.notNullize(text);
   };
 
   private static final TransferHandler DEFAULT_TRANSFER_HANDLER = new TransferHandler() {
@@ -229,7 +225,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   public boolean isUnderRemoteDebug() {
     DataContext context = DataManager.getInstance().getDataContext(this);
-    ExecutionEnvironment env = context.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment env = context.getData(ExecutionEnvironment.KEY);
     if (env != null && env.getRunProfile() instanceof RemoteRunProfile) {
       return true;
     }

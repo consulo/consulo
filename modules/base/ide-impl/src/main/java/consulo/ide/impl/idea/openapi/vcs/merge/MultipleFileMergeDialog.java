@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.ide.impl.idea.diff.merge.MergeUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;

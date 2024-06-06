@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awt.util.TimedDeadzone;

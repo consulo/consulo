@@ -57,7 +57,7 @@ import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

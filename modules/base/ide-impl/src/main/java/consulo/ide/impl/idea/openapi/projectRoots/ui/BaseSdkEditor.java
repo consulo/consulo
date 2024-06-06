@@ -22,7 +22,7 @@ import consulo.content.OrderRootType;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;

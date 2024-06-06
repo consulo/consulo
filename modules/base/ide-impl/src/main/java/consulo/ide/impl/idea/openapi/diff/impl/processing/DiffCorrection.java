@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.diff.ex.DiffFragment;
 import consulo.ide.impl.idea.openapi.diff.impl.ComparisonPolicy;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.FragmentSide;
 import consulo.ide.impl.idea.openapi.diff.impl.highlighting.Util;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.logging.Logger;
 

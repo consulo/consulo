@@ -29,7 +29,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.progress.util.ProgressDialog;
 import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import consulo.language.util.IncorrectOperationException;

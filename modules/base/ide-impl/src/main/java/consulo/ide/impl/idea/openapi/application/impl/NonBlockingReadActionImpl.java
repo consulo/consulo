@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Promises;

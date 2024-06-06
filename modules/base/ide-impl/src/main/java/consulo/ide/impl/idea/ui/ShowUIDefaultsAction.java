@@ -21,11 +21,10 @@ import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.util.lang.function.PairFunction;
@@ -62,14 +61,9 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
       i++;
     }
 
-    Arrays.sort(data, new Comparator<Object[]>() {
-      @Override
-      public int compare(Object[] o1, Object[] o2) {
-        return StringUtil.naturalCompare(o1[0].toString(), o2[0].toString());
-      }
-    });
+    Arrays.sort(data, (o1, o2) -> StringUtil.naturalCompare(o1[0].toString(), o2[0].toString()));
 
-    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    final Project project = e == null ? null : e.getData(Project.KEY);
     new DialogWrapper(project) {
       {
         setTitle("Edit LaF Defaults");

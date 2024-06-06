@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;

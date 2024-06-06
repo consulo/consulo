@@ -9,7 +9,7 @@ import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.HintHint;

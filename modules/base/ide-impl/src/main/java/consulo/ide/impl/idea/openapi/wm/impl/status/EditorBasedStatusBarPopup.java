@@ -20,10 +20,9 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -210,9 +209,9 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
     VirtualFile selectedFile = getSelectedFile();
-    return SimpleDataContext.getSimpleContext(ImmutableMapBuilder.<Key, Object>newBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
-                                                                                  .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
-                                                                                  .put(CommonDataKeys.PROJECT, getProject())
+    return SimpleDataContext.getSimpleContext(ImmutableMapBuilder.<Key, Object>newBuilder().put(VirtualFile.KEY, selectedFile)
+                                                                                  .put(VirtualFile.KEY_OF_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
+                                                                                  .put(Project.KEY, getProject())
                                                                                   .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
   }
 

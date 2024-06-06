@@ -11,7 +11,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;

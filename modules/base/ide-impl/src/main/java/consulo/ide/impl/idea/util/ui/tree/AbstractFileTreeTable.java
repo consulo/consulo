@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.virtualFileSystem.VirtualFile;

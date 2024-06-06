@@ -25,7 +25,6 @@ import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import consulo.ide.impl.idea.diff.util.IntPair;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ui.ex.awt.FrameWrapper;
@@ -40,6 +39,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.AllIcons;
 import consulo.application.progress.ProgressManager;
@@ -119,7 +119,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private final Splitter mySplitter;
   private final DiffRequestPanel myDiffPanel;
-  private final JCheckBox myChangesOnlyCheckBox = new JCheckBox(VcsBundle.message("checkbox.show.changed.revisions.only"));
+  private final JCheckBox myChangesOnlyCheckBox = new JCheckBox(VcsLocalize.checkboxShowChangedRevisionsOnly().get());
   private final JLabel myStatusLabel = new JBLabel();
   private final AnimatedIconComponent myStatusSpinner = new AsyncProcessIcon("VcsSelectionHistoryDialog");
   private final JEditorPane myComments;
@@ -166,7 +166,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     myList = new TableView<>(myListModel);
     new TableLinkMouseListener().installOn(myList);
 
-    myList.getEmptyText().setText(VcsBundle.message("history.empty"));
+    myList.getEmptyText().setText(VcsLocalize.historyEmpty().get());
 
     myDiffPanel = DiffManager.getInstance().createRequestPanel(myProject, this, getFrame());
     myUpdateQueue = new MergingUpdateQueue("VcsSelectionHistoryDialog", 300, true, myList, this);
@@ -401,7 +401,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
   @Nullable
   private String createDiffContentTitle(int index) {
     if (index >= myRevisions.size()) return null;
-    return VcsBundle.message("diff.content.title.revision.number", myRevisions.get(index).getRevisionNumber());
+    return VcsLocalize.diffContentTitleRevisionNumber(myRevisions.get(index).getRevisionNumber()).get();
   }
 
   @Nullable
@@ -455,7 +455,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
     else if (VcsDataKeys.VCS_VIRTUAL_FILE == dataId) {
@@ -480,7 +480,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private class MyDiffAction extends DumbAwareAction {
     public MyDiffAction() {
-      super(VcsBundle.message("action.name.compare"), VcsBundle.message("action.description.compare"), AllIcons.Actions.Diff);
+      super(VcsLocalize.actionNameCompare(), VcsLocalize.actionDescriptionCompare(), AllIcons.Actions.Diff);
       setShortcutSet(CommonShortcuts.getDiff());
     }
 
@@ -508,9 +508,11 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
 
   private class MyDiffLocalAction extends DumbAwareAction {
     public MyDiffLocalAction() {
-      super(VcsBundle.message("show.diff.with.local.action.text"),
-            VcsBundle.message("show.diff.with.local.action.description"),
-            AllIcons.Actions.DiffWithCurrent);
+      super(
+        VcsLocalize.showDiffWithLocalActionText(),
+        VcsLocalize.showDiffWithLocalActionDescription(),
+        AllIcons.Actions.DiffWithCurrent
+      );
       setShortcutSet(ActionManager.getInstance().getAction("Vcs.ShowDiffWithLocal").getShortcutSet());
     }
 
@@ -641,7 +643,7 @@ public class VcsSelectionHistoryDialog extends FrameWrapper implements DataProvi
     @Nonnull
     private final List<Block> myBlocks;
     @Nullable private final VcsException myException;
-    @jakarta.annotation.Nullable
+    @Nullable
     private final VcsFileRevision myCurrentLoadingRevision;
 
     public BlockData(boolean isLoading,

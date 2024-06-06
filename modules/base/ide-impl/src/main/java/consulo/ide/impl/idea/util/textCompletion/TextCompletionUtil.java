@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.DumbService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.ui.awt.LanguageTextField;
 import jakarta.annotation.Nonnull;

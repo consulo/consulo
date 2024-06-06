@@ -14,7 +14,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;

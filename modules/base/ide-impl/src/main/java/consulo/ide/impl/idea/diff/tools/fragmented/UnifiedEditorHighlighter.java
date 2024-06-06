@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.tools.fragmented;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;

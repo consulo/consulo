@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -34,7 +34,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
   private static final Collection<BooleanOptionDescription> ourOptions = ContainerUtil.immutableList(
           editor("Mouse: " + messageApp("checkbox.honor.camelhumps.words.settings.on.double.click"),
                  "IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS"),
-          editor("Mouse: " + messageApp(SystemInfo.isMac
+          editor("Mouse: " + messageApp(Platform.current().os().isMac()
                                         ? "checkbox.enable.ctrl.mousewheel.changes.font.size.macos"
                                         : "checkbox.enable.ctrl.mousewheel.changes.font.size"), "IS_WHEEL_FONTCHANGE_ENABLED"),
           editor("Mouse: " + messageApp("checkbox.enable.drag.n.drop.functionality.in.editor"), "IS_DND_ENABLED"),

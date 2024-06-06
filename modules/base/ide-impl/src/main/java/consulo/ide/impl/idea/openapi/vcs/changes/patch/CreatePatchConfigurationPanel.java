@@ -28,23 +28,21 @@ import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.util.io.CharsetToolkit;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.charset.Charset;
 
@@ -64,21 +62,19 @@ public class CreatePatchConfigurationPanel {
     myProject = project;
     initMainPanel();
 
-    myFileNameField.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        final FileSaverDialog dialog =
-                FileChooserFactory.getInstance().createSaveFileDialog(
-                        new FileSaverDescriptor("Save Patch to", ""), myMainPanel);
-        final String path = FileUtil.toSystemIndependentName(getFileName());
-        final int idx = path.lastIndexOf("/");
-        VirtualFile baseDir = idx == -1 ? project.getBaseDir() :
-                              (LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path.substring(0, idx))));
-        baseDir = baseDir == null ? project.getBaseDir() : baseDir;
-        final String name = idx == -1 ? path : path.substring(idx + 1);
-        final VirtualFileWrapper fileWrapper = dialog.save(baseDir, name);
-        if (fileWrapper != null) {
-          myFileNameField.setText(fileWrapper.getFile().getPath());
-        }
+    myFileNameField.addActionListener(e -> {
+      final FileSaverDialog dialog =
+              FileChooserFactory.getInstance().createSaveFileDialog(
+                      new FileSaverDescriptor("Save Patch to", ""), myMainPanel);
+      final String path = FileUtil.toSystemIndependentName(getFileName());
+      final int idx = path.lastIndexOf("/");
+      VirtualFile baseDir = idx == -1 ? project.getBaseDir() :
+                            (LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(path.substring(0, idx))));
+      baseDir = baseDir == null ? project.getBaseDir() : baseDir;
+      final String name = idx == -1 ? path : path.substring(idx + 1);
+      final VirtualFileWrapper fileWrapper = dialog.save(baseDir, name);
+      if (fileWrapper != null) {
+        myFileNameField.setText(fileWrapper.getFile().getPath());
       }
     });
 
@@ -109,20 +105,20 @@ public class CreatePatchConfigurationPanel {
   private void initMainPanel() {
     myFileNameField = new TextFieldWithBrowseButton();
     myBasePathField = new TextFieldWithBrowseButton();
-    myReversePatchCheckbox = new JCheckBox(VcsBundle.message("create.patch.reverse.checkbox"));
+    myReversePatchCheckbox = new JCheckBox(VcsLocalize.createPatchReverseCheckbox().get());
     myEncoding = new ComboBox<>();
     myWarningLabel = new JLabel();
 
     myMainPanel = FormBuilder.createFormBuilder()
-            .addLabeledComponent(VcsBundle.message("create.patch.file.path"), myFileNameField)
+            .addLabeledComponent(VcsLocalize.createPatchFilePath().get(), myFileNameField)
             .addLabeledComponent("&Base path:", myBasePathField)
             .addComponent(myReversePatchCheckbox)
-            .addLabeledComponent(VcsBundle.message("create.patch.encoding"), myEncoding)
+            .addLabeledComponent(VcsLocalize.createPatchEncoding().get(), myEncoding)
             .addComponent(myWarningLabel)
             .getPanel();
   }
 
-  public void setCommonParentPath(@jakarta.annotation.Nullable File commonParentPath) {
+  public void setCommonParentPath(@Nullable File commonParentPath) {
     myCommonParentDir = commonParentPath == null || commonParentPath.isDirectory() ? commonParentPath : commonParentPath.getParentFile();
   }
 
@@ -159,7 +155,7 @@ public class CreatePatchConfigurationPanel {
     return validateFields() == null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private ValidationInfo verifyBaseDirPath() {
     String baseDirName = getBaseDirName();
     if (StringUtil.isEmptyOrSpaces(baseDirName)) return new ValidationInfo("Base path can't be empty!", myBasePathField);

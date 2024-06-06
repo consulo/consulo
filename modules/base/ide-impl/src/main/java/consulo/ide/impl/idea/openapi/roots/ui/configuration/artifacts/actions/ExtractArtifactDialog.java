@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactTy
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.PlainArtifactType;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;

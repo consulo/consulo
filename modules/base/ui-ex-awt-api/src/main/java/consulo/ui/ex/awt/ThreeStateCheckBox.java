@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 
 import javax.accessibility.AccessibleContext;
@@ -123,7 +123,7 @@ public class ThreeStateCheckBox extends JCheckBox {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    if (UIUtil.isUnderAquaLookAndFeel() || (SystemInfo.isMac && UIUtil.isUnderIntelliJLaF())) {
+    if (UIUtil.isUnderAquaLookAndFeel() || (Platform.current().os().isMac() && UIUtil.isUnderIntelliJLaF())) {
       return;
     }
 

@@ -25,7 +25,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.util.Alarm;

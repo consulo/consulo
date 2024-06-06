@@ -20,7 +20,7 @@ import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.project.ui.view.internal.ProjectSettingsService;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;

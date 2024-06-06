@@ -23,7 +23,7 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.FieldPanel;

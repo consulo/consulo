@@ -29,7 +29,7 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 

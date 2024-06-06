@@ -30,7 +30,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.HyperlinkAdapter;

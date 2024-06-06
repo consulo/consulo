@@ -28,14 +28,15 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.analysis.PerformAnalysisInBackgroundOption;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.packageDependencies.*;
 import consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesHandler;
 import consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesHandler;
 import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
@@ -458,7 +459,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
   @Nullable
   @NonNls
   public Object getData(@Nonnull @NonNls Key dataId) {
-    if (LangDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       final PackageDependenciesNode selectedNode = myRightTree.getSelectedNode();
       if (selectedNode != null) {
         final PsiElement element = selectedNode.getPsiElement();
@@ -689,16 +690,13 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
       final Element rootElement = new Element("root");
       rootElement.setAttribute("isBackward", String.valueOf(!myForward));
       final List<PsiFile> files = new ArrayList<>(myDependencies.keySet());
-      Collections.sort(files, new Comparator<>() {
-        @Override
-        public int compare(PsiFile f1, PsiFile f2) {
-          final VirtualFile virtualFile1 = f1.getVirtualFile();
-          final VirtualFile virtualFile2 = f2.getVirtualFile();
-          if (virtualFile1 != null && virtualFile2 != null) {
-            return virtualFile1.getPath().compareToIgnoreCase(virtualFile2.getPath());
-          }
-          return 0;
+      Collections.sort(files, (f1, f2) -> {
+        final VirtualFile virtualFile1 = f1.getVirtualFile();
+        final VirtualFile virtualFile2 = f2.getVirtualFile();
+        if (virtualFile1 != null && virtualFile2 != null) {
+          return virtualFile1.getPath().compareToIgnoreCase(virtualFile2.getPath());
         }
+        return 0;
       });
       for (PsiFile file : files) {
         final Element fileElement = new Element("file");
@@ -733,7 +731,7 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
 
   private class RerunAction extends AnAction {
     public RerunAction(JComponent comp) {
-      super(CommonBundle.message("action.rerun"), AnalysisScopeBundle.message("action.rerun.dependency"), AllIcons.Actions.Rerun);
+      super(CommonLocalize.actionRerun().get(), AnalysisScopeBundle.message("action.rerun.dependency"), AllIcons.Actions.Rerun);
       registerCustomShortcutSet(CommonShortcuts.getRerun(), comp);
     }
 
@@ -776,10 +774,10 @@ public class DependenciesPanel extends JPanel implements Disposable, DataProvide
     @Override
     public Object getData(@Nonnull Key<?> dataId) {
       PackageDependenciesNode node = getSelectedNode();
-      if (PlatformDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         return node;
       }
-      if (LangDataKeys.PSI_ELEMENT == dataId && node != null)  {
+      if (PsiElement.KEY == dataId && node != null)  {
         final PsiElement element = node.getPsiElement();
         return element != null && element.isValid() ? element : null;
       }

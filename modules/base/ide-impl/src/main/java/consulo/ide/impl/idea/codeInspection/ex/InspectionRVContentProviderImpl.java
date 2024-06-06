@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.codeInspection.ex;
 
 import consulo.ide.impl.idea.codeInspection.ui.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;

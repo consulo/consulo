@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import com.google.common.base.CharMatcher;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
@@ -31,7 +32,6 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.execution.ConsoleFolding;
 import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.util.ConsoleBuffer;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;
@@ -45,11 +45,10 @@ import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.navigation.Navigatable;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
@@ -862,7 +861,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     if (myEditor == null) {
       return null;
     }
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       final LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
       final HyperlinkInfo info = myHyperlinks.getHyperlinkInfoByLineAndCol(pos.line, pos.column);
       final OpenFileDescriptor openFileDescriptor = info instanceof FileHyperlinkInfo ? ((FileHyperlinkInfo)info).getDescriptor() : null;
@@ -872,13 +871,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       return openFileDescriptor;
     }
 
-    if (CommonDataKeys.EDITOR == dataId) {
+    if (Editor.KEY == dataId) {
       return myEditor;
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return myHelpId;
     }
-    if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+    if (KEY == dataId) {
       return this;
     }
     return null;
@@ -1233,7 +1232,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
 
     @Nullable
     private static ConsoleViewImpl getRunningConsole(@Nonnull DataContext context) {
-      final Editor editor = context.getData(CommonDataKeys.EDITOR);
+      final Editor editor = context.getData(Editor.KEY);
       if (editor != null) {
         final ConsoleViewImpl console = editor.getUserData(CONSOLE_VIEW_IN_EDITOR_VIEW);
         if (console != null && console.myState.isRunning()) {

@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;

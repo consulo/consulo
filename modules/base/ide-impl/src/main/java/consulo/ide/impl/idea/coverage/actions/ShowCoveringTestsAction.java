@@ -7,22 +7,20 @@ package consulo.ide.impl.idea.coverage.actions;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
 import consulo.ide.impl.idea.openapi.ui.PanelWithText;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.AllIcons;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuite;
 import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
@@ -55,9 +53,9 @@ public class ShowCoveringTestsAction extends AnAction {
 
   public void actionPerformed(final AnActionEvent e) {
     final DataContext context = e.getDataContext();
-    final Project project = context.getData(CommonDataKeys.PROJECT);
+    final Project project = context.getData(Project.KEY);
     LOG.assertTrue(project != null);
-    final Editor editor = context.getData(CommonDataKeys.EDITOR);
+    final Editor editor = context.getData(Editor.KEY);
     LOG.assertTrue(editor != null);
 
     final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
@@ -65,25 +63,23 @@ public class ShowCoveringTestsAction extends AnAction {
 
     final File[] traceFiles = getTraceFiles(project);
 
-    final Set<String> tests = new HashSet<String>();
-    Runnable runnable = new Runnable() {
-      public void run() {
-        for (File traceFile : traceFiles) {
-          DataInputStream in = null;
+    final Set<String> tests = new HashSet<>();
+    Runnable runnable = () -> {
+      for (File traceFile : traceFiles) {
+        DataInputStream in = null;
+        try {
+          in = new DataInputStream(new FileInputStream(traceFile));
+          extractTests(traceFile, in, tests);
+        }
+        catch (Exception ex) {
+          LOG.error(traceFile.getName(), ex);
+        }
+        finally {
           try {
-            in = new DataInputStream(new FileInputStream(traceFile));
-            extractTests(traceFile, in, tests);
+            in.close();
           }
-          catch (Exception ex) {
-            LOG.error(traceFile.getName(), ex);
-          }
-          finally {
-            try {
-              in.close();
-            }
-            catch (IOException ex) {
-              LOG.error(ex);
-            }
+          catch (IOException ex) {
+            LOG.error(ex);
           }
         }
       }
@@ -104,13 +100,10 @@ public class ShowCoveringTestsAction extends AnAction {
         component = new ImplementationViewComponent(PsiUtilCore.toPsiElementArray(elements), 0);
         popupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(component, component.getPreferredFocusableComponent())
           .setDimensionServiceKey(project, "ShowTestsPopup", false)
-          .setCouldPin(new Processor<JBPopup>() {
-            @Override
-            public boolean process(JBPopup popup) {
-              component.showInUsageView();
-              popup.cancel();
-              return false;
-            }
+          .setCouldPin(popup -> {
+            component.showInUsageView();
+            popup.cancel();
+            return false;
           });
       } else {
         component = null;
@@ -153,7 +146,7 @@ public class ShowCoveringTestsAction extends AnAction {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(false);
     if (myLineData != null && myLineData.getStatus() != LineCoverage.NONE) {
-      final Project project = e.getDataContext().getData(CommonDataKeys.PROJECT);
+      final Project project = e.getDataContext().getData(Project.KEY);
       if (project != null) {
         final File[] files = getTraceFiles(project);
         if (files != null && files.length > 0) {
@@ -167,7 +160,7 @@ public class ShowCoveringTestsAction extends AnAction {
   private static File[] getTraceFiles(Project project) {
     final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
     if (currentSuite == null) return null;
-    final List<File> files = new ArrayList<File>();
+    final List<File> files = new ArrayList<>();
     for (CoverageSuite coverageSuite : currentSuite.getSuites()) {
 
       final String filePath = coverageSuite.getCoverageDataFileName();

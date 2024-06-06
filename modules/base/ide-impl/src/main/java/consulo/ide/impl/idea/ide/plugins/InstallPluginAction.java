@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
@@ -24,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -92,7 +91,7 @@ public class InstallPluginAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    install(e.getData(CommonDataKeys.PROJECT), null);
+    install(e.getData(Project.KEY), null);
   }
 
   @RequiredUIAccess

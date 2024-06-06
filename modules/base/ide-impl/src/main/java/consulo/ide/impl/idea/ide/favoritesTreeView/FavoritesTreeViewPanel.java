@@ -74,9 +74,9 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.dataholder.Key;
+import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -423,14 +423,14 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
     if (LangDataKeys.NO_NEW_ACTION == dataId) {
       return Boolean.TRUE;
     }
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       PsiElement[] elements = getSelectedPsiElements();
       if (elements.length != 1) {
         return null;
       }
       return elements[0] != null && elements[0].isValid() ? elements[0] : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       final PsiElement[] elements = getSelectedPsiElements();
       ArrayList<PsiElement> result = new ArrayList<>();
       for (PsiElement element : elements) {
@@ -681,8 +681,8 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
           if (element instanceof PsiDirectory) {
             final VirtualFile virtualFile = ((PsiDirectory)element).getVirtualFile();
             final String path = virtualFile.getPath();
-            if (path.endsWith(ArchiveFileSystem.ARCHIVE_SEPARATOR)) { // if is jar-file root
-              final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - ArchiveFileSystem.ARCHIVE_SEPARATOR.length()));
+            if (path.endsWith(URLUtil.ARCHIVE_SEPARATOR)) { // if is jar-file root
+              final VirtualFile vFile = LocalFileSystem.getInstance().findFileByPath(path.substring(0, path.length() - URLUtil.ARCHIVE_SEPARATOR.length()));
               if (vFile != null) {
                 final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(vFile);
                 if (psiFile != null) {

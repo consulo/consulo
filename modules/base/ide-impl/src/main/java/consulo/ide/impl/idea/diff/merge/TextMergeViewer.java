@@ -59,7 +59,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.LineTokenizer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -945,7 +945,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
       @Override
       public void actionPerformed(@Nonnull final AnActionEvent e) {
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+        Editor editor = e.getData(Editor.KEY);
         final ThreeSide side = getEditorSide(editor);
         if (editor == null || side == null) return;
 
@@ -954,9 +954,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
         String title = e.getPresentation().getText() + " in merge";
 
-        executeMergeCommand(title, selectedChanges.size() > 1, selectedChanges, () -> {
-          apply(side, selectedChanges);
-        });
+        executeMergeCommand(title, selectedChanges.size() > 1, selectedChanges, () -> apply(side, selectedChanges));
       }
 
       private boolean isSomeChangeSelected(@Nonnull ThreeSide side) {

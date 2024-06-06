@@ -101,8 +101,8 @@ public class ShowFilePathAction extends AnAction {
     @Nonnull
     @Override
     protected String compute() {
-      if (SystemInfo.isMac) return "Finder";
-      if (SystemInfo.isWindows) return "Explorer";
+      if (Platform.current().os().isMac()) return "Finder";
+      if (Platform.current().os().isWindows()) return "Explorer";
       return readDesktopEntryKey("Name").orElse("File Manager");
     }
   };
@@ -139,7 +139,7 @@ public class ShowFilePathAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    boolean visible = !SystemInfo.isMac && isSupported();
+    boolean visible = !Platform.current().os().isMac() && isSupported();
     e.getPresentation().setVisible(visible);
     if (visible) {
       VirtualFile file = getFile(e);
@@ -193,7 +193,7 @@ public class ShowFilePathAction extends AnAction {
 
   private static String getPresentableUrl(final VirtualFile eachParent) {
     String url = eachParent.getPresentableUrl();
-    if (eachParent.getParent() == null && SystemInfo.isWindows) {
+    if (eachParent.getParent() == null && Platform.current().os().isWindows()) {
       url += "\\";
     }
     return url;
@@ -221,7 +221,7 @@ public class ShowFilePathAction extends AnAction {
   }
 
   public static boolean isSupported() {
-    return SystemInfo.isWindows || SystemInfo.isMac || SystemInfo.hasXdgOpen() || Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
+    return Platform.current().os().isWindows() || Platform.current().os().isMac() || SystemInfo.hasXdgOpen() || Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN);
   }
 
   @Nonnull
@@ -270,7 +270,7 @@ public class ShowFilePathAction extends AnAction {
     String dir = FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_dir.getPath()));
     String toSelect = _toSelect != null ? FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_toSelect.getPath())) : null;
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       String cmd = toSelect != null ? "explorer /select,\"" + shortPath(toSelect) + '"' : "explorer /root,\"" + shortPath(dir) + '"';
       LOG.debug(cmd);
       PooledThreadExecutor.getInstance().execute(() -> {
@@ -283,7 +283,7 @@ public class ShowFilePathAction extends AnAction {
         }
       });
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       GeneralCommandLine cmd = toSelect != null ? new GeneralCommandLine("open", "-R", toSelect) : new GeneralCommandLine("open", dir);
       schedule(cmd);
     }

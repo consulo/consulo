@@ -37,7 +37,6 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.diff.util.Side;
-import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.codeEditor.event.VisibleAreaListener;
@@ -294,7 +293,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
   @Nullable
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
     else if (DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE == dataId) {
@@ -554,7 +553,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
       }
 
       Presentation presentation = e.getPresentation();
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
 
       Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
       if (side == null) {
@@ -568,7 +567,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
     @Override
     public void actionPerformed(@Nonnull final AnActionEvent e) {
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       final Side side = Side.fromValue(ContainerUtil.list(myResultEditor, myPatchEditor), editor);
       if (editor == null || side == null) return;
 
@@ -577,9 +576,7 @@ class ApplyPatchViewer implements DataProvider, Disposable {
 
       String title = e.getPresentation().getText() + " in patch resolve";
 
-      executeCommand(title, () -> {
-        apply(selectedChanges);
-      });
+      executeCommand(title, () -> apply(selectedChanges));
     }
 
     private boolean isSomeChangeSelected(@Nonnull Side side) {

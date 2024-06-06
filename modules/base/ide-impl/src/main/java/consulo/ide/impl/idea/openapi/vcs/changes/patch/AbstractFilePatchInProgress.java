@@ -19,7 +19,7 @@ import consulo.diff.chain.DiffRequestProducer;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchReader;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PathMerger;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.completion.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.highlight.HighlightManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.EditorEx;

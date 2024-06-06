@@ -2,8 +2,8 @@ package consulo.ide.impl.idea.ide.browsers;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ui.image.Image;
 import consulo.webBrowser.BrowserFamily;

@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.internal;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -98,7 +98,7 @@ public final class DetectRetinaKit {
   public static boolean isRetina() {
     // Oracle JDK
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
       GraphicsDevice[] devices = e.getScreenDevices();

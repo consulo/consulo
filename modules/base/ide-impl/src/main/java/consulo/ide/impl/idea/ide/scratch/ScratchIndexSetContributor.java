@@ -20,7 +20,7 @@ import consulo.application.Application;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
 import consulo.language.psi.stub.IndexableSetContributor;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

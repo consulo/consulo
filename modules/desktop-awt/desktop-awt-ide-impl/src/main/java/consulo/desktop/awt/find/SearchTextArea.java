@@ -2,7 +2,6 @@
 package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.EditorCopyPasteHelper;
 import consulo.dataContext.DataContext;
@@ -14,6 +13,7 @@ import consulo.find.FindInProjectSettings;
 import consulo.ide.impl.idea.find.editorHeaderActions.Utils;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -46,7 +46,7 @@ import static javax.swing.ScrollPaneConstants.*;
 
 public class SearchTextArea extends JPanel implements PropertyChangeListener {
   public static final String JUST_CLEARED_KEY = "JUST_CLEARED";
-  public static final KeyStroke NEW_LINE_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (SystemInfo.isMac ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
+  public static final KeyStroke NEW_LINE_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, (Platform.current().os().isMac() ? META_DOWN_MASK : CTRL_DOWN_MASK) | SHIFT_DOWN_MASK);
   private final JTextArea myTextArea;
   private final boolean mySearchMode;
   private final JPanel myIconsPanel = new NonOpaquePanel();
@@ -126,7 +126,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
       @Override
       public Insets getBorderInsets(Component c) {
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           return new JBInsets(3, 0, 2, 0);
         }
         else {
@@ -187,7 +187,7 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
 
     removeAll();
     setLayout(new BorderLayout(JBUIScale.scale(3), 0));
-    setBorder(JBUI.Borders.empty(SystemInfo.isLinux ? JBUI.scale(2) : JBUI.scale(1)));
+    setBorder(JBUI.Borders.empty(Platform.current().os().isLinux() ? JBUI.scale(2) : JBUI.scale(1)));
     add(historyButtonWrapper, BorderLayout.WEST);
     add(myScrollPane, BorderLayout.CENTER);
     add(iconsPanelWrapper, BorderLayout.EAST);

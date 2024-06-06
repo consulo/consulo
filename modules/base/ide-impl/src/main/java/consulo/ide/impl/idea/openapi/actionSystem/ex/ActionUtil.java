@@ -19,18 +19,16 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.PausesStat;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -39,11 +37,12 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -98,7 +97,7 @@ public class ActionUtil {
         actionNames.add(s);
       }
 
-      final Project _project = event.getData(CommonDataKeys.PROJECT);
+      final Project _project = event.getData(Project.KEY);
       if (_project != null && project == null) {
         project = _project;
       }
@@ -206,7 +205,7 @@ public class ActionUtil {
 
   @RequiredReadAction
   private static boolean checkModuleExtensions(AnAction action, AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return true;
     }
@@ -223,7 +222,7 @@ public class ActionUtil {
       }
     }
     else {
-      Module module = e.getData(CommonDataKeys.MODULE);
+      Module module = e.getData(Module.KEY);
       if (module != null) {
         boolean result = checkModuleForModuleExtensions(module, moduleExtensionIds);
         if (result) {
@@ -231,7 +230,7 @@ public class ActionUtil {
         }
       }
 
-      VirtualFile[] virtualFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      VirtualFile[] virtualFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
       if (virtualFiles != null) {
         for (VirtualFile virtualFile : virtualFiles) {
           Module moduleForFile = ModuleUtilCore.findModuleForFile(virtualFile, project);
@@ -442,7 +441,7 @@ public class ActionUtil {
       KeyboardShortcut ctrlAltShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK), null);
       KeyboardShortcut altShortcut = new KeyboardShortcut(KeyStroke.getKeyStroke(mnemonic, InputEvent.ALT_DOWN_MASK), null);
       CustomShortcutSet shortcutSet;
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         if (Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
           shortcutSet = new CustomShortcutSet(ctrlAltShortcut, altShortcut);
         }

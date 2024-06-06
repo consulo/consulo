@@ -21,6 +21,7 @@ import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
 import consulo.ide.IdeBundle;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.tree.DefaultTreeExpander;
 import consulo.ide.impl.idea.ide.actions.ViewStructureAction;
 import consulo.language.editor.structureView.StructureViewCompositeModel;
@@ -35,8 +36,8 @@ import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
@@ -48,7 +49,6 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -78,7 +78,6 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.JBIterable;
-import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
@@ -534,10 +533,10 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     scrollPane.setBorder(IdeBorderFactory.createBorder(JBCurrentTheme.Popup.toolbarBorderColor(), SideBorder.TOP | SideBorder.BOTTOM));
     panel.add(scrollPane, BorderLayout.CENTER);
     DataManager.registerDataProvider(panel, dataId -> {
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return myProject;
       }
-      if (PlatformDataKeys.FILE_EDITOR == dataId) {
+      if (FileEditor.KEY == dataId) {
         return myFileEditor;
       }
       if (OpenFileDescriptorImpl.NAVIGATE_IN_EDITOR == dataId) {
@@ -545,23 +544,23 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
           return ((TextEditor)myFileEditor).getEditor();
         }
       }
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         return getSelectedElements().filter(PsiElement.class).first();
       }
-      if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+      if (PsiElement.KEY_OF_ARRAY == dataId) {
         return PsiUtilCore.toPsiElementArray(getSelectedElements().filter(PsiElement.class).toList());
       }
-      if (CommonDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         return getSelectedElements().filter(Navigatable.class).first();
       }
-      if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) {
+      if (Navigatable.KEY_OF_ARRAY == dataId) {
         List<Navigatable> result = getSelectedElements().filter(Navigatable.class).toList();
         return result.isEmpty() ? null : result.toArray(new Navigatable[0]);
       }
       if (LangDataKeys.POSITION_ADJUSTER_POPUP == dataId) {
         return myPopup;
       }
-      if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+      if (CopyProvider.KEY == dataId) {
         return myCopyPasteDelegator.getCopyProvider();
       }
       if (PlatformDataKeys.TREE_EXPANDER == dataId) {

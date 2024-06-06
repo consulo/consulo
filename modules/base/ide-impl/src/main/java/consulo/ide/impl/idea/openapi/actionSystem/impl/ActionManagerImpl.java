@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -1297,7 +1296,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
     //noinspection AssignmentToStaticFieldFromInstanceMethod
     LastActionTracker.ourLastActionId = myLastPreformedActionId;
-    final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    final PsiFile file = dataContext.getData(PsiFile.KEY);
     final Language language = file != null ? file.getLanguage() : null;
     //ActionsCollector.getInstance().record(CommonDataKeys.PROJECT.getData(dataContext), action, event, language);
     for (AnActionListener listener : myActionListeners) {

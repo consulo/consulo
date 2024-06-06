@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.components.ScrollablePanel;
 import consulo.ui.ex.awt.OnePixelDivider;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.ui.SeparatorComponent;

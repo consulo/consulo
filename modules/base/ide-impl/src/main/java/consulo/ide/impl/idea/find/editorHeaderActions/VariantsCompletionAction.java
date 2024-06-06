@@ -15,25 +15,24 @@
  */
 package consulo.ide.impl.idea.find.editorHeaderActions;
 
-import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorFontType;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.application.util.matcher.NameUtil;
-import consulo.language.psi.stub.IdTableBuilding;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.util.matcher.Matcher;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.awt.util.GraphicsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.application.util.matcher.NameUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
+import consulo.colorScheme.EditorFontType;
+import consulo.externalService.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.psi.stub.IdTableBuilding;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -58,7 +57,7 @@ public class VariantsCompletionAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final Editor editor = e.getData(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE);
+    final Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
     if (editor == null) return;
     final String prefix = myTextField.getText().substring(0, myTextField.getCaretPosition());
     if (StringUtil.isEmpty(prefix)) return;
@@ -86,21 +85,18 @@ public class VariantsCompletionAction extends AnAction {
 
   private static String[] calcWords(final String prefix, Editor editor) {
     final Matcher matcher = NameUtil.buildMatcher(prefix, 0, true, true);
-    final Set<String> words = new HashSet<String>();
+    final Set<String> words = new HashSet<>();
     CharSequence chars = editor.getDocument().getCharsSequence();
 
-    IdTableBuilding.scanWords(new IdTableBuilding.ScanWordProcessor() {
-      @Override
-      public void run(final CharSequence chars, @Nullable char[] charsArray, final int start, final int end) {
-        final String word = chars.subSequence(start, end).toString();
-        if (matcher.matches(word)) {
-          words.add(word);
-        }
+    IdTableBuilding.scanWords((chars1, charsArray, start, end) -> {
+      final String word = chars1.subSequence(start, end).toString();
+      if (matcher.matches(word)) {
+        words.add(word);
       }
     }, chars, 0, chars.length());
 
 
-    ArrayList<String> sortedWords = new ArrayList<String>(words);
+    ArrayList<String> sortedWords = new ArrayList<>(words);
     Collections.sort(sortedWords);
 
     return ArrayUtil.toStringArray(sortedWords);

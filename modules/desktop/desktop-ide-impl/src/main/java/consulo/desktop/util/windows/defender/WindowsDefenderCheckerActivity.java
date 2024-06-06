@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;

@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentName;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.escapeXmlEntities;
+import static consulo.util.lang.StringUtil.escapeXmlEntities;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;

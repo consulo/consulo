@@ -19,10 +19,10 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.ide.impl.idea.ide.util.gotoByName.*;
 import consulo.ide.impl.idea.openapi.ui.playback.commands.ActionCommand;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.ide.navigation.GotoClassOrTypeContributor;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.navigation.AnonymousElementProvider;
@@ -54,12 +54,12 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     //we need to change the template presentation to show the proper text for the action in Settings | Keymap
     Presentation presentation = getTemplatePresentation();
     presentation.setText(GotoClassPresentationUpdater.getActionTitle() + "...");
-    presentation.setDescription(IdeBundle.message("go.to.class.action.description", StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), "/")));
+    presentation.setDescriptionValue(IdeLocalize.goToClassActionDescription(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), "/")));
   }
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     boolean dumb = DumbService.isDumb(project);
@@ -83,7 +83,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.class");
@@ -91,8 +91,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     final GotoClassModel2 model = new GotoClassModel2(project);
-    String pluralKinds = StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), s -> StringUtil.pluralize(s), "/"));
-    String title = IdeBundle.message("go.to.class.toolwindow.title", pluralKinds);
+    String pluralKinds = StringUtil.capitalize(StringUtil.join(GotoClassPresentationUpdater.getElementKinds(), StringUtil::pluralize, "/"));
+    String title = IdeLocalize.goToClassToolwindowTitle(pluralKinds).get();
     showNavigationPopup(e, model, new GotoActionCallback<Language>() {
       @Override
       protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {

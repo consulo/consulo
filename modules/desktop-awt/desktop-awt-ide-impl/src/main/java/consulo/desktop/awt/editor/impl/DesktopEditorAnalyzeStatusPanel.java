@@ -29,17 +29,17 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.action.ActionButtonImpl;
+import consulo.desktop.awt.action.ActionButtonUI;
+import consulo.desktop.awt.action.ActionToolbarImpl;
 import consulo.desktop.awt.language.editor.DesktopEditorFloatPanel;
 import consulo.disposer.Disposable;
-import consulo.desktop.awt.action.ActionButtonUI;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.desktop.awt.action.ActionButtonImpl;
-import consulo.desktop.awt.action.ActionToolbarImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ide.impl.idea.ui.components.labels.DropDownLink;
 import consulo.ide.impl.idea.ui.popup.util.PopupState;
+import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.language.editor.impl.internal.markup.*;
@@ -65,10 +65,11 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import kava.beans.PropertyChangeListener;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import kava.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorEvent;
@@ -343,7 +344,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       setVisible(!status.isEmpty());
 
       GridBag gc = new GridBag().nextLine();
-      if (status.size() == 1 && consulo.util.lang.StringUtil.isEmpty(status.get(0).getText())) {
+      if (status.size() == 1 && StringUtil.isEmpty(status.get(0).getText())) {
         add(createStyledLabel(null, status.get(0).getIcon(), SwingConstants.CENTER), gc.next().weightx(1).fillCellHorizontally());
       }
       else if (status.size() > 0) {
@@ -378,7 +379,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
         public void setUI(LabelUI ui) {
           super.setUI(ui);
 
-          if (!SystemInfo.isWindows) {
+          if (!Platform.current().os().isWindows()) {
             Font font = getFont();
             font = new FontUIResource(font.deriveFont(font.getStyle(), font.getSize() - JBUIScale.scale(2))); // Allow to reset the font by UI
             setFont(font);

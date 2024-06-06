@@ -16,7 +16,7 @@
 
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,19 +30,19 @@ public class ComboBoxWithWidePopup<E> extends JComboBox<E> {
   public ComboBoxWithWidePopup(final ComboBoxModel<E> aModel) {
     super(aModel);
 
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
   public ComboBoxWithWidePopup(final E[] items) {
     super(items);
 
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
   public ComboBoxWithWidePopup(final Vector<E> items) {
     super(items);
 
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) setMaximumRowCount(25);
   }
 
   public ComboBoxWithWidePopup() {

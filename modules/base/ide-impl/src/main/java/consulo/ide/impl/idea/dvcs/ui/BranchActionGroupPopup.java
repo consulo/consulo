@@ -2,11 +2,10 @@
 package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.Size;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.openapi.vcs.ui.PopupListElementRendererWithIcon;
 import consulo.ui.ex.awt.ErrorLabel;
@@ -72,7 +71,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   public BranchActionGroupPopup(@Nonnull String title, @Nonnull Project project, @Nonnull Condition<AnAction> preselectActionCondition, @Nonnull ActionGroup actions, @Nullable String dimensionKey) {
     super(title, createBranchSpeedSearchActionGroup(actions),
           SimpleDataContext.builder()
-                  .add(CommonDataKeys.PROJECT, project)
+                  .add(Project.KEY, project)
                   .add(UIExAWTDataKey.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
                   .build(),
           preselectActionCondition, true);

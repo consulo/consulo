@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.execution.configurations;
 
 import com.pty4j.PtyProcess;
 import consulo.application.ApplicationProperties;
-import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.collection.ArrayUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -117,7 +117,7 @@ public class PtyCommandLine extends GeneralCommandLine {
     String[] command = ArrayUtil.toStringArray(commands);
     File workDirectory = getWorkDirectory();
     String directory = workDirectory != null ? workDirectory.getPath() : null;
-    boolean cygwin = myUseCygwinLaunch && SystemInfo.isWindows;
+    boolean cygwin = myUseCygwinLaunch && Platform.current().os().isWindows();
     return PtyProcess.exec(command, env, directory, console, cygwin, getPtyLogFile());
   }
 }

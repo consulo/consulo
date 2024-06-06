@@ -15,7 +15,6 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AppContextHacking;
 import consulo.awt.hacking.BasicLookAndFeelHacking;
@@ -26,7 +25,6 @@ import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExpandActionExtender;
 import consulo.desktop.awt.ui.plaf.extend.textBox.SupportTextBoxWithExtensionsExtender;
 import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.ui.ex.awt.JBInsets;
@@ -36,8 +34,9 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.*;
@@ -89,7 +88,7 @@ public class DarculaLaf extends BaseLookAndFeel {
     try {
       final UIDefaults metalDefaults = new MetalLookAndFeel().getDefaults();
       final UIDefaults defaults = base.getDefaults();
-      if (SystemInfo.isLinux && !Registry.is("darcula.use.native.fonts.on.linux")) {
+      if (Platform.current().os().isLinux() && !Registry.is("darcula.use.native.fonts.on.linux")) {
         Font font = findFont("DejaVu Sans");
         if (font != null) {
           for (Object key : defaults.keySet()) {

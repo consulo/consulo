@@ -30,10 +30,10 @@ import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.structureView.StructureViewComposite;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
 import consulo.ui.ex.internal.ToolWindowEx;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
@@ -111,19 +111,11 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       }
     };
     ActionManager.getInstance().addTimerListener(500, timerListener);
-    Disposer.register(this, new Disposable() {
-      @Override
-      public void dispose() {
-        ActionManager.getInstance().removeTimerListener(timerListener);
-      }
-    });
+    Disposer.register(this, () -> ActionManager.getInstance().removeTimerListener(timerListener));
 
-    myToolWindow.getComponent().addHierarchyListener(new HierarchyListener() {
-      @Override
-      public void hierarchyChanged(HierarchyEvent e) {
-        if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.DISPLAYABILITY_CHANGED)) {
-          scheduleRebuild();
-        }
+    myToolWindow.getComponent().addHierarchyListener(e -> {
+      if (BitUtil.isSet(e.getChangeFlags(), HierarchyEvent.DISPLAYABILITY_CHANGED)) {
+        scheduleRebuild();
       }
     });
     myToolWindow.getContentManager().addContentManagerListener(new ContentManagerAdapter() {
@@ -154,9 +146,9 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
     final DataContext dataContext = DataManager.getInstance().getDataContext(owner);
     if (dataContext.getData(ourDataSelectorKey) == this) return;
-    if (dataContext.getData(CommonDataKeys.PROJECT) != myProject) return;
+    if (dataContext.getData(Project.KEY) != myProject) return;
 
-    final VirtualFile[] files = hasFocus() ? null : dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = hasFocus() ? null : dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     if (!myToolWindow.isVisible()) {
       if (files != null && files.length > 0) {
         myFile = files[0];
@@ -347,7 +339,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     if (myModuleStructureComponent == null && myStructureView == null) {
-      createSinglePanel(new JLabel(IdeBundle.message("message.nothing.to.show.in.structure.view"), SwingConstants.CENTER));
+      createSinglePanel(new JLabel(IdeLocalize.messageNothingToShowInStructureView().get(), SwingConstants.CENTER));
     }
 
     for (int i = 0; i < myPanels.length; i++) {

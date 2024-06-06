@@ -25,8 +25,8 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingNodeSource;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingTreeNodeFactory;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;

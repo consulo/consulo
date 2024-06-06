@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceIte
 import consulo.ui.ex.action.AnAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 
 import jakarta.annotation.Nullable;

@@ -25,6 +25,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
@@ -35,7 +36,7 @@ import java.util.Date;
 
 public class CurrentRevision implements VcsFileRevision {
   private final VirtualFile myFile;
-  public static final String CURRENT = VcsBundle.message("vcs.revision.name.current");
+  public static final String CURRENT = VcsLocalize.vcsRevisionNameCurrent().get();
   private final VcsRevisionNumber myRevisionNumber;
 
   public CurrentRevision(VirtualFile file, VcsRevisionNumber revision) {

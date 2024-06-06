@@ -2,9 +2,9 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -24,7 +24,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.FileDocumentManager;
 import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;

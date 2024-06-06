@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.hints.filtering;
 
 import consulo.util.lang.Couple;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

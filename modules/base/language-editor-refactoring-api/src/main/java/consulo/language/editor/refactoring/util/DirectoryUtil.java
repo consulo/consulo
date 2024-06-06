@@ -16,10 +16,10 @@
 
 package consulo.language.editor.refactoring.util;
 
-import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
+import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -62,7 +62,7 @@ public class DirectoryUtil {
 
       if (StringUtil.endsWithChar(existingPath, '/')) {
         existingPath = existingPath.substring(0, existingPath.length() - 1);
-        if (SystemInfo.isWindows && existingPath.length() == 2 && existingPath.charAt(1) == ':') {
+        if (Platform.current().os().isWindows() && existingPath.length() == 2 && existingPath.charAt(1) == ':') {
           return null;
         }
       }

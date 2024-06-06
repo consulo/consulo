@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.versionControlSystem.VcsBundle;
@@ -33,6 +32,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
-    boolean visible = canRemoveChangeLists(e.getData(CommonDataKeys.PROJECT), changeLists);
+    boolean visible = canRemoveChangeLists(e.getData(Project.KEY), changeLists);
 
     Presentation presentation = e.getPresentation();
     presentation.setEnabled(visible);
@@ -81,7 +81,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    final Project project = e.getRequiredData(Project.KEY);
     final ChangeList[] selectedLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
 
     //noinspection unchecked
@@ -102,13 +102,16 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     }
 
     String message = lists.size() == 1
-                     ? VcsBundle.message("changes.removechangelist.warning.text", lists.get(0).getName())
-                     : VcsBundle.message("changes.removechangelist.multiple.warning.text", lists.size());
+      ? VcsLocalize.changesRemovechangelistWarningText(lists.get(0).getName()).get()
+      : VcsLocalize.changesRemovechangelistMultipleWarningText(lists.size()).get();
 
     return haveNoChanges ||
-           Messages.YES ==
-           Messages
-                   .showYesNoDialog(project, message, VcsBundle.message("changes.removechangelist.warning.title"), Messages.getQuestionIcon());
+      Messages.YES == Messages.showYesNoDialog(
+        project,
+        message,
+        VcsLocalize.changesRemovechangelistWarningTitle().get(),
+        Messages.getQuestionIcon()
+      );
   }
 
   static boolean confirmActiveChangeListRemoval(@Nonnull Project project, @Nonnull List<? extends LocalChangeList> lists, boolean empty) {
@@ -123,11 +126,15 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     }
 
     String[] remainingListsNames = remainingLists.stream().map(ChangeList::getName).toArray(String[]::new);
-    int nameIndex = Messages.showChooseDialog(project, empty
-                                                       ? VcsBundle.message("changes.remove.active.empty.prompt")
-                                                       : VcsBundle.message("changes.remove.active.prompt"),
-                                              VcsBundle.message("changes.remove.active.title"), Messages.getQuestionIcon(),
-                                              remainingListsNames, remainingListsNames[0]);
+    int nameIndex = Messages.showChooseDialog(
+      project,
+      empty ? VcsLocalize.changesRemoveActiveEmptyPrompt().get()
+        : VcsLocalize.changesRemoveActivePrompt().get(),
+      VcsLocalize.changesRemoveActiveTitle().get(),
+      Messages.getQuestionIcon(),
+      remainingListsNames,
+      remainingListsNames[0]
+    );
     if (nameIndex < 0) return false;
     ChangeListManager.getInstance(project).setDefaultChangeList(remainingLists.get(nameIndex));
     return true;

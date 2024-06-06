@@ -16,50 +16,51 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.language.editor.FileColorManager;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.CopyProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.diff.DiffBundle;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.ide.impl.idea.ui.SmartExpander;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.FileColorManager;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.CheckboxTree;
+import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeState;
-import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.action.CollapseAllAction;
+import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.ui.ex.keymap.KeymapManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.util.lang.EmptyRunnable;
-import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.action.CollapseAllAction;
-import consulo.ui.ex.awt.tree.action.ExpandAllAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
-import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -69,8 +70,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author max
@@ -522,7 +523,7 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
     };
     final AnAction[] actions = new AnAction[]{directoriesAction, expandAllAction, collapseAllAction};
     directoriesAction.registerCustomShortcutSet(
-            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, SystemInfo.isMac ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK)),
+            new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_P, Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK)),
             this);
     expandAllAction.registerCustomShortcutSet(
             new CustomShortcutSet(KeymapManager.getInstance().getActiveKeymap().getShortcuts(IdeActions.ACTION_EXPAND_ALL)),
@@ -630,8 +631,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
 
   public class ToggleShowDirectoriesAction extends ToggleAction implements DumbAware {
     public ToggleShowDirectoriesAction() {
-      super(VcsBundle.message("changes.action.show.directories.text"),
-            VcsBundle.message("changes.action.show.directories.description"),
+      super(VcsLocalize.changesActionShowDirectoriesText().get(),
+            VcsLocalize.changesActionShowDirectoriesDescription().get(),
             AllIcons.Actions.GroupByPackage);
     }
 

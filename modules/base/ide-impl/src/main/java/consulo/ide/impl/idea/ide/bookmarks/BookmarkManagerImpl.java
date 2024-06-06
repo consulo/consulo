@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.ide.bookmarks;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.SystemInfo;
 import consulo.bookmark.Bookmark;
 import consulo.bookmark.BookmarkManager;
 import consulo.bookmark.event.BookmarksListener;
@@ -40,6 +39,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.ide.IdeBundle;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
@@ -428,7 +428,7 @@ public class BookmarkManagerImpl implements BookmarkManager, PersistentStateComp
     public void mouseClicked(final EditorMouseEvent e) {
       if (e.getArea() != EditorMouseEventArea.LINE_MARKERS_AREA) return;
       if (e.getMouseEvent().isPopupTrigger()) return;
-      if ((e.getMouseEvent().getModifiers() & (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK)) == 0) return;
+      if ((e.getMouseEvent().getModifiers() & (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK)) == 0) return;
 
       Editor editor = e.getEditor();
       int line = editor.xyToLogicalPosition(new Point(e.getMouseEvent().getX(), e.getMouseEvent().getY())).line;

@@ -1,16 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -25,7 +25,7 @@ public class CodeStyleStatusBarPanel extends JPanel {
     setAlignmentY(Component.CENTER_ALIGNMENT);
     myLabel = new TextPanel() {
     };
-    myLabel.setFont(SystemInfo.isMac ? JBUI.Fonts.label(11) : JBFont.label());
+    myLabel.setFont(Platform.current().os().isMac() ? JBUI.Fonts.label(11) : JBFont.label());
     add(myLabel);
     myIconLabel = new JLabel("");
     myIconLabel.setBorder(JBUI.Borders.empty(2, 2, 2, 0));

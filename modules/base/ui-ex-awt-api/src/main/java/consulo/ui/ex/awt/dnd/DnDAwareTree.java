@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.dnd;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.TransferableList;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
@@ -23,9 +23,9 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -59,7 +59,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
 
   @Override
   protected void processMouseMotionEvent(MouseEvent e) {
-    if (SystemInfo.isMac && JBSwingUtilities.isRightMouseButton(e) && e.getID() == MouseEvent.MOUSE_DRAGGED) return;
+    if (Platform.current().os().isMac() && JBSwingUtilities.isRightMouseButton(e) && e.getID() == MouseEvent.MOUSE_DRAGGED) return;
     super.processMouseMotionEvent(e);
   }
 

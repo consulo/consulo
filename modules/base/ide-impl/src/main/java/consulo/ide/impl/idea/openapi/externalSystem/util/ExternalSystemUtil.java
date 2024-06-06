@@ -62,7 +62,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.Modul
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
 import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;

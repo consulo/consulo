@@ -21,7 +21,6 @@ import consulo.execution.ui.console.HyperlinkInfoBase;
 import consulo.execution.ui.console.HyperlinkInfoFactory;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -71,7 +70,7 @@ class MultipleFilesHyperlinkInfo extends HyperlinkInfoBase implements FileHyperl
     if (hyperlinkLocationPoint != null) {
       DataManager dataManager = DataManager.getInstance();
       DataContext dataContext = dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent());
-      originalEditor = dataContext.getData(CommonDataKeys.EDITOR);
+      originalEditor = dataContext.getData(Editor.KEY);
     }
     else {
       originalEditor = null;

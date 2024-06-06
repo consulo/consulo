@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingHelpItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.ide.impl.idea.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.matcher.Matcher;
 import consulo.ui.image.Image;

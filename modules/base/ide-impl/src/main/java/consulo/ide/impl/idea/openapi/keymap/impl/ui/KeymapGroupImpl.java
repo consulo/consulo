@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ui.ex.keymap.KeymapGroup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

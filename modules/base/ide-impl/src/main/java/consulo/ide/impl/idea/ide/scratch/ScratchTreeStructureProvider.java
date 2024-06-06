@@ -15,7 +15,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPaneImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;

@@ -26,7 +26,8 @@ import consulo.application.util.DateFormatUtil;
 import consulo.ide.IdeBundle;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.todo.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -47,6 +48,7 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitExecutor;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -79,7 +81,7 @@ public class TodoCheckinHandler extends CheckinHandler {
 
   @Override
   public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-    JCheckBox checkBox = new JCheckBox(VcsBundle.message("before.checkin.new.todo.check", ""));
+    JCheckBox checkBox = new JCheckBox(VcsLocalize.beforeCheckinNewTodoCheck("").get());
     return new RefreshableOnComponent() {
       @Override
       public JComponent getComponent() {
@@ -113,9 +115,9 @@ public class TodoCheckinHandler extends CheckinHandler {
 
       private void setFilterText(String filterName) {
         if (filterName == null) {
-          checkBox.setText(VcsBundle.message("before.checkin.new.todo.check", IdeBundle.message("action.todo.show.all")));
+          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(IdeLocalize.actionTodoShowAll().get()).get());
         } else {
-          checkBox.setText(VcsBundle.message("before.checkin.new.todo.check", "Filter: " + filterName));
+          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck("Filter: " + filterName).get());
         }
       }
 
@@ -139,7 +141,7 @@ public class TodoCheckinHandler extends CheckinHandler {
   public ReturnResult beforeCheckin(@Nullable CommitExecutor executor, PairConsumer<Object, Object> additionalDataConsumer) {
     if (! myConfiguration.CHECK_NEW_TODO) return ReturnResult.COMMIT;
     if (DumbService.getInstance(myProject).isDumb()) {
-      String todoName = VcsBundle.message("before.checkin.new.todo.check.title");
+      String todoName = VcsLocalize.beforeCheckinNewTodoCheckTitle().get();
       if (Messages.showOkCancelDialog(myProject,
                                       todoName +
                                       " can't be performed while " + ApplicationNamesInfo.getInstance().getFullProductName() + " updates the indices in background.\n" +
@@ -193,7 +195,7 @@ public class TodoCheckinHandler extends CheckinHandler {
                                          @Nonnull String commitButton,
                                          @Nonnull String text,
                                          @Nonnull String title) {
-    String yesButton = VcsBundle.message("todo.in.new.review.button");
+    String yesButton = VcsLocalize.todoInNewReviewButton().get();
     switch (showYesNoCancelDialog(myProject, text, title, yesButton, commitButton, getCancelButtonText(), getWarningIcon())) {
       case YES:
         showTodo(worker);
@@ -235,13 +237,13 @@ public class TodoCheckinHandler extends CheckinHandler {
     int changed = worker.getInChangedTodos().size();
     int skipped = worker.getSkipped().size();
     if (added == 0 && changed == 0) {
-      return VcsBundle.message("todo.handler.only.skipped", skipped);
+      return VcsLocalize.todoHandlerOnlySkipped(skipped).get();
     } else if (changed == 0) {
-      return VcsBundle.message("todo.handler.only.added", added, skipped);
+      return VcsLocalize.todoHandlerOnlyAdded(added, skipped).get();
     } else if (added == 0) {
-      return VcsBundle.message("todo.handler.only.in.changed", changed, skipped);
+      return VcsLocalize.todoHandlerOnlyInChanged(changed, skipped).get();
     } else {
-      return VcsBundle.message("todo.handler.only.both", added, changed, skipped);
+      return VcsLocalize.todoHandlerOnlyBoth(added, changed, skipped).get();
     }
   }
 }

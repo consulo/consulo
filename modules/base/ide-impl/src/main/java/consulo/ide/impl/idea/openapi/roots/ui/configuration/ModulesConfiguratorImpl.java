@@ -27,7 +27,7 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.newProject.ui.NewProjectDialog;
 import consulo.ide.impl.newProject.ui.NewProjectPanel;

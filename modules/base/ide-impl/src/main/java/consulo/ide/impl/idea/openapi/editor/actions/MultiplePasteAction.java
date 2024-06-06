@@ -20,9 +20,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.UILocalize;
 import consulo.project.Project;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -50,15 +49,14 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
 
   @Override
   public void actionPerformed(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     Component focusedComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
 
     if (!(focusedComponent instanceof JComponent)) return;
 
     final CopyPasteManagerEx copyPasteManager = CopyPasteManagerEx.getInstanceEx();
-    final ContentChooser<Transferable> chooser = new ContentChooser<Transferable>(project, UIBundle.message(
-      "choose.content.to.paste.dialog.title"), true, true){
+    final ContentChooser<Transferable> chooser = new ContentChooser<>(project, UILocalize.chooseContentToPasteDialogTitle().get(), true, true){
       @Override
       protected String getStringRepresentationFor(final Transferable content) {
         try {
@@ -136,7 +134,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
   private static boolean isEnabled(AnActionEvent e) {
     Object component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (!(component instanceof JComponent)) return false;
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor != null) return !editor.isViewer();
     Action pasteAction = ((JComponent)component).getActionMap().get(DefaultEditorKit.pasteAction);
     return pasteAction != null;

@@ -2,31 +2,31 @@
 package consulo.ide.impl.idea.ide.browsers;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.ide.impl.idea.openapi.util.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.collection.SmartList;
+import consulo.component.util.SimpleModificationTracker;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.ide.GeneralSettings;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.component.util.SimpleModificationTracker;
-import consulo.logging.Logger;
 import consulo.webBrowser.BrowserFamily;
 import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.DefaultBrowserPolicy;
 import consulo.webBrowser.WebBrowser;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -52,9 +52,9 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   private static List<ConfigurableWebBrowser> getPredefinedBrowsers() {
     return Arrays.asList(new ConfigurableWebBrowser(PREDEFINED_CHROME_ID, BrowserFamily.CHROME), new ConfigurableWebBrowser(PREDEFINED_FIREFOX_ID, BrowserFamily.FIREFOX),
                          new ConfigurableWebBrowser(PREDEFINED_SAFARI_ID, BrowserFamily.SAFARI), new ConfigurableWebBrowser(PREDEFINED_OPERA_ID, BrowserFamily.OPERA),
-                         new ConfigurableWebBrowser(PREDEFINED_YANDEX_ID, BrowserFamily.CHROME, "Yandex", SystemInfo.isWindows ? "browser" : (SystemInfo.isMac ? "Yandex" : "yandex"), false,
+                         new ConfigurableWebBrowser(PREDEFINED_YANDEX_ID, BrowserFamily.CHROME, "Yandex", Platform.current().os().isWindows() ? "browser" : (Platform.current().os().isMac() ? "Yandex" : "yandex"), false,
                                                     BrowserFamily.CHROME.createBrowserSpecificSettings()), new ConfigurableWebBrowser(PREDEFINED_EXPLORER_ID, BrowserFamily.EXPLORER),
-                         new ConfigurableWebBrowser(PREDEFINED_EDGE_ID, BrowserFamily.EXPLORER, "Edge", SystemInfo.isWindows ? EDGE_COMMAND : null, true, null));
+                         new ConfigurableWebBrowser(PREDEFINED_EDGE_ID, BrowserFamily.EXPLORER, "Edge", Platform.current().os().isWindows() ? EDGE_COMMAND : null, true, null));
   }
 
   private List<ConfigurableWebBrowser> browsers;

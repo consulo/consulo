@@ -21,7 +21,7 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.GridBag;

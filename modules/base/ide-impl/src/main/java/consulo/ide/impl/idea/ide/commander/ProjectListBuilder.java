@@ -28,7 +28,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;

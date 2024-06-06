@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

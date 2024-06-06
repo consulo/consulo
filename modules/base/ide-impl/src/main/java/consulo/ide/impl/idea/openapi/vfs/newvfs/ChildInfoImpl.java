@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
 import consulo.util.io.FileAttributes;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import jakarta.annotation.Nonnull;

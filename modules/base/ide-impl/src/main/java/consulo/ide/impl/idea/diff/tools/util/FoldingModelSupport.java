@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.diff.util.DiffDrawUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

@@ -15,18 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.application.util.SystemInfo;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.*;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 
 public class RevealFileAction extends DumbAwareAction {
@@ -62,6 +58,6 @@ public class RevealFileAction extends DumbAwareAction {
     if (ActionPlaces.EDITOR_TAB_POPUP.equals(place) || ActionPlaces.EDITOR_POPUP.equals(place) || ActionPlaces.PROJECT_VIEW_POPUP.equals(place)) {
       return ShowFilePathAction.getFileManagerName();
     }
-    return SystemInfo.isMac ? ActionsBundle.message("action.RevealIn.name.mac") : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
+    return Platform.current().os().isMac() ? ActionsBundle.message("action.RevealIn.name.mac") : ActionsBundle.message("action.RevealIn.name.other", ShowFilePathAction.getFileManagerName());
   }
 }

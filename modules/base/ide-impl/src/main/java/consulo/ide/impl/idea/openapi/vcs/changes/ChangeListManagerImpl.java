@@ -38,7 +38,7 @@ import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.EditorNotifications;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.VcsConnectionProblem;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.ChangeListRemoveConfirmation;
@@ -50,6 +50,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsRootIterator;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EventDispatcher;
@@ -1209,11 +1210,11 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     });
 
     if (!exceptions.isEmpty()) {
-      StringBuilder message = new StringBuilder(VcsBundle.message("error.adding.files.prompt"));
+      StringBuilder message = new StringBuilder(VcsLocalize.errorAddingFilesPrompt().get());
       for (VcsException ex : exceptions) {
         message.append("\n").append(ex.getMessage());
       }
-      Messages.showErrorDialog(myProject, message.toString(), VcsBundle.message("error.adding.files.title"));
+      Messages.showErrorDialog(myProject, message.toString(), VcsLocalize.errorAddingFilesTitle().get());
     }
 
     for (VirtualFile file : allProcessedFiles) {
@@ -1242,7 +1243,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         });
 
         myChangesViewManager.scheduleRefresh();
-      }, updateMode, VcsBundle.message("change.lists.manager.add.unversioned"), null);
+      }, updateMode, VcsLocalize.changeListsManagerAddUnversioned().get(), null);
 
       if (changesConsumer != null) {
         changesConsumer.accept(foundChanges.get());

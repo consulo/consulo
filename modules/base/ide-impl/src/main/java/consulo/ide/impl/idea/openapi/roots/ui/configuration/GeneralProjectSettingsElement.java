@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.Chunk;
 import consulo.component.util.graph.Graph;
 import consulo.ide.setting.ProjectStructureSettingsUtil;

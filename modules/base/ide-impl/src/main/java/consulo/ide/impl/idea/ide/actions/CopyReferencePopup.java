@@ -1,34 +1,32 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.language.LangBundle;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.dataContext.DataContext;
-import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.ErrorLabel;
+import consulo.ide.impl.idea.openapi.actionSystem.AlwaysPerformingActionGroup;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.LangBundle;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.ErrorLabel;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.MnemonicNavigationFilter;
+import consulo.util.collection.ArrayUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static consulo.language.editor.CommonDataKeys.*;
-import static consulo.language.editor.LangDataKeys.PSI_ELEMENT_ARRAY;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 
 public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysPerformingActionGroup {
@@ -42,12 +40,19 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    DataContext dataContext = SimpleDataContext.builder().addAll(e.getDataContext(), PSI_ELEMENT, PROJECT, PSI_ELEMENT_ARRAY, VIRTUAL_FILE_ARRAY, EDITOR).build();
+    DataContext dataContext = DataContext.builder().addAll(
+      e.getDataContext(),
+      PsiElement.KEY,
+      Project.KEY,
+      PsiElement.KEY_OF_ARRAY,
+      VirtualFile.KEY_OF_ARRAY,
+      Editor.KEY
+    ).build();
     String popupPlace = ActionPlaces.getActionGroupPopupPlace(getClass().getSimpleName());
     ListPopup popup = new PopupFactoryImpl.ActionGroupPopup(LangBundle.message("popup.title.copy"), this, e.getDataContext(), true, true, false, true, null, -1, null, popupPlace) {
       @Override
       protected ListCellRenderer<PopupFactoryImpl.ActionItem> getListElementRenderer() {
-        return new PopupListElementRenderer<PopupFactoryImpl.ActionItem>(this) {
+        return new PopupListElementRenderer<>(this) {
           private JLabel myInfoLabel;
           private JLabel myShortcutLabel;
 
@@ -77,7 +82,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
           protected void customizeComponent(@Nonnull JList<? extends PopupFactoryImpl.ActionItem> list, @Nonnull PopupFactoryImpl.ActionItem actionItem, boolean isSelected) {
             //myNextStepButtonSeparator.setVisible(false);
             AnAction action = actionItem.getAction();
-            Editor editor = dataContext.getData(EDITOR);
+            Editor editor = dataContext.getData(Editor.KEY);
             java.util.List<PsiElement> elements = CopyReferenceUtil.getElementsToCopy(editor, dataContext);
             String qualifiedName = null;
             if (action instanceof CopyPathProvider) {

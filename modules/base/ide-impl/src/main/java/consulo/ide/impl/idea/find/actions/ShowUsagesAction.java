@@ -20,7 +20,6 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressIndicator;
-import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
@@ -30,6 +29,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
+import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
@@ -46,17 +46,15 @@ import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.usages.impl.*;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.hint.HintManager;
@@ -67,9 +65,9 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -79,6 +77,7 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.JBPopup;
@@ -88,10 +87,10 @@ import consulo.usage.*;
 import consulo.usage.rule.UsageFilteringRuleListener;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -199,7 +198,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     Runnable searchEverywhere = mySearchEverywhereRunnable;
@@ -216,7 +215,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.usages");
 
     UsageTarget[] usageTargets = e.getData(UsageView.USAGE_TARGETS_KEY);
-    final Editor editor = e.getData(CommonDataKeys.EDITOR);
+    final Editor editor = e.getData(Editor.KEY);
     if (usageTargets == null) {
       FindUsagesAction.chooseAmbiguousTargetAndPerform(project, editor, element -> {
         startFindUsages(element, popupPosition, editor, getUsagesPageSize());
@@ -395,7 +394,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                     String title = presentation.getTabText();
                     boolean shouldShowMoreSeparator = visibleNodes.contains(MORE_USAGES_SEPARATOR_NODE);
                     String fullTitle = getFullTitle(usages, title, shouldShowMoreSeparator, visibleNodes.size() - (shouldShowMoreSeparator ? 1 : 0), false);
-                    ((AbstractPopup)popup).setCaption(fullTitle);
+                    popup.setCaption(fullTitle);
                   }
                 }
               }
@@ -417,7 +416,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
     @Nonnull
     private static ColumnInfo[] cols(int cols) {
-      ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<UsageNode, UsageNode>("") {
+      ColumnInfo<UsageNode, UsageNode> o = new ColumnInfo<>("") {
         @Nullable
         @Override
         public UsageNode valueOf(UsageNode node) {
@@ -504,7 +503,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                                              final int maxUsages,
                                              @Nonnull final Runnable cancelAction) {
     String shortcutText = "";
-    KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut();
+    KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut();
     if (shortcut != null) {
       shortcutText = "(" + KeymapUtil.getShortcutText(shortcut) + ")";
     }
@@ -657,7 +656,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
     builder.setItemChoosenCallback(itemChoseCallback);
     final JBPopup[] popup = new JBPopup[1];
 
-    KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut();
+    KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut();
     if (shortcut != null) {
       new DumbAwareAction() {
         @Override
@@ -1152,7 +1151,7 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
 
     @Override
     public Object getData(@Nonnull @NonNls Key<?> dataId) {
-      if (CommonDataKeys.PSI_ELEMENT == dataId) {
+      if (PsiElement.KEY == dataId) {
         final int[] selected = getSelectedRows();
         if (selected.length == 1) {
           return getPsiElementForHint(getValueAt(selected[0], 0));

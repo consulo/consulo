@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**

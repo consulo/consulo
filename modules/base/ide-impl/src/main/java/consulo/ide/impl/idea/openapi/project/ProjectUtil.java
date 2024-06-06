@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
@@ -24,15 +23,16 @@ import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ui.util.ProjectUIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.nio.file.Path;
 
@@ -103,7 +103,7 @@ public class ProjectUtil {
         }
       }
 
-      if (SystemInfo.isMac && file.getFileSystem() instanceof ArchiveFileSystem) {
+      if (Platform.current().os().isMac() && file.getFileSystem() instanceof ArchiveFileSystem) {
         final VirtualFile fileForJar = ((ArchiveFileSystem)file.getFileSystem()).getLocalVirtualFileFor(file);
         if (fileForJar != null) {
           final OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
@@ -123,7 +123,7 @@ public class ProjectUtil {
 
       final Module module = ModuleUtil.findModuleForFile(file, project);
       if (module == null) return url;
-      return !keepModuleAlwaysOnTheLeft && SystemInfo.isMac ? url + " - [" + module.getName() + "]" : "[" + module.getName() + "] - " + url;
+      return !keepModuleAlwaysOnTheLeft && Platform.current().os().isMac() ? url + " - [" + module.getName() + "]" : "[" + module.getName() + "] - " + url;
     }
   }
 

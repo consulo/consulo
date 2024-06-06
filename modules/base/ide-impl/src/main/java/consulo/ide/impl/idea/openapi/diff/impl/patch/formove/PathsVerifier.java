@@ -23,16 +23,17 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchFactory;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyTextFilePatch;
 import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.RelativePathCalculator;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedBinaryFilePatch;
@@ -407,11 +408,11 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   }
 
   private static String fileNotFoundMessage(final String path) {
-    return VcsBundle.message("cannot.find.file.to.patch", path);
+    return VcsLocalize.cannotFindFileToPatch(path).get();
   }
 
   private static String fileAlreadyExists(final String path) {
-    return VcsBundle.message("cannot.apply.file.already.exists", path);
+    return VcsLocalize.cannotApplyFileAlreadyExists(path).get();
   }
 
   private void revert(final String errorMessage) {

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.FileListRenderer;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;
 import consulo.virtualFileSystem.VirtualFile;

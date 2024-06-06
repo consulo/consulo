@@ -1,9 +1,9 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JBViewportHacking;
+import consulo.platform.Platform;
 import consulo.ui.ex.TypingTarget;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
 import consulo.ui.ex.awt.internal.ScrollSettings;
@@ -12,9 +12,9 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.util.dataholder.Key;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
@@ -278,8 +278,8 @@ public class JBViewport extends JViewport implements ZoomableViewport {
   }
 
   private static boolean isAlignmentNeeded(JComponent view, boolean horizontal) {
-    return (!SystemInfo.isMac || horizontal && ScrollSettings.isHorizontalGapNeededOnMac()) &&
-           (view instanceof JList || view instanceof JTree || (!SystemInfo.isMac && ScrollSettings.isGapNeededForAnyComponent()));
+    return (!Platform.current().os().isMac() || horizontal && ScrollSettings.isHorizontalGapNeededOnMac()) &&
+           (view instanceof JList || view instanceof JTree || (!Platform.current().os().isMac() && ScrollSettings.isGapNeededForAnyComponent()));
   }
 
   private static Insets getInnerInsets(JComponent view) {

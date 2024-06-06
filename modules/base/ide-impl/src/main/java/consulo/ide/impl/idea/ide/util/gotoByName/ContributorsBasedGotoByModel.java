@@ -25,7 +25,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
 import jakarta.annotation.Nonnull;

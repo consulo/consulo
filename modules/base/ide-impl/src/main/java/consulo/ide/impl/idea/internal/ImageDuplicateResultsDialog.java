@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.AllIcons;
-import consulo.application.util.function.Computable;
 import consulo.component.PropertyName;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
@@ -24,11 +23,9 @@ import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.NotLookupOrSearchCondition;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.internal.DocumentationManagerHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -49,13 +46,13 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -121,32 +118,29 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
   @Override
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
-    DataManager.registerDataProvider(panel, new DataProvider() {
-      @Override
-      public Object getData(@Nonnull @NonNls Key dataId) {
-        final TreePath path = myTree.getSelectionPath();
-        if (path != null) {
-          Object component = path.getLastPathComponent();
-          VirtualFile file = null;
-          if (component instanceof MyFileNode) {
-            component = ((MyFileNode)component).getParent();
-          }
-          if (component instanceof MyDuplicatesNode) {
-            file = ((MyDuplicatesNode)component).getUserObject().iterator().next();
-          }
-          if (PlatformDataKeys.VIRTUAL_FILE == dataId) {
-            return file;
-          }
-          if (PlatformDataKeys.VIRTUAL_FILE_ARRAY == dataId && file != null) {
-            return new VirtualFile[]{file};
-          }
+    DataManager.registerDataProvider(panel, dataId -> {
+      final TreePath path = myTree.getSelectionPath();
+      if (path != null) {
+        Object component = path.getLastPathComponent();
+        VirtualFile file = null;
+        if (component instanceof MyFileNode) {
+          component = ((MyFileNode)component).getParent();
         }
-        return null;
+        if (component instanceof MyDuplicatesNode) {
+          file = ((MyDuplicatesNode)component).getUserObject().iterator().next();
+        }
+        if (VirtualFile.KEY == dataId) {
+          return file;
+        }
+        if (VirtualFile.KEY_OF_ARRAY == dataId && file != null) {
+          return new VirtualFile[]{file};
+        }
       }
+      return null;
     });
 
     final JBList list = new JBList(new ResourceModules().getModuleNames());
-    final NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<Object, JComponent>() {
+    final NotNullFunction<Object, JComponent> modulesRenderer = new NotNullFunction<>() {
       @Nonnull
       @Override
       public JComponent apply(Object dom) {
@@ -155,46 +149,32 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     };
     list.installCellRenderer(modulesRenderer);
     final JPanel modulesPanel = ToolbarDecorator.createDecorator(list)
-      .setAddAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          final Module[] all = ModuleManager.getInstance(myProject).getModules();
-          Arrays.sort(all, new Comparator<Module>() {
-            @Override
-            public int compare(Module o1, Module o2) {
-              return o1.getName().compareTo(o2.getName());
+      .setAddAction(button -> {
+        final Module[] all = ModuleManager.getInstance(myProject).getModules();
+        Arrays.sort(all, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        final JBList modules = new JBList(all);
+        modules.installCellRenderer(modulesRenderer);
+        new PopupChooserBuilder<>(modules)
+          .setTitle("Add Resource Module")
+          .setFilteringEnabled(o -> ((Module)o).getName())
+          .setItemChoosenCallback(() -> {
+            final Object value = modules.getSelectedValue();
+            if (value instanceof Module && !myResourceModules.contains((Module)value)) {
+              myResourceModules.add((Module)value);
+              ((DefaultListModel)list.getModel()).addElement(((Module)value).getName());
             }
-          });
-          final JBList modules = new JBList(all);
-          modules.installCellRenderer(modulesRenderer);
-          new PopupChooserBuilder<>(modules)
-            .setTitle("Add Resource Module")
-            .setFilteringEnabled(o -> ((Module)o).getName())
-            .setItemChoosenCallback(new Runnable() {
-              @Override
-              public void run() {
-                final Object value = modules.getSelectedValue();
-                if (value instanceof Module && !myResourceModules.contains((Module)value)) {
-                  myResourceModules.add((Module)value);
-                  ((DefaultListModel)list.getModel()).addElement(((Module)value).getName());
-                }
-                ((DefaultTreeModel)myTree.getModel()).reload();
-                TreeUtil.expandAll(myTree);
-              }
-            }).createPopup().show(button.getPreferredPopupPoint());
-        }
+            ((DefaultTreeModel)myTree.getModel()).reload();
+            TreeUtil.expandAll(myTree);
+          }).createPopup().show(button.getPreferredPopupPoint());
       })
-      .setRemoveAction(new AnActionButtonRunnable() {
-        @Override
-        public void run(AnActionButton button) {
-          final Object[] values = list.getSelectedValues();
-          for (Object value : values) {
-            myResourceModules.remove((String)value);
-            ((DefaultListModel)list.getModel()).removeElement(value);
-          }
-          ((DefaultTreeModel)myTree.getModel()).reload();
-          TreeUtil.expandAll(myTree);
+      .setRemoveAction(button -> {
+        final Object[] values = list.getSelectedValues();
+        for (Object value : values) {
+          myResourceModules.remove((String)value);
+          ((DefaultListModel)list.getModel()).removeElement(value);
         }
+        ((DefaultTreeModel)myTree.getModel()).reload();
+        TreeUtil.expandAll(myTree);
       })
       .disableDownAction()
       .disableUpAction()
@@ -215,15 +195,12 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
           final PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
           if (psiFile != null) {
             final ImplementationViewComponent viewComponent = new ImplementationViewComponent(new PsiElement[]{psiFile}, 0);
-            final TreeSelectionListener listener = new TreeSelectionListener() {
-              @Override
-              public void valueChanged(TreeSelectionEvent e) {
-                final VirtualFile selection = getFileFromSelection();
-                if (selection != null) {
-                  final PsiFile newElement = PsiManager.getInstance(myProject).findFile(selection);
-                  if (newElement != null) {
-                    viewComponent.update(new PsiElement[]{newElement}, 0);
-                  }
+            final TreeSelectionListener listener = e1 -> {
+              final VirtualFile selection = getFileFromSelection();
+              if (selection != null) {
+                final PsiFile newElement = PsiManager.getInstance(myProject).findFile(selection);
+                if (newElement != null) {
+                  viewComponent.update(new PsiElement[]{newElement}, 0);
                 }
               }
             };
@@ -237,12 +214,9 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
                 .setResizable(true)
                 .setMovable(true)
                 .setRequestFocus(false)
-                .setCancelCallback(new Computable<Boolean>() {
-                  @Override
-                  public Boolean compute() {
-                    myTree.removeTreeSelectionListener(listener);
-                    return true;
-                  }
+                .setCancelCallback(() -> {
+                  myTree.removeTreeSelectionListener(listener);
+                  return true;
                 })
                 .setTitle("Image Preview")
                 .createPopup();
@@ -407,7 +381,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
     }
 
     public void remove(String value) {
-      final List<String> names = new ArrayList<String>(getModuleNames());
+      final List<String> names = new ArrayList<>(getModuleNames());
       names.remove(value);
       modules = StringUtil.join(names, "\n");
     }

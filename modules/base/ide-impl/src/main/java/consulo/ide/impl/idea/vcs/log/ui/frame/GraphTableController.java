@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.vcs.log.ui.frame;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.popup.Balloon;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.Wrapper;

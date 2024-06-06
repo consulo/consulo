@@ -37,9 +37,9 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.CustomBinaryPatchApplier;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.formove.PatchApplier;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAny;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
@@ -66,6 +66,7 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -352,7 +353,7 @@ public class ShelveChangesManager implements JDOMExternalizable {
           progressIndicator.startNonCancelableSection();
         }
         new RollbackWorker(myProject, operationName, modalContext).
-                doRollback(changes, true, null, VcsBundle.message("shelve.changes.action"));
+                doRollback(changes, true, null, VcsLocalize.shelveChangesAction().get());
       }
     }
     finally {

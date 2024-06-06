@@ -33,8 +33,8 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.M
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.LabeledComponent;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.MutableCollectionComboBoxModel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;

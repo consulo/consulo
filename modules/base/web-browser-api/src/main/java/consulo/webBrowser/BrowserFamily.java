@@ -1,12 +1,11 @@
 package consulo.webBrowser;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.component.util.Iconable;
+import consulo.platform.Platform;
 import consulo.ui.image.Image;
 import consulo.webBrowser.chrome.ChromeSettings;
 import consulo.webBrowser.firefox.FirefoxSettings;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -52,10 +51,10 @@ public enum BrowserFamily implements Iconable {
 
   @Nullable
   public String getExecutionPath() {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       return myWindowsPath;
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       return myMacPath;
     }
     else {

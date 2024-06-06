@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.Pair;
 
 import jakarta.annotation.Nonnull;

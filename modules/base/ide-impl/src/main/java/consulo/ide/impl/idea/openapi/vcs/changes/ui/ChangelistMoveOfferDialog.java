@@ -23,6 +23,7 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ui.ex.awt.OptionsDialog;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
   public ChangelistMoveOfferDialog(VcsConfiguration config) {
     super(false);
     myConfig = config;
-    setTitle(VcsBundle.message("changes.commit.partial.offer.to.move.title"));
+    setTitle(VcsLocalize.changesCommitPartialOfferToMoveTitle().get());
     init();
   }
 
@@ -63,7 +64,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
 
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel(VcsBundle.message("changes.commit.partial.offer.to.move.text"));
+    final JLabel label = new JLabel(VcsLocalize.changesCommitPartialOfferToMoveText().get());
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));

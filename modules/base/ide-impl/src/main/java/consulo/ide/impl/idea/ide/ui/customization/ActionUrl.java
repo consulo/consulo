@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -64,7 +65,7 @@ public class ActionUrl implements JDOMExternalizable {
 
 
   public ActionUrl() {
-    myGroupPath = new ArrayList<String>();
+    myGroupPath = new ArrayList<>();
   }
 
   public ActionUrl(final ArrayList<String> groupPath,
@@ -132,7 +133,7 @@ public class ActionUrl implements JDOMExternalizable {
   }
 
   public void readExternal(Element element) throws InvalidDataException {
-    myGroupPath = new ArrayList<String>();
+    myGroupPath = new ArrayList<>();
     for (Object o : element.getChildren(PATH)) {
       myGroupPath.add(((Element)o).getAttributeValue(VALUE));
     }
@@ -247,7 +248,7 @@ public class ActionUrl implements JDOMExternalizable {
   }
 
   public static ArrayList<String> getGroupPath(final TreePath treePath){
-    final ArrayList<String> result = new ArrayList<String>();
+    final ArrayList<String> result = new ArrayList<>();
     for (int i = 0; i < treePath.getPath().length - 1; i++) {
       Object o = ((DefaultMutableTreeNode)treePath.getPath()[i]).getUserObject();
       if (o instanceof KeymapGroupImpl){
@@ -262,8 +263,8 @@ public class ActionUrl implements JDOMExternalizable {
       return false;
     }
     ActionUrl url = (ActionUrl)object;
-    Object comp = myComponent instanceof consulo.util.lang.Pair ? ((consulo.util.lang.Pair)myComponent).first : myComponent;
-    Object thatComp = url.myComponent instanceof consulo.util.lang.Pair ? ((consulo.util.lang.Pair)url.myComponent).first : url.myComponent;
+    Object comp = myComponent instanceof Pair ? ((Pair)myComponent).first : myComponent;
+    Object thatComp = url.myComponent instanceof Pair ? ((Pair)url.myComponent).first : url.myComponent;
     return Comparing.equal(comp, thatComp) && myGroupPath.equals(url.myGroupPath) && myAbsolutePosition == url.getAbsolutePosition();
   }
 

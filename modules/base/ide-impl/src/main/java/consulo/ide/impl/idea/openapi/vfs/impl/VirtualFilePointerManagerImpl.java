@@ -10,26 +10,23 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
-import consulo.util.collection.Maps;
-import consulo.util.collection.MultiMap;
-import consulo.util.collection.Sets;
-import consulo.util.collection.SmartList;
+import consulo.platform.Platform;
+import consulo.util.collection.*;
+import consulo.util.io.URLUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.event.AsyncFileListener.ChangeApplier;
@@ -39,11 +36,11 @@ import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.*;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -292,7 +289,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
       }
       char next = path.charAt(slash + 1);
 
-      if (next == '/' && !(i == 0 && SystemInfo.isWindows) || // additional condition for Windows UNC
+      if (next == '/' && !(i == 0 && Platform.current().os().isWindows()) || // additional condition for Windows UNC
           next == '.' && (slash == path.length() - 2 || path.charAt(slash + 2) == '/')) {
         return cleanupTail(path, slash);
       }

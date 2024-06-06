@@ -21,7 +21,7 @@
 package consulo.ide.impl.idea.internal;
 
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

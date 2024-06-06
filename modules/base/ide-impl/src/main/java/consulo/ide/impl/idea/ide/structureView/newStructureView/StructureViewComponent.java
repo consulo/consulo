@@ -4,6 +4,7 @@ package consulo.ide.impl.idea.ide.structureView.newStructureView;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
+import consulo.application.HelpManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.registry.Registry;
@@ -29,14 +30,12 @@ import consulo.ide.impl.idea.ide.util.FileStructurePopup;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.ex.*;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.PsiCopyPasteManager;
 import consulo.language.editor.refactoring.ui.CopyPasteDelegator;
 import consulo.language.editor.structureView.CustomRegionTreeElement;
@@ -51,8 +50,6 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.OpenSourceUtil;
-import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.dnd.DnDAwareTree;
@@ -574,7 +571,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       if (isDisposed()) return;
       myAutoscrollFeedback = true;
 
-      Navigatable navigatable = DataManager.getInstance().getDataContext(getTree()).getData(CommonDataKeys.NAVIGATABLE);
+      Navigatable navigatable = DataManager.getInstance().getDataContext(getTree()).getData(Navigatable.KEY);
       if (myFileEditor != null && navigatable != null && navigatable.canNavigateToSource()) {
         navigatable.navigate(false);
       }
@@ -628,26 +625,26 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (PsiElement.KEY == dataId) {
       PsiElement element = getSelectedValues().filter(PsiElement.class).single();
       return element != null && element.isValid() ? element : null;
     }
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       return PsiUtilCore.toPsiElementArray(getSelectedValues().filter(PsiElement.class).toList());
     }
-    if (PlatformDataKeys.FILE_EDITOR == dataId) {
+    if (FileEditor.KEY == dataId) {
       return myFileEditor;
     }
-    if (PlatformDataKeys.CUT_PROVIDER == dataId) {
+    if (CutProvider.KEY == dataId) {
       return myCopyPasteDelegator.getCutProvider();
     }
-    if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+    if (CopyProvider.KEY == dataId) {
       return myCopyPasteDelegator.getCopyProvider();
     }
-    if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
+    if (PasteProvider.KEY == dataId) {
       return myCopyPasteDelegator.getPasteProvider();
     }
-    if (CommonDataKeys.NAVIGATABLE == dataId) {
+    if (Navigatable.KEY == dataId) {
       List<Object> list = JBIterable.of(getTree().getSelectionPaths())
                                     .map(TreePath::getLastPathComponent)
                                     .map(StructureViewComponent::unwrapNavigatable)
@@ -658,10 +655,10 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
         return selectedElements[0];
       }
     }
-    if (PlatformDataKeys.HELP_ID == dataId) {
+    if (HelpManager.HELP_ID == dataId) {
       return getHelpID();
     }
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
     return super.getData(dataId);

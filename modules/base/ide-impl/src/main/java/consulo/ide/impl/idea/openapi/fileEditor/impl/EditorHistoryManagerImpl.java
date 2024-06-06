@@ -33,7 +33,7 @@ import consulo.fileEditor.event.FileEditorManagerBeforeListener;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiDocumentManager;

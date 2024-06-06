@@ -22,7 +22,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

@@ -19,7 +19,6 @@ import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
@@ -33,8 +32,8 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
@@ -117,7 +116,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     final PsiElement nameSuggestionContext = element;
     element = adjustForRename(dataContext, element);
     LOG.assertTrue(element != null);
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     doRename(element, project, nameSuggestionContext, editor);
   }
 

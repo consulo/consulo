@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
@@ -138,7 +137,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
       Application.get().invokeLater(() -> {
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
 
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
@@ -313,7 +312,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }

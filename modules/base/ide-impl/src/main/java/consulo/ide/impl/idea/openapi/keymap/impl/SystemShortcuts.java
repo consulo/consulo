@@ -11,6 +11,7 @@ import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessUtil;
@@ -258,7 +259,7 @@ public final class SystemShortcuts {
     });
     notification.addAction(muteAction);
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       final AnAction changeSystemSettings = DumbAwareAction.create("Change system settings", e -> {
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
           final GeneralCommandLine cmdLine =
@@ -307,7 +308,7 @@ public final class SystemShortcuts {
   private void readSystem() {
     myKeyStroke2SysShortcut.clear();
 
-    if (!SystemInfo.isMac || !SystemInfo.isJetBrainsJvm) return;
+    if (!Platform.current().os().isMac() || !SystemInfo.isJetBrainsJvm) return;
 
     try {
       if (!Registry.is("read.system.shortcuts")) return;

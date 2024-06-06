@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.diff.ex;
 
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffString;
 import consulo.ide.impl.idea.openapi.diff.impl.string.DiffStringBuilder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nullable;

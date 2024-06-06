@@ -32,6 +32,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.ide.impl.idea.util.MessageBusUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
@@ -166,7 +167,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       };
       myLocationCache = new RepositoryLocationCache(project);
       myCachesHolder = new CachesHolder(project, myLocationCache);
-      myTaskQueue = new ProgressManagerQueue(project, VcsBundle.message("committed.changes.refresh.progress"));
+      myTaskQueue = new ProgressManagerQueue(project, VcsLocalize.committedChangesRefreshProgress().get());
       ((ProjectLevelVcsManagerImpl)vcsManager).addInitializationRequest(VcsInitObject.COMMITTED_CHANGES_CACHE, new Runnable() {
         @Override
         public void run() {

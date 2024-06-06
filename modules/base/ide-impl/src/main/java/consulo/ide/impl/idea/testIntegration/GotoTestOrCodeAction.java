@@ -21,8 +21,6 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.testIntegration.TestFinderHelper;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -48,8 +46,8 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
       return;
     }
     p.setEnabled(false);
-    Project project = event.getData(CommonDataKeys.PROJECT);
-    Editor editor = event.getData(PlatformDataKeys.EDITOR);
+    Project project = event.getData(Project.KEY);
+    Editor editor = event.getData(Editor.KEY);
     if (editor == null || project == null) return;
 
     PsiFile psiFile = PsiUtilBase.getPsiFileInEditor(editor, project);

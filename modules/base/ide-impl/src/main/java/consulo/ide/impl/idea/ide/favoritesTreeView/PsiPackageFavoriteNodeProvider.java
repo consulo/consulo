@@ -59,9 +59,9 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
     if (project == null) {
       return null;
     }
-    PsiElement[] elements = context.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+    PsiElement[] elements = context.getData(PsiElement.KEY_OF_ARRAY);
     if (elements == null) {
-      final PsiElement element = context.getData(LangDataKeys.PSI_ELEMENT);
+      final PsiElement element = context.getData(PsiElement.KEY);
       if (element != null) {
         elements = new PsiElement[]{element};
       }
@@ -75,7 +75,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
           if (directories.length > 0) {
             final VirtualFile firstDir = directories[0].getVirtualFile();
             final boolean isLibraryRoot = ProjectRootsUtil.isLibraryRoot(firstDir, project);
-            final PackageElement packageElement = new PackageElement(context.getData(LangDataKeys.MODULE), psiPackage, isLibraryRoot);
+            final PackageElement packageElement = new PackageElement(context.getData(Module.KEY), psiPackage, isLibraryRoot);
             result.add(new PackageElementNode(project, packageElement, viewSettings));
           }
         }
@@ -122,14 +122,11 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   public boolean elementContainsFile(final Object element, final VirtualFile vFile) {
     if (element instanceof PackageElement) {
       final Set<Boolean> find = new HashSet<>();
-      final ContentIterator contentIterator = new ContentIterator() {
-        @Override
-        public boolean processFile(VirtualFile fileOrDir) {
-          if (fileOrDir != null && fileOrDir.getPath().equals(vFile.getPath())) {
-            find.add(Boolean.TRUE);
-          }
-          return true;
+      final ContentIterator contentIterator = fileOrDir -> {
+        if (fileOrDir != null && fileOrDir.getPath().equals(vFile.getPath())) {
+          find.add(Boolean.TRUE);
         }
+        return true;
       };
       final PackageElement packageElement = (PackageElement)element;
       final PsiPackage aPackage = packageElement.getPackage();

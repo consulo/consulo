@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiFile;
+import consulo.module.Module;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -35,12 +37,13 @@ import java.util.Map;
  * @author Konstantin Bulenkov
  */
 class HackyDataContext implements DataContext {
-  private static Key[] keys = {CommonDataKeys.PROJECT,
-    PlatformDataKeys.PROJECT_FILE_DIRECTORY,
-    PlatformDataKeys.EDITOR,
-    PlatformDataKeys.VIRTUAL_FILE,
-    LangDataKeys.MODULE,
-    LangDataKeys.PSI_FILE
+  private static Key[] keys = {
+    Project.KEY,
+    Project.PROJECT_FILE_DIRECTORY,
+    Editor.KEY,
+    VirtualFile.KEY,
+    Module.KEY,
+    PsiFile.KEY
   };
 
 

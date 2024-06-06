@@ -25,10 +25,10 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.BrowserUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.ExternalDocumentationHandler;
@@ -62,25 +62,25 @@ public class ExternalJavaDocAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     PsiElement element = getElement(dataContext, editor);
     if (element == null) {
       Messages.showMessageDialog(
               project,
-              IdeBundle.message("message.please.select.element.for.javadoc"),
-              IdeBundle.message("title.no.element.selected"),
+              IdeLocalize.messagePleaseSelectElementForJavadoc().get(),
+              IdeLocalize.titleNoElementSelected().get(),
               Messages.getErrorIcon()
       );
       return;
     }
 
 
-    PsiFile context = dataContext.getData(CommonDataKeys.PSI_FILE);
+    PsiFile context = dataContext.getData(PsiFile.KEY);
 
     PsiElement originalElement = getOriginalElement(context, editor);
     DocumentationManagerHelper.storeOriginalElement(project, originalElement, element);
@@ -94,7 +94,7 @@ public class ExternalJavaDocAction extends AnAction {
         ((ExternalDocumentationHandler)provider).handleExternal(element, originalElement)) {
       return;
     }
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     final Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       List<String> urls;
@@ -152,10 +152,10 @@ public class ExternalJavaDocAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     PsiElement element = getElement(dataContext, editor);
-    final PsiElement originalElement = getOriginalElement(dataContext.getData(CommonDataKeys.PSI_FILE), editor);
-    DocumentationManagerHelper.storeOriginalElement(dataContext.getData(CommonDataKeys.PROJECT), originalElement, element);
+    final PsiElement originalElement = getOriginalElement(dataContext.getData(PsiFile.KEY), editor);
+    DocumentationManagerHelper.storeOriginalElement(dataContext.getData(Project.KEY), originalElement, element);
     final DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
     boolean enabled;
     if (provider instanceof ExternalDocumentationProvider) {
@@ -182,7 +182,7 @@ public class ExternalJavaDocAction extends AnAction {
   }
 
   private static PsiElement getElement(DataContext dataContext, Editor editor) {
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    PsiElement element = dataContext.getData(PsiElement.KEY);
     if (element == null && editor != null) {
       PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
       if (reference != null) {

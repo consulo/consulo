@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import consulo.application.util.SystemInfo;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
 import consulo.ide.impl.idea.ui.roots.FilePathClipper;
@@ -30,6 +28,7 @@ import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.Gray;
@@ -37,6 +36,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
@@ -399,7 +399,7 @@ public abstract class ContentRootPanel extends JPanel {
       }
       */
       final Stroke saved = g.getStroke();
-      if (!SystemInfo.isMac && !UIUtil.isUnderDarcula()) {
+      if (!Platform.current().os().isMac() && !UIUtil.isUnderDarcula()) {
         g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, DASH, y1 % 2));
       }
 

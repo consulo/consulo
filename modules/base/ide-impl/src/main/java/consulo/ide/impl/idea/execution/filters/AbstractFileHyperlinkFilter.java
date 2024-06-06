@@ -11,7 +11,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;

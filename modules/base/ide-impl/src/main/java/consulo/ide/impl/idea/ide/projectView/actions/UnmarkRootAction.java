@@ -18,13 +18,11 @@ package consulo.ide.impl.idea.ide.projectView.actions;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ModuleRootManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.content.LanguageContentFolderScopes;
 
@@ -42,8 +40,8 @@ public class UnmarkRootAction extends MarkRootAction {
   }
 
   public boolean canUnmark(AnActionEvent e) {
-    Module module = e.getData(LangDataKeys.MODULE);
-    VirtualFile[] vFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    Module module = e.getData(Module.KEY);
+    VirtualFile[] vFiles = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (module == null || vFiles == null) {
       return false;
     }

@@ -15,43 +15,44 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
 import consulo.diff.DiffContentFactory;
-import consulo.ide.impl.idea.diff.DiffRequestFactory;
-import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.request.DiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
+import consulo.document.Document;
+import consulo.ide.impl.idea.diff.DiffRequestFactory;
+import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.util.lang.ref.Ref;
-import consulo.util.dataholder.UserDataHolder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.change.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffRequest;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeRequest;
-import consulo.virtualFileSystem.VirtualFile;
-import java.util.function.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PatchDiffRequestFactory {
   @Nonnull
-  public static DiffRequest createDiffRequest(@jakarta.annotation.Nullable Project project,
+  public static DiffRequest createDiffRequest(@Nullable Project project,
                                               @Nonnull Change change,
                                               @Nonnull String name,
                                               @Nonnull UserDataHolder context,
@@ -64,7 +65,7 @@ public class PatchDiffRequestFactory {
 
   @Nonnull
   public static DiffRequest createConflictDiffRequest(@Nullable Project project,
-                                                      @jakarta.annotation.Nullable VirtualFile file,
+                                                      @Nullable VirtualFile file,
                                                       @Nonnull TextFilePatch patch,
                                                       @Nonnull String afterTitle,
                                                       @Nonnull final Getter<ApplyPatchForBaseRevisionTexts> textsGetter,
@@ -76,12 +77,7 @@ public class PatchDiffRequestFactory {
     if (file.getFileType().isBinary()) throw new DiffRequestProducerException("Can't show diff for binary file '" + name + "'");
 
     final Ref<ApplyPatchForBaseRevisionTexts> textsRef = new Ref<>();
-    ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-      @Override
-      public void run() {
-        textsRef.set(textsGetter.get());
-      }
-    }, indicator.getModalityState());
+    ApplicationManager.getApplication().invokeAndWait(() -> textsRef.set(textsGetter.get()), indicator.getModalityState());
     ApplyPatchForBaseRevisionTexts texts = textsRef.get();
 
     if (texts.getLocal() == null) throw new DiffRequestProducerException("Can't show diff for '" + file.getPresentableUrl() + "'");
@@ -116,9 +112,9 @@ public class PatchDiffRequestFactory {
 
     if (windowTitle == null) windowTitle = getPatchTitle(file);
 
-    String localTitle = StringUtil.notNullize(titles.get(0), VcsBundle.message("patch.apply.conflict.local.version"));
+    String localTitle = StringUtil.notNullize(titles.get(0), VcsLocalize.patchApplyConflictLocalVersion().get());
     String baseTitle = StringUtil.notNullize(titles.get(1), "Base Version");
-    String patchedTitle = StringUtil.notNullize(titles.get(2), VcsBundle.message("patch.apply.conflict.patched.version"));
+    String patchedTitle = StringUtil.notNullize(titles.get(2), VcsLocalize.patchApplyConflictPatchedVersion().get());
 
     FileType fileType = file != null ? file.getFileType() : null;
 
@@ -139,10 +135,10 @@ public class PatchDiffRequestFactory {
                                                  @Nonnull AppliedTextPatch textPatch,
                                                  @Nullable String windowTitle,
                                                  @Nullable String localTitle,
-                                                 @jakarta.annotation.Nullable String resultTitle,
+                                                 @Nullable String resultTitle,
                                                  @Nullable String patchTitle) {
     if (windowTitle == null) windowTitle = getBadPatchTitle(file);
-    if (localTitle == null) localTitle = VcsBundle.message("patch.apply.conflict.local.version");
+    if (localTitle == null) localTitle = VcsLocalize.patchApplyConflictLocalVersion().get();
     if (resultTitle == null) resultTitle = VcsBundle.message("patch.apply.conflict.patched.somehow.version");
     if (patchTitle == null) patchTitle = VcsBundle.message("patch.apply.conflict.patch");
 
@@ -167,12 +163,12 @@ public class PatchDiffRequestFactory {
   }
 
   @Nonnull
-  public static MergeRequest createBadMergeRequest(@jakarta.annotation.Nullable Project project,
+  public static MergeRequest createBadMergeRequest(@Nullable Project project,
                                                    @Nonnull Document document,
                                                    @Nonnull VirtualFile file,
                                                    @Nonnull String localContent,
                                                    @Nonnull AppliedTextPatch textPatch,
-                                                   @jakarta.annotation.Nullable Consumer<MergeResult> callback)
+                                                   @Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     return createBadMergeRequest(project, document, file, localContent, textPatch, null, null, null, null, callback);
   }
@@ -191,7 +187,7 @@ public class PatchDiffRequestFactory {
 
     if (windowTitle == null) windowTitle = getPatchTitle(file);
 
-    String localTitle = StringUtil.notNullize(titles.get(0), VcsBundle.message("patch.apply.conflict.local.version"));
+    String localTitle = StringUtil.notNullize(titles.get(0), VcsLocalize.patchApplyConflictLocalVersion().get());
     String baseTitle = StringUtil.notNullize(titles.get(1), VcsBundle.message("patch.apply.conflict.merged.version"));
     String patchedTitle = StringUtil.notNullize(titles.get(2), VcsBundle.message("patch.apply.conflict.patched.version"));
 
@@ -202,15 +198,15 @@ public class PatchDiffRequestFactory {
   }
 
   @Nonnull
-  public static MergeRequest createBadMergeRequest(@jakarta.annotation.Nullable Project project,
+  public static MergeRequest createBadMergeRequest(@Nullable Project project,
                                                    @Nonnull Document document,
                                                    @Nullable VirtualFile file,
                                                    @Nonnull String localContent,
                                                    @Nonnull AppliedTextPatch textPatch,
-                                                   @jakarta.annotation.Nullable String windowTitle,
+                                                   @Nullable String windowTitle,
                                                    @Nullable String localTitle,
                                                    @Nullable String resultTitle,
-                                                   @jakarta.annotation.Nullable String patchTitle,
+                                                   @Nullable String patchTitle,
                                                    @Nullable Consumer<MergeResult> callback)
           throws InvalidDiffRequestException {
     if (!DiffUtil.canMakeWritable(document)) {
@@ -218,7 +214,7 @@ public class PatchDiffRequestFactory {
     }
 
     if (windowTitle == null) windowTitle = getBadPatchTitle(file);
-    if (localTitle == null) localTitle = VcsBundle.message("patch.apply.conflict.local.version");
+    if (localTitle == null) localTitle = VcsLocalize.patchApplyConflictLocalVersion().get();
     if (resultTitle == null) resultTitle = VcsBundle.message("patch.apply.conflict.patched.somehow.version");
     if (patchTitle == null) patchTitle = VcsBundle.message("patch.apply.conflict.patch");
 
@@ -230,7 +226,7 @@ public class PatchDiffRequestFactory {
   @Nonnull
   private static String getPatchTitle(@Nullable VirtualFile file) {
     if (file != null) {
-      return VcsBundle.message("patch.apply.conflict.title", getPresentablePath(file));
+      return VcsLocalize.patchApplyConflictTitle(getPresentablePath(file)).get();
     }
     else {
       return "Patch Conflict";
@@ -239,7 +235,7 @@ public class PatchDiffRequestFactory {
 
 
   @Nonnull
-  private static String getBadPatchTitle(@jakarta.annotation.Nullable VirtualFile file) {
+  private static String getBadPatchTitle(@Nullable VirtualFile file) {
     if (file != null) {
       return "Result of Patch Apply to " + getPresentablePath(file);
     }

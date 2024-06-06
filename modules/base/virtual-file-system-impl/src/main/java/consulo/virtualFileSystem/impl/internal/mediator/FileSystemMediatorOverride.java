@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.impl.internal.mediator;
 
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 import consulo.virtualFileSystem.internal.FileSystemMediator;
 import jakarta.annotation.Nullable;
@@ -38,12 +39,12 @@ public class FileSystemMediatorOverride {
   private static FileSystemMediator getMediator() {
     if (!Boolean.getBoolean(FORCE_USE_NIO2_KEY)) {
       try {
-        if ((SystemInfo.isLinux || SystemInfo.isMac || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
+        if ((Platform.current().os().isLinux() || Platform.current().os().isMac() || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
           return check(new JnaUnixMediatorImpl());
         }
       }
       catch (Throwable t) {
-        LOG.warn("Failed to load filesystem access layer: " + SystemInfo.OS_NAME + ", " + SystemInfo.JAVA_VERSION, t);
+        LOG.warn("Failed to load filesystem access layer: " + Platform.current().os().name() + ", " + SystemInfo.JAVA_VERSION, t);
       }
     }
 
@@ -51,7 +52,7 @@ public class FileSystemMediatorOverride {
   }
 
   private static FileSystemMediator check(final FileSystemMediator mediator) throws Exception {
-    final String quickTestPath = SystemInfo.isWindows ? "C:\\" : "/";
+    final String quickTestPath = Platform.current().os().isWindows() ? "C:\\" : "/";
     mediator.getAttributes(quickTestPath);
     return mediator;
   }

@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.editor.actions;
 
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorAction;
 import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.application.util.SystemInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,8 +46,8 @@ public class PasteFromX11Action extends EditorAction {
   @Override
   public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
-    if (editor == null || !SystemInfo.isXWindow) {
+    Editor editor = e.getData(Editor.KEY);
+    if (editor == null || !Platform.current().os().isXWindow()) {
       presentation.setEnabled(false);
     }
     else {

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -26,6 +26,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -51,7 +52,7 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
             .map(project -> getCommonVcs(getRootsStream(dataContext), project))
             .map(AbstractVcs::getCheckinEnvironment)
             .map(CheckinEnvironment::getCheckinOperationName)
-            .orElse(VcsBundle.message("vcs.command.name.checkin"));
+            .orElse(VcsLocalize.vcsCommandNameCheckin().get());
 
     return modifyCheckinActionName(dataContext, actionName);
   }
@@ -70,7 +71,7 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
 
   @Override
   protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
-    return modifyCheckinActionName(context, VcsBundle.message("vcs.command.name.checkin.no.mnemonics"));
+    return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics().get());
   }
 
   @Nullable

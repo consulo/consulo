@@ -16,41 +16,40 @@
 package consulo.ide.impl.idea.openapi.ui.impl;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.application.ui.RemoteDesktopService;
-import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.internal.DialogWrapperDialog;
-import consulo.ui.ex.awt.internal.DialogWrapperPeer;
-import consulo.ui.ex.popup.StackingPopupDispatcher;
-import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.util.concurrent.ActionCallback;
-import consulo.application.util.SystemInfo;
+import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.JBLayeredPane;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.project.ui.internal.WindowManagerEx;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.JBLayeredPane;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.DialogWrapperDialog;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
+import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.IdeFrameUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -84,7 +83,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
     if (myWindowManager != null) {
 
       if (project == null) {
-        project = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PROJECT);
+        project = DataManager.getInstance().getDataContext().getData(Project.KEY);
       }
 
       myProject = project;
@@ -365,7 +364,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
   //[kirillk] for now it only deals with the TaskWindow under Mac OS X: modal dialogs are shown behind JBPopup
   //hopefully this whole code will go away
   private void hidePopupsIfNeeded() {
-    if (!SystemInfo.isMac) return;
+    if (!Platform.current().os().isMac()) return;
 
     final StackingPopupDispatcher stackingPopupDispatcher = StackingPopupDispatcher.getInstance();
     stackingPopupDispatcher.hidePersistentPopups();

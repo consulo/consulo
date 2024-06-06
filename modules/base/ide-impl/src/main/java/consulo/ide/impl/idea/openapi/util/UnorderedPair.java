@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.util.lang.Comparing;
+
 public class UnorderedPair<T> {
   public final T first;
   public final T second;

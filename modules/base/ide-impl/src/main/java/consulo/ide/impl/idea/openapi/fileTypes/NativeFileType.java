@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
@@ -67,11 +68,11 @@ public class NativeFileType implements INativeFileType {
 
   public static boolean openAssociatedApplication(@Nonnull final VirtualFile file) {
     final List<String> commands = new ArrayList<>();
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       commands.add("rundll32.exe");
       commands.add("url.dll,FileProtocolHandler");
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       commands.add("/usr/bin/open");
     }
     else if (SystemInfo.hasXdgOpen()) {

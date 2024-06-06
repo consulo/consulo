@@ -24,7 +24,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbarPosition;

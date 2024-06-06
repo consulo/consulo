@@ -13,7 +13,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.cacheBuilder.CacheManager;

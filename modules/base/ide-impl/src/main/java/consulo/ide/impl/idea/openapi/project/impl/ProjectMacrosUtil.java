@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.macro.PathMacros;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.util.WaitForProgressToShow;
 import consulo.logging.Logger;
 import consulo.project.Project;

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

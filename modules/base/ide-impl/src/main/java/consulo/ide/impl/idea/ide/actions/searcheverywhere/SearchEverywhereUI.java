@@ -40,9 +40,9 @@ import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
@@ -76,6 +76,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static consulo.language.editor.CommonDataKeys.PSI_ELEMENT;
 
 /**
  * @author Konstantin Bulenkov
@@ -293,15 +295,15 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     if (PlatformDataKeys.PREDEFINED_TEXT == dataId) {
       return getSearchPattern();
     }
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
 
-    if (LangDataKeys.PSI_ELEMENT_ARRAY == dataId) {
+    if (PsiElement.KEY_OF_ARRAY == dataId) {
       List<PsiElement> elements = indicesStream.mapToObj(i -> {
         SearchEverywhereContributor<Object> contributor = myListModel.getContributorForIndex(i);
         Object item = myListModel.getElementAt(i);
-        Object psi = contributor.getDataForItem(item, CommonDataKeys.PSI_ELEMENT);
+        Object psi = contributor.getDataForItem(item, PSI_ELEMENT);
         return (PsiElement)psi;
       }).filter(Objects::nonNull).collect(Collectors.toList());
       return PsiUtilCore.toPsiElementArray(elements);
@@ -522,7 +524,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
 
     stopSearching();
 
-    myResultsList.setEmptyText(IdeBundle.message("label.choosebyname.searching"));
+    myResultsList.setEmptyText(IdeLocalize.labelChoosebynameSearching().get());
     String rawPattern = getSearchPattern();
     updateViewType(rawPattern.isEmpty() ? ViewType.SHORT : ViewType.FULL);
     String namePattern = mySelectedTab.getContributor().map(contributor -> contributor.filterControlSymbols(rawPattern)).orElse(rawPattern);
@@ -904,7 +906,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     }
   }
 
-  private final ListCellRenderer<Object> myCommandRenderer = new ColoredListCellRenderer<Object>() {
+  private final ListCellRenderer<Object> myCommandRenderer = new ColoredListCellRenderer<>() {
 
     @Override
     protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
@@ -919,7 +921,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     }
   };
 
-  private final ListCellRenderer<Object> myMoreRenderer = new ColoredListCellRenderer<Object>() {
+  private final ListCellRenderer<Object> myMoreRenderer = new ColoredListCellRenderer<>() {
     // todo
     //@Override
     //protected int getMinHeight() {
@@ -1371,7 +1373,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     }
 
     private static <T> ElementsChooser<T> createChooser(@Nonnull PersistentSearchEverywhereContributorFilter<T> filter, @Nonnull Runnable rebuildRunnable) {
-      ElementsChooser<T> res = new ElementsChooser<T>(filter.getAllElements(), false) {
+      ElementsChooser<T> res = new ElementsChooser<>(filter.getAllElements(), false) {
         @Override
         protected String getItemText(@Nonnull T value) {
           return filter.getElementText(value);
@@ -1501,7 +1503,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     }
   }
 
-  private final SearchEverywhereContributor<Object> myStubCommandContributor = new SearchEverywhereContributor<Object>() {
+  private final SearchEverywhereContributor<Object> myStubCommandContributor = new SearchEverywhereContributor<>() {
     @Nonnull
     @Override
     public String getSearchProviderId() {

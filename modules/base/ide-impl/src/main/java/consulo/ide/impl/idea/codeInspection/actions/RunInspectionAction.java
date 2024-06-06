@@ -29,8 +29,8 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.GotoActionBase;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameFilter;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -53,24 +53,24 @@ public class RunInspectionAction extends GotoActionBase {
   private static final Logger LOGGER = Logger.getInstance(RunInspectionAction.class);
 
   public RunInspectionAction() {
-    getTemplatePresentation().setText(IdeBundle.message("goto.inspection.action.text"));
+    getTemplatePresentation().setTextValue(IdeLocalize.gotoInspectionActionText());
   }
 
   @Override
   protected void gotoActionPerformed(final AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    final PsiElement psiElement = e.getDataContext().getData(CommonDataKeys.PSI_ELEMENT);
-    final PsiFile psiFile = e.getDataContext().getData(CommonDataKeys.PSI_FILE);
-    final VirtualFile virtualFile = e.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
+    final PsiElement psiElement = e.getDataContext().getData(PsiElement.KEY);
+    final PsiFile psiFile = e.getDataContext().getData(PsiFile.KEY);
+    final VirtualFile virtualFile = e.getDataContext().getData(VirtualFile.KEY);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.goto.inspection");
 
     final GotoInspectionModel model = new GotoInspectionModel(project);
-    showNavigationPopup(e, model, new GotoActionCallback<Object>() {
+    showNavigationPopup(e, model, new GotoActionCallback<>() {
       @Override
       protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
         popup.setSearchInAnyPlace(true);
@@ -79,12 +79,9 @@ public class RunInspectionAction extends GotoActionBase {
 
       @Override
       public void elementChosen(ChooseByNamePopup popup, final Object element) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            runInspection(project, ((InspectionToolWrapper)element).getShortName(), virtualFile, psiElement, psiFile);
-          }
-        });
+        ApplicationManager.getApplication().invokeLater(
+          () -> runInspection(project, ((InspectionToolWrapper)element).getShortName(), virtualFile, psiElement, psiFile)
+        );
       }
     }, false);
   }

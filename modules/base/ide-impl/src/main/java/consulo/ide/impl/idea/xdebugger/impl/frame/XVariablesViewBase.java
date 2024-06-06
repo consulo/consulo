@@ -34,7 +34,7 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ObjectLongHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerInlayUtil;
 import consulo.execution.debug.XDebuggerActions;

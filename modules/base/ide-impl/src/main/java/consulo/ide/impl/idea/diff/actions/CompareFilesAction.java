@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.diff.DiffRequestFactory;
 import consulo.diff.request.DiffRequest;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
@@ -46,7 +45,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
 
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
     String text = "Compare Files";
     if (files != null && files.length == 1) {
@@ -83,7 +82,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
       return true;
     }
 
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) {
       return false;
     }
@@ -103,13 +102,13 @@ public class CompareFilesAction extends BaseShowDiffAction {
   @Nullable
   @Override
   protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     DiffRequest diffRequest = e.getData(DIFF_REQUEST);
     if (diffRequest != null) {
       return diffRequest;
     }
 
-    VirtualFile[] data = e.getRequiredData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] data = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
     if (data.length == 1) {
       VirtualFile otherFile = getOtherFile(project, data[0]);
       if (otherFile == null) return null;

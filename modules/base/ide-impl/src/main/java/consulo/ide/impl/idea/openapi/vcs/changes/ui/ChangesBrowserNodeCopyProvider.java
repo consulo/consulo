@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.CopyProvider;

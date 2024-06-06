@@ -6,7 +6,7 @@ import consulo.language.editor.completion.lookup.LookupAdvertiser;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Lists;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

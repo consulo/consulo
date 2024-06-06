@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.file.exclude;
 
 import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -10,7 +9,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -67,7 +66,7 @@ public class OverrideFileTypeAction extends AnAction {
 
   @Nonnull
   static VirtualFile[] getContextFiles(@Nonnull AnActionEvent e, @Nonnull Predicate<? super VirtualFile> additionalPredicate) {
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) return VirtualFile.EMPTY_ARRAY;
     return Arrays.stream(files).filter(file -> file != null && !file.isDirectory()).filter(additionalPredicate).toArray(count -> VirtualFile.ARRAY_FACTORY.create(count));
   }

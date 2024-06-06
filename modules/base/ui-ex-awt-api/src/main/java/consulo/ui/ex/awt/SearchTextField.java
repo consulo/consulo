@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -160,7 +161,7 @@ public class SearchTextField extends JPanel {
 
       if (!hasIconsOutsideOfTextField()) {
         final Border originalBorder;
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           originalBorder = BorderFactory.createLoweredBevelBorder();
         }
         else {

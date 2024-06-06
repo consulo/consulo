@@ -16,25 +16,25 @@
 
 package consulo.ide.impl.presentationAssistant;
 
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.util.collection.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -230,7 +230,7 @@ class ShortcutPresenter implements Disposable {
     if (StringUtil.isEmpty(shortcutText) || Comparing.equal(shortcutText, shownShortcut)) {
       return fragments;
     }
-    if (keymap.getKind() == Keymaps.KeymapKind.WIN || SystemInfo.isMac) {
+    if (keymap.getKind() == Keymaps.KeymapKind.WIN || Platform.current().os().isMac()) {
       addText(fragments, shortcutText);
     }
     else if (MacKeyStrokePresentation.macKeyStrokesFont != null && MacKeyStrokePresentation.macKeyStrokesFont.canDisplayUpTo(shortcutText) == -1) {

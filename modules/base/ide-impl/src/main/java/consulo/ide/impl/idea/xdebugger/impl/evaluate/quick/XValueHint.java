@@ -35,7 +35,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.LinkMouseListenerBase;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.actions.handlers.XDebuggerEvaluateActionHandler;

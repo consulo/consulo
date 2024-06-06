@@ -15,29 +15,31 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
 import consulo.ide.impl.idea.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ui.ex.awt.UIUtil;
-import org.jetbrains.annotations.Nls;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
 
@@ -99,7 +101,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     }
 
     myPromptsPanel.setSize(myPromptsPanel.getPreferredSize());                           // todo check text!
-    myOnPatchCreation.setName((SystemInfo.isMac ? "Reveal patch in" : "Show patch in ") +
+    myOnPatchCreation.setName((Platform.current().os().isMac() ? "Reveal patch in" : "Show patch in ") +
                               ShowFilePathAction.getFileManagerName() + " after creation:");
   }
 
@@ -269,7 +271,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       final JCheckBox checkBox = myPromptOptions.get(setting);
       checkBox.setEnabled(setting.isApplicableTo(activeVcses) || myProject.isDefault());
       if (!myProject.isDefault()) {
-        checkBox.setToolTipText(VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(setting.getApplicableVcses())));
+        checkBox.setToolTipText(VcsLocalize.tooltipTextActionApplicableToVcses(composeText(setting.getApplicableVcses())).get());
       }
     }
 
@@ -278,12 +280,12 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
       final VcsShowConfirmationOptionImpl addConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.ADD);
       UIUtil.setEnabled(myAddConfirmationPanel, addConfirmation.isApplicableTo(activeVcses), true);
       myAddConfirmationPanel.setToolTipText(
-        VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(addConfirmation.getApplicableVcses())));
+        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(addConfirmation.getApplicableVcses())).get());
 
       final VcsShowConfirmationOptionImpl removeConfirmation = vcsManager.getConfirmation(VcsConfiguration.StandardConfirmation.REMOVE);
       UIUtil.setEnabled(myRemoveConfirmationPanel, removeConfirmation.isApplicableTo(activeVcses), true);
       myRemoveConfirmationPanel.setToolTipText(
-        VcsBundle.message("tooltip.text.action.applicable.to.vcses", composeText(removeConfirmation.getApplicableVcses())));
+        VcsLocalize.tooltipTextActionApplicableToVcses(composeText(removeConfirmation.getApplicableVcses())).get());
     }
   }
 

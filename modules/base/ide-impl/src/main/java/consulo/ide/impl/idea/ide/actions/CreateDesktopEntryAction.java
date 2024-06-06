@@ -25,8 +25,9 @@ import consulo.application.progress.Task;
 import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ExecUtil;
@@ -55,7 +56,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   private static final Logger LOG = Logger.getInstance(CreateDesktopEntryAction.class);
 
   public static boolean isAvailable() {
-    return SystemInfo.isUnix && SystemInfo.hasXdgOpen();
+    return Platform.current().os().isUnix() && SystemInfo.hasXdgOpen();
   }
 
   @RequiredUIAccess
@@ -72,7 +73,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
   public void actionPerformed(@Nonnull final AnActionEvent event) {
     if (!isAvailable()) return;
 
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final CreateDesktopEntryDialog dialog = new CreateDesktopEntryDialog(project);
     if (!dialog.showAndGet()) {
       return;
@@ -94,15 +95,15 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     final double step = (1.0 - indicator.getFraction()) / 3.0;
 
     try {
-      indicator.setText(ApplicationBundle.message("desktop.entry.checking"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryChecking());
       check();
       indicator.setFraction(indicator.getFraction() + step);
 
-      indicator.setText(ApplicationBundle.message("desktop.entry.preparing"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryPreparing());
       final File entry = prepare();
       indicator.setFraction(indicator.getFraction() + step);
 
-      indicator.setText(ApplicationBundle.message("desktop.entry.installing"));
+      indicator.setTextValue(ApplicationLocalize.desktopEntryInstalling());
       install(entry, globalEntry);
       indicator.setFraction(indicator.getFraction() + step);
 

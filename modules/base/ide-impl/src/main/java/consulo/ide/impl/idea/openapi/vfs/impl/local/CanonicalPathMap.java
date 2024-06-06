@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl.local;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;

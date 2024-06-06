@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.util.lang.ObjectUtil;
 import consulo.project.Project;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.remote.ext;
 
 import consulo.application.util.UserHomeFileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.remote.VagrantBasedCredentialsHolder;
 import org.jdom.Element;
 

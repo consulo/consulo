@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.execution.debug.ui.XNamedTreeNode;

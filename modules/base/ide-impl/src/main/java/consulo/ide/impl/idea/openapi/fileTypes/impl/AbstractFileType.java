@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
 import consulo.ide.impl.idea.ide.highlighter.custom.impl.CustomFileTypeEditor;
 import consulo.ide.impl.idea.openapi.fileTypes.UserFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.text.StringTokenizer;

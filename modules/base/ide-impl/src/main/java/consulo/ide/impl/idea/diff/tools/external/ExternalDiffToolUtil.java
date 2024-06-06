@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.contents.DirectoryContent;
 import consulo.ide.impl.idea.diff.merge.ThreesideMergeRequest;
 import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

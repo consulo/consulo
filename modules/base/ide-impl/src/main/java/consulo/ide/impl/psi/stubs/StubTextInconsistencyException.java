@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.DebugUtil;

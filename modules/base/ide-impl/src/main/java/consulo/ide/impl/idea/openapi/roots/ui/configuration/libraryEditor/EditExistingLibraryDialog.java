@@ -21,7 +21,7 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 

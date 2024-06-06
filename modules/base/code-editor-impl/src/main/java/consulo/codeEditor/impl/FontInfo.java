@@ -2,16 +2,16 @@
 package consulo.codeEditor.impl;
 
 import consulo.application.util.Patches;
-import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
-import org.intellij.lang.annotations.JdkConstants;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextAttribute;
@@ -163,7 +163,7 @@ public class FontInfo {
 
   public static boolean canDisplay(@Nonnull Font font, int codePoint, boolean disableFontFallback) {
     if (!Character.isValidCodePoint(codePoint)) return false;
-    if (disableFontFallback && SystemInfo.isMac) {
+    if (disableFontFallback && Platform.current().os().isMac()) {
       int glyphCode = font.createGlyphVector(DEFAULT_CONTEXT, new String(new int[]{codePoint}, 0, 1)).getGlyphCode(0);
       return (glyphCode & GLYPHMASK) != 0 && (glyphCode & SLOTMASK) == 0;
     }

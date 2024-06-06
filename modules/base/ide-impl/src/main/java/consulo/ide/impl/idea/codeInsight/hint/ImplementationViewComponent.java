@@ -29,7 +29,7 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.editor.highlight.HighlighterFactory;

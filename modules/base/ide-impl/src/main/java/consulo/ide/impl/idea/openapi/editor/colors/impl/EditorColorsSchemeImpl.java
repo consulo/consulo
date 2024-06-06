@@ -22,7 +22,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.color.ColorValue;
 
 import jakarta.annotation.Nonnull;

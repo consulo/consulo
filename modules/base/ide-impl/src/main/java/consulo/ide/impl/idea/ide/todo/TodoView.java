@@ -18,7 +18,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.PluginVcsMappingListener;
 import consulo.versionControlSystem.ProjectLevelVcsManager;

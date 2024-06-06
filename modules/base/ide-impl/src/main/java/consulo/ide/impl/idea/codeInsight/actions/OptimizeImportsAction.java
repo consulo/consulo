@@ -22,7 +22,6 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -33,7 +32,7 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -98,14 +97,14 @@ public class OptimizeImportsAction extends AnAction {
 
   @RequiredUIAccess
   public static void actionPerformedImpl(final DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
     }
     PsiDocumentManager.getInstance(project).commitAllDocuments();
-    final Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(CommonDataKeys.EDITOR));
+    final Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY));
 
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
 
     PsiFile file = null;
     PsiDirectory dir;
@@ -152,7 +151,7 @@ public class OptimizeImportsAction extends AnAction {
         return;
       }
 
-      PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+      PsiElement element = dataContext.getData(PsiElement.KEY);
       if (element == null) return;
       if (element instanceof PsiDirectoryContainer) {
         dir = ((PsiDirectoryContainer)element).getDirectories()[0];
@@ -212,16 +211,16 @@ public class OptimizeImportsAction extends AnAction {
     }
 
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       updatePresentationForFiles(presentation, false, Collections.emptyList());
       return;
     }
 
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
     List<PsiFile> psiFiles = new ArrayList<>();
 
-    final Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(CommonDataKeys.EDITOR), false);
+    final Editor editor = BaseCodeInsightAction.getInjectedEditor(project, dataContext.getData(Editor.KEY), false);
     if (editor != null) {
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null || !isOptimizeImportsAvailable(file)) {
@@ -255,7 +254,7 @@ public class OptimizeImportsAction extends AnAction {
     }
     else {
       if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null && dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null) {
           updatePresentationForFiles(presentation, false, Collections.emptyList());
           return;

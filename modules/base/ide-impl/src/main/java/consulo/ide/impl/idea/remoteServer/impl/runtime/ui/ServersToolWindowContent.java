@@ -4,7 +4,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.impl.internal.runtime.log.LoggingHandlerImpl;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.DeploymentNode;

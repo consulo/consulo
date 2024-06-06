@@ -22,7 +22,6 @@ import consulo.ide.impl.idea.codeInspection.ex.Descriptor;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -66,8 +65,8 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
   public DefaultActionGroup createPopupActionGroup(JComponent component) {
     final DefaultActionGroup group = new DefaultActionGroup();
 
-    final List<NamedScope> predefinedScopes = new ArrayList<NamedScope>();
-    final List<NamedScope> customScopes = new ArrayList<NamedScope>();
+    final List<NamedScope> predefinedScopes = new ArrayList<>();
+    final List<NamedScope> customScopes = new ArrayList<>();
     for (final NamedScopesHolder holder : NamedScopesHolder.getAllNamedScopeHolders(myProject)) {
       Collections.addAll(customScopes, holder.getEditableScopes());
       predefinedScopes.addAll(holder.getPredefinedScopes());
@@ -117,7 +116,7 @@ public abstract class ScopesChooser extends ComboBoxAction implements DumbAware 
         @Override
         public void actionPerformed(final AnActionEvent e) {
           for (final Descriptor defaultDescriptor : defaultDescriptors) {
-            inspectionProfile.addScope(defaultDescriptor.getToolWrapper().createCopy(), scope, defaultDescriptor.getLevel(), true, e == null ? null : e.getData(CommonDataKeys.PROJECT));
+            inspectionProfile.addScope(defaultDescriptor.getToolWrapper().createCopy(), scope, defaultDescriptor.getLevel(), true, e == null ? null : e.getData(Project.KEY));
           }
           onScopeAdded();
         }

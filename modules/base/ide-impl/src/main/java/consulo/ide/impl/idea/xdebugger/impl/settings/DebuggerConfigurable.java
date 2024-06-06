@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.settings;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.SmartList;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XBreakpointType;

@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.logging.Logger;

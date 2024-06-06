@@ -30,7 +30,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.plugins.sorters.SortByStatusAction;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.localize.LocalizeKey;

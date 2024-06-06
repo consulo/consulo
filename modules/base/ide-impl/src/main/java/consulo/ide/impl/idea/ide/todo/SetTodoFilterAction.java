@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.util.TodoPanelSettings;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;

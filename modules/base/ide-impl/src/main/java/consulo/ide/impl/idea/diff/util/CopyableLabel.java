@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nonnull;
 

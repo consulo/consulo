@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;

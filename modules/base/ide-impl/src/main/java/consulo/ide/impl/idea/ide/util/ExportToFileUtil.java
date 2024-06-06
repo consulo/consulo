@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;

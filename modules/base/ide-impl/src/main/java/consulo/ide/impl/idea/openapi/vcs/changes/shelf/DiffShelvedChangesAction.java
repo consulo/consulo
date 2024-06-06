@@ -15,43 +15,41 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
-import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.diff.chain.DiffRequestChain;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
 import consulo.diff.request.DiffRequest;
+import consulo.ide.impl.idea.diff.actions.impl.GoToChangePopupBuilder;
 import consulo.ide.impl.idea.diff.requests.UnknownFileTypeDiffRequest;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.*;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Getter;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
+import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
+import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchDiffRequestFactory;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.FilePath;
-import consulo.virtualFileSystem.status.FileStatus;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.FilePathsHelper;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeGoToChangePopupAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchForBaseRevisionTexts;
-import consulo.ide.impl.idea.openapi.vcs.changes.patch.PatchDiffRequestFactory;
-import consulo.virtualFileSystem.VirtualFile;
-import java.util.function.Consumer;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -59,6 +57,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
+
+import static consulo.language.editor.CommonDataKeys.PROJECT;
 
 public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
@@ -70,7 +71,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   public static boolean isEnabled(final DataContext dc) {
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(PROJECT);
     if (project == null) return false;
 
     ShelvedChangeList[] changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
@@ -83,7 +84,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   public static void showShelvedChangesDiff(final DataContext dc) {
-    final Project project = dc.getData(CommonDataKeys.PROJECT);
+    final Project project = dc.getData(PROJECT);
     if (project == null) return;
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
 
@@ -199,20 +200,12 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
               final FilePath pathBeforeRename = patchContext.getPathBeforeRename(file);
               final String relativePath = patch.getAfterName() == null ? patch.getBeforeName() : patch.getAfterName();
 
-              final Getter<CharSequence> baseContentGetter = new Getter<CharSequence>() {
-                @Override
-                public CharSequence get() {
-                  BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
-                  return baseRevisionTextPatchEP.provideContent(relativePath, commitContext);
-                }
+              final Getter<CharSequence> baseContentGetter = () -> {
+                BaseRevisionTextPatchEP baseRevisionTextPatchEP = PatchEP.EP_NAME.findExtensionOrFail(project, BaseRevisionTextPatchEP.class);
+                return baseRevisionTextPatchEP.provideContent(relativePath, commitContext);
               };
 
-              Getter<ApplyPatchForBaseRevisionTexts> getter = new Getter<ApplyPatchForBaseRevisionTexts>() {
-                @Override
-                public ApplyPatchForBaseRevisionTexts get() {
-                  return ApplyPatchForBaseRevisionTexts.create(project, file, pathBeforeRename, patch, baseContentGetter);
-                }
-              };
+              Getter<ApplyPatchForBaseRevisionTexts> getter = () -> ApplyPatchForBaseRevisionTexts.create(project, file, pathBeforeRename, patch, baseContentGetter);
 
               return PatchDiffRequestFactory.createConflictDiffRequest(project, file, patch, "Shelved Version", getter, getName(), context, indicator);
             }
@@ -292,7 +285,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
     @Nonnull
     @Override
     public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
-      return new ChangeGoToChangePopupAction.Fake<MyDiffRequestChain>(this, myIndex, onSelected) {
+      return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
         @Nonnull
         @Override
         protected FilePath getFilePath(int index) {
@@ -309,7 +302,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   private static abstract class MyDiffRequestProducer implements DiffRequestProducer {
-    @jakarta.annotation.Nullable
+    @Nullable
     private final ShelvedChange myTextChange;
     @Nullable private final ShelvedBinaryFile myBinaryChange;
     @Nonnull
@@ -332,7 +325,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
       return myTextChange;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     public ShelvedBinaryFile getBinaryChange() {
       return myBinaryChange;
     }

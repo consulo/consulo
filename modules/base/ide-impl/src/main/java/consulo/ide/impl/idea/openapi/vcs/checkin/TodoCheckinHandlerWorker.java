@@ -33,7 +33,7 @@ import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;

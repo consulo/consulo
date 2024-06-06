@@ -35,7 +35,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
@@ -401,7 +401,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
   }
 
   private Content getOrCreateConsoleContent(final ContentManager contentManager) {
-    final String displayName = VcsBundle.message("vcs.console.toolwindow.display.name");
+    final String displayName = VcsLocalize.vcsConsoleToolwindowDisplayName().get();
     Content content = contentManager.findContent(displayName);
     if (content == null) {
       releaseConsole();

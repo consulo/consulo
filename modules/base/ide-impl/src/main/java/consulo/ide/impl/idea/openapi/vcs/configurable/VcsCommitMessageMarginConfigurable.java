@@ -19,13 +19,14 @@ import consulo.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -84,7 +85,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
   private class MySpinnerConfigurable extends VcsCheckBoxWithSpinnerConfigurable {
 
     public MySpinnerConfigurable(Project project) {
-      super(project, VcsBundle.message("configuration.commit.message.margin.prompt"), "");
+      super(project, VcsLocalize.configurationCommitMessageMarginPrompt().get(), "");
     }
 
     @Override

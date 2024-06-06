@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.diff.util.LineRange;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

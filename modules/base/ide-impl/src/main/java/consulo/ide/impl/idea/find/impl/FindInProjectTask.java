@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.ide.impl.idea.find.FindInProjectSearchEngine;
 import consulo.ide.impl.idea.find.findInProject.FindInProjectManager;
 import consulo.application.internal.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;

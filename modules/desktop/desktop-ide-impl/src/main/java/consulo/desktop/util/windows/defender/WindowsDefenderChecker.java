@@ -23,7 +23,7 @@ import consulo.project.ui.notification.NotificationAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

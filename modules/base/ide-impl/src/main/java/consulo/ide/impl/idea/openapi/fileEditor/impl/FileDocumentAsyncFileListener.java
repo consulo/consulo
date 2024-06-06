@@ -21,7 +21,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.util.collection.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;

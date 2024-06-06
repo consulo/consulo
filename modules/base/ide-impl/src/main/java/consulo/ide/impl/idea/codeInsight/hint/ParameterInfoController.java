@@ -34,7 +34,7 @@ import consulo.ui.ex.popup.Balloon.Position;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
