@@ -17,21 +17,18 @@ package consulo.desktop.awt.editor.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.EditorHolder;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.DocumentRunnable;
@@ -41,11 +38,10 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.PasteProvider;
@@ -64,12 +60,12 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.UndoableEditListener;
@@ -96,17 +92,14 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     setFocusCycleRoot(!ScreenReader.isActive());
     setOpaque(true);
 
-    putClientProperty(Magnificator.CLIENT_PROPERTY_KEY, new Magnificator() {
-      @Override
-      public Point magnify(double scale, Point at) {
-        if (myEditor.isDisposed()) return at;
-        VisualPosition magnificationPosition = myEditor.xyToVisualPosition(at);
-        double currentSize = myEditor.getColorsScheme().getEditorFontSize();
-        int defaultFontSize = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontSize();
-        myEditor.setFontSize(Math.max((int)(currentSize * scale), defaultFontSize));
+    putClientProperty(Magnificator.CLIENT_PROPERTY_KEY, (Magnificator) (scale, at) -> {
+      if (myEditor.isDisposed()) return at;
+      VisualPosition magnificationPosition = myEditor.xyToVisualPosition(at);
+      double currentSize = myEditor.getColorsScheme().getEditorFontSize();
+      int defaultFontSize = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontSize();
+      myEditor.setFontSize(Math.max((int)(currentSize * scale), defaultFontSize));
 
-        return myEditor.visualPositionToXY(magnificationPosition);
-      }
+      return myEditor.visualPositionToXY(magnificationPosition);
     });
 
     // This editor extends JTextComponent rather than JComponent *only* for accessibility
@@ -141,10 +134,10 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
   public Object getData(@Nonnull Key<?> dataId) {
     if (myEditor.isDisposed() || myEditor.isRendererMode()) return null;
 
-    if (CommonDataKeys.EDITOR == dataId) {
+    if (Editor.KEY == dataId) {
       return myEditor;
     }
-    if (CommonDataKeys.CARET == dataId) {
+    if (Caret.KEY == dataId) {
       return myEditor.getCaretModel().getCurrentCaret();
     }
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {
@@ -159,7 +152,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myEditor.getPasteProvider();
     }
-    if (CommonDataKeys.EDITOR_VIRTUAL_SPACE == dataId) {
+    if (EditorKeys.EDITOR_VIRTUAL_SPACE == dataId) {
       LogicalPosition location = myEditor.myLastMousePressedLocation;
       if (location == null) {
         location = myEditor.getCaretModel().getLogicalPosition();
@@ -530,12 +523,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
 
     @Override
     public String getText(final int offset, final int length) throws BadLocationException {
-      return ApplicationManager.getApplication().runReadAction(new Computable<String>() {
-        @Override
-        public String compute() {
-          return myEditor.getDocument().getText(new TextRange(offset, offset + length));
-        }
-      });
+      return ApplicationManager.getApplication().runReadAction((Computable<String>) () -> myEditor.getDocument().getText(new TextRange(offset, offset + length)));
     }
 
     @Override
@@ -916,12 +904,9 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
       myEditor.getCaretModel().addCaretListener(this);
       myEditor.getDocument().addDocumentListener(this);
 
-      Disposer.register(myEditor.getDisposable(), new Disposable() {
-        @Override
-        public void dispose() {
-          myEditor.getCaretModel().removeCaretListener(AccessibleEditorComponentImpl.this);
-          myEditor.getDocument().removeDocumentListener(AccessibleEditorComponentImpl.this);
-        }
+      Disposer.register(myEditor.getDisposable(), () -> {
+        myEditor.getCaretModel().removeCaretListener(AccessibleEditorComponentImpl.this);
+        myEditor.getDocument().removeDocumentListener(AccessibleEditorComponentImpl.this);
       });
     }
 
@@ -939,9 +924,9 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
       int mark = caret.getLeadSelectionOffset();
       if (myCaretPos != dot) {
         ApplicationManager.getApplication().assertIsDispatchThread();
-        firePropertyChange(ACCESSIBLE_CARET_PROPERTY, new Integer(myCaretPos), new Integer(dot));
+        firePropertyChange(ACCESSIBLE_CARET_PROPERTY, myCaretPos, dot);
 
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           // For MacOSX we also need to fire a caret event to anyone listening
           // to our Document, since *that* rather than the accessible property
           // change is the only way to trigger a speech update
@@ -977,7 +962,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
       final Integer pos = event.getOffset();
       if (ApplicationManager.getApplication().isDispatchThread()) {
         firePropertyChange(ACCESSIBLE_TEXT_PROPERTY, null, pos);
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           // For MacOSX we also need to fire a JTextComponent event to anyone listening
           // to our Document, since *that* rather than the accessible property
           // change is the only way to trigger a speech update
@@ -1011,7 +996,7 @@ public class EditorComponentImpl extends JTextComponent implements EditorHolder,
     @Override
     public AccessibleRole getAccessibleRole() {
       // See comment on TextAccessibleRole class.
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         return TextAccessibleRole.TEXT_AREA;
       }
       else {

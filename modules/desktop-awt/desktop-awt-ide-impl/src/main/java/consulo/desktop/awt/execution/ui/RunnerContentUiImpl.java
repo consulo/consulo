@@ -33,7 +33,7 @@ import consulo.execution.impl.internal.ui.layout.action.MinimizeViewAction;
 import consulo.execution.impl.internal.ui.layout.action.RestoreViewAction;
 import consulo.ide.impl.idea.execution.ui.layout.impl.JBRunnerTabs;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

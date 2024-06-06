@@ -15,19 +15,19 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.awt.hacking.X11Hacking;
-import consulo.util.concurrent.ActionCallback;
-import consulo.application.util.SystemInfo;
+import consulo.disposer.Disposable;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.internal.WindowManagerEx;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.annotation.ReviewAfterMigrationToJRE;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
 import consulo.ui.Window;
-
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.concurrent.ActionCallback;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -42,11 +42,11 @@ public abstract class IdeFrameDecorator implements Disposable {
   @Nullable
   @ReviewAfterMigrationToJRE(9)
   public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
-    if (SystemInfo.isXWindow && X11UiUtil.isFullScreenSupported()) {
+    if (Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported()) {
       return new EWMHFrameDecorator(frame);
     }
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return new MacMainFrameDecorator(frame, false);
     }
 

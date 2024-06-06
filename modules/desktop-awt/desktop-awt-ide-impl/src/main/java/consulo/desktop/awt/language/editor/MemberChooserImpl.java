@@ -24,7 +24,6 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.generation.*;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
@@ -622,11 +621,11 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
   @Override
   public void calcData(final Key key, final DataSink sink) {
-    if (CommonDataKeys.PSI_ELEMENT == key) {
+    if (PsiElement.KEY == key) {
       if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
         T selectedElement = mySelectedElements.iterator().next();
         if (selectedElement instanceof ClassMemberWithElement) {
-          sink.put(CommonDataKeys.PSI_ELEMENT, ((ClassMemberWithElement)selectedElement).getElement());
+          sink.put(PsiElement.KEY, ((ClassMemberWithElement)selectedElement).getElement());
         }
       }
     }

@@ -26,7 +26,7 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ide.impl.idea.openapi.wm.impl.AnchoredButton;

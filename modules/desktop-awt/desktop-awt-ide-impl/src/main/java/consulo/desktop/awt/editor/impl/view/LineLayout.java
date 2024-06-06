@@ -8,7 +8,7 @@ import consulo.codeEditor.impl.LogicalPositionCache;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.FontFallbackIterator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;

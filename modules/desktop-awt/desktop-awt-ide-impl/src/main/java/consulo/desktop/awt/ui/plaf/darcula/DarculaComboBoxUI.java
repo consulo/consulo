@@ -1,22 +1,18 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.ui.ex.awt.ComboBoxWithWidePopup;
-import consulo.ui.ex.awt.ErrorBorderCapable;
 import consulo.application.util.ColoredItem;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
-import consulo.util.lang.ObjectUtil;
-import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
@@ -668,7 +664,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
     protected void configurePopup() {
       super.configurePopup();
       Border border = UIManager.getBorder("ComboPopup.border");
-      setBorder(border != null ? border : SystemInfo.isMac ? JBUI.Borders.empty() : IdeBorderFactory.createBorder());
+      setBorder(border != null ? border : Platform.current().os().isMac() ? JBUI.Borders.empty() : IdeBorderFactory.createBorder());
       putClientProperty("JComboBox.isCellEditor", DarculaUIUtil.isTableCellEditor(comboBox));
     }
 

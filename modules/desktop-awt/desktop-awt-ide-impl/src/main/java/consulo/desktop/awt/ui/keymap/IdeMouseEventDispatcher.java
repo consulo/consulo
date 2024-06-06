@@ -16,19 +16,19 @@
 package consulo.desktop.awt.ui.keymap;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.MouseShortcutPanel;
-import consulo.desktop.awt.wm.FocusManagerImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.ReflectionUtil;
+import consulo.platform.Platform;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
@@ -161,7 +161,7 @@ public final class IdeMouseEventDispatcher {
       }
     }
 
-    if (SystemInfo.isXWindow && e.isPopupTrigger() && e.getButton() != 3) {
+    if (Platform.current().os().isXWindow() && e.isPopupTrigger() && e.getButton() != 3) {
       // we can do better than silly triggering popup on everything but left click
       resetPopupTrigger(e);
     }
@@ -322,7 +322,7 @@ public final class IdeMouseEventDispatcher {
   }
 
   private static boolean isHorizontalScrolling(Component c, MouseEvent e) {
-    if (c != null && e instanceof MouseWheelEvent && (!SystemInfo.isMac || false)) {
+    if (c != null && e instanceof MouseWheelEvent && (!Platform.current().os().isMac() || false)) {
       final MouseWheelEvent mwe = (MouseWheelEvent)e;
       return mwe.isShiftDown() && mwe.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && isScrollEvent(mwe) && findHorizontalScrollBar(c) != null;
     }

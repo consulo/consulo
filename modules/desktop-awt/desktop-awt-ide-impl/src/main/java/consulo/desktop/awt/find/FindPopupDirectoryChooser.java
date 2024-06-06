@@ -17,7 +17,6 @@ package consulo.desktop.awt.find;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
@@ -27,6 +26,7 @@ import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.impl.FindUIHelper;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.ActionToolbar;
@@ -35,9 +35,9 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -109,7 +109,7 @@ public class FindPopupDirectoryChooser extends JPanel {
     });
 
     MyRecursiveDirectoryAction recursiveDirectoryAction = new MyRecursiveDirectoryAction();
-    int mnemonicModifiers = SystemInfo.isMac ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK;
+    int mnemonicModifiers = Platform.current().os().isMac() ? InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK : InputEvent.ALT_DOWN_MASK;
     recursiveDirectoryAction.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mnemonicModifiers)), myFindPopupPanel);
 
     add(myDirectoryComboBox, BorderLayout.CENTER);

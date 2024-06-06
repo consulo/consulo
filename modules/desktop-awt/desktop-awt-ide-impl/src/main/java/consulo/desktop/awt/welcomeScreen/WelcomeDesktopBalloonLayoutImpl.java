@@ -16,14 +16,14 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
+import consulo.desktop.awt.internal.notification.NotificationsManagerImpl;
+import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.desktop.awt.internal.notification.NotificationsManagerImpl;
 import consulo.ide.impl.idea.ui.BalloonImpl;
-import consulo.desktop.awt.uiOld.BalloonLayoutData;
 import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.AbstractLayoutManager;
@@ -100,7 +100,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
       pane.getVerticalScrollBar().addComponentListener(new ComponentAdapter() {
         @Override
         public void componentShown(ComponentEvent e) {
-          int top = SystemInfo.isMac ? 2 : 1;
+          int top = Platform.current().os().isMac() ? 2 : 1;
           pane.setBorder(JBUI.Borders.empty(top, 0, 1, 1));
         }
 

@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.container.impl;
 
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.util.lang.SystemProperties;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
-import consulo.logging.Logger;
+import consulo.util.lang.SystemProperties;
 
 import javax.swing.*;
 
@@ -53,7 +53,7 @@ public class DesktopStartUIUtil {
      * The method should be called before java.awt.Toolkit.initAssistiveTechnologies()
      * which is called from Toolkit.getDefaultToolkit().
      */
-    if (!SystemInfo.isLinux || !SystemProperties.getBooleanProperty("linux.jdk.accessibility.atkwrapper.block", true)) return;
+    if (!Platform.current().os().isLinux() || !SystemProperties.getBooleanProperty("linux.jdk.accessibility.atkwrapper.block", true)) return;
 
     if (ScreenReader.isEnabled(ScreenReader.ATK_WRAPPER)) {
       // Replace AtkWrapper with a dummy Object. It'll be instantiated & GC'ed right away, a NOP.

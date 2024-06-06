@@ -16,34 +16,34 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.dataContext.DataManager;
+import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
+import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.desktop.awt.ui.util.AppIconUtil;
-import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.awt.internal.MouseGestureManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.FrameWrapper;
-import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.util.UISettingsUtil;
-import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.ui.FrameState;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.project.ui.internal.IdeFrameEx;
+import consulo.project.ui.wm.BalloonLayout;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.internal.IdeFrameEx;
-import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.project.ui.wm.BalloonLayout;
-import consulo.ide.impl.idea.ui.FrameState;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.Window;
-import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
-import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.ui.Rectangle2D;
-import jakarta.inject.Singleton;
-
+import consulo.ui.Window;
+import consulo.ui.ex.awt.FrameWrapper;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
+import consulo.ui.ex.awt.internal.MouseGestureManager;
+import consulo.ui.ex.awt.util.UISettingsUtil;
+import consulo.ui.ex.internal.ActionManagerEx;
+import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -75,9 +75,9 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       FrameState.setFrameStateListener(this);
       setGlassPane(new IdeGlassPaneImpl(getRootPane(), true));
 
-      boolean setMenuOnFrame = SystemInfo.isMac;
+      boolean setMenuOnFrame = Platform.current().os().isMac();
 
-      if (SystemInfo.isLinux) {
+      if (Platform.current().os().isLinux()) {
         final String desktop = System.getenv("XDG_CURRENT_DESKTOP");
         if ("Unity".equals(desktop) || "Unity:Unity7".equals(desktop)) {
           try {

@@ -25,7 +25,7 @@ import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ide.util.DownloadUtil;
 import consulo.logging.Logger;

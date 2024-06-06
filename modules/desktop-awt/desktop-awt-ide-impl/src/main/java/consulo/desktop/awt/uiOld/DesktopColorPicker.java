@@ -16,13 +16,11 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.Platform;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
@@ -30,7 +28,9 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -1055,7 +1055,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
       picker.setVisible(true);
       myTimer.start();
       // it seems like it's the lowest value for opacity for mouse events to be processed correctly
-      WindowManager.getInstance().setAlphaModeRatio(picker, SystemInfo.isMac ? 0.95f : 0.99f);
+      WindowManager.getInstance().setAlphaModeRatio(picker, Platform.current().os().isMac() ? 0.95f : 0.99f);
     }
 
     @Override

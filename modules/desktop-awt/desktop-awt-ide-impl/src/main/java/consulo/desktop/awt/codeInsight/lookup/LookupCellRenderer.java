@@ -27,7 +27,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.EmptyLookupItem;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.LookupIconUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.completion.lookup.*;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
@@ -42,6 +41,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.FList;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

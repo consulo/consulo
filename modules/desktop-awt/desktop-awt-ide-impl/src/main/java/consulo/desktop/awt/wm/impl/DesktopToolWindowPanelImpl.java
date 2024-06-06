@@ -15,32 +15,32 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.util.lang.Pair;
-import consulo.project.ui.internal.WindowInfoImpl;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
+import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.internal.WindowInfoImpl;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.ui.ex.toolWindow.*;
-import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
-
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -1136,7 +1136,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
       if (image == null || image.getWidth(null) < getWidth() || image.getHeight(null) < getHeight()) {
         final int width = Math.max(Math.max(1, getWidth()), awtWindow.getWidth());
         final int height = Math.max(Math.max(1, getHeight()), awtWindow.getHeight());
-        if (SystemInfo.isWindows) {
+        if (Platform.current().os().isWindows()) {
           image = awtWindow.getGraphicsConfiguration().createCompatibleImage(width, height);
         }
         else {

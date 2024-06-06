@@ -24,6 +24,7 @@ import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.UILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
@@ -85,7 +86,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     public final void update(@Nonnull final AnActionEvent event) {
       Presentation presentation = event.getPresentation();
 
-      presentation.setText(UIBundle.message("tool.window.hide.action.name"));
+      presentation.setTextValue(UILocalize.toolWindowHideActionName());
       boolean visible = myToolWindow.isVisible();
       presentation.setEnabled(visible);
       if (visible) {

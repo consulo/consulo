@@ -6,7 +6,7 @@ import consulo.ui.ex.awt.dnd.DnDTarget;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;

@@ -16,18 +16,18 @@
 package consulo.desktop.awt.progress;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 
 public class DispatchThreadProgressWindow extends ProgressWindow {
   private static final Logger LOG = Logger.getInstance(DispatchThreadProgressWindow.class);
 
   private long myLastPumpEventsTime = 0;
-  private static final int PUMP_INTERVAL = SystemInfo.isWindows ? 100 : 500;
+  private static final int PUMP_INTERVAL = Platform.current().os().isWindows() ? 100 : 500;
   private Runnable myRunnable;
 
   public DispatchThreadProgressWindow(boolean shouldShowCancel, Project project) {

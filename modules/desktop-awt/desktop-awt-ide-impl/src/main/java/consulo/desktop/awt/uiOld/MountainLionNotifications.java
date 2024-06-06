@@ -18,7 +18,7 @@ package consulo.desktop.awt.uiOld;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;

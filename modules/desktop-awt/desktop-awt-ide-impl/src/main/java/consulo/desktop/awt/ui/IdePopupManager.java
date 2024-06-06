@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -81,7 +81,7 @@ public final class IdePopupManager implements Predicate<AWTEvent> {
         if (KeyEvent.KEY_TYPED == e.getID()) return true;
         myIgnoreNextKeyTypedEvent = false;
       }
-      else if (SystemInfo.isMac && InputEvent.ALT_DOWN_MASK == keyEvent.getModifiersEx() && Registry.is("ide.mac.alt.mnemonic.without.ctrl") && source instanceof Component) {
+      else if (Platform.current().os().isMac() && InputEvent.ALT_DOWN_MASK == keyEvent.getModifiersEx() && Registry.is("ide.mac.alt.mnemonic.without.ctrl") && source instanceof Component) {
         // the myIgnoreNextKeyTypedEvent changes event processing to support Alt-based mnemonics on Mac only
         if (KeyEvent.KEY_TYPED == e.getID() && !IdeEventQueue.getInstance().isInputMethodEnabled() || IdeKeyEventDispatcher.hasMnemonicInWindow((Component)source, keyEvent)) {
           myIgnoreNextKeyTypedEvent = true;

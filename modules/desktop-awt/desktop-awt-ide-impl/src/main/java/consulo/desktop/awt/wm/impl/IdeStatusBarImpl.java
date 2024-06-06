@@ -18,18 +18,18 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.desktop.awt.wm.impl.status.InfoAndProgressPanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.MemoryUsagePanel;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
 import consulo.ide.impl.idea.ui.popup.NotificationPopup;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.*;
@@ -304,7 +304,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, Predica
             if (component instanceof MemoryUsagePanel) {
               Rectangle r = component.getBounds();
               r.y = 0;
-              r.width += SystemInfo.isMac ? 4 : 0;
+              r.width += Platform.current().os().isMac() ? 4 : 0;
               r.height = target.getHeight();
               component.setBounds(r);
             }

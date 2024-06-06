@@ -2,37 +2,36 @@
 package consulo.desktop.awt.editor.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
+import consulo.application.util.registry.RegistryValue;
+import consulo.awt.hacking.SunVolatileImageHacking;
+import consulo.codeEditor.*;
+import consulo.codeEditor.impl.FontLayoutService;
+import consulo.codeEditor.impl.IterationState;
 import consulo.codeEditor.internal.EditorActionPlan;
-import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.impl.DocumentImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.codeEditor.impl.FontLayoutService;
-import consulo.codeEditor.impl.IterationState;
-import consulo.codeEditor.*;
-import consulo.colorScheme.EffectType;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.colorScheme.TextAttributes;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.application.util.registry.RegistryValue;
 import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.paint.PaintUtil;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.ImageUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.awt.hacking.SunVolatileImageHacking;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.JBUIScale;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.paint.PaintUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -241,7 +240,7 @@ class ImmediatePainter {
   private static boolean isImageValid(VolatileImage image, Component component) {
     GraphicsConfiguration componentConfig = component.getGraphicsConfiguration();
     // JBR-1540
-    if (SystemInfo.isWindows && SunVolatileImageHacking.isSunVolatileImage(image)) {
+    if (Platform.current().os().isWindows() && SunVolatileImageHacking.isSunVolatileImage(image)) {
       GraphicsConfiguration imageConfig = SunVolatileImageHacking.getGraphicsConfig(image);
       if (imageConfig != null && componentConfig != null && imageConfig.getDevice() != componentConfig.getDevice()) return false;
     }
