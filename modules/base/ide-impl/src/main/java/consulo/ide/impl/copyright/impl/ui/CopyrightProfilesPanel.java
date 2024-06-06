@@ -29,7 +29,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidator;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;

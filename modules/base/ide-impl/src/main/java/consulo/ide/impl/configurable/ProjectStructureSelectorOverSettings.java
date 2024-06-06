@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectL
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;

@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;

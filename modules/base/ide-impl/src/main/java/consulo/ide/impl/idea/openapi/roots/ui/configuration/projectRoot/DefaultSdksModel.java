@@ -25,7 +25,7 @@ import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.ProjectBundle;

@@ -19,7 +19,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 
 import jakarta.annotation.Nullable;

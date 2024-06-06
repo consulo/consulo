@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.S
 import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.bundle.SettingsSdksModel;
-import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;

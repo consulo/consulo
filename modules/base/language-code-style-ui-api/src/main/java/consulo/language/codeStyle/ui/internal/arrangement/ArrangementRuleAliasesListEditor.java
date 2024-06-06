@@ -19,12 +19,12 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
-import consulo.language.codeStyle.ui.internal.copypaste.DeprecatedNamedItemsListEditor;
+import consulo.ui.ex.awt.NamedItemsListEditor;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 /**
  * @author Svetlana.Zemlyanskaya
  */
-public class ArrangementRuleAliasesListEditor extends DeprecatedNamedItemsListEditor<StdArrangementRuleAliasToken> {
+public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdArrangementRuleAliasToken> {
   private static final Namer<StdArrangementRuleAliasToken> NAMER = new Namer<StdArrangementRuleAliasToken>() {
     @Override
     public String getName(StdArrangementRuleAliasToken token) {
