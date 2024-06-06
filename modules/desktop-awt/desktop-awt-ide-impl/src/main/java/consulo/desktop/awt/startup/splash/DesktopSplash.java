@@ -17,6 +17,7 @@ package consulo.desktop.awt.startup.splash;
 
 import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.application.ApplicationProperties;
@@ -42,7 +43,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
     super(null, false);
 
     setUndecorated(true);
-    if (!(SystemInfo.isLinux && SystemInfo.isJavaVersionAtLeast(7))) {
+    if (!(Platform.current().os().isLinux() && SystemInfo.isJavaVersionAtLeast(7))) {
       setResizable(false);
     }
     setFocusableWindowState(false);
@@ -63,7 +64,7 @@ public class DesktopSplash extends JDialogAsUIWindow implements StartupProgress 
 
   private void setLocationInTheCenterOfScreen() {
     Rectangle bounds = getGraphicsConfiguration().getBounds();
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       Insets insets = ScreenUtil.getScreenInsets(getGraphicsConfiguration());
       int x = insets.left + (bounds.width - insets.left - insets.right - getWidth()) / 2;
       int y = insets.top + (bounds.height - insets.top - insets.bottom - getHeight()) / 2;

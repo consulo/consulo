@@ -21,30 +21,28 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.IdeEventQueue;
+import consulo.desktop.awt.ui.ProhibitAWTEvents;
+import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.dataContext.BaseDataManager;
-import consulo.desktop.awt.ui.ProhibitAWTEvents;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
-import consulo.desktop.awt.ui.keymap.keyGesture.KeyboardGestureProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;
 import consulo.ide.impl.idea.ui.KeyStrokeAdapter;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
@@ -65,6 +63,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.*;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -118,7 +117,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     if (myState == KeyState.STATE_WAIT_FOR_SECOND_KEYSTROKE) {
       resetState();
       final DataContext dataContext = myContext.getDataContext();
-      StatusBar.Info.set(null, dataContext == null ? null : dataContext.getData(CommonDataKeys.PROJECT));
+      StatusBar.Info.set(null, dataContext == null ? null : dataContext.getData(Project.KEY));
     }
   };
 
@@ -332,7 +331,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     if (KeyEvent.KEY_RELEASED == e.getID()) {
       myFirstKeyStroke = null;
       setState(KeyState.STATE_INIT);
-      Project project = myContext.getDataContext().getData(CommonDataKeys.PROJECT);
+      Project project = myContext.getDataContext().getData(Project.KEY);
       StatusBar.Info.set(null, project);
       return false;
     }
@@ -351,7 +350,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
     }
 
     // finally user had managed to enter the second keystroke, so let it be processed
-    Project project = myContext.getDataContext().getData(CommonDataKeys.PROJECT);
+    Project project = myContext.getDataContext().getData(Project.KEY);
     StatusBarEx statusBar = (StatusBarEx)WindowManager.getInstance().getStatusBar(project);
     if (processAction(e, myActionProcessor)) {
       if (statusBar != null) {
@@ -418,7 +417,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       return true;
     }
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       boolean keyTyped = e.getID() == KeyEvent.KEY_TYPED;
       boolean hasMnemonicsInWindow =
         e.getID() == KeyEvent.KEY_PRESSED && hasMnemonicInWindow(focusOwner, e.getKeyCode()) || keyTyped && hasMnemonicInWindow(focusOwner,
@@ -442,7 +441,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
       myFirstKeyStroke = keyStroke;
       final ArrayList<Pair<AnAction, KeyStroke>> secondKeyStrokes = getSecondKeystrokeActions();
 
-      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      final Project project = dataContext.getData(Project.KEY);
       StringBuilder message = new StringBuilder();
       message.append(KeyMapBundle.message("prefix.key.pressed.message"));
       message.append(' ');
@@ -471,7 +470,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
           final DataContext oldContext = myContext.getDataContext();
           mySecondKeystrokePopupTimeout = Application.get().getLastUIAccess().getScheduler().schedule(() -> {
             if (myState == KeyState.STATE_WAIT_FOR_SECOND_KEYSTROKE) {
-              StatusBar.Info.set(null, oldContext.getData(CommonDataKeys.PROJECT));
+              StatusBar.Info.set(null, oldContext.getData(Project.KEY));
               new SecondaryKeystrokePopup(myFirstKeyStroke, secondKeyStrokes, oldContext).showInBestPositionFor(oldContext);
             }
           }, Registry.intValue("actionSystem.secondKeystrokePopupTimeout"), TimeUnit.MILLISECONDS);
@@ -618,7 +617,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
   public boolean processAction(final InputEvent e, @Nonnull ActionProcessor processor) {
     ActionManagerEx actionManager = ActionManagerEx.getInstanceEx();
-    final Project project = myContext.getDataContext().getData(CommonDataKeys.PROJECT);
+    final Project project = myContext.getDataContext().getData(Project.KEY);
     final boolean dumb = project != null && DumbService.getInstance(project).isDumb();
     List<AnActionEvent> nonDumbAwareAction = new ArrayList<>();
     List<AnAction> actions = myContext.getActions();

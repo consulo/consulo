@@ -18,19 +18,17 @@ package consulo.desktop.awt.wm.impl;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataProvider;
 import consulo.desktop.awt.ui.animation.AlphaAnimated;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction;
 import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
@@ -54,10 +52,12 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -142,7 +142,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
     contentPane.add(inner, BorderLayout.CENTER);
     add(contentPane, BorderLayout.CENTER);
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       setBackground(new JBColor(Gray._200, Gray._90));
     }
 
@@ -634,7 +634,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Override
     public void update(@Nonnull AnActionEvent e) {
       super.update(e);
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         e.getPresentation().setEnabledAndVisible(false);
       }
     }

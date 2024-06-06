@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.SaveAndSyncHandler;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.platform.base.localize.UILocalize;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.NodeRenderer;
@@ -35,7 +35,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -116,7 +116,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
   private static String getChooserTitle(final FileChooserDescriptor descriptor) {
     final String title = descriptor.getTitle();
-    return title != null ? title : UIBundle.message("file.chooser.default.title");
+    return title != null ? title : UILocalize.fileChooserDefaultTitle().get();
   }
 
   @Override
@@ -552,7 +552,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     }
 
     public Object getData(@Nonnull Key<?> dataId) {
-      if (CommonDataKeys.VIRTUAL_FILE_ARRAY == dataId) {
+      if (VirtualFile.KEY_OF_ARRAY == dataId) {
         return myFileSystemTree.getSelectedFiles();
       }
       else if (PathField.PATH_FIELD == dataId) {
@@ -607,11 +607,9 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
       }
     }
 
-    myPathTextField.setText(text, now, new Runnable() {
-      public void run() {
-        myPathTextField.getField().selectAll();
-        setErrorText(null);
-      }
+    myPathTextField.setText(text, now, () -> {
+      myPathTextField.getField().selectAll();
+      setErrorText(null);
     });
   }
 
@@ -622,17 +620,15 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
 
     myUiUpdater.queue(new Update("treeFromPath.1") {
       public void run() {
-        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-          public void run() {
-            final LocalFsFinder.VfsFile toFind = (LocalFsFinder.VfsFile)myPathTextField.getFile();
-            if (toFind == null || !toFind.exists()) return;
+        ApplicationManager.getApplication().executeOnPooledThread((Runnable) () -> {
+          final LocalFsFinder.VfsFile toFind = (LocalFsFinder.VfsFile)myPathTextField.getFile();
+          if (toFind == null || !toFind.exists()) return;
 
-            myUiUpdater.queue(new Update("treeFromPath.2") {
-              public void run() {
-                selectInTree(toFind.getFile(), text);
-              }
-            });
-          }
+          myUiUpdater.queue(new Update("treeFromPath.2") {
+            public void run() {
+              selectInTree(toFind.getFile(), text);
+            }
+          });
         });
       }
     });
@@ -653,19 +649,17 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     myTreeIsUpdating = true;
     final List<VirtualFile> fileList = Arrays.asList(array);
     if (!Arrays.asList(myFileSystemTree.getSelectedFiles()).containsAll(fileList)) {
-      myFileSystemTree.select(array, new Runnable() {
-        public void run() {
-          if (!myFileSystemTree.areHiddensShown() && !Arrays.asList(myFileSystemTree.getSelectedFiles()).containsAll(fileList)) {
-            myFileSystemTree.showHiddens(true);
-            selectInTree(array, requestFocus);
-            return;
-          }
+      myFileSystemTree.select(array, () -> {
+        if (!myFileSystemTree.areHiddensShown() && !Arrays.asList(myFileSystemTree.getSelectedFiles()).containsAll(fileList)) {
+          myFileSystemTree.showHiddens(true);
+          selectInTree(array, requestFocus);
+          return;
+        }
 
-          myTreeIsUpdating = false;
-          setErrorText(null);
-          if (requestFocus) {
-            IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileSystemTree.getTree());
-          }
+        myTreeIsUpdating = false;
+        setErrorText(null);
+        if (requestFocus) {
+          IdeFocusManager.getGlobalInstance().doForceFocusWhenFocusSettlesDown(myFileSystemTree.getTree());
         }
       });
     }

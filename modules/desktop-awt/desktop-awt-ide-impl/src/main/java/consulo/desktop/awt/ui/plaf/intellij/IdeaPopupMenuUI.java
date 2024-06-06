@@ -2,10 +2,10 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.desktop.awt.action.ActionMenu;
-import consulo.ui.ex.awt.JBPopupMenu;
-import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
+import consulo.platform.Platform;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.JBValue;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 
@@ -76,7 +76,7 @@ public class IdeaPopupMenuUI extends BasicPopupMenuUI {
       g.drawRoundRect(0, 0, rectangle.width - 1, rectangle.height - 1, cornerRadiusX, cornerRadiusY);
     }
     else {
-      int delta = SystemInfoRt.isMac ? 0 : 1;
+      int delta = Platform.current().os().isMac() ? 0 : 1;
       g.fillRect(0, 0, rectangle.width - delta, rectangle.height - delta);
       g.setColor(borderColor);
       g.drawRect(0, 0, rectangle.width - delta, rectangle.height - delta);

@@ -20,22 +20,20 @@
 package consulo.ide.impl.idea.openapi.editor.colors.impl;
 
 import consulo.application.ui.UISettings;
+import consulo.application.util.SystemInfo;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.*;
-import consulo.colorScheme.FontSize;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
 import consulo.colorScheme.impl.FontPreferencesImpl;
-import consulo.util.xml.serializer.WriteExternalException;
-import java.util.HashMap;
-import consulo.ui.ex.awt.JBUI;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.style.StandardColors;
-import org.jdom.Element;
-
+import consulo.util.lang.Comparing;
+import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -302,20 +300,22 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
     for (final Element childNode : node.getChildren()) {
       String childName = childNode.getName();
-      if (OPTION_ELEMENT.equals(childName)) {
-        readSettings(childNode);
-      }
-      else if (EDITOR_FONT.equals(childName)) {
-        readFontSettings(childNode, myFontPreferences);
-      }
-      else if (CONSOLE_FONT.equals(childName)) {
-        readFontSettings(childNode, myConsoleFontPreferences);
-      }
-      else if (COLORS_ELEMENT.equals(childName)) {
-        readColors(childNode);
-      }
-      else if (ATTRIBUTES_ELEMENT.equals(childName)) {
-        readAttributes(childNode);
+      switch (childName) {
+        case OPTION_ELEMENT:
+          readSettings(childNode);
+          break;
+        case EDITOR_FONT:
+          readFontSettings(childNode, myFontPreferences);
+          break;
+        case CONSOLE_FONT:
+          readFontSettings(childNode, myConsoleFontPreferences);
+          break;
+        case COLORS_ELEMENT:
+          readColors(childNode);
+          break;
+        case ATTRIBUTES_ELEMENT:
+          readAttributes(childNode);
+          break;
       }
     }
 
@@ -335,6 +335,15 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     initFonts();
+  }
+
+  public void readExternalAttributes(@Nonnull Element childNode) {
+    readAttributes(childNode);
+
+    Element colorsElement = childNode.getChild(COLORS_ELEMENT);
+    if (colorsElement != null) {
+      readColors(colorsElement);
+    }
   }
 
   protected void readAttributes(@Nonnull Element childNode) {

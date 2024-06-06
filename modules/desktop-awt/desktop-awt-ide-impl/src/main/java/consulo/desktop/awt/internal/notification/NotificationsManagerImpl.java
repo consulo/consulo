@@ -33,6 +33,7 @@ import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.idea.ui.NotificationBalloonShadowBorderProvider;
 import consulo.ide.impl.idea.ui.components.GradientViewport;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
@@ -939,10 +940,10 @@ public class NotificationsManagerImpl extends NotificationsManager {
         g.setColor(new JBColor(0xE3E3E3, 0x3A3C3D));
         ((Graphics2D)g).fill(new Rectangle2D.Double(1.5, 1, getWidth() - 2.5, getHeight() - 2));
         g.setColor(new JBColor(0xDBDBDB, 0x353738));
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           ((Graphics2D)g).draw(new Rectangle2D.Double(2, 0, getWidth() - 3.5, 0.5));
         }
-        else if (SystemInfo.isWindows) {
+        else if (Platform.current().os().isWindows()) {
           ((Graphics2D)g).draw(new Rectangle2D.Double(1.5, 0, getWidth() - 3, 0.5));
         }
         else {

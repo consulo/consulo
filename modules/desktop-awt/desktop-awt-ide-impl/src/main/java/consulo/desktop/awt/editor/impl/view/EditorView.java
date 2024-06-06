@@ -24,13 +24,13 @@ import consulo.disposer.Disposer;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;

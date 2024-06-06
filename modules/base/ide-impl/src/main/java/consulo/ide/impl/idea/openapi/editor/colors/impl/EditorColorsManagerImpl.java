@@ -22,33 +22,34 @@ import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.persist.*;
+import consulo.component.persist.scheme.BaseSchemeProcessor;
+import consulo.component.persist.scheme.SchemeManager;
+import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.impl.idea.ide.ui.LafManager;
-import consulo.component.persist.scheme.BaseSchemeProcessor;
-import consulo.component.persist.scheme.SchemeManagerFactory;
-import consulo.component.persist.scheme.SchemeManager;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.io.URLUtil;
+import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
 @Singleton
 @State(name = "EditorColorsManagerImpl",
-        // make roamingType per platform, due user can use light laf on one platform, and dark on other
-        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS), additionalExportFile = EditorColorsManagerImpl.FILE_SPEC)
+  // make roamingType per platform, due user can use light laf on one platform, and dark on other
+  storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS), additionalExportFile = EditorColorsManagerImpl.FILE_SPEC)
 @ServiceImpl
 public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance(EditorColorsManagerImpl.class);
@@ -57,7 +58,8 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   private static final String DEFAULT_NAME = "Default";
   static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + "/colors";
 
-  private final ComponentTreeEventDispatcher<EditorColorsListener> myTreeDispatcher = ComponentTreeEventDispatcher.create(EditorColorsListener.class);
+  private final ComponentTreeEventDispatcher<EditorColorsListener> myTreeDispatcher =
+    ComponentTreeEventDispatcher.create(EditorColorsListener.class);
 
   private final SchemeManager<EditorColorsScheme, EditorColorsSchemeImpl> mySchemeManager;
   private State myState = new State();
@@ -65,56 +67,57 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   @Inject
   public EditorColorsManagerImpl(@Nonnull Application application, @Nonnull SchemeManagerFactory schemeManagerFactory) {
-    mySchemeManager = schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
-      @Nonnull
-      @Override
-      public EditorColorsSchemeImpl readScheme(@Nonnull Element element) {
-        EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
-        scheme.readExternal(element);
-        return scheme;
-      }
-
-      @Override
-      public Element writeScheme(@Nonnull final EditorColorsSchemeImpl scheme) {
-        Element root = new Element(SCHEME_NODE_NAME);
-        try {
-          scheme.writeExternal(root);
+    mySchemeManager =
+      schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
+        @Nonnull
+        @Override
+        public EditorColorsSchemeImpl readScheme(@Nonnull Element element) {
+          EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
+          scheme.readExternal(element);
+          return scheme;
         }
-        catch (WriteExternalException e) {
-          LOG.error(e);
-          return null;
+
+        @Override
+        public Element writeScheme(@Nonnull final EditorColorsSchemeImpl scheme) {
+          Element root = new Element(SCHEME_NODE_NAME);
+          try {
+            scheme.writeExternal(root);
+          }
+          catch (WriteExternalException e) {
+            LOG.error(e);
+            return null;
+          }
+          return root;
         }
-        return root;
-      }
 
-      @Nonnull
-      @Override
-      public State getState(@Nonnull EditorColorsSchemeImpl scheme) {
-        return scheme instanceof ReadOnlyColorsScheme ? State.NON_PERSISTENT : State.POSSIBLY_CHANGED;
-      }
+        @Nonnull
+        @Override
+        public State getState(@Nonnull EditorColorsSchemeImpl scheme) {
+          return scheme instanceof ReadOnlyColorsScheme ? State.NON_PERSISTENT : State.POSSIBLY_CHANGED;
+        }
 
-      @Override
-      public void onCurrentSchemeChanged(final EditorColorsSchemeImpl newCurrentScheme) {
-        fireChanges(mySchemeManager.getCurrentScheme());
-      }
+        @Override
+        public void onCurrentSchemeChanged(final EditorColorsSchemeImpl newCurrentScheme) {
+          fireChanges(mySchemeManager.getCurrentScheme());
+        }
 
-      @Nonnull
-      @Override
-      public String getSchemeExtension() {
-        return ".icls";
-      }
+        @Nonnull
+        @Override
+        public String getSchemeExtension() {
+          return ".icls";
+        }
 
-      @Override
-      public boolean isUpgradeNeeded() {
-        return true;
-      }
+        @Override
+        public boolean isUpgradeNeeded() {
+          return true;
+        }
 
-      @Nonnull
-      @Override
-      public String getName(@Nonnull EditorColorsScheme immutableElement) {
-        return immutableElement.getName();
-      }
-    }, RoamingType.DEFAULT);
+        @Nonnull
+        @Override
+        public String getName(@Nonnull EditorColorsScheme immutableElement) {
+          return immutableElement.getName();
+        }
+      }, RoamingType.DEFAULT);
 
     addDefaultSchemes();
 
@@ -154,22 +157,37 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     // It is reasonable to fetch attributes from Default color scheme. Otherwise if we launch IDE and then
     // try switch from custom colors scheme (e.g. with dark background) to default one. Editor will show
     // incorrect highlighting with "traces" of color scheme which was active during IDE startup.
-    return getScheme(dark ? "Darcula" : EditorColorsScheme.DEFAULT_SCHEME_NAME).getAttributes(key);
+    return getScheme(dark ? EditorColorsScheme.DARCULA_SCHEME_NAME : EditorColorsScheme.DEFAULT_SCHEME_NAME).getAttributes(key);
   }
 
   private void loadAdditionalTextAttributes(@Nonnull Application application) {
     application.getExtensionPoint(AdditionalTextAttributesProvider.class).forEachExtensionSafe(provider -> {
       EditorColorsScheme editorColorsScheme = mySchemeManager.findSchemeByName(provider.getColorSchemeName());
+      Class<? extends AdditionalTextAttributesProvider> providerClass = provider.getClass();
       if (editorColorsScheme == null) {
         if (!isUnitTestOrHeadlessMode()) {
-          LOG.warn("Cannot find scheme: " + provider.getColorSchemeName() + " from plugin: " + PluginManager.getPlugin(provider.getClass()).getPluginId());
+          LOG.warn("Cannot find scheme: " + provider.getColorSchemeName() + " from plugin: " + PluginManager.getPlugin(providerClass)
+                                                                                                            .getPluginId());
         }
         return;
       }
-      try {
-        URL resource = provider.getClass().getResource(provider.getColorSchemeFile());
-        assert resource != null;
-        ((AbstractColorsScheme)editorColorsScheme).readAttributes(JDOMUtil.load(URLUtil.openStream(resource)));
+      String colorSchemeFile = provider.getColorSchemeFile();
+
+      String resourceName;
+      URL resource;
+      if (AdditionalTextAttributesProvider.THIS_CLASS_NAME.equals(colorSchemeFile)) {
+        resource = providerClass.getResource(resourceName = providerClass.getSimpleName() + ".xml");
+      }
+      else {
+        resource = providerClass.getResource(resourceName = colorSchemeFile);
+      }
+
+      if (resource == null) {
+        throw new IllegalArgumentException("Resource " + resourceName + " not resolved.");
+      }
+
+      try (InputStream stream = URLUtil.openStream(resource)) {
+        ((AbstractColorsScheme)editorColorsScheme).readExternalAttributes(JDOMUtil.load(stream));
       }
       catch (Exception e) {
         LOG.error(e);

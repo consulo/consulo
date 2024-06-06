@@ -21,13 +21,13 @@ import consulo.codeEditor.*;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
 import consulo.util.collection.FList;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

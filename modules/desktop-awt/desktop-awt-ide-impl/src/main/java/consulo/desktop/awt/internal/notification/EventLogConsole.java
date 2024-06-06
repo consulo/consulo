@@ -33,9 +33,8 @@ import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.ide.impl.idea.notification.impl.NotificationSettings;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerAdapter;
@@ -341,19 +340,16 @@ class EventLogConsole {
     colorHighlighter.setErrorStripeMarkColor(color);
     colorHighlighter.setErrorStripeTooltip(message);
 
-    final Runnable removeHandler = new Runnable() {
-      @Override
-      public void run() {
-        if (colorHighlighter.isValid()) {
-          markupModel.removeHighlighter(colorHighlighter);
-        }
+    final Runnable removeHandler = () -> {
+      if (colorHighlighter.isValid()) {
+        markupModel.removeHighlighter(colorHighlighter);
+      }
 
-        TextAttributes italic = new TextAttributes(null, null, null, null, Font.ITALIC);
-        for (int line = startLine; line < endLine; line++) {
-          for (RangeHighlighter highlighter : myHyperlinkSupport.getValue().findAllHyperlinksOnLine(line)) {
-            markupModel.addRangeHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), HighlighterLayer.CARET_ROW + 2, italic, HighlighterTargetArea.EXACT_RANGE);
-            myHyperlinkSupport.getValue().removeHyperlink(highlighter);
-          }
+      TextAttributes italic = new TextAttributes(null, null, null, null, Font.ITALIC);
+      for (int line = startLine; line < endLine; line++) {
+        for (RangeHighlighter highlighter : myHyperlinkSupport.getValue().findAllHyperlinksOnLine(line)) {
+          markupModel.addRangeHighlighter(highlighter.getStartOffset(), highlighter.getEndOffset(), HighlighterLayer.CARET_ROW + 2, italic, HighlighterTargetArea.EXACT_RANGE);
+          myHyperlinkSupport.getValue().removeHyperlink(highlighter);
         }
       }
     };
@@ -422,15 +418,12 @@ class EventLogConsole {
     EditorEx editor = (EditorEx)getConsoleEditor();
     final Ref<RangeHighlighterEx> highlighter = new Ref<>();
 
-    editor.getMarkupModel().processRangeHighlightersOverlappingWith(0, editor.getDocument().getTextLength(), new Processor<>() {
-      @Override
-      public boolean process(RangeHighlighterEx rangeHighlighter) {
-        if (id.equals(NOTIFICATION_ID.get(rangeHighlighter))) {
-          highlighter.set(rangeHighlighter);
-          return false;
-        }
-        return true;
+    editor.getMarkupModel().processRangeHighlightersOverlappingWith(0, editor.getDocument().getTextLength(), rangeHighlighter -> {
+      if (id.equals(NOTIFICATION_ID.get(rangeHighlighter))) {
+        highlighter.set(rangeHighlighter);
+        return false;
       }
+      return true;
     });
 
     return highlighter.get();
@@ -462,7 +455,7 @@ class EventLogConsole {
 
     @Override
     public void update(AnActionEvent e) {
-      Editor editor = e.getData(CommonDataKeys.EDITOR);
+      Editor editor = e.getData(Editor.KEY);
       e.getPresentation().setEnabled(editor != null && editor.getDocument().getTextLength() > 0);
     }
 
@@ -473,7 +466,7 @@ class EventLogConsole {
         model.removeNotification(notification);
       }
       model.setStatusMessage(null, 0);
-      final Editor editor = e.getData(CommonDataKeys.EDITOR);
+      final Editor editor = e.getData(Editor.KEY);
       if (editor != null) {
         editor.getDocument().deleteString(0, editor.getDocument().getTextLength());
       }

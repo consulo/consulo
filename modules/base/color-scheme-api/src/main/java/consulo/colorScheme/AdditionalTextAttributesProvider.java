@@ -17,7 +17,6 @@ package consulo.colorScheme;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -29,9 +28,16 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalTextAttributesProvider {
+  String THIS_CLASS_NAME = "___this___class___name";
+
   @Nonnull
   String getColorSchemeName();
 
+  /**
+   * If method not implemented - used class as name with .xml extension
+   */
   @Nonnull
-  String getColorSchemeFile();
+  default String getColorSchemeFile() {
+    return THIS_CLASS_NAME;
+  }
 }

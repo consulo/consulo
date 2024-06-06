@@ -16,8 +16,8 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.AllIcons;
-import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.internal.notification.NotificationsManagerImpl;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
@@ -66,11 +66,11 @@ public class BalloonLayoutConfiguration {
   static {
     int width;
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       width = 360;
       RawStyleWidth = 240;
     }
-    else if (SystemInfo.isLinux) {
+    else if (Platform.current().os().isLinux()) {
       width = 410;
       RawStyleWidth = 270;
     }

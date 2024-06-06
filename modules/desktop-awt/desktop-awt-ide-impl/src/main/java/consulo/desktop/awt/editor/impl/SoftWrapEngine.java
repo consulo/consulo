@@ -10,14 +10,13 @@ import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
+import consulo.desktop.awt.editor.impl.view.EditorView;
+import consulo.desktop.awt.editor.impl.view.WrapElementMeasuringIterator;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.desktop.awt.editor.impl.view.EditorView;
-import consulo.desktop.awt.editor.impl.view.WrapElementMeasuringIterator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 /**

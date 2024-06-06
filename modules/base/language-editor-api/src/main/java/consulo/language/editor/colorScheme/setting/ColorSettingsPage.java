@@ -60,5 +60,7 @@ public interface ColorSettingsPage extends ColorAndFontDescriptors {
    * does not contain any additional highlighting tags.
    */
   @Nullable
-  Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap();
+  default Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
+    return Map.of();
+  }
 }

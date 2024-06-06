@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
@@ -744,7 +743,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     if (EditorGutter.KEY == dataId) {
       return this;
     }
-    if (CommonDataKeys.EDITOR == dataId) {
+    if (Editor.KEY == dataId) {
       return myEditor;
     }
     if (EditorGutterComponentEx.LOGICAL_LINE_AT_CURSOR == dataId) {
@@ -1753,7 +1752,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
       RelativePoint showPoint = new RelativePoint(this, t.get());
 
       TooltipRenderer tr =
-        ((EditorMarkupModel)myEditor.getMarkupModel()).getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip);
+        myEditor.getMarkupModel().getErrorStripTooltipRendererProvider().calcTooltipRenderer(toolTip);
       HintHint hint =
         new HintHint(this, t.get()).setAwtTooltip(true).setPreferredPosition(ballPosition).setRequestFocus(ScreenReader.isActive());
       if (myEditor.getComponent().getRootPane() != null) {

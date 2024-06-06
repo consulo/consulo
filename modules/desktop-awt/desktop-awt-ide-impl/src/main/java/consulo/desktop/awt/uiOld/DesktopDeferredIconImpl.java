@@ -26,7 +26,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.ui.PaintingParent;
 import consulo.ide.impl.idea.ui.RetrievableIcon;
 import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;

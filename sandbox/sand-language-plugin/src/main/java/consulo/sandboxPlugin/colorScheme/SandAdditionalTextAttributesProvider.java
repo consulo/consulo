@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.desktop.awt.ui.plaf;
+package consulo.sandboxPlugin.colorScheme;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.eap.EarlyAccessProgramDescriptor;
-import consulo.platform.Platform;
+import consulo.colorScheme.AdditionalTextAttributesProvider;
+import consulo.colorScheme.EditorColorsScheme;
 import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 6/7/17
+ * @since 06/06/2024
  */
 @ExtensionImpl
-public class GTKPlusEAPDescriptor extends EarlyAccessProgramDescriptor {
+public class SandAdditionalTextAttributesProvider implements AdditionalTextAttributesProvider {
   @Nonnull
   @Override
-  public String getName() {
-    return "Enabled GTK+ theme";
-  }
-
-  @Override
-  public boolean isAvailable() {
-    return Platform.current().os().isLinux();
-  }
-
-  @Override
-  public boolean isRestartRequired() {
-    return true;
+  public String getColorSchemeName() {
+    return EditorColorsScheme.DEFAULT_SCHEME_NAME;
   }
 }

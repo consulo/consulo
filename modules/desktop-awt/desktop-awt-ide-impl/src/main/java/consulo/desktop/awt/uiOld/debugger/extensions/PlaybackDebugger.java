@@ -23,13 +23,13 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.ServiceManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackRunner;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
@@ -190,7 +190,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
     @Override
     public void actionPerformed(AnActionEvent e) {
       if (pathToFile() == null) {
-        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(CommonDataKeys.PROJECT), null);
+        VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(Project.KEY), null);
         if (selectedFile != null) {
           myState.currentScript = selectedFile.getPresentableUrl();
           myCurrentScript.setText(myState.currentScript);
@@ -232,7 +232,7 @@ public class PlaybackDebugger implements UiDebuggerExtension, PlaybackRunner.Sta
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(CommonDataKeys.PROJECT), pathToFile());
+      VirtualFile selectedFile = IdeaFileChooser.chooseFile(FILE_DESCRIPTOR, myComponent, e == null ? null : e.getData(Project.KEY), pathToFile());
       if (selectedFile != null) {
         myState.currentScript = selectedFile.getPresentableUrl();
         loadFrom(selectedFile);

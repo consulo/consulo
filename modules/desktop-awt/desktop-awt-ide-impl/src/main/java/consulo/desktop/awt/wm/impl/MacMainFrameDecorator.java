@@ -21,6 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.component.util.BuildNumber;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.ide.impl.idea.ui.CustomProtocolHandler;
 import consulo.application.util.mac.foundation.Foundation;
@@ -212,7 +213,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     assert jFrame != null;
 
     try {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         FullScreenUtilitiesWrapper.setWindowCanFullScreen(jFrame, true);
         // Native fullscreen listener can be set only once
         FullScreenUtilitiesWrapper.addFullScreenListenerTo(jFrame, new FullScreenListenerWrapper() {
