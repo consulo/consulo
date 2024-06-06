@@ -34,7 +34,7 @@ import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ObjectUtil;
 

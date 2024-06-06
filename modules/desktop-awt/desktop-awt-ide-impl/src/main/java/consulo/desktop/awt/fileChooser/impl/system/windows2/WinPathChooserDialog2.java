@@ -37,7 +37,7 @@ import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 
 import jakarta.annotation.Nonnull;

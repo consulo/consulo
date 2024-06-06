@@ -78,7 +78,7 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.*;
