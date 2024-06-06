@@ -2831,14 +2831,14 @@
     </action>
 
     <group id="RemoteServersViewToolbar">
-      <action id="RemoteServers.RunServer" class="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions.RunServerAction"/>
+      <action id="RemoteServers.RunServer" class="consulo.remoteServer.impl.internal.ui.tree.action.RunServerAction"/>
       <action id="RemoteServers.DebugServer"
-              class="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions.DebugServerAction"/>
-      <action id="RemoteServers.StopServer" class="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions.StopServerAction"/>
+              class="consulo.remoteServer.impl.internal.ui.tree.action.DebugServerAction"/>
+      <action id="RemoteServers.StopServer" class="consulo.remoteServer.impl.internal.ui.tree.action.StopServerAction"/>
       <action id="RemoteServers.EditServer"
-              class="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions.EditConfigurationAction"/>
+              class="consulo.remoteServer.impl.internal.ui.tree.action.EditConfigurationAction"/>
       <separator/>
-      <action id="RemoteServers.DeployAll" class="consulo.ide.impl.idea.remoteServer.impl.runtime.ui.tree.actions.DeployAllAction"/>
+      <action id="RemoteServers.DeployAll" class="consulo.remoteServer.impl.internal.ui.tree.action.DeployAllAction"/>
     </group>
 
     <group id="task.actions">
