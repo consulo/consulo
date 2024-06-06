@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.desktop.awt.migration;
+package consulo.desktop.awt.uiOld;
 
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.AWTComponentProvider;

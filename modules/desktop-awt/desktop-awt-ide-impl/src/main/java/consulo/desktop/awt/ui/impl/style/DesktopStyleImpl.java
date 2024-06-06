@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.MorphValue;
-import consulo.ide.impl.desktop.awt.laf.GTKPlusUIUtil;
+import consulo.desktop.awt.uiOld.GTKPlusUIUtil;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;

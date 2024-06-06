@@ -39,7 +39,7 @@ import consulo.desktop.awt.ui.plaf.intellij.IntelliJLookAndFeelInfo;
 import consulo.desktop.awt.ui.plaf.mac.MacButtonlessScrollbarUI;
 import consulo.disposer.Disposable;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.desktop.awt.laf.GTKPlusUIUtil;
+import consulo.desktop.awt.uiOld.GTKPlusUIUtil;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.platform.Platform;

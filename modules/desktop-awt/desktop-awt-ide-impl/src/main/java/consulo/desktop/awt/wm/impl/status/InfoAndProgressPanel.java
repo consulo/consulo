@@ -17,7 +17,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.internal.FileEditorManagerEx;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;

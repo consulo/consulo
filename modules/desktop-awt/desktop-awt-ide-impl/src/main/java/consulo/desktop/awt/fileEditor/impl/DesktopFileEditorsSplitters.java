@@ -25,7 +25,7 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.internal.AsyncConfigTreeReader;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.ide.impl.idea.diagnostic.Activity;
 import consulo.ide.impl.idea.diagnostic.ActivityCategory;

@@ -44,7 +44,7 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.EditorNotifications;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;

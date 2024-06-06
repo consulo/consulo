@@ -25,12 +25,15 @@ import jakarta.inject.Inject;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 02/02/2023
  */
+@Singleton
 @ServiceImpl
 public class ShowConfigurableServiceImpl implements ShowConfigurableService {
   private final ShowSettingsUtil myShowSettingsUtil;

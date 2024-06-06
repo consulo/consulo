@@ -21,7 +21,7 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
+import consulo.desktop.awt.uiOld.AWTComponentProviderUtil;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
