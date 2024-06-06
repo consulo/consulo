@@ -23,12 +23,12 @@ import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.internal.FrequentEventDetector;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.InvocationUtil;
 import consulo.awt.hacking.PostEventQueueHacking;
@@ -43,13 +43,11 @@ import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.ide.AWTIdleHolder;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.dnd.DnDManagerImpl;
-import consulo.application.internal.FrequentEventDetector;
 import consulo.ide.impl.idea.openapi.keymap.KeyboardSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.keymap.impl.KeyState;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -58,8 +56,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -538,7 +538,7 @@ public class IdeEventQueue extends EventQueue {
 
   @Nonnull
   private static AWTEvent mapEvent(@Nonnull AWTEvent e) {
-    return SystemInfo.isXWindow && e instanceof MouseEvent && ((MouseEvent)e).getButton() > 3 ? mapXWindowMouseEvent((MouseEvent)e) : e;
+    return Platform.current().os().isXWindow() && e instanceof MouseEvent && ((MouseEvent)e).getButton() > 3 ? mapXWindowMouseEvent((MouseEvent)e) : e;
   }
 
   @Nonnull
@@ -649,7 +649,7 @@ public class IdeEventQueue extends EventQueue {
     if (dispatchByCustomDispatchers(e)) return;
 
     if (e instanceof InputMethodEvent) {
-      if (SystemInfo.isMac && myKeyEventDispatcher.isWaitingForSecondKeyStroke()) {
+      if (Platform.current().os().isMac() && myKeyEventDispatcher.isWaitingForSecondKeyStroke()) {
         return;
       }
     }
@@ -923,7 +923,7 @@ public class IdeEventQueue extends EventQueue {
         }
         else {
           UISettings uiSettings = UISettings.getInstanceOrNull();
-          if (uiSettings == null || !SystemInfo.isWindows || !Registry.is("actionSystem.win.suppressAlt") || !(uiSettings.getHideToolStripes() || uiSettings.getPresentationMode())) {
+          if (uiSettings == null || !Platform.current().os().isWindows() || !Registry.is("actionSystem.win.suppressAlt") || !(uiSettings.getHideToolStripes() || uiSettings.getPresentationMode())) {
             return false;
           }
 
@@ -985,7 +985,7 @@ public class IdeEventQueue extends EventQueue {
   }
 
   public boolean isInputMethodEnabled() {
-    return !SystemInfo.isMac || myInputMethodLock == 0;
+    return !Platform.current().os().isMac() || myInputMethodLock == 0;
   }
 
   private void onFocusEvent(@Nonnull AWTEvent event) {

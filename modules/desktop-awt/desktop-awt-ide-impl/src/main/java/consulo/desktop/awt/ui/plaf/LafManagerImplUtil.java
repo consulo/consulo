@@ -15,13 +15,13 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import consulo.application.util.SystemInfo;
-import consulo.desktop.awt.uiOld.components.OnOffButton;
 import consulo.desktop.awt.ui.plaf.intellij.ActionButtonUI;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
+import consulo.desktop.awt.uiOld.components.OnOffButton;
+import consulo.platform.Platform;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultEditorKit;
@@ -107,7 +107,7 @@ public class LafManagerImplUtil {
       defaults.put(fontResource, uiFont);
     }
 
-    if (!SystemInfo.isMac) {
+    if (!Platform.current().os().isMac()) {
       defaults.put("PasswordField.font", monoFont);
     }
     defaults.put("TextArea.font", monoFont);

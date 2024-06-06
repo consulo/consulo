@@ -2,15 +2,14 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
-import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.wm.statusBar.BaseToolWindowsSwitcher;
+import consulo.platform.Platform;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -24,6 +23,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.StringUtil;
@@ -147,7 +147,7 @@ public class DesktopToolWindowsSwicher extends BaseToolWindowsSwitcher {
         final JComponent c = (JComponent)TargetAWT.to(myLabel);
         final Insets padding = UIUtil.getListViewportPadding();
         final RelativePoint point =
-          new RelativePoint(c, new Point(-4, -padding.top - padding.bottom - 4 - size.height + (SystemInfo.isMac ? 2 : 0)));
+          new RelativePoint(c, new Point(-4, -padding.top - padding.bottom - 4 - size.height + (Platform.current().os().isMac() ? 2 : 0)));
 
         if (popup != null && popup.isVisible()) {
           return;

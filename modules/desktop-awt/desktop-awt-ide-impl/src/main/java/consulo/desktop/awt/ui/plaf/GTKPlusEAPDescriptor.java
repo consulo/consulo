@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.plaf;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.util.SystemInfo;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.platform.Platform;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -34,7 +34,7 @@ public class GTKPlusEAPDescriptor extends EarlyAccessProgramDescriptor {
 
   @Override
   public boolean isAvailable() {
-    return SystemInfo.isLinux;
+    return Platform.current().os().isLinux();
   }
 
   @Override

@@ -10,31 +10,30 @@ import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.application.util.NotNullLazyValue;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
-import consulo.desktop.awt.internal.notification.EventLog;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspender;
 import consulo.ide.impl.idea.openapi.progress.impl.ProgressSuspenderListener;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.impl.status.*;
+import consulo.ide.impl.idea.openapi.wm.impl.status.InlineProgressIndicator;
+import consulo.ide.impl.idea.openapi.wm.impl.status.PresentationModeProgressPanel;
+import consulo.ide.impl.idea.openapi.wm.impl.status.ProgressButton;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
+import consulo.project.ui.internal.BalloonLayoutEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.PositionTracker;
@@ -54,12 +53,11 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.JBIterable;
-import consulo.util.collection.MultiValuesMap;
-import consulo.util.collection.Sets;
+import consulo.util.collection.*;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -356,7 +354,7 @@ public class InfoAndProgressPanel extends JPanel implements Disposable {
 
     myMultiProcessLink = new LinkLabel<>(getMultiProgressLinkText(), null, (aSource, aLinkData) -> triggerPopupShowing());
 
-    if (SystemInfo.isMac) myMultiProcessLink.setFont(JBUI.Fonts.label(11));
+    if (Platform.current().os().isMac()) myMultiProcessLink.setFont(JBUI.Fonts.label(11));
 
     myMultiProcessLink.setOpaque(false);
 

@@ -24,7 +24,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.UniqueNameBuilder;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -35,9 +34,9 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
@@ -51,9 +50,10 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -401,7 +401,7 @@ public class RecentProjectPanel {
     protected RecentProjectItemRenderer(UniqueNameBuilder<ReopenProjectAction> pathShortener) {
       super(new VerticalFlowLayout());
       myShortener = pathShortener;
-      myPath.setFont(JBUI.Fonts.label(SystemInfo.isMac ? 10f : 11f));
+      myPath.setFont(JBUI.Fonts.label(Platform.current().os().isMac() ? 10f : 11f));
       setFocusable(true);
       layoutComponents();
     }
@@ -594,7 +594,7 @@ public class RecentProjectPanel {
   private static boolean isPathAvailable(String pathStr) {
     Path path = Paths.get(pathStr), pathRoot = path.getRoot();
     if (pathRoot == null) return false;
-    if (SystemInfo.isWindows && pathRoot.toString().startsWith("\\\\")) return true;
+    if (Platform.current().os().isWindows() && pathRoot.toString().startsWith("\\\\")) return true;
     for (Path fsRoot : pathRoot.getFileSystem().getRootDirectories()) {
       if (pathRoot.equals(fsRoot)) return Files.exists(path);
     }

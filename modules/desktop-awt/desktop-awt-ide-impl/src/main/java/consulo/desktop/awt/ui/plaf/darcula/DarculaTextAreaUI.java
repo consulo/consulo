@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
+import consulo.platform.Platform;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -19,7 +19,7 @@ public class DarculaTextAreaUI extends BasicTextAreaUI {
   @Override
   protected void installKeyboardActions() {
     super.installKeyboardActions();
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       InputMap inputMap = getComponent().getInputMap();
       inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), DefaultEditorKit.upAction);
       inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), DefaultEditorKit.downAction);

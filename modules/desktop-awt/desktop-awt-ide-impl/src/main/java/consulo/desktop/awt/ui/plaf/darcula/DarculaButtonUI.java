@@ -2,15 +2,15 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.action.ComboBoxAction;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.util.lang.ObjectUtil;
+import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -254,7 +254,7 @@ public class DarculaButtonUI extends BasicButtonUI {
 
   protected void setupDefaultButton(JComponent button, Graphics g) {
     Font f = button.getFont();
-    if (!SystemInfo.isMac && f instanceof FontUIResource && isDefaultButton(button)) {
+    if (!Platform.current().os().isMac() && f instanceof FontUIResource && isDefaultButton(button)) {
       g.setFont(f.deriveFont(Font.BOLD));
     }
   }

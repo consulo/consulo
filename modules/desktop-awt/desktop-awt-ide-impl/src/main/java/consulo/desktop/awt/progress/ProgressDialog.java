@@ -12,6 +12,7 @@ import consulo.ide.impl.idea.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import consulo.ide.impl.idea.ui.PopupBorder;
 import consulo.ide.impl.idea.ui.TitlePanel;
 import consulo.ide.impl.idea.ui.WindowMoveListener;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.WindowManager;
@@ -112,10 +113,10 @@ public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDi
   }
 
   private void initDialog(boolean shouldShowBackground, String cancelText) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       UIUtil.applyStyle(UIUtil.ComponentStyle.SMALL, myText2Label);
     }
-    myInnerPanel.setPreferredSize(new Dimension(SystemInfo.isMac ? 350 : JBUI.scale(450), -1));
+    myInnerPanel.setPreferredSize(new Dimension(Platform.current().os().isMac() ? 350 : JBUI.scale(450), -1));
 
     myCancelButton.addActionListener(__ -> doCancelAction());
 

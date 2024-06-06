@@ -18,15 +18,14 @@ package consulo.desktop.awt.fileEditor.impl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.util.Queryable;
-import consulo.application.util.SystemInfo;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataProvider;
+import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.ide.impl.idea.ide.actions.CloseAction;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.ide.ui.customization.CustomActionsSchemaImpl;
@@ -39,13 +38,11 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.ui.InplaceButton;
-import consulo.ide.impl.idea.ui.tabs.*;
+import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
-import consulo.ui.ex.awt.tab.*;
-import consulo.ui.ex.awt.util.TimedDeadzone;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -60,6 +57,8 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tab.*;
+import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -419,10 +418,10 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
   private class MyDataProvider implements DataProvider {
     @Override
     public Object getData(@Nonnull Key<?> dataId) {
-      if (CommonDataKeys.PROJECT == dataId) {
+      if (Project.KEY == dataId) {
         return myProject;
       }
-      if (CommonDataKeys.VIRTUAL_FILE == dataId) {
+      if (VirtualFile.KEY == dataId) {
         final VirtualFile selectedFile = myWindow.getSelectedFile();
         return selectedFile != null && selectedFile.isValid() ? selectedFile : null;
       }
@@ -513,7 +512,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     @Override
     public void mouseClicked(MouseEvent e) {
-      if (UIUtil.isActionClick(e, MouseEvent.MOUSE_CLICKED) && (e.isMetaDown() || !SystemInfo.isMac && e.isControlDown())) {
+      if (UIUtil.isActionClick(e, MouseEvent.MOUSE_CLICKED) && (e.isMetaDown() || !Platform.current().os().isMac() && e.isControlDown())) {
         final TabInfo info = myTabs.findInfo(e);
         if (info != null && info.getObject() != null) {
           final VirtualFile vFile = (VirtualFile)info.getObject();

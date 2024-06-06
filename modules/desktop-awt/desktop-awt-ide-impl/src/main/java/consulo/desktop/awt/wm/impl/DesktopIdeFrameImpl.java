@@ -21,6 +21,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataManager;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
+import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
@@ -28,13 +29,12 @@ import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.internal.IdeFrameEx;
@@ -45,7 +45,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.awt.*;
-import consulo.desktop.awt.ui.util.AppIconUtil;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -54,6 +53,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -96,7 +96,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Nonnull
     @Override
     public Insets getInsets() {
-      if (SystemInfo.isMac && isInFullScreen()) {
+      if (Platform.current().os().isMac() && isInFullScreen()) {
         return JBUI.emptyInsets();
       }
       return super.getInsets();
@@ -155,7 +155,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     @Override
     public void dispose() {
-      if (SystemInfo.isMac && isInFullScreen()) {
+      if (Platform.current().os().isMac() && isInFullScreen()) {
         ((MacMainFrameDecorator)myFrameDecorator).toggleFullScreenNow();
       }
       if (isTemporaryDisposed()) {
@@ -268,7 +268,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
     // to show window thumbnail under Macs
     // http://lists.apple.com/archives/java-dev/2009/Dec/msg00240.html
-    if (SystemInfo.isMac) myJFrame.setIconImage(null);
+    if (Platform.current().os().isMac()) myJFrame.setIconImage(null);
 
     //MouseGestureManager.getInstance().add(this);
 
@@ -281,7 +281,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
       }
     });
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       myWindowsBorderUpdater = __ -> updateBorder();
       Toolkit.getDefaultToolkit().addPropertyChangeListener("win.xpstyle.themeActive", myWindowsBorderUpdater);
       if (!SystemInfo.isJavaVersionAtLeast(8, 0, 0)) {
@@ -309,7 +309,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
   private void updateBorder() {
     int state = myJFrame.getExtendedState();
-    if (!WindowManager.getInstance().isFullScreenSupportedInCurrentOS() || !SystemInfo.isWindows || myRootPane == null) {
+    if (!WindowManager.getInstance().isFullScreenSupportedInCurrentOS() || !Platform.current().os().isWindows() || myRootPane == null) {
       return;
     }
 
@@ -410,7 +410,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
 
       final String applicationName = FrameTitleUtil.buildTitle();
       final TitleBuilder titleBuilder = new TitleBuilder();
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         boolean addAppName = StringUtil.isEmpty(title) || ProjectManager.getInstance().getOpenProjects().length == 0;
         titleBuilder.append(fileTitle).append(title).append(addAppName ? applicationName : null);
       }
@@ -438,7 +438,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
   }
 
   private Object getData(@Nonnull Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       if (myProject != null) {
         return myProject.isInitialized() ? myProject : null;
       }
@@ -584,7 +584,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
   }
 
   private boolean temporaryFixForIdea156004(final boolean state) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       try {
         Field modalBlockerField = Window.class.getDeclaredField("modalBlocker");
         modalBlockerField.setAccessible(true);

@@ -16,7 +16,6 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import consulo.project.Project;
@@ -96,11 +95,11 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         myWindow2Info.put(window, new WindowInfo(window, true));
       }
       myFocusedWindow = window;
-      final Project project = myDataManager.getDataContext(myFocusedWindow).getData(CommonDataKeys.PROJECT);
+      final Project project = myDataManager.getDataContext(myFocusedWindow).getData(Project.KEY);
       for (Iterator<consulo.ui.Window> i = myFocusedWindows.iterator(); i.hasNext(); ) {
         final consulo.ui.Window w = i.next();
         final DataContext dataContext = myDataManager.getDataContext(TargetAWT.to(w));
-        if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
+        if (project == dataContext.getData(Project.KEY)) {
           i.remove();
         }
       }
@@ -313,7 +312,7 @@ public final class DesktopWindowWatcher implements PropertyChangeListener {
         }
       }
       final DataContext dataContext = myDataManager.getDataContext(awtWindow);
-      if (project == dataContext.getData(CommonDataKeys.PROJECT)) {
+      if (project == dataContext.getData(Project.KEY)) {
         return awtWindow;
       }
     }

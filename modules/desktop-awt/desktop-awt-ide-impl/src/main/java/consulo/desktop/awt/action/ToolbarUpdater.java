@@ -8,7 +8,7 @@ import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.action.ActionButton;
 import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
