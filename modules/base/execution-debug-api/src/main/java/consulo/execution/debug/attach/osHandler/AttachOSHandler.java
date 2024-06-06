@@ -1,14 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.attach.osHandler;
 
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.application.util.SystemInfo;
-import consulo.process.local.EnvironmentUtil;
 import consulo.execution.debug.attach.EnvironmentAwareHost;
 import consulo.execution.debug.attach.LocalAttachHost;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.EnvironmentUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -75,15 +74,15 @@ public abstract class AttachOSHandler {
 
   @Nonnull
   private static OSType localComputeOsType() {
-    if (SystemInfo.isLinux) {
+    if (Platform.current().os().isLinux()) {
       return OSType.LINUX;
     }
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return OSType.MACOSX;
     }
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       return OSType.WINDOWS;
     }
 

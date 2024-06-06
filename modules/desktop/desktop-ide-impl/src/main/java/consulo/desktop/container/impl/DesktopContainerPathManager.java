@@ -16,15 +16,15 @@
 package consulo.desktop.container.impl;
 
 import consulo.application.ApplicationProperties;
-import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -112,7 +112,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       }
     }
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       try {
         ourHomePath = new File(ourHomePath).getCanonicalPath();
       }

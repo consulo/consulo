@@ -17,16 +17,16 @@ package consulo.ui.ex.awt;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -287,7 +287,7 @@ public class CommonActionsPanel extends JPanel {
     switch (button) {
       case ADD: return CommonShortcuts.getNewForDialogs();
       case EDIT: return CustomShortcutSet.fromString("ENTER");
-      case REMOVE: return CustomShortcutSet.fromString(SystemInfo.isMac ? "meta BACK_SPACE" : "alt DELETE");
+      case REMOVE: return CustomShortcutSet.fromString(Platform.current().os().isMac() ? "meta BACK_SPACE" : "alt DELETE");
       case UP: return CommonShortcuts.MOVE_UP;
       case DOWN: return CommonShortcuts.MOVE_DOWN;
     }

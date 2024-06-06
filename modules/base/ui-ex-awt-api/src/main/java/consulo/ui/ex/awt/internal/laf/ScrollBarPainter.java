@@ -3,17 +3,20 @@ package consulo.ui.ex.awt.internal.laf;
 
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.colorScheme.EditorColorKey;
+import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.EditorColorsUtil;
+import consulo.ui.ex.awt.MixedColorProducer;
+import consulo.ui.ex.awt.RegionPainter;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.paint.RectanglePainter;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -40,69 +43,69 @@ public abstract class ScrollBarPainter implements RegionPainter<Float> {
   /**
    * The scroll track background on opaque scroll bar.
    */
-  public static final EditorColorKey TRACK_OPAQUE_BACKGROUND = SystemInfo.isMac ? key(0x00808080, 0x00808080, "ScrollBar.Mac.trackColor") : key(0x00808080, 0x00808080, "ScrollBar.trackColor");
+  public static final EditorColorKey TRACK_OPAQUE_BACKGROUND = Platform.current().os().isMac() ? key(0x00808080, 0x00808080, "ScrollBar.Mac.trackColor") : key(0x00808080, 0x00808080, "ScrollBar.trackColor");
   /**
    * The scroll track background on opaque scroll bar when it is hovered.
    */
   public static final EditorColorKey TRACK_OPAQUE_HOVERED_BACKGROUND =
-          SystemInfo.isMac ? key(0x00808080, 0x00808080, "ScrollBar.Mac.hoverTrackColor") : key(0x00808080, 0x00808080, "ScrollBar.hoverTrackColor");
+          Platform.current().os().isMac() ? key(0x00808080, 0x00808080, "ScrollBar.Mac.hoverTrackColor") : key(0x00808080, 0x00808080, "ScrollBar.hoverTrackColor");
   /**
    * The scroll track background on transparent scroll bar.
    */
   public static final EditorColorKey TRACK_BACKGROUND =
-          SystemInfo.isMac ? key(0x00808080, 0x00808080, "ScrollBar.Mac.Transparent.trackColor") : key(0x00808080, 0x00808080, "ScrollBar.Transparent.trackColor");
+          Platform.current().os().isMac() ? key(0x00808080, 0x00808080, "ScrollBar.Mac.Transparent.trackColor") : key(0x00808080, 0x00808080, "ScrollBar.Transparent.trackColor");
   /**
    * The scroll track background on transparent scroll bar when it is hovered.
    */
   public static final EditorColorKey TRACK_HOVERED_BACKGROUND =
-          SystemInfo.isMac ? key(0x1A808080, 0x1A808080, "ScrollBar.Mac.Transparent.hoverTrackColor") : key(0x1A808080, 0x1A808080, "ScrollBar.Transparent.hoverTrackColor");
+          Platform.current().os().isMac() ? key(0x1A808080, 0x1A808080, "ScrollBar.Mac.Transparent.hoverTrackColor") : key(0x1A808080, 0x1A808080, "ScrollBar.Transparent.hoverTrackColor");
 
   /**
    * The scroll thumb border color on opaque scroll bar.
    */
   public static final EditorColorKey THUMB_OPAQUE_FOREGROUND =
-          SystemInfo.isMac ? key(0x33000000, 0x59262626, "ScrollBar.Mac.thumbBorderColor") : key(0x33595959, 0x47383838, "ScrollBar.thumbBorderColor");
+          Platform.current().os().isMac() ? key(0x33000000, 0x59262626, "ScrollBar.Mac.thumbBorderColor") : key(0x33595959, 0x47383838, "ScrollBar.thumbBorderColor");
   /**
    * The scroll thumb background on opaque scroll bar.
    */
-  public static final EditorColorKey THUMB_OPAQUE_BACKGROUND = SystemInfo.isMac ? key(0x33000000, 0x59808080, "ScrollBar.Mac.thumbColor") : key(0x33737373, 0x47A6A6A6, "ScrollBar.thumbColor");
+  public static final EditorColorKey THUMB_OPAQUE_BACKGROUND = Platform.current().os().isMac() ? key(0x33000000, 0x59808080, "ScrollBar.Mac.thumbColor") : key(0x33737373, 0x47A6A6A6, "ScrollBar.thumbColor");
   /**
    * The scroll thumb border color on opaque scroll bar when it is hovered.
    */
   public static final EditorColorKey THUMB_OPAQUE_HOVERED_FOREGROUND =
-          SystemInfo.isMac ? key(0x80000000, 0x8C262626, "ScrollBar.Mac.hoverThumbBorderColor") : key(0x47595959, 0x59383838, "ScrollBar.hoverThumbBorderColor");
+          Platform.current().os().isMac() ? key(0x80000000, 0x8C262626, "ScrollBar.Mac.hoverThumbBorderColor") : key(0x47595959, 0x59383838, "ScrollBar.hoverThumbBorderColor");
   /**
    * The scroll thumb background on opaque scroll bar when it is hovered.
    */
   public static final EditorColorKey THUMB_OPAQUE_HOVERED_BACKGROUND =
-          SystemInfo.isMac ? key(0x80000000, 0x8C808080, "ScrollBar.Mac.hoverThumbColor") : key(0x47737373, 0x59A6A6A6, "ScrollBar.hoverThumbColor");
+          Platform.current().os().isMac() ? key(0x80000000, 0x8C808080, "ScrollBar.Mac.hoverThumbColor") : key(0x47737373, 0x59A6A6A6, "ScrollBar.hoverThumbColor");
   /**
    * The scroll thumb border color on transparent scroll bar.
    */
   public static final EditorColorKey THUMB_FOREGROUND =
-          SystemInfo.isMac ? key(0x00000000, 0x00262626, "ScrollBar.Mac.Transparent.thumbBorderColor") : key(0x33595959, 0x47383838, "ScrollBar.Transparent.thumbBorderColor");
+          Platform.current().os().isMac() ? key(0x00000000, 0x00262626, "ScrollBar.Mac.Transparent.thumbBorderColor") : key(0x33595959, 0x47383838, "ScrollBar.Transparent.thumbBorderColor");
   /**
    * The scroll thumb background on transparent scroll bar.
    */
   public static final EditorColorKey THUMB_BACKGROUND =
-          SystemInfo.isMac ? key(0x00000000, 0x00808080, "ScrollBar.Mac.Transparent.thumbColor") : key(0x33737373, 0x47A6A6A6, "ScrollBar.Transparent.thumbColor");
+          Platform.current().os().isMac() ? key(0x00000000, 0x00808080, "ScrollBar.Mac.Transparent.thumbColor") : key(0x33737373, 0x47A6A6A6, "ScrollBar.Transparent.thumbColor");
   /**
    * The scroll thumb border color on transparent scroll bar when it is hovered.
    */
   public static final EditorColorKey THUMB_HOVERED_FOREGROUND =
-          SystemInfo.isMac ? key(0x80000000, 0x8C262626, "ScrollBar.Mac.Transparent.hoverThumbBorderColor") : key(0x47595959, 0x59383838, "ScrollBar.Transparent.hoverThumbBorderColor");
+          Platform.current().os().isMac() ? key(0x80000000, 0x8C262626, "ScrollBar.Mac.Transparent.hoverThumbBorderColor") : key(0x47595959, 0x59383838, "ScrollBar.Transparent.hoverThumbBorderColor");
   /**
    * The scroll thumb background on transparent scroll bar when it is hovered.
    */
   public static final EditorColorKey THUMB_HOVERED_BACKGROUND =
-          SystemInfo.isMac ? key(0x80000000, 0x8C808080, "ScrollBar.Mac.Transparent.hoverThumbColor") : key(0x47737373, 0x59A6A6A6, "ScrollBar.Transparent.hoverThumbColor");
+          Platform.current().os().isMac() ? key(0x80000000, 0x8C808080, "ScrollBar.Mac.Transparent.hoverThumbColor") : key(0x47737373, 0x59A6A6A6, "ScrollBar.Transparent.hoverThumbColor");
 
   private static final List<EditorColorKey> CONTRAST_ELEMENTS_KEYS =
           Arrays.asList(THUMB_OPAQUE_FOREGROUND, THUMB_OPAQUE_BACKGROUND, THUMB_OPAQUE_HOVERED_FOREGROUND, THUMB_OPAQUE_HOVERED_BACKGROUND, THUMB_FOREGROUND, THUMB_BACKGROUND,
                         THUMB_HOVERED_FOREGROUND, THUMB_HOVERED_BACKGROUND);
 
-  private static final int LIGHT_ALPHA = SystemInfo.isMac ? 120 : 160;
-  private static final int DARK_ALPHA = SystemInfo.isMac ? 255 : 180;
+  private static final int LIGHT_ALPHA = Platform.current().os().isMac() ? 120 : 160;
+  private static final int DARK_ALPHA = Platform.current().os().isMac() ? 255 : 180;
 
   ScrollBarPainter(@Nonnull Supplier<? extends Component> supplier) {
     animator = new TwoWayAnimator(getClass().getName(), 11, 150, 125, 300, 125) {

@@ -18,6 +18,7 @@ package consulo.versionControlSystem.util;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
@@ -188,7 +189,7 @@ public class VcsFileUtil {
   }
 
   public static String getRelativeFilePath(String file, @Nonnull final VirtualFile baseDir) {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       file = file.replace('\\', '/');
     }
     final String basePath = baseDir.getPath();

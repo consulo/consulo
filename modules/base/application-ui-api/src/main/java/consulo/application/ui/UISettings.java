@@ -27,6 +27,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
+import consulo.platform.Platform;
 import consulo.ui.AntialiasingType;
 import consulo.ui.ex.ColorBlindness;
 import consulo.util.xml.serializer.XmlSerializerUtil;
@@ -138,9 +139,9 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public float ALPHA_MODE_RATIO = 0.5f;
   public int MAX_CLIPBOARD_CONTENTS = 5;
   public boolean SHOW_ICONS_IN_MENUS = true;
-  public boolean DISABLE_MNEMONICS = SystemInfo.isMac; // IDEADEV-33409, should be disabled by default on MacOS
+  public boolean DISABLE_MNEMONICS = Platform.current().os().isMac(); // IDEADEV-33409, should be disabled by default on MacOS
   public boolean DISABLE_MNEMONICS_IN_CONTROLS = false;
-  public boolean USE_SMALL_LABELS_ON_TABS = SystemInfo.isMac;
+  public boolean USE_SMALL_LABELS_ON_TABS = Platform.current().os().isMac();
   public boolean SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = false;
   public int MAX_LOOKUP_WIDTH2 = 500;
   public int MAX_LOOKUP_LIST_HEIGHT = 11;
@@ -466,7 +467,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   public boolean getAnimatedScrolling() {
-    return !SystemInfo.isMac || !SystemInfo.isJetBrainsJvm;
+    return !Platform.current().os().isMac() || !SystemInfo.isJetBrainsJvm;
   }
 
   public boolean getFullPathsInWindowHeader() {
@@ -478,14 +479,14 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   }
 
   public int getAnimatedScrollingDuration() {
-    if (SystemInfo.isWindows) return 200;
-    if (SystemInfo.isMac) return 50;
+    if (Platform.current().os().isWindows()) return 200;
+    if (Platform.current().os().isMac()) return 50;
     return 150;
   }
 
   public int getAnimatedScrollingCurvePoints() {
-    if (SystemInfo.isWindows) return 1684366536;
-    if (SystemInfo.isMac) return 845374563;
+    if (Platform.current().os().isWindows()) return 1684366536;
+    if (Platform.current().os().isMac()) return 845374563;
     return 729434056;
   }
 

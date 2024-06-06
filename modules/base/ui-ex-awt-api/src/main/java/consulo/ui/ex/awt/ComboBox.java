@@ -15,14 +15,14 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -176,7 +176,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
   @Override
   public final void setEditor(final ComboBoxEditor editor) {
     ComboBoxEditor _editor = editor;
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) {
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) {
       if ("AquaComboBoxEditor".equals(editor.getClass().getSimpleName())) {
         _editor = new FixedComboBoxEditor();
       }
@@ -203,7 +203,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
 
   @Override
   public boolean hasFocus() {
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel() && myPaintingNow) {
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel() && myPaintingNow) {
       return false;
     }
     return super.hasFocus();

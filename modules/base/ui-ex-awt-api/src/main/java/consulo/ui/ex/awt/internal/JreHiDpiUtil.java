@@ -1,14 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.internal;
 
-import consulo.application.util.SystemInfo;
 import consulo.awt.hacking.GraphicsEnvironmentHacking;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.lang.SystemProperties;
-import org.jetbrains.annotations.TestOnly;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -60,7 +60,7 @@ public final class JreHiDpiUtil {
               catch (Throwable ignore) {
               }
             }
-            if (SystemInfo.isMac) {
+            if (Platform.current().os().isMac()) {
               value = true;
             }
           }

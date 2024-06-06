@@ -17,6 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.util.MacUIUtil;
 
@@ -50,7 +51,7 @@ public class FixedComboBoxEditor implements ComboBoxEditor {
   private Object oldValue;
 
   public FixedComboBoxEditor() {
-    if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) {
+    if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) {
       myField = new MacComboBoxTextField();
     } else {
       myField = new JTextField();

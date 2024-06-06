@@ -15,14 +15,14 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.Platform;
 import consulo.ui.ex.IdeGlassPane;
-import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.Splittable;
+import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -226,7 +226,7 @@ public class OnePixelDivider extends Divider {
     if (e.getID() == MouseEvent.MOUSE_CLICKED) {
       if (mySwitchOrientationEnabled
           && e.getClickCount() == 1
-          && SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())) {
+          && SwingUtilities.isLeftMouseButton(e) && (Platform.current().os().isMac() ? e.isMetaDown() : e.isControlDown())) {
         mySplitter.setOrientation(!mySplitter.getOrientation());
       }
       if (myResizeEnabled && e.getClickCount() == 2) {

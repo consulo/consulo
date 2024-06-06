@@ -21,7 +21,6 @@ import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.navigation.OpenFileDescriptor;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -59,8 +58,8 @@ public class TestsUIUtil {
     final Project project = properties.getProject();
     if (testProxy == null) return null;
     if (AbstractTestProxy.KEY == dataId) return (T)testProxy;
-    if (CommonDataKeys.NAVIGATABLE == dataId) return (T)getOpenFileDescriptor(testProxy, model);
-    if (CommonDataKeys.PSI_ELEMENT == dataId) {
+    if (Navigatable.KEY == dataId) return (T)getOpenFileDescriptor(testProxy, model);
+    if (PsiElement.KEY == dataId) {
       final Location location = testProxy.getLocation(project, properties.getScope());
       if (location != null) {
         final PsiElement element = location.getPsiElement();

@@ -16,14 +16,14 @@
 package consulo.desktop.util;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.TempFileService;
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
-import jakarta.inject.Singleton;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -157,7 +157,7 @@ public class DesktopTempFileServiceImpl implements TempFileService {
   @Nonnull
   private static File normalizeFile(@Nonnull File temp) throws IOException {
     final File canonical = temp.getCanonicalFile();
-    return SystemInfo.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
+    return Platform.current().os().isWindows() && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
   @Override
@@ -174,7 +174,7 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     final File file = new File(ContainerPathManager.get().getTempPath());
     try {
       final String canonical = file.getCanonicalPath();
-      if (!SystemInfo.isWindows || !canonical.contains(" ")) {
+      if (!Platform.current().os().isWindows() || !canonical.contains(" ")) {
         return Path.of(canonical);
       }
     }

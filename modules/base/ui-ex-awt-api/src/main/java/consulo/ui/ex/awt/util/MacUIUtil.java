@@ -18,6 +18,7 @@ package consulo.ui.ex.awt.util;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
+import consulo.platform.Platform;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.UIUtil;
 
@@ -92,7 +93,7 @@ public class MacUIUtil {
   }
 
   public static void hideCursor() {
-    if (SystemInfo.isMac && Registry.is("ide.mac.hide.cursor.when.typing")) {
+    if (Platform.current().os().isMac() && Registry.is("ide.mac.hide.cursor.when.typing")) {
       Foundation.invoke("NSCursor", "setHiddenUntilMouseMoves:", true);
     }
   }
@@ -180,7 +181,7 @@ public class MacUIUtil {
   }
 
   public static void drawComboboxFocusRing(@Nonnull final JComboBox combobox, @Nonnull final Graphics g) {
-    if (SystemInfo.isMac && combobox.isEnabled() && combobox.isEditable() && UIUtil.isUnderAquaLookAndFeel()) {
+    if (Platform.current().os().isMac() && combobox.isEnabled() && combobox.isEditable() && UIUtil.isUnderAquaLookAndFeel()) {
       final Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
       if (focusOwner != null) {
         final Container ancestor = SwingUtilities.getAncestorOfClass(JComboBox.class, focusOwner);

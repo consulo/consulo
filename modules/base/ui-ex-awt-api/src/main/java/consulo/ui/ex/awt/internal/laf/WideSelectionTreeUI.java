@@ -16,17 +16,17 @@
 package consulo.ui.ex.awt.internal.laf;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.TreeUI;
@@ -275,7 +275,7 @@ public class WideSelectionTreeUI extends BasicTreeUI {
 
   @Override
   protected boolean isToggleSelectionEvent(MouseEvent e) {
-    return SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+    return SwingUtilities.isLeftMouseButton(e) && (Platform.current().os().isMac() ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
   }
 
   @Override

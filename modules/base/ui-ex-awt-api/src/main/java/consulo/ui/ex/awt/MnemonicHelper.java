@@ -1,19 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.internal.MnemonicWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import org.intellij.lang.annotations.MagicConstant;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.MagicConstant;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -89,7 +89,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
   }
 
   private static void fixMacMnemonicKeyStroke(JComponent component, String type) {
-    if (SystemInfo.isMac && Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
+    if (Platform.current().os().isMac() && Registry.is("ide.mac.alt.mnemonic.without.ctrl")) {
       // hack to make component's mnemonic work for ALT+KEY_CODE on Macs.
       // Default implementation uses ALT+CTRL+KEY_CODE (see BasicLabelUI).
       InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -151,7 +151,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
    */
   public static CustomShortcutSet createShortcut(char ch) {
     Character mnemonic = Character.valueOf(ch);
-    return CustomShortcutSet.fromString("alt " + (SystemInfo.isMac ? "released" : "pressed") + " " + mnemonic);
+    return CustomShortcutSet.fromString("alt " + (Platform.current().os().isMac() ? "released" : "pressed") + " " + mnemonic);
   }
 
   /**
@@ -216,7 +216,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
   @MagicConstant(flagsFromClass = InputEvent.class)
   public static int getFocusAcceleratorKeyMask() {
     //noinspection MagicConstant
-    return SystemInfo.isMac ? ActionEvent.ALT_MASK | ActionEvent.CTRL_MASK : ActionEvent.ALT_MASK;
+    return Platform.current().os().isMac() ? ActionEvent.ALT_MASK | ActionEvent.CTRL_MASK : ActionEvent.ALT_MASK;
   }
 
   public static void registerMnemonicAction(@Nonnull JComponent component, int mnemonic) {

@@ -21,17 +21,17 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
-import consulo.application.util.SystemInfo;
+import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.IdeBundle;
 import consulo.ide.action.ui.NewItemPopupUtil;
 import consulo.ide.action.ui.NewItemSimplePopupPanel;
-import consulo.externalService.statistic.UsageTrigger;
 import consulo.language.LangBundle;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.TextBox;
@@ -45,9 +45,9 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -136,7 +136,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
 
     @RequiredReadAction
     public MkDirs(@Nonnull String newName, @Nonnull PsiDirectory directory) {
-      if (SystemInfo.isWindows) {
+      if (Platform.current().os().isWindows()) {
         newName = newName.replace('\\', '/');
       }
       if (newName.contains("/")) {

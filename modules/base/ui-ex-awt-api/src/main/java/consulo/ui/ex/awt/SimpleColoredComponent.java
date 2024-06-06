@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.ex.ColoredTextContainer;
@@ -31,14 +30,14 @@ import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
 import javax.accessibility.AccessibleStateSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.TreeCellRenderer;
@@ -802,7 +801,7 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
       }
       // 4. Bold Dotted Line
       if (attributes.isBoldDottedLine()) {
-        final int dottedAt = SystemInfo.isMac ? textBaseline : textBaseline + 1;
+        final int dottedAt = Platform.current().os().isMac() ? textBaseline : textBaseline + 1;
         final Color lineColor = attributes.getWaveColor();
         UIUtil.drawBoldDottedLine(g, offset, offset + fragmentWidth, dottedAt, bgColor, lineColor, isOpaque());
       }

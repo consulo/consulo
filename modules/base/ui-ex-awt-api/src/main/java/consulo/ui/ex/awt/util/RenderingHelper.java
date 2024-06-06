@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.util;
 
+import consulo.platform.Platform;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.util.dataholder.Key;
 import jakarta.annotation.Nonnull;
@@ -9,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
 
-import static consulo.application.util.SystemInfo.isMac;
 import static consulo.ui.ex.awt.JBScrollPane.IGNORE_SCROLLBAR_IN_INSETS;
 
 public final class RenderingHelper {
@@ -39,7 +39,7 @@ public final class RenderingHelper {
           myShrinkingDisabled = isClientPropertyFalse(component, SHRINK_LONG_RENDERER, false);
         }
         JScrollBar vsb = pane.getVerticalScrollBar();
-        if (vsb != null && vsb.isVisible() && !vsb.isOpaque() && isClientPropertyFalse(vsb, IGNORE_SCROLLBAR_IN_INSETS, isMac)) {
+        if (vsb != null && vsb.isVisible() && !vsb.isOpaque() && isClientPropertyFalse(vsb, IGNORE_SCROLLBAR_IN_INSETS, Platform.current().os().isMac())) {
           myRightMargin = vsb.getWidth();
         }
       }

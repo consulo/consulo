@@ -28,6 +28,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.Alerts;
@@ -473,7 +474,7 @@ public abstract class DialogWrapper {
       actions = ArrayUtil.remove(actions, getHelpAction());
     }
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       for (Action action : actions) {
         if (action instanceof MacOtherAction) {
           leftSideActions = ArrayUtil.append(leftSideActions, action);
@@ -504,7 +505,7 @@ public abstract class DialogWrapper {
       lrButtonsPanel.add(Box.createHorizontalGlue(),    // left strut
                          new GridBagConstraints(gridX++, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
       if (actions.length > 0) {
-        if (SystemInfo.isMac) {
+        if (Platform.current().os().isMac()) {
           // move ok action to the right
           int okNdx = ArrayUtil.indexOf(actions, getOKAction());
           if (okNdx >= 0 && okNdx != actions.length - 1) {
@@ -746,7 +747,7 @@ public abstract class DialogWrapper {
 
     String text = button.getText();
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       button.putClientProperty("JButton.buttonType", "text");
     }
 
@@ -1051,14 +1052,14 @@ public abstract class DialogWrapper {
   @Nonnull
   protected Action[] createActions() {
     if (getHelpId() == null) {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         return new Action[]{getCancelAction(), getOKAction()};
       }
 
       return new Action[]{getOKAction(), getCancelAction()};
     }
     else {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         return new Action[]{getHelpAction(), getCancelAction(), getOKAction()};
       }
       return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -1162,7 +1163,7 @@ public abstract class DialogWrapper {
   @Nullable
   @RequiredUIAccess
   public JComponent getPreferredFocusedComponent() {
-    return SystemInfo.isMac ? myPreferredFocusedComponent : null;
+    return Platform.current().os().isMac() ? myPreferredFocusedComponent : null;
   }
 
   /**
@@ -1288,7 +1289,7 @@ public abstract class DialogWrapper {
     if (!postponeValidation()) {
       startTrackingValidation();
     }
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       installEnterHook(root);
     }
   }
@@ -1460,7 +1461,7 @@ public abstract class DialogWrapper {
   protected final void setCancelButtonIcon(Icon icon) {
     // Setting icons causes buttons be 'square' style instead of
     // 'rounded', which is expected by apple users.
-    if (!SystemInfo.isMac) {
+    if (!Platform.current().os().isMac()) {
       myCancelAction.putValue(Action.SMALL_ICON, icon);
     }
   }
@@ -1484,7 +1485,7 @@ public abstract class DialogWrapper {
   protected final void setOKButtonIcon(Icon icon) {
     // Setting icons causes buttons be 'square' style instead of
     // 'rounded', which is expected by apple users.
-    if (!SystemInfo.isMac) {
+    if (!Platform.current().os().isMac()) {
       myOKAction.putValue(Action.SMALL_ICON, icon);
     }
   }

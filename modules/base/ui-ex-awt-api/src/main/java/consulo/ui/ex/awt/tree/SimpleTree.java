@@ -4,6 +4,7 @@ package consulo.ui.ex.awt.tree;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
@@ -76,7 +77,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
         }
       }
     });
-    if (SystemInfo.isWindows && !SystemInfo.isWinVistaOrNewer) {
+    if (Platform.current().os().isWindows() && !SystemInfo.isWinVistaOrNewer) {
       setUI(new BasicTreeUI());   // In WindowsXP UI handles are not shown :(
     }
 
