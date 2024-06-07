@@ -3,7 +3,6 @@ package consulo.execution.coverage.view;
 import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
-import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.RunConfigurationEditor;
@@ -21,6 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.navigation.Navigatable;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -34,9 +34,9 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
@@ -111,18 +111,18 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
         if (myBuilder == null) return;
         myBuilder.buildRoot();
       }
-    }, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
+    }, KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
 
     myTable.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), ACTION_DRILL_DOWN);
     myTable.getInputMap(WHEN_FOCUSED).put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), ACTION_DRILL_DOWN);
+      KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK), ACTION_DRILL_DOWN);
     myTable.getActionMap().put(ACTION_DRILL_DOWN, new AbstractAction() {
       public void actionPerformed(final ActionEvent e) {
         drillDown(structure);
       }
     });
     myTable.getInputMap(WHEN_FOCUSED).put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK), ACTION_GO_UP);
+      KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK), ACTION_GO_UP);
     myTable.getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), ACTION_GO_UP);
     myTable.getActionMap().put(ACTION_GO_UP, new AbstractAction() {
       public void actionPerformed(final ActionEvent e) {

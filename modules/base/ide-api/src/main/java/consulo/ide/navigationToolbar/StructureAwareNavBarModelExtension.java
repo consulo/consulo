@@ -26,7 +26,6 @@ import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.psi.PsiElement;
@@ -70,8 +69,8 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   @RequiredReadAction
   public PsiElement getLeafElement(@Nonnull DataContext dataContext) {
     if (UISettings.getInstance().getShowMembersInNavigationBar()) {
-      PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
-      Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+      PsiFile psiFile = dataContext.getData(PsiFile.KEY);
+      Editor editor = dataContext.getData(Editor.KEY);
       if (psiFile == null || editor == null) return null;
       PsiElement psiElement = psiFile.findElementAt(editor.getCaretModel().getOffset());
       if (psiElement != null && psiElement.getLanguage() == getLanguage()) {

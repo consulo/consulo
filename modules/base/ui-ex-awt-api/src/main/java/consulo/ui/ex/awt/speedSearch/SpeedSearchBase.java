@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.speedSearch;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.DataManager;
@@ -12,6 +11,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
@@ -25,11 +25,11 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
@@ -111,7 +111,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
       public void update(@Nonnull AnActionEvent e) {
         e.getPresentation().setEnabled(isPopupActive() && !StringUtil.isEmpty(getEnteredPrefix()));
       }
-    }.registerCustomShortcutSet(CustomShortcutSet.fromString(SystemInfo.isMac ? "meta BACK_SPACE" : "control BACK_SPACE"), myComponent);
+    }.registerCustomShortcutSet(CustomShortcutSet.fromString(Platform.current().os().isMac() ? "meta BACK_SPACE" : "control BACK_SPACE"), myComponent);
 
     installSupplyTo(component);
   }

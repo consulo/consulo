@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.Splittable;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.util.FocusWatcher;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.MathUtil;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -650,7 +650,7 @@ public class Splitter extends JPanel implements Splittable {
     protected void processMouseEvent(MouseEvent e) {
       super.processMouseEvent(e);
       if (e.getID() == MouseEvent.MOUSE_CLICKED) {
-        if (mySwitchOrientationEnabled && e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())) {
+        if (mySwitchOrientationEnabled && e.getClickCount() == 1 && SwingUtilities.isLeftMouseButton(e) && (Platform.current().os().isMac() ? e.isMetaDown() : e.isControlDown())) {
           Splitter.this.setOrientation(!Splitter.this.getOrientation());
         }
         if (myResizeEnabled && e.getClickCount() == 2) {

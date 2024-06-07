@@ -18,10 +18,11 @@ import com.sun.jna.Native;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class UnixProcessManager {
   static {
     CLib lib = null;
     try {
-      if (SystemInfo.isUnix && JnaLoader.isLoaded()) {
+      if (Platform.current().os().isUnix() && JnaLoader.isLoaded()) {
         lib = Native.load("c", CLib.class);
       }
     }
@@ -80,7 +81,7 @@ public class UnixProcessManager {
 
   private static void checkCLib() {
     if (C_LIB == null) {
-      throw new IllegalStateException("Couldn't load c library, OS: " + SystemInfo.OS_NAME + ", isUnix: " + SystemInfo.isUnix);
+      throw new IllegalStateException("Couldn't load c library, OS: " + Platform.current().os().name() + ", isUnix: " + Platform.current().os().isUnix());
     }
   }
 
@@ -230,10 +231,10 @@ public class UnixProcessManager {
     if (!new File(psCommand).isFile()) {
       psCommand = "ps";
     }
-    if (SystemInfo.isLinux) {
+    if (Platform.current().os().isLinux()) {
       return new String[]{psCommand, "-e", "--format", commandLineOnly ? "%a" : "%P%p%a"};
     }
-    else if (SystemInfo.isMac || SystemInfo.isFreeBSD) {
+    else if (Platform.current().os().isMac() || SystemInfo.isFreeBSD) {
       final String command = isShortenCommand ? "comm" : "command";
       return new String[]{psCommand, "-ax", "-o", commandLineOnly ? command : "ppid,pid," + command};
     }

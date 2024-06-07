@@ -23,9 +23,7 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.internal.ArtifactBySourceFileFinder;
 import consulo.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
@@ -52,7 +50,7 @@ public class CompileAction extends CompileActionBase {
       CompilerManager.getInstance(project).compile(module, null);
     }
     else {
-      VirtualFile[] files = getCompilableFiles(project, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
+      VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
       if (files.length > 0) {
         CompilerManager.getInstance(project).compile(files, null);
       }
@@ -72,7 +70,7 @@ public class CompileAction extends CompileActionBase {
     presentation.setText(ActionsBundle.actionText(IdeActions.ACTION_COMPILE));
     presentation.setVisible(true);
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -80,7 +78,7 @@ public class CompileAction extends CompileActionBase {
 
     final Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
 
-    final VirtualFile[] files = getCompilableFiles(project, dataContext.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY));
+    final VirtualFile[] files = getCompilableFiles(project, dataContext.getData(VirtualFile.KEY_OF_ARRAY));
     if (module == null && files.length == 0) {
       presentation.setEnabled(false);
       presentation.setVisible(!ActionPlaces.isPopupPlace(event.getPlace()));
@@ -100,7 +98,7 @@ public class CompileAction extends CompileActionBase {
         }
       }
       else {
-        PsiElement element = dataContext.getData(LangDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element instanceof PsiPackage) {
           aPackage = (PsiPackage)element;
         }
@@ -167,7 +165,7 @@ public class CompileAction extends CompileActionBase {
     final PsiManager psiManager = PsiManager.getInstance(project);
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final CompilerManager compilerManager = CompilerManager.getInstance(project);
-    final List<VirtualFile> filesToCompile = new ArrayList<VirtualFile>();
+    final List<VirtualFile> filesToCompile = new ArrayList<>();
     for (final VirtualFile file : files) {
       if (!fileIndex.isInSourceContent(file)) {
         continue;

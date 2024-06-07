@@ -2,9 +2,9 @@
 package consulo.ui.ex.awt.internal;
 
 import consulo.application.ui.UISettings;
-import consulo.logging.Logger;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;
@@ -77,7 +77,7 @@ public abstract class MnemonicWrapper<T extends JComponent> implements Runnable,
       int code = disabled ? KeyEvent.VK_UNDEFINED : myCode;
       if (code != getMnemonicCode()) setMnemonicCode(code);
       // update input map to support Alt-based mnemonics
-      if (SystemInfo.isMac && Registry.is("ide.mac.alt.mnemonic.without.ctrl", true)) {
+      if (Platform.current().os().isMac() && Registry.is("ide.mac.alt.mnemonic.without.ctrl", true)) {
         InputMap map = myComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         if (map != null) updateInputMap(map, code);
       }

@@ -20,6 +20,7 @@ import consulo.application.ReadAction;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposer;
+import consulo.platform.Platform;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.awt.*;
@@ -380,7 +381,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
   protected void processMouseEvent(final MouseEvent e) {
     MouseEvent e2 = e;
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       if (SwingUtilities.isLeftMouseButton(e) && e.isControlDown() && e.getID() == MouseEvent.MOUSE_PRESSED) {
         int modifiers = e.getModifiers() & ~(InputEvent.CTRL_MASK | InputEvent.BUTTON1_MASK) | InputEvent.BUTTON3_MASK;
         e2 = new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), modifiers, e.getX(), e.getY(), e.getClickCount(),

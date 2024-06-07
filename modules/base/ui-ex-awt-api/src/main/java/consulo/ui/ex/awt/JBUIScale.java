@@ -17,17 +17,18 @@ package consulo.ui.ex.awt;
 
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.DetectRetinaKit;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.lazy.LazyValue;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
@@ -57,7 +58,7 @@ public class JBUIScale {
       log.info(String.format("Label font: %s, %d", font.getFontName(), font.getSize()));
     }
 
-    if (SystemInfo.isLinux) {
+    if (Platform.current().os().isLinux()) {
       Object value = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/DPI");
       if (isScaleVerbose) {
         log.info(String.format("gnome.Xft/DPI: %s", value));
@@ -83,7 +84,7 @@ public class JBUIScale {
         }
       }
     }
-    else if (SystemInfo.isWindows) {
+    else if (Platform.current().os().isWindows()) {
       //noinspection HardCodedStringLiteral
       @SuppressWarnings("SpellCheckingInspection") Font winFont = (Font)Toolkit.getDefaultToolkit().getDesktopProperty("win.messagebox.font");
       if (winFont != null) {
@@ -196,7 +197,7 @@ public class JBUIScale {
     }
 
     // Ignore the correction when UIUtil.DEF_SYSTEM_FONT_SIZE is overridden, see UIUtil.initSystemFontData.
-    if (SystemInfo.isLinux && scale == 1.25f && UIUtil.DEF_SYSTEM_FONT_SIZE == 12) {
+    if (Platform.current().os().isLinux() && scale == 1.25f && UIUtil.DEF_SYSTEM_FONT_SIZE == 12) {
       // Default UI font size for Unity and Gnome is 15. Scaling factor 1.25f works badly on Linux
       scale = 1f;
     }
@@ -275,7 +276,7 @@ public class JBUIScale {
     if (scale < 1 && sysScale() >= 1) scale = 1;
 
     // Ignore the correction when UIUtil.DEF_SYSTEM_FONT_SIZE is overridden, see UIUtil.initSystemFontData.
-    if (SystemInfo.isLinux && scale == 1.25f && UIUtil.DEF_SYSTEM_FONT_SIZE == 12) {
+    if (Platform.current().os().isLinux() && scale == 1.25f && UIUtil.DEF_SYSTEM_FONT_SIZE == 12) {
       //Default UI font size for Unity and Gnome is 15. Scaling factor 1.25f works badly on Linux
       scale = 1f;
     }
@@ -351,7 +352,7 @@ public class JBUIScale {
   public static float sysScale(@Nullable GraphicsConfiguration gc) {
     if (JreHiDpiUtil.isJreHiDPIEnabled() && gc != null) {
       if (gc.getDevice().getType() != GraphicsDevice.TYPE_PRINTER) {
-        if (SystemInfo.isMac && JreHiDpiUtil.isJreHiDPI_earlierVersion()) {
+        if (Platform.current().os().isMac() && JreHiDpiUtil.isJreHiDPI_earlierVersion()) {
           return DetectRetinaKit.isOracleMacRetinaDevice(gc.getDevice()) ? 2f : 1f;
         }
         return (float)gc.getDefaultTransform().getScaleX();

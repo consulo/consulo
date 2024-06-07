@@ -3,8 +3,9 @@ package consulo.ui.ex.awt.internal.laf;
 
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
-import consulo.logging.Logger;
 import consulo.application.util.ColoredItem;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.BackgroundSupplier;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandlerBase;
@@ -22,9 +23,9 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.plaf.ComponentUI;
@@ -39,7 +40,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import static consulo.application.ApplicationManager.getApplication;
-import static consulo.application.util.SystemInfo.isMac;
 import static consulo.application.util.registry.Registry.is;
 import static consulo.ui.ex.awt.paint.RectanglePainter.DRAW;
 
@@ -244,7 +244,7 @@ public final class DefaultTreeUI extends BasicTreeUI {
                 }
               }
             }
-            if (!isMac && lead && g instanceof Graphics2D) {
+            if (!Platform.current().os().isMac() && lead && g instanceof Graphics2D) {
               if (!selected) {
                 g.setColor(getBackground(tree, path, row, true));
                 DRAW.paint((Graphics2D)g, helper.getX(), bounds.y, helper.getWidth(), bounds.height, 0);

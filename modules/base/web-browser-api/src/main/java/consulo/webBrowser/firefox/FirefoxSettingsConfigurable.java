@@ -15,10 +15,10 @@
  */
 package consulo.webBrowser.firefox;
 
-import consulo.application.util.SystemInfo;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.io.FileUtil;
@@ -28,9 +28,9 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.WebBrowserBundle;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.io.File;
@@ -67,7 +67,7 @@ public class FirefoxSettingsConfigurable implements Configurable {
       public boolean isFileSelectable(VirtualFile file) {
         return file.getName().equals(FirefoxUtil.PROFILES_INI_FILE) && super.isFileSelectable(file);
       }
-    }.withShowHiddenFiles(SystemInfo.isUnix);
+    }.withShowHiddenFiles(Platform.current().os().isUnix());
   }
 
   @Override

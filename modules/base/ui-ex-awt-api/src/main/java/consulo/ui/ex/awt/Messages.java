@@ -23,6 +23,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -193,7 +194,7 @@ public class Messages {
   }
 
   public static boolean canShowMacSheetPanel() {
-    return SystemInfo.isMac && !isApplicationInUnitTestOrHeadless() && Registry.is("ide.mac.message.dialogs.as.sheets");
+    return Platform.current().os().isMac() && !isApplicationInUnitTestOrHeadless() && Registry.is("ide.mac.message.dialogs.as.sheets");
   }
 
   /**

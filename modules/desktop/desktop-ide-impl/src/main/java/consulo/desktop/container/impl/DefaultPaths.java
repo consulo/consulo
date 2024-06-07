@@ -15,10 +15,10 @@
  */
 package consulo.desktop.container.impl;
 
-import consulo.application.util.SystemInfo;
-import consulo.util.lang.SystemProperties;
 import com.sun.jna.platform.win32.Shell32Util;
 import com.sun.jna.platform.win32.ShlObj;
+import consulo.platform.Platform;
+import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -155,10 +155,10 @@ public abstract class DefaultPaths {
   private static final String ourDefaultPrefix = "Consulo";
 
   private static DefaultPaths get() {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return new Mac();
     }
-    else if (SystemInfo.isWindows) {
+    else if (Platform.current().os().isWindows()) {
       return new Windows();
     }
     return new Fallback();

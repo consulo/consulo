@@ -44,7 +44,7 @@ public interface LangDataKeys extends PlatformDataKeys {
   Key<Language[]> CONTEXT_LANGUAGES = Key.create("context.Languages");
 
   @Deprecated(forRemoval = true)
-  Key<PsiElement[]> PSI_ELEMENT_ARRAY = CommonDataKeys.PSI_ELEMENT_ARRAY;
+  Key<PsiElement[]> PSI_ELEMENT_ARRAY = PsiElement.KEY_OF_ARRAY;
 
   Key<Boolean> NO_NEW_ACTION = Key.create("IDEview.no.create.element.action");
   Key<Condition<AnAction>> PRESELECT_NEW_ACTION_CONDITION = Key.create("newElementAction.preselect.id");

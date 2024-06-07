@@ -1,12 +1,11 @@
 package consulo.desktop.util.windows;
 
-import consulo.application.util.AtomicNotNullLazyValue;
-import consulo.application.util.SystemInfo;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.*;
 import com.sun.jna.ptr.IntByReference;
+import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class WindowsElevationUtil {
     @Nonnull
     @Override
     protected Boolean compute() {
-      if (!SystemInfo.isWindows) {
+      if (!Platform.current().os().isWindows()) {
         return false;
       }
 

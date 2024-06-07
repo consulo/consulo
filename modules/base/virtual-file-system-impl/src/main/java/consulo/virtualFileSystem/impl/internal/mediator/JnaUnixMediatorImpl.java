@@ -15,17 +15,18 @@
  */
 package consulo.virtualFileSystem.impl.internal.mediator;
 
-import consulo.virtualFileSystem.internal.FileSystemMediator;
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileAttributes;
-import consulo.util.lang.SystemProperties;
 import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.util.io.FileAttributes;
+import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.internal.FileSystemMediator;
 import jakarta.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -89,8 +90,8 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   private final boolean myCoarseTs = SystemProperties.getBooleanProperty(COARSE_TIMESTAMP, false);
 
   public JnaUnixMediatorImpl() throws Exception {
-    if (SystemInfo.isLinux) {
-      if ("arm".equals(SystemInfo.OS_ARCH)) {
+    if (Platform.current().os().isLinux()) {
+      if ("arm".equals(Platform.current().os().arch())) {
         if (SystemInfo.is32Bit) {
           myOffsets = LINUX_ARM;
         }
@@ -98,21 +99,21 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
           throw new IllegalStateException("AArch64 architecture is not supported");
         }
       }
-      else if ("ppc".equals(SystemInfo.OS_ARCH)) {
+      else if ("ppc".equals(Platform.current().os().arch())) {
         myOffsets = SystemInfo.is32Bit ? LNX_PPC32 : LNX_PPC64;
       }
       else {
         myOffsets = SystemInfo.is32Bit ? LINUX_32 : LINUX_64;
       }
     }
-    else if (SystemInfo.isMac | SystemInfo.isFreeBSD) {
+    else if (Platform.current().os().isMac() | SystemInfo.isFreeBSD) {
       myOffsets = SystemInfo.is32Bit ? BSD_32 : BSD_64;
     }
     else if (SystemInfo.isSolaris) {
       myOffsets = SystemInfo.is32Bit ? SUN_OS_32 : SUN_OS_64;
     }
     else {
-      throw new IllegalStateException("Unsupported OS/arch: " + SystemInfo.OS_NAME + "/" + SystemInfo.OS_ARCH);
+      throw new IllegalStateException("Unsupported OS/arch: " + Platform.current().os().name() + "/" + Platform.current().os().arch());
     }
 
     myLibC = (LibC)Native.loadLibrary("c", LibC.class);
@@ -123,7 +124,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   @Override
   public FileAttributes getAttributes(@Nonnull String path) {
     Memory buffer = new Memory(256);
-    int res = SystemInfo.isLinux ? myLibC.__lxstat64(STAT_VER, path, buffer) : myLibC.lstat(path, buffer);
+    int res = Platform.current().os().isLinux() ? myLibC.__lxstat64(STAT_VER, path, buffer) : myLibC.lstat(path, buffer);
     if (res != 0) return null;
 
     int mode = getModeFlags(buffer) & LibC.S_MASK;
@@ -148,7 +149,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   private boolean loadFileStatus(@Nonnull String path, Memory buffer) {
-    return (SystemInfo.isLinux ? myLibC.__xstat64(STAT_VER, path, buffer) : myLibC.stat(path, buffer)) == 0;
+    return (Platform.current().os().isLinux() ? myLibC.__xstat64(STAT_VER, path, buffer) : myLibC.stat(path, buffer)) == 0;
   }
 
   @Override
@@ -185,7 +186,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   private int getModeFlags(Memory buffer) {
-    return SystemInfo.isLinux ? buffer.getInt(myOffsets[OFF_MODE]) : buffer.getShort(myOffsets[OFF_MODE]);
+    return Platform.current().os().isLinux() ? buffer.getInt(myOffsets[OFF_MODE]) : buffer.getShort(myOffsets[OFF_MODE]);
   }
 
   private boolean ownFile(Memory buffer) {

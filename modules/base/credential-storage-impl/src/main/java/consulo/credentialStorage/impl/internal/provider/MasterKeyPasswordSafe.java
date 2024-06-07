@@ -17,7 +17,6 @@ package consulo.credentialStorage.impl.internal.provider;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.credentialStorage.PasswordSafeException;
 import consulo.credentialStorage.impl.internal.ByteArrayWrapper;
 import consulo.credentialStorage.impl.internal.provider.masterKey.EncryptionUtil;
@@ -26,10 +25,11 @@ import consulo.credentialStorage.impl.internal.provider.masterKey.PasswordDataba
 import consulo.credentialStorage.impl.internal.provider.masterKey.WindowsCryptUtils;
 import consulo.credentialStorage.impl.internal.ui.MasterPasswordDialog;
 import consulo.credentialStorage.impl.internal.ui.ResetPasswordDialog;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nullable;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -297,7 +297,7 @@ public class MasterKeyPasswordSafe extends BasePasswordSafeProvider {
   @SuppressWarnings({"MethodMayBeStatic"})
   public boolean isOsProtectedPasswordSupported() {
     // TODO extension point needed?
-    return SystemInfo.isWindows;
+    return Platform.current().os().isWindows();
   }
 
 
@@ -309,7 +309,7 @@ public class MasterKeyPasswordSafe extends BasePasswordSafeProvider {
    * @throws MasterPasswordUnavailableException if encryption fails
    */
   private static byte[] encryptPassword(String pw) throws MasterPasswordUnavailableException {
-    assert SystemInfo.isWindows;
+    assert Platform.current().os().isWindows();
     return WindowsCryptUtils.protect(EncryptionUtil.getUTF8Bytes(pw));
   }
 
@@ -321,7 +321,7 @@ public class MasterKeyPasswordSafe extends BasePasswordSafeProvider {
    * @throws MasterPasswordUnavailableException if decryption fails
    */
   private static String decryptPassword(byte[] pw) throws MasterPasswordUnavailableException {
-    assert SystemInfo.isWindows;
+    assert Platform.current().os().isWindows();
     try {
       return new String(WindowsCryptUtils.unprotect(pw), "UTF-8");
     }

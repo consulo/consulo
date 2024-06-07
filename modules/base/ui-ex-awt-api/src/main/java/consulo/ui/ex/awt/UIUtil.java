@@ -23,6 +23,7 @@ import consulo.component.util.localize.BundleBase;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;
@@ -177,7 +178,7 @@ public class UIUtil {
   };
 
   private static final Supplier<Boolean> X_RENDER_ACTIVE = LazyValue.atomicNotNull(() -> {
-    if (!SystemInfo.isXWindow) {
+    if (!Platform.current().os().isXWindow()) {
       return false;
     }
     try {
@@ -236,7 +237,7 @@ public class UIUtil {
   }
 
   public static Cursor getTextCursor(final Color backgroundColor) {
-    return SystemInfo.isMac && ColorUtil.isDark(backgroundColor) ? MacUIUtil.getInvertedTextCursor() : Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+    return Platform.current().os().isMac() && ColorUtil.isDark(backgroundColor) ? MacUIUtil.getInvertedTextCursor() : Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
   }
 
   /**
@@ -385,7 +386,7 @@ public class UIUtil {
   @NonNls
   private static final String ROOT_PANE = "JRootPane.future";
 
-  private static final Ref<Boolean> ourRetina = Ref.create(SystemInfo.isMac ? null : false);
+  private static final Ref<Boolean> ourRetina = Ref.create(Platform.current().os().isMac() ? null : false);
 
   private static volatile StyleSheet ourDefaultHtmlKitCss;
 
@@ -462,7 +463,7 @@ public class UIUtil {
   }
 
   public static boolean isRetina(Graphics2D graphics) {
-    return SystemInfo.isMac ? DetectRetinaKit.isMacRetina(graphics) : isRetina();
+    return Platform.current().os().isMac() ? DetectRetinaKit.isMacRetina(graphics) : isRetina();
   }
 
   public static boolean isRetina() {
@@ -515,7 +516,7 @@ public class UIUtil {
     //   }
     // }
 
-    return SystemInfo.isMac && System.getProperty("java.runtime.version").startsWith("1.6.0_29");
+    return Platform.current().os().isMac() && System.getProperty("java.runtime.version").startsWith("1.6.0_29");
   }
 
   public static void removeLeakingAppleListeners() {
@@ -617,7 +618,7 @@ public class UIUtil {
     char c = e.getKeyChar();
     if (c < 0x20 || c == 0x7F) return false;
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return !e.isMetaDown() && !e.isControlDown();
     }
 
@@ -1480,17 +1481,17 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static boolean isUnderAquaLookAndFeel() {
-    return SystemInfo.isMac && UIManager.getLookAndFeel().getName().contains("Mac OS X");
+    return Platform.current().os().isMac() && UIManager.getLookAndFeel().getName().contains("Mac OS X");
   }
 
   public static boolean isUnderAquaBasedLookAndFeel() {
-    return SystemInfo.isMac && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
+    return Platform.current().os().isMac() && (isUnderAquaLookAndFeel() || isUnderDarkBuildInLaf());
   }
 
   @Deprecated
   @DeprecationInfo("macOS specific option")
   public static boolean isGraphite() {
-    if (!SystemInfo.isMac) return false;
+    if (!Platform.current().os().isMac()) return false;
     try {
       // https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSCell_Class/index.html#//apple_ref/doc/c_ref/NSGraphiteControlTint
       // NSGraphiteControlTint = 6
@@ -1512,7 +1513,7 @@ public class UIUtil {
   }
 
   public static boolean isUnderDefaultMacTheme() {
-    return SystemInfo.isMac && isUnderIntelliJLaF();
+    return Platform.current().os().isMac() && isUnderIntelliJLaF();
   }
 
   @Deprecated
@@ -1580,7 +1581,7 @@ public class UIUtil {
   }
 
   public static boolean isUnderNativeMacLookAndFeel() {
-    return SystemInfo.isMac;
+    return Platform.current().os().isMac();
   }
 
   public static int getListCellHPadding() {
@@ -1604,7 +1605,7 @@ public class UIUtil {
   }
 
   public static boolean isControlKeyDown(MouseEvent mouseEvent) {
-    return SystemInfo.isMac ? mouseEvent.isMetaDown() : mouseEvent.isControlDown();
+    return Platform.current().os().isMac() ? mouseEvent.isMetaDown() : mouseEvent.isControlDown();
   }
 
   public static String[] getValidFontNames(final boolean familyName) {
@@ -1733,7 +1734,7 @@ public class UIUtil {
                                         final Color bgColor,
                                         final Color fgColor,
                                         final boolean opaque) {
-    if ((SystemInfo.isMac && !isRetina()) || SystemInfo.isLinux) {
+    if ((Platform.current().os().isMac() && !isRetina()) || Platform.current().os().isLinux()) {
       drawAppleDottedLine(g, startX, endX, lineY, bgColor, fgColor, opaque);
     }
     else {
@@ -2565,7 +2566,7 @@ public class UIUtil {
 
   @Nonnull
   public static Font getFontWithFallbackIfNeeded(@Nonnull Font font, @Nonnull String text) {
-    if (!SystemInfo.isMac /* 'getFontWithFallback' does nothing on macOS */ && font.canDisplayUpTo(text) != -1) {
+    if (!Platform.current().os().isMac() /* 'getFontWithFallback' does nothing on macOS */ && font.canDisplayUpTo(text) != -1) {
       return getFontWithFallback(font);
     }
     else {
@@ -2824,7 +2825,7 @@ public class UIUtil {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   public static void fixFormattedField(JFormattedTextField field) {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
       final int commandKeyMask = toolkit.getMenuShortcutKeyMask();
       final InputMap inputMap = field.getInputMap();
@@ -2870,7 +2871,7 @@ public class UIUtil {
 
   @SuppressWarnings("deprecation")
   public static void setComboBoxEditorBounds(int x, int y, int width, int height, JComponent editor) {
-    if (SystemInfo.isMac && isUnderAquaLookAndFeel()) {
+    if (Platform.current().os().isMac() && isUnderAquaLookAndFeel()) {
       // fix for too wide combobox editor, see AquaComboBoxUI.layoutContainer:
       // it adds +4 pixels to editor width. WTF?!
       editor.reshape(x, y, width - 4, height - 1);
@@ -3375,7 +3376,7 @@ public class UIUtil {
 
     // Evaluate the value depending on our current theme
     if (lcdContrastValue == 0) {
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         lcdContrastValue = isUnderDarcula() ? 140 : 200;
       }
       else {
@@ -3451,14 +3452,14 @@ public class UIUtil {
 
   public static void suppressFocusStealing(Window window) {
     // Focus stealing is not a problem on Mac
-    if (SystemInfo.isMac) return;
+    if (Platform.current().os().isMac()) return;
     if (Registry.is("suppress.focus.stealing")) {
       setAutoRequestFocus(window, false);
     }
   }
 
   public static void setAutoRequestFocus(final Window onWindow, final boolean set) {
-    if (!SystemInfo.isMac) {
+    if (!Platform.current().os().isMac()) {
       try {
         onWindow.getClass().getMethod("setAutoRequestFocus", boolean.class).invoke(onWindow, set);
       }
@@ -3583,12 +3584,12 @@ public class UIUtil {
     textComponent.putClientProperty(UNDO_MANAGER, undoManager);
     textComponent.getDocument().addUndoableEditListener(undoManager);
     textComponent.getInputMap()
-                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
+                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK),
                       "undoKeystroke");
     textComponent.getActionMap().put("undoKeystroke", UNDO_ACTION);
     textComponent.getInputMap()
                  .put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-                                             (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK),
+                                             (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK),
                       "redoKeystroke");
     textComponent.getActionMap().put("redoKeystroke", REDO_ACTION);
   }

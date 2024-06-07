@@ -17,7 +17,6 @@ package consulo.application.impl.internal.start;
 
 import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
-import consulo.application.util.SystemInfo;
 import consulo.container.ExitCodes;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.impl.ShowErrorCaller;
@@ -28,6 +27,7 @@ import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactory;
 import consulo.logging.internal.LoggerFactoryInitializer;
+import consulo.platform.Platform;
 import consulo.process.local.EnvironmentUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ShutDownTracker;
@@ -172,7 +172,7 @@ public class StartupUtil {
 
     JnaLoader.load(org.slf4j.LoggerFactory.getLogger(StartupUtil.class));
 
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       // WinP should not unpack .dll files into parent directory
       System.setProperty("winp.folder.preferred", ideTempDir.getPath());
     }

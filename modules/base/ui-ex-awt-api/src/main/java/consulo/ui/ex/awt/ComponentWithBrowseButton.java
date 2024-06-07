@@ -17,12 +17,12 @@ package consulo.ui.ex.awt;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
@@ -39,10 +39,10 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -58,7 +58,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
   private boolean myButtonEnabled = true;
 
   public ComponentWithBrowseButton(Comp component, @Nullable ActionListener browseActionListener) {
-    super(new BorderLayout(SystemInfo.isMac ? 0 : 2, 0));
+    super(new BorderLayout(Platform.current().os().isMac() ? 0 : 2, 0));
 
     myComponent = component;
     // required! otherwise JPanel will occasionally gain focus instead of the component
