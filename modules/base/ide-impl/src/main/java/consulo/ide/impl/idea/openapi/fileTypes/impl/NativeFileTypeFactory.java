@@ -16,26 +16,18 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.virtualFileSystem.archive.ZipArchiveFileType;
-import consulo.ide.impl.idea.openapi.fileTypes.*;
-import consulo.language.plain.PlainTextFileType;
+import consulo.ide.impl.idea.openapi.fileTypes.NativeFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-
 import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionImpl
-public class PlatformFileTypeFactory extends FileTypeFactory {
+public class NativeFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@Nonnull final FileTypeConsumer consumer) {
-    // eat jar file type, but java plugin will rewrite it
-    consumer.consume(ZipArchiveFileType.INSTANCE, "zip;ear;ane;egg;jar");
-    consumer.consume(PlainTextFileType.INSTANCE, "txt;sh;bat;cmd;policy;log;cgi;MF;jad;jam;htaccess");
     consumer.consume(NativeFileType.INSTANCE, "doc;docx;xls;xlsx;ppt;pptx;mdb;vsd;pdf;hlp;chm;odt");
-    consumer.consume(UnknownFileType.INSTANCE);
   }
 }

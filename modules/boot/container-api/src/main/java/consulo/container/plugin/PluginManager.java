@@ -26,6 +26,8 @@ import java.util.function.Consumer;
  * @since 2019-07-25
  */
 public final class PluginManager {
+  public static final String CONSULO_PLUGIN_EXTENSION = "consulo-plugin";
+
   private static final PluginManagerInternal ourInternal;
 
   static {
