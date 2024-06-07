@@ -265,7 +265,11 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         elements.add(rootElement);
         //noinspection unchecked
         elements.addAll(rootElement.getChildren("component"));
-        state = consulo.ide.impl.idea.util.containers.ContainerUtil.find(elements, element -> "component".equals(element.getName()) && COMPONENT_NAME.equals(element.getAttributeValue("name")));
+        state = consulo.util.collection.ContainerUtil.find(
+          elements,
+          element -> "component".equals(element.getName())
+            && COMPONENT_NAME.equals(element.getAttributeValue("name"))
+        );
       }
       if (state != null) {
         final Configuration cfg = new Configuration();
