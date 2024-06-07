@@ -21,7 +21,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;

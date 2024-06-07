@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.injection;
 
 import consulo.configurable.Configurable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;

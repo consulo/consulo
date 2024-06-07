@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.PsiNamedElement;

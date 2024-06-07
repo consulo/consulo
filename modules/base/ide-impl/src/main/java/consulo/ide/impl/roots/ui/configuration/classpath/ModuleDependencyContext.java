@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ide.setting.module.ClasspathPanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;

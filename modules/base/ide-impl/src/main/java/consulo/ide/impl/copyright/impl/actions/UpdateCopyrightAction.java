@@ -25,7 +25,6 @@ import consulo.ide.impl.copyright.impl.pattern.FileUtil;
 import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
@@ -61,7 +60,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
 
   private static boolean isEnabled(AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = context.getData(CommonDataKeys.PROJECT);
+    final Project project = context.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -69,8 +68,8 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     if (!CopyrightManager.getInstance(project).hasAnyCopyrights()) {
       return false;
     }
-    final VirtualFile[] files = context.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
-    final Editor editor = context.getData(CommonDataKeys.EDITOR);
+    final VirtualFile[] files = context.getData(VirtualFile.KEY_OF_ARRAY);
+    final Editor editor = context.getData(Editor.KEY);
     if (editor != null) {
       final PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (file == null || !UpdateCopyrightsProvider.hasExtension(file)) {
@@ -95,7 +94,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
           context.getData(LangDataKeys.MODULE_CONTEXT) == null &&
           context.getData(LangDataKeys.MODULE_CONTEXT_ARRAY) == null &&
           context.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-        final PsiElement[] elems = context.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+        final PsiElement[] elems = context.getData(PsiElement.KEY_OF_ARRAY);
         if (elems != null) {
           boolean copyrightEnabled = false;
           for (PsiElement elem : elems) {

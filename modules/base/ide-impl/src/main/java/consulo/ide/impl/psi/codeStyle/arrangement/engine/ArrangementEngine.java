@@ -27,7 +27,7 @@ import consulo.language.codeStyle.arrangement.match.TextAwareArrangementEntry;
 import consulo.project.DumbService;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

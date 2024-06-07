@@ -5,12 +5,11 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.LangBundle;
 import consulo.language.codeStyle.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.*;
@@ -149,7 +148,7 @@ public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(CommonDataKeys.PROJECT), "preferences.sourceCode", "detect indent");
+      ShowSettingsUtil.getInstance().showSettingsDialog(e.getData(Project.KEY), "preferences.sourceCode", "detect indent");
     }
   }
 
