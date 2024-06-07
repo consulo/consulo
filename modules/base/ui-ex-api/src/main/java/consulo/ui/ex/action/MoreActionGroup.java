@@ -39,7 +39,7 @@ public class MoreActionGroup extends DefaultActionGroup {
   public void update(@Nonnull AnActionEvent e) {
     Presentation presentation = e.getPresentation();
 
-    presentation.setIcon(myHorizontal ? PlatformIconGroup.actionsMorehorizontal() : PlatformIconGroup.actionsMore());
+    presentation.setIcon(myHorizontal ? PlatformIconGroup.actionsMorehorizontal() : PlatformIconGroup.actionsMorevertical());
     presentation.putClientProperty(ActionButton.HIDE_DROPDOWN_ICON, true);
     // TODO not supported presentation.setHideGroupIfEmpty(true);
   }

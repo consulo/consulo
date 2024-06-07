@@ -26,15 +26,14 @@ import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.UILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -49,7 +48,7 @@ public abstract class DesktopToolWindowHeader extends JPanel implements Disposab
     private NotNullProducer<ActionGroup> myGearProducer;
 
     public GearAction(NotNullProducer<ActionGroup> gearProducer) {
-      super("Show options", null, PlatformIconGroup.actionsMorevertical());
+      super("Show options", null, PlatformIconGroup.generalGearplain());
       myGearProducer = gearProducer;
     }
 

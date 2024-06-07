@@ -15,13 +15,24 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.image.Image;
+import jakarta.annotation.Nullable;
 
+@ActionImpl(id = "CollapseAll")
 public class CollapseAllAction extends TreeCollapseAllActionBase {
   @Override
   protected TreeExpander getExpander(DataContext dataContext) {
     return dataContext.getData(PlatformDataKeys.TREE_EXPANDER);
+  }
+
+  @Nullable
+  @Override
+  protected Image getTemplateIcon() {
+    return PlatformIconGroup.actionsCollapseall();
   }
 }

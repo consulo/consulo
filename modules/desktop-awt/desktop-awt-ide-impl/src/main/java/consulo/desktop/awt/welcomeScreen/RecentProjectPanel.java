@@ -338,7 +338,7 @@ public class RecentProjectPanel {
 
     public Rectangle getCloseIconRect(int index) {
       final Rectangle bounds = getCellBounds(index, index);
-      Image icon = PlatformIconGroup.actionsMore();
+      Image icon = PlatformIconGroup.actionsMorevertical();
       return new Rectangle(bounds.width - icon.getWidth() * 2, bounds.y, icon.getWidth() * 2, (int)bounds.getHeight());
     }
 

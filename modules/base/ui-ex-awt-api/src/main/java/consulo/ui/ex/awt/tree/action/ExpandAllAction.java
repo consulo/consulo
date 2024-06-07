@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.tree.action;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
@@ -26,7 +26,7 @@ public class ExpandAllAction extends AnAction {
   protected JTree myTree;
 
   public ExpandAllAction(JTree tree) {
-    super("Expand All", "", AllIcons.Actions.Expandall);
+    super("Expand All", "", PlatformIconGroup.actionsExpandall());
     myTree = tree;
   }
 

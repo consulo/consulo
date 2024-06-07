@@ -84,7 +84,7 @@ public class AllIcons {
     public static final Image Menu_replace = PlatformIconGroup.actionsMenu_replace(); // 16x16
     public static final Image Menu_saveall = PlatformIconGroup.actionsMenu_saveall(); // 16x16
     public static final Image Module = PlatformIconGroup.actionsModule(); // 16x16
-    public static final Image More = PlatformIconGroup.actionsMore();
+    public static final Image More = PlatformIconGroup.actionsMorevertical();
     public static final Image Move_to_button = PlatformIconGroup.actionsMove_to_button(); // 11x10
     public static final Image MoveDown = PlatformIconGroup.actionsMovedown(); // 14x14
     public static final Image MoveToAnotherChangelist = PlatformIconGroup.actionsMovetoanotherchangelist(); // 16x16
@@ -368,7 +368,7 @@ public class AllIcons {
     public static final Image Bullet = PlatformIconGroup.generalBullet(); // 16x16
     public static final Image CollapseComponent = PlatformIconGroup.generalCollapsecomponent();
     public static final Image CollapseComponentHover = PlatformIconGroup.generalCollapsecomponenthover();
-    public static final Image CollapseAll = PlatformIconGroup.generalCollapseall(); // 11x16
+    public static final Image CollapseAll = PlatformIconGroup.actionsCollapseall(); // 11x16
     public static final Image ContextHelp = PlatformIconGroup.generalContexthelp();
     public static final Image Divider = PlatformIconGroup.generalDivider(); // 2x19
     public static final Image Dropdown = PlatformIconGroup.generalDropdown(); // 16x16
@@ -379,7 +379,7 @@ public class AllIcons {
     public static final Image ExclMark = PlatformIconGroup.generalExclmark(); // 16x16
     public static final Image ExpandComponent = PlatformIconGroup.generalExpandcomponent();
     public static final Image ExpandComponentHover = PlatformIconGroup.generalExpandcomponenthover();
-    public static final Image ExpandAll = PlatformIconGroup.generalExpandall(); // 11x16
+    public static final Image ExpandAll = PlatformIconGroup.actionsExpandall(); // 11x16
     public static final Image Filter = PlatformIconGroup.generalFilter(); // 16x16
     public static final Image GearPlain = PlatformIconGroup.generalGearplain(); // 16x16
     public static final Image HideToolWindow = PlatformIconGroup.generalHidetoolwindow(); // 16x16

@@ -208,14 +208,14 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             if (isSelected) {
               Style style = StyleManager.get().getCurrentStyle();
               if (style.isDark()) {
-                moreImage = PlatformIconGroup.actionsMore();
+                moreImage = PlatformIconGroup.actionsMorevertical();
               }
               else {
-                moreImage = IconLibraryManager.get().inverseIcon(PlatformIconGroup.actionsMore());
+                moreImage = IconLibraryManager.get().inverseIcon(PlatformIconGroup.actionsMorevertical());
               }
             }
             else {
-              moreImage = ImageEffects.transparent(PlatformIconGroup.actionsMore(), 0.5f);
+              moreImage = ImageEffects.transparent(PlatformIconGroup.actionsMorevertical(), 0.5f);
             }
             
             JLabel moreActionLabel = new JBLabel(moreImage);

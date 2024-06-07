@@ -498,10 +498,6 @@
       <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
     </group>
 
-    <action id="ExpandAll" class="consulo.ide.impl.idea.ide.actions.ExpandAllAction"
-            icon="consulo.platform.base.PlatformIconGroup@general.expandall"/>
-    <action id="CollapseAll" class="consulo.ide.impl.idea.ide.actions.CollapseAllAction"
-            icon="consulo.platform.base.PlatformIconGroup@general.collapseall"/>
     <action id="ExportToTextFile" class="consulo.ide.impl.idea.ide.actions.ExportToTextFileAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
     <action id="ExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.ExpandTreeNodeAction"/>

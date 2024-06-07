@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ui.content.ContentManagerUtil;
 import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ui.content.ContentManagerUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
@@ -31,7 +30,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -87,7 +85,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
   }
 
   protected Handler getHandler(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     FileEditorWindow currentWindow = e.getData(FileEditorWindow.DATA_KEY);
 
     Content content = currentWindow != null ? null : getContentFromEvent(e);
@@ -158,7 +156,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
 
   @Nullable
   private static VirtualFile getFileInWindow(@Nonnull AnActionEvent e, @Nonnull FileEditorWindow window) {
-    VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    VirtualFile file = e.getData(VirtualFile.KEY);
     if (file == null) file = window.getSelectedFile();
     if (file != null && window.isFileOpen(file)) return file;
     return null;
