@@ -48,7 +48,7 @@ import consulo.content.library.LibraryTable;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;

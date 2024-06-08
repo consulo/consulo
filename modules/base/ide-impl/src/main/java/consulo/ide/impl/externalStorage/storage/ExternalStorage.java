@@ -25,6 +25,7 @@ import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.util.jdom.JDOMUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -321,19 +322,19 @@ public class ExternalStorage {
 
   @Nonnull
   private static String getOsPrefix() {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       return "win";
     }
-    else if (SystemInfo.isMac) {
+    else if (Platform.current().os().isMac()) {
       return "mac";
     }
-    else if (SystemInfo.isLinux) {
+    else if (Platform.current().os().isLinux()) {
       return "linux";
     }
     else if (SystemInfo.isFreeBSD) {
       return "bsd";
     }
-    else if (SystemInfo.isUnix) {
+    else if (Platform.current().os().isUnix()) {
       return "unix";
     }
     return "other";

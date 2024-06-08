@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.*;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.tree.CheckboxTreeNoPolicy;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.OnePixelSplitter;

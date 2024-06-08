@@ -30,7 +30,7 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.impl.internal.template.TemplateDataLanguagePatterns;
 import consulo.ide.impl.idea.ui.*;

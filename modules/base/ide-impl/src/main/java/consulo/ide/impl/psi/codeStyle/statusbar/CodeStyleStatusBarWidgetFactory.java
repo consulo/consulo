@@ -11,8 +11,8 @@ import consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeSty
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.Language;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiFile;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
@@ -44,11 +44,12 @@ public class CodeStyleStatusBarWidgetFactory extends StatusBarEditorBasedWidgetF
     return DumbAwareAction.create(ApplicationBundle.message("code.style.widget.configure.indents", langName), event -> {
       Configurable configurable = findCodeStyleConfigurableId(psiFile.getProject(), langName);
       if (configurable instanceof CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper) {
-        ShowSettingsUtil.getInstance()
-                        .editConfigurable(event.getData(CommonDataKeys.PROJECT),
-                                          configurable,
-                                          () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable).selectTab(
-                                            ApplicationBundle.message("title.tabs.and.indents")));
+        ShowSettingsUtil.getInstance().editConfigurable(
+          event.getData(Project.KEY),
+          configurable,
+          () -> ((CodeStyleSchemesConfigurable.CodeStyleConfigurableWrapper)configurable)
+            .selectTab(ApplicationLocalize.titleTabsAndIndents().get())
+        );
       }
     });
   }

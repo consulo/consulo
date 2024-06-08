@@ -16,18 +16,15 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
-import consulo.annotation.component.ActionRef;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.language.copyright.config.CopyrightManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
@@ -38,7 +35,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-
 import jakarta.annotation.Nullable;
 
 @ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
@@ -51,7 +47,7 @@ public class GenerateCopyrightAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext context = event.getDataContext();
-    Project project = context.getData(CommonDataKeys.PROJECT);
+    Project project = context.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
@@ -65,9 +61,9 @@ public class GenerateCopyrightAction extends AnAction {
 
   @Nullable
   private static PsiFile getFile(DataContext context, Project project) {
-    PsiFile file = context.getData(LangDataKeys.PSI_FILE);
+    PsiFile file = context.getData(PsiFile.KEY);
     if (file == null) {
-      Editor editor = context.getData(PlatformDataKeys.EDITOR);
+      Editor editor = context.getData(Editor.KEY);
       if (editor != null) {
         file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       }
@@ -78,9 +74,9 @@ public class GenerateCopyrightAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent event) {
     DataContext context = event.getDataContext();
-    Project project = context.getData(CommonDataKeys.PROJECT);
+    Project project = context.getData(Project.KEY);
     assert project != null;
-    Module module = context.getData(LangDataKeys.MODULE);
+    Module module = context.getData(Module.KEY);
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
 

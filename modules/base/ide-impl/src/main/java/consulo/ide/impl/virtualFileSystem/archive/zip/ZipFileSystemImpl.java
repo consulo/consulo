@@ -16,7 +16,7 @@
 package consulo.ide.impl.virtualFileSystem.archive.zip;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.ide.impl.virtualFileSystem.archive.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.VirtualFile;

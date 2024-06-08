@@ -23,7 +23,7 @@ import consulo.ui.ex.JBColor;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.virtualFileSystem.VirtualFile;

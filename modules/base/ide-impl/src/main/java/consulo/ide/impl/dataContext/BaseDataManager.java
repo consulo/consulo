@@ -16,19 +16,23 @@
 package consulo.ide.impl.dataContext;
 
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.internal.DataManagerEx;
 import consulo.dataContext.internal.DataRuleHoler;
+import consulo.fileEditor.FileEditor;
 import consulo.ide.impl.idea.ide.impl.dataRules.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ModalityState;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.Maps;
@@ -151,10 +155,10 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
       if (PlatformDataKeys.CONTEXT_UI_COMPONENT == dataId) {
         return (T)component;
       }
-      if (PlatformDataKeys.MODALITY_STATE == dataId) {
-        return (T)IdeaModalityState.NON_MODAL; //FIXME [VISTALL] stub
+      if (ModalityState.KEY == dataId) {
+        return (T)ModalityStateImpl.NON_MODAL; //FIXME [VISTALL] stub
       }
-      if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
+      if (Editor.KEY == dataId || EditorKeys.HOST_EDITOR == dataId) {
         Editor editor = (Editor)getDataManager().getData(dataId, component);
         //return (T)validateEditor(editor);   //FIXME [VISTALL] stub
         return (T)editor;
@@ -163,9 +167,14 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     }
   }
 
-  protected static final Set<Key> ourSafeKeys = ContainerUtil
-          .newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, UIExAWTDataKey.CONTEXT_COMPONENT, PlatformDataKeys.CONTEXT_UI_COMPONENT,
-                      PlatformDataKeys.MODALITY_STATE);
+  protected static final Set<Key> ourSafeKeys = ContainerUtil.newHashSet(
+    Project.KEY,
+    Editor.KEY,
+    PlatformDataKeys.IS_MODAL_CONTEXT,
+    UIExAWTDataKey.CONTEXT_COMPONENT,
+    PlatformDataKeys.CONTEXT_UI_COMPONENT,
+    ModalityState.KEY
+  );
 
 
   protected final ConcurrentMap<Key, GetDataRule> myDataConstantToRuleMap = new ConcurrentHashMap<>();
@@ -183,9 +192,9 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     myDataConstantToRuleMap.put(PlatformDataKeys.CUT_PROVIDER, new CutProviderRule());
     myDataConstantToRuleMap.put(PlatformDataKeys.PASTE_PROVIDER, new PasteProviderRule());
     myDataConstantToRuleMap.put(PlatformDataKeys.FILE_TEXT, new FileTextRule());
-    myDataConstantToRuleMap.put(PlatformDataKeys.FILE_EDITOR, new FileEditorRule());
-    myDataConstantToRuleMap.put(CommonDataKeys.NAVIGATABLE_ARRAY, new NavigatableArrayRule());
-    myDataConstantToRuleMap.put(CommonDataKeys.EDITOR_EVEN_IF_INACTIVE, new InactiveEditorRule());
+    myDataConstantToRuleMap.put(FileEditor.KEY, new FileEditorRule());
+    myDataConstantToRuleMap.put(Navigatable.KEY_OF_ARRAY, new NavigatableArrayRule());
+    myDataConstantToRuleMap.put(EditorKeys.EDITOR_EVEN_IF_INACTIVE, new InactiveEditorRule());
   }
 
   @Nullable
@@ -197,7 +206,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
 
     final GetDataRule<T> plainRule = getRuleFromMap(AnActionEvent.uninjectedId(dataId));
     if (plainRule != null) {
-      return new GetDataRule<T>() {
+      return new GetDataRule<>() {
         @Nonnull
         @Override
         public Key<T> getKey() {
@@ -285,7 +294,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
   public DataContext getDataContextTest(consulo.ui.Component component) {
     DataContext dataContext = getDataContext(component);
 
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     Component focusedComponent = myWindowManager.get().getFocusedComponent(project);
     if (focusedComponent != null) {
       dataContext = getDataContext(focusedComponent);
@@ -322,7 +331,7 @@ public abstract class BaseDataManager implements DataManagerEx, DataRuleHoler {
     return new MyUIDataContext(this, component);
   }
 
-  public DataContext getDataContextTest(java.awt.Component component) {
+  public DataContext getDataContextTest(Component component) {
     throw new UnsupportedOperationException();
   }
 }

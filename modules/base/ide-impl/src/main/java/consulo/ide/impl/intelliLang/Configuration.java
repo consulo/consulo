@@ -21,7 +21,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.command.undo.GlobalUndoableAction;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
@@ -265,7 +265,11 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
         elements.add(rootElement);
         //noinspection unchecked
         elements.addAll(rootElement.getChildren("component"));
-        state = consulo.util.collection.ContainerUtil.find(elements, element -> "component".equals(element.getName()) && COMPONENT_NAME.equals(element.getAttributeValue("name")));
+        state = consulo.util.collection.ContainerUtil.find(
+          elements,
+          element -> "component".equals(element.getName())
+            && COMPONENT_NAME.equals(element.getAttributeValue("name"))
+        );
       }
       if (state != null) {
         final Configuration cfg = new Configuration();
