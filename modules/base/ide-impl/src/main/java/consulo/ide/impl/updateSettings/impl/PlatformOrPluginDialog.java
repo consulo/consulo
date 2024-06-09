@@ -26,7 +26,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.*;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;

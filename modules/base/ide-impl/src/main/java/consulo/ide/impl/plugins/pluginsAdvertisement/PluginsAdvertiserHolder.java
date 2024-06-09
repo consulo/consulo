@@ -21,7 +21,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.update.UpdateSettings;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 

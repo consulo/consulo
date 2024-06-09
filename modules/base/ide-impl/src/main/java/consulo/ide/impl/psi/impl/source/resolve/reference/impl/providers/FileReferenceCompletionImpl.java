@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.component.util.Iconable;
 import consulo.language.psi.path.FileReference;
 import consulo.language.psi.path.FileReferenceCompletion;

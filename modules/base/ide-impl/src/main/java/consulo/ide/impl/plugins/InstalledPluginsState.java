@@ -23,7 +23,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.container.plugin.PluginId;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import jakarta.inject.Singleton;
 

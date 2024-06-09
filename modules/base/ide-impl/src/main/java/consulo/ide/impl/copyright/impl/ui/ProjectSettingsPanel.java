@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.scopeChooser.PackageSetChooserCombo;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.content.internal.scope.CustomScopesProviderEx;

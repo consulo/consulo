@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.actionSystem.ex;
 
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 
 /**
  * @author VISTALL
  * @since 8/1/19
  */
 public class TopApplicationMenuUtil {
-  public static final boolean isMacSystemMenu = SystemInfo.isMac && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
+  public static final boolean isMacSystemMenu = Platform.current().os().isMac() && "true".equals(System.getProperty("apple.laf.useScreenMenuBar"));
 }

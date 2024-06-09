@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.intelliLang.inject.config.ui;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.impl.internal.pattern.compiler.PatternCompilerImpl;
 import consulo.codeEditor.EditorEx;
 import consulo.document.Document;

@@ -26,7 +26,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.document.Document;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.copyright.PredefinedCopyrightProvider;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
