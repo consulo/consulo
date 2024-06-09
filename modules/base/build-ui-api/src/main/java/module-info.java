@@ -15,4 +15,5 @@ module consulo.build.ui.api {
   exports consulo.build.ui.issue;
   exports consulo.build.ui.process;
   exports consulo.build.ui.progress;
+  exports consulo.build.ui.localize;
 }

@@ -1,0 +1,52 @@
+build.status.finished:
+  text: finished
+build.status.failed:
+  text: failed
+build.status.cancelled:
+  text: cancelled
+build.status.running:
+  text: running...
+build.messages.finished:
+  text: '{0} finished'
+build.messages.failed:
+  text: '{0} failed'
+build.messages.cancelled:
+  text: '{0} cancelled'
+build.event.message.successful:
+  text: successful
+build.event.message.syncing:
+  text: syncing...
+tab.title.build.output:
+  text: Build Output
+build.event.title.build.issues:
+  text: Build Issues
+build.event.message.up.to.date:
+  text: UP-TO-DATE
+build.event.title.other.messages:
+  text: Other Messages
+action.filters.text:
+  text: Filters
+build.event.message.at:
+  text: At {0}
+build.event.message.0.at.1:
+  text: '{0} at {1}'
+build.event.title.kotlin.compiler:
+  text: Kotlin Compiler
+build.tree.filters.show.succesful:
+  text: Show Successful Steps
+build.tree.filters.show.warnings:
+  text: Show Warnings
+build.event.message.errors:
+  text: '{0} {0,choice, 1#error|2#errors}'
+build.event.message.warnings:
+  text: '{0} {0,choice, 1#warning|2#warnings}'
+build.event.message.with:
+  text: '{0} with {1}'
+tab.title.more:
+  text: '{0} and {1} More'
+sync.view.title:
+  text: Sync
+build.event.message.out.memory:
+  text: Out of memory.
+tab.title.build:
+  text: Build
