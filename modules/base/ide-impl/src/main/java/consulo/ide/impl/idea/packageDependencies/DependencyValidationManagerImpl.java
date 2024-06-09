@@ -24,7 +24,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.*;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;

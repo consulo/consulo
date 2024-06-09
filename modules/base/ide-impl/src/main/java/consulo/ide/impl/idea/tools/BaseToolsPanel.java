@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.AnActionButton;

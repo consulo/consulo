@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.dvcs;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.versionControlSystem.distributed.DvcsBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;

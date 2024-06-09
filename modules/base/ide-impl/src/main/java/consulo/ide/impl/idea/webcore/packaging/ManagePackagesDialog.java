@@ -8,7 +8,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.SwingHelper;
 import consulo.language.LangBundle;

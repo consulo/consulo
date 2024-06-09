@@ -20,9 +20,8 @@ import consulo.application.PowerSaveMode;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
@@ -215,7 +214,7 @@ public class CodeCompletionPanel implements Supplier<Layout> {
 
     UISettings.getInstance().SORT_LOOKUP_ELEMENTS_LEXICOGRAPHICALLY = myCbSorting2.getValue();
 
-    Project project = DataManager.getInstance().getDataContext(myLayout).getData(CommonDataKeys.PROJECT);
+    Project project = DataManager.getInstance().getDataContext(myLayout).getData(Project.KEY);
     if (project != null) {
       DaemonCodeAnalyzer.getInstance(project).settingsChanged();
     }

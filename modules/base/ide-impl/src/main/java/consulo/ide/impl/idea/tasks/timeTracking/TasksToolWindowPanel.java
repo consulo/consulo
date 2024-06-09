@@ -4,7 +4,7 @@ import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;

@@ -9,7 +9,6 @@ import consulo.dataContext.DataContext;
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -20,7 +19,7 @@ public class GenerateCoverageReportAction extends AnAction {
   @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     assert project != null;
     final CoverageDataManager coverageDataManager = CoverageDataManager.getInstance(project);
     final CoverageSuitesBundle currentSuite = coverageDataManager.getCurrentSuitesBundle();
@@ -42,7 +41,7 @@ public class GenerateCoverageReportAction extends AnAction {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(false);
     presentation.setVisible(false);
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project != null) {
       final CoverageSuitesBundle currentSuite = CoverageDataManager.getInstance(project).getCurrentSuitesBundle();
       if (currentSuite != null) {

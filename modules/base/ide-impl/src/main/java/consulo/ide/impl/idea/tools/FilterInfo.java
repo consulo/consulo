@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

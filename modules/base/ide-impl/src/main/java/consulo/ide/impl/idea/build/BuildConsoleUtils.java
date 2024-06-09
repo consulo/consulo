@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.stripHtml;
+import static consulo.util.lang.StringUtil.stripHtml;
 
 /**
  * @author Vladislav.Soroka

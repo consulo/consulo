@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.remote;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;

@@ -16,17 +16,17 @@
 
 package consulo.ide.impl.idea.moduleDependencies;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.dataContext.DataContext;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
@@ -44,7 +44,7 @@ public class ShowModuleDependenciesAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null){
       return;
     }
@@ -55,7 +55,7 @@ public class ShowModuleDependenciesAction extends AnAction {
       panel = new ModulesDependenciesPanel(project, modules);
       scope = new AnalysisScope(modules);
     } else {
-      final PsiElement element = dataContext.getData(LangDataKeys.PSI_FILE);
+      final PsiElement element = dataContext.getData(PsiFile.KEY);
       final Module module = element != null ? ModuleUtil.findModuleForPsiElement(element) : null;
       if (module != null && ModuleManager.getInstance(project).getModules().length > 1){
         MyModuleOrProjectScope dlg = new MyModuleOrProjectScope(module.getName());
@@ -88,7 +88,7 @@ public class ShowModuleDependenciesAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     e.getPresentation().setEnabled(project != null);
   }
 

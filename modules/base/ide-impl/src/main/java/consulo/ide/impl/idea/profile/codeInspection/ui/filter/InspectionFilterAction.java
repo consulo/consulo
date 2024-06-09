@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.action.CheckboxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.ide.impl.idea.profile.codeInspection.ui.LevelChooserAction;
 import consulo.ide.impl.idea.profile.codeInspection.ui.SingleInspectionProfilePanel;

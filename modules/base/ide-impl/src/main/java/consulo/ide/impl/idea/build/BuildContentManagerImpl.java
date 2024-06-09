@@ -16,7 +16,7 @@ import consulo.language.LangBundle;
 import consulo.dataContext.DataProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowManager;

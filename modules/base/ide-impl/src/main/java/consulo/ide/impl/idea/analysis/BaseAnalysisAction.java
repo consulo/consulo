@@ -16,36 +16,35 @@
 
 package consulo.ide.impl.idea.analysis;
 
+import consulo.application.HelpManager;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
+import consulo.document.FileDocumentManager;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.logging.Logger;
-import consulo.document.FileDocumentManager;
-import consulo.application.HelpManager;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,7 +63,7 @@ public abstract class BaseAnalysisAction extends AnAction {
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     final DataContext dataContext = event.getDataContext();
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     final boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
     presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
   }
@@ -72,8 +71,8 @@ public abstract class BaseAnalysisAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    final Project project = e.getData(CommonDataKeys.PROJECT);
-    final Module module = e.getData(LangDataKeys.MODULE);
+    final Project project = e.getData(Project.KEY);
+    final Module module = e.getData(Module.KEY);
     if (project == null) {
       return;
     }
@@ -81,19 +80,20 @@ public abstract class BaseAnalysisAction extends AnAction {
     LOG.assertTrue(scope != null);
     final boolean rememberScope = e.getPlace().equals(ActionPlaces.MAIN_MENU);
     final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
-    BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(AnalysisScopeBundle.message("specify.analysis.scope", myTitle),
-                                                                AnalysisScopeBundle.message("analysis.scope.title", myAnalysisNoon),
-                                                                project,
-                                                                scope,
-                                                                module != null ? ModuleUtilCore.getModuleNameInReadAction(module) : null,
-                                                                rememberScope, AnalysisUIOptions.getInstance(project), element){
+    PsiElement element = dataContext.getData(PsiElement.KEY);
+    BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
+      AnalysisScopeBundle.message("specify.analysis.scope", myTitle),
+      AnalysisScopeBundle.message("analysis.scope.title", myAnalysisNoon),
+      project,
+      scope,
+      module != null ? ModuleUtilCore.getModuleNameInReadAction(module) : null,
+      rememberScope, AnalysisUIOptions.getInstance(project), element
+    ) {
       @Override
       @Nullable
       protected JComponent getAdditionalActionSettings(final Project project) {
         return BaseAnalysisAction.this.getAdditionalActionSettings(project, this);
       }
-
 
       @Override
       protected void doHelpAction() {
@@ -134,7 +134,7 @@ public abstract class BaseAnalysisAction extends AnAction {
 
   @Nullable
   private AnalysisScope getInspectionScope(@Nonnull DataContext dataContext) {
-    if (dataContext.getData(CommonDataKeys.PROJECT) == null) return null;
+    if (dataContext.getData(Project.KEY) == null) return null;
 
     AnalysisScope scope = getInspectionScopeImpl(dataContext);
 
@@ -154,7 +154,7 @@ public abstract class BaseAnalysisAction extends AnAction {
       return analysisScope;
     }
 
-    final PsiFile psiFile = dataContext.getData(CommonDataKeys.PSI_FILE);
+    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     if (psiFile != null && psiFile.getManager().isInProject(psiFile)) {
       final VirtualFile file = psiFile.getVirtualFile();
       if (file != null && file.isValid() && file.getFileType() instanceof ArchiveFileType && acceptNonProjectDirectories()) {
@@ -169,8 +169,8 @@ public abstract class BaseAnalysisAction extends AnAction {
       return new AnalysisScope(psiFile);
     }
 
-    VirtualFile[] virtualFiles = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    VirtualFile[] virtualFiles = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
+    Project project = dataContext.getData(Project.KEY);
     if (virtualFiles != null && project != null) { //analyze on selection
       ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
       if (virtualFiles.length == 1) {
@@ -179,7 +179,7 @@ public abstract class BaseAnalysisAction extends AnAction {
           return new AnalysisScope(psiDirectory);
         }
       }
-      Set<VirtualFile> files = new HashSet<VirtualFile>();
+      Set<VirtualFile> files = new HashSet<>();
       for (VirtualFile vFile : virtualFiles) {
         if (fileIndex.isInContent(vFile)) {
           files.add(vFile);

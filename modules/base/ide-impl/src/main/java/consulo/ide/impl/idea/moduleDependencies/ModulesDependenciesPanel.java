@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.moduleDependencies;
 
 import consulo.application.AllIcons;
-import consulo.application.CommonBundle;
+import consulo.application.HelpManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.component.util.graph.DFSTBuilder;
@@ -25,12 +25,12 @@ import consulo.component.util.graph.Graph;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.navigation.Navigatable;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.application.util.graph.GraphAlgorithms;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.pom.NavigatableWithText;
 import consulo.module.Module;
@@ -118,7 +118,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
       return;
     }
     myModulesGraph = buildGraph();
-    DFSTBuilder<Module> builder = new DFSTBuilder<Module>(myModulesGraph);
+    DFSTBuilder<Module> builder = new DFSTBuilder<>(myModulesGraph);
     if (builder.isAcyclic()){
       mySplitter.setProportion(1.f);
     } else {
@@ -137,7 +137,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
   private JComponent createNorthPanel(){
     DefaultActionGroup group = new DefaultActionGroup();
 
-    group.add(new AnAction(CommonBundle.message("action.close"), AnalysisScopeBundle.message("action.close.modules.dependencies.description"),
+    group.add(new AnAction(CommonLocalize.actionClose().get(), AnalysisScopeBundle.message("action.close.modules.dependencies.description"),
                            AllIcons.Actions.Cancel){
       @Override
       public void actionPerformed(AnActionEvent e) {
@@ -512,7 +512,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
 
     @Override
     public Object getData(@Nonnull Key dataId) {
-      if (CommonDataKeys.PROJECT == dataId){
+      if (Project.KEY == dataId){
         return myProject;
       }
       if (LangDataKeys.MODULE_CONTEXT == dataId){
@@ -524,10 +524,10 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
           }
         }
       }
-      if (PlatformDataKeys.HELP_ID == dataId) {
+      if (HelpManager.HELP_ID == dataId) {
         return ourHelpID;
       }
-      if (PlatformDataKeys.NAVIGATABLE == dataId) {
+      if (Navigatable.KEY == dataId) {
         final TreePath selectionPath = myTree.getLeadSelectionPath();
         if (selectionPath != null && selectionPath.getLastPathComponent() instanceof DefaultMutableTreeNode){
           DefaultMutableTreeNode node = (DefaultMutableTreeNode)selectionPath.getLastPathComponent();

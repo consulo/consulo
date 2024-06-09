@@ -22,7 +22,7 @@ import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;

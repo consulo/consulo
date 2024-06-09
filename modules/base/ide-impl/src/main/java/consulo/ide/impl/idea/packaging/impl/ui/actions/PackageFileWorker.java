@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.packaging.impl.ui.actions;
 
 import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.ArtifactRootElement;

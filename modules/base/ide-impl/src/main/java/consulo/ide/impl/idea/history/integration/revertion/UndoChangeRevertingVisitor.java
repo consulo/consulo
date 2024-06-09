@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.openapi.command.impl.DocumentUndoProvider;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import java.util.HashSet;

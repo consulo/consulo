@@ -22,7 +22,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.scheme.SchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 
 import jakarta.annotation.Nullable;

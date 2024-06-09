@@ -19,7 +19,7 @@ import consulo.find.FindManager;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.application.internal.TooManyUsagesStatus;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;

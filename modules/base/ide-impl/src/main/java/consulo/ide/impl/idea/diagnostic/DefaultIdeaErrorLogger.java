@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.diagnostic;
 
 import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
@@ -87,7 +88,7 @@ public class DefaultIdeaErrorLogger {
   }
 
   private static void processMappingFailed(IdeaLoggingEvent event) throws InterruptedException, InvocationTargetException {
-    if (!ourMappingFailedNotificationPosted && SystemInfo.isWindows && SystemInfo.is32Bit) {
+    if (!ourMappingFailedNotificationPosted && Platform.current().os().isWindows() && SystemInfo.is32Bit) {
       ourMappingFailedNotificationPosted = true;
       @SuppressWarnings("ThrowableResultOfMethodCallIgnored") String exceptionMessage = event.getThrowable().getMessage();
       String text = exceptionMessage + "<br>Possible cause: unable to allocate continuous memory chunk of necessary size.<br>" + "Reducing JVM maximum heap size (-Xmx) may help.";

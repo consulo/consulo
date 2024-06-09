@@ -1,12 +1,12 @@
 package consulo.ide.impl.idea.diagnostic.errordialog;
 
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.application.util.SystemInfo;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -44,7 +44,7 @@ public class DisablePluginWarningDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       if (myRestartCapable) {
         return new Action[]{getCancelAction(), new DisableAction(), new DisableAndRestartAction()};
       }

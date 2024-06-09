@@ -23,7 +23,7 @@ import consulo.configurable.*;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.configurable.EditorGeneralConfigurable;

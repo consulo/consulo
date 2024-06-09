@@ -15,7 +15,7 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionDataKeys;
+import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
@@ -354,16 +354,16 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nullable
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+    if (KEY == dataId) {
       return getConsoleView();
     }
     Object data = super.getData(dataId);
     if (data != null) return data;
-    if (ExecutionDataKeys.RUN_PROFILE == dataId) {
+    if (RunProfile.KEY == dataId) {
       ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
       return environment == null ? null : environment.getRunProfile();
     }
-    if (ExecutionDataKeys.EXECUTION_ENVIRONMENT == dataId) {
+    if (ExecutionEnvironment.KEY == dataId) {
       return myBuildDescriptor.getExecutionEnvironment();
     }
     if (RESTART_ACTIONS == dataId) {

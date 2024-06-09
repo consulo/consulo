@@ -23,7 +23,7 @@ import consulo.versionControlSystem.distributed.DvcsRememberedInputs;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.ui.FrameStateManager;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.project.Project;

@@ -22,7 +22,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.DateFormatUtil;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.impl.PluginValidator;
@@ -41,13 +40,11 @@ import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.ide.impl.idea.openapi.diagnostic.SubmittedReportInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.HeaderlessTabbedPane;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
@@ -57,6 +54,8 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SimpleReference;
@@ -197,7 +196,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
   @Override
   protected Action[] createActions() {
     List<Action> actions = new ArrayList<>(3);
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       actions.add(getCancelAction());
       actions.add(myClearAction);
       actions.add(myBlameAction);
@@ -958,7 +957,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
 
       AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, myAnalyze.getTemplatePresentation(), ActionManager.getInstance(), e.getModifiers());
 
-      final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      final Project project = dataContext.getData(Project.KEY);
       if (project != null) {
         myAnalyze.actionPerformed(event);
         doOKAction();

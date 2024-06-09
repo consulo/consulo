@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.dvcs.push;
 
+import consulo.codeEditor.Editor;
 import consulo.versionControlSystem.distributed.DvcsUtil;
 import consulo.ide.impl.idea.dvcs.push.ui.VcsPushDialog;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ide.ServiceManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
@@ -49,11 +49,11 @@ public class VcsPushAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     VcsRepositoryManager manager = ServiceManager.getService(project, VcsRepositoryManager.class);
-    Collection<Repository> repositories = e.getData(CommonDataKeys.EDITOR) != null
+    Collection<Repository> repositories = e.getData(Editor.KEY) != null
                                           ? ContainerUtil.<Repository>emptyList()
-                                          : collectRepositories(manager, e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY));
+                                          : collectRepositories(manager, e.getData(VirtualFile.KEY_OF_ARRAY));
     VirtualFile selectedFile = DvcsUtil.getSelectedFile(project);
     new VcsPushDialog(project, DvcsUtil.sortRepositories(repositories), selectedFile != null ? manager.getRepositoryForFile(selectedFile) : null).show();
   }
@@ -61,7 +61,7 @@ public class VcsPushAction extends DumbAwareAction {
   @Override
   public void update(@Nonnull AnActionEvent e) {
     super.update(e);
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     e.getPresentation().setEnabledAndVisible(project != null && !ServiceManager.getService(project, VcsRepositoryManager.class).getRepositories().isEmpty());
   }
 }

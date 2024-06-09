@@ -20,7 +20,7 @@ import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 

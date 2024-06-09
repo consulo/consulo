@@ -39,7 +39,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.navigation.Navigatable;
@@ -91,7 +90,7 @@ import java.util.function.Supplier;
 
 import static consulo.ide.impl.idea.build.BuildConsoleUtils.getMessageTitle;
 import static consulo.ide.impl.idea.build.BuildView.CONSOLE_VIEW_NAME;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
+import static consulo.util.lang.StringUtil.isEmpty;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.addIfNotNull;
 import static consulo.ui.ex.SimpleTextAttributes.GRAYED_ATTRIBUTES;
 import static consulo.ui.ex.awt.AnimatedIcon.ANIMATION_IN_RENDERER_ALLOWED;
@@ -819,9 +818,9 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
   @Nullable
   public Object getData(@Nonnull Key dataId) {
     if (PlatformDataKeys.HELP_ID == dataId) return "reference.build.tool.window";
-    if (CommonDataKeys.PROJECT == dataId) return myProject;
-    if (CommonDataKeys.NAVIGATABLE_ARRAY == dataId) return extractSelectedNodesNavigatables();
-    if (CommonDataKeys.NAVIGATABLE == dataId) return extractSelectedNodeNavigatable();
+    if (Project.KEY == dataId) return myProject;
+    if (Navigatable.KEY_OF_ARRAY == dataId) return extractSelectedNodesNavigatables();
+    if (Navigatable.KEY == dataId) return extractSelectedNodeNavigatable();
     return null;
   }
 
@@ -947,7 +946,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
       myViewSettingsProvider = buildViewSettingsProvider;
       myExecutionConsoleFilters = executionConsoleFilters;
       Disposer.register(parentDisposable, this);
-      myView = new CompositeView<ExecutionConsole>(null) {
+      myView = new CompositeView<>(null) {
         @Override
         public void addView(@Nonnull ExecutionConsole view, @Nonnull String viewName) {
           super.addView(view, viewName);

@@ -29,10 +29,8 @@ import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
 import consulo.ide.impl.idea.application.options.colors.TextAttributesDescription;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityUtil;
 import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.rawHighlight.SeverityRegistrarImpl;
 import consulo.language.editor.inspection.InspectionsBundle;
@@ -42,11 +40,11 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -55,8 +53,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
 
@@ -141,60 +137,43 @@ public class SeverityEditorDialog extends DialogWrapper {
         myOptionsList.clearSelection();
         ScrollingUtil.selectItem(myOptionsList, newSeverityBasedTextAttributes);
       }
-    }).setMoveUpAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        apply(myCurrentSelection);
-        ListUtil.moveSelectedItemsUp(myOptionsList);
-      }
-    }).setMoveDownAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        apply(myCurrentSelection);
-        ListUtil.moveSelectedItemsDown(myOptionsList);
-      }
+    }).setMoveUpAction(button -> {
+      apply(myCurrentSelection);
+      ListUtil.moveSelectedItemsUp(myOptionsList);
+    }).setMoveDownAction(button -> {
+      apply(myCurrentSelection);
+      ListUtil.moveSelectedItemsDown(myOptionsList);
     }).createPanel();
-    ToolbarDecorator.findRemoveButton(leftPanel).addCustomUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        return !mySeverityRegistrar.isDefaultSeverity(((SeverityBasedTextAttributes)myOptionsList.getSelectedValue()).getSeverity());
-      }
-    });
-    ToolbarDecorator.findUpButton(leftPanel).addCustomUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        boolean canMove = ListUtil.canMoveSelectedItemsUp(myOptionsList);
-        if (canMove) {
-          SeverityBasedTextAttributes pair = (SeverityBasedTextAttributes)myOptionsList.getSelectedValue();
-          if (pair != null && mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
-            final int newPosition = myOptionsList.getSelectedIndex() - 1;
-            pair = (SeverityBasedTextAttributes)myOptionsList.getModel().getElementAt(newPosition);
-            if (mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
-              canMove = false;
-            }
+    ToolbarDecorator.findRemoveButton(leftPanel).addCustomUpdater(e -> !mySeverityRegistrar.isDefaultSeverity(((SeverityBasedTextAttributes)myOptionsList.getSelectedValue()).getSeverity()));
+    ToolbarDecorator.findUpButton(leftPanel).addCustomUpdater(e -> {
+      boolean canMove = ListUtil.canMoveSelectedItemsUp(myOptionsList);
+      if (canMove) {
+        SeverityBasedTextAttributes pair = (SeverityBasedTextAttributes)myOptionsList.getSelectedValue();
+        if (pair != null && mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
+          final int newPosition = myOptionsList.getSelectedIndex() - 1;
+          pair = (SeverityBasedTextAttributes)myOptionsList.getModel().getElementAt(newPosition);
+          if (mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
+            canMove = false;
           }
         }
-
-        return canMove;
       }
+
+      return canMove;
     });
-    ToolbarDecorator.findDownButton(leftPanel).addCustomUpdater(new AnActionButtonUpdater() {
-      @Override
-      public boolean isEnabled(AnActionEvent e) {
-        boolean canMove = ListUtil.canMoveSelectedItemsDown(myOptionsList);
-        if (canMove) {
-          SeverityBasedTextAttributes pair = (SeverityBasedTextAttributes)myOptionsList.getSelectedValue();
-          if (pair != null && mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
-            final int newPosition = myOptionsList.getSelectedIndex() + 1;
-            pair = (SeverityBasedTextAttributes)myOptionsList.getModel().getElementAt(newPosition);
-            if (mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
-              canMove = false;
-            }
+    ToolbarDecorator.findDownButton(leftPanel).addCustomUpdater(e -> {
+      boolean canMove = ListUtil.canMoveSelectedItemsDown(myOptionsList);
+      if (canMove) {
+        SeverityBasedTextAttributes pair = (SeverityBasedTextAttributes)myOptionsList.getSelectedValue();
+        if (pair != null && mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
+          final int newPosition = myOptionsList.getSelectedIndex() + 1;
+          pair = (SeverityBasedTextAttributes)myOptionsList.getModel().getElementAt(newPosition);
+          if (mySeverityRegistrar.isDefaultSeverity(pair.getSeverity())) {
+            canMove = false;
           }
         }
-
-        return canMove;
       }
+
+      return canMove;
     });
 
     myPanel = new JPanel(new BorderLayout());
@@ -203,12 +182,7 @@ public class SeverityEditorDialog extends DialogWrapper {
     myRightPanel = new JPanel(myCard);
     final JPanel disabled = new JPanel(new GridBagLayout());
     final JButton button = new JButton(InspectionsBundle.message("severities.default.settings.message"));
-    button.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(final ActionEvent e) {
-        editColorsAndFonts();
-      }
-    });
+    button.addActionListener(e -> editColorsAndFonts());
     disabled.add(button, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     myRightPanel.add(DEFAULT, disabled);
     myRightPanel.add(EDITABLE, myOptionsPanel.getPanel());
@@ -231,13 +205,10 @@ public class SeverityEditorDialog extends DialogWrapper {
       assert colorAndFontOptions != null;
       final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
-      optionsEditor.clearSearchAndSelect(javaPage).doWhenDone(new Runnable() {
-        @Override
-        public void run() {
-          final Runnable runnable = javaPage.enableSearch(toConfigure);
-          if (runnable != null) {
-            SwingUtilities.invokeLater(runnable);
-          }
+      optionsEditor.clearSearchAndSelect(javaPage).doWhenDone(() -> {
+        final Runnable runnable = javaPage.enableSearch(toConfigure);
+        if (runnable != null) {
+          SwingUtilities.invokeLater(runnable);
         }
       });
     }
@@ -246,7 +217,7 @@ public class SeverityEditorDialog extends DialogWrapper {
       final Configurable[] configurables = colorAndFontOptions.buildConfigurables();
       final SearchableConfigurable javaPage = colorAndFontOptions.findSubConfigurable(GeneralColorsPage.class);
       LOG.assertTrue(javaPage != null);
-      AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(CommonDataKeys.PROJECT), javaPage);
+      AsyncResult<Void> result = ShowSettingsUtil.getInstance().editConfigurable(dataContext.getData(Project.KEY), javaPage);
 
       result.doWhenProcessed(() -> {
         for (Configurable configurable : configurables) {
@@ -260,14 +231,9 @@ public class SeverityEditorDialog extends DialogWrapper {
   private void fillList(final HighlightSeverity severity) {
     DefaultListModel model = new DefaultListModel();
     model.removeAllElements();
-    final List<SeverityBasedTextAttributes> infoTypes = new ArrayList<SeverityBasedTextAttributes>();
+    final List<SeverityBasedTextAttributes> infoTypes = new ArrayList<>();
     infoTypes.addAll(SeverityUtil.getRegisteredHighlightingInfoTypes(mySeverityRegistrar));
-    Collections.sort(infoTypes, new Comparator<SeverityBasedTextAttributes>() {
-      @Override
-      public int compare(SeverityBasedTextAttributes attributes1, SeverityBasedTextAttributes attributes2) {
-        return -mySeverityRegistrar.compare(attributes1.getSeverity(), attributes2.getSeverity());
-      }
-    });
+    Collections.sort(infoTypes, (attributes1, attributes2) -> -mySeverityRegistrar.compare(attributes1.getSeverity(), attributes2.getSeverity()));
     SeverityBasedTextAttributes preselection = null;
     for (SeverityBasedTextAttributes type : infoTypes) {
       model.addElement(type);
@@ -311,9 +277,9 @@ public class SeverityEditorDialog extends DialogWrapper {
   @Override
   protected void doOKAction() {
     apply((SeverityBasedTextAttributes)myOptionsList.getSelectedValue());
-    final Collection<SeverityBasedTextAttributes> infoTypes = new HashSet<SeverityBasedTextAttributes>(SeverityUtil.getRegisteredHighlightingInfoTypes(mySeverityRegistrar));
+    final Collection<SeverityBasedTextAttributes> infoTypes = new HashSet<>(SeverityUtil.getRegisteredHighlightingInfoTypes(mySeverityRegistrar));
     final ListModel listModel = myOptionsList.getModel();
-    final List<HighlightSeverity> order = new ArrayList<HighlightSeverity>();
+    final List<HighlightSeverity> order = new ArrayList<>();
     for (int i = listModel.getSize() - 1; i >= 0; i--) {
       final SeverityBasedTextAttributes info = (SeverityBasedTextAttributes)listModel.getElementAt(i);
       order.add(info.getSeverity());

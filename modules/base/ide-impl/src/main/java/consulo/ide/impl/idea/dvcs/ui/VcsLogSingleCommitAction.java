@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.dvcs.ui;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -35,7 +34,7 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     VcsLog log = e.getRequiredData(VcsLogDataKeys.VCS_LOG);
 
     CommitId commit = ContainerUtil.getFirstItem(log.getSelectedCommits());
@@ -48,7 +47,7 @@ public abstract class VcsLogSingleCommitAction<Repo extends Repository> extends 
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     VcsLog log = e.getData(VcsLogDataKeys.VCS_LOG);
     if (project == null || log == null) {
       e.getPresentation().setEnabledAndVisible(false);
