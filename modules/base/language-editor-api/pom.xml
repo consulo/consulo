@@ -42,13 +42,14 @@
             <phase>generate-sources</phase>
             <goals>
               <goal>generate-lexers</goal>
+              <goal>generate-localize</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-	</plugins>
+    </plugins>
   </build>
- 
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

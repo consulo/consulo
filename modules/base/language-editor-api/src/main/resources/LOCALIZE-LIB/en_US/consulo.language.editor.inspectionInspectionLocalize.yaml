@@ -1,0 +1,1180 @@
+inspection.diff.format.error:
+  text: 'Required parameters: <old_file> <new_file> [<delta_file_name>]'
+inspection.command.line.explanation:
+  text: "Expected parameters: <project_file_path> <inspection_profile> <output_path> <inspections_profile> -- use here profile name configured in the project or locally or path to the inspection profile; can be stabbed when one of the -e|-profileName|-profilePath is used\n[<options>]\n Available options are:\n -d <directory_path>  --  directory to be inspected. Optional. Whole project is inspected by default.\n -e                   --  skip  \n-v[0|1|2]            --  verbose level. 0 - silent, 1 - verbose, 2 - most verbose. \n-profileName         --  name of a profile defined in project \n -profilePath         --  absolute path to the profile file"
+inspection.action.title:
+  text: Inspection
+inspection.action.noun:
+  text: Inspection
+inspection.action.profile.label:
+  text: Inspection profile
+inspection.disabled.title:
+  text: Inspection disabled
+inspection.disabled.wrong.id:
+  text: 'Inspection ''''{0}'''' is disabled: ID ''''{1}'''' not matches ''''{2}'''' pattern.'
+inspection.disabled.error:
+  text: 'Inspection ''''{0}'''' is disabled: {1}.'
+inspection.problem.synopsis:
+  text: Problem synopsis
+inspection.export.results.description.tag:
+  text: description
+inspection.export.results.problem.element.tag:
+  text: problem_class
+inspection.export.results.can.be.final.description:
+  text: Declaration can have final modifier
+inspection.export.results.package:
+  text: package
+inspection.export.results.default:
+  text: <default>
+inspection.export.results.class:
+  text: class
+inspection.export.results.constructor:
+  text: constructor
+inspection.export.results.method:
+  text: method
+inspection.export.results.field:
+  text: field
+inspection.export.results.file:
+  text: file
+inspection.export.results.interface:
+  text: interface
+inspection.can.be.final.display.name:
+  text: Declaration can have final modifier
+inspection.can.be.final.accept.quickfix:
+  text: Accept Suggested Final Modifier
+inspection.can.be.final.option:
+  text: Report classes
+inspection.can.be.final.option1:
+  text: Report methods
+inspection.can.be.final.option2:
+  text: Report fields
+inspection.annotate.method.quickfix.name:
+  text: Annotate method as ''@{0}''
+inspection.data.flow.display.name:
+  text: Constant conditions \& exceptions
+inspection.data.flow.nullable.quickfix.option:
+  text: <html><body>Suggest @Nullable annotation for methods that may possibly return null and <br>report nullable values passed to non-annotated parameters</body></html>
+inspection.data.flow.true.asserts.option:
+  text: <html><body>Don't report assertions with condition statically proven to be always <code>true</code></body></html>
+inspection.data.flow.redundant.instanceof.quickfix:
+  text: Replace with != null
+inspection.data.flow.simplify.boolean.expression.quickfix:
+  text: Simplify Boolean Expression
+inspection.data.flow.simplify.to.assignment.quickfix.name:
+  text: Simplify to normal assignment
+configure.annotations.option:
+  text: Configure annotations
+configure.checker.option.button:
+  text: Configure Assert/Check Methods
+configure.checker.option.main.dialog.title:
+  text: Assert/Check Method Configuration
+configure.checker.option.overlap.error.title:
+  text: Overlapping Check
+configure.checker.option.overlap.error.msg:
+  text: Configuration conflicts with
+configure.checker.option.isNull.add.method.checker.dialog.title:
+  text: Add IsNull Check Method
+configure.checker.option.isNotNull.add.method.checker.dialog.title:
+  text: Add IsNotNull Check Method
+configure.checker.option.assert.isNull.add.method.checker.dialog.title:
+  text: Add Assert IsNull Method
+configure.checker.option.assert.isNotNull.add.method.checker.dialog.title:
+  text: Add Assert IsNotNull Method
+configure.checker.option.assert.true.add.method.checker.dialog.title:
+  text: Add Assert True Method
+configure.checker.option.assert.false.add.method.checker.dialog.title:
+  text: Add Assert False Method
+configure.checker.option.assert.isNull.method.panel.title:
+  text: Assert IsNull Methods
+configure.checker.option.assert.isNotNull.method.panel.title:
+  text: Assert IsNotNull Methods
+configure.checker.option.isNull.method.panel.title:
+  text: IsNull Check Methods
+configure.checker.option.isNotNull.method.panel.title:
+  text: IsNotNull Check Methods
+configure.checker.option.assert.true.method.panel.title:
+  text: Assert True Methods
+configure.checker.option.assert.false.method.panel.title:
+  text: Assert False Methods
+dataflow.message.npe.method.invocation:
+  text: 'Method invocation <code>#ref</code> #loc may produce <code>java.lang.NullPointerException</code>'
+dataflow.message.npe.array.access:
+  text: 'Array access <code>#ref</code> #loc may produce <code>java.lang.NullPointerException</code>'
+dataflow.message.npe.field.access:
+  text: 'Dereference of <code>#ref</code> #loc may produce <code>java.lang.NullPointerException</code>'
+dataflow.message.cce:
+  text: 'Casting <code>{0}</code> to <code>#ref</code> #loc may produce <code>java.lang.ClassCastException</code>'
+dataflow.message.redundant.instanceof:
+  text: 'Condition <code>#ref</code> #loc is redundant and can be replaced with <code>!= null</code>'
+dataflow.message.constant.condition:
+  text: 'Condition <code>#ref</code> #loc is always <code>{0}</code>'
+dataflow.message.constant.condition.when.reached:
+  text: 'Condition <code>#ref</code> #loc is always <code>{0}</code> when reached'
+dataflow.message.unreachable.switch.label:
+  text: 'Switch label<code>#ref</code> #loc is unreachable'
+dataflow.message.pointless.assignment.expression:
+  text: 'Condition <code>#ref</code> #loc at the left side of assignment expression is always <code>{0}</code>. Can be simplified to normal assignment'
+dataflow.message.passing.null.argument:
+  text: Passing <code>null</code> argument to parameter annotated as @NotNull
+dataflow.message.initializing.field.with.null:
+  text: Field annotated as @NotNull is implicitly initialized with <code>null</code>
+dataflow.message.passing.nullable.argument:
+  text: 'Argument <code>#ref</code> #loc might be null'
+dataflow.message.assigning.null:
+  text: <code>null</code> is assigned to a variable that is annotated with @NotNull
+dataflow.message.assigning.nullable:
+  text: Expression <code>#ref</code> might evaluate to null but is assigned to a variable that is annotated with @NotNull
+dataflow.message.return.null.from.notnull:
+  text: <code>null</code> is returned by the method declared as @NotNull
+dataflow.message.return.nullable.from.notnull:
+  text: Expression <code>#ref</code> might evaluate to null but is returned by the method declared as @NotNull
+dataflow.message.return.null.from.notnullable:
+  text: <code>null</code> is returned by the method which isn't declared as @Nullable
+dataflow.message.return.nullable.from.notnullable:
+  text: Expression <code>#ref</code> might evaluate to null but is returned by the method which isn't declared as @Nullable
+dataflow.message.unboxing:
+  text: 'Unboxing of <code>#ref</code> #loc may produce <code>java.lang.NullPointerException</code>'
+dataflow.too.complex:
+  text: Method <code>#ref</code> is too complex to analyze by data flow algorithm
+inspection.deprecated.display.name:
+  text: Deprecated API usage
+inspection.marked.for.removal.display.name:
+  text: Usage of API marked for removal
+inspection.empty.method.display.name:
+  text: Empty method
+inspection.empty.method.delete.quickfix:
+  text: Delete Unnecessary Method(s)
+inspection.empty.method.problem.descriptor:
+  text: Method only calls its super
+inspection.empty.method.problem.descriptor1:
+  text: Empty method overrides empty method
+inspection.empty.method.problem.descriptor2:
+  text: The method is empty
+inspection.empty.method.problem.descriptor3:
+  text: The method and all it's derivables are empty
+inspection.empty.method.problem.descriptor4:
+  text: All implementations of this method are empty
+inspection.redundant.cast.display.name:
+  text: Redundant type cast
+inspection.redundant.cast.remove.quickfix:
+  text: Remove Redundant Cast(s)
+inspection.redundant.cast.problem.descriptor:
+  text: Casting {0} to {1} is redundant
+inspection.redundant.throws.display.name:
+  text: Redundant throws clause
+inspection.redundant.throws.remove.quickfix:
+  text: Remove unnecessary throws declarations
+inspection.redundant.throws.problem.descriptor:
+  text: The declared exception {0} is never thrown in method implementations
+inspection.redundant.throws.problem.descriptor1:
+  text: The declared exception {0} is never thrown in this method, nor in its derivables
+inspection.redundant.throws.problem.descriptor2:
+  text: The declared exception {0} is never thrown
+inspection.equals.hashcode.display.name:
+  text: equals() and hashCode() not paired
+inspection.equals.hashcode.only.one.defined.problem.descriptor:
+  text: Class has {0} defined but does not define {1}
+inspection.1.5.display.name:
+  text: Usages of API documented as @since 1.5 (1.6|1.7)
+inspection.1.5.problem.descriptor:
+  text: Usage of API documented as @since {0}
+inspection.local.can.be.final.display.name:
+  text: Local variable or parameter can be final
+inspection.local.can.be.final.option:
+  text: Report local variables
+inspection.local.can.be.final.option1:
+  text: Report method parameters
+inspection.can.be.local.parameter.problem.descriptor:
+  text: Parameter <code>#ref</code> can have <code>final</code> modifier
+inspection.can.be.local.variable.problem.descriptor:
+  text: Variable <code>#ref</code> can have <code>final</code> modifier
+inspection.nullable.problems.display.name:
+  text: '@NotNull/@Nullable problems'
+inspection.nullable.problems.method.overrides.notnull.option:
+  text: <html>report @NotNull &parameter overrides @Nullable and <br>@Nullable method overrides @NotNull</html>
+inspection.nullable.problems.method.overrides.option:
+  text: report non-&annotated parameter or method overrides @NotNull
+inspection.nullable.problems.not.annotated.getters.for.annotated.fields:
+  text: report non-annotated &setter parameter or getter of annotated fields
+inspection.nullable.problems.annotation.not.propagated:
+  text: report @NotNull not propagated to ove&rridden methods
+inspection.nullable.problems.Nullable.NotNull.conflict:
+  text: Cannot annotate with both @Nullable and @NotNull
+inspection.nullable.problems.Nullable.method.overrides.NotNull:
+  text: Method annotated with @Nullable must not override @NotNull method
+inspection.nullable.problems.method.overrides.NotNull:
+  text: Not annotated method overrides method annotated with @NotNull
+inspection.nullable.problems.annotated.field.getter.not.annotated:
+  text: Getter for @{0} field might be annotated @{0} itself
+inspection.nullable.problems.annotated.field.getter.conflict:
+  text: Getter for @{0} field is annotated @{1}
+inspection.nullable.problems.annotated.field.setter.parameter.not.annotated:
+  text: Setter parameter for @{0} field might be annotated @{0} itself
+inspection.nullable.problems.annotated.field.setter.parameter.conflict:
+  text: Setter parameter for @{0} field is annotated @{1}
+inspection.nullable.problems.annotated.field.constructor.parameter.not.annotated:
+  text: Constructor parameter for @{0} field might be annotated @{0} itself
+inspection.nullable.problems.annotated.field.constructor.parameter.conflict:
+  text: Constructor parameter for @{0} field is annotated @{1}
+inspection.nullable.problems.NotNull.parameter.overrides.Nullable:
+  text: Parameter annotated @NonNull must not override @Nullable parameter
+inspection.nullable.problems.parameter.overrides.NotNull:
+  text: Not annotated parameter overrides @NotNull parameter
+inspection.nullable.problems.primitive.type.annotation:
+  text: Primitive type members cannot be Nullable/NotNull annotated
+inspection.test.only.problems.display.name:
+  text: Test-only method call in production code
+inspection.test.only.problems.test.only.method.call:
+  text: Test-only method is called in production code
+inspection.visibility.display.name:
+  text: Declaration access can be weaker
+inspection.visibility.option:
+  text: Suggest package local visibility level for class members
+inspection.visibility.option1:
+  text: Suggest package local visibility level for top-level classes
+inspection.visibility.option2:
+  text: <html>Suggest private for inner class members when referenced from outer class only</html>
+inspection.visibility.compose.suggestion:
+  text: Can be {0}
+inspection.visibility.accept.quickfix:
+  text: Accept Suggested Access Level
+inspection.field.can.be.local.display.name:
+  text: Field can be local
+inspection.field.can.be.local.problem.descriptor:
+  text: Field can be converted to a local variable
+inspection.parameter.can.be.local.display.name:
+  text: Parameter can be local
+inspection.parameter.can.be.local.problem.descriptor:
+  text: Parameter can be converted to a local variable
+inspection.convert.to.local.quickfix:
+  text: Convert to local
+inspection.unused.return.value.display.name:
+  text: Unused method return value
+inspection.unused.return.value.problem.descriptor:
+  text: Return value of the method is never used
+inspection.unused.return.value.make.void.quickfix:
+  text: Make Method void
+inspection.same.return.value.display.name:
+  text: Method returns the same value
+inspection.same.return.value.problem.descriptor:
+  text: Method always returns {0}
+inspection.same.return.value.problem.descriptor1:
+  text: Method and all its derivables always return {0}
+inspection.same.return.value.problem.descriptor2:
+  text: All implementations of this method always return {0}
+inspection.dependency.violator.problem.descriptor:
+  text: Dependency rule ''{0}.'' is violated
+inspection.same.parameter.display.name:
+  text: Actual method parameter is the same constant
+inspection.same.parameter.problem.descriptor:
+  text: Actual value of parameter ''{0}'' is always ''{1}''
+inspection.unused.assignment.display.name:
+  text: Unused assignment
+inspection.unused.assignment.option:
+  text: Report ++i when may be replaced with (i + 1)
+inspection.unused.assignment.option1:
+  text: Report i++ when changed value is not used afterwards
+inspection.unused.assignment.option2:
+  text: Report redundant initializers
+inspection.unused.assignment.remove.quickfix:
+  text: Remove Redundant Initializer
+inspection.unused.assignment.problem.descriptor1:
+  text: Variable {0} is never used
+inspection.unused.assignment.problem.descriptor2:
+  text: Variable {0} initializer {1} is redundant
+inspection.unused.assignment.problem.descriptor3:
+  text: The value {0} assigned to {1} is never used
+inspection.unused.assignment.problem.descriptor4:
+  text: The value changed at {0} is never used
+inspection.unused.assignment.problem.descriptor5:
+  text: Variable {0} is never used
+inspection.unused.assignment.problem.descriptor6:
+  text: The variable is assigned to itself in {0}
+inspection.unused.parameter.composer:
+  text: Parameter <code>#ref</code> is not used in any implementation
+inspection.unused.parameter.composer1:
+  text: Parameter <code>#ref</code> is not used  in either this method or any of its derived methods
+inspection.unused.parameter.display.name:
+  text: Unused method parameters
+inspection.unused.parameter.delete.quickfix:
+  text: Delete Unused Parameter(s)
+inspection.redundant.type.display.name:
+  text: Redundant type arguments
+inspection.redundant.type.remove.quickfix:
+  text: Remove explicit type arguments
+inspection.redundant.type.problem.descriptor:
+  text: Explicit type arguments can be inferred
+inspection.redundant.array.creation.display.name:
+  text: Redundant array creation
+inspection.redundant.array.creation.quickfix:
+  text: Remove explicit array creation
+inspection.redundant.array.creation.for.varargs.call.descriptor:
+  text: Redundant array creation for calling varargs method
+inspection.suspicious.collections.method.calls.display.name:
+  text: Suspicious collections method calls
+inspection.suspicious.collections.method.calls.problem.descriptor:
+  text: '''''{0}'''' may not contain objects of type ''''{1}'''''
+inspection.suspicious.collections.method.calls.problem.descriptor1:
+  text: Suspicious call to ''{0}''
+inspection.reference.invalid:
+  text: invalid
+inspection.reference.default.package:
+  text: default package
+inspection.reference.implicit.constructor.name:
+  text: implicit constructor of {0}
+inspection.reference.noname:
+  text: noname
+inspection.reference.anonymous.name:
+  text: anonymous ({0})
+inspection.reference.jsp.holder.method.anonymous.name:
+  text: <% page content %>
+inspection.reference.anonymous:
+  text: anonymous
+inspection.export.save.button:
+  text: Save
+inspection.export.dialog.title:
+  text: Export
+inspection.export.options.panel.title:
+  text: Options
+inspection.export.open.option:
+  text: Open generated HTML in &browser
+inspection.export.title:
+  text: Code Inspection results
+inspection.export.generating.html.for:
+  text: Generating HTML:{0}
+inspection.export.error.writing.to:
+  text: Error writing to {0}
+inspection.export.results.error.title:
+  text: Inspection Results Export
+inspection.export.inspections.link.text:
+  text: Inspections
+inspection.export.open.source.link.text:
+  text: Open source
+inspection.offline.view.empty.browser.text:
+  text: <HTML><BODY>Select tree node for detailed information</BODY></HTML>
+inspection.offline.view.tool.display.name.title:
+  text: Name
+inspection.generating.html.progress.title:
+  text: Generating HTML...
+inspection.generating.xml.progress.title:
+  text: Dumping XML...
+inspection.action.export.html:
+  text: Export
+inspection.action.export.popup.title:
+  text: Export To
+inspection.tool.description.under.construction.text:
+  text: Under construction
+inspection.tool.in.browser.id.title:
+  text: ID
+inspection.tool.in.browser.description.title:
+  text: Description
+inspection.action.edit.settings:
+  text: Edit Settings
+inspection.action.apply.quickfix:
+  text: Apply a quickfix
+inspection.action.apply.quickfix.description:
+  text: Apply an inspection quickfix
+inspection.tree.popup.title:
+  text: Accept Resolution
+inspection.action.rerun:
+  text: Rerun Inspection
+inspection.general.tools.group.name:
+  text: General
+inspection.empty.root.node.text:
+  text: Nothing left to show
+inspection.invalid.node.text:
+  text: (INVALID)
+inspection.problem.descriptor.count:
+  text: '{0, choice, 0#|1#(1 item)|2#({0,number,integer} items)}'
+inspection.action.go.next:
+  text: Go Next Problem
+inspection.actiongo.prev:
+  text: Go Prev Problem
+inspection.javadoc.display.name:
+  text: Declaration has Javadoc problems
+inspection.javadoc.ref.display.name:
+  text: Declaration has problems in Javadoc references
+inspection.javadoc.option.tab.title:
+  text: Class
+inspection.javadoc.option.tab.title.method:
+  text: Method
+inspection.javadoc.option.tab.title.field:
+  text: Field
+inspection.javadoc.option.tab.title.inner.class:
+  text: Inner class
+inspection.javadoc.option.ignore.deprecated:
+  text: Ignore elements marked as @deprecated
+inspection.javadoc.option.ignore.period:
+  text: Ignore period problems
+inspection.scope.for.title:
+  text: Scope
+inspection.javadoc.required.tags.option.title:
+  text: Required Tags
+inspection.javadoc.problem.descriptor:
+  text: Required Javadoc is absent
+inspection.javadoc.problem.descriptor1:
+  text: Period in the documentation is missing. The period is used by the Javadoc tool to generate the comment for the overview page
+inspection.javadoc.problem.missing.tag:
+  text: Required tag {0} is missing
+inspection.javadoc.problem.missing.author.description:
+  text: Author is missing after @author tag
+inspection.javadoc.problem.missing.version.description:
+  text: Version is missing after @version tag
+inspection.javadoc.problem.missing.since.description:
+  text: Since is missing after @since tag
+inspection.javadoc.problem.cannot.resolve:
+  text: Cannot resolve symbol {0}
+inspection.javadoc.problem.name.expected:
+  text: Name expected
+inspection.javadoc.problem.wrong.tag:
+  text: Wrong tag {0}
+inspection.javadoc.problem.disallowed.tag:
+  text: Tag ''{0}'' is not allowed here
+inspection.javadoc.method.problem.descriptor:
+  text: Description is missing in {0} tag for parameter {1}
+inspection.javadoc.method.problem.missing.tag.description:
+  text: '{0} tag description is missing'
+inspection.javadoc.method.problem.missing.param.tag:
+  text: Required tag {0} is missing for parameter {1}
+inspection.javadoc.problem.duplicate.param:
+  text: Duplicate @param tag for parameter ''{0}''
+inspection.javadoc.problem.duplicate.throws:
+  text: Duplicate @throws or @exception tag for exception ''{0}''
+inspection.javadoc.problem.duplicate.tag:
+  text: Duplicate @{0} tag
+inspection.javadoc.problem.add.tag:
+  text: Add tag @{0} {1}
+inspection.javadoc.problem.add.tag.family:
+  text: Add missing Javadoc tag
+inspection.javadoc.problem.add.param.tag:
+  text: Add tag @param for parameter ''{0}''
+inspection.export.results.abstract:
+  text: abstract
+inspection.export.results.static:
+  text: static
+inspection.export.results.capitalized.class:
+  text: Class
+inspection.export.results.initializer:
+  text: initializer
+inspection.export.results.capitalized.interface:
+  text: Interface
+inspection.export.results.capitalized.abstract.class:
+  text: Abstract\&nbsp;class
+inspection.export.results.abstract.class:
+  text: abstract\&nbsp;class
+inspection.export.results.implicit.constructor:
+  text: implicit constructor of
+inspection.problem.resolution:
+  text: Problem resolution
+inspection.quickfix.assert.family:
+  text: Assert
+inspection.assert.quickfix:
+  text: Assert ''{0}''
+inspection.surround.if.quickfix:
+  text: Surround with ''if ({0} != null)''
+inspection.replace.ternary.quickfix:
+  text: Replace with ''{0} != null ?:''
+inspection.surround.if.family:
+  text: Surround with if
+inspection.dependency.configure.button.text:
+  text: Configure dependency rules
+inspection.javadoc.label.text:
+  text: 'Additional Javadoc Tags:'
+inspection.javadoc.dialog.title:
+  text: Edit Additional Javadoc Tags
+inspection.javadoc.html.not.required.label.text:
+  text: 'Additional Not Required Html Attributes:'
+inspection.javadoc.html.not.required.dialog.title:
+  text: Edit Additional Not Required Html Attributes
+inspection.required.attributes.display.name:
+  text: Missing required attribute
+inspection.unused.symbol.check.localvars:
+  text: Check &Local Variables
+inspection.unused.symbol.check.fields:
+  text: Check &Fields
+inspection.unused.symbol.check.methods:
+  text: Check &Methods
+inspection.unused.symbol.check.classes:
+  text: Check &Classes
+inspection.unused.symbol.check.parameters:
+  text: Check &Parameters
+inspection.results.for.profile.toolwindow.title:
+  text: Results for Inspection Profile ''{0}''
+inspection.export.results.invalidated.item:
+  text: invalidated item
+inspection.export.results.at.line:
+  text: at line
+inspection.descriptor.provider.apply.fix:
+  text: Apply Fix {0}
+inspection.export.results.capitalized.location:
+  text: Location
+inspection.export.results.extends.implements:
+  text: Extends/implements
+inspection.export.results.extended.implemented:
+  text: Extended/implemented by
+inspection.export.results.extended:
+  text: Extended by
+inspection.export.results.overrides.library.methods:
+  text: Overrides library methods
+inspection.export.results.overrides.implements:
+  text: Overrides/implements
+inspection.export.results.derived.methods:
+  text: Derived methods
+inspection.export.results.type.references:
+  text: The following uses this type
+inspection.export.results.used.from:
+  text: Used from
+inspection.export.results.uses:
+  text: Uses the following
+inspection.export.results.no.problems.found:
+  text: No problems found
+inspection.export.results.suppress:
+  text: Suppress
+inspection.export.results.callees:
+  text: Call chain
+inspection.export.results.anonymous.ref.in.owner:
+  text: in
+inspection.processing.job.descriptor:
+  text: Processing project usages in
+inspection.processing.job.descriptor1:
+  text: Processing external usages of
+inspection.processing.job.descriptor2:
+  text: Analyzing code in
+inspection.display.name:
+  text: Analyzing code ...
+inspection.action.group.by.severity:
+  text: Group by Severity
+inspection.action.group.by.severity.description:
+  text: Group Inspections By Severity
+inspection.no.jdk.error.message:
+  text: The JDK is not configured properly for this project. Inspection cannot proceed.
+inspection.progress.title:
+  text: Inspecting Code...
+inspection.no.problems.dialog.title:
+  text: Code Inspection
+inspection.no.problems.message:
+  text: No suspicious code found
+inspection.problems:
+  text: problems
+inspection.error.loading.message:
+  text: Error reading inspection profile {0, choice, 0#from {1}|1#}
+inspection.errors.occurred.dialog.title:
+  text: Errors Occurred
+inspection.profiles.presentable.name:
+  text: Inspection profiles
+inspection.severity:
+  text: 'Se&verity:'
+inspection.description.title:
+  text: Description
+inspection.as:
+  text: As {0}
+inspection.new.profile.dialog.title:
+  text: Create new profile
+inspection.unable.to.create.profile.dialog.title:
+  text: Unable to Create Profile.
+inspection.unable.to.create.profile.message:
+  text: Inspection profile with name ''{0}'' already exists.
+inspection.profile.unnamed:
+  text: Unnamed
+inspection.tool.availability.in.tree.node:
+  text: (available for editor highlighting)
+inspection.tool.availability.in.tree.node1:
+  text: (available for Analyze|Inspect Code)
+inspection.error.level.popup.menu.title:
+  text: Choose Error Level
+inspection.application.starting.up:
+  text: Starting up {0} ...
+inspection.done:
+  text: done.
+inspection.capitalized.done:
+  text: Done.
+inspection.application.file.cannot.be.found:
+  text: File {0} cannot be found
+inspection.application.opening.project:
+  text: Opening project...
+inspection.application.initializing.project:
+  text: Initializing project...
+inspection.application.directory.cannot.be.found:
+  text: Directory {0} cannot be found
+inspection.application.project.has.older.format.and.will.be.converted:
+  text: Project has an older format and will be converted.
+inspection.application.project.was.succesfully.converted.old.project.files.were.saved.to.0:
+  text: Project was succesfully converted. Old project files were saved to {0}
+inspection.application.cannot.convert.project.0:
+  text: 'Cannot convert project: {0}'
+inspection.application.cannot.convert.the.project.the.following.files.are.read.only.0:
+  text: 'Cannot convert the project. The following files are read only: {0}'
+inspection.comparing.references.display.name:
+  text: == used instead of equals()
+inspection.comparing.references.use.quickfix:
+  text: Use equals()
+inspection.comparing.references.problem.descriptor:
+  text: 'Suspicious comparison #ref #loc'
+inspection.dead.code.display.name:
+  text: Unused declaration
+inspection.dead.code.option:
+  text: <html><code>void main(String args[])</code> methods</html>
+inspection.dead.code.option2:
+  text: JUnit testcases
+inspection.dead.code.option3:
+  text: Applets
+inspection.dead.code.option4:
+  text: Servlets
+inspection.dead.code.option5:
+  text: Classes that have usages in non-java files
+inspection.export.results.dead.code:
+  text: unused declaration
+inspection.dead.code.comment:
+  text: // --Commented out by Inspection
+inspection.dead.code.date.comment:
+  text: '// --Commented out by Inspection ({0}):'
+inspection.dead.code.stop.comment:
+  text: |
+    // --Commented out by Inspection STOP ({0})
+inspection.dead.code.start.comment:
+  text: |
+    // --Commented out by Inspection START ({0}):
+inspection.dead.code.safe.delete.quickfix:
+  text: Safe Delete
+inspection.dead.code.comment.quickfix:
+  text: Comment Out
+inspection.dead.code.entry.point.quickfix:
+  text: Add as Entry Point
+inspection.dead.code.remove.from.entry.point.quickfix:
+  text: Remove from Entry Points
+inspection.dead.code.entry.points.display.name:
+  text: Entry Points
+inspection.dead.code.export.results.no.instantiations.found:
+  text: No instantiations found.
+inspection.dead.code.export.results.instantiated.from.heading:
+  text: Instantiated from
+inspection.dead.code.problem.synopsis:
+  text: Field is never assigned.
+inspection.dead.code.problem.synopsis1:
+  text: Field has no usages.
+inspection.dead.code.problem.synopsis2:
+  text: Field is assigned but never accessed.
+inspection.dead.code.problem.synopsis3:
+  text: Field has one usage but it is not reachable from entry points.
+inspection.dead.code.problem.synopsis4:
+  text: Field has {0, choice, 1#1 usage|2#{0,number} usages} but they are not reachable from entry points.
+inspection.dead.code.problem.synopsis6:
+  text: Reachable. {0, choice, 1#1 usage|2#{0, number} usages} found in the project code.
+inspection.dead.code.problem.synopsis6.suspicious:
+  text: Not Reachable. {0, choice, 1#1 usage|2#{0, number} usages} found in the project code.
+inspection.dead.code.problem.synopsis7.suspicious:
+  text: Has no reachable instantiations. {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis8.suspicious:
+  text: Has no reachable implementation instantiations. {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis9.suspicious:
+  text: Anonymous class context is not reachable. Class is not instantiated. {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis7:
+  text: Has reachable instantiations. {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis8:
+  text: Has reachable implementation instantiations. {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis9:
+  text: Instantiated {0, choice, 1#1 instantiation|2#{0, number} instantiations} found in the project code.
+inspection.dead.code.problem.synopsis10:
+  text: Anonymous class declaration context is not reachable from entry points. Class is never instantiated.
+inspection.dead.code.problem.synopsis11:
+  text: No class references has been found. Class static initializer is not reachable.
+inspection.dead.code.problem.synopsis12:
+  text: Class has one instantiation but it is not reachable from entry points.
+inspection.dead.code.problem.synopsis13:
+  text: Class is not instantiated.
+inspection.dead.code.problem.synopsis14:
+  text: <ul><li>Abstract method is not implemented OR</li><li>Implementation class is never instantiated OR</li><li>An instantiation is not reachable from entry points.</li></ul>
+inspection.dead.code.problem.synopsis15:
+  text: <ul><li>Method owner class is never instantiated OR</li><li>An instantiation is not reachable from entry points.</li></ul>
+inspection.dead.code.problem.synopsis16:
+  text: Method is never used.
+inspection.dead.code.problem.synopsis17:
+  text: Method has usage(s) but they all belong to recursive calls chain that has no members reachable from entry points.
+inspection.dead.code.problem.synopsis18:
+  text: Method is not reachable from entry points.
+inspection.dead.code.problem.synopsis19:
+  text: Neither the class nor {0, choice, 1#its implementation|2#{0,number} its implementations} are ever instantiated.
+inspection.dead.code.problem.synopsis20:
+  text: Class has {0, choice, 1#instantiation|2#{0,number} instantiations} but they are not reachable from entry points.
+inspection.dead.code.problem.synopsis21:
+  text: Method is never used as a member of this {0}, but only as a member of the implementation class(es). The project will stay compilable if the method is removed from the {0}.
+inspection.dead.code.problem.synopsis22:
+  text: Method overrides a library method but<ul><li>its {0} is never instantiated OR</li><li>its {0} instantiation is not reachable from entry points.</li></ul>
+inspection.dead.code.problem.synopsis23:
+  text: '{0} is not implemented.'
+inspection.dead.code.problem.synopsis24:
+  text: '{0} has an implementation but <ul><li>it is never instantiated OR</li><li>no instantiations are reachable from entry points.</li></ul>'
+inspection.dead.code.problem.synopsis25:
+  text: '{0} has {1, choice, 1#direct or indirect implementation|2#{1,number} direct or indirect implementations} but <ul><li>they are never instantiated OR</li><li>no instantiations are reachable from entry points.</li></ul>'
+inspection.dead.code.problem.synopsis26.constructor:
+  text: Constructor is never used.
+inspection.dead.code.problem.synopsis27.constructor:
+  text: Constructor has usage(s) but they all belong to recursive calls chain that has no members reachable from entry points.
+inspection.dead.code.problem.synopsis28.constructor:
+  text: Constructor has one usage but it is not reachable from entry points.
+inspection.dead.code.problem.synopsis29.constructor:
+  text: Constructor has {0, choice, 1#usage|2#{0,number} usages} but they are not reachable from entry points.
+inspection.dead.code.problem.synopsis26.method:
+  text: Method is never used.
+inspection.dead.code.problem.synopsis27.method:
+  text: Method has usage(s) but they all belong to recursive calls chain that has no members reachable from entry points.
+inspection.dead.code.problem.synopsis28.method:
+  text: Method has one usage but it is not reachable from entry points.
+inspection.dead.code.problem.synopsis29.method:
+  text: Method has {0, choice, 1#usage|2#{0,number} usages} but they are not reachable from entry points.
+inspections.dead.code.entry.points.annotations.list.title:
+  text: Additional entry points annotations
+inspection.duplicates.display.name:
+  text: Duplicate String Literal
+inspection.duplicates.replace.family.quickfix:
+  text: Replace
+inspection.duplicates.replace.quickfix:
+  text: Replace with ''{0}''
+inspection.duplicates.option:
+  text: '&Min string length:'
+inspection.duplicates.message.in.this.file:
+  text: (in this file)
+inspection.duplicates.message.more:
+  text: '... ({0} more)'
+inspection.duplicates.message:
+  text: <html><body>Duplicate string literal found in<br>{0}</body></html>
+inspection.compiler.javac.quirks.name:
+  text: Javac quirks
+inspection.compiler.javac.quirks.anno.array.comma.problem:
+  text: Trailing comma in annotation array initializer may cause compilation error in some Javac versions (e.g. JDK 5 and JDK 6).
+inspection.compiler.javac.quirks.anno.array.comma.fix:
+  text: Remove trailing comma
+inspection.compiler.javac.quirks.qualifier.type.args.problem:
+  text: Generics in qualifier reference may cause compilation error in some Javac versions (e.g. JDK 5 and JDK 6).
+inspection.compiler.javac.quirks.qualifier.type.args.fix:
+  text: Remove generic parameter
+inspection.root.node.title:
+  text: Inspections
+inspection.tools.action.show.global.inspections.text:
+  text: Hide Global Inspections
+inspection.tools.action.show.global.inspections.description:
+  text: Hide Global Inspections Settings
+deprecated.symbol:
+  text: Deprecated symbol
+unused.import:
+  text: Unused import (editor light)
+unused.import.statement:
+  text: Unused import statement
+unused.symbol:
+  text: Unused symbol
+redundant.throws.declaration:
+  text: Redundant throws declaration
+access.static.via.instance:
+  text: Access static member via instance reference
+wrong.package.statement:
+  text: Wrong package statement
+illegal.package.dependencies:
+  text: Illegal package dependencies
+unchecked.warning:
+  text: Unchecked warning
+suppress.all.for.class:
+  text: Suppress all inspections for class
+suppress.inspection.family:
+  text: Suppress inspection
+suppress.inspection.statement:
+  text: Suppress for statement
+suppress.inspection.class:
+  text: Suppress for class
+suppress.inspection.field:
+  text: Suppress for field
+suppress.inspection.method:
+  text: Suppress for method
+inspection.options.action.text:
+  text: Inspection ''{0}'' options
+edit.dependency.rules.family:
+  text: Edit dependency rules
+edit.dependency.rules.text:
+  text: Edit dependency rule "{0} "
+error.analysis.is.in.progress:
+  text: Error analysis is in progress
+no.errors.found.in.this.file:
+  text: No errors found in this file
+edit.options.of.reporter.inspection.family:
+  text: Edit options of reporter inspection
+edit.options.of.reporter.inspection.text:
+  text: Edit inspection profile setting
+group.names.abstraction.issues:
+  text: Abstraction issues
+group.names.assignment.issues:
+  text: Assignment issues
+group.names.probable.bugs:
+  text: Probable bugs
+group.names.bitwise.operation.issues:
+  text: Bitwise operation issues
+group.names.class.structure:
+  text: Class structure
+group.names.class.metrics:
+  text: Class metrics
+group.names.compiler.issues:
+  text: Compiler issues
+group.names.potentially.confusing.code.constructs:
+  text: Potentially confusing code constructs
+group.names.encapsulation.issues:
+  text: Encapsulation issues
+group.names.error.handling:
+  text: Error handling
+group.names.finalization.issues:
+  text: Finalization issues
+group.names.imports:
+  text: Imports
+group.names.initialization.issues:
+  text: Initialization issues
+group.names.internationalization.issues:
+  text: Internationalization issues
+group.names.junit.issues:
+  text: JUnit issues
+group.names.logging.issues:
+  text: Logging issues
+group.names.code.maturity.issues:
+  text: Code maturity issues
+group.names.method.metrics:
+  text: Method metrics
+group.names.naming.conventions:
+  text: Naming conventions
+group.names.performance.issues:
+  text: Performance issues
+group.names.memory.issues:
+  text: Memory issues
+group.names.java.language.level.issues:
+  text: Java language level issues
+group.names.portability.issues:
+  text: Portability issues
+group.names.security.issues:
+  text: Security issues
+group.names.serialization.issues:
+  text: Serialization issues
+group.names.code.style.issues:
+  text: Code style issues
+group.names.threading.issues:
+  text: Threading issues
+group.names.verbose.or.redundant.code.constructs:
+  text: Verbose or redundant code constructs
+group.names.visibility.issues:
+  text: Visibility issues
+group.names.cloning.issues:
+  text: Cloning issues
+group.names.resource.management.issues:
+  text: Resource management issues
+group.names.j2me.issues:
+  text: J2ME issues
+group.names.control.flow.issues:
+  text: Control flow issues
+group.names.numeric.issues:
+  text: Numeric issues
+group.names.language.level.specific.issues.and.migration.aids:
+  text: Java language level migration aids
+group.names.javabeans.issues:
+  text: JavaBeans issues
+group.names.inheritance.issues:
+  text: Inheritance issues
+group.names.data.flow.issues:
+  text: Data flow issues
+group.names.declaration.redundancy:
+  text: Declaration redundancy
+group.names.javadoc.issues:
+  text: Javadoc issues
+group.names.concurrency.annotation.issues:
+  text: Concurrency annotation issues
+group.names.javaee.issues:
+  text: Java EE issues
+group.names.properties.files:
+  text: Properties Files
+duplicate.property.display.name:
+  text: Duplicate Property
+duplicate.property.diff.key.problem.descriptor:
+  text: 'Duplicate Property Key ''''{0}'''' With Different Values #end :<br>'
+duplicate.property.diff.key.progress.indicator.text:
+  text: 'Processing duplicate property key: {0}'
+duplicate.property.key.problem.descriptor:
+  text: 'Duplicate Property Key ''''{0}'''' #end With Values:<br>'
+duplicate.property.key.progress.indicator.text:
+  text: Processing duplicate property key:{0}
+duplicate.property.value.problem.descriptor:
+  text: 'Duplicate Property Value ''''{0}'''' #end With Keys:<br>'
+duplicate.property.value.progress.indicator.text:
+  text: 'Processing duplicate property value: {0}'
+duplicate.property.diff.key.option:
+  text: '&Duplicate keys with different values'
+duplicate.property.value.option:
+  text: Duplicate &values
+duplicate.property.key.option:
+  text: Duplicate &keys
+duplicate.property.file.scope.option:
+  text: '&File scope'
+duplicate.property.module.scope.option:
+  text: '&Module Scope'
+duplicate.property.project.scope.option:
+  text: '&Project Scope'
+inspection.javadoc.throws.or.exception.option:
+  text: '@throws or @exception'
+suppress.inspection.annotation.syntax.error:
+  text: 'Incorrect annotation syntax: {0}'
+default.file.template.report.file.header:
+  text: Report Default file header
+default.file.template.report.method.body:
+  text: Report default created/overridden/implemented method body
+default.file.template.report.catch.section:
+  text: Report default catch section
+default.file.template.description:
+  text: Default File template
+default.file.template.display.name:
+  text: Default File Template Usage
+default.file.template.edit.template:
+  text: Edit template...
+default.file.template.replace.with.actual.file.template:
+  text: Replace with actual file template
+profile.assignments.display.name:
+  text: Errors
+profile.mapping.inspection.profile.column.title:
+  text: inspection profile
+profile.mapping.scope.column.title:
+  text: scope
+boolean.method.is.always.inverted.display.name:
+  text: Boolean method is always inverted
+boolean.method.is.always.inverted.problem.descriptor:
+  text: Boolean method <code>#ref</code> is always inverted
+inspection.results.title:
+  text: Results By Editor Settings
+unnecessary.module.dependency.display.name:
+  text: Unnecessary module dependency
+unnecessary.module.dependency.problem.descriptor:
+  text: Module ''{0}'' sources do not depend on module ''{1}'' sources, the dependency between modules could be removed
+suspected.module.dependency.problem.descriptor:
+  text: Dependency from module ''{0}'' on module ''{1}'' could be probably be removed when complementary scope to ''{2}'' also does not contain references on module ''{3}''
+run.with.editor.settings.dialog.option:
+  text: Run with &editor settings
+inspection.new.profile.text:
+  text: New Profile Name
+profile.save.as.project.checkbox.title:
+  text: Save as project profile
+profile.save.as.ide.checkbox.title:
+  text: Save as IDE profile
+profile.assignment.repeatable.scope.warning:
+  text: Repeatable scope. Correct assignments.
+profile.ide.profile.radiobutton.title:
+  text: IDE Profile
+profile.project.radiobutton.title:
+  text: Project Profile
+profile.default.profile.title:
+  text: Default Project Profile
+profile.assignments.table.title:
+  text: Project Inspection Profile Assignments
+profile.assignments.browse.scope.button.title:
+  text: '&Browse ...'
+profile.assignments.browse.profile.scopes.dialog.title:
+  text: Profiles Scopes
+profile.quick.change.suggestion.message:
+  text: <html>There are a few scopes configured for the project. Do you want to edit profile assignments on them?</html>
+profile.quick.change.suggestion.dialog.title:
+  text: Unable to switch profile
+unhandled.exception.in.jsp.name:
+  text: Unhandled Exception in JSP
+inspection.no.modules.error.message:
+  text: This project contains no modules. Inspection cannot proceed.
+inspection.redundant.suppression.name:
+  text: Redundant suppression
+inspection.redundant.suppression.description:
+  text: Redundant suppression
+run.with.choosen.profile.dialog.option:
+  text: Run with &chosen profile
+disable.inspection.action.name:
+  text: Disable inspection
+group.names.packaging.issues:
+  text: Packaging issues
+group.names.dependency.issues:
+  text: Dependency issues
+group.names.modularization.issues:
+  text: Modularization issues
+run.inspection.on.file.intention.text:
+  text: Run inspection on ...
+severities.editor.dialog.title:
+  text: Severities Editor
+highlight.severity.create.dialog.title:
+  text: New Highlight Severity
+highlight.severity.create.dialog.name.label:
+  text: Name
+suspicious.name.combination.display.name:
+  text: Suspicious variable/parameter name combination
+suspicious.name.combination.options.title:
+  text: Groups of names
+suspicious.name.combination.options.prompt:
+  text: 'Enter a comma-separated list of names:'
+suspicious.name.combination.add.titile:
+  text: Add Group of Names
+suspicious.name.combination.edit.title:
+  text: Edit Group of Names
+special.annotations.list.add.annotation.class:
+  text: Add Annotation Class
+special.annotations.list.annotation.class:
+  text: Annotation Class
+special.annotations.list.remove.annotation.class:
+  text: Remove Annotation Class
+dependency.injection.annotations.list:
+  text: Additional Dependency Injection Annotations
+special.annotations.annotations.list:
+  text: Additional Special Annotations
+inspection.filter.resolved.action.text:
+  text: Filter resolved items
+inspection.filter.show.diff.action.text:
+  text: Show diff
+inspection.duplicate.throws.display.name:
+  text: Duplicate throws
+inspection.duplicate.throws.problem:
+  text: Duplicate throws
+inspection.duplicate.throws.more.general.problem:
+  text: There is a more general exception, ''{0}'', in the throws list already.
+inspection.duplicate.throws.ignore.subclassing.option:
+  text: Ignore exceptions subclassing others
+inspection.filter.show.diff.only.action.text:
+  text: Show diff only
+inspection.new.profile.ide.to.project.warning.message:
+  text: Do you want to save selected IDE profile as project profile?
+inspection.new.profile.ide.to.project.warning.title:
+  text: Unable to set up IDE profile for scope
+profile.project.settings.banner:
+  text: Project Profiles Settings
+profile.project.display.name:
+  text: Project Profiles
+profile.banner.text:
+  text: 'Inspection profile: {0} {1, choice, 0#(inactive)|1#}'
+profile.ide.tree.text:
+  text: IDE Profiles
+profile.ide.settings.banner:
+  text: IDE Profiles Settings
+profile.project.settings.disable.text:
+  text: < Use IDE Profile >
+errors.single.profile.title:
+  text: 'Errors: ''''{0}'''' inspection profile'
+rename.inspection.profile:
+  text: Rename inspection profile
+rename.message.prefix.inspection.profile:
+  text: Inspection profile
+default.ide.profile.label.text:
+  text: 'Default IDE profile:'
+profile.lock.action.text:
+  text: Lock
+profile.unlock.action.text:
+  text: Unlock
+profile.activate.action.text:
+  text: Set as project default
+profile.project.activate.action.text:
+  text: Set as IDE default
+inspection.annotate.quickfix.overridden.method.messages:
+  text: |-
+    Method {0} {1} method {2}.
+    Annotate the base method as well?
+inspection.annotate.quickfix.overridden.method.warning:
+  text: Overridden Method Warning
+inspection.annotate.quickfix.implements:
+  text: implements
+inspection.annotate.quickfix.overrides:
+  text: overrides
+offline.inspections.jdk.not.found:
+  text: '{0} not found'
+offline.inspections.module.jdk.not.found:
+  text: Please, specify sdk ''{0}'' for module ''{1}''
+inconsistent.resource.bundle.display.name:
+  text: Inconsistent Resource Bundle
+inconsistent.bundle.property.error:
+  text: Inconsistent property ''{0}''. Must be defined in the parent file ''{1}''.
+inconsistent.bundle.untranslated.property.error:
+  text: Untranslated property ''{0}''. Should be overridden in the ''{1}''.
+inconsistent.bundle.report.missing.translations:
+  text: Report &missing translations
+inconsistent.bundle.report.inconsistent.properties:
+  text: Report &inconsistent properties
+inconsistent.bundle.report.duplicate.properties.values:
+  text: Report properties &overridden with the same value
+inconsistent.bundle.property.inherited.with.the.same.value:
+  text: Property inherited from the ''{0}'' file with the same value
+edit.inspection.options:
+  text: Edit ''{0}'' Options
+offline.view.title:
+  text: Offline View
+offline.view.editor.settings.title:
+  text: Editor Settings
+offline.view.parse.exception.title:
+  text: Nothing found to display
+parsing.inspections.dump.progress.title:
+  text: Parsing inspections XML dump
+suppress.inspection.problem:
+  text: Suppress
+inspections.view.options.title:
+  text: Inspection {0} options
+inspections.result.view.exclude.action.text:
+  text: Exclude
+inspections.result.view.include.action.text:
+  text: Include
+xml.suppressable.for.tag.title:
+  text: Suppress for tag
+xml.suppressable.for.file.title:
+  text: Suppress for file
+xml.suppressable.all.for.file.title:
+  text: Suppress all for file
+annotate.overridden.methods.as.notnull:
+  text: Annotate overridden methods as ''@{0}''
+nullable.stuff.problems.overridden.methods.are.not.annotated:
+  text: Overridden methods are not annotated
+nullable.stuff.problems.overridden.method.parameters.are.not.annotated:
+  text: Overridden method parameters are not annotated
+annotate.overridden.methods.parameters:
+  text: Annotate overridden method parameters as ''@{0}''
+offline.inspections.library.was.not.resolved:
+  text: Please configure library ''{0}'' which is used in module ''{1}''
+report.suspicious.but.possibly.correct.method.calls:
+  text: '&Report suspicious but possibly correct method calls'
+unused.library.display.name:
+  text: Unused library
+unused.library.problem.descriptor:
+  text: Unused library ''{0}''
+unused.library.roots.problem.descriptor:
+  text: Unused roots {0} from library ''{1}''
+unused.library.backward.analysis.job.description:
+  text: Perform backward analysis
+inspection.duplicates.option.report.propertykey.expressions:
+  text: '&Ignore @PropertyKey expressions'
+inspection.same.parameter.fix.name:
+  text: Inline value ''{1}'' for parameter ''{0}''
+fix.all.inspection.problems.in.file:
+  text: Fix all ''{0}'' problems
+cleanup.in.file:
+  text: Cleanup code
+cleanup.in.scope:
+  text: Cleanup code on...
+severities.default.settings.message:
+  text: Edit Settings|Colors \& Fonts
+unsupported.character.for.the.charset:
+  text: Unsupported characters for the charset ''{0}''
+lossy.encoding:
+  text: Lossy encoding
+inconsistent.line.separators:
+  text: Inconsistent line separators
+inspection.unused.symbol.public.method.parameters:
+  text: Check parameters in &Non-private methods
+introduce.constant.across.the.project:
+  text: Introduce Constant Across the Project
+inspection.application.chosen.profile.log message:
+  text: Inspecting with profile ''{0}''
+detach.library.quickfix.name:
+  text: Detach library
+detach.library.roots.quickfix.name:
+  text: Detach unused library roots
+inspection.javadoc.problem.pointing.to.itself:
+  text: Javadoc pointing to itself
+inspection.redirect.template:
+  text: '<html><body>Injected element has problem: {0} (in <a href="#navigation/{1}:{2}">{3}</a>). </body></html>'
+nothing.found:
+  text: Nothing found
+special.annotations.list.annotation.pattern:
+  text: Add Annotations Pattern
+inspection.variable.assigned.to.itself.display.name:
+  text: Variable is assigned to itself
+assignment.to.itself.problem.descriptor:
+  text: Variable ''{0}'' is assigned to itself
+assignment.to.declared.variable.problem.descriptor:
+  text: Variable ''{0}'' is initialized with self assignment

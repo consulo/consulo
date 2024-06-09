@@ -1,0 +1,1013 @@
+codeinsight.settings:
+  text: CodeInsight settings
+not.action.OptimizeImports.text:
+  text: Optimi_ze Imports...
+not.action.OptimizeImports.description:
+  text: Remove unused imports and reorder/reorganize imports
+error.hint.file.is.readonly:
+  text: File {0} is read-only
+error.dialog.readonly.file.title:
+  text: File Is Read-Only
+error.dialog.readonly.files.title:
+  text: Cannot Modify Read-Only Files
+error.dialog.readonly.files.message:
+  text: |-
+    {0} contains read-only file(s).
+    Process all other (writeable) files?
+process.scope.directory:
+  text: Directory ''{0}''
+process.scope.project:
+  text: Project ''{0}''
+process.scope.module:
+  text: Module ''{0}''
+reformat.code.accept.button.text:
+  text: Run
+process.scope.changed.files:
+  text: process only VCS changed files
+process.scope.file:
+  text: '&File {0}'
+reformat.option.selected.text:
+  text: '&Selected text'
+reformat.option.all.files.in.directory:
+  text: '&All files in directory {0}'
+reformat.option.include.subdirectories:
+  text: '&Include subdirectories'
+reformat.option.optimize.imports:
+  text: '&Optimize imports'
+reformat.option.rearrange.entries:
+  text: '&Rearrange entries'
+reformat.option.vcs.changed.region:
+  text: Only &VCS changed text
+reformat.progress.file.with.known.name.text:
+  text: Reformatting {0}
+reformat.and.optimize.progress.common.text:
+  text: Preparing imports...
+reformat.progress.common.text:
+  text: Reformatting code...
+process.optimize.imports:
+  text: Optimize Imports
+process.optimize.imports.before.commit:
+  text: Optimize Imports Before Commit
+progress.text.optimizing.imports:
+  text: Optimizing imports...
+progress.reformat.and.optimize.common.command.text:
+  text: Reformat and Optimize Imports
+progress.reformat.stage.wrapping.blocks:
+  text: Preparing...
+progress.reformat.stage.processing.blocks:
+  text: Calculating changes...
+progress.reformat.stage.applying.changes:
+  text: Storing changes...
+process.reformat.code:
+  text: Reformat Code
+process.reformat.code.before.commit:
+  text: Reformat Code Before Commit
+dialog.reformat.files.title:
+  text: Reformat Files
+dialog.reformat.files.optimize.imports.checkbox:
+  text: '&Optimize imports'
+dialog.reformat.files.reformat.selected.files.label:
+  text: Reformat selected files?
+command.name.typing:
+  text: Typing
+dialog.import.on.paste.title:
+  text: Select Classes to Import
+dialog.import.on.paste.title2:
+  text: Select Elements to Import
+dialog.paste.on.import.text:
+  text: <html>The code fragment which you have pasted uses classes that are not accessible by imports in the new context.<br/>Select classes that you want to import to the new file.</html>
+dialog.paste.on.import.text2:
+  text: <html>The code fragment which you have pasted uses elements that are not accessible by imports in the new context.<br/>Select elements that you want to import to the new file.</html>
+paste.data.flavor.folding:
+  text: FoldingData
+paste.dataflavor.referencedata:
+  text: ReferenceData
+generate.constructor.fields.chooser.title:
+  text: Choose Fields to Initialize by Constructor
+error.attempt.to.generate.constructor.for.anonymous.class:
+  text: Cannot add constructor to an anonymous class
+generate.constructor.super.constructor.chooser.title:
+  text: Choose Super Class Constructor
+generate.delegate.method.chooser.title:
+  text: Select Methods to Generate Delegates for
+generate.delegate.target.chooser.title:
+  text: Select Target to Generate Delegates for
+generate.equals.and.hashcode.already.defined.warning:
+  text: |-
+    Methods ''boolean equals(Object)'' and ''int hashCode()'' are already defined
+    for class {0}. Do you want to delete them and proceed?
+generate.equals.and.hashcode.already.defined.warning.anonymous:
+  text: |-
+    Methods 'boolean equals(Object)' and 'int hashCode()' are already defined
+    for this anonymous class. Do you want to delete them and proceed?
+generate.equals.and.hashcode.already.defined.title:
+  text: Generate equals() and hashCode()
+generate.equals.and.hashcode.error.no.object.class.message:
+  text: |-
+    Cannot generate equals() and hashCode().
+    No java.lang.Object class found.
+generate.equals.and.hashcode.error.no.object.class.title:
+  text: No java.lang.Object
+generate.equals.compare.nested.arrays.comment:
+  text: // Compare nested arrays - values of {0} here
+generate.equals.compare.arrays.comment:
+  text: // Probably incorrect - comparing Object[] arrays with Arrays.equals
+generate.getter.setter.title:
+  text: Select Fields to Generate Getters and Setters
+generate.getter.fields.chooser.title:
+  text: Select Fields to Generate Getters
+generate.setter.fields.chooser.title:
+  text: Select Fields to Generate Setters
+override.implement.broken.file.template.message:
+  text: Please Correct "Overridden/Implemented Method Body" Template
+override.implement.broken.file.template.title:
+  text: File Template Error
+methods.to.implement.chooser.title:
+  text: Select Methods to Implement
+methods.to.override.chooser.title:
+  text: Select Methods to Override
+methods.to.override.implement.chooser.title:
+  text: Select Methods to Override/Implement
+generate.list.popup.title:
+  text: Generate
+surround.with.cast.template:
+  text: ((Type)expr)
+surround.with.dowhile.template:
+  text: do / while
+surround.with.for.template:
+  text: for
+surround.with.ifelse.expression.template:
+  text: if (expr) '{'...'}' else '{'...'}'
+surround.with.ifelse.template:
+  text: if / else
+surround.with.if.expression.template:
+  text: if (expr) '{'...'}'
+surround.with.if.template:
+  text: if
+surround.with.not.instanceof.template:
+  text: '!(expr instanceof Type)'
+surround.with.not.template:
+  text: '!(expr)'
+surround.with.parenthesis.template:
+  text: (expr)
+surround.with.runnable.template:
+  text: Runnable
+surround.with.synchronized.template:
+  text: synchronized
+surround.with.try.catch.finally.template:
+  text: try / catch / finally
+surround.with.try.catch.template:
+  text: try / catch
+surround.with.try.catch.incorrect.template.message:
+  text: Invalid File Template for Catch Body!
+surround.with.try.catch.incorrect.template.title:
+  text: Surround With Try / Catch
+surround.with.try.finally.template:
+  text: try / finally
+surround.with.while.template:
+  text: while
+surround.with.runtime.type.template:
+  text: ((RuntimeType)expr)
+surround.with.chooser.title:
+  text: Surround With
+unwrap.popup.title:
+  text: Choose the statement to unwrap/remove
+unwrap.if:
+  text: Unwrap 'if...'
+unwrap.else:
+  text: Unwrap 'else...'
+remove.else:
+  text: Remove 'else...'
+unwrap.while:
+  text: Unwrap 'while...'
+unwrap.for:
+  text: Unwrap 'for...'
+unwrap.braces:
+  text: Unwrap braces
+unwrap.try:
+  text: Unwrap 'try...'
+unwrap.conditional:
+  text: 'Unwrap ''f ? a : b'''
+remove.catch:
+  text: Remove 'catch...'
+unwrap.synchronized:
+  text: Unwrap 'synchronized...'
+unwrap.with.placeholder:
+  text: Unwrap ''{0}''
+unwrap.anonymous:
+  text: Unwrap 'anonymous...'
+generate.equals.hashcode.wizard.title:
+  text: Generate equals() and hashCode()
+generate.equals.hashcode.equals.fields.chooser.title:
+  text: Choose &fields to be included in equals()
+generate.equals.hashcode.hashcode.fields.chooser.title:
+  text: Choose &fields to be included in hashCode()
+generate.equals.hashcode.non.null.fields.chooser.title:
+  text: Select all non-null &fields
+generate.equals.hashcode.accept.sublcasses:
+  text: Accept &subclasses as parameter to equals() method
+generate.equals.hashcode.accept.sublcasses.explanation:
+  text: <html><body>While generally incompliant to Object.equals() specification accepting<br>subclasses might be necessary for generated method to work correctly<br>with frameworks, which generate Proxy subclasses like Hibernate.</body></html>
+generate.equals.hashcode.internal.error:
+  text: Internal error
+generate.equals.warning.equals.for.nested.arrays.not.supported:
+  text: equals() for nested arrays is not supported
+generate.equals.warning.generated.equals.could.be.incorrect:
+  text: Generated equals() for Object[] can be incorrect
+generate.equals.hashcode.warning.hashcode.for.arrays.is.not.supported:
+  text: hashCode () for arrays is not supported
+highlight.thrown.exceptions.chooser.all.entry:
+  text: All listed
+highlight.exceptions.thrown.chooser.title:
+  text: Choose Exception Classes to Highlight
+highlight.exceptions.thrown.notfound:
+  text: 'No exceptions thrown in the method found '
+status.bar.exit.points.highlighted.message:
+  text: '{0} exit {0, choice, 1#point|2#points} highlighted (press {1} again to remove the highlighting, Escape to remove all highlighting)'
+status.bar.highlighted.usages.message:
+  text: '{0} {0, choice, 1#usage|2#usages} of {1} found (press {2} again to remove the highlighting, Escape to remove all highlighting)'
+status.bar.highlighted.usages.no.target.message:
+  text: '{0} {0, choice, 1#usage|2#usages} found (press {2} again to remove the highlighting, Escape to remove all highlighting)'
+status.bar.overridden.methods.highlighted.message:
+  text: '{0} overridden {0, choice, 1#method|2#methods} found (press {1} again to remove the highlighting, Escape to remove all highlighting)'
+status.bar.highlighted.usages.not.found.message:
+  text: No usages of {0} found
+status.bar.highlighted.usages.not.found.no.target.message:
+  text: No usages found
+parameter.info.no.parameters:
+  text: <no parameters>
+xml.tag.info.no.attributes:
+  text: <no attributes>
+n.of.m:
+  text: '{0} of {1}'
+quick.definition.back:
+  text: Back
+quick.definition.forward:
+  text: Forward
+quick.definition.edit.source:
+  text: Edit Source
+quick.definition.show.source:
+  text: Show Source
+i18n.quickfix.property.panel.title:
+  text: Property Info
+i18n.quickfix.property.panel.update.all.files.in.bundle.checkbox:
+  text: Update all properties files in &Resource bundle
+i18n.quickfix.property.panel.properties.file.label:
+  text: '&Properties File:'
+i18n.quickfix.property.panel.property.value.label:
+  text: 'Property &Value:'
+i18n.quickfix.property.panel.property.key.label:
+  text: 'Property &Key:'
+i18n.quickfix.code.panel.title:
+  text: Java Code Info
+i18n.quickfix.code.panel.resource.bundle.expression.label:
+  text: 'Resource bundle &expression:'
+i18n.quickfix.preview.panel.title:
+  text: Preview
+quickfix.i18n.concatentation:
+  text: I18nize string concatenation containing hard coded string literal
+quickfix.i18n.concatentation.error:
+  text: String concatenation not found
+quickfix.i18n.command.name:
+  text: I18nize
+inspection.i18n.display.name:
+  text: Hard coded strings
+inspection.i18n.option.ignore.assert:
+  text: Ignore for assert statement arguments
+inspection.i18n.option.ignore.for.exception.constructor.arguments:
+  text: 'Ignore for exception constructor arguments:'
+inspection.i18n.option.ignore.for.specified.exception.constructor.arguments:
+  text: Ignore for specified exception constructor arguments
+inspection.i18n.option.ignore.for.junit.assert.arguments:
+  text: Ignore for JUnit assert arguments
+inspection.i18n.option.ignore.qualified.class.names:
+  text: Ignore literals which have value equal to existing qualified class name
+inspection.i18n.option.ignore.property.keys:
+  text: Ignore literals which have value equal to existing property key
+inspection.i18n.option.ignore.nonalphanumerics:
+  text: Ignore literals which do not contain alphabetic characters
+inspection.i18n.quickfix:
+  text: I18nize hard coded string literal
+inspection.i18n.message.general.with.value:
+  text: 'Hard coded string literal: {0}'
+inspection.unresolved.property.key.reference.name:
+  text: Invalid property key
+inspection.unresolved.property.key.reference.message:
+  text: String literal ''{0}'' doesn''t appear to be valid property key
+inspection.invalid.resource.bundle.reference:
+  text: Invalid resource bundle reference ''{0}''
+i18nize.dialog.title:
+  text: I18nize Hardcoded String
+i18nize.dialog.error.jdk.message:
+  text: |-
+    Class 'java.util.ResourceBundle' cannot be found.
+    Please setup correct JDK.
+i18nize.dialog.error.jdk.title:
+  text: Class Not Found
+i18nize.dialog.property.file.chooser.title:
+  text: Choose Properties File
+i18nize.dialog.template.link.label:
+  text: Edit I18n template
+i18nize.dialog.error.property.already.defined.message:
+  text: Property ''{0}'' already exists in the file ''{1}''
+i18nize.dialog.error.property.already.defined.title:
+  text: Property Already Exists
+intention.split.declaration.family:
+  text: Split Declaration
+intention.split.declaration.text:
+  text: Split into separate declarations
+intention.split.declaration.assignment.text:
+  text: Split into declaration and assignment
+intention.add.override.annotation:
+  text: Add '@Override' Annotation
+intention.add.override.annotation.family:
+  text: Add Override Annotation
+intention.make.type.generic.family:
+  text: Make Type Generic
+intention.make.type.generic.text:
+  text: Change type of {0} to {1}
+intention.split.if.family:
+  text: Split If
+intention.split.if.text:
+  text: Split into 2 if's
+intention.introduce.variable.text:
+  text: Introduce local variable
+intention.encapsulate.field.text:
+  text: Encapsulate field
+intention.implement.abstract.method.family:
+  text: Implement Abstract Method
+intention.implement.abstract.method.text:
+  text: Implement method ''{0}''
+intention.override.method.text:
+  text: Override method ''{0}''
+intention.add.annotation.family:
+  text: Add Annotation
+intention.add.on.demand.static.import.family:
+  text: Add On Demand Static Import
+intention.add.on.demand.static.import.text:
+  text: Add on demand static import for ''{0}''
+intention.add.single.member.static.import.family:
+  text: Add Single-Member Static Import
+intention.add.single.member.static.import.text:
+  text: Add static import for ''{0}''
+intention.replace.concatenation.with.formatted.output.family:
+  text: Replace Concatenation with Formatted Output
+intention.replace.concatenation.with.formatted.output.text:
+  text: Replace '+' with 'java.text.MessageFormat.format()'
+intention.color.chooser.dialog:
+  text: Choose Color
+intention.convert.to.basic.latin:
+  text: Convert to Basic Latin
+intention.surround.resource.with.ARM.block:
+  text: Surround with try-with-resources block
+dialog.create.field.from.parameter.title:
+  text: Create Field
+dialog.create.field.from.parameter.already.exists.text:
+  text: Use existing field ''{0}''?
+dialog.create.field.from.parameter.already.exists.title:
+  text: Field Already Exists
+dialog.create.field.from.parameter.field.type.label:
+  text: 'Field of type:'
+dialog.create.field.from.parameter.field.name.label:
+  text: 'Name:'
+dialog.create.field.from.parameter.declare.final.checkbox:
+  text: Declare &final
+dialog.create.class.destination.package.label:
+  text: 'Destination package:'
+dialog.create.class.package.chooser.title:
+  text: Choose Destination Package
+create.directory.command:
+  text: Create directory
+dialog.create.class.label:
+  text: 'Create {0}:'
+dialog.create.class.name:
+  text: Create {0} {1}
+intention.implement.abstract.class.family:
+  text: Implement Abstract Class or Interface
+intention.implement.abstract.class.default.text:
+  text: Implement Abstract Class
+intention.implement.abstract.class.interface.text:
+  text: Implement Interface
+intention.implement.abstract.class.subclass.text:
+  text: Create Subclass
+intention.error.cannot.create.class.message:
+  text: Cannot Create Class ''{0}''
+intention.error.cannot.create.class.title:
+  text: Failed to Create Class
+intention.assign.field.from.parameter.text:
+  text: Assign Parameter to Field ''{0}''
+intention.assign.field.from.parameter.family:
+  text: Assign Parameter to Field
+intention.create.field.from.parameter.text:
+  text: Create Field for Parameter ''{0}''
+intention.create.field.from.parameter.family:
+  text: Create Field for Parameter
+intention.bind.fields.from.parameters.text:
+  text: Bind {0} Parameters to Fields
+intention.bind.fields.from.parameters.family:
+  text: Bind Parameters to Fields
+intention.implement.abstract.method.searching.for.descendants.progress:
+  text: Searching For Descendants...
+intention.implement.abstract.method.error.no.classes.message:
+  text: There are no classes found where this method can be implemented
+intention.implement.abstract.method.error.no.classes.title:
+  text: No Classes Found
+intention.implement.abstract.method.class.chooser.title:
+  text: Choose Implementing Class
+intention.implement.abstract.method.command.name:
+  text: Implement method
+intention.invert.if.condition:
+  text: Invert If Condition
+intention.extract.if.condition.text:
+  text: Extract if ({0})
+intention.extract.if.condition.family:
+  text: Extract If Condition
+intention.underscores.in.literals.family:
+  text: Underscores in numeric literals
+intention.remove.literal.underscores:
+  text: Remove underscores from literal
+intention.insert.literal.underscores:
+  text: Insert underscores into literal
+intention.replace.cast.with.var.text:
+  text: Replace ''{0}'' with ''{1}''
+intention.replace.cast.with.var.family:
+  text: Replace cast with variable
+intention.convert.color.representation.text:
+  text: Convert to ''new Color{0}''
+intention.convert.color.representation.family:
+  text: Convert Color representation
+intention.break.string.on.line.breaks.text:
+  text: Break string on '\n'
+intention.create.test:
+  text: Create Test
+intention.create.test.dialog.testing.library:
+  text: 'Testing library:'
+intention.create.test.dialog.language:
+  text: 'Language:'
+intention.create.test.dialog.class.name:
+  text: 'Class name:'
+intention.create.test.dialog.super.class:
+  text: 'Superclass:'
+intention.create.test.dialog.choose.super.class:
+  text: Choose Superclass
+intention.create.test.dialog.generate:
+  text: 'Generate:'
+intention.create.test.dialog.show.inherited:
+  text: Show inherited methods
+intention.create.test.dialog.select.methods:
+  text: 'Generate test methods for:'
+intention.create.test.dialog.library.not.found:
+  text: '{0} library not found in the module'
+intention.create.test.dialog.fix.library:
+  text: Fix
+intention.create.test.dialog.java:
+  text: Java
+lightbulb.tooltip:
+  text: Click or press {0}
+dialog.intention.settings.intention.list.title:
+  text: Intention List
+dialog.intention.settings.description.panel.title:
+  text: Description
+dialog.intention.settings.description.usage.example.title:
+  text: Usage Example
+intention.settings:
+  text: Code Intentions
+intention.settings.category.text:
+  text: <html><body><font face="verdana" size="-1"><center>You have selected the intention category ''<b>{0}</b>''.</center><center>By clicking the checkbox, you can enable/disable all intentions in this category.</center><center>To enable/disable a particular intention, select the intention inside this category.</center></font></body></html>
+javadoc.description.copied.from.interface:
+  text: 'Description copied from interface:'
+javadoc.description.copied.from.class:
+  text: 'Description copied from class:'
+javadoc.deprecated:
+  text: Deprecated
+javadoc.since:
+  text: 'Since:'
+javadoc.see.also:
+  text: 'See Also:'
+javadoc.parameters:
+  text: 'Parameters:'
+javadoc.returns:
+  text: 'Returns:'
+javadoc.throws:
+  text: 'Throws:'
+javadoc.method.in.interface:
+  text: '{0} in interface {1}'
+javadoc.method.in.class:
+  text: '{0} in class {1}'
+javadoc.method.overrides:
+  text: 'Overrides:'
+javadoc.method.specified.by:
+  text: 'Specified by:'
+javadoc.external.fetch.error.message:
+  text: 'Cannot fetch remote documentation: {0}'
+searching.for.implementations:
+  text: Searching For Implementations...
+goto.implementation.chooserTitle:
+  text: <html><body>Choose Implementation of <b>{0}</b> ({1} found)</body></html>
+goto.implementation.findUsages.title:
+  text: Implementations of {0}
+goto.implementation.notFound:
+  text: No implementations found
+goto.test.chooserTitle.test:
+  text: <html><body>Choose Test for <b>{0}</b> ({1} found)</body></html>
+goto.test.findUsages.test.title:
+  text: Tests for {0}
+goto.test.chooserTitle.subject:
+  text: <html><body>Choose Test Subject for <b>{0}</b> ({1} found)</body></html>
+goto.test.findUsages.subject.title:
+  text: Test Subjects for {0}
+goto.test.notFound:
+  text: No test subjects found
+incremental.search.tooltip.prefix:
+  text: 'Search for:'
+goto.super.method.chooser.title:
+  text: Choose super method
+goto.super.method.findUsages.title:
+  text: Super methods of {0}
+goto.super.class.chooser.title:
+  text: Choose super class or interface
+javadoc.action.back:
+  text: Back
+javadoc.action.forward:
+  text: Forward
+javadoc.action.view.external:
+  text: View External Documentation
+javadoc.documentation.not.found.message:
+  text: |-
+    The documentation for this element is not found.
+    Please add all the needed paths to API docs in Project Settings.
+javadoc.documentation.not.found.title:
+  text: No Documentation
+javadoc.fetching.progress:
+  text: Fetching Documentation...
+no.documentation.found:
+  text: No documentation found.
+javadoc.candiates:
+  text: <html>Candidates for method call <b>{0}</b> are:<br><br>{1}</html>
+javadoc.candidates.not.found:
+  text: <html>No candidates found for method call <b>{0}</b>.</html>
+declaration.navigation.title:
+  text: Choose Declaration
+template.shortcut.enter:
+  text: Enter
+template.shortcut.tab:
+  text: Tab
+template.shortcut.space:
+  text: Space
+dialog.edit.live.template.title:
+  text: Edit Live Template
+dialog.add.live.template.title:
+  text: Add Live Template
+templates.no.defined:
+  text: No templates defined in this context
+templates.surround.no.defined:
+  text: No surround templates defined in this context
+templates.no.defined.with.prefix:
+  text: No templates starting with ''{0}'' defined in this context
+templates.settings.page.title:
+  text: Live Templates
+templates.select.template.chooser.title:
+  text: Select Template
+templates.export.display.name:
+  text: Live templates
+templates.dialog.edit.variables.title:
+  text: Edit Template Variables
+templates.dialog.edit.variables.border.title:
+  text: Variables
+templates.dialog.edit.variables.action.move.up:
+  text: Move &Up
+templates.dialog.edit.variables.action.move.down:
+  text: Move &Down
+templates.dialog.edit.variables.table.column.name:
+  text: Name
+templates.dialog.edit.variables.table.column.expression:
+  text: Expression
+templates.dialog.edit.variables.table.column.default.value:
+  text: Default value
+templates.dialog.edit.variables.table.column.skip.if.defined:
+  text: Skip if defined
+templates.dialog.table.column.abbreviation:
+  text: Abbreviation
+templates.dialog.table.column.description:
+  text: Description
+templates.dialog.table.column.active:
+  text: Active
+templates.dialog.shortcut.chooser.label:
+  text: By default expand with
+dialog.copy.live.template.title:
+  text: Copy Live Template
+dialog.edit.template.shortcut.default:
+  text: Default ({0})
+dialog.edit.template.template.text.title:
+  text: '&Template text:'
+dialog.edit.template.button.edit.variables:
+  text: '&Edit variables'
+dialog.edit.template.label.abbreviation:
+  text: '&Abbreviation:'
+dialog.edit.template.label.group:
+  text: '&Group:'
+dialog.edit.template.label.description:
+  text: '&Description:'
+dialog.edit.template.options.title:
+  text: Options
+dialog.edit.template.label.expand.with:
+  text: E&xpand with
+dialog.edit.template.checkbox.reformat.according.to.style:
+  text: '&Reformat according to style'
+dialog.edit.template.checkbox.shorten.fq.names:
+  text: Shorten &FQ names
+dialog.edit.template.checkbox.use.static.import:
+  text: Use static &import if possible
+dialog.edit.template.context.title:
+  text: Context
+dialog.edit.template.checkbox.html:
+  text: '&HTML'
+dialog.edit.template.checkbox.xml:
+  text: '&XML'
+dialog.edit.template.checkbox.jsp:
+  text: JS&P
+dialog.edit.template.checkbox.smart.type.completion:
+  text: Smart type c&ompletion
+dialog.edit.template.error.title:
+  text: Cannot Save
+dialog.edit.template.error.malformed.abbreviation:
+  text: |-
+    Cannot save the template.
+    Template abbreviation should contain only letters, digits, dots and hyphens.
+dialog.edit.template.error.already.exists:
+  text: |-
+    Cannot save the template.
+    Template with the abbreviation "{0}"
+    already exists in group "{1}".
+    Please choose a different abbreviation or group.
+finish.template.command:
+  text: Finish Template
+insert.code.template.command:
+  text: Insert Code Template
+template.next.variable.command:
+  text: Go to Next Code Template Tab
+template.previous.variable.command:
+  text: Go to Previous Code Template Tab
+macro.array.variable:
+  text: arrayVariable()
+macro.capitalize.string:
+  text: capitalize(String)
+macro.cast.to.left.side.type:
+  text: castToLeftSideType()
+macro.classname:
+  text: className()
+macro.component.type.of.array:
+  text: componentTypeOf(Array)
+macro.current.package:
+  text: currentPackage()
+macro.decapitalize.string:
+  text: decapitalize(String)
+macro.firstWord.string:
+  text: firstWord(String)
+macro.undescoresToSpaces.string:
+  text: underscoresToSpaces(String)
+macro.undescoresToCamelCase.string:
+  text: underscoresToCamelCase(String)
+macro.capitalizeAndUnderscore.string:
+  text: capitalizeAndUnderscore(String)
+macro.descendant.classes.enum:
+  text: descendantClassesEnum(String)
+macro.enum:
+  text: enum(...)
+macro.expected.type:
+  text: expectedType()
+macro.groovy.script:
+  text: groovyScript("groovy code")
+macro.guess.element.type.of.container:
+  text: guessElementType(Container)
+macro.iterable.component.type:
+  text: iterableComponentType(ArrayOrIterable)
+macro.iterable.variable:
+  text: iterableVariable()
+macro.linenumber:
+  text: lineNumber()
+macro.methodname:
+  text: methodName()
+macro.method.parameters:
+  text: methodParameters()
+macro.qualified.class.name:
+  text: qualifiedClassName()
+macro.right.side.type:
+  text: rightSideType()
+macro.suggest.index.name:
+  text: suggestIndexName()
+macro.suggest.variable.name:
+  text: suggestVariableName()
+macro.suggest.first.variable.name:
+  text: suggestFirstVariableName()
+macro.variable.of.type:
+  text: variableOfType(Type)
+macro.file.name:
+  text: fileName()
+macro.file.name.without.extension:
+  text: fileNameWithoutExtension()
+command.name.surround.with.runtime.cast:
+  text: Surround with runtime cast
+inspection.i18n.expression.is.invalid.error.message:
+  text: The I18nized Expression template is not a valid expression
+inspection.error.dialog.title:
+  text: Error
+livetemplate.description.tag.pair:
+  text: Tag pair
+livetemplate.description.itar:
+  text: Iterate elements of array
+livetemplate.description.itco:
+  text: Iterate elements of java.util.Collection
+livetemplate.description.iten:
+  text: Iterate java.util.Enumeration
+livetemplate.description.itit:
+  text: Iterate java.util.Iterator
+livetemplate.description.itli:
+  text: Iterate elements of java.util.List
+livetemplate.description.ittok:
+  text: Iterate tokens from String
+livetemplate.description.itve:
+  text: Iterate elements of java.util.Vector
+livetemplate.description.ritar:
+  text: Iterate elements of array in reverse order
+livetemplate.description.iter:
+  text: Iterate Iterable | Array in J2SDK 5.0 syntax
+livetemplate.description.itover:
+  text: Iterate over an Iterable or Array selection in J2SDK 5.0 syntax
+livetemplate.description.inst:
+  text: Checks object type with instanceof and down-casts it
+livetemplate.description.lst:
+  text: Fetches last element of an array
+livetemplate.description.mn:
+  text: Sets lesser value to a variable
+livetemplate.description.mx:
+  text: Sets greater value to a variable
+livetemplate.description.psvm:
+  text: main() method declaration
+livetemplate.description.toar:
+  text: Stores elements of java.util.Collection into array
+livetemplate.description.lazy:
+  text: Performs lazy initialization
+livetemplate.description.if.not.null:
+  text: Inserts ''if not null'' statement
+livetemplate.description.if.null:
+  text: Inserts ''if null'' statement
+livetemplate.description.geti:
+  text: Inserts singleton method getInstance
+livetemplate.description.serr:
+  text: Prints a string to System.err
+livetemplate.description.sout:
+  text: Prints a string to System.out
+livetemplate.description.souf:
+  text: Prints a formatted string to System.out
+livetemplate.description.soutm:
+  text: Prints current class and method names to System.out
+livetemplate.description.soutp:
+  text: Prints method parameter names and values to System.out
+livetemplate.description.soutv:
+  text: Prints a value to System.out
+livetemplate.description.st:
+  text: String
+livetemplate.description.psf:
+  text: public static final
+livetemplate.description.psfi:
+  text: public static final int
+livetemplate.description.psfs:
+  text: public static final String
+livetemplate.description.thr:
+  text: throw new
+livetemplate.description.surround.braces:
+  text: Surround with '{''}'
+livetemplate.description.surround.parens:
+  text: Surround with ()
+livetemplate.description.surround.tag:
+  text: Surround with <tag></tag>
+livetemplate.description.surround.tag.in.htmlorjsp:
+  text: Surround with <tag></tag> in HTML/JSP
+livetemplate.description.surround.cdata.in.xmlorhtmlorjsp:
+  text: Surround with CDATA section
+livetemplate.description.surround.with.callable:
+  text: Surround with Callable
+livetemplate.description.surround.with.read.lock:
+  text: Surround with ReadWriteLock.readLock
+livetemplate.description.surround.with.write.lock:
+  text: Surround with ReadWriteLock.writeLock
+quickfix.add.variable.text:
+  text: Initialize variable ''{0}''
+quickfix.add.variable.family.name:
+  text: Initialize variable
+inspection.i18n.quickfix.annotate.as:
+  text: Annotate as @{0}
+inspection.i18n.quickfix.annotate.element.as:
+  text: Annotate {0} ''{1}'' as @{2}
+disable.intention.action:
+  text: Disable ''{0}''
+enable.intention.action:
+  text: Enable ''{0}''
+under.construction.string:
+  text: Under construction.
+inspection.i18n.option.ignore.comment.pattern:
+  text: 'Ignore lines containing this comment (pattern in java.util.Pattern format):'
+inspection.i18n.option.ignore.comment.title:
+  text: Non-Nls comment pattern
+inspection.i18n.option.ignore.assigned.to.constants:
+  text: Ignore literals assigned to constants
+inspection.i18n.option.ignore.tostring:
+  text: Ignore contents of toString() method
+intention.move.initializer.to.constructor:
+  text: Move initializer to constructor
+intention.move.initializer.to.set.up:
+  text: Move initializer to setUp method
+intention.move.field.assignment.to.declaration:
+  text: Move assignment to field declaration
+i18nize.jsp.error:
+  text: |-
+    Please select JSP text to I18nize.
+    Make sure you have not selected any scriptlets, custom tags or other foreign languages elements.
+    Also, HTML tags inside selection must be balanced.
+i18nize.error.title:
+  text: Cannot I18nize Selection
+i18nize.error.message:
+  text: |-
+    You can only i18nize Java string literal or substring thereof.
+    Please point the caret inside Java string literal or select part of it.
+display.coverage.prompt:
+  text: Do you want to display coverage data for ''{0}''?
+code.coverage:
+  text: Code Coverage
+coverage.button.add.package:
+  text: Add Package
+coverage.pattern.filter.editor.choose.package.title:
+  text: Choose Package
+no.coverage:
+  text: No coverage
+code.coverage.is.not.supported:
+  text: Code coverage is supported for jre 5.0 or higher
+title.popup.show.coverage:
+  text: Coverage Suites
+prompt.remove.coverage:
+  text: Do you want to remove ''{0}'' coverage data?
+title.remove.coverage.data:
+  text: Remove Coverage Data
+coverage.data.outdated:
+  text: Coverage data outdated
+coverage.data.not.found:
+  text: Coverage data not found
+error.cannot.resolve.class:
+  text: Cannot resolve class ''{0}''
+implementation.view.title:
+  text: Definition of {0}
+javadoc.info.title:
+  text: Documentation for {0}
+intention.intercept.ejb.method.or.class.family:
+  text: Add EJB interceptor
+intention.intercept.ejb.method.or.class.class.text:
+  text: Add interceptor for EJB class ''{0}''
+intention.intercept.ejb.method.or.class.method.text:
+  text: Add interceptor for business method ''{0}''
+intention.edit.interceptor.binding.family:
+  text: Interceptor Bindings
+intention.edit.interceptor.binding.text:
+  text: Edit Interceptor ''{0}'' bindings
+powered.by:
+  text: Powered by
+powered.by.plugin:
+  text: Powered by ''{0}'' plugin.
+error.cannot.convert.default.message:
+  text: 'Invalid value: ''''{0}'''''
+error.cannot.resolve.default.message:
+  text: Cannot resolve symbol ''{0}''
+error.cannot.resolve.0.1:
+  text: Cannot resolve {0} ''{1}''
+error.unknown.enum.value.message:
+  text: Unknown enum value ''{0}''
+unknown.encoding.0:
+  text: 'Unknown encoding: ''''{0}'''''
+i18nize.cant.create.properties.file.because.its.name.is.associated:
+  text: Can''t create properties file ''{0}'' because its name is associated with the {1}.
+i18nize.error.creating.properties.file:
+  text: Error creating properties file
+node.method.tooltip:
+  text: Method
+node.field.tooltip:
+  text: Field
+node.annotation.tooltip:
+  text: Annotation
+node.anonymous.class.tooltip:
+  text: Anonymous Class
+node.enum.tooltip:
+  text: Enum
+node.exception.tooltip:
+  text: Exception
+node.interface.tooltip:
+  text: Interface
+node.junit.test.tooltip:
+  text: JUnit Test
+node.runnable.class.tooltip:
+  text: Runnable Class
+node.class.tooltip:
+  text: Class
+node.excluded.flag.tooltip:
+  text: Excluded
+node.abstract.flag.tooltip:
+  text: Abstract
+node.final.flag.tooltip:
+  text: Final
+node.static.flag.tooltip:
+  text: Static
+multiple.implementations.tooltip:
+  text: Multiple implementations
+static.class.initializer:
+  text: '{0}class initializer'
+intentions.category.ejb:
+  text: EJB
+set.language.level:
+  text: Set language level
+set.language.level.to.0:
+  text: Set language level to {0}
+remove.annotation:
+  text: Remove annotation
+deannotate.intention.action.text:
+  text: Deannotate
+deannotate.intention.chooser.title:
+  text: Choose annotation to delete
+javadoc.type.parameters:
+  text: 'Type parameters:'
+highlight.overridden.classes.chooser.title:
+  text: Choose Classes to Highlight Overridden Methods from
+no.methods.overriding.0.are.found:
+  text: No methods overriding {0, choice, 0#|1# '{1}'|2#these classes} are found
+copy.abstract.method.no.existing.implementations.found:
+  text: No existing implementations found
+copy.abstract.method.intention.name:
+  text: Use existing implementation of ''{0}''
+copy.abstract.method.popup.title:
+  text: Choose implementation to copy
+copy.abstract.method.title:
+  text: Use Abstract Method Implementation
+i18nize.empty.file.path:
+  text: Please specify properties file path
+choose.type.popup.title:
+  text: Choose Type
+cast.expression:
+  text: Cast expression
+cast.to.0:
+  text: Cast to ''{0}''
+class.completion.file.path:
+  text: Press {0} again to search for all matching project files
+class.completion.file.path.all.variants:
+  text: Press {0} to search for matching files of any type
+property.has.more.parameters.than.passed:
+  text: Property ''{0}'' expected {1} {1, choice, 1#parameter|2#parameters}, passed {2}
+create.file.family:
+  text: Create File
+rename.file.reference.family:
+  text: Rename File Reference
+rename.file.reference.text:
+  text: Rename File Reference to {0}
+create.directory.text:
+  text: Create Directory {0}
+create.file.text:
+  text: Create File {0}
+create.tagfile.text:
+  text: Create Tag File {0}
+rename.file.fix:
+  text: Rename File
+rename.element.family:
+  text: Rename Element
+rename.public.class.text:
+  text: Rename class ''{0}'' to ''{1}''
+rename.named.element.text:
+  text: Rename ''{0}'' to ''{1}''
+dialog.edit.template.checkbox.html.text:
+  text: HTML Text
+dialog.edit.template.checkbox.xsl.text:
+  text: XSL Text
+javadoc.error.resolving.url:
+  text: Couldn''t resolve URL <i>{0}</i> <p>Configuring paths to API docs in <a href="open://Project Settings">project settings</a> might help
+block.comment.intersects.existing.comment:
+  text: Selected region intersects existing comment
+block.comment.wrapping.suffix:
+  text: Selected region contains block comment suffix
+block.comment.nested.comment:
+  text: |-
+    Selected region contained block {0, choice, 1#comment|2#comments},
+    surrounding ranges were commented.
+popup.title.next.error.action.0.goes.through:
+  text: '''''Next Error'''' Action{0} Goes Through'
+parameter.info.switch.overload.shortcuts:
+  text: Switch with {0} or {1}
+parameter.info.switch.overload.shortcuts.single:
+  text: Switch with {0}
+parameter.info.progress.title:
+  text: Calculating parameter info...
+parameter.info.indexing.mode.not.supported:
+  text: Parameter Info is unavailable during indexing
+postfix.live.template.title:
+  text: Postfix
+postfix.template.description.under.construction:
+  text: Under construction
+command.expand.postfix.template:
+  text: Expand Postfix Template
+command.wrap.with.template:
+  text: Wrap With Template
