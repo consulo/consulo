@@ -15,13 +15,14 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
 import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -34,14 +35,9 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
   public CustomizeKeyboardSchemeStepPanel() {
     setLayout(new GridLayout(1, 2, GAP, GAP));
     final JRadioButton macRadioButton =
-            new JRadioButton("I've never used " + ApplicationNamesInfo.getInstance().getProductName());
+            new JRadioButton(LocalizeValue.localizeTODO("I've never used " + Application.get().getName()).get());
     macRadioButton.setOpaque(false);
-    JPanel macPanel = createBigButtonPanel(new VerticalFlowLayout(), macRadioButton, new Runnable() {
-      @Override
-      public void run() {
-        applyKeymap(KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP);
-      }
-    });
+    JPanel macPanel = createBigButtonPanel(new VerticalFlowLayout(), macRadioButton, () -> applyKeymap(KeymapManager.MAC_OS_X_10_5_PLUS_KEYMAP));
     String style = "<style type=\"text/css\">" +
                    "body {margin-left:"+ GAP +"px; border:none;padding:0px;}"+
                    "table {margin:0px; cell-padding:0px; border:none;}"+
@@ -57,14 +53,9 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
 
     add(macPanel);
     final JRadioButton defaultRadioButton =
-            new JRadioButton("I used " + ApplicationNamesInfo.getInstance().getProductName() + " before");
+            new JRadioButton(LocalizeValue.localizeTODO("I used " + Application.get().getName()) + " before");
     defaultRadioButton.setOpaque(false);
-    JPanel defaultPanel = createBigButtonPanel(new VerticalFlowLayout(), defaultRadioButton, new Runnable() {
-      @Override
-      public void run() {
-        applyKeymap(KeymapManager.MAC_OS_X_KEYMAP);
-      }
-    });
+    JPanel defaultPanel = createBigButtonPanel(new VerticalFlowLayout(), defaultRadioButton, () -> applyKeymap(KeymapManager.MAC_OS_X_KEYMAP));
     defaultPanel.add(defaultRadioButton);
     defaultPanel.add(new JLabel("<html><head>" + style + "</head><body><h3>" + KeymapManager.MAC_OS_X_KEYMAP + " keymap</h3>" +
                                 "Default for all platforms<br><br><table><tr><td align=\"left\" colspan=\"2\">EXAMPLES</td></tr>" +

@@ -25,10 +25,10 @@ import consulo.compiler.scope.CompileScope;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -40,9 +40,8 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * @author spleaner
@@ -77,13 +76,13 @@ public class CompileStepBeforeRun extends BeforeRunTaskProvider<CompileStepBefor
   @Nonnull
   @Override
   public String getName() {
-    return ExecutionBundle.message("before.launch.compile.step");
+    return ExecutionLocalize.beforeLaunchCompileStep().get();
   }
 
   @Nonnull
   @Override
   public String getDescription(MakeBeforeRunTask task) {
-    return ExecutionBundle.message("before.launch.compile.step");
+    return ExecutionLocalize.beforeLaunchCompileStep().get();
   }
 
   @Override

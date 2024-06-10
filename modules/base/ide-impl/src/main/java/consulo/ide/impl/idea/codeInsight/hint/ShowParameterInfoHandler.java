@@ -6,6 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.ide.impl.idea.openapi.editor.EditorActivityManager;
 import consulo.ide.impl.idea.ui.LightweightHint;
@@ -67,7 +68,7 @@ public class ShowParameterInfoHandler implements CodeInsightActionHandler {
 
   public static void invoke(final Project project, final Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus) {
     invoke(project, editor, file, lbraceOffset, highlightedElement, requestFocus, false, CodeInsightBundle.message("parameter.info.progress.title"),
-           e -> DumbService.getInstance(project).showDumbModeNotification(CodeInsightBundle.message("parameter.info.indexing.mode.not.supported")));
+           e -> DumbService.getInstance(project).showDumbModeNotification(CodeInsightLocalize.parameterInfoIndexingModeNotSupported().get()));
   }
 
   /**

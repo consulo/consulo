@@ -29,7 +29,8 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.localize.CodeInsightLocalize;
+import consulo.util.lang.Comparing;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.editor.highlight.HighlighterFactory;
@@ -462,7 +463,7 @@ public class ImplementationViewComponent extends JPanel {
     //TODO: Move from JavaDoc to somewhere more appropriate place.
     ElementLocationUtil.customizeElementLabel(myElements[myIndex], myLocationLabel);
     //noinspection AutoBoxing
-    myCountLabel.setText(CodeInsightBundle.message("n.of.m", myIndex + 1, myElements.length));
+    myCountLabel.setText(CodeInsightLocalize.nOfM(myIndex + 1, myElements.length).get());
   }
 
   private ActionToolbar createToolbar() {
@@ -511,7 +512,7 @@ public class ImplementationViewComponent extends JPanel {
 
   private class BackAction extends AnAction implements HintManagerImpl.ActionToIgnore {
     public BackAction() {
-      super(CodeInsightBundle.message("quick.definition.back"), null, AllIcons.Actions.Back);
+      super(CodeInsightLocalize.quickDefinitionBack(), null, AllIcons.Actions.Back);
     }
 
     @Override
@@ -559,7 +560,7 @@ public class ImplementationViewComponent extends JPanel {
 
   private class ShowSourceAction extends EditSourceActionBase implements HintManagerImpl.ActionToIgnore {
     public ShowSourceAction() {
-      super(false, AllIcons.Actions.Preview, CodeInsightBundle.message("quick.definition.show.source"));
+      super(false, AllIcons.Actions.Preview, CodeInsightLocalize.quickDefinitionShowSource().get());
     }
   }
 
@@ -592,7 +593,7 @@ public class ImplementationViewComponent extends JPanel {
   }
 
   private PsiElement[] collectNonBinaryElements() {
-    List<PsiElement> result = new ArrayList<PsiElement>();
+    List<PsiElement> result = new ArrayList<>();
     for (PsiElement element : myElements) {
       if (!(element instanceof PsiBinaryFile)) {
         result.add(element);

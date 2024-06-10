@@ -18,19 +18,18 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UIFontManager;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hint.LineTooltipRenderer;
 import consulo.ide.impl.idea.openapi.actionSystem.PopupAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
+import consulo.language.editor.localize.DaemonLocalize;
+import consulo.platform.Platform;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Html;
@@ -40,6 +39,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -162,7 +162,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     //remove "more... (keymap)" info
 
     Html html = new Html(problem).setKeepFont(true);
-    String extendMessage = DaemonBundle.message("inspection.extended.description");
+    String extendMessage = DaemonLocalize.inspectionExtendedDescription().get();
     String textToProcess = UIUtil.getHtmlBody(html);
     int indexOfMore = textToProcess.indexOf(extendMessage);
     if (indexOfMore < 0) return textToProcess;
@@ -378,16 +378,16 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
   private Font getActionFont() {
     Font toolTipFont = UIUtil.getToolTipFont();
-    if (toolTipFont == null || SystemInfo.isWindows) return toolTipFont;
+    if (toolTipFont == null || Platform.current().os().isWindows()) return toolTipFont;
 
     //if font was changed from default we dont have a good heuristic to customize it
     if (JBUI.Fonts.label() != toolTipFont || UIFontManager.getInstance().isOverrideFont()) return toolTipFont;
 
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       return toolTipFont.deriveFont(toolTipFont.getSize() - 1f);
     }
 
-    if (SystemInfo.isLinux) {
+    if (Platform.current().os().isLinux()) {
       return toolTipFont.deriveFont(toolTipFont.getSize() - 1f);
     }
     return toolTipFont;

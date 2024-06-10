@@ -9,7 +9,7 @@ import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.HintHint;
@@ -69,7 +69,7 @@ class TrafficProgressPanel extends JPanel {
     fakeStatusLargeEnough.passes = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
       fakeStatusLargeEnough.passes.add(new ProgressableTextEditorHighlightingPass(project, editor.getDocument(), DaemonBundle.message("pass.wolf"), psiFile, editor, TextRange.EMPTY_RANGE, false,
-                                                                                  HighlightInfoProcessor.getEmpty()) {
+        HighlightInfoProcessor.getEmpty()) {
         @Override
         protected void collectInformationWithProgress(@Nonnull ProgressIndicator progress) {
         }

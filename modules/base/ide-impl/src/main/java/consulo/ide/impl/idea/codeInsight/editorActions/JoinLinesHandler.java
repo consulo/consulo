@@ -26,7 +26,6 @@ import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.codeStyle.*;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.action.JoinLinesHandlerDelegate;
 import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
@@ -65,7 +64,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
       return;
     }
     final DocumentEx doc = (DocumentEx)editor.getDocument();
-    final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(CommonDataKeys.PROJECT);
+    final Project project = DataManager.getInstance().getDataContext(editor.getContentComponent()).getData(Project.KEY);
     if (project == null) return;
 
     final PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);

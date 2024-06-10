@@ -18,7 +18,6 @@ package consulo.desktop.container.impl;
 import com.sun.jna.platform.win32.Shell32Util;
 import com.sun.jna.platform.win32.ShlObj;
 import consulo.platform.Platform;
-import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -32,26 +31,26 @@ public abstract class DefaultPaths {
     @Nonnull
     @Override
     public File getDocumentsDir() {
-      String userHome = SystemProperties.getUserHome();
+      File userHome = Platform.current().user().homePath().toFile();
       // some OS-es can have documents dir inside user home, for example Ubuntu
       File file = new File(userHome, "Documents");
       if (file.exists()) {
-        return new File(userHome + File.separatorChar + "Documents" + File.separatorChar + ourDefaultPrefix);
+        return new File(userHome, "Documents" + File.separatorChar + ourDefaultPrefix);
       }
-      return new File(userHome + File.separatorChar + ourDefaultPrefix + " Project");
+      return new File(userHome, ourDefaultPrefix + " Project");
     }
 
     @Nonnull
     @Override
     public String getLocalSettingsDir() {
-      String userHome = SystemProperties.getUserHome();
+      String userHome = Platform.current().user().homePath().toString();
       return userHome + File.separatorChar + ".consulo_settings" + File.separatorChar + "system";
     }
 
     @Nonnull
     @Override
     public String getRoamingSettingsDir() {
-      String userHome = SystemProperties.getUserHome();
+      String userHome = Platform.current().user().homePath().toString();
       return userHome + File.separatorChar + ".consulo_settings" + File.separatorChar + "config";
     }
   }
@@ -89,37 +88,40 @@ public abstract class DefaultPaths {
     @Nonnull
     @Override
     protected String getDocumentsDirNoPrefix() {
-      return SystemProperties.getUserHome() + "/Documents";
+      return Platform.current().user().homePath() + "/Documents";
     }
 
     @Nonnull
     @Override
     public File getExternalPlatformDirectory(@Nonnull File defaultPath) {
-      return new File(SystemProperties.getUserHome(), "Library/Application Support/Consulo Platform");
+      return new File(
+        Platform.current().user().homePath().toFile(),
+        "Library/Application Support/Consulo Platform"
+      );
     }
 
     @Nonnull
     @Override
     protected String getLocalSettingsDirNoPrefix() {
-      return SystemProperties.getUserHome() + "/Library/Caches";
+      return Platform.current().user().homePath() + "/Library/Caches";
     }
 
     @Nonnull
     @Override
     protected String getRoamingSettingsDirNoPrefix() {
-      return SystemProperties.getUserHome() + "/Library/Preferences";
+      return Platform.current().user().homePath() + "/Library/Preferences";
     }
 
     @Nonnull
     @Override
     public String getRoamingPluginsDir() {
-      return SystemProperties.getUserHome() + "/Library/Application Support/" + ourDefaultPrefix;
+      return Platform.current().user().homePath() + "/Library/Application Support/" + ourDefaultPrefix;
     }
 
     @Nonnull
     @Override
     public File getLocalLogsDir() {
-      return new File(SystemProperties.getUserHome() + "/Library/Logs/" + ourDefaultPrefix);
+      return new File(Platform.current().user().homePath().toFile(),"Library/Logs/" + ourDefaultPrefix);
     }
   }
 

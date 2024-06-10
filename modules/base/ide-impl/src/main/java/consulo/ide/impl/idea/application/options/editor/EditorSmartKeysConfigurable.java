@@ -17,17 +17,16 @@
 package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.ApplicationBundle;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;
 import consulo.ui.Component;
@@ -36,10 +35,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledComponents;
-import org.jetbrains.annotations.Nls;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.Nls;
+
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -77,39 +77,46 @@ public class EditorSmartKeysConfigurable extends SimpleConfigurable<EditorSmartK
     @RequiredUIAccess
     public Panel() {
       myWholeLayout = VerticalLayout.create();
-      myWholeLayout.add(myCbSmartHome = CheckBox.create(ApplicationBundle.message("checkbox.smart.home")));
-      myWholeLayout.add(myCbSmartEnd = CheckBox.create(ApplicationBundle.message("checkbox.smart.end.on.blank.line")));
-      myWholeLayout.add(myCbInsertPairBracket = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.bracket")));
-      myWholeLayout.add(myCbInsertPairQuote = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.quote")));
-      myWholeLayout.add(myCbReformatBlockOnTypingRBrace = CheckBox.create(ApplicationBundle.message("checkbox.reformat.on.typing.rbrace")));
-      myWholeLayout.add(myCbCamelWords = CheckBox.create(ApplicationBundle.message("checkbox.use.camelhumps.words")));
-      myWholeLayout.add(myCbSurroundSelectionOnTyping = CheckBox.create(ApplicationBundle.message("checkbox.surround.selection.on.typing.quote.or.brace")));
-      myWholeLayout.add(mySmartIndentPastedLinesCheckBox = CheckBox.create(ApplicationBundle.message("checkbox.indent.on.paste")));
+      myWholeLayout.add(myCbSmartHome = CheckBox.create(ApplicationLocalize.checkboxSmartHome().get()));
+      myWholeLayout.add(myCbSmartEnd = CheckBox.create(ApplicationLocalize.checkboxSmartEndOnBlankLine().get()));
+      myWholeLayout.add(myCbInsertPairBracket = CheckBox.create(ApplicationLocalize.checkboxInsertPairBracket().get()));
+      myWholeLayout.add(myCbInsertPairQuote = CheckBox.create(ApplicationLocalize.checkboxInsertPairQuote().get()));
+      myWholeLayout.add(myCbReformatBlockOnTypingRBrace = CheckBox.create(ApplicationLocalize.checkboxReformatOnTypingRbrace().get()));
+      myWholeLayout.add(myCbCamelWords = CheckBox.create(ApplicationLocalize.checkboxUseCamelhumpsWords().get()));
+      myWholeLayout.add(myCbSurroundSelectionOnTyping = CheckBox.create(ApplicationLocalize.checkboxSurroundSelectionOnTypingQuoteOrBrace().get()));
+      myWholeLayout.add(mySmartIndentPastedLinesCheckBox = CheckBox.create(ApplicationLocalize.checkboxIndentOnPaste().get()));
 
       ComboBox.Builder<Integer> reformatOnPasteBuilder = ComboBox.builder();
-      reformatOnPasteBuilder.add(CodeInsightSettings.NO_REFORMAT, ApplicationBundle.message("combobox.paste.reformat.none"));
-      reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_BLOCK, ApplicationBundle.message("combobox.paste.reformat.indent.block"));
-      reformatOnPasteBuilder.add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationBundle.message("combobox.paste.reformat.indent.each.line"));
-      reformatOnPasteBuilder.add(CodeInsightSettings.REFORMAT_BLOCK, ApplicationBundle.message("combobox.paste.reformat.reformat.block"));
+      reformatOnPasteBuilder
+        .add(CodeInsightSettings.NO_REFORMAT, ApplicationLocalize.comboboxPasteReformatNone().get());
+      reformatOnPasteBuilder
+        .add(CodeInsightSettings.INDENT_BLOCK, ApplicationLocalize.comboboxPasteReformatIndentBlock().get());
+      reformatOnPasteBuilder
+        .add(CodeInsightSettings.INDENT_EACH_LINE, ApplicationLocalize.comboboxPasteReformatIndentEachLine().get());
+      reformatOnPasteBuilder
+        .add(CodeInsightSettings.REFORMAT_BLOCK, ApplicationLocalize.comboboxPasteReformatReformatBlock().get());
 
-      myWholeLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.paste.reformat"), myReformatOnPasteCombo = reformatOnPasteBuilder.build()));
+      myWholeLayout.add(LabeledComponents.left(
+        ApplicationLocalize.comboboxPasteReformat().get(),
+        myReformatOnPasteCombo = reformatOnPasteBuilder.build()
+      ));
 
       VerticalLayout enterLayout = VerticalLayout.create();
       myWholeLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Enter"), enterLayout));
 
-      enterLayout.add(myCbSmartIndentOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.smart.indent")));
-      enterLayout.add(myCbInsertPairCurlyBraceOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.insert.pair.curly.brace")));
-      enterLayout.add(myCbInsertJavadocStubOnEnter = CheckBox.create(ApplicationBundle.message("checkbox.javadoc.stub.after.slash.star.star")));
+      enterLayout.add(myCbSmartIndentOnEnter = CheckBox.create(ApplicationLocalize.checkboxSmartIndent().get()));
+      enterLayout.add(myCbInsertPairCurlyBraceOnEnter = CheckBox.create(ApplicationLocalize.checkboxInsertPairCurlyBrace().get()));
+      enterLayout.add(myCbInsertJavadocStubOnEnter = CheckBox.create(ApplicationLocalize.checkboxJavadocStubAfterSlashStarStar().get()));
       myCbInsertJavadocStubOnEnter.setVisible(hasAnyDocAwareCommenters());
 
       VerticalLayout backspaceLayout = VerticalLayout.create();
       myWholeLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Backspace"), backspaceLayout));
 
       ComboBox.Builder<SmartBackspaceMode> smartIndentBuilder = ComboBox.builder();
-      smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationBundle.message("combobox.smart.backspace.off"));
-      smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationBundle.message("combobox.smart.backspace.simple"));
-      smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationBundle.message("combobox.smart.backspace.smart"));
-      backspaceLayout.add(LabeledComponents.left(ApplicationBundle.message("combobox.smart.backspace"), myCbIndentingBackspace = smartIndentBuilder.build()));
+      smartIndentBuilder.add(SmartBackspaceMode.OFF, ApplicationLocalize.comboboxSmartBackspaceOff().get());
+      smartIndentBuilder.add(SmartBackspaceMode.INDENT, ApplicationLocalize.comboboxSmartBackspaceSimple().get());
+      smartIndentBuilder.add(SmartBackspaceMode.AUTOINDENT, ApplicationLocalize.comboboxSmartBackspaceSmart().get());
+      backspaceLayout.add(LabeledComponents.left(ApplicationLocalize.comboboxSmartBackspace().get(), myCbIndentingBackspace = smartIndentBuilder.build()));
     }
 
     private static boolean hasAnyDocAwareCommenters() {

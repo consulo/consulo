@@ -8,9 +8,9 @@ import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.ProcessCloseConfirmation;
 import consulo.execution.impl.internal.TerminateRemoteProcessDialog;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
@@ -155,7 +155,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
     final boolean myModal;
 
     protected WaitForProcessTask(@Nonnull ProcessHandler processHandler, @Nonnull String processName, boolean modal, @Nullable Project project) {
-      super(project, ExecutionBundle.message("terminating.process.progress.title", processName));
+      super(project, ExecutionLocalize.terminatingProcessProgressTitle(processName).get());
       myProcessHandler = processHandler;
       myModal = modal;
     }
@@ -183,7 +183,7 @@ public abstract class BaseContentCloseListener implements ProjectManagerListener
           semaphore.up();
         }
       });
-      progressIndicator.setText(ExecutionBundle.message("waiting.for.vm.detach.progress.text"));
+      progressIndicator.setTextValue(ExecutionLocalize.waitingForVmDetachProgressText());
       ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
         @Override
         public void run() {

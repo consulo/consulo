@@ -15,23 +15,21 @@
  */
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.document.DocCommandGroupId;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.editor.util.PsiUtilBase;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ref.Ref;
 import jakarta.annotation.Nonnull;
 
 /**
@@ -47,11 +45,11 @@ import jakarta.annotation.Nonnull;
 public abstract class MultiCaretCodeInsightAction extends AnAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
-    final Editor hostEditor = e.getDataContext().getData(CommonDataKeys.EDITOR);
+    final Editor hostEditor = e.getDataContext().getData(Editor.KEY);
     if (hostEditor == null) {
       return;
     }
@@ -77,19 +75,19 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
   public void update(@Nonnull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    Editor hostEditor = e.getDataContext().getData(CommonDataKeys.EDITOR);
+    Editor hostEditor = e.getDataContext().getData(Editor.KEY);
     if (hostEditor == null) {
       presentation.setEnabled(false);
       return;
     }
 
-    final Ref<Boolean> enabled  = new Ref<Boolean>(Boolean.FALSE);
+    final Ref<Boolean> enabled  = new Ref<>(Boolean.FALSE);
     iterateOverCarets(project, hostEditor, new MultiCaretCodeInsightActionHandler() {
       @Override
       public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
@@ -108,21 +106,18 @@ public abstract class MultiCaretCodeInsightAction extends AnAction {
     final PsiFile psiFile = documentManager.getCachedPsiFile(hostEditor.getDocument());
     documentManager.commitAllDocuments();
 
-    hostEditor.getCaretModel().runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        Editor editor = hostEditor;
-        if (psiFile != null) {
-          Caret injectedCaret = InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, psiFile);
-          if (injectedCaret != null) {
-            caret = injectedCaret;
-            editor = caret.getEditor();
-          }
+    hostEditor.getCaretModel().runForEachCaret(caret -> {
+      Editor editor = hostEditor;
+      if (psiFile != null) {
+        Caret injectedCaret = InjectedLanguageUtil.getCaretForInjectedLanguageNoCommit(caret, psiFile);
+        if (injectedCaret != null) {
+          caret = injectedCaret;
+          editor = caret.getEditor();
         }
-        final PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
-        if (file != null) {
-          handler.invoke(project, editor, caret, file);
-        }
+      }
+      final PsiFile file = PsiUtilBase.getPsiFileInEditor(caret, project);
+      if (file != null) {
+        handler.invoke(project, editor, caret, file);
       }
     });
   }

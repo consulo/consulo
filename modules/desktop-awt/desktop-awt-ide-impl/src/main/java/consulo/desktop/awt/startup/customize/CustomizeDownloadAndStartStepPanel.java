@@ -15,25 +15,24 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.Application;
+import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.application.util.Restarter;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Set;
@@ -136,14 +135,14 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
 
   @Override
   protected String getTitle() {
-    return myPluginsStepPanel == null ? getStartName() : "Download plugins";
+    return myPluginsStepPanel == null ? getStartName() : LocalizeValue.localizeTODO("Download plugins").get();
   }
 
   @Override
   protected String getHTMLHeader() {
     Set<PluginDescriptor> pluginsForDownload =
             myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
-    return pluginsForDownload.isEmpty() || myDone ? "" : "<html><body><h2>Downloading plugins</h2></body></html>";
+    return pluginsForDownload.isEmpty() || myDone ? "" : LocalizeValue.localizeTODO("<html><body><h2>Downloading plugins</h2></body></html>").get();
   }
 
   @Override
@@ -154,11 +153,11 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   @Nonnull
   private static String getStartName() {
     boolean supported = Restarter.isSupported();
-    if(supported) {
-      return "Start using " + ApplicationNamesInfo.getInstance().getFullProductName();
+    if (supported) {
+      return LocalizeValue.localizeTODO("Start using " + Application.get().getName()).get();
     }
     else {
-      return "Manual restart " + ApplicationNamesInfo.getInstance().getFullProductName();
+      return LocalizeValue.localizeTODO("Manual restart " + Application.get().getName()).toString();
     }
   }
 }

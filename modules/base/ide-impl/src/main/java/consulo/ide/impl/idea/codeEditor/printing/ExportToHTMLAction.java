@@ -18,8 +18,6 @@ package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.application.CommonBundle;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -39,7 +37,7 @@ public class ExportToHTMLAction extends AnAction {
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -56,12 +54,12 @@ public class ExportToHTMLAction extends AnAction {
   public void update(@Nonnull AnActionEvent event) {
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
+    PsiElement psiElement = dataContext.getData(PsiElement.KEY);
     if (psiElement instanceof PsiDirectory) {
       presentation.setEnabled(true);
       return;
     }
-    PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+    PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     presentation.setEnabled(psiFile != null && psiFile.getContainingDirectory() != null);
   }
 }

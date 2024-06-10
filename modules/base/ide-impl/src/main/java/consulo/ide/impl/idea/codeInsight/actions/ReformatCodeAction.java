@@ -16,36 +16,35 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
-import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.*;
+import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.content.scope.SearchScope;
-import consulo.language.psi.PsiUtilCore;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
-import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return;
       }
       else {
-        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null) return;
         if (element instanceof PsiDirectoryContainer) {
           dir = ((PsiDirectoryContainer)element).getDirectories()[0];
@@ -160,12 +159,15 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
 
   @Nullable
-  private static DirectoryFormattingOptions getDirectoryFormattingOptions(@Nonnull Project project, @Nonnull PsiDirectory dir) {
+  private static DirectoryFormattingOptions getDirectoryFormattingOptions(
+    @Nonnull Project project,
+    @Nonnull PsiDirectory dir
+  ) {
     LayoutDirectoryDialog dialog = new LayoutDirectoryDialog(
-            project,
-            CodeInsightBundle.message("process.reformat.code"),
-            CodeInsightBundle.message("process.scope.directory", dir.getVirtualFile().getPath()),
-            FormatChangedTextUtil.hasChanges(dir)
+      project,
+      CodeInsightLocalize.processReformatCode().get(),
+      CodeInsightLocalize.processScopeDirectory(dir.getVirtualFile().getPath()).get(),
+      FormatChangedTextUtil.hasChanges(dir)
     );
 
     boolean enableIncludeDirectoriesCb = dir.getSubdirectories().length > 0;
@@ -178,10 +180,11 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return null;
   }
 
-  private static void reformatDirectory(@Nonnull Project project,
-                                        @Nonnull PsiDirectory dir,
-                                        @Nonnull DirectoryFormattingOptions options)
-  {
+  private static void reformatDirectory(
+    @Nonnull Project project,
+    @Nonnull PsiDirectory dir,
+    @Nonnull DirectoryFormattingOptions options
+  ) {
     AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(
             project, dir, options.isIncludeSubdirectories(), options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
     );
@@ -199,10 +202,11 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.run();
   }
 
-  private static void reformatModule(@Nonnull Project project,
-                                     @Nullable Module moduleContext,
-                                     @Nonnull ReformatFilesOptions selectedFlags)
-  {
+  private static void reformatModule(
+    @Nonnull Project project,
+    @Nullable Module moduleContext,
+    @Nonnull ReformatFilesOptions selectedFlags
+  ) {
     boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
     boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
 
@@ -226,7 +230,10 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.run();
   }
 
-  public static void registerScopeFilter(@Nonnull AbstractLayoutCodeProcessor processor, @Nullable final SearchScope scope) {
+  public static void registerScopeFilter(
+    @Nonnull AbstractLayoutCodeProcessor processor,
+    @Nullable final SearchScope scope
+  ) {
     if (scope == null) {
       return;
     }
@@ -234,7 +241,10 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     processor.addFileFilter(scope::contains);
   }
 
-  public static void registerFileMaskFilter(@Nonnull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
+  public static void registerFileMaskFilter(
+    @Nonnull AbstractLayoutCodeProcessor processor,
+    @Nullable String fileTypeMask
+  ) {
     if (fileTypeMask == null)
       return;
 
@@ -267,15 +277,15 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
   public void update(@Nonnull AnActionEvent event){
     Presentation presentation = event.getPresentation();
     DataContext dataContext = event.getDataContext();
-    Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    Project project = dataContext.getData(Project.KEY);
     if (project == null){
       presentation.setEnabled(false);
       return;
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
-    final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
 
     if (editor != null){
       PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -317,7 +327,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     else {
       if (dataContext.getData(LangDataKeys.MODULE_CONTEXT) == null &&
           dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT) == null) {
-        PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+        PsiElement element = dataContext.getData(PsiElement.KEY);
         if (element == null) {
           presentation.setEnabled(false);
           return;
@@ -352,18 +362,21 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
       return myTestOptions;
     }
 
-    final String text = module != null ? CodeInsightBundle.message("process.scope.module", module.getModuleDir())
-                                       : CodeInsightBundle.message("process.scope.project", project.getPresentableUrl());
+    final String text = module != null
+      ? CodeInsightLocalize.processScopeModule(module.getModuleDir()).get()
+      : CodeInsightLocalize.processScopeProject(project.getPresentableUrl()).get();
 
-    final boolean enableOnlyVCSChangedRegions = module != null ? FormatChangedTextUtil.hasChanges(module)
-                                                               : FormatChangedTextUtil.hasChanges(project);
+    final boolean enableOnlyVCSChangedRegions = module != null
+      ? FormatChangedTextUtil.hasChanges(module)
+      : FormatChangedTextUtil.hasChanges(project);
 
-    LayoutProjectCodeDialog dialog =
-            new LayoutProjectCodeDialog(project, CodeInsightBundle.message("process.reformat.code"), text, enableOnlyVCSChangedRegions);
-    if (!dialog.showAndGet()) {
-      return null;
-    }
-    return dialog;
+    LayoutProjectCodeDialog dialog = new LayoutProjectCodeDialog(
+        project,
+      CodeInsightLocalize.processReformatCode().get(),
+      text,
+      enableOnlyVCSChangedRegions
+    );
+    return !dialog.showAndGet() ? null : dialog;
   }
 
   @TestOnly
@@ -380,4 +393,3 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     return true;
   }
 }
-

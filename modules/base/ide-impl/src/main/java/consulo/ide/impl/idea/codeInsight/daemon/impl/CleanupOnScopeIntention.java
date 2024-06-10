@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ide.impl.idea.analysis.AnalysisUIOptions;
 import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.ide.impl.idea.codeInspection.actions.CleanupIntention;
-import consulo.module.Module;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.psi.PsiFile;
 import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
 import jakarta.annotation.Nullable;
 
 /**
@@ -46,12 +46,15 @@ public class CleanupOnScopeIntention extends CleanupIntention {
       analysisScope = new AnalysisScope(project);
     }
     final BaseAnalysisActionDialog dlg = new BaseAnalysisActionDialog(
-            AnalysisScopeBundle.message("specify.analysis.scope", InspectionsBundle.message("inspection.action.title")),
-            AnalysisScopeBundle.message("analysis.scope.title", InspectionsBundle.message("inspection.action.noun")),
-            project,
-            analysisScope,
-            module != null ? module.getName() : null,
-            true, AnalysisUIOptions.getInstance(project), file);
+      AnalysisScopeLocalize.specifyAnalysisScope(InspectionsBundle.message("inspection.action.title")).get(),
+      AnalysisScopeLocalize.analysisScopeTitle(InspectionsBundle.message("inspection.action.noun")).get(),
+      project,
+      analysisScope,
+      module != null ? module.getName() : null,
+      true,
+      AnalysisUIOptions.getInstance(project),
+      file
+    );
     dlg.show();
     if (!dlg.isOK()) return null;
     final AnalysisUIOptions uiOptions = AnalysisUIOptions.getInstance(project);

@@ -15,7 +15,7 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionDataKeys;
+import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
@@ -66,20 +66,28 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   ExecutionConsole myExecutionConsole;
   private volatile BuildViewSettingsProvider myViewSettingsProvider;
 
-  public BuildView(@Nonnull Project project, @Nonnull BuildDescriptor buildDescriptor, @NonNls @Nullable String selectionStateKey, @Nonnull ViewManager viewManager) {
+  public BuildView(
+    @Nonnull Project project,
+    @Nonnull BuildDescriptor buildDescriptor,
+    @NonNls @Nullable String selectionStateKey,
+    @Nonnull ViewManager viewManager
+  ) {
     this(project, null, buildDescriptor, selectionStateKey, viewManager);
   }
 
-  public BuildView(@Nonnull Project project,
-                   @Nullable ExecutionConsole executionConsole,
-                   @Nonnull BuildDescriptor buildDescriptor,
-                   @NonNls @Nullable String selectionStateKey,
-                   @Nonnull ViewManager viewManager) {
+  public BuildView(
+    @Nonnull Project project,
+    @Nullable ExecutionConsole executionConsole,
+    @Nonnull BuildDescriptor buildDescriptor,
+    @NonNls @Nullable String selectionStateKey,
+    @Nonnull ViewManager viewManager
+  ) {
     super(selectionStateKey);
     myProject = project;
     myViewManager = viewManager;
     myExecutionConsole = executionConsole;
-    myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor)buildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
+    myBuildDescriptor = buildDescriptor instanceof DefaultBuildDescriptor
+      ? (DefaultBuildDescriptor) buildDescriptor : new DefaultBuildDescriptor(buildDescriptor);
     Disposer.register(project, this);
   }
 
@@ -106,7 +114,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   }
 
   private void processEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
-    if (event instanceof OutputBuildEvent && (event.getParentId() == null || event.getParentId() == myBuildDescriptor.getId())) {
+    if (event instanceof OutputBuildEvent
+      && (event.getParentId() == null || event.getParentId() == myBuildDescriptor.getId())) {
       ExecutionConsole consoleView = getConsoleView();
       if (consoleView instanceof BuildProgressListener) {
         ((BuildProgressListener)consoleView).onEvent(buildId, event);
@@ -133,9 +142,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     if (myExecutionConsole == null) {
       Supplier<? extends RunContentDescriptor> descriptorSupplier = myBuildDescriptor.getContentDescriptorSupplier();
       RunContentDescriptor runContentDescriptor = descriptorSupplier != null ? descriptorSupplier.get() : null;
-      myExecutionConsole = runContentDescriptor != null && runContentDescriptor.getExecutionConsole() != null && runContentDescriptor.getExecutionConsole() != this
-                           ? runContentDescriptor.getExecutionConsole()
-                           : new BuildTextConsoleView(myProject, false, myBuildDescriptor.getExecutionFilters());
+      myExecutionConsole = runContentDescriptor != null
+        && runContentDescriptor.getExecutionConsole() != null
+        && runContentDescriptor.getExecutionConsole() != this
+        ? runContentDescriptor.getExecutionConsole()
+        : new BuildTextConsoleView(myProject, false, myBuildDescriptor.getExecutionFilters());
       if (runContentDescriptor != null && Disposer.findRegisteredObject(runContentDescriptor, this) == null) {
         Disposer.register(this, runContentDescriptor);
       }
@@ -169,7 +180,8 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
       if (processHandler != null) {
         assert consoleView != null;
         consoleView.attachToProcess(processHandler);
-        java.util.function.Consumer<? super ConsoleView> attachedConsoleConsumer = myBuildDescriptor.getAttachedConsoleConsumer();
+        java.util.function.Consumer<? super ConsoleView> attachedConsoleConsumer =
+          myBuildDescriptor.getAttachedConsoleConsumer();
         if (attachedConsoleConsumer != null) {
           attachedConsoleConsumer.accept(consoleView);
         }
@@ -310,8 +322,11 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
     final DefaultActionGroup rerunActionGroup = new DefaultActionGroup();
     AnAction stopAction = null;
     if (myBuildDescriptor.getProcessHandler() != null) {
-      stopAction = new StopProcessAction(IdeBundle.message("action.DumbAware.BuildView.text.stop"), IdeBundle.message("action.DumbAware.CopyrightProfilesPanel.description.stop"),
-                                         myBuildDescriptor.getProcessHandler());
+      stopAction = new StopProcessAction(
+        IdeBundle.message("action.DumbAware.BuildView.text.stop"),
+        IdeBundle.message("action.DumbAware.CopyrightProfilesPanel.description.stop"),
+        myBuildDescriptor.getProcessHandler()
+      );
       ActionUtil.copyFrom(stopAction, IdeActions.ACTION_STOP_PROGRAM);
       stopAction.registerCustomShortcutSet(stopAction.getShortcutSet(), this);
     }
@@ -354,16 +369,16 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nullable
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+    if (KEY == dataId) {
       return getConsoleView();
     }
     Object data = super.getData(dataId);
     if (data != null) return data;
-    if (ExecutionDataKeys.RUN_PROFILE == dataId) {
+    if (RunProfile.KEY == dataId) {
       ExecutionEnvironment environment = myBuildDescriptor.getExecutionEnvironment();
       return environment == null ? null : environment.getRunProfile();
     }
-    if (ExecutionDataKeys.EXECUTION_ENVIRONMENT == dataId) {
+    if (ExecutionEnvironment.KEY == dataId) {
       return myBuildDescriptor.getExecutionEnvironment();
     }
     if (RESTART_ACTIONS == dataId) {

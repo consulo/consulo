@@ -17,12 +17,9 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.language.editor.action.*;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
@@ -31,12 +28,14 @@ import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
-import consulo.language.editor.CodeInsightBundle;
+import consulo.language.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.*;
 import consulo.language.editor.documentation.CodeDocumentationProvider;
 import consulo.language.editor.documentation.CompositeDocumentationProvider;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.documentation.LanguageDocumentationProvider;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.ParserDefinition;
@@ -50,8 +49,8 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -107,7 +106,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
       return;
     }
 
-    CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("command.name.typing"));
+    CommandProcessor.getInstance().setCurrentCommandName(CodeInsightLocalize.commandNameTyping().get());
 
     EditorModificationUtil.deleteSelectedText(editor);
 

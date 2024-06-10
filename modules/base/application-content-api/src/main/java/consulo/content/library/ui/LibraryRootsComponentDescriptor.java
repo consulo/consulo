@@ -15,11 +15,11 @@ package consulo.content.library.ui;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryType;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -50,8 +50,9 @@ public abstract class LibraryRootsComponentDescriptor {
   public abstract List<? extends RootDetector> getRootDetectors();
 
   /**
-   * Provides root detector for 'Attach Files' button. It will be used to automatically assign {@link OrderRootType}s for selected files.
-   * Also this detector is used when a new library is created
+   * Provides root detector for 'Attach Files' button. It will be used
+   * to automatically assign {@link OrderRootType}s for selected files.
+   * Also this detector is used when a new library is created.
    *
    * @return {@link LibraryRootsDetector}'s implementation
    */
@@ -60,18 +61,19 @@ public abstract class LibraryRootsComponentDescriptor {
     return new LibraryRootsDetectorImpl(getRootDetectors());
   }
 
-
   /**
    * @return descriptor for the file chooser which will be shown when 'Attach Files' button is pressed
    * @param libraryName
    */
   @Nonnull
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
-    final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, false, true, true);
-    descriptor.setTitle(StringUtil.isEmpty(libraryName) ? ProjectBundle.message("library.attach.files.action")
-                                                        : ProjectBundle.message("library.attach.files.to.library.action", libraryName));
-    descriptor.setDescription(ProjectBundle.message("library.attach.files.description"));
-    return descriptor;
+    return new FileChooserDescriptor(true, true, true, false, true, true)
+      .withTitleValue(
+        StringUtil.isEmpty(libraryName)
+          ? ProjectLocalize.libraryAttachFilesAction()
+          : ProjectLocalize.libraryAttachFilesToLibraryAction(libraryName)
+      )
+      .withDescriptionValue(ProjectLocalize.libraryAttachFilesDescription());
   }
 
   /**
@@ -90,6 +92,6 @@ public abstract class LibraryRootsComponentDescriptor {
   }
 
   public String getAttachFilesActionName() {
-    return ProjectBundle.message("button.text.attach.files");
+    return ProjectLocalize.buttonTextAttachFiles().get();
   }
 }

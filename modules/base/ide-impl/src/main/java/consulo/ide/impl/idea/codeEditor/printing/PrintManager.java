@@ -18,11 +18,8 @@ package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.application.CommonBundle;
 import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.language.editor.CommonDataKeys;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.*;
 import consulo.logging.Logger;
@@ -51,17 +48,17 @@ class PrintManager {
   private static final Logger LOG = Logger.getInstance(PrintManager.class);
 
   public static void executePrint(DataContext dataContext) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
 
     final PrinterJob printerJob = PrinterJob.getPrinterJob();
 
     final PsiDirectory[] psiDirectory = new PsiDirectory[1];
-    PsiElement psiElement = dataContext.getData(LangDataKeys.PSI_ELEMENT);
+    PsiElement psiElement = dataContext.getData(PsiElement.KEY);
     if(psiElement instanceof PsiDirectory) {
       psiDirectory[0] = (PsiDirectory)psiElement;
     }
 
-    final PsiFile psiFile = dataContext.getData(LangDataKeys.PSI_FILE);
+    final PsiFile psiFile = dataContext.getData(PsiFile.KEY);
     final String[] shortFileName = new String[1];
     final String[] directoryName = new String[1];
     if(psiFile != null || psiDirectory[0] != null) {
@@ -76,7 +73,7 @@ class PrintManager {
       }
     }
 
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     String text = null;
     if(editor != null) {
       if(editor.getSelectionModel().hasSelection()) {
@@ -164,12 +161,7 @@ class PrintManager {
           printerJob.print();
         }
         catch(final PrinterException e) {
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              Messages.showErrorDialog(project, e.getMessage(), CommonBundle.getErrorTitle());
-            }
-          });
+          SwingUtilities.invokeLater(() -> Messages.showErrorDialog(project, e.getMessage(), CommonBundle.getErrorTitle()));
           LOG.info(e);
         }
         catch(ProcessCanceledException e) {
@@ -224,12 +216,7 @@ class PrintManager {
   }
 
   public static TextPainter initTextPainter(final PsiFile psiFile, final Editor editor) {
-    return ApplicationManager.getApplication().runReadAction(new Computable<TextPainter>() {
-      @Override
-      public TextPainter compute() {
-        return doInitTextPainter(psiFile, editor);
-      }
-    });
+    return ApplicationManager.getApplication().runReadAction((Computable<TextPainter>) () -> doInitTextPainter(psiFile, editor));
   }
 
   private static TextPainter doInitTextPainter(final PsiFile psiFile, final Editor editor) {
@@ -244,11 +231,8 @@ class PrintManager {
   public static TextPainter initTextPainter(@Nonnull final DocumentEx doc, final Project project) {
     final TextPainter[] res = new TextPainter[1];
     ApplicationManager.getApplication().runReadAction(
-      new Runnable() {
-        @Override
-        public void run() {
-          res[0] = doInitTextPainter(doc, project);
-        }
+      () -> {
+        res[0] = doInitTextPainter(doc, project);
       }
     );
     return res[0];

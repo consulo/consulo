@@ -16,15 +16,16 @@
 package consulo.content.bundle;
 
 import consulo.application.AllIcons;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Used as a plug for all SDKs which type cannot be determined (for example, plugin that registered a custom type has been deinstalled)
+ * Used as a plug for all SDKs which type cannot be determined
+ * (for example, plugin that registered a custom type has been deinstalled)
  * @author Eugene Zhuravlev
  *         Date: Dec 11, 2004
  */
@@ -59,7 +60,7 @@ public class UnknownSdkType extends SdkType{
   @Nonnull
   @Override
   public String getPresentableName() {
-    return ProjectBundle.message("sdk.unknown.name");
+    return ProjectLocalize.sdkUnknownName().get();
   }
 
   @Nonnull
