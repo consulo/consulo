@@ -8,6 +8,7 @@ import consulo.build.ui.*;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.impl.internal.event.FileNavigatable;
 import consulo.build.ui.issue.BuildIssue;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerMessage;
@@ -206,11 +207,11 @@ public class BuildViewServiceImpl implements BuildViewService {
   public void onEnd(Object sessionId, ExitStatus exitStatus, long endBuildStamp) {
     String message;
     if (exitStatus == ExitStatus.ERRORS) {
-      message = BuildBundle.message("build.messages.failed", StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildLocalize.buildMessagesFailed(StringUtil.wordsToBeginFromLowerCase(myContentName)).get();
       myBuildProgress.fail(endBuildStamp, message);
     }
     else if (exitStatus == ExitStatus.CANCELLED) {
-      message = BuildBundle.message("build.messages.cancelled", StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildLocalize.buildMessagesCancelled(StringUtil.wordsToBeginFromLowerCase(myContentName)).get();
       myBuildProgress.cancel(endBuildStamp, message);
     }
     else {
@@ -223,7 +224,7 @@ public class BuildViewServiceImpl implements BuildViewService {
       //    myConsolePrinter.print(CompilerBundle.message("compiler.build.messages.classes.check.outdated"), MessageEvent.Kind.SIMPLE);
       //  }
       //}
-      message = BuildBundle.message("build.messages.finished", StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildLocalize.buildMessagesFinished(StringUtil.wordsToBeginFromLowerCase(myContentName)).get();
       myBuildProgress.finish(endBuildStamp, isUpToDate, message);
     }
   }
@@ -286,12 +287,14 @@ public class BuildViewServiceImpl implements BuildViewService {
   }
 
   @Nullable
-  private BuildIssue buildIssue(@Nonnull Collection<String> moduleNames,
-                                @Nonnull String title,
-                                @Nonnull String message,
-                                @Nonnull MessageEvent.Kind kind,
-                                @Nullable VirtualFile virtualFile,
-                                @Nullable Navigatable navigatable) {
+  private BuildIssue buildIssue(
+    @Nonnull Collection<String> moduleNames,
+    @Nonnull String title,
+    @Nonnull String message,
+    @Nonnull MessageEvent.Kind kind,
+    @Nullable VirtualFile virtualFile,
+    @Nullable Navigatable navigatable
+  ) {
     // TODO [VISTALL] use ep? like in idea
     return null;
   }

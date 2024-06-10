@@ -5,7 +5,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.codeEditor.Editor;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.inspection.FileModifier;

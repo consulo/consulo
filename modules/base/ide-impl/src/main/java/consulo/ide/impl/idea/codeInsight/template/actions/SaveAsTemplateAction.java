@@ -24,33 +24,34 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.actions;
 
-import consulo.language.editor.impl.internal.completion.CompletionUtil;
-import consulo.language.editor.completion.OffsetKey;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.component.util.pointer.NamedPointer;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
+import consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateListPanel;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.Language;
+import consulo.language.LanguagePointerUtil;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.completion.OffsetKey;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
-import consulo.ide.impl.idea.codeInsight.template.impl.*;
-import consulo.language.Language;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.WriteCommandAction;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.document.RangeMarker;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.language.psi.util.PsiElementFilter;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.LanguagePointerUtil;
-import consulo.logging.Logger;
-import consulo.component.util.pointer.NamedPointer;
 
 import java.util.*;
 
@@ -63,8 +64,8 @@ public class SaveAsTemplateAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = Objects.requireNonNull(dataContext.getData(CommonDataKeys.EDITOR));
-    PsiFile file = Objects.requireNonNull(dataContext.getData(CommonDataKeys.PSI_FILE));
+    Editor editor = Objects.requireNonNull(dataContext.getData(Editor.KEY));
+    PsiFile file = Objects.requireNonNull(dataContext.getData(PsiFile.KEY));
 
     final Project project = file.getProject();
     PsiDocumentManager.getInstance(project).commitAllDocuments();
@@ -80,12 +81,7 @@ public class SaveAsTemplateAction extends AnAction {
 
     if (startOffset >= selection.getEndOffset()) startOffset = selection.getStartOffset();
 
-    final PsiElement[] psiElements = PsiTreeUtil.collectElements(file, new PsiElementFilter() {
-      @Override
-      public boolean isAccepted(PsiElement element) {
-        return selection.contains(element.getTextRange()) && element.getReferences().length > 0;
-      }
-    });
+    final PsiElement[] psiElements = PsiTreeUtil.collectElements(file, element -> selection.contains(element.getTextRange()) && element.getReferences().length > 0);
 
     final Document document = EditorFactory.getInstance().createDocument(editor.getDocument().getText().
             substring(startOffset, selection.getEndOffset()));
@@ -168,8 +164,8 @@ public class SaveAsTemplateAction extends AnAction {
   @Override
   public void update(AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    Editor editor = dataContext.getData(Editor.KEY);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
 
     if (file == null || editor == null) {
       e.getPresentation().setEnabled(false);

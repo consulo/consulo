@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.colors.highlighting;
 
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
 import jakarta.annotation.Nullable;

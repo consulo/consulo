@@ -16,15 +16,15 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,12 +41,14 @@ public class NewColorAndFontPanel extends JPanel {
   private final String myCategory;
   private final Collection<String> myOptionList;
 
-  public NewColorAndFontPanel(final SchemesPanel schemesPanel,
-                              final OptionsPanel optionsPanel,
-                              final PreviewPanel previewPanel,
-                              final String category,
-                              final Collection<String> optionList,
-                              final ColorSettingsPage page) {
+  public NewColorAndFontPanel(
+    final SchemesPanel schemesPanel,
+    final OptionsPanel optionsPanel,
+    final PreviewPanel previewPanel,
+    final String category,
+    final Collection<String> optionList,
+    final ColorSettingsPage page
+  ) {
     super(new BorderLayout(0, 10));
     mySchemesPanel = schemesPanel;
     myOptionsPanel = optionsPanel;
@@ -61,7 +63,7 @@ public class NewColorAndFontPanel extends JPanel {
     top.add(myOptionsPanel.getPanel(), BorderLayout.CENTER);
     if (optionsPanel instanceof ConsoleFontOptions) {
       JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-      myCopyAction = new AbstractAction(ApplicationBundle.message("action.apply.editor.font.settings")) {
+      myCopyAction = new AbstractAction(ApplicationLocalize.actionApplyEditorFontSettings().get()) {
         @Override
         public void actionPerformed(ActionEvent e) {
           EditorColorsScheme scheme = ((ConsoleFontOptions)myOptionsPanel).getCurrentScheme();
@@ -149,7 +151,7 @@ public class NewColorAndFontPanel extends JPanel {
       return myOptionsPanel.processListOptions();
     }
     else {
-      final HashSet<String> result = new HashSet<String>();
+      final HashSet<String> result = new HashSet<>();
       for (String s : myOptionList) {
         result.add(s);
       }

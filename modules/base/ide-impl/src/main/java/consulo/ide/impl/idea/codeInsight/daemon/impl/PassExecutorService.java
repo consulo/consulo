@@ -22,7 +22,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.highlight.HighlightingPass;
 import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.impl.highlight.EditorBoundHighlightingPass;

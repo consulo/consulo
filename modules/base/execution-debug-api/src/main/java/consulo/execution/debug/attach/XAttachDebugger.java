@@ -16,6 +16,7 @@
 package consulo.execution.debug.attach;
 
 import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
@@ -37,7 +38,7 @@ public interface XAttachDebugger {
   default String getDebuggerSelectedTitle() {
     String title = getDebuggerDisplayName();
     title = StringUtil.shortenTextWithEllipsis(title, 50, 0);
-    return XDebuggerBundle.message("xdebugger.attach.popup.title", title);
+    return XDebuggerLocalize.xdebuggerAttachPopupTitle(title).get();
   }
 
   /**
@@ -48,5 +49,9 @@ public interface XAttachDebugger {
    * @param info     process to attach to
    * @throws ExecutionException if an error occurs during attach
    */
-  void attachDebugSession(@Nonnull Project project, @Nonnull XAttachHost hostInfo, @Nonnull ProcessInfo info) throws ExecutionException;
+  void attachDebugSession(
+    @Nonnull Project project,
+    @Nonnull XAttachHost hostInfo,
+    @Nonnull ProcessInfo info
+  ) throws ExecutionException;
 }

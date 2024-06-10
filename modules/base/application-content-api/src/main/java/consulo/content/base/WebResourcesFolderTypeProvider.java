@@ -20,12 +20,12 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -37,8 +37,8 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-  );
+  private static final Supplier<WebResourcesFolderTypeProvider> INSTANCE =
+    ExtensionInstance.from(ContentFolderTypeProvider.class);
 
   @Nonnull
   public static ContentFolderTypeProvider getInstance() {
@@ -69,7 +69,7 @@ public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.web.resources.action");
+    return ProjectLocalize.moduleToggleWebResourcesAction().get();
   }
 
   @Nonnull

@@ -17,11 +17,11 @@ package consulo.content.bundle;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.platform.Platform;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -77,20 +77,19 @@ public abstract class BundleType extends SdkType {
             valid = isValidSdkHome(platform, adjustSelectedSdkHome(platform, selectedPath));
             if (!valid) {
               String message = files[0].isDirectory()
-                ? ProjectBundle.message("sdk.configure.home.invalid.error", getPresentableName())
-                : ProjectBundle.message("sdk.configure.home.file.invalid.error", getPresentableName());
+                ? ProjectLocalize.sdkConfigureHomeInvalidError(getPresentableName()).get()
+                : ProjectLocalize.sdkConfigureHomeFileInvalidError(getPresentableName()).get();
               throw new Exception(message);
             }
           }
         }
       }
     };
-    descriptor.setTitle(ProjectBundle.message("sdk.configure.home.title", getPresentableName()));
+    descriptor.setTitle(ProjectLocalize.sdkConfigureHomeTitle(getPresentableName()).get());
     return descriptor;
   }
 
   // region obsolete stuff
-
 
   @Nonnull
   @Override

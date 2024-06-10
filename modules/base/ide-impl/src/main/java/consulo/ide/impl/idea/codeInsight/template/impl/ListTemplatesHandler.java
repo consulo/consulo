@@ -25,15 +25,14 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.psi.PsiDocumentManager;
@@ -44,6 +43,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -74,7 +74,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
     if (matchingTemplates.isEmpty() && customTemplatesLookupElements.isEmpty()) {
       if (!ApplicationManager.getApplication().isUnitTestMode()) {
-        HintManager.getInstance().showErrorHint(editor, CodeInsightBundle.message("templates.no.defined"));
+        HintManager.getInstance().showErrorHint(editor, CodeInsightLocalize.templatesNoDefined().get());
       }
       return;
     }
@@ -295,7 +295,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
     @Override
     public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
-      LinkedHashSet<LookupElement> result = new LinkedHashSet<LookupElement>();
+      LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
       List<LookupElement> items = getMatchingItems();
       for (LookupElement item : items) {
         if (item.getLookupString().startsWith(lookup.itemPattern(item))) {
@@ -303,9 +303,9 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         }
       }
       result.addAll(items);
-      ArrayList<LookupElement> list = new ArrayList<LookupElement>(result);
+      ArrayList<LookupElement> list = new ArrayList<>(result);
       int selected = lookup.isSelectionTouched() ? list.indexOf(lookup.getCurrentItem()) : 0;
-      return new Pair<List<LookupElement>, Integer>(list, selected >= 0 ? selected : 0);
+      return new Pair<>(list, selected >= 0 ? selected : 0);
     }
 
     @Override

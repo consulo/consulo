@@ -26,7 +26,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;

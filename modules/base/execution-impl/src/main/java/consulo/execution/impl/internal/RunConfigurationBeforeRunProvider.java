@@ -16,42 +16,41 @@
 package consulo.execution.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.execution.impl.internal.configuration.RunManagerImpl;
-import consulo.execution.internal.RunManagerEx;
+import consulo.application.AllIcons;
+import consulo.dataContext.DataContext;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.executor.Executor;
-import consulo.process.ExecutionException;
-import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
+import consulo.execution.impl.internal.configuration.RunManagerImpl;
+import consulo.execution.internal.RunManagerEx;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataContext;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
-import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -93,17 +92,17 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
   @Nonnull
   @Override
   public String getName() {
-    return ExecutionBundle.message("before.launch.run.another.configuration");
+    return ExecutionLocalize.beforeLaunchRunAnotherConfiguration().get();
   }
 
   @Nonnull
   @Override
   public String getDescription(RunConfigurableBeforeRunTask task) {
     if (task.getSettings() == null) {
-      return ExecutionBundle.message("before.launch.run.another.configuration");
+      return ExecutionLocalize.beforeLaunchRunAnotherConfiguration().get();
     }
     else {
-      return ExecutionBundle.message("before.launch.run.certain.configuration", task.getSettings().getName());
+      return ExecutionLocalize.beforeLaunchRunCertainConfiguration(task.getSettings().getName()).get();
     }
   }
 
@@ -143,7 +142,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     if (project == null || !project.isInitialized()) return Collections.emptyList();
     final RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
 
-    final ArrayList<RunnerAndConfigurationSettings> configurations = new ArrayList<RunnerAndConfigurationSettings>(runManager.getSortedConfigurations());
+    final ArrayList<RunnerAndConfigurationSettings> configurations = new ArrayList<>(runManager.getSortedConfigurations());
     String executorId = DefaultRunExecutor.getRunExecutorInstance().getId();
     for (Iterator<RunnerAndConfigurationSettings> iterator = configurations.iterator(); iterator.hasNext(); ) {
       RunnerAndConfigurationSettings settings = iterator.next();
@@ -307,7 +306,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
     private SelectionDialog(RunnerAndConfigurationSettings selectedSettings, @Nonnull List<RunnerAndConfigurationSettings> settings) {
       super(myProject);
-      setTitle(ExecutionBundle.message("before.launch.run.another.configuration.choose"));
+      setTitle(ExecutionLocalize.beforeLaunchRunAnotherConfigurationChoose().get());
       mySelectedSettings = selectedSettings;
       mySettings = settings;
       init();
@@ -331,18 +330,15 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
     protected JComponent createCenterPanel() {
       myJBList = new JBList(mySettings);
       myJBList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      myJBList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-          Object selectedValue = myJBList.getSelectedValue();
-          if (selectedValue instanceof RunnerAndConfigurationSettings) {
-            mySelectedSettings = (RunnerAndConfigurationSettings)selectedValue;
-          }
-          else {
-            mySelectedSettings = null;
-          }
-          setOKActionEnabled(mySelectedSettings != null);
+      myJBList.getSelectionModel().addListSelectionListener(e -> {
+        Object selectedValue = myJBList.getSelectedValue();
+        if (selectedValue instanceof RunnerAndConfigurationSettings) {
+          mySelectedSettings = (RunnerAndConfigurationSettings)selectedValue;
         }
+        else {
+          mySelectedSettings = null;
+        }
+        setOKActionEnabled(mySelectedSettings != null);
       });
       myJBList.setCellRenderer(new ColoredListCellRenderer() {
         @Override

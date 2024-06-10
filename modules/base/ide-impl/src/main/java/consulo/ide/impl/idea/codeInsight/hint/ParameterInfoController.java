@@ -3,6 +3,7 @@
 package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.parameterInfo.*;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
@@ -34,7 +35,7 @@ import consulo.ui.ex.popup.Balloon.Position;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -397,7 +398,9 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         return elementForUpdating;
       }
       catch (IndexNotReadyException e) {
-        DumbService.getInstance(myProject).showDumbModeNotification(CodeInsightBundle.message("parameter.info.indexing.mode.not.supported"));
+        DumbService.getInstance(myProject).showDumbModeNotification(
+          CodeInsightLocalize.parameterInfoIndexingModeNotSupported().get()
+        );
       }
       return null;
     }).withDocumentsCommitted(myProject).expireWhen(() -> !myKeepOnHintHidden && !myHint.isVisible() && !ApplicationManager.getApplication().isHeadlessEnvironment() ||

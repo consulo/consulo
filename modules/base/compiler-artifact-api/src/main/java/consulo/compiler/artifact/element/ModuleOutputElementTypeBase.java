@@ -25,10 +25,10 @@ import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,9 +69,9 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
                                                              @Nonnull Artifact artifact,
                                                              @Nonnull CompositePackagingElement<?> parent) {
     List<Module> suitableModules = getSuitableModules(context);
-    List<Module> selected = context.chooseModules(suitableModules, ProjectBundle.message("dialog.title.packaging.choose.module"));
+    List<Module> selected = context.chooseModules(suitableModules, ProjectLocalize.dialogTitlePackagingChooseModule().get());
 
-    final List<PackagingElement<?>> elements = new ArrayList<PackagingElement<?>>();
+    final List<PackagingElement<?>> elements = new ArrayList<>();
     for (Module module : selected) {
       elements.add(createElement(context.getProject(), ModuleUtilCore.createPointer(module)));
     }
@@ -94,7 +94,7 @@ public abstract class ModuleOutputElementTypeBase extends PackagingElementType<M
 
   private List<Module> getSuitableModules(ArtifactEditorContext context) {
     ModulesProvider modulesProvider = context.getModulesProvider();
-    ArrayList<Module> modules = new ArrayList<Module>();
+    ArrayList<Module> modules = new ArrayList<>();
     for (Module module : modulesProvider.getModules()) {
       if (isSuitableModule(modulesProvider, module)) {
         modules.add(module);

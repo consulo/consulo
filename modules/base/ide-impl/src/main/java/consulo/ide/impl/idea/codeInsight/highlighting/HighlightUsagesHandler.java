@@ -21,7 +21,7 @@ import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.find.EditorSearchSession;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.externalService.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;

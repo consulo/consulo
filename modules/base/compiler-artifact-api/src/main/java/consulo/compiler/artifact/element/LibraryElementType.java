@@ -22,12 +22,12 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.content.library.Library;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
 import consulo.project.content.library.ProjectLibraryTable;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +59,8 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
   @Nonnull
   public List<? extends LibraryPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
                                                                  @Nonnull CompositePackagingElement<?> parent) {
-    final List<Library> selected = context.chooseLibraries(ProjectBundle.message("dialog.title.packaging.choose.library"));
-    final List<LibraryPackagingElement> elements = new ArrayList<LibraryPackagingElement>();
+    final List<Library> selected = context.chooseLibraries(ProjectLocalize.dialogTitlePackagingChooseLibrary().get());
+    final List<LibraryPackagingElement> elements = new ArrayList<>();
     for (Library library : selected) {
       elements.add(new LibraryPackagingElement(library.getTable().getTableLevel(), library.getName(), null));
     }
@@ -68,7 +68,7 @@ public class LibraryElementType extends ComplexPackagingElementType<LibraryPacka
   }
 
   private static List<Library> getAllLibraries(ArtifactEditorContext context) {
-    List<Library> libraries = new ArrayList<Library>();
+    List<Library> libraries = new ArrayList<>();
     ContainerUtil.addAll(libraries, ProjectLibraryTable.getInstance(context.getProject()).getLibraries());
     return libraries;
   }

@@ -16,39 +16,38 @@
 
 package consulo.ide.impl.idea.analysis;
 
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposer;
 import consulo.find.FindSettings;
 import consulo.find.ui.ScopeChooserCombo;
+import consulo.language.editor.refactoring.ui.RadioUpDownListener;
 import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.TitledSeparator;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.language.editor.util.PsiUtilBase;
-import consulo.language.editor.refactoring.ui.RadioUpDownListener;
-import consulo.ui.ex.awt.TitledSeparator;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -72,19 +71,21 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
   private final String myAnalysisNoon;
   private ButtonGroup myGroup;
 
-  private static final String ALL = AnalysisScopeBundle.message("scope.option.uncommited.files.all.changelists.choice");
+  private static final String ALL = AnalysisScopeLocalize.scopeOptionUncommitedFilesAllChangelistsChoice().get();
   private final AnalysisUIOptions myAnalysisOptions;
   @Nullable
   private final PsiElement myContext;
 
-  public BaseAnalysisActionDialog(@Nonnull String title,
-                                  @Nonnull String analysisNoon,
-                                  @Nonnull Project project,
-                                  @Nonnull final AnalysisScope scope,
-                                  final String moduleName,
-                                  final boolean rememberScope,
-                                  @Nonnull AnalysisUIOptions analysisUIOptions,
-                                  @Nullable PsiElement context) {
+  public BaseAnalysisActionDialog(
+    @Nonnull String title,
+    @Nonnull String analysisNoon,
+    @Nonnull Project project,
+    @Nonnull final AnalysisScope scope,
+    final String moduleName,
+    final boolean rememberScope,
+    @Nonnull AnalysisUIOptions analysisUIOptions,
+    @Nullable PsiElement context
+  ) {
     super(true);
     Disposer.register(myDisposable, myScopeCombo);
     myAnalysisOptions = analysisUIOptions;
@@ -115,7 +116,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     myInspectTestSource.setSelected(myAnalysisOptions.ANALYZE_TEST_SOURCES);
 
     //module scope if applicable
-    myModuleButton.setText(AnalysisScopeBundle.message("scope.option.module.with.mnemonic", myModuleName));
+    myModuleButton.setText(AnalysisScopeLocalize.scopeOptionModuleWithMnemonic(myModuleName).get());
     boolean useModuleScope = false;
     if (myModuleName != null) {
       useModuleScope = myAnalysisOptions.SCOPE_TYPE == AnalysisScope.MODULE;
@@ -156,12 +157,13 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     boolean searchInLib = file != null && (fileIndex.isInLibraryClasses(file) || fileIndex.isInLibrarySource(file));
 
     String preselect = StringUtil.isEmptyOrSpaces(myAnalysisOptions.CUSTOM_SCOPE_NAME)
-                       ? FindSettings.getInstance().getDefaultScopeName()
-                       : myAnalysisOptions.CUSTOM_SCOPE_NAME;
+      ? FindSettings.getInstance().getDefaultScopeName()
+      : myAnalysisOptions.CUSTOM_SCOPE_NAME;
     if (searchInLib && GlobalSearchScope.projectScope(myProject).getDisplayName().equals(preselect)) {
       preselect = GlobalSearchScope.allScope(myProject).getDisplayName();
     }
-    if (GlobalSearchScope.allScope(myProject).getDisplayName().equals(preselect) && myAnalysisOptions.SCOPE_TYPE == AnalysisScope.CUSTOM) {
+    if (GlobalSearchScope.allScope(myProject).getDisplayName().equals(preselect)
+      && myAnalysisOptions.SCOPE_TYPE == AnalysisScope.CUSTOM) {
       myAnalysisOptions.CUSTOM_SCOPE_NAME = preselect;
       searchInLib = true;
     }
@@ -172,19 +174,23 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     myScopeCombo.init(myProject, searchInLib, true, preselect);
 
     //correct selection
-    myProjectButton.setSelected(myRememberScope && myAnalysisOptions.SCOPE_TYPE == AnalysisScope.PROJECT || myFileName == null);
-    myFileButton.setSelected(myFileName != null &&
-                             (!myRememberScope ||
-                             myAnalysisOptions.SCOPE_TYPE != AnalysisScope.PROJECT && !useModuleScope && myAnalysisOptions.SCOPE_TYPE != AnalysisScope.CUSTOM && !useUncommitedFiles));
+    myProjectButton.setSelected(
+      myRememberScope && myAnalysisOptions.SCOPE_TYPE == AnalysisScope.PROJECT
+        || myFileName == null
+    );
+    myFileButton.setSelected(
+      myFileName != null && (
+        !myRememberScope ||
+          myAnalysisOptions.SCOPE_TYPE != AnalysisScope.PROJECT
+            && !useModuleScope
+            && myAnalysisOptions.SCOPE_TYPE != AnalysisScope.CUSTOM
+            && !useUncommitedFiles
+      )
+    );
 
     myScopeCombo.setEnabled(myCustomScopeButton.isSelected());
 
-    final ActionListener radioButtonPressed = new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        onScopeRadioButtonPressed();
-      }
-    };
+    final ActionListener radioButtonPressed = e -> onScopeRadioButtonPressed();
     final Enumeration<AbstractButton> enumeration = myGroup.getElements();
     while (enumeration.hasMoreElements()) {
       enumeration.nextElement().addActionListener(radioButtonPressed);
@@ -197,7 +203,13 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     if (additionalPanel!= null){
       wholePanel.add(additionalPanel, BorderLayout.CENTER);
     }
-    new RadioUpDownListener(myProjectButton, myModuleButton, myUncommitedFilesButton, myFileButton, myCustomScopeButton);
+    new RadioUpDownListener(
+      myProjectButton,
+      myModuleButton,
+      myUncommitedFilesButton,
+      myFileButton,
+      myCustomScopeButton
+    );
     return wholePanel;
   }
 
@@ -263,7 +275,12 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
   }
 
   @Nonnull
-  public AnalysisScope getScope(@Nonnull AnalysisUIOptions uiOptions, @Nonnull AnalysisScope defaultScope, @Nonnull Project project, Module module) {
+  public AnalysisScope getScope(
+    @Nonnull AnalysisUIOptions uiOptions,
+    @Nonnull AnalysisScope defaultScope,
+    @Nonnull Project project,
+    Module module
+  ) {
     AnalysisScope scope;
     if (isProjectScopeSelected()) {
       scope = new AnalysisScope(project);
@@ -287,7 +304,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
           files = changeListManager.getAffectedFiles();
         }
         else {
-          files = new ArrayList<VirtualFile>();
+          files = new ArrayList<>();
           for (ChangeList list : changeListManager.getChangeListsCopy()) {
             if (!Comparing.strEqual(list.getName(), (String)myChangeLists.getSelectedItem())) continue;
             final Collection<Change> changes = list.getChanges();
@@ -302,7 +319,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
             }
           }
         }
-        scope = new AnalysisScope(project, new HashSet<VirtualFile>(files));
+        scope = new AnalysisScope(project, new HashSet<>(files));
         uiOptions.SCOPE_TYPE = AnalysisScope.UNCOMMITTED_FILES;
       }
       else {

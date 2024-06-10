@@ -38,7 +38,6 @@ import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.documentation.DocumentationManager;
@@ -103,7 +102,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
   @Override
   public void update(final AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       e.getPresentation().setEnabled(false);
       return;
@@ -112,8 +111,8 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     DataContext dataContext = e.getDataContext();
     Editor editor = getEditor(dataContext);
 
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
+    PsiElement element = dataContext.getData(PsiElement.KEY);
     element = getElement(project, file, editor, element);
 
     PsiFile containingFile = element != null ? element.getContainingFile() : file;
@@ -123,10 +122,10 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
 
 
   protected static Editor getEditor(@Nonnull DataContext dataContext) {
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     if (editor == null) {
-      final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+      final PsiFile file = dataContext.getData(PsiFile.KEY);
       if (file != null) {
         final VirtualFile virtualFile = file.getVirtualFile();
         if (virtualFile != null) {
@@ -141,15 +140,15 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
   }
 
   public void performForContext(@Nonnull DataContext dataContext, boolean invokedByShortcut) {
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) return;
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
-    PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
+    PsiFile file = dataContext.getData(PsiFile.KEY);
     Editor editor = getEditor(dataContext);
 
-    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
-    boolean isInvokedFromEditor = dataContext.getData(CommonDataKeys.EDITOR) != null;
+    PsiElement element = dataContext.getData(PsiElement.KEY);
+    boolean isInvokedFromEditor = dataContext.getData(Editor.KEY) != null;
     element = getElement(project, file, editor, element);
 
     if (element == null && file == null) return;
@@ -288,7 +287,7 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     JBPopup popup = SoftReference.dereference(myPopupRef);
     if (popup != null && popup.isVisible() && popup instanceof AbstractPopup) {
       final ImplementationViewComponent component = (ImplementationViewComponent)((AbstractPopup)popup).getComponent();
-      ((AbstractPopup)popup).setCaption(title);
+      popup.setCaption(title);
       component.update(impls, index);
       updateInBackground(editor, element, component, title, (AbstractPopup)popup, usageView);
       if (invokedByShortcut) {
@@ -398,12 +397,9 @@ public class ShowImplementationsAction extends AnAction implements PopupAction {
     // if the definition is the tree parent of the target element, filter out the target element
     for (int i = 1; i < targetElements.length; i++) {
       final PsiElement targetElement = targetElements[i];
-      if (ApplicationManager.getApplication().runReadAction(new Computable<Boolean>() {
-        @Override
-        public Boolean compute() {
-          return PsiTreeUtil.isAncestor(targetElement, targetElements[0], true);
-        }
-      })) {
+      if (ApplicationManager.getApplication().runReadAction(
+        (Computable<Boolean>) () -> PsiTreeUtil.isAncestor(targetElement, targetElements[0], true))
+      ) {
         unique.remove(targetElements[0]);
         break;
       }
