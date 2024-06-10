@@ -3,7 +3,6 @@
 package consulo.desktop.awt.codeInsight.lookup;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -25,16 +24,19 @@ import consulo.language.editor.hint.HintManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
-import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 @ServiceImpl
@@ -46,6 +48,8 @@ public class LookupManagerImpl extends LookupManager {
   private final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
   public static final Key<Boolean> SUPPRESS_AUTOPOPUP_JAVADOC = Key.create("LookupManagerImpl.suppressAutopopupJavadoc");
+
+  private Future<?> myUpdateDocFuture = CompletableFuture.completedFuture(null);
 
   @Inject
   public LookupManagerImpl(Project project) {
@@ -102,7 +106,10 @@ public class LookupManagerImpl extends LookupManager {
   }
 
   @Override
-  public LookupEx showLookup(@Nonnull final Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull final LookupArranger arranger) {
+  public LookupEx showLookup(@Nonnull final Editor editor,
+                             @Nonnull LookupElement[] items,
+                             @Nonnull final String prefix,
+                             @Nonnull final LookupArranger arranger) {
     for (LookupElement item : items) {
       assert item != null;
     }
@@ -113,14 +120,15 @@ public class LookupManagerImpl extends LookupManager {
 
   @Nonnull
   @Override
-  public LookupImpl createLookup(@Nonnull final Editor editor, @Nonnull LookupElement[] items, @Nonnull final String prefix, @Nonnull final LookupArranger arranger) {
+  public LookupImpl createLookup(@Nonnull final Editor editor,
+                                 @Nonnull LookupElement[] items,
+                                 @Nonnull final String prefix,
+                                 @Nonnull final LookupArranger arranger) {
     hideActiveLookup();
 
     final LookupImpl lookup = createLookup(editor, arranger, myProject);
 
-    final Alarm alarm = new Alarm();
-
-    ApplicationManager.getApplication().assertIsDispatchThread();
+    UIAccess.assertIsUIThread();
 
     myActiveLookup = lookup;
     myActiveLookupEditor = editor;
@@ -137,26 +145,25 @@ public class LookupManagerImpl extends LookupManager {
 
       @Override
       public void currentItemChanged(@Nonnull LookupEvent event) {
-        alarm.cancelAllRequests();
+        myUpdateDocFuture.cancel(false);
         CodeInsightSettings settings = CodeInsightSettings.getInstance();
         if (settings.AUTO_POPUP_JAVADOC_INFO && DocumentationManager.getInstance(myProject).getDocInfoHint() == null) {
-          alarm.addRequest(() -> showJavadoc(lookup), settings.JAVADOC_INFO_DELAY);
+          myUpdateDocFuture =
+            myProject.getUIAccess().getScheduler().schedule(() -> showJavadoc(lookup), settings.JAVADOC_INFO_DELAY, TimeUnit.MILLISECONDS);
         }
       }
 
+      @RequiredUIAccess
       private void lookupClosed() {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        alarm.cancelAllRequests();
+        UIAccess.assertIsUIThread();
+        myUpdateDocFuture.cancel(false);
         lookup.removeLookupListener(this);
       }
     });
-    Disposer.register(lookup, new Disposable() {
-      @Override
-      public void dispose() {
-        myActiveLookup = null;
-        myActiveLookupEditor = null;
-        myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, lookup, null);
-      }
+    Disposer.register(lookup, () -> {
+      myActiveLookup = null;
+      myActiveLookupEditor = null;
+      myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, lookup, null);
     });
 
     if (items.length > 0) {
@@ -167,7 +174,7 @@ public class LookupManagerImpl extends LookupManager {
       myActiveLookup.refreshUi(true, true);
     }
     else {
-      alarm.cancelAllRequests(); // no items -> no doc
+      myUpdateDocFuture.cancel(false); // no items -> no doc
     }
 
     myPropertyChangeSupport.firePropertyChange(PROP_ACTIVE_LOOKUP, null, myActiveLookup);
@@ -245,28 +252,5 @@ public class LookupManagerImpl extends LookupManager {
   @Override
   public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
     myPropertyChangeSupport.removePropertyChangeListener(listener);
-  }
-
-
-  @TestOnly
-  public void forceSelection(char completion, int index) {
-    if (myActiveLookup == null) throw new RuntimeException("There are no items in this lookup");
-    final LookupElement lookupItem = myActiveLookup.getItems().get(index);
-    myActiveLookup.setCurrentItem(lookupItem);
-    myActiveLookup.finishLookup(completion);
-  }
-
-  @TestOnly
-  public void forceSelection(char completion, LookupElement item) {
-    myActiveLookup.setCurrentItem(item);
-    myActiveLookup.finishLookup(completion);
-  }
-
-  @TestOnly
-  public void clearLookup() {
-    if (myActiveLookup != null) {
-      myActiveLookup.hide();
-      myActiveLookup = null;
-    }
   }
 }

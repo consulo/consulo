@@ -23,7 +23,6 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-
 import jakarta.annotation.Nullable;
 
 /**
@@ -34,7 +33,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
   @Override
   public void renderElement(final LookupItem item, final LookupElementPresentation presentation) {
-    presentation.setIcon(getRawIcon(item, presentation.isReal()));
+    presentation.setIcon(getRawIcon(item));
 
     presentation.setItemText(getName(item));
     presentation.setItemTextBold(item.getAttribute(LookupItem.HIGHLIGHTED_ATTR) != null);
@@ -44,8 +43,15 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
   @Nullable
   @RequiredReadAction
+  @Deprecated
   public static Image getRawIcon(final LookupElement item, boolean real) {
-    final Image icon = _getRawIcon(item, real);
+    return getRawIcon(item);
+  }
+
+  @Nullable
+  @RequiredReadAction
+  public static Image getRawIcon(final LookupElement item) {
+    final Image icon = _getRawIcon(item);
     if (icon != null && icon.getHeight() > Image.DEFAULT_ICON_SIZE) {
       return ImageEffects.resize(icon, icon.getWidth(), Image.DEFAULT_ICON_SIZE);
     }
@@ -54,7 +60,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
   @Nullable
   @RequiredReadAction
-  private static Image _getRawIcon(LookupElement item, boolean real) {
+  private static Image _getRawIcon(LookupElement item) {
     if (item instanceof LookupItem) {
       Image icon = (Image)((LookupItem)item).getAttribute(LookupItem.ICON_ATTR);
       if (icon != null) return icon;
@@ -62,21 +68,13 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
 
     Object o = item.getObject();
 
-    if (!real) {
-      if (item.getObject() instanceof String) {
-        return Image.empty();
-      }
-
-      return Image.empty(Image.DEFAULT_ICON_SIZE * 2, Image.DEFAULT_ICON_SIZE);
-    }
-
     if (o instanceof Iconable && !(o instanceof PsiElement)) {
-      return ((Iconable)o).getIcon(Iconable.ICON_FLAG_VISIBILITY);
+      return ((Iconable)o).getIcon(0);
     }
 
     final PsiElement element = item.getPsiElement();
     if (element != null && element.isValid()) {
-      return IconDescriptorUpdaters.getIcon(element, Iconable.ICON_FLAG_VISIBILITY);
+      return IconDescriptorUpdaters.getIcon(element, 0);
     }
     return null;
   }
@@ -99,7 +97,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     return (String)item.getAttribute(LookupItem.TAIL_TEXT_ATTR);
   }
 
-  private static String getName(final LookupItem item){
+  private static String getName(final LookupItem item) {
     final String presentableText = item.getPresentableText();
     if (presentableText != null) return presentableText;
     final Object o = item.getObject();
@@ -119,7 +117,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     else {
       name = String.valueOf(o);
     }
-    if (name == null){
+    if (name == null) {
       name = "";
     }
 

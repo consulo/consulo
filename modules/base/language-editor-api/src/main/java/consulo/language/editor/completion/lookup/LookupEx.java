@@ -83,7 +83,7 @@ public interface LookupEx extends Lookup, Disposable {
 
   void markSelectionTouched();
 
-  void updateLookupWidth(LookupElement item);
+  void updateLookupWidth();
 
   void requestResize();
 

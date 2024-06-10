@@ -31,7 +31,7 @@ public final class SingleAlarm extends Alarm {
     this(task, delay, threadToUse, threadToUse == ThreadToUse.SWING_THREAD ? Application.get().getNoneModalityState() : null, parentDisposable);
   }
 
-  private SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
+  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
     super(threadToUse, parentDisposable);
 
     this.task = task;
