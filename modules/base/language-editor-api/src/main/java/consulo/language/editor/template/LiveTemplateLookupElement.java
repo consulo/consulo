@@ -17,13 +17,9 @@ package consulo.language.editor.template;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.language.editor.completion.lookup.RealLookupElementPresentation;
-import consulo.language.editor.internal.TemplateConstants;
-import consulo.util.lang.StringUtil;
-
+import consulo.platform.base.icon.PlatformIconGroup;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.awt.event.KeyEvent;
 
 /**
  * @author peter
@@ -54,24 +50,9 @@ abstract public class LiveTemplateLookupElement extends LookupElement {
 
   @Override
   public void renderElement(LookupElementPresentation presentation) {
-    super.renderElement(presentation);
-    char shortcut = getTemplateShortcut();
     presentation.setItemText(getItemText());
-    if (sudden) {
-      presentation.setItemTextBold(true);
-      if (!presentation.isReal() || !((RealLookupElementPresentation)presentation).isLookupSelectionTouched()) {
-        if (shortcut == TemplateConstants.DEFAULT_CHAR) {
-          shortcut = TemplateSettings.getInstance().getDefaultShortcutChar();
-        }
-        presentation.setTypeText("  [" + KeyEvent.getKeyText(shortcut) + "] ");
-      }
-      if (StringUtil.isNotEmpty(myDescription)) {
-        presentation.setTailText(" (" + myDescription + ")", true);
-      }
-    }
-    else {
-      presentation.setTypeText(myDescription);
-    }
+    presentation.setTypeText(myDescription);
+    presentation.setIcon(PlatformIconGroup.nodesTemplate());
   }
 
   @Override

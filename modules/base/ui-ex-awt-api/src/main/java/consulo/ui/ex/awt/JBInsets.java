@@ -26,6 +26,11 @@ import static consulo.ui.ex.awt.JBUI.scale;
  * @author Konstantin Bulenkov
  */
 public class JBInsets extends Insets {
+  @Nonnull
+  public static JBInsets emptyInsets() {
+    return JBUI.emptyInsets();
+  }
+
   /**
    * Creates and initializes a new <code>Insets</code> object with the
    * specified top, left, bottom, and right insets.

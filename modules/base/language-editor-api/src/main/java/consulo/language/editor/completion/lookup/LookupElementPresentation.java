@@ -43,20 +43,24 @@ public class LookupElementPresentation {
   private boolean myTypeGrayed;
   @Nullable
   private List<TextFragment> myTail;
+  private volatile boolean myFrozen;
 
   public void setIcon(@Nullable Image icon) {
     myIcon = icon;
   }
 
   public void setItemText(@Nullable String text) {
+    ensureMutable();
     myItemText = text;
   }
 
   public void setStrikeout(boolean strikeout) {
+    ensureMutable();
     myStrikeout = strikeout;
   }
 
   public void setItemTextBold(boolean bold) {
+    ensureMutable();
     myItemTextBold = bold;
   }
 
@@ -65,6 +69,7 @@ public class LookupElementPresentation {
   }
 
   public void clearTail() {
+    ensureMutable();
     myTail = null;
   }
 
@@ -102,20 +107,17 @@ public class LookupElementPresentation {
   }
 
   public void setTypeText(@Nullable String text, @Nullable Image icon) {
+    ensureMutable();
     myTypeText = text;
     myTypeIcon = icon;
   }
 
   public void setItemTextItalic(boolean itemTextItalic) {
+    ensureMutable();
     myItemTextItalic = itemTextItalic;
   }
 
-  /**
-   * Is equivalent to instanceof {@link RealLookupElementPresentation} check.
-   *
-   * @return whether the presentation is requested to actually render lookup element on screen, or just to estimate its width.
-   * In the second, 'non-real' case, some heavy operations (e.g. getIcon()) can be omitted (only icon width is important)
-   */
+  @Deprecated
   public boolean isReal() {
     return false;
   }
@@ -179,6 +181,7 @@ public class LookupElementPresentation {
   }
 
   public void setItemTextUnderlined(boolean itemTextUnderlined) {
+    ensureMutable();
     myItemTextUnderlined = itemTextUnderlined;
   }
 
@@ -188,6 +191,7 @@ public class LookupElementPresentation {
   }
 
   public void setItemTextForeground(@Nonnull ColorValue itemTextForeground) {
+    ensureMutable();
     myItemTextForeground = itemTextForeground;
   }
 
@@ -214,6 +218,7 @@ public class LookupElementPresentation {
   }
 
   public void setTypeIconRightAligned(boolean typeIconRightAligned) {
+    ensureMutable();
     myTypeIconRightAligned = typeIconRightAligned;
   }
 
@@ -222,6 +227,7 @@ public class LookupElementPresentation {
   }
 
   public void setTypeGrayed(boolean typeGrayed) {
+    ensureMutable();
     myTypeGrayed = typeGrayed;
   }
 
@@ -234,6 +240,17 @@ public class LookupElementPresentation {
   @Override
   public String toString() {
     return "LookupElementPresentation{" + ", itemText='" + myItemText + '\'' + ", tail=" + myTail + ", typeText='" + myTypeText + '\'' + '}';
+  }
+
+  private void ensureMutable() {
+    if (myFrozen) throw new IllegalStateException("This lookup element presentation can't be changed");
+  }
+
+  /**
+   * Disallow any further changes to this presentation object.
+   */
+  public void freeze() {
+    myFrozen = true;
   }
 
   public static class TextFragment {

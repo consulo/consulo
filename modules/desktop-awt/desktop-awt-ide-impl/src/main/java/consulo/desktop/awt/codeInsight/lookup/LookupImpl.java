@@ -3,6 +3,7 @@
 package consulo.desktop.awt.codeInsight.lookup;
 
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.application.ui.UISettings;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
@@ -51,6 +52,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
@@ -79,6 +81,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -122,7 +125,6 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   private LookupFocusDegree myFocusDegree = LookupFocusDegree.FOCUSED;
   private volatile boolean myCalculating;
   private final Advertiser myAdComponent;
-  volatile int myLookupTextWidth = 50;
   private int myGuardedChanges;
   private volatile LookupArranger myArranger;
   private LookupArranger myPresentableArranger;
@@ -134,6 +136,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   private Integer myLastVisibleIndex;
   private final AtomicInteger myDummyItemCount = new AtomicInteger();
 
+  private final EmptyLookupItem myDummyItem = new EmptyLookupItem(CommonBundle.message("tree.node.loading"), true);
+
   public LookupImpl(Project project, Editor editor, @Nonnull LookupArranger arranger) {
     super(new JPanel(new BorderLayout()));
     setForceShowAsPopup(true);
@@ -141,14 +145,15 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     setResizable(true);
 
     myProject = project;
-    myEditor = InjectedLanguageUtil.getTopLevelEditor(editor);
+    myEditor = EditorWindow.getTopLevelEditor(editor);
     myArranger = arranger;
     myPresentableArranger = arranger;
     myEditor.getColorsScheme().getFontPreferences().copyTo(myFontPreferences);
 
     DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(this);
 
-    myCellRenderer = new LookupCellRenderer(this);
+    myCellRenderer = new LookupCellRenderer(this, editor.getContentComponent());
+    myCellRenderer.itemAdded(myDummyItem, LookupElementPresentation.renderElement(myDummyItem));
     myList.setCellRenderer(myCellRenderer);
 
     myList.setFocusable(false);
@@ -173,6 +178,21 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     updateListHeight(model);
 
     addListeners();
+  }
+
+  public List<LookupElement> getVisibleItems() {
+    UIAccess.assertIsUIThread();
+
+    var itemsCount = myList.getItemsCount();
+    if (!myShown || itemsCount == 0) return Collections.emptyList();
+
+    synchronized (myUiLock) {
+      int lowerItemIndex = myList.getFirstVisibleIndex();
+      int higherItemIndex = myList.getLastVisibleIndex();
+      if (lowerItemIndex < 0 || higherItemIndex < 0) return Collections.emptyList();
+
+      return getListModel().toList().subList(lowerItemIndex, Math.min(higherItemIndex + 1, itemsCount));
+    }
   }
 
   private CollectionListModel<LookupElement> getListModel() {
@@ -222,9 +242,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
 
   @Override
   public void markSelectionTouched() {
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      ApplicationManager.getApplication().assertIsDispatchThread();
-    }
+    UIAccess.assertIsUIThread();
     mySelectionTouched = true;
     myList.repaint();
   }
@@ -277,7 +295,7 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
       return false;
     }
 
-    updateLookupWidth(item, presentation);
+    myCellRenderer.itemAdded(item, presentation);
     withLock(() -> {
       myArranger.registerMatcher(item, matcher);
       myArranger.addElement(item, presentation);
@@ -305,17 +323,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
   }
 
   @Override
-  public void updateLookupWidth(LookupElement item) {
-    updateLookupWidth(item, renderItemApproximately(item));
-  }
-
-  private void updateLookupWidth(LookupElement item, LookupElementPresentation presentation) {
-    final Font customFont = myCellRenderer.getFontAbleToDisplay(presentation);
-    if (customFont != null) {
-      item.putUserData(CUSTOM_FONT_KEY, customFont);
-    }
-    int maxWidth = myCellRenderer.updateMaximumWidth(presentation, item);
-    myLookupTextWidth = Math.max(maxWidth, myLookupTextWidth);
+  public void updateLookupWidth() {
+    myCellRenderer.scheduleUpdateLookupWidthFromVisibleItems();
   }
 
   @Nullable
@@ -521,7 +530,8 @@ public class LookupImpl extends LightweightHint implements LookupEx, Disposable,
     LookupElement item = new EmptyLookupItem(myCalculating ? " " : LangBundle.message("completion.no.suggestions"), false);
     model.add(item);
 
-    updateLookupWidth(item);
+    myCellRenderer.itemAdded(item, LookupElementPresentation.renderElement(item));
+
     requestResize();
   }
 

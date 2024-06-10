@@ -5,6 +5,7 @@
 module consulo.language.editor.api {
   // TODO obsolete dep
   requires java.desktop;
+  
 
   requires transitive consulo.language.api;
   requires transitive consulo.language.code.style.api;
