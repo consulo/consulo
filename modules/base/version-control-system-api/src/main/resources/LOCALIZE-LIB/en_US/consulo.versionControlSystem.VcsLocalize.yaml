@@ -693,6 +693,10 @@ patch.apply.select.title:
   text: Select Patch File
 patch.apply.select.base.directory.title:
   text: Select Base Directory
+patch.apply.select.title:
+  text: Select Patch File
+patch.apply.select.base.directory.title:
+  text: Select Base Directory
 shelve.changes.action:
   text: Shelve Changes
 patch.apply.already.applied:

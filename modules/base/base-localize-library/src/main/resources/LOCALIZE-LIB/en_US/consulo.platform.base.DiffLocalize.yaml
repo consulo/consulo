@@ -134,6 +134,8 @@ merge.dialog.apply.partially.resolved.changes.confirmation.message:
     Are you sure you want to save changes and finish merging?
 apply.partially.resolved.merge.dialog.title:
   text: Apply Changes
+merge.all.changes.processed.message.text:
+  text: "All changes have been processed.<br><a href=\"\">Save changes and finish merging</a>"
 merge.dialog.resolve.side.with.discard.title:
   text: Accept Changes
 merge.dialog.resolve.side.with.discard.message:

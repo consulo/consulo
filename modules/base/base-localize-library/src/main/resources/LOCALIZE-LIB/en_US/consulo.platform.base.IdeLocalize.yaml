@@ -2551,3 +2551,31 @@ action.DumbAware.BuildView.text.stop:
   text: BuildView
 action.DumbAware.CopyrightProfilesPanel.description.stop:
   text: Stop
+action.ToggleAction.text.toggle.view:
+  text: Toggle View
+action.ToggleAction.text.filter:
+  text: Filter
+file.encoding.option.global.encoding:
+  text: Global Encoding
+file.encoding.option.project.encoding:
+  text: Project Encoding
+file.encoding.option.encoding.column:
+  text: Encoding
+file.encoding.option.path.column:
+  text: Path
+file.encoding.option.properties.files:
+  text: Properties Files (*.properties)
+file.encoding.option.create.utf8.files:
+  text: Create UTF-8 files:
+file.encoding.option.warning.always:
+  text: "<html> {0} will add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>"
+file.encoding.option.warning.never:
+  text: "<html> {0} will NOT add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>"
+file.encoding.option.warning.windows.only:
+  text: "<html> {0} will add <a>UTF-8 BOM</a> to every created UTF-8 file only when it's running under Windows.</html>"
+handle.ro.file.status.type.using.file.system:
+  text: using file system
+handle.ro.file.status.failed:
+  text: "<html>Failed to change read-only status for the following files:<br>{0}</html>"
+dialog.title.clear.read.only.file.status:
+  text: Clear Read-Only Status
