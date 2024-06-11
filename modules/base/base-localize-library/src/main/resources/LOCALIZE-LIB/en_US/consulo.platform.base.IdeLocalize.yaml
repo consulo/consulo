@@ -2566,7 +2566,7 @@ file.encoding.option.path.column:
 file.encoding.option.properties.files:
   text: Properties Files (*.properties)
 file.encoding.option.create.utf8.files:
-  text: Create UTF-8 files:
+  text: "Create UTF-8 files:"
 file.encoding.option.warning.always:
   text: "<html> {0} will add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>"
 file.encoding.option.warning.never:
