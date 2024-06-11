@@ -71,7 +71,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
       if (order.first()) {
         first.add(o);
       }
-      
+
       if (!order.before().isEmpty()) {
         hasBefore.add(o);
       }
@@ -196,5 +196,9 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
     String getOrderId();
 
     LoadingOrder getOrder();
+
+    default Object getObjectValue() {
+      return null;
+    }
   }
 }

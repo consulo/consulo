@@ -16,6 +16,7 @@
 package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.util.ModificationTracker;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -23,9 +24,9 @@ import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ControlFlowException;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
@@ -79,12 +80,18 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
   }
 
   /**
+   * Sort extensions depends on @{@link ExtensionImpl#order()} - internal logic
+   */
+  @Nonnull
+  default List<E> sort(List<E> extensionsList) {
+    return extensionsList;
+  }
+
+  /**
    * Return cache or build it. This cache will be dropped if extensions reloaded (for example plugin added/removed)
    */
   @Nonnull
-  default <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key) {
-    return key.getFactory().apply(this::forEachExtensionSafe);
-  }
+  <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<E, K> key);
 
   @Nonnull
   default <V extends E> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {

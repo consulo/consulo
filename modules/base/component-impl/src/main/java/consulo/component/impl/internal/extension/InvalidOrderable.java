@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.extension;
+package consulo.component.impl.internal.extension;
 
-import jakarta.annotation.Nonnull;
-
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import jakarta.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 20/04/2023
+ * @since 11-Jun-24
  */
-public interface ExtensionWalker<E> {
-  void walk(@Nonnull Consumer<E> consumer);
+public class InvalidOrderable<K> implements LoadingOrder.Orderable {
+  private final K myValue;
 
-  /**
-   * @see ExtensionPoint#sort(List)
-   */
-  @Nonnull
-  Function<List<E>, List<E>> sorter();
+  public InvalidOrderable(K value) {
+    myValue = value;
+  }
+
+  public K getValue() {
+    return myValue;
+  }
+
+  @Override
+  public Object getObjectValue() {
+    return myValue;
+  }
+
+  @Nullable
+  @Override
+  public String getOrderId() {
+    return null;
+  }
+
+  @Override
+  public LoadingOrder getOrder() {
+    return LoadingOrder.ANY;
+  }
 }

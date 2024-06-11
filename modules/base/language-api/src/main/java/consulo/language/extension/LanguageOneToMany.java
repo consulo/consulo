@@ -17,12 +17,9 @@ package consulo.language.extension;
 
 import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
-import consulo.util.collection.ContainerUtil;
-
 import jakarta.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -36,39 +33,34 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
 
     private final boolean myWithAnyLanguage;
 
+    private final Map<Language, List<T>> myRawExtension = new HashMap<>();
+    private final Function<List<T>, List<T>> mySorter;
+
     public ByLanguageValueImpl(ExtensionWalker<T> walker, boolean withAnyLanguage) {
       myWithAnyLanguage = withAnyLanguage;
-
-      walker.walk(extension -> myExtensions.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
+      mySorter = walker.sorter();
+      walker.walk(extension -> myRawExtension.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
     }
 
     @Nonnull
     @Override
-    public List<T> get(@Nonnull Language language) {
-      List<T> extension = myExtensions.get(language);
-      if (extension != null) {
-        return joinAny(language, extension);
-      }
-
-      Language base = language;
-      while ((base = base.getBaseLanguage()) != null) {
-        List<T> baseExtension = myExtensions.get(base);
-        if (baseExtension != null) {
-          myExtensions.put(language, baseExtension);
-          return joinAny(language, baseExtension);
+    public List<T> get(@Nonnull Language l) {
+      return myExtensions.computeIfAbsent(l, language -> {
+        Set<T> allExtensions = new HashSet<>();
+        // add any
+        if (myWithAnyLanguage) {
+          allExtensions.addAll(myRawExtension.getOrDefault(Language.ANY, List.of()));
         }
-      }
-      
-      return joinAny(language, List.of());
-    }
 
-    private List<T> joinAny(Language language, List<T> result) {
-      if (!myWithAnyLanguage || language == Language.ANY) {
-        return result;
-      }
+        allExtensions.addAll(myRawExtension.getOrDefault(language, List.of()));
 
-      List<T> anyExtensions = get(Language.ANY);
-      return ContainerUtil.concat(result, anyExtensions);
+        Language base = language;
+        while ((base = base.getBaseLanguage()) != null) {
+          allExtensions.addAll(myRawExtension.getOrDefault(base, List.of()));
+        }
+
+        return mySorter.apply(new ArrayList<>(allExtensions));
+      });
     }
   }
 

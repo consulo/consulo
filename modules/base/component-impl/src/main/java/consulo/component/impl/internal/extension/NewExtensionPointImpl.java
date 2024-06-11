@@ -17,7 +17,6 @@ package consulo.component.impl.internal.extension;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -25,28 +24,26 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.extension.ExtensionWalker;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.component.internal.ExtensionInstanceRef;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingContainer;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -55,60 +52,6 @@ import java.util.function.Consumer;
 public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
   private static final Logger LOG = Logger.getInstance(NewExtensionPointImpl.class);
 
-  private static class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
-    private final String myOrderId;
-    private final Pair<K, PluginDescriptor> myValue;
-
-    private LoadingOrder myLoadingOrder;
-
-    private ExtensionImplOrderable(Pair<K, PluginDescriptor> value) {
-      myValue = value;
-
-      K extensionImpl = myValue.getFirst();
-      Class<?> extensionImplClass = extensionImpl.getClass();
-
-      ExtensionImpl extensionImplAnnotation = extensionImplClass.getAnnotation(ExtensionImpl.class);
-      // extension impl can be null if extension added by ExtensionExtender
-      if (extensionImplAnnotation != null) {
-        myOrderId =
-          StringUtil.isEmptyOrSpaces(extensionImplAnnotation.id()) ? extensionImplClass.getSimpleName() : extensionImplAnnotation.id();
-        myLoadingOrder = LoadingOrder.readOrder(extensionImplAnnotation.order());
-      }
-      else {
-        myOrderId = extensionImplClass.getSimpleName();
-        myLoadingOrder = LoadingOrder.ANY;
-      }
-    }
-
-    protected void reportFirstLastRestriction(@Nonnull PluginDescriptor apiPlugin) {
-      // we allow it in platform impl
-      if (PluginIds.isPlatformPlugin(myValue.getValue().getPluginId())) {
-        return;
-      }
-
-      if (myLoadingOrder == LoadingOrder.FIRST || myLoadingOrder == LoadingOrder.LAST) {
-        if (apiPlugin.getPluginId() != myValue.getValue().getPluginId()) {
-          LOG.error("Usage order [first, last] is restricted for owner plugin impl only. Class: %s, Plugin: %s, Owner Plugin: %s"
-                      .formatted(myValue.getKey().toString(),
-                                 myValue.getValue().getPluginId().getIdString(),
-                                 apiPlugin.getPluginId().getIdString()));
-          myLoadingOrder = LoadingOrder.ANY;
-        }
-      }
-    }
-
-    @Nullable
-    @Override
-    public String getOrderId() {
-      return myOrderId;
-    }
-
-    @Override
-    public LoadingOrder getOrder() {
-      return myLoadingOrder;
-    }
-  }
-
   private static class CacheValue<K> {
     final List<Pair<K, PluginDescriptor>> myExtensionCache;
     final List<K> myUnwrapExtensionCache;
@@ -116,7 +59,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     private CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<InjectingBinding> injectingBindings) {
       myExtensionCache = extensionCache;
-      myUnwrapExtensionCache = extensionCache == null ? null : new UnwrapList<K>(extensionCache);
+      myUnwrapExtensionCache = extensionCache == null ? null : new UnwrapList<>(extensionCache);
       myInjectingBindings = injectingBindings;
     }
   }
@@ -186,6 +129,29 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     myHasAnyExtension = null;
   }
 
+  @Nonnull
+  @Override
+  public List<T> sort(List<T> extensionsList) {
+    return sortImpl(extensionsList);
+  }
+
+  @Nonnull
+  @SuppressWarnings("unchecked")
+  private static <K> List<K> sortImpl(List<K> extensionsList) {
+    List<LoadingOrder.Orderable> orders = new ArrayList<>(extensionsList.size());
+    for (K extension : extensionsList) {
+      PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
+      if (plugin == null) {
+        orders.add(new InvalidOrderable<>(extension));
+      }
+      else {
+        orders.add(new ExtensionImplOrderable<>(Pair.create(extension, plugin)));
+      }
+    }
+    LoadingOrder.sort(orders);
+    return orders.stream().map(orderable -> (K)orderable.getObjectValue()).toList();
+  }
+
   @Nullable
   @Override
   @SuppressWarnings("unchecked")
@@ -212,7 +178,18 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
     }
 
-    return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(this::forEachExtensionSafe));
+    return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
+      @Override
+      public void walk(@Nonnull Consumer<T> consumer) {
+        forEachExtensionSafe(consumer);
+      }
+
+      @Nonnull
+      @Override
+      public Function<List<T>, List<T>> sorter() {
+        return NewExtensionPointImpl::sortImpl;
+      }
+    }));
   }
 
   @SuppressWarnings("unchecked")
@@ -317,13 +294,12 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     // set new order
     for (int i = 0; i < orders.size(); i++) {
-      extensions.set(i, orders.get(i).myValue);
+      extensions.set(i, orders.get(i).getValue());
     }
 
     Pair[] array = extensions.toArray(new Pair[extensions.size()]);
     return List.of(array);
   }
-
 
   @Override
   @SuppressWarnings("unchecked")
