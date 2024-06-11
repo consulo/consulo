@@ -46,6 +46,8 @@ error.report.new.eap.build.message:
   text: New build {0} is available.
 error.report.sending.failure:
   text: Sending failed. Do you want to try again?
+error.report.update.required.message:
+  text: Error report rejected. Update required
 error.list.message.info:
   text: '{0}. Occurred {1,choice,1#once|2#{1} times} since the last clear.'
 error.list.message.unread:

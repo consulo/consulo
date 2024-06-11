@@ -168,6 +168,10 @@ action.next.message:
   text: Next Message
 action.previous.message:
   text: Previous Message
+action.next.problem:
+  text: Next Problem
+action.previous.problem:
+  text: Previous Problem
 action.stop:
   text: Stop
 errortree.prefix.line:
@@ -2541,3 +2545,9 @@ web.search.label.layout:
   text: Web Search
 checksum.failed:
   text: Checksum mismatch. Try again later
+message.path.to.fqn.has.been.copied:
+  text: "''{0}'' has been copied."
+action.DumbAware.BuildView.text.stop:
+  text: BuildView
+action.DumbAware.CopyrightProfilesPanel.description.stop:
+  text: Stop

@@ -58,6 +58,10 @@ merge.editor.insert.operation.name:
   text: Insert
 merge.editor.remove.operation.name:
   text: Remove
+diff.highlighting.disabled.text:
+  text: Differences highlighting is off
+diff.all.differences.ignored.text:
+  text: Differences ignored
 diff.count.differences.status.text:
   text: '{0, choice, 0#no differences|1#1 difference|2#{0, number} differences}'
 cant.launch.diff.tool.error.message:
@@ -116,6 +120,14 @@ merge.dialog.exit.without.applying.changes.confirmation.message:
   text: Are you sure you want to exit without applying changes?
 cancel.visual.merge.dialog.title:
   text: Cancel Visual Merge
+apply.somehow.status.message.all.applied:
+  text: All hunks resolved
+apply.somehow.status.message.already.applied:
+  text: "{0, number} {0, choice, 1#hunk is|2#hunks are} already applied"
+apply.somehow.status.message.cant.apply:
+  text: "Cannot apply {0, number} {0, choice, 1#hunk|2#hunks}"
+apply.somehow.status.message.cant.apply.some:
+  text: "Cannot apply {0, number} of {1, number} hunks"
 merge.dialog.apply.partially.resolved.changes.confirmation.message:
   text: |-
     There are {0, choice, 0#|1#one change|2#{0, number} changes}{0, choice, 0#|1#'{1, choice, 0#|1# and }'}{1, choice, 0#|1#one conflict|2#{1, number} conflicts} left unprocessed.
