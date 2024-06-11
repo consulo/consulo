@@ -30,7 +30,7 @@ import java.util.List;
  * @author peter
  */
 public class LookupElementPresentation {
-  private Image myIcon;
+  private Image myIcon = Image.empty(Image.DEFAULT_ICON_SIZE);
   private Image myTypeIcon;
   private boolean myTypeIconRightAligned;
   private String myItemText;
