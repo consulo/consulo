@@ -1940,6 +1940,12 @@ action.Vcs.IncludeAction.description:
   text: Include into commit
 action.openAssertEqualsDiff.text:
   text: View assertEquals Difference
+geView.Include.text:
+  text: Include
+action.UsageView.Rerun.text:
+  text: Rerun
+action.UsageView.Rerun.description:
+  text: Rerun search
 action.UsageView.Include.text:
   text: Include
 action.UsageView.Include.description:
