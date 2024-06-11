@@ -1368,3 +1368,5 @@ editorsearch.in.selection.with.hint:
   text: Search in selection. {0} to search for selected text
 nothing.here:
   text: Nothing Here
+checkbox.show.softwraps.only.for.caret.line.action.text:
+  text: "Soft Wraps: Show for current line only"

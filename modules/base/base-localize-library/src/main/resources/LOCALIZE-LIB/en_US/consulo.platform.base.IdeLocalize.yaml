@@ -2585,3 +2585,5 @@ progress.title.reload.files:
   text: Reload files
 progress.text.reloading.files:
   text: Reloading files...
+checkbox.use.preview.window:
+  text: Navigate to preview

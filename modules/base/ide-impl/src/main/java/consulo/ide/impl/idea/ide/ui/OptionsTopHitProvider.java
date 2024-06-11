@@ -15,21 +15,17 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
-import consulo.annotation.DeprecationInfo;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.ide.SearchTopHitProvider;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
-import consulo.application.ApplicationBundle;
-import consulo.localize.LocalizeValue;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.project.Project;
-import consulo.util.lang.StringUtil;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
-import org.jetbrains.annotations.NonNls;
-
+import consulo.ide.impl.idea.ide.SearchTopHitProvider;
+import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -69,24 +65,6 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
 
   static String message(LocalizeValue message) {
     return StringUtil.stripHtml(message.get(), false);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #message()")
-  static String messageApp(String property) {
-    return StringUtil.stripHtml(ApplicationBundle.message(property), false);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #message()")
-  static String messageIde(String property) {
-    return StringUtil.stripHtml(IdeBundle.message(property), false);
-  }
-
-  @Deprecated
-  @DeprecationInfo("Use #message()")
-  static String messageKeyMap(String property) {
-    return StringUtil.stripHtml(KeyMapBundle.message(property), false);
   }
 
   /*
