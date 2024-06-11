@@ -58,6 +58,10 @@ merge.editor.insert.operation.name:
   text: Insert
 merge.editor.remove.operation.name:
   text: Remove
+diff.highlighting.disabled.text:
+  text: Differences highlighting is off
+diff.all.differences.ignored.text:
+  text: Differences ignored
 diff.count.differences.status.text:
   text: '{0, choice, 0#no differences|1#1 difference|2#{0, number} differences}'
 cant.launch.diff.tool.error.message:
@@ -86,6 +90,10 @@ diff.contents.have.differences.only.in.line.separators.message.text:
   text: Contents have differences only in line separators
 diff.contents.have.differences.only.in.line.separators.or.whitespaces:
   text: Contents have differences only in line separators or whitespaces
+diff.contents.have.differences.only.in.charset.message.text:
+  text: Contents have differences only in encoding
+diff.contents.have.differences.only.in.charset.and.line.separators.message.text:
+  text: Contents have differences only in line separators and encoding
 show.diff.anyway.dialog.message:
   text: Show diff anyway?
 no.differences.dialog.title:
@@ -116,12 +124,24 @@ merge.dialog.exit.without.applying.changes.confirmation.message:
   text: Are you sure you want to exit without applying changes?
 cancel.visual.merge.dialog.title:
   text: Cancel Visual Merge
+apply.somehow.status.message.all.applied:
+  text: All hunks resolved
+apply.somehow.status.message.already.applied:
+  text: "{0, number} {0, choice, 1#hunk is|2#hunks are} already applied"
+apply.somehow.status.message.cant.apply:
+  text: "Cannot apply {0, number} {0, choice, 1#hunk|2#hunks}"
+apply.somehow.status.message.cant.apply.some:
+  text: "Cannot apply {0, number} of {1, number} hunks"
 merge.dialog.apply.partially.resolved.changes.confirmation.message:
-  text: |-
-    There are {0, choice, 0#|1#one change|2#{0, number} changes}{0, choice, 0#|1#'{1, choice, 0#|1# and }'}{1, choice, 0#|1#one conflict|2#{1, number} conflicts} left unprocessed.
-    Are you sure you want to save changes and finish merging?
+  text: "There are {0, choice, 0#|1#one change|2#{0, number} changes}{0, choice, 0#|1#'{1, choice, 0#|1# and }'}{1, choice, 0#|1#one conflict|2#{1, number} conflicts} left unprocessed.\nAre you sure you want to save changes and finish merging?"
+apply.patch.partially.resolved.changes.confirmation.message:
+  text: "There {0, choice, 1#is one hunk|2#are {0, number} hunks} left unprocessed.\nSave changes and finish resolve?"
 apply.partially.resolved.merge.dialog.title:
   text: Apply Changes
+merge.all.changes.processed.message.text:
+  text: "All changes have been processed.<br><a href=\"\">Save changes and finish merging</a>"
+apply.patch.all.changes.processed.message.text:
+  text: "All hunks have been processed.<br><a href=\"\">Save changes and finish resolve</a>"
 merge.dialog.resolve.side.with.discard.title:
   text: Accept Changes
 merge.dialog.resolve.side.with.discard.message:
@@ -176,5 +196,11 @@ merge.color.options.dialog.title:
   text: Merge Color Options
 option.inherit.ignored.color:
   text: Inherit ignored color
+label.default.diff.editor.tab.name:
+  text: Diff
+diff.file.editor.name:
+  text: Diff
 filetype.diff.description:
   text: Diff
+merge.dialog.resolve.change.action.name:
+  text: Resolve

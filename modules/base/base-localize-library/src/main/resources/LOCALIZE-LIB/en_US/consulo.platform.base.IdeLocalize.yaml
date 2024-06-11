@@ -168,6 +168,10 @@ action.next.message:
   text: Next Message
 action.previous.message:
   text: Previous Message
+action.next.problem:
+  text: Next Problem
+action.previous.problem:
+  text: Previous Problem
 action.stop:
   text: Stop
 errortree.prefix.line:
@@ -2218,7 +2222,7 @@ file.encodings.configurable:
 file.encodings.not.configured:
   text: Encodings are not configured
 encodings.dialog.caption:
-  text: <html>To change encoding $productName uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>Built-in file encoding (e.g. JSP, HTML or XML) overrides encoding you specify here.<br>If not specified, files and directories inherit encoding settings from the parent directory or from the Project Encoding.</html>
+  text: "<html>To change encoding {0} uses for a file or directory, click an item and then select encoding from the Default Encoding list.<br><br>\n Built-in file encoding (e.g. JSP, HTML or XML) overrides encoding you specify here.<br>\n If not specified, files and directories inherit encoding settings from the parent directory or from the Project Encoding.</html>"
 encoding.name.system.default:
   text: <System Default>
 quick.lists.presentable.name:
@@ -2541,3 +2545,43 @@ web.search.label.layout:
   text: Web Search
 checksum.failed:
   text: Checksum mismatch. Try again later
+message.path.to.fqn.has.been.copied:
+  text: "''{0}'' has been copied."
+action.DumbAware.BuildView.text.stop:
+  text: BuildView
+action.DumbAware.CopyrightProfilesPanel.description.stop:
+  text: Stop
+action.ToggleAction.text.toggle.view:
+  text: Toggle View
+action.ToggleAction.text.filter:
+  text: Filter
+file.encoding.option.global.encoding:
+  text: Global Encoding
+file.encoding.option.project.encoding:
+  text: Project Encoding
+file.encoding.option.encoding.column:
+  text: Encoding
+file.encoding.option.path.column:
+  text: Path
+file.encoding.option.properties.files:
+  text: Properties Files (*.properties)
+file.encoding.option.create.utf8.files:
+  text: "Create UTF-8 files:"
+file.encoding.option.warning.always:
+  text: "<html> {0} will add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>"
+file.encoding.option.warning.never:
+  text: "<html> {0} will NOT add <a>UTF-8 BOM</a> to every created file in UTF-8 encoding</html>"
+file.encoding.option.warning.windows.only:
+  text: "<html> {0} will add <a>UTF-8 BOM</a> to every created UTF-8 file only when it's running under Windows.</html>"
+handle.ro.file.status.type.using.file.system:
+  text: using file system
+handle.ro.file.status.failed:
+  text: "<html>Failed to change read-only status for the following files:<br>{0}</html>"
+dialog.title.clear.read.only.file.status:
+  text: Clear Read-Only Status
+progress.text.reloading.file:
+  text: Reloading file...
+progress.title.reload.files:
+  text: Reload files
+progress.text.reloading.files:
+  text: Reloading files...

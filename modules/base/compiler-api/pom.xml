@@ -63,4 +63,22 @@
       <version>${project.version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>maven-consulo-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate-localize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
