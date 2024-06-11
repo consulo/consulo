@@ -15,13 +15,14 @@
  */
 package consulo.codeEditor.util;
 
+import consulo.application.WriteAction;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,22 @@ import java.util.List;
  * @since 18-Mar-22
  */
 public class EditorModificationUtil {
+  public static void fillVirtualSpaceUntilCaret(@Nonnull Editor editor) {
+    final LogicalPosition position = editor.getCaretModel().getLogicalPosition();
+    fillVirtualSpaceUntil(editor, position.column, position.line);
+  }
+
+  public static void fillVirtualSpaceUntil(@Nonnull final Editor editor, int columnNumber, int lineNumber) {
+    final int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
+    final String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
+    if (!filler.isEmpty()) {
+      WriteAction.run(() -> {
+        editor.getDocument().insertString(offset, filler);
+        editor.getCaretModel().moveToOffset(offset + filler.length());
+      });
+    }
+  }
+
   @Nonnull
   public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor, @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
     int startLine = Math.max(Math.min(blockStart.line, editor.getDocument().getLineCount() - 1), 0);

@@ -20,6 +20,7 @@ import consulo.language.codeStyle.CoreFormatterUtil;
 import consulo.language.codeStyle.FormattingMode;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.inject.InjectedLanguageManager;
@@ -83,7 +84,7 @@ abstract class CodeStyleManagerRunnable<T> {
 
     PsiElement element = null;
     if (offset != -1) {
-      element = CodeStyleManagerImpl.findElementInTreeWithFormatterEnabled(file, offset);
+      element = CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, offset);
       if (element == null && offset != file.getTextLength()) {
         return defaultValue;
       }
@@ -153,7 +154,8 @@ abstract class CodeStyleManagerRunnable<T> {
   }
 
   private static TextRange getSignificantRange(final PsiFile file, final int offset) {
-    final ASTNode elementAtOffset = SourceTreeToPsiMap.psiElementToTree(CodeStyleManagerImpl.findElementInTreeWithFormatterEnabled(file, offset));
+    final ASTNode elementAtOffset = SourceTreeToPsiMap.psiElementToTree(CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file,
+                                                                                                                                offset));
     if (elementAtOffset == null) {
       int significantRangeStart = CharArrayUtil.shiftBackward(file.getText(), offset - 1, "\n\r\t ");
       return new TextRange(Math.max(significantRangeStart, 0), offset);

@@ -27,7 +27,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
+import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.impl.DebugUtil;

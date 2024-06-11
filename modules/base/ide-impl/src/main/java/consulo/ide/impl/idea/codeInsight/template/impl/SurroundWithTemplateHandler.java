@@ -9,6 +9,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;

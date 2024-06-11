@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 @ExtensionImpl

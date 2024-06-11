@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl.actions;
 
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.ListTemplatesHandler;
+import consulo.language.editor.impl.internal.template.ListTemplatesHandler;
 import jakarta.annotation.Nonnull;
 
 public class ListTemplatesAction extends BaseCodeInsightAction{

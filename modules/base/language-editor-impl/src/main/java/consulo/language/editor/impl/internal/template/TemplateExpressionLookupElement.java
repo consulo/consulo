@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
+import consulo.application.Result;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.disposer.Disposer;
+import consulo.document.util.TextRange;
 import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.completion.CompletionInitializationContext;
-import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.OffsetMap;
-import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
+import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementDecorator;
+import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 import consulo.language.editor.template.TemplateLookupSelectionHandler;
-import consulo.application.Result;
-import consulo.language.editor.WriteCommandAction;
-import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.disposer.Disposer;
-
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
@@ -52,7 +51,8 @@ class TemplateExpressionLookupElement extends LookupElementDecorator<LookupEleme
                                                          List<? extends LookupElement> elements,
                                                          Editor editor, final char completionChar) {
     final OffsetMap offsetMap = new OffsetMap(editor.getDocument());
-    final InsertionContext context = new InsertionContext(offsetMap, completionChar, elements.toArray(new LookupElement[elements.size()]), psiFile, editor, false);
+    final InsertionContext context =
+      new InsertionContext(offsetMap, completionChar, elements.toArray(new LookupElement[elements.size()]), psiFile, editor, false);
     context.setTailOffset(editor.getCaretModel().getOffset());
     offsetMap.addOffset(CompletionInitializationContext.START_OFFSET, context.getTailOffset() - item.getLookupString().length());
     offsetMap.addOffset(CompletionInitializationContext.SELECTION_END_OFFSET, context.getTailOffset());

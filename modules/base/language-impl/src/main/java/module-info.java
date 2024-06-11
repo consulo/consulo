@@ -26,14 +26,18 @@ module consulo.language.impl {
   exports consulo.language.impl.internal.file to consulo.ide.impl, consulo.language.inject.impl;
   exports consulo.language.impl.internal.parser to consulo.ide.impl, consulo.test.impl;
   exports consulo.language.impl.internal.psi to
-          consulo.ide.impl,
-          consulo.test.impl,
-          consulo.component.impl,
-          consulo.language.code.style.api,
-          consulo.language.editor.impl,
-          consulo.language.inject.impl,
-          consulo.util.xml.serializer;
-  exports consulo.language.impl.internal.psi.diff to consulo.ide.impl, consulo.language.inject.impl;
+    consulo.ide.impl,
+    consulo.test.impl,
+    consulo.component.impl,
+    consulo.language.code.style.api,
+    consulo.language.editor.impl,
+    consulo.language.inject.impl,
+    consulo.util.xml.serializer;
+  exports consulo.language.impl.internal.psi.diff to
+    consulo.ide.impl,
+    consulo.language.inject.impl,
+    consulo.language.editor.impl;
+
   exports consulo.language.impl.internal.psi.pointer to consulo.ide.impl, consulo.test.impl, consulo.language.inject.impl;
   exports consulo.language.impl.internal.psi.stub to consulo.ide.impl;
   exports consulo.language.impl.internal.pom to consulo.ide.impl;

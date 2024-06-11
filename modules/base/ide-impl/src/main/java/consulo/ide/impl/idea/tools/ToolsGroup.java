@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.ide.impl.idea.openapi.options.CompoundScheme;
+import consulo.component.persist.scheme.CompoundScheme;
 
 public class ToolsGroup<T extends Tool> extends CompoundScheme<T> {
   public ToolsGroup(final String name) {

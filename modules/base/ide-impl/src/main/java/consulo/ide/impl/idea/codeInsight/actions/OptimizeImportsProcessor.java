@@ -16,16 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.actions;
 
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.refactoring.ImportOptimizer;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -93,7 +93,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
     }
 
     Runnable runnable = !runnables.isEmpty() ? () -> {
-      CodeStyleManagerImpl.setSequentialProcessingAllowed(false);
+      CoreCodeStyleUtil.setSequentialProcessingAllowed(false);
       try {
         for (Runnable runnable1 : runnables) {
           runnable1.run();
@@ -102,7 +102,7 @@ public class OptimizeImportsProcessor extends AbstractLayoutCodeProcessor {
         putNotificationInfoIntoCollector();
       }
       finally {
-        CodeStyleManagerImpl.setSequentialProcessingAllowed(true);
+        CoreCodeStyleUtil.setSequentialProcessingAllowed(true);
       }
     } : EmptyRunnable.getInstance();
 

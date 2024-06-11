@@ -27,6 +27,7 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.psi.BooleanRunnable;
+import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
 import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.diff.BlockSupport;

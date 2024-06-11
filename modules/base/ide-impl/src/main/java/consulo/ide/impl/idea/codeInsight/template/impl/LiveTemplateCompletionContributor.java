@@ -12,6 +12,8 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.impl.internal.template.LiveTemplateLookupElementImpl;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
@@ -32,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.ide.impl.idea.codeInsight.template.impl.ListTemplatesHandler.filterTemplatesByPrefix;
+import static consulo.language.editor.impl.internal.template.ListTemplatesHandler.filterTemplatesByPrefix;
 
 /**
  * @author peter

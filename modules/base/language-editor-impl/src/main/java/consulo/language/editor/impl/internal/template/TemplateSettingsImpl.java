@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.component.persist.*;
-import consulo.component.util.localize.AbstractBundle;
-import consulo.container.classloader.PluginClassLoader;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.component.util.localize.AbstractBundle;
+import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.language.editor.impl.internal.template.TemplateImpl;
 import consulo.language.editor.internal.TemplateConstants;
 import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.language.editor.template.Template;
@@ -36,11 +33,15 @@ import consulo.language.editor.template.TemplateSettings;
 import consulo.logging.Logger;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -48,8 +49,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;

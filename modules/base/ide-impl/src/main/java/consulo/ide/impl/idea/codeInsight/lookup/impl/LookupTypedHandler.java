@@ -18,7 +18,7 @@ import consulo.ide.impl.idea.codeInsight.editorActions.AutoHardWrapHandler;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
 import consulo.language.editor.completion.lookup.CharFilter;
 import consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.language.editor.AutoPopupController;

@@ -31,6 +31,7 @@ import consulo.language.editor.annotation.Annotator;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -114,5 +115,10 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
   @Override
   public int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
     return EnterHandler.adjustLineIndentNoCommit(language, document, editor, offset);
+  }
+
+  @Override
+  public boolean isInlineRefactoringActive(@Nonnull Editor editor) {
+    return editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null;
   }
 }

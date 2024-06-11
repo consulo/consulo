@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.language.editor.template.TemplateManager;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

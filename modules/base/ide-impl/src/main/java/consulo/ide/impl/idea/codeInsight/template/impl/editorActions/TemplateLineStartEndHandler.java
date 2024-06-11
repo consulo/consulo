@@ -23,8 +23,8 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.ExtensionEditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 
 import jakarta.annotation.Nonnull;

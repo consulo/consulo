@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettingsImpl;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.psi.PsiFile;

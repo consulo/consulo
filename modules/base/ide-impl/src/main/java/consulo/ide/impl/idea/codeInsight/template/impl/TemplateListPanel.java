@@ -20,7 +20,10 @@ import consulo.component.persist.scheme.SchemeManager;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.impl.internal.template.TemplateComparator;
+import consulo.language.editor.impl.internal.template.TemplateGroup;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateOptionalProcessor;
 import consulo.language.editor.template.context.TemplateContextType;
@@ -60,7 +63,7 @@ import java.util.*;
 public class TemplateListPanel extends JPanel implements Disposable {
   public static final String ABBREVIATION = "<abbreviation>";
 
-  public static final Comparator<Template> TEMPLATE_COMPARATOR = (o1, o2) -> o1.getKey().compareToIgnoreCase(o2.getKey());
+  public static final Comparator<Template> TEMPLATE_COMPARATOR = TemplateComparator.INSTANCE;
 
   private CheckboxTree myTree;
   private final List<TemplateGroup> myTemplateGroups = new ArrayList<>();

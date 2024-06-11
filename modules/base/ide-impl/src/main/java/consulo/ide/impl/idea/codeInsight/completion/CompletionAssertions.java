@@ -12,6 +12,7 @@ import consulo.language.editor.completion.OffsetMap;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;

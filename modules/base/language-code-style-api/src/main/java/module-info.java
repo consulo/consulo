@@ -27,7 +27,7 @@ module consulo.language.code.style.api {
   exports consulo.language.codeStyle.inject;
   exports consulo.language.codeStyle.lineIndent;
 
-  exports consulo.language.codeStyle.internal to consulo.ide.impl;
+  exports consulo.language.codeStyle.internal to consulo.ide.impl, consulo.language.editor.impl;
 
   opens consulo.language.codeStyle to consulo.util.xml.serializer;
 }

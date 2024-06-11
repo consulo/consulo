@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.refactoring.rename.inplace;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
+import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
+import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;

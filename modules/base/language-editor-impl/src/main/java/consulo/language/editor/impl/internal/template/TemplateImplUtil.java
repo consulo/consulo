@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.language.editor.impl.internal.template.TemplateImpl;
-import consulo.language.editor.impl.internal.template.TemplateTextLexer;
-import consulo.language.editor.impl.internal.template.TemplateTokenType;
-import consulo.language.editor.template.Expression;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.template.macro.MacroParser;
+import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.Variable;
+import consulo.language.editor.template.macro.MacroParser;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 

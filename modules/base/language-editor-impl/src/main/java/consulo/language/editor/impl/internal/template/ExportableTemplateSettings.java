@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,8 +27,8 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 @Deprecated
 @State(
-        name = "ExportableTemplateSettings",
-        storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED)
+  name = "ExportableTemplateSettings",
+  storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/template.settings.xml", roamingType = RoamingType.DISABLED)
 )
 public final class ExportableTemplateSettings implements PersistentStateComponent<ExportableTemplateSettings> {
   public Collection<TemplateSettingsImpl.TemplateKey> deletedKeys = new SmartList<TemplateSettingsImpl.TemplateKey>();

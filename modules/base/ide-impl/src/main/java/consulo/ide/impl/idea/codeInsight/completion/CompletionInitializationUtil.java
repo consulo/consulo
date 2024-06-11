@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.codeInsight.completion;
 
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.util.lang.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.editor.util.PsiUtilBase;

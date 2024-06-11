@@ -1,24 +1,27 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.internal.psi;
 
-import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.psi.ForeignLeafPsiElement;
-import consulo.language.impl.ast.TreeUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
 
 public class ChangedPsiRangeUtil {
-  private static int getLeafMatchingLength(CharSequence leafText, CharSequence pattern, int patternIndex, int finalPatternIndex, int direction) {
+  private static int getLeafMatchingLength(CharSequence leafText,
+                                           CharSequence pattern,
+                                           int patternIndex,
+                                           int finalPatternIndex,
+                                           int direction) {
     int leafIndex = direction == 1 ? 0 : leafText.length() - 1;
     int finalLeafIndex = direction == 1 ? leafText.length() - 1 : 0;
     int result = 0;
@@ -57,7 +60,9 @@ public class ChangedPsiRangeUtil {
   }
 
   @Nullable
-  public static TextRange getChangedPsiRange(@Nonnull PsiFile file, @Nonnull FileElement treeElement, @Nonnull CharSequence newDocumentText) {
+  public static TextRange getChangedPsiRange(@Nonnull PsiFile file,
+                                             @Nonnull FileElement treeElement,
+                                             @Nonnull CharSequence newDocumentText) {
     int psiLength = treeElement.getTextLength();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new TextRange(0, psiLength);
@@ -73,7 +78,10 @@ public class ChangedPsiRangeUtil {
   }
 
   @Nullable
-  static ProperTextRange getChangedPsiRange(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull CharSequence oldDocumentText, @Nonnull CharSequence newDocumentText) {
+  public static ProperTextRange getChangedPsiRange(@Nonnull PsiFile file,
+                                                   @Nonnull Document document,
+                                                   @Nonnull CharSequence oldDocumentText,
+                                                   @Nonnull CharSequence newDocumentText) {
     int psiLength = oldDocumentText.length();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new ProperTextRange(0, psiLength);

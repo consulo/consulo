@@ -89,4 +89,8 @@ public interface LanguageEditorInternalHelper {
   default int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
     return -1;
   }
+
+  default boolean isInlineRefactoringActive(@Nonnull Editor editor) {
+    return false;
+  }
 }

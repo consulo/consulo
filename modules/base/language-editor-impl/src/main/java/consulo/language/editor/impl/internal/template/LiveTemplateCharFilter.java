@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightSettings;

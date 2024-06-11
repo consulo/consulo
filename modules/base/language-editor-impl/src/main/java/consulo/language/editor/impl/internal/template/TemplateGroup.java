@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.ide.impl.idea.openapi.options.CompoundScheme;
-import consulo.language.editor.impl.internal.template.TemplateImpl;
-
+import consulo.component.persist.scheme.CompoundScheme;
 import jakarta.annotation.Nullable;
 
 public class TemplateGroup extends CompoundScheme<TemplateImpl> {

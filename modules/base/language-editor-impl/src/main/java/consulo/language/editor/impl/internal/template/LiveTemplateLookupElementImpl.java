@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.template.LiveTemplateLookupElement;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateManager;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 public class LiveTemplateLookupElementImpl extends LiveTemplateLookupElement {

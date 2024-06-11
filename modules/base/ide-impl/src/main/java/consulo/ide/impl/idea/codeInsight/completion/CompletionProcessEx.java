@@ -8,6 +8,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.OffsetMap;
+import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.project.Project;
 import consulo.language.pattern.ElementPattern;
 import consulo.disposer.Disposable;

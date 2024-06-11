@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.LookupItem;

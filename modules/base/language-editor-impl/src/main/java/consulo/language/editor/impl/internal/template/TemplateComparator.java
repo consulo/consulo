@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2024 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
+package consulo.language.editor.impl.internal.template;
 
-import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
-import consulo.codeEditor.action.EditorAction;
+import consulo.language.editor.template.Template;
+
+import java.util.Comparator;
 
 /**
- * @author peter
+ * @author VISTALL
+ * @since 11-Jun-24
  */
-public class ExpandLiveTemplateByTabAction extends EditorAction {
-  public ExpandLiveTemplateByTabAction() {
-    super(ExpandLiveTemplateCustomAction.createExpandTemplateHandler(TemplateSettingsImpl.TAB_CHAR));
-    setInjectedContext(true);
+public class TemplateComparator implements Comparator<Template> {
+  public static final TemplateComparator INSTANCE = new TemplateComparator();
+
+  @Override
+  public int compare(Template o1, Template o2) {
+    return o1.getKey().compareToIgnoreCase(o2.getKey());
   }
 }

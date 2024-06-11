@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.completion;
+package consulo.language.editor.impl.internal.completion;
 
-import consulo.language.editor.completion.OffsetMap;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.document.impl.DocumentImpl;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.document.impl.DocumentImpl;
 import consulo.document.util.TextRange;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
-import consulo.language.impl.internal.psi.diff.DiffLog;
+import consulo.language.editor.completion.OffsetMap;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.ast.FileElement;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.impl.internal.psi.ChangedPsiRangeUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
+import consulo.language.impl.internal.psi.diff.DiffLog;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.PsiFile;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 
 /**

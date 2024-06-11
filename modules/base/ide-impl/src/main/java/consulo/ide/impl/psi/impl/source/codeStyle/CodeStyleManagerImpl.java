@@ -21,16 +21,15 @@ import consulo.ide.impl.psi.codeStyle.IndentOld;
 import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedIndentAdjuster;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
-import consulo.language.CompositeLanguage;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.util.PsiUtilBase;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
-import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
@@ -40,38 +39,30 @@ import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.psi.*;
-import consulo.language.util.CharTable;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.lang.Pair;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Singleton
 @ServiceImpl
 public class CodeStyleManagerImpl extends CodeStyleManager implements FormattingModeAwareIndentAdjuster {
   private static final Logger LOG = Logger.getInstance(CodeStyleManagerImpl.class);
-  private static final ThreadLocal<ProcessingUnderProgressInfo> SEQUENTIAL_PROCESSING_ALLOWED =
-    ThreadLocal.withInitial(() -> new ProcessingUnderProgressInfo());
 
   private final ThreadLocal<FormattingMode> myCurrentFormattingMode = ThreadLocal.withInitial(() -> FormattingMode.REFORMAT);
 
   private final Project myProject;
-  @NonNls
-  private static final String DUMMY_IDENTIFIER = "xxx";
 
   @Inject
   public CodeStyleManagerImpl(Project project) {
@@ -242,8 +233,8 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
     List<RangeFormatInfo> infos = new ArrayList<>();
     for (TextRange range : ranges.getTextRanges()) {
-      final PsiElement start = findElementInTreeWithFormatterEnabled(file, range.getStartOffset());
-      final PsiElement end = findElementInTreeWithFormatterEnabled(file, range.getEndOffset());
+      final PsiElement start = CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, range.getStartOffset());
+      final PsiElement end = CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, range.getEndOffset());
       if (start != null && !start.isValid()) {
         LOG.error("start=" + start + "; file=" + file);
       }
@@ -282,7 +273,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
       final int rangeStart = range.getStartOffset();
       final int rangeEnd = range.getEndOffset();
 
-      PsiElement lastElementInRange = findElementInTreeWithFormatterEnabled(file, rangeEnd);
+      PsiElement lastElementInRange = CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, rangeEnd);
       if (lastElementInRange instanceof PsiWhiteSpace && rangeStart < lastElementInRange.getTextRange().getStartOffset()) {
         PsiElement prev = lastElementInRange.getPrevSibling();
         if (prev != null) {
@@ -353,21 +344,6 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
                                         .disablePostprocessFormattingInside(() -> doAdjustLineIndentByOffset(file,
                                                                                                              offset,
                                                                                                              FormattingMode.ADJUST_INDENT));
-  }
-
-  @Nullable
-  static PsiElement findElementInTreeWithFormatterEnabled(final PsiFile file, final int offset) {
-    final PsiElement bottomost = file.findElementAt(offset);
-    if (bottomost != null && FormattingModelBuilder.forContext(bottomost) != null) {
-      return bottomost;
-    }
-
-    final Language fileLang = file.getLanguage();
-    if (fileLang instanceof CompositeLanguage) {
-      return file.getViewProvider().findElementAt(offset, fileLang);
-    }
-
-    return bottomost;
   }
 
   @Override
@@ -466,7 +442,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     if (end >= chars.length()) {
       return false;
     }
-    ASTNode element = SourceTreeToPsiMap.psiElementToTree(findElementInTreeWithFormatterEnabled(file, end));
+    ASTNode element = SourceTreeToPsiMap.psiElementToTree(CoreCodeStyleUtil.findElementInTreeWithFormatterEnabled(file, end));
     if (element == null) {
       return false;
     }
@@ -501,113 +477,6 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return false;
   }
 
-  private static boolean isWhiteSpaceSymbol(char c) {
-    return c == ' ' || c == '\t' || c == '\n';
-  }
-
-  /**
-   * Formatter trims line that contains white spaces symbols only, however, there is a possible case that we want
-   * to preserve them for particular line
-   * (e.g. for live template that defines line with whitespaces that contains $END$ marker: templateText   $END$).
-   * <p/>
-   * Current approach is to do the following:
-   * <pre>
-   * <ol>
-   *   <li>Insert dummy text at the end of the blank line which white space symbols should be preserved;</li>
-   *   <li>Perform formatting;</li>
-   *   <li>Remove dummy text;</li>
-   * </ol>
-   * </pre>
-   * <p/>
-   * This method inserts that dummy comment (fallback to identifier {@code xxx}, see {@link CodeStyleManagerImpl#createDummy(PsiFile)})
-   * if necessary.
-   * <p/>
-   *
-   * <b>Note:</b> it's expected that the whole white space region that contains given offset is processed in a way that all
-   * {@link RangeMarker range markers} registered for the given offset are expanded to the whole white space region.
-   * E.g. there is a possible case that particular range marker serves for defining formatting range, hence, its start/end offsets
-   * are updated correspondingly after current method call and whole white space region is reformatted.
-   *
-   * @param file     target PSI file
-   * @param document target document
-   * @param offset   offset that defines end boundary of the target line text fragment (start boundary is the first line's symbol)
-   * @return text range that points to the newly inserted dummy text if any; {@code null} otherwise
-   * @throws IncorrectOperationException if given file is read-only
-   */
-  @Nullable
-  public static TextRange insertNewLineIndentMarker(@Nonnull PsiFile file, @Nonnull Document document, int offset) {
-    CharSequence text = document.getImmutableCharSequence();
-    if (offset <= 0 || offset >= text.length() || !isWhiteSpaceSymbol(text.charAt(offset))) {
-      return null;
-    }
-
-    if (!isWhiteSpaceSymbol(text.charAt(offset - 1))) {
-      return null; // no whitespaces before offset
-    }
-
-    int end = offset;
-    for (; end < text.length(); end++) {
-      if (text.charAt(end) == '\n') {
-        break; // line is empty till the end
-      }
-      if (!isWhiteSpaceSymbol(text.charAt(end))) {
-        return null;
-      }
-    }
-
-    setSequentialProcessingAllowed(false);
-    String dummy = createDummy(file);
-    document.insertString(offset, dummy);
-    return new TextRange(offset, offset + dummy.length());
-  }
-
-  @Nonnull
-  private static String createDummy(@Nonnull PsiFile file) {
-    Language language = file.getLanguage();
-    PsiComment comment = null;
-    try {
-      comment = PsiParserFacade.SERVICE.getInstance(file.getProject()).createLineOrBlockCommentFromText(language, "");
-    }
-    catch (Throwable ignored) {
-    }
-    String text = comment != null ? comment.getText() : null;
-    return text != null ? text : DUMMY_IDENTIFIER;
-  }
-
-  /**
-   * Allows to check if given offset points to white space element within the given PSI file and return that white space
-   * element in the case of positive answer.
-   *
-   * @param file   target file
-   * @param offset offset that might point to white space element within the given PSI file
-   * @return target white space element for the given offset within the given file (if any); {@code null} otherwise
-   */
-  @Nullable
-  public static PsiElement findWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
-    return doFindWhiteSpaceNode(file, offset).first;
-  }
-
-  @Nonnull
-  private static Pair<PsiElement, CharTable> doFindWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
-    ASTNode astNode = SourceTreeToPsiMap.psiElementToTree(file);
-    if (!(astNode instanceof FileElement)) {
-      return new Pair<>(null, null);
-    }
-    PsiElement elementAt = InjectedLanguageManager.getInstance(file.getProject()).findInjectedElementAt(file, offset);
-    final CharTable charTable = ((FileElement)astNode).getCharTable();
-    if (elementAt == null) {
-      elementAt = findElementInTreeWithFormatterEnabled(file, offset);
-    }
-
-    if (elementAt == null) {
-      return new Pair<>(null, charTable);
-    }
-    ASTNode node = elementAt.getNode();
-    if (node == null || node.getElementType() != TokenType.WHITE_SPACE) {
-      return new Pair<>(null, charTable);
-    }
-    return Pair.create(elementAt, charTable);
-  }
 
   public IndentOld getIndent(String text, FileType fileType) {
     int indent = IndentHelperImpl.getIndent(CodeStyle.getSettings(myProject).getIndentOptions(fileType), text, true);
@@ -652,53 +521,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public boolean isSequentialProcessingAllowed() {
-    return SEQUENTIAL_PROCESSING_ALLOWED.get().isAllowed();
-  }
-
-  /**
-   * Allows to define if {@link #isSequentialProcessingAllowed() sequential processing} should be allowed.
-   * <p/>
-   * Current approach is not allow to stop sequential processing for more than predefine amount of time (couple of seconds).
-   * That means that call to this method with {@code 'true'} argument is not mandatory for successful processing even
-   * if this method is called with {@code 'false'} argument before.
-   *
-   * @param allowed flag that defines if {@link #isSequentialProcessingAllowed() sequential processing} should be allowed
-   */
-  public static void setSequentialProcessingAllowed(boolean allowed) {
-    ProcessingUnderProgressInfo info = SEQUENTIAL_PROCESSING_ALLOWED.get();
-    if (allowed) {
-      info.decrement();
-    }
-    else {
-      info.increment();
-    }
-  }
-
-  private static class ProcessingUnderProgressInfo {
-
-    private static final long DURATION_TIME = TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS);
-
-    private int myCount;
-    private long myEndTime;
-
-    public void increment() {
-      if (myCount > 0 && System.currentTimeMillis() > myEndTime) {
-        myCount = 0;
-      }
-      myCount++;
-      myEndTime = System.currentTimeMillis() + DURATION_TIME;
-    }
-
-    public void decrement() {
-      if (myCount <= 0) {
-        return;
-      }
-      myCount--;
-    }
-
-    public boolean isAllowed() {
-      return myCount <= 0 || System.currentTimeMillis() >= myEndTime;
-    }
+    return CoreCodeStyleUtil.isSequentialProcessingAllowed();
   }
 
   @Override

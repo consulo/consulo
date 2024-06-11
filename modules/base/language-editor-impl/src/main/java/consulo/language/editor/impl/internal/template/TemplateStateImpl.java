@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
@@ -27,6 +27,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposer;
@@ -39,10 +40,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.WriteCommandAction;
@@ -53,8 +50,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
-import consulo.language.editor.impl.internal.template.TemplateImpl;
-import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.editor.template.macro.MacroCallNode;
@@ -73,16 +69,19 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.event.CommandAdapter;
 import consulo.undoRedo.event.CommandEvent;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 
@@ -112,7 +111,7 @@ public class TemplateStateImpl implements TemplateState {
   @Nullable
   private LookupListener myLookupListener;
 
-  private final List<TemplateEditingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<TemplateEditingListener> myListeners = Lists.newLockFreeCopyOnWriteList();
   private DocumentAdapter myEditorDocumentListener;
   private final Map myProperties = new HashMap();
   private boolean myTemplateIndented = false;
@@ -361,7 +360,9 @@ public class TemplateStateImpl implements TemplateState {
     }
   }
 
-  public void start(@Nonnull TemplateImpl template, @Nullable final BiPredicate<String, String> processor, @Nullable Map<String, String> predefinedVarValues) {
+  public void start(@Nonnull TemplateImpl template,
+                    @Nullable final BiPredicate<String, String> processor,
+                    @Nullable Map<String, String> predefinedVarValues) {
     LOG.assertTrue(!myStarted, "Already started");
     myStarted = true;
 
@@ -370,7 +371,8 @@ public class TemplateStateImpl implements TemplateState {
 
     myProcessor = processor;
 
-    DocumentReference[] refs = myDocument != null ? new DocumentReference[]{DocumentReferenceManager.getInstance().create(myDocument)} : null;
+    DocumentReference[] refs =
+      myDocument != null ? new DocumentReference[]{DocumentReferenceManager.getInstance().create(myDocument)} : null;
     ProjectUndoManager.getInstance(myProject).undoableActionPerformed(new BasicUndoableAction(refs) {
       @Override
       public void undo() {
@@ -421,9 +423,9 @@ public class TemplateStateImpl implements TemplateState {
   }
 
   private void preprocessTemplate(final PsiFile file, int caretOffset, final String textToInsert) {
-    for (TemplatePreprocessor preprocessor : TemplatePreprocessor.EP_NAME.getExtensionList()) {
+    myProject.getApplication().getExtensionPoint(TemplatePreprocessor.class).forEachExtensionSafe(preprocessor -> {
       preprocessor.preprocessTemplate(myEditor, file, caretOffset, textToInsert, myTemplate.getTemplateText());
-    }
+    });
   }
 
   private void processAllExpressions(@Nonnull final TemplateImpl template) {
@@ -560,7 +562,8 @@ public class TemplateStateImpl implements TemplateState {
     String variableName = myTemplate.getVariableNameAt(varNumber);
     int segmentNumber = myTemplate.getVariableSegmentNumber(variableName);
     if (segmentNumber < 0) {
-      LOG.error("No segment for variable: var=" + varNumber + "; name=" + variableName + "; " + presentTemplate(myTemplate) + "; offset: " + myEditor.getCaretModel().getOffset(),
+      LOG.error("No segment for variable: var=" + varNumber + "; name=" + variableName + "; " + presentTemplate(myTemplate) + "; offset: " + myEditor.getCaretModel()
+                                                                                                                                                     .getOffset(),
                 AttachmentFactoryUtil.createAttachment(myDocument));
     }
     return segmentNumber;
@@ -613,7 +616,10 @@ public class TemplateStateImpl implements TemplateState {
         try {
           Result result = expressionNode.calculateResult(getCurrentExpressionContext());
           if (result != null) {
-            result.handleFocused(psiFile, myDocument, mySegments.getSegmentStart(currentSegmentNumber), mySegments.getSegmentEnd(currentSegmentNumber));
+            result.handleFocused(psiFile,
+                                 myDocument,
+                                 mySegments.getSegmentStart(currentSegmentNumber),
+                                 mySegments.getSegmentEnd(currentSegmentNumber));
           }
         }
         catch (IndexNotReadyException ignore) {
@@ -638,7 +644,7 @@ public class TemplateStateImpl implements TemplateState {
     LookupElement[] elements = getCurrentExpression().calculateLookupItems(getCurrentExpressionContext());
     if (elements == null) return Collections.emptyList();
 
-    List<TemplateExpressionLookupElement> result = ContainerUtil.newArrayList();
+    List<TemplateExpressionLookupElement> result = new ArrayList<>();
     for (int i = 0; i < elements.length; i++) {
       result.add(new TemplateExpressionLookupElement(this, elements[i], i));
     }
@@ -661,7 +667,7 @@ public class TemplateStateImpl implements TemplateState {
     final LookupEx lookup = lookupManager.showLookup(myEditor, lookupItems.toArray(new LookupElement[lookupItems.size()]));
     if (lookup == null) return;
 
-    if (CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && myEditor.getUserData(InplaceRefactoring.INPLACE_RENAMER) == null) {
+    if (CodeInsightSettings.getInstance().AUTO_POPUP_COMPLETION_LOOKUP && !LanguageEditorInternalHelper.getInstance().isInlineRefactoringActive(myEditor)) {
       lookup.setStartCompletionWhenNothingMatches(true);
     }
 
@@ -728,7 +734,8 @@ public class TemplateStateImpl implements TemplateState {
           final Expression expression = myTemplate.getExpressionAt(i);
           final Expression defaultValue = myTemplate.getDefaultValueAt(i);
           String oldValue = getVariableValueText(variableName);
-          DumbService.getInstance(myProject).withAlternativeResolveEnabled(() -> recalcSegment(segmentNumber, isQuick, expression, defaultValue));
+          DumbService.getInstance(myProject)
+                     .withAlternativeResolveEnabled(() -> recalcSegment(segmentNumber, isQuick, expression, defaultValue));
           final TextResult value = getVariableValue(variableName);
           assert value != null : "name=" + variableName + "\ntext=" + myTemplate.getTemplateText();
           String newValue = value.getText();
@@ -853,9 +860,9 @@ public class TemplateStateImpl implements TemplateState {
 
     // do not update default value of neighbour segment
     if (resultIsNullOrEmpty &&
-        myCurrentSegmentNumber >= 0 &&
-        (mySegments.getSegmentStart(segmentNumber) == mySegments.getSegmentEnd(myCurrentSegmentNumber) ||
-         mySegments.getSegmentEnd(segmentNumber) == mySegments.getSegmentStart(myCurrentSegmentNumber))) {
+      myCurrentSegmentNumber >= 0 &&
+      (mySegments.getSegmentStart(segmentNumber) == mySegments.getSegmentEnd(myCurrentSegmentNumber) ||
+        mySegments.getSegmentEnd(segmentNumber) == mySegments.getSegmentStart(myCurrentSegmentNumber))) {
       return;
     }
     if (defaultValue != null && resultIsNullOrEmpty) {
@@ -872,7 +879,10 @@ public class TemplateStateImpl implements TemplateState {
       IntList indices = initEmptyVariables();
       shortenReferences();
       PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
-      ((RecalculatableResult)result).handleRecalc(psiFile, myDocument, mySegments.getSegmentStart(segmentNumber), mySegments.getSegmentEnd(segmentNumber));
+      ((RecalculatableResult)result).handleRecalc(psiFile,
+                                                  myDocument,
+                                                  mySegments.getSegmentStart(segmentNumber),
+                                                  mySegments.getSegmentEnd(segmentNumber));
       restoreEmptyVariables(indices);
     }
   }
@@ -880,7 +890,8 @@ public class TemplateStateImpl implements TemplateState {
   private void replaceString(String newValue, int start, int end, int segmentNumber) {
     TextRange range = TextRange.create(start, end);
     if (!TextRange.from(0, myDocument.getCharsSequence().length()).contains(range)) {
-      LOG.error("Diagnostic for EA-54980. Can't extract " + range + " range. " + presentTemplate(myTemplate), AttachmentFactoryUtil.createAttachment(myDocument));
+      LOG.error("Diagnostic for EA-54980. Can't extract " + range + " range. " + presentTemplate(myTemplate),
+                AttachmentFactoryUtil.createAttachment(myDocument));
     }
     String oldText = range.subSequence(myDocument.getCharsSequence()).toString();
 
@@ -1060,7 +1071,8 @@ public class TemplateStateImpl implements TemplateState {
     if (brokenOff && !((TemplateManagerImpl)TemplateManager.getInstance(myProject)).shouldSkipInTests()) return;
 
     int selectionSegment = myTemplate.getVariableSegmentNumber(TemplateImpl.SELECTION);
-    int endSegmentNumber = selectionSegment >= 0 && getSelectionBeforeTemplate() == null ? selectionSegment : myTemplate.getEndSegmentNumber();
+    int endSegmentNumber =
+      selectionSegment >= 0 && getSelectionBeforeTemplate() == null ? selectionSegment : myTemplate.getEndSegmentNumber();
     int offset = -1;
     if (endSegmentNumber >= 0) {
       offset = mySegments.getSegmentStart(endSegmentNumber);
@@ -1223,7 +1235,12 @@ public class TemplateStateImpl implements TemplateState {
 
     int start = mySegments.getSegmentStart(segmentNumber);
     int end = mySegments.getSegmentEnd(segmentNumber);
-    RangeHighlighter segmentHighlighter = myEditor.getMarkupModel().addRangeHighlighter(start, end, HighlighterLayer.LAST + 1, isEnd ? endAttributes : attributes, HighlighterTargetArea.EXACT_RANGE);
+    RangeHighlighter segmentHighlighter = myEditor.getMarkupModel()
+                                                  .addRangeHighlighter(start,
+                                                                       end,
+                                                                       HighlighterLayer.LAST + 1,
+                                                                       isEnd ? endAttributes : attributes,
+                                                                       HighlighterTargetArea.EXACT_RANGE);
     segmentHighlighter.setGreedyToLeft(true);
     segmentHighlighter.setGreedyToRight(true);
     return segmentHighlighter;
@@ -1274,7 +1291,7 @@ public class TemplateStateImpl implements TemplateState {
           int endVarOffset = -1;
           if (endSegmentNumber >= 0) {
             endVarOffset = mySegments.getSegmentStart(endSegmentNumber);
-            TextRange range = CodeStyleManagerImpl.insertNewLineIndentMarker(file, myDocument, endVarOffset);
+            TextRange range = TemplateCodeStyleHelper.insertNewLineIndentMarker(file, myDocument, endVarOffset);
             if (range != null) dummyAdjustLineMarkerRange = myDocument.createRangeMarker(range);
           }
           int reformatStartOffset = myTemplateRange.getStartOffset();
@@ -1285,8 +1302,8 @@ public class TemplateStateImpl implements TemplateState {
           }
           if (dummyAdjustLineMarkerRange == null && endVarOffset >= 0) {
             // There is a possible case that indent marker element was not inserted (e.g. because there is no blank line
-            // at the target offset). However, we want to reformat white space adjacent to the current template (if any).
-            PsiElement whiteSpaceElement = CodeStyleManagerImpl.findWhiteSpaceNode(file, endVarOffset);
+            // at the target offset). However, we want to reformat white space adjacent to the current template( if any).
+            PsiElement whiteSpaceElement = TemplateCodeStyleHelper.findWhiteSpaceNode(file, endVarOffset);
             if (whiteSpaceElement != null) {
               TextRange whiteSpaceRange = whiteSpaceElement.getTextRange();
               if (whiteSpaceElement.getContainingFile() != null) {
@@ -1303,7 +1320,9 @@ public class TemplateStateImpl implements TemplateState {
 
           if (dummyAdjustLineMarkerRange != null && dummyAdjustLineMarkerRange.isValid()) {
             //[ven] TODO: [max] correct javadoc reformatting to eliminate isValid() check!!!
-            mySegments.replaceSegmentAt(endSegmentNumber, dummyAdjustLineMarkerRange.getStartOffset(), dummyAdjustLineMarkerRange.getEndOffset());
+            mySegments.replaceSegmentAt(endSegmentNumber,
+                                        dummyAdjustLineMarkerRange.getStartOffset(),
+                                        dummyAdjustLineMarkerRange.getEndOffset());
             myDocument.deleteString(dummyAdjustLineMarkerRange.getStartOffset(), dummyAdjustLineMarkerRange.getEndOffset());
             PsiDocumentManager.getInstance(myProject).commitDocument(myDocument);
           }

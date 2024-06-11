@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
@@ -22,11 +22,9 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.matcher.PlainPrefixMatcher;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.document.Document;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -44,6 +42,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -57,7 +56,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   @RequiredUIAccess
   @Override
   public void invoke(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
-    EditorUtil.fillVirtualSpaceUntilCaret(editor);
+    EditorModificationUtil.fillVirtualSpaceUntilCaret(editor);
 
     PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
     int offset = editor.getCaretModel().getOffset();
@@ -92,7 +91,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     String prefixWithoutDots = computeDescriptionMatchingPrefix(editor.getDocument(), offset);
     Pattern prefixSearchPattern = Pattern.compile(".*\\b" + prefixWithoutDots + ".*");
 
-    Map<Template, String> matchingTemplates = new TreeMap<>(TemplateListPanel.TEMPLATE_COMPARATOR);
+    Map<Template, String> matchingTemplates = new TreeMap<>(TemplateComparator.INSTANCE);
     for (Template template : templates) {
       ProgressManager.checkCanceled();
       String templateKey = template.getKey();
@@ -184,7 +183,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         if (description == null) {
           return super.getAllLookupStrings();
         }
-        return ContainerUtil.newHashSet(getLookupString(), description);
+        return Set.of(getLookupString(), description);
       }
     };
   }

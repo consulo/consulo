@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.component.persist.scheme;
 
-import consulo.component.persist.scheme.ExternalInfo;
-import consulo.component.persist.scheme.ExternalizableScheme;
-import consulo.component.persist.scheme.SchemeElement;
 import consulo.logging.Logger;
 
 import jakarta.annotation.Nonnull;
@@ -50,16 +47,16 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     }
   }
 
-
-
   public List<T> getElements() {
-    return Collections.unmodifiableList(new ArrayList<T>(myElements));
+    return Collections.unmodifiableList(new ArrayList<>(myElements));
   }
 
+  @Override
   public String getName() {
     return myName;
   }
 
+  @Override
   public void setName(final String name) {
     myName = name;
     for (T template : myElements) {
@@ -80,6 +77,7 @@ public class CompoundScheme<T extends SchemeElement> implements ExternalizableSc
     return myElements.isEmpty();
   }
 
+  @Override
   @Nonnull
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;

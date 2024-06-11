@@ -24,7 +24,9 @@ import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupActionProvider;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementAction;
+import consulo.language.editor.impl.internal.template.LiveTemplateLookupElementImpl;
 import consulo.language.editor.impl.internal.template.TemplateImpl;
+import consulo.language.editor.impl.internal.template.TemplateSettingsImpl;
 import consulo.language.editor.template.Template;
 import consulo.project.Project;
 

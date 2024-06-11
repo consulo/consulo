@@ -86,7 +86,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -101,9 +100,7 @@ import java.util.*;
  */
 public abstract class InplaceRefactoring {
   protected static final Logger LOG = Logger.getInstance(InplaceRefactoring.class);
-  @NonNls
   protected static final String PRIMARY_VARIABLE_NAME = "PrimaryVariable";
-  @NonNls
   protected static final String OTHER_VARIABLE_NAME = "OtherVariable";
   protected static final Stack<InplaceRefactoring> ourRenamersStack = new Stack<InplaceRefactoring>();
   public static final Key<InplaceRefactoring> INPLACE_RENAMER = Key.create("EditorInplaceRenamer");
@@ -125,7 +122,6 @@ public abstract class InplaceRefactoring {
   protected PsiElement myScope;
 
   protected RangeMarker myCaretRangeMarker;
-
 
   protected Balloon myBalloon;
   protected String myTitle;

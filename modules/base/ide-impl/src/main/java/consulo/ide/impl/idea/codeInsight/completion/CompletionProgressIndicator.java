@@ -15,6 +15,7 @@ import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.LangBundle;

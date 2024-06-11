@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.impl.internal.template;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
@@ -22,19 +22,17 @@ import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;
 import consulo.language.editor.impl.internal.completion.CompletionUtil;
-import consulo.language.editor.impl.internal.template.TemplateImpl;
+import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.editor.internal.TemplateEx;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.context.TemplateActionContext;
@@ -48,15 +46,16 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.PairProcessor;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiPredicate;

@@ -42,8 +42,8 @@
         serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.template.impl.ExportableTemplateSettings"/>
+    <applicationService serviceInterface="consulo.language.editor.impl.internal.template.ExportableTemplateSettings"
+                        serviceImplementation="consulo.language.editor.impl.internal.template.ExportableTemplateSettings"/>
 
 
     <search.optionContributor
