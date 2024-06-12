@@ -20,9 +20,9 @@ import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -42,7 +42,9 @@ public abstract class DumbAwareAction extends AnAction implements DumbAware {
   }
 
   @Nonnull
-  public static DumbAwareAction create(@Nullable String text, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
+  public static DumbAwareAction create(@Nullable String text,
+                                       @Nullable Image image,
+                                       @RequiredUIAccess @Nonnull Consumer<? super AnActionEvent> actionPerformed) {
     return new DumbAwareAction(text, null, image) {
       @RequiredUIAccess
       @Override
@@ -70,9 +72,12 @@ public abstract class DumbAwareAction extends AnAction implements DumbAware {
     super(icon);
   }
 
+  @Deprecated
   protected DumbAwareAction(@Nullable String text) {
     super(text);
   }
+
+  @Deprecated
   protected DumbAwareAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
     super(text, description, icon);
   }

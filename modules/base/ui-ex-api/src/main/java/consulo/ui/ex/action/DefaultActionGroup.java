@@ -2,6 +2,7 @@
 package consulo.ui.ex.action;
 
 import consulo.component.ProcessCanceledException;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ex.internal.ActionStubBase;
 import consulo.util.collection.ContainerUtil;
@@ -49,6 +50,20 @@ public class DefaultActionGroup extends ActionGroup {
    */
   private final List<Pair<AnAction, Constraints>> myPairs = Lists.newLockFreeCopyOnWriteList();
 
+  // region deprecated code
+  @Deprecated
+  public DefaultActionGroup(@Nullable String name, @Nonnull List<? extends AnAction> actions) {
+    this(name, false);
+    addActions(actions);
+  }
+
+  @Deprecated
+  public DefaultActionGroup(@Nullable String shortName, boolean popup) {
+    super(shortName, popup);
+  }
+
+  // endregion
+
   public DefaultActionGroup() {
     // do not initialize template if not data for it
   }
@@ -59,7 +74,7 @@ public class DefaultActionGroup extends ActionGroup {
    * @param actions the actions to add to the group
    */
   public DefaultActionGroup(@Nonnull AnAction... actions) {
-    this(Arrays.asList(actions));
+    addActions(Arrays.asList(actions));
   }
 
   /**
@@ -68,16 +83,16 @@ public class DefaultActionGroup extends ActionGroup {
    * @param actions the actions to add to the group
    */
   public DefaultActionGroup(@Nonnull List<? extends AnAction> actions) {
-    this(null, actions);
-  }
-
-  public DefaultActionGroup(@Nullable String name, @Nonnull List<? extends AnAction> actions) {
-    this(name, false);
     addActions(actions);
   }
 
-  public DefaultActionGroup(@Nullable String shortName, boolean popup) {
-    super(shortName, popup);
+  public DefaultActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    super(text, popup);
+  }
+
+  public DefaultActionGroup(@Nonnull LocalizeValue text, @Nonnull List<? extends AnAction> actions) {
+    this(text, false);
+    addActions(actions);
   }
 
   private void addActions(@Nonnull List<? extends AnAction> actions) {

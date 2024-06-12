@@ -21,11 +21,10 @@ public class LightActionGroup extends ActionGroup {
   private final List<AnAction> myChildren = new ArrayList<>();
 
   public LightActionGroup() {
-    this(false);
   }
 
   public LightActionGroup(boolean popup) {
-    super(null, popup);
+    setPopup(popup);
   }
 
   @Nonnull

@@ -25,7 +25,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.action.DumbAwareToggleBooleanProperty;
 import consulo.application.ui.action.DumbAwareToggleInvertedBooleanProperty;
 import consulo.application.ui.action.ToggleBooleanProperty;
-import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
@@ -38,8 +37,8 @@ import consulo.execution.test.action.*;
 import consulo.execution.test.export.ExportTestResultsAction;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.action.*;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class ToolbarPanel extends JPanel implements OccurenceNavigator, Disposab
 
   public ToolbarPanel(final TestConsoleProperties properties, final JComponent parent) {
     super(new BorderLayout());
-    final DefaultActionGroup actionGroup = new DefaultActionGroup(null, false);
+    final DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.addAction(new DumbAwareToggleInvertedBooleanProperty(ExecutionBundle.message("junit.run.hide.passed.action.name"), ExecutionBundle.message("junit.run.hide.passed.action.description"),
                                                                      AllIcons.RunConfigurations.TestPassed, properties, TestConsoleProperties.HIDE_PASSED_TESTS));
     actionGroup.add(new DumbAwareToggleInvertedBooleanProperty("Show Ignored", "Show Ignored", AllIcons.RunConfigurations.TestIgnored, properties, TestConsoleProperties.HIDE_IGNORED_TEST));

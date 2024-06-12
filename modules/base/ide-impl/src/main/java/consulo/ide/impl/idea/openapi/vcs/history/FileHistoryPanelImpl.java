@@ -216,7 +216,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     listener.installOn(myDualView.getTreeView());
     setEmptyText(CommonBundle.getLoadingTreeNodeText());
 
-    setupDualView(addToGroup(true, new DefaultActionGroup(null, false)));
+    setupDualView(addToGroup(true, new DefaultActionGroup()));
     if (isStaticEmbedded) {
       setIsStaticAndEmbedded(true);
     }

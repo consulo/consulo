@@ -93,7 +93,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
   }
 
   private void createTitlePanelToolbar(@Nonnull String dimensionKey) {
-    ActionGroup actionGroup = new LightActionGroup() {
+    ActionGroup actionGroup = new ActionGroup() {
       @Override
       @Nonnull
       public AnAction[] getChildren(@Nullable AnActionEvent e) {

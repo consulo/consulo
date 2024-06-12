@@ -136,6 +136,7 @@ public abstract class ActionGroup extends AnAction {
    * @param popup     {@code true} if this group is a popup, {@code false}
    *                  otherwise
    */
+  @Deprecated
   public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String shortName, boolean popup) {
     super(shortName);
     setPopup(popup);
@@ -147,6 +148,11 @@ public abstract class ActionGroup extends AnAction {
 
   protected ActionGroup(@Nonnull LocalizeValue text) {
     super(text);
+  }
+
+  protected ActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    super(text);
+    setPopup(popup);
   }
 
   protected ActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {

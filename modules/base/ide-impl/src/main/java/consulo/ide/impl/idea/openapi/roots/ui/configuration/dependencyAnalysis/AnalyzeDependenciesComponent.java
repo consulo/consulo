@@ -673,7 +673,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     @Override
     public DefaultActionGroup createPopupActionGroup(JComponent component) {
       if (myItems == null) {
-        myItems = new DefaultActionGroup(null, true);
+        myItems = new DefaultActionGroup();
         for (final ClasspathType classpathType : ClasspathType.values()) {
           myItems.addAction(new DumbAwareAction(classpathType.getDescription()) {
             @Override

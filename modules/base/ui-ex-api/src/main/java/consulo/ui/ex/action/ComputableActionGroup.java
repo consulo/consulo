@@ -30,7 +30,7 @@ public abstract class ComputableActionGroup extends ActionGroup implements DumbA
   }
 
   protected ComputableActionGroup(boolean popup) {
-    super(null, popup);
+    setPopup(popup);
   }
 
   @Override
