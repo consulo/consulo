@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.profile.codeInspection.ui.inspectionsTree;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.SystemInfo;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.profile.codeInspection.ui.InspectionsAggregationUtil;
 import consulo.ide.impl.idea.profile.codeInspection.ui.ToolDescriptors;
@@ -31,6 +30,7 @@ import consulo.language.editor.impl.internal.inspection.scheme.ToolsImpl;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.event.DoubleClickListener;
@@ -42,9 +42,9 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -69,7 +69,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
   private final static int IS_ENABLED_COLUMN = 2;
 
   public static int getAdditionalPadding() {
-    return SystemInfo.isMac ? 10 : 0;
+    return Platform.current().os().isMac() ? 10 : 0;
   }
 
   public static InspectionsConfigTreeTable create(final InspectionsConfigTreeTableSettings settings, Disposable parentDisposable) {

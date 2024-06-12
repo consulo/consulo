@@ -8,7 +8,6 @@ import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.event.FrameStateListener;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
@@ -22,6 +21,7 @@ import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.ide.impl.idea.util.ui.BaseButtonBehavior;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -490,7 +490,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     final Ref<Component> originalFocusOwner = new Ref<>();
     final Ref<ActionCallback> proxyFocusRequest = new Ref<>(ActionCallback.DONE);
 
-    boolean mnemonicsFix = myDialogMode && SystemInfo.isMac && Registry.is("ide.mac.inplaceDialogMnemonicsFix");
+    boolean mnemonicsFix = myDialogMode && Platform.current().os().isMac() && Registry.is("ide.mac.inplaceDialogMnemonicsFix");
     if (mnemonicsFix) {
       proxyFocusRequest.set(new ActionCallback());
 

@@ -15,24 +15,23 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ui.ex.Cell;
-import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.Cell;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.ColorChooser;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.util.lang.function.PairFunction;
 import consulo.ui.ex.awt.EmptyIcon;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.TableUtil;
-
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.PairFunction;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
@@ -41,7 +40,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.EventObject;
 
@@ -62,14 +60,9 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
       i++;
     }
 
-    Arrays.sort(data, new Comparator<Object[]>() {
-      @Override
-      public int compare(Object[] o1, Object[] o2) {
-        return StringUtil.naturalCompare(o1[0].toString(), o2[0].toString());
-      }
-    });
+    Arrays.sort(data, (o1, o2) -> StringUtil.naturalCompare(o1[0].toString(), o2[0].toString()));
 
-    final Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    final Project project = e == null ? null : e.getData(Project.KEY);
     new DialogWrapper(project) {
       {
         setTitle("Edit LaF Defaults");

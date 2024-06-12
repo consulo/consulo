@@ -16,18 +16,17 @@
 
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
-import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
-import consulo.find.ui.ScopeChooserCombo;
-import consulo.project.Project;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
-
+import consulo.find.ui.ScopeChooserCombo;
+import consulo.ide.impl.idea.analysis.BaseAnalysisAction;
+import consulo.ide.impl.idea.analysis.BaseAnalysisActionDialog;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
-
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 
 /**
@@ -37,9 +36,11 @@ import javax.swing.*;
 public class BackwardDependenciesAction extends BaseAnalysisAction {
   private AdditionalSettingsPanel myPanel;
 
-
   public BackwardDependenciesAction() {
-    super(AnalysisScopeBundle.message("action.backward.dependency.analysis"), AnalysisScopeBundle.message("action.analysis.noun"));
+    super(
+      AnalysisScopeLocalize.actionBackwardDependencyAnalysis().get(),
+      AnalysisScopeLocalize.actionAnalysisNoun().get()
+    );
   }
 
   @Override

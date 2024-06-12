@@ -16,11 +16,11 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.ex.awt.ComboBox;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.FontInfo;
+import consulo.util.lang.Comparing;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -175,7 +175,7 @@ public final class FontComboBox extends ComboBox {
     private final static class NoFontItem {
       @Override
       public String toString() {
-        return ApplicationBundle.message("settings.editor.font.none");
+        return ApplicationLocalize.settingsEditorFontNone().get();
       }
     }
   }

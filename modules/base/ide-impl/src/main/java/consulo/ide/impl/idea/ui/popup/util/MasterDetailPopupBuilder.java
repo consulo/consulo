@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.Size;
@@ -32,6 +33,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
+import consulo.ui.style.StyleManager;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import javax.swing.*;
@@ -174,7 +176,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         }
       };
       //native button is pretty enough
-      if ((SystemInfo.isMacOSLion || SystemInfo.isMacOSMountainLion) &&  !UIUtil.isUnderDarcula()) {
+      if ((SystemInfo.isMacOSLion || SystemInfo.isMacOSMountainLion) && !StyleManager.get().getCurrentStyle().isDark()) {
         final JButton done = new JButton("Done");
         done.setMnemonic('o');
         done.addActionListener(actionListener);

@@ -16,22 +16,22 @@
 
 package consulo.ide.impl.idea.tools;
 
-import consulo.application.CommonBundle;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.platform.base.icon.PlatformIconGroup;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
@@ -413,7 +413,12 @@ public abstract class BaseToolsPanel<T extends Tool> extends JPanel {
   private void removeSelected() {
     CheckedTreeNode node = getSelectedToolNode();
     if (node != null) {
-      int result = Messages.showYesNoDialog(this, ToolsBundle.message("tools.delete.confirmation"), CommonBundle.getWarningTitle(), Messages.getWarningIcon());
+      int result = Messages.showYesNoDialog(
+        this,
+        ToolsBundle.message("tools.delete.confirmation"),
+        CommonLocalize.titleWarning().get(),
+        Messages.getWarningIcon()
+      );
       if (result != 0) {
         return;
       }

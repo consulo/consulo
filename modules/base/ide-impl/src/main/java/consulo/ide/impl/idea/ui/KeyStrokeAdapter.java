@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import java.util.HashMap;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -90,7 +90,7 @@ public class KeyStrokeAdapter implements KeyListener {
   public static KeyStroke getDefaultKeyStroke(KeyEvent event) {
     if (event == null || event.isConsumed()) return null;
     // On Windows and Mac it is preferable to use normal key code here
-    boolean extendedKeyCodeFirst = !SystemInfo.isWindows && !SystemInfo.isMac && event.getModifiers() == 0;
+    boolean extendedKeyCodeFirst = !Platform.current().os().isWindows() && !Platform.current().os().isMac() && event.getModifiers() == 0;
     KeyStroke stroke = getKeyStroke(event, extendedKeyCodeFirst);
     return stroke != null ? stroke : getKeyStroke(event, !extendedKeyCodeFirst);
   }

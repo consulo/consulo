@@ -23,25 +23,25 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.*;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.packageDependency.DependencyRule;
 import consulo.language.editor.packageDependency.DependencyValidationManager;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.*;
 
 @Singleton
@@ -197,7 +197,7 @@ public class DependencyValidationManagerImpl extends DependencyValidationManager
 
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("shared.scopes.node.text");
+    return IdeLocalize.sharedScopesNodeText().get();
   }
 
   @Override

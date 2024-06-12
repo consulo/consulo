@@ -19,7 +19,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;

@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.refactoring.extractMethod;
 
 import consulo.application.AccessRule;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -40,8 +40,8 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -49,12 +49,14 @@ import java.util.function.Consumer;
  * @author Dennis.Ushakov
  */
 public class ExtractMethodHelper {
-  public static void processDuplicates(@Nonnull final PsiElement callElement,
-                                       @Nonnull final PsiElement generatedMethod,
-                                       @Nonnull final List<PsiElement> scope,
-                                       @Nonnull final SimpleDuplicatesFinder finder,
-                                       @Nonnull final Editor editor,
-                                       @Nonnull final Consumer<Pair<SimpleMatch, PsiElement>> replacer) {
+  public static void processDuplicates(
+    @Nonnull final PsiElement callElement,
+    @Nonnull final PsiElement generatedMethod,
+    @Nonnull final List<PsiElement> scope,
+    @Nonnull final SimpleDuplicatesFinder finder,
+    @Nonnull final Editor editor,
+    @Nonnull final Consumer<Pair<SimpleMatch, PsiElement>> replacer
+  ) {
     finder.setReplacement(callElement);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       replaceDuplicates(callElement, editor, replacer, finder.findDuplicates(scope, generatedMethod));
@@ -117,20 +119,27 @@ public class ExtractMethodHelper {
    * @param duplicates  discovered duplicates of extracted code fragment
    * @see #collectDuplicates(SimpleDuplicatesFinder, List, PsiElement)
    */
-  public static void replaceDuplicates(@Nonnull PsiElement callElement,
-                                       @Nonnull Editor editor,
-                                       @Nonnull Consumer<Pair<SimpleMatch, PsiElement>> replacer,
-                                       @Nonnull List<SimpleMatch> duplicates) {
+  public static void replaceDuplicates(
+    @Nonnull PsiElement callElement,
+    @Nonnull Editor editor,
+    @Nonnull Consumer<Pair<SimpleMatch, PsiElement>> replacer,
+    @Nonnull List<SimpleMatch> duplicates
+  ) {
     if (!duplicates.isEmpty()) {
-      final String message = RefactoringBundle
-              .message("0.has.detected.1.code.fragments.in.this.file.that.can.be.replaced.with.a.call.to.extracted.method",
-                       ApplicationNamesInfo.getInstance().getProductName(), duplicates.size());
+      final String message = RefactoringBundle.message("0.has.detected.1.code.fragments.in.this.file.that.can.be.replaced.with.a.call.to.extracted.method",
+        Application.get().getName(),
+        duplicates.size()
+      );
       final boolean isUnittest = ApplicationManager.getApplication().isUnitTestMode();
       final Project project = callElement.getProject();
-      final int exitCode = !isUnittest ? Messages.showYesNoDialog(project, message,
-                                                                  RefactoringBundle.message("refactoring.extract.method.dialog.title"),
-                                                                  Messages.getInformationIcon()) :
-                           Messages.YES;
+      final int exitCode = !isUnittest
+        ? Messages.showYesNoDialog(
+          project,
+          message,
+          RefactoringBundle.message("refactoring.extract.method.dialog.title"),
+          Messages.getInformationIcon()
+        )
+        : Messages.YES;
       if (exitCode == Messages.YES) {
         boolean replaceAll = false;
         final Map<SimpleMatch, RangeHighlighter> highlighterMap = new HashMap<>();
@@ -144,7 +153,7 @@ public class ExtractMethodHelper {
             //noinspection ConstantConditions
             if (!isUnittest) {
               ReplacePromptDialog promptDialog =
-                      new ReplacePromptDialog(false, RefactoringBundle.message("replace.fragment"), project);
+                new ReplacePromptDialog(false, RefactoringBundle.message("replace.fragment"), project);
               promptDialog.show();
               promptResult = promptDialog.getExitCode();
             }
@@ -172,14 +181,26 @@ public class ExtractMethodHelper {
     }
   }
 
-  private static void replaceDuplicate(final Project project, final Consumer<Pair<SimpleMatch, PsiElement>> replacer,
-                                       final Pair<SimpleMatch, PsiElement> replacement) {
-    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> replacer.accept(replacement)), "Replace duplicate", null);
+  private static void replaceDuplicate(
+    final Project project,
+    final Consumer<Pair<SimpleMatch, PsiElement>> replacer,
+    final Pair<SimpleMatch, PsiElement> replacement
+  ) {
+    CommandProcessor.getInstance().executeCommand(
+      project,
+      () -> ApplicationManager.getApplication().runWriteAction(() -> replacer.accept(replacement)),
+      "Replace duplicate",
+      null
+    );
   }
 
 
-  private static void highlightInEditor(@Nonnull final Project project, @Nonnull final SimpleMatch match,
-                                        @Nonnull final Editor editor, Map<SimpleMatch, RangeHighlighter> highlighterMap) {
+  private static void highlightInEditor(
+    @Nonnull final Project project,
+    @Nonnull final SimpleMatch match,
+    @Nonnull final Editor editor,
+    Map<SimpleMatch, RangeHighlighter> highlighterMap
+  ) {
     final List<RangeHighlighter> highlighters = new ArrayList<>();
     final HighlightManager highlightManager = HighlightManager.getInstance(project);
     final EditorColorsManager colorsManager = EditorColorsManager.getInstance();

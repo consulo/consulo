@@ -12,7 +12,7 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.JBUI;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.navigation.Navigatable;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;

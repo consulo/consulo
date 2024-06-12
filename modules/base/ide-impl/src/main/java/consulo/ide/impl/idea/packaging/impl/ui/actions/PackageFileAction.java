@@ -3,27 +3,26 @@
  */
 package consulo.ide.impl.idea.packaging.impl.ui.actions;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.util.lang.Clock;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.WindowManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.internal.ArtifactBySourceFileFinder;
-import consulo.util.lang.SyncDateFormat;
+import consulo.compiler.localize.CompilerLocalize;
+import consulo.document.FileDocumentManager;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.lang.Clock;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.SyncDateFormat;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,19 +33,27 @@ public class PackageFileAction extends AnAction {
   private static final SyncDateFormat TIME_FORMAT = new SyncDateFormat(new SimpleDateFormat("h:mm:ss a"));
 
   public PackageFileAction() {
-    super(CompilerBundle.message("action.name.package.file"), CompilerBundle.message("action.description.package.file"), null);
+    super(
+      CompilerLocalize.actionNamePackageFile(),
+      CompilerLocalize.actionDescriptionPackageFile(),
+      null
+    );
   }
 
   @RequiredUIAccess
   @Override
   public void update(AnActionEvent e) {
     boolean visible = false;
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project != null) {
       final List<VirtualFile> files = getFilesToPackage(e, project);
       if (!files.isEmpty()) {
         visible = true;
-        e.getPresentation().setText(files.size() == 1 ? CompilerBundle.message("action.name.package.file") : CompilerBundle.message("action.name.package.files"));
+        e.getPresentation().setTextValue(
+          files.size() == 1
+            ? CompilerLocalize.actionNamePackageFile()
+            : CompilerLocalize.actionNamePackageFiles()
+        );
       }
     }
 
@@ -55,10 +62,10 @@ public class PackageFileAction extends AnAction {
 
   @Nonnull
   private static List<VirtualFile> getFilesToPackage(@Nonnull AnActionEvent e, @Nonnull Project project) {
-    final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+    final VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) return Collections.emptyList();
 
-    List<VirtualFile> result = new ArrayList<VirtualFile>();
+    List<VirtualFile> result = new ArrayList<>();
     ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     final CompilerManager compilerManager = CompilerManager.getInstance(project);
     for (VirtualFile file : files) {
@@ -80,17 +87,13 @@ public class PackageFileAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent event) {
-    final Project project = event.getData(CommonDataKeys.PROJECT);
+    final Project project = event.getData(Project.KEY);
     if (project == null) return;
 
     FileDocumentManager.getInstance().saveAllDocuments();
     final List<VirtualFile> files = getFilesToPackage(event, project);
     Artifact[] allArtifacts = ArtifactManager.getInstance(project).getArtifacts();
-    PackageFileWorker.startPackagingFiles(project, files, allArtifacts, new Runnable() {
-      public void run() {
-        setStatusText(project, files);
-      }
-    });
+    PackageFileWorker.startPackagingFiles(project, files, allArtifacts, () -> setStatusText(project, files));
   }
 
   private static void setStatusText(Project project, List<VirtualFile> files) {
@@ -101,8 +104,8 @@ public class PackageFileAction extends AnAction {
         fileNames.append("'").append(file.getName()).append("'");
       }
       String time = TIME_FORMAT.format(Clock.getTime());
-      final String statusText = CompilerBundle.message("status.text.file.has.been.packaged", files.size(), fileNames, time);
-      WindowManager.getInstance().getStatusBar(project).setInfo(statusText);
+      final LocalizeValue statusText = CompilerLocalize.statusTextFileHasBeenPackaged(files.size(), fileNames, time);
+      WindowManager.getInstance().getStatusBar(project).setInfo(statusText.get());
     }
   }
 }

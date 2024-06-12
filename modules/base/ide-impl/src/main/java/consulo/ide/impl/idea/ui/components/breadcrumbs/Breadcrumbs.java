@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.components.breadcrumbs;
 import consulo.application.util.registry.Registry;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.paint.EffectPainter;
 import consulo.ide.impl.idea.util.ui.MouseEventHandler;
 import consulo.ui.color.ColorValue;

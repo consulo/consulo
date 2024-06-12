@@ -16,31 +16,32 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.ide.impl.idea.notification.impl.ui.StickyButton;
-import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.content.internal.scope.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.awt.ColorChooser;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.language.editor.FileColorManager;
-import consulo.ui.ex.JBColor;
+import consulo.ide.impl.idea.notification.impl.ui.StickyButton;
+import consulo.ide.impl.idea.notification.impl.ui.StickyButtonUI;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.FileColorManager;
+import consulo.language.editor.scope.NamedScopeManager;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.ColorChooser;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
-
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.style.StyleManager;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author spleaner
@@ -52,7 +53,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
   private final FileColorManager myManager;
   private HashMap<String, AbstractButton> myColorToButtonMap;
   private static final String CUSTOM_COLOR_NAME = "Custom";
-  private final Map<String, NamedScope> myScopeNames = new HashMap<String, NamedScope>();
+  private final Map<String, NamedScope> myScopeNames = new HashMap<>();
 
   public FileColorConfigurationEditDialog(@Nonnull final FileColorManager manager, @Nullable final FileColorConfiguration configuration) {
     super(true);
@@ -80,7 +81,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     final JPanel result = new JPanel();
     result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
 
-    final List<NamedScope> scopeList = new ArrayList<NamedScope>();
+    final List<NamedScope> scopeList = new ArrayList<>();
     final Project project = myManager.getProject();
     final NamedScopesHolder[] scopeHolders = NamedScopeManager.getAllNamedScopeHolders(project);
     for (final NamedScopesHolder scopeHolder : scopeHolders) {
@@ -93,12 +94,9 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
     }
 
     myScopeComboBox = new JComboBox(ArrayUtil.toStringArray(myScopeNames.keySet()));
-    myScopeComboBox.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        updateCustomButton();
-        updateOKButton();
-      }
+    myScopeComboBox.addActionListener(e -> {
+      updateCustomButton();
+      updateOKButton();
     });
 
     final JPanel pathPanel = new JPanel();
@@ -171,15 +169,18 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
 
     final JPanel inner = new JPanel();
     inner.setLayout(new BoxLayout(inner, BoxLayout.X_AXIS));
-    inner.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-    if (!UIUtil.isUnderDarcula()) {
+    inner.setBorder(
+      BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+        BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    );
+    if (!StyleManager.get().getCurrentStyle().isDark()) {
       inner.setBackground(Color.WHITE);
     }
     result.add(inner, BorderLayout.CENTER);
 
     final ButtonGroup group = new ButtonGroup();
 
-    myColorToButtonMap = new HashMap<String, AbstractButton>();
+    myColorToButtonMap = new HashMap<>();
 
     final Collection<String> names = myManager.getColorNames();
     for (final String name : names) {
@@ -244,13 +245,7 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
       super(FileColorManagerImpl.getAlias(text));
       setUI(new ColorButtonUI());
       myColor = color;
-      addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          doPerformAction(e);
-        }
-      });
-
+      addActionListener(e -> doPerformAction(e));
       setBackground(new JBColor(Color.WHITE, UIUtil.getControlColor()));
       setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
     }

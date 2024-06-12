@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.idea.ui.speedSearch;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.application.util.function.Computable;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;

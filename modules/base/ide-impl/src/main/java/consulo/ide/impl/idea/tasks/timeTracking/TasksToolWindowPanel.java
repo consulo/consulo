@@ -2,9 +2,10 @@ package consulo.ide.impl.idea.tasks.timeTracking;
 
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
@@ -118,63 +119,75 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
     assert action instanceof GotoTaskAction;
     final GotoTaskAction gotoTaskAction = (GotoTaskAction)action;
     group.add(gotoTaskAction);
-    group.add(new AnAction("Remove Task", "Remove Task", IconUtil.getRemoveIcon()) {
-      @Override
-      public void actionPerformed(final AnActionEvent e) {
-        for (LocalTask localTask : myTable.getSelectedObjects()) {
-          SwitchTaskAction.removeTask(myProject, localTask, myTaskManager);
-        }
-      }
-    });
-    group.add(new ToggleAction("Show closed tasks", "Show closed tasks", AllIcons.Actions.Checked) {
-      @Override
-      public boolean isSelected(final AnActionEvent e) {
-        return myTimeTrackingManager.getState().showClosedTasks;
-      }
-
-      @Override
-      public void setSelected(final AnActionEvent e, final boolean state) {
-        myTimeTrackingManager.getState().showClosedTasks = state;
-        updateTable();
-      }
-    });
-    group.add(new ModeToggleAction());
-    group.add(new StartStopAction());
-
-    if (timeManagementExist()) {
-      group.add(new AnAction("Post work item to bugtracker", "Post work item to bugtracker", AllIcons.Actions.Export) {
+    group.add(
+      new AnAction("Remove Task", "Remove Task", IconUtil.getRemoveIcon()) {
         @Override
         public void actionPerformed(final AnActionEvent e) {
-          final LocalTask localTask = myTable.getSelectedObject();
-          if (localTask == null) return;
-          new SendTimeTrackingInformationDialog(myProject, localTask).show();
-        }
-
-        @Override
-        public void update(final AnActionEvent e) {
-          final LocalTask localTask = myTable.getSelectedObject();
-          if (localTask == null) {
-            e.getPresentation().setEnabled(false);
-          }
-          else {
-            final TaskRepository repository = localTask.getRepository();
-            e.getPresentation().setEnabled(repository != null && repository.isSupported(TaskRepository.TIME_MANAGEMENT));
+          for (LocalTask localTask : myTable.getSelectedObjects()) {
+            SwitchTaskAction.removeTask(myProject, localTask, myTaskManager);
           }
         }
-      });
-
-      group.add(new ToggleAction("Show time spent from last post of work item", "Show time spent from last post of work item", TasksIcons.Clock) {
+      }
+    );
+    group.add(
+      new ToggleAction("Show closed tasks", "Show closed tasks", AllIcons.Actions.Checked) {
         @Override
         public boolean isSelected(final AnActionEvent e) {
-          return myTimeTrackingManager.getState().showSpentTimeFromLastPost;
+          return myTimeTrackingManager.getState().showClosedTasks;
         }
 
         @Override
         public void setSelected(final AnActionEvent e, final boolean state) {
-          myTimeTrackingManager.getState().showSpentTimeFromLastPost = state;
-          myTable.repaint();
+          myTimeTrackingManager.getState().showClosedTasks = state;
+          updateTable();
         }
-      });
+      }
+    );
+    group.add(new ModeToggleAction());
+    group.add(new StartStopAction());
+
+    if (timeManagementExist()) {
+      group.add(
+        new AnAction("Post work item to bugtracker", "Post work item to bugtracker", AllIcons.Actions.Export) {
+          @Override
+          public void actionPerformed(final AnActionEvent e) {
+            final LocalTask localTask = myTable.getSelectedObject();
+            if (localTask == null) return;
+            new SendTimeTrackingInformationDialog(myProject, localTask).show();
+          }
+
+          @Override
+          public void update(final AnActionEvent e) {
+            final LocalTask localTask = myTable.getSelectedObject();
+            if (localTask == null) {
+              e.getPresentation().setEnabled(false);
+            }
+            else {
+              final TaskRepository repository = localTask.getRepository();
+              e.getPresentation().setEnabled(repository != null && repository.isSupported(TaskRepository.TIME_MANAGEMENT));
+            }
+          }
+        }
+      );
+
+      group.add(
+        new ToggleAction(
+          "Show time spent from last post of work item",
+          "Show time spent from last post of work item",
+          TasksIcons.Clock
+        ) {
+          @Override
+          public boolean isSelected(final AnActionEvent e) {
+            return myTimeTrackingManager.getState().showSpentTimeFromLastPost;
+          }
+
+          @Override
+          public void setSelected(final AnActionEvent e, final boolean state) {
+            myTimeTrackingManager.getState().showSpentTimeFromLastPost = state;
+            myTable.repaint();
+          }
+        }
+      );
     }
     final ActionToolbar actionToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, myVertical);
     actionToolBar.setTargetComponent(this);

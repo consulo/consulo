@@ -169,8 +169,8 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
           FilePath filePath = VcsContextFactory.getInstance().createFilePathOn(file);
 
-          if (historyProvider instanceof VcsHistoryProviderEx) {
-            VcsFileRevision revision = ((VcsHistoryProviderEx)historyProvider).getLastRevision(filePath);
+          if (historyProvider instanceof VcsHistoryProviderEx vcsHistoryProviderEx) {
+            VcsFileRevision revision = vcsHistoryProviderEx.getLastRevision(filePath);
             if (revision == null) return null;
             return LastRevision.create(revision);
           }

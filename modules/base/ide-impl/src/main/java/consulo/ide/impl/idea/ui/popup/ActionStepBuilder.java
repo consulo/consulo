@@ -6,7 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.ex.action.*;
@@ -86,13 +86,13 @@ class ActionStepBuilder {
   }
 
   private void calcMaxIconSize(final ActionGroup actionGroup) {
-    if (myPresentationFactory instanceof MenuItemPresentationFactory && ((MenuItemPresentationFactory)myPresentationFactory).shallHideIcons())
+    if (myPresentationFactory instanceof MenuItemPresentationFactory factory && factory.shallHideIcons()) {
       return;
+    }
     AnAction[] actions = actionGroup.getChildren(createActionEvent(actionGroup));
     for (AnAction action : actions) {
       if (action == null) continue;
-      if (action instanceof ActionGroup) {
-        final ActionGroup group = (ActionGroup)action;
+      if (action instanceof ActionGroup group) {
         if (!group.isPopup()) {
           calcMaxIconSize(group);
           continue;
@@ -126,9 +126,9 @@ class ActionStepBuilder {
     List<AnAction> newVisibleActions =
       ActionGroupExpander.expandActionGroup(false, actionGroup, myPresentationFactory, myDataContext, myActionPlace);
     for (AnAction action : newVisibleActions) {
-      if (action instanceof AnSeparator) {
+      if (action instanceof AnSeparator separator) {
         myPrependWithSeparator = true;
-        mySeparatorText = ((AnSeparator)action).getText();
+        mySeparatorText = separator.getText();
       }
       else {
         appendAction(action);

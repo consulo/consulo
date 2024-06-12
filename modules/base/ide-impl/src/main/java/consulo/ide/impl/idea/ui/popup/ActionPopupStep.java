@@ -37,15 +37,17 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
   private Runnable myFinalRunnable;
   private final Condition<? super AnAction> myPreselectActionCondition;
 
-  public ActionPopupStep(@Nonnull List<PopupFactoryImpl.ActionItem> items,
-                         String title,
-                         @Nonnull Supplier<? extends DataContext> context,
-                         @Nullable String actionPlace,
-                         boolean enableMnemonics,
-                         @Nullable Condition<? super AnAction> preselectActionCondition,
-                         boolean autoSelection,
-                         boolean showDisabledActions,
-                         @Nullable BasePresentationFactory presentationFactory) {
+  public ActionPopupStep(
+    @Nonnull List<PopupFactoryImpl.ActionItem> items,
+    String title,
+    @Nonnull Supplier<? extends DataContext> context,
+    @Nullable String actionPlace,
+    boolean enableMnemonics,
+    @Nullable Condition<? super AnAction> preselectActionCondition,
+    boolean autoSelection,
+    boolean showDisabledActions,
+    @Nullable BasePresentationFactory presentationFactory
+  ) {
     myItems = items;
     myTitle = title;
     myContext = context;
@@ -58,7 +60,10 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
     myShowDisabledActions = showDisabledActions;
   }
 
-  private static int getDefaultOptionIndexFromSelectCondition(@Nullable Condition<? super AnAction> preselectActionCondition, @Nonnull List<? extends PopupFactoryImpl.ActionItem> items) {
+  private static int getDefaultOptionIndexFromSelectCondition(
+    @Nullable Condition<? super AnAction> preselectActionCondition,
+    @Nonnull List<? extends PopupFactoryImpl.ActionItem> items
+  ) {
     int defaultOptionIndex = 0;
     if (preselectActionCondition != null) {
       for (int i = 0; i < items.size(); i++) {
@@ -73,37 +78,69 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
   }
 
   @Nonnull
-  public static ListPopupStep<PopupFactoryImpl.ActionItem> createActionsStep(@Nonnull ActionGroup actionGroup,
-                                                                             @Nonnull DataContext dataContext,
-                                                                             boolean showNumbers,
-                                                                             boolean useAlphaAsNumbers,
-                                                                             boolean showDisabledActions,
-                                                                             String title,
-                                                                             boolean honorActionMnemonics,
-                                                                             boolean autoSelectionEnabled,
-                                                                             Supplier<? extends DataContext> contextSupplier,
-                                                                             @Nullable String actionPlace,
-                                                                             Condition<? super AnAction> preselectCondition,
-                                                                             int defaultOptionIndex,
-                                                                             @Nullable BasePresentationFactory presentationFactory) {
-    List<PopupFactoryImpl.ActionItem> items = createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
-    boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0);
+  public static ListPopupStep<PopupFactoryImpl.ActionItem> createActionsStep(
+    @Nonnull ActionGroup actionGroup,
+    @Nonnull DataContext dataContext,
+    boolean showNumbers,
+    boolean useAlphaAsNumbers,
+    boolean showDisabledActions,
+    String title,
+    boolean honorActionMnemonics,
+    boolean autoSelectionEnabled,
+    Supplier<? extends DataContext> contextSupplier,
+    @Nullable String actionPlace,
+    Condition<? super AnAction> preselectCondition,
+    int defaultOptionIndex,
+    @Nullable BasePresentationFactory presentationFactory
+  ) {
+    List<PopupFactoryImpl.ActionItem> items = createActionItems(
+      actionGroup,
+      dataContext,
+      showNumbers,
+      useAlphaAsNumbers,
+      showDisabledActions,
+      honorActionMnemonics,
+      actionPlace,
+      presentationFactory
+    );
+    boolean enableMnemonics = showNumbers || honorActionMnemonics && items.stream().anyMatch(
+      actionItem -> TextWithMnemonic.parse(actionItem.getAction().getTemplatePresentation().getTextWithMnemonic()).getMnemonic() != 0
+    );
 
-    return new ActionPopupStep(items, title, contextSupplier, actionPlace, enableMnemonics,
-                               preselectCondition != null ? preselectCondition : action -> defaultOptionIndex >= 0 && defaultOptionIndex < items.size() && items.get(defaultOptionIndex).getAction().equals(action),
-                               autoSelectionEnabled, showDisabledActions, presentationFactory);
+    return new ActionPopupStep(
+      items,
+      title,
+      contextSupplier,
+      actionPlace,
+      enableMnemonics,
+      preselectCondition != null ? preselectCondition
+        : action -> defaultOptionIndex >= 0 && defaultOptionIndex < items.size() && items.get(defaultOptionIndex).getAction().equals(action),
+      autoSelectionEnabled,
+      showDisabledActions,
+      presentationFactory
+    );
   }
 
   @Nonnull
-  public static List<PopupFactoryImpl.ActionItem> createActionItems(@Nonnull ActionGroup actionGroup,
-                                                                    @Nonnull DataContext dataContext,
-                                                                    boolean showNumbers,
-                                                                    boolean useAlphaAsNumbers,
-                                                                    boolean showDisabledActions,
-                                                                    boolean honorActionMnemonics,
-                                                                    @Nullable String actionPlace,
-                                                                    @Nullable BasePresentationFactory presentationFactory) {
-    ActionStepBuilder builder = new ActionStepBuilder(dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
+  public static List<PopupFactoryImpl.ActionItem> createActionItems(
+    @Nonnull ActionGroup actionGroup,
+    @Nonnull DataContext dataContext,
+    boolean showNumbers,
+    boolean useAlphaAsNumbers,
+    boolean showDisabledActions,
+    boolean honorActionMnemonics,
+    @Nullable String actionPlace,
+    @Nullable BasePresentationFactory presentationFactory
+  ) {
+    ActionStepBuilder builder = new ActionStepBuilder(
+      dataContext,
+      showNumbers,
+      useAlphaAsNumbers,
+      showDisabledActions,
+      honorActionMnemonics,
+      actionPlace,
+      presentationFactory
+    );
     builder.buildGroup(actionGroup);
     return builder.getItems();
   }
@@ -183,9 +220,22 @@ public class ActionPopupStep implements ListPopupStepEx<PopupFactoryImpl.ActionI
     if (!actionChoice.isEnabled()) return FINAL_CHOICE;
     final AnAction action = actionChoice.getAction();
     final DataContext dataContext = myContext.get();
-    if (action instanceof ActionGroup && (!finalChoice || !((ActionGroup)action).canBePerformed(dataContext))) {
-      return createActionsStep((ActionGroup)action, dataContext, myEnableMnemonics, true, myShowDisabledActions, null, false, false, myContext, myActionPlace, myPreselectActionCondition, -1,
-                               myPresentationFactory);
+    if (action instanceof ActionGroup group && (!finalChoice || !group.canBePerformed(dataContext))) {
+      return createActionsStep(
+        group,
+        dataContext,
+        myEnableMnemonics,
+        true,
+        myShowDisabledActions,
+        null,
+        false,
+        false,
+        myContext,
+        myActionPlace,
+        myPreselectActionCondition,
+        -1,
+        myPresentationFactory
+      );
     }
     else {
       myFinalRunnable = () -> performAction(action, eventModifiers);

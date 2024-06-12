@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.navigation.Navigatable;

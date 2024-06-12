@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.ui.popup;
 
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.awt.util.PopupUtil;
-import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.PopupHacking;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.PopupUtil;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,7 +154,7 @@ public interface PopupComponent {
       myPopup = popup;
       myJBPopup = jbPopup;
 
-      if (SystemInfo.isMac && UIUtil.isUnderAquaLookAndFeel()) {
+      if (Platform.current().os().isMac() && UIUtil.isUnderAquaLookAndFeel()) {
         final Component c = PopupHacking.getComponent(myPopup);
         c.setBackground(UIUtil.getPanelBackground());
       }
