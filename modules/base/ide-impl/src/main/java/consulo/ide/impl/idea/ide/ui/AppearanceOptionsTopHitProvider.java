@@ -21,8 +21,8 @@ import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
-import consulo.platform.base.localize.KeyMapLocalize;
 import consulo.project.Project;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -99,7 +99,7 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
       }
     };
   }
-  
+
   @Deprecated
   static BooleanOptionDescription appearance(String option, String field) {
     return appearance(LocalizeValue.of(option), field);
