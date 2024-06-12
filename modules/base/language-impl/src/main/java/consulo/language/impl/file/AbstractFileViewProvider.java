@@ -268,8 +268,8 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     }
 
     for (PsiFile psiFile : files) {
-      if (psiFile instanceof PsiFileEx) {
-        ((PsiFileEx)psiFile).onContentReload();
+      if (psiFile instanceof PsiFileEx psiFileEx) {
+        psiFileEx.onContentReload();
       }
     }
 
@@ -288,7 +288,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     event.setParent(file);
     event.setFile(file);
     event.setGenericChange(generic);
-    if (file instanceof PsiFileImpl && ((PsiFileImpl)file).isContentsLoaded()) {
+    if (file instanceof PsiFileImpl psiFile && psiFile.isContentsLoaded()) {
       event.setOffset(0);
       event.setOldLength(file.getTextLength());
     }
@@ -297,8 +297,8 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
 
   @Override
   public void rootChanged(@Nonnull PsiFile psiFile) {
-    if (psiFile instanceof PsiFileImpl && ((PsiFileImpl)psiFile).isContentsLoaded() && psiFile.isValid()) {
-      setContent(new PsiFileContent(((PsiFileImpl)psiFile).calcTreeElement(), LocalTimeCounter.currentTime()));
+    if (psiFile instanceof PsiFileImpl psiFileImpl && psiFileImpl.isContentsLoaded() && psiFileImpl.isValid()) {
+      setContent(new PsiFileContent(psiFileImpl.calcTreeElement(), LocalTimeCounter.currentTime()));
     }
   }
 
@@ -396,8 +396,8 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
 
   private void invalidateCachedPsi() {
     for (PsiFile file : getCachedPsiFiles()) {
-      if (file instanceof PsiFileEx) {
-        ((PsiFileEx)file).markInvalidated();
+      if (file instanceof PsiFileEx psiFileEx) {
+        psiFileEx.markInvalidated();
       }
     }
   }
@@ -441,10 +441,10 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     @Override
     public CharSequence getText() {
       final VirtualFile virtualFile = getVirtualFile();
-      if (virtualFile instanceof LightVirtualFile) {
+      if (virtualFile instanceof LightVirtualFile lightVirtualFile) {
         Document doc = getCachedDocument();
         if (doc != null) return getLastCommittedText(doc);
-        return ((LightVirtualFile)virtualFile).getContent();
+        return lightVirtualFile.getContent();
       }
 
       final Document document = getDocument();

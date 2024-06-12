@@ -18,8 +18,8 @@ package consulo.ide.moduleImport;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.IdeBundle;
 import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.ui.ComboBox;
@@ -37,9 +37,9 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -104,7 +104,11 @@ public class ModuleImportProcessor {
   }
 
   @RequiredUIAccess
-  public static <C extends ModuleImportContext> void showImportChooser(@Nullable Project project, VirtualFile file, @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
+  public static <C extends ModuleImportContext> void showImportChooser(
+    @Nullable Project project,
+    VirtualFile file,
+    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+  ) {
     boolean isModuleImport = project != null;
 
     List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isModuleImport);
@@ -122,10 +126,12 @@ public class ModuleImportProcessor {
 
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
-  public static <C extends ModuleImportContext> void showImportChooser(@Nullable Project project,
-                                                                       @Nonnull VirtualFile file,
-                                                                       @Nonnull List<ModuleImportProvider> providers,
-                                                                       @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
+  public static <C extends ModuleImportContext> void showImportChooser(
+    @Nullable Project project,
+    @Nonnull VirtualFile file,
+    @Nonnull List<ModuleImportProvider> providers,
+    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+  ) {
     if (providers.size() == 1) {
       showImportWizard(project, file, providers.get(0), result);
     }
@@ -160,10 +166,12 @@ public class ModuleImportProcessor {
   }
 
   @RequiredUIAccess
-  private static <C extends ModuleImportContext> void showImportWizard(@Nullable Project project,
-                                                                       @Nonnull VirtualFile targetFile,
-                                                                       @Nonnull ModuleImportProvider<C> moduleImportProvider,
-                                                                       @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result) {
+  private static <C extends ModuleImportContext> void showImportWizard(
+    @Nullable Project project,
+    @Nonnull VirtualFile targetFile,
+    @Nonnull ModuleImportProvider<C> moduleImportProvider,
+    @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+  ) {
     ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
 
     AsyncResult<Void> showAsync = dialog.showAsync();
@@ -174,6 +182,8 @@ public class ModuleImportProcessor {
 
   private static String getFileChooserDescription(boolean isImport) {
     List<ModuleImportProvider> providers = ModuleImportProviders.getExtensions(isImport);
-    return IdeBundle.message("import.project.chooser.header", StringUtil.join(providers, ModuleImportProvider::getFileSample, ", <br>"));
+    return IdeLocalize.importProjectChooserHeader(
+      StringUtil.join(providers, ModuleImportProvider::getFileSample, ", <br>")
+    ).get();
   }
 }

@@ -16,13 +16,12 @@
 package consulo.desktop.awt.tipOfDay;
 
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.ide.tipOfDay.TipOfDayProvider;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBDimension;
@@ -74,7 +73,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
 
   public void prevTip() {
     if (myTips.size() == 0) {
-      myBrowser.setText(IdeBundle.message("error.tips.not.found", Application.get().getName().toString()));
+      myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName().toString()).get());
       return;
     }
     final GeneralSettings settings = GeneralSettings.getInstance();
@@ -101,7 +100,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
 
   public void nextTip() {
     if (myTips.size() == 0) {
-      myBrowser.setText(IdeBundle.message("error.tips.not.found", ApplicationNamesInfo.getInstance().getFullProductName()));
+      myBrowser.setText(IdeLocalize.errorTipsNotFound(Application.get().getName()).get());
       return;
     }
     GeneralSettings settings = GeneralSettings.getInstance();
@@ -141,6 +140,6 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
 
   @Override
   public String getDoNotShowMessage() {
-    return IdeBundle.message("checkbox.show.tips.on.startup");
+    return IdeLocalize.checkboxShowTipsOnStartup().get();
   }
 }

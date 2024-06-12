@@ -32,6 +32,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -93,7 +94,7 @@ final class DesktopStripePanelImpl extends JPanel {
         LinePainter2D.paint(g, x, y + height - 1, x + width, y + height - 1);
       }
 
-      if (!UIUtil.isUnderDarcula()) {
+      if (!StyleManager.get().getCurrentStyle().isDark()) {
         return;
       }
 

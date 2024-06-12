@@ -7,6 +7,7 @@ import consulo.platform.Platform;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
@@ -329,7 +330,7 @@ public class DarculaComboBoxUI extends BasicComboBoxUI implements Border, ErrorB
       // the text jumps as more or less space becomes available.
       // a proper text layout algorithm on painting in DarculaLabelUI can fix that.
       String text = cc.getText();
-      int maxWidth = bounds.width - (padding == null || UIUtil.isUnderDarcula() ? 0 : padding.right);
+      int maxWidth = bounds.width - (padding == null || StyleManager.get().getCurrentStyle().isDark() ? 0 : padding.right);
       if (StringUtil.isNotEmpty(text) && cc.getPreferredSize().width > maxWidth) {
         int max0 = ObjectUtil.binarySearch(7, text.length() - 1, idx -> {
           cc.setText(StringUtil.trimMiddle(text, idx));

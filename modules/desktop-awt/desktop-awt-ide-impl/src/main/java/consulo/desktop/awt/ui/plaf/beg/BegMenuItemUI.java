@@ -109,8 +109,8 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     FontMetrics fontmetrics = g.getFontMetrics(font1);
     FontMetrics fontmetrics1 = g.getFontMetrics(acceleratorFont);
     String keyStrokeText;
-    if (jmenuitem instanceof ActionMenuItem) {
-      keyStrokeText = ((ActionMenuItem)jmenuitem).getFirstShortcutText();
+    if (jmenuitem instanceof ActionMenuItem actionMenuItem) {
+      keyStrokeText = actionMenuItem.getFirstShortcutText();
     }
     else {
       keyStrokeText = getKeyStrokeText(jmenuitem.getAccelerator());
@@ -184,8 +184,8 @@ public class BegMenuItemUI extends BasicMenuItemUI {
       }
       else {
         final Object disabledForeground = UIUtil.getMenuItemDisabledForegroundObject();
-        if (disabledForeground instanceof Color) {
-          g.setColor((Color)disabledForeground);
+        if (disabledForeground instanceof Color color) {
+          g.setColor(color);
           BasicGraphicsUtils.drawStringUnderlineCharAt(g, s1, mnemonicIndex, j.x, j.y + fontmetrics.getAscent());
         }
         else {
@@ -266,10 +266,7 @@ public class BegMenuItemUI extends BasicMenuItemUI {
   }
 
   private boolean useCheckAndArrow() {
-    if ((menuItem instanceof JMenu) && ((JMenu)menuItem).isTopLevelMenu()) {
-      return false;
-    }
-    return true;
+    return !(menuItem instanceof JMenu jMenu && jMenu.isTopLevelMenu());
   }
 
   @Override
@@ -408,8 +405,8 @@ public class BegMenuItemUI extends BasicMenuItemUI {
     Icon icon2 = getAllowedIcon();
     String text = jmenuitem.getText();
     String keyStrokeText;
-    if (jmenuitem instanceof ActionMenuItem) {
-      keyStrokeText = ((ActionMenuItem)jmenuitem).getFirstShortcutText();
+    if (jmenuitem instanceof ActionMenuItem actionMenuItem) {
+      keyStrokeText = actionMenuItem.getFirstShortcutText();
     }
     else {
       keyStrokeText = getKeyStrokeText(jmenuitem.getAccelerator());

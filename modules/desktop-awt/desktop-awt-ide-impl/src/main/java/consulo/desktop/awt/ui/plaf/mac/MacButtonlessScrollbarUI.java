@@ -23,6 +23,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RegionPainter;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.ScrollBarUIConstants;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -250,8 +251,8 @@ public class MacButtonlessScrollbarUI extends BasicScrollBarUI {
     if (!myMouseIsOverThumb) {
       return c;
     }
-    final int sign = UIUtil.isUnderDarkTheme() ? -1 : 1;
-    int shift = UIUtil.isUnderDarkTheme() ? 20 : 40;
+    final int sign = StyleManager.get().getCurrentStyle().isDark() ? -1 : 1;
+    int shift = StyleManager.get().getCurrentStyle().isDark() ? 20 : 40;
     return Gray.get(Math.max(0, Math.min(255, c.getRed() - sign * shift)));
   }
 

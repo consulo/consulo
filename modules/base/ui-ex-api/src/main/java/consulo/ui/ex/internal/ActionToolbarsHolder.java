@@ -34,9 +34,9 @@ public class ActionToolbarsHolder {
     for (ActionToolbarEx toolbar : new ArrayList<>(ourToolbars)) {
       toolbar.updateActionsImmediately();
       toolbar.forEachButton(b -> {
-        if (b instanceof ActionButtonEx) {
-          ((ActionButtonEx)b).updateToolTipText();
-          ((ActionButtonEx)b).updateIcon();
+        if (b instanceof ActionButtonEx buttonEx) {
+          buttonEx.updateToolTipText();
+          buttonEx.updateIcon();
         }
       });
     }

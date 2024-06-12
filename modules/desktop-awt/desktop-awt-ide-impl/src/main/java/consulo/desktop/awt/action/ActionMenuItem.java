@@ -183,8 +183,8 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
 
   private void setAcceleratorFromShortcuts(final Shortcut[] shortcuts) {
     for (Shortcut shortcut : shortcuts) {
-      if (shortcut instanceof KeyboardShortcut) {
-        final KeyStroke firstKeyStroke = ((KeyboardShortcut)shortcut).getFirstKeyStroke();
+      if (shortcut instanceof KeyboardShortcut keyboardShortcut) {
+        final KeyStroke firstKeyStroke = keyboardShortcut.getFirstKeyStroke();
         //If action has Enter shortcut, do not add it. Otherwise, user won't be able to chose any ActionMenuItem other than that
         if (!isEnterKeyStroke(firstKeyStroke)) {
           setAccelerator(firstKeyStroke);
@@ -304,7 +304,7 @@ public class ActionMenuItem extends JBCheckBoxMenuItem {
           selectedIcon = iconLibraryManager.inverseIcon(icon);
         }
 
-        if (action instanceof ToggleAction && ((ToggleAction)action).isSelected(myEvent)) {
+        if (action instanceof ToggleAction toggleAction && toggleAction.isSelected(myEvent)) {
           icon = new PoppedIcon(icon, JBUI.scale(Image.DEFAULT_ICON_SIZE), JBUI.scale(Image.DEFAULT_ICON_SIZE));
         }
 

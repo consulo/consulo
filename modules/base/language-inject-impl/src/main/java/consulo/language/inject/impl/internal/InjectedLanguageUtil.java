@@ -360,8 +360,7 @@ public class InjectedLanguageUtil {
             }
           }
         }
-        if (result.references != null && visitor instanceof InjectedReferenceVisitor) {
-          InjectedReferenceVisitor refVisitor = (InjectedReferenceVisitor)visitor;
+        if (result.references != null && visitor instanceof InjectedReferenceVisitor refVisitor) {
           for (Pair<ReferenceInjector, PlaceImpl> pair : result.references) {
             PlaceImpl place = pair.getSecond();
             if (place.isValid()) {
@@ -555,13 +554,13 @@ public class InjectedLanguageUtil {
     if (virtualFile == null) {
       return null;
     }
-    if (virtualFile instanceof VirtualFileWindow) {
-      virtualFile = ((VirtualFileWindow)virtualFile).getDelegate();
+    if (virtualFile instanceof VirtualFileWindow virtualFileWindow) {
+      virtualFile = virtualFileWindow.getDelegate();
     }
     Editor editor = FileEditorManager.getInstance(project).openTextEditor(OpenFileDescriptorFactory.getInstance(project).builder(virtualFile).build(), false);
     if (editor == null || editor instanceof EditorWindow || editor.isDisposed()) return editor;
-    if (document instanceof DocumentWindowImpl) {
-      return EditorWindowImpl.create((DocumentWindowImpl)document, (RealEditor)editor, file);
+    if (document instanceof DocumentWindowImpl documentWindow) {
+      return EditorWindowImpl.create(documentWindow, (RealEditor)editor, file);
     }
     return editor;
   }
@@ -683,8 +682,7 @@ public class InjectedLanguageUtil {
     PsiFile file = element.getContainingFile();
     if (file == null) return null;
     VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile instanceof VirtualFileWindow) return ((VirtualFileWindow)virtualFile).getDocumentWindow();
-    return null;
+    return virtualFile instanceof VirtualFileWindow virtualFileWindow ? virtualFileWindow.getDocumentWindow() : null;
   }
 
   public static boolean isHighlightInjectionBackground(@Nullable PsiLanguageInjectionHost host) {
@@ -712,7 +710,8 @@ public class InjectedLanguageUtil {
 
   @Nullable
   public static PsiLanguageInjectionHost findInjectionHost(@Nullable VirtualFile virtualFile) {
-    return virtualFile instanceof VirtualFileWindow ? getShreds(((VirtualFileWindow)virtualFile).getDocumentWindow()).getHostPointer().getElement() : null;
+    return virtualFile instanceof VirtualFileWindow virtualFileWindow
+      ? getShreds(virtualFileWindow.getDocumentWindow()).getHostPointer().getElement() : null;
   }
 
   public static <T> void putInjectedFileUserData(@Nonnull PsiElement element, @Nonnull Language language, @Nonnull Key<T> key, @Nullable T value) {

@@ -43,6 +43,7 @@ import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.Lists;
@@ -487,7 +488,9 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     editor.setOneLineMode(isOneLineMode);
 
     EditorColorsManager colorsManager = EditorColorsManager.getInstance();
-    final EditorColorsScheme defaultScheme = UIUtil.isUnderDarcula() ? colorsManager.getGlobalScheme() : colorsManager.getScheme(EditorColorsManager.DEFAULT_SCHEME_NAME);
+    final EditorColorsScheme defaultScheme = StyleManager.get().getCurrentStyle().isDark()
+      ? colorsManager.getGlobalScheme()
+      : colorsManager.getScheme(EditorColorsManager.DEFAULT_SCHEME_NAME);
     EditorColorsScheme customGlobalScheme = isOneLineMode ? defaultScheme : null;
 
     editor.setColorsScheme(editor.createBoundColorSchemeDelegate(customGlobalScheme));

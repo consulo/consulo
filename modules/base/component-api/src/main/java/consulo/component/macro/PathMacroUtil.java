@@ -16,11 +16,11 @@
 package consulo.component.macro;
 
 import consulo.container.boot.ContainerPathManager;
+import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class PathMacroUtil {
   public static final String MODULE_WORKING_DIR = "$" + MODULE_WORKING_DIR_NAME + "$";
 
   public static String getUserHomePath() {
-    return StringUtil.trimEnd(FileUtil.toSystemIndependentName(SystemProperties.getUserHome()), "/");
+    return StringUtil.trimEnd(FileUtil.toSystemIndependentName(Platform.current().user().homePath().toString()), "/");
   }
 
   public static Map<String, String> getGlobalSystemMacros() {

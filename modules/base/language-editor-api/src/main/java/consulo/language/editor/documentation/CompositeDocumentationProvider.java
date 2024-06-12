@@ -38,8 +38,8 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   public static DocumentationProvider wrapProviders(Collection<? extends DocumentationProvider> providers) {
     ArrayList<DocumentationProvider> list = new ArrayList<>();
     for (DocumentationProvider provider : providers) {
-      if (provider instanceof CompositeDocumentationProvider) {
-        list.addAll(((CompositeDocumentationProvider)provider).getProviders());
+      if (provider instanceof CompositeDocumentationProvider compositeDocumentationProvider) {
+        list.addAll(compositeDocumentationProvider.getProviders());
       }
       else if (provider != null) {
         list.add(provider);
@@ -67,8 +67,8 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   @Override
   public boolean handleExternal(PsiElement element, PsiElement originalElement) {
     for (DocumentationProvider provider : getAllProviders()) {
-      if (provider instanceof ExternalDocumentationHandler &&
-          ((ExternalDocumentationHandler)provider).handleExternal(element, originalElement)) {
+      if (provider instanceof ExternalDocumentationHandler externalDocumentationHandler
+        && externalDocumentationHandler.handleExternal(element, originalElement)) {
         return true;
       }
     }

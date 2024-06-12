@@ -15,6 +15,7 @@
  */
 package consulo.logging.impl.log4j2;
 
+import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.impl.ShowErrorCaller;
 import consulo.logging.Logger;
@@ -91,7 +92,7 @@ public class Log4J2LoggerFactory implements LoggerFactory {
       return Configurator.initialize(Log4J2LoggerFactory.class.getClassLoader(), source);
     }
     catch (Exception e) {
-      ShowErrorCaller.showErrorDialog("Consulo", e.getMessage(), e);
+      ShowErrorCaller.showErrorDialog(Application.get().getName().get(), e.getMessage(), e);
       return null;
     }
   }

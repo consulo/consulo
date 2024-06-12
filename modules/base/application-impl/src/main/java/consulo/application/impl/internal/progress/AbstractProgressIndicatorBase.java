@@ -132,14 +132,14 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private void throwIfCanceled() {
     if (isCanceled() && isCancelable()) {
       Throwable trace = getCancellationTrace();
-      throw trace instanceof ProcessCanceledException ? (ProcessCanceledException)trace : new ProcessCanceledException(trace);
+      throw trace instanceof ProcessCanceledException canceledException ? canceledException : new ProcessCanceledException(trace);
     }
   }
 
   @Nullable
   protected Throwable getCancellationTrace() {
-    if (this instanceof Disposable) {
-      return Disposer.getDisposalTrace((Disposable)this);
+    if (this instanceof Disposable disposable) {
+      return Disposer.getDisposalTrace(disposable);
     }
     return null;
   }
@@ -296,9 +296,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
       myFraction = indicator.getFraction();
 
-      if (indicator instanceof AbstractProgressIndicatorBase) {
-        AbstractProgressIndicatorBase stacked = (AbstractProgressIndicatorBase)indicator;
-
+      if (indicator instanceof AbstractProgressIndicatorBase stacked) {
         myTextStack = stacked.myTextStack == null ? null : new Stack<>(stacked.getTextStack());
 
         myText2Stack = stacked.myText2Stack == null ? null : new Stack<>(stacked.getText2Stack());

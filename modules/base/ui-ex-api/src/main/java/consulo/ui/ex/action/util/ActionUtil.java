@@ -84,8 +84,7 @@ public class ActionUtil {
 
   public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
     for (Shortcut shortcut : shortcuts.getShortcuts()) {
-      if (shortcut instanceof KeyboardShortcut) {
-        KeyboardShortcut ks = (KeyboardShortcut)shortcut;
+      if (shortcut instanceof KeyboardShortcut ks) {
         KeyStroke first = ks.getFirstKeyStroke();
         KeyStroke second = ks.getSecondKeyStroke();
         if (second == null) {
