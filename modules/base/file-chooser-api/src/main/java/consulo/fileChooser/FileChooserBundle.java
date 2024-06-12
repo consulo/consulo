@@ -15,6 +15,7 @@
  */
 package consulo.fileChooser;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.util.localize.AbstractBundle;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -24,6 +25,8 @@ import jakarta.annotation.Nonnull;
  * @author VISTALL
  * @since 21/01/2022
  */
+@Deprecated
+@DeprecationInfo("Use FileChooserLocalize")
 public class FileChooserBundle extends AbstractBundle {
   private static final String BUNDLE = "consulo.fileChooser.FileChooserBundle";
   private static final FileChooserBundle INSTANCE = new FileChooserBundle();

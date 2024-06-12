@@ -18,12 +18,12 @@ package consulo.ide.impl.diff;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.diff.localize.DiffLocalize;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings;
 import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
@@ -32,11 +32,10 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * @author VISTALL

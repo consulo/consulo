@@ -28,10 +28,10 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
-import consulo.platform.base.localize.KeyMapLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.IconLibrary;
@@ -42,9 +42,9 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

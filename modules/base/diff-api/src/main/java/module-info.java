@@ -12,6 +12,7 @@ module consulo.diff.api {
 
   exports consulo.diff;
   exports consulo.diff.chain;
+  exports consulo.diff.localize;
   exports consulo.diff.merge;
   exports consulo.diff.request;
   exports consulo.diff.content;

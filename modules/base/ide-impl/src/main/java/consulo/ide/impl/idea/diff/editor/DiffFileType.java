@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.diff.localize.DiffLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.image.Image;
-
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 /**

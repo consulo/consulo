@@ -17,11 +17,11 @@ package consulo.fileChooser;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.util.Iconable;
+import consulo.fileChooser.localize.FileChooserLocalize;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.platform.base.localize.UILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
@@ -32,9 +32,9 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private final boolean myChooseMultiple;
 
   @Nonnull
-  private LocalizeValue myTitleValue = UILocalize.fileChooserDefaultTitle();
+  private LocalizeValue myTitleValue = FileChooserLocalize.fileChooserDefaultTitle();
   @Nonnull
   private LocalizeValue myDescriptionValue = LocalizeValue.empty();
 

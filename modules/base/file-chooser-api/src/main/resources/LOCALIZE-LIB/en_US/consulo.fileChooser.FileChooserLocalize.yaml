@@ -1,0 +1,12 @@
+file.chooser.default.title:
+  text: Select Path
+file.chooser.save.dialog.default.title:
+  text: Select File to Save
+file.chooser.save.dialog.confirmation:
+  text: |-
+    {0} is already exists.
+    Do you want to replace it?
+file.chooser.save.dialog.confirmation.title:
+  text: Confirm Save as
+file.chooser.select.object.title:
+  text: Select {0}

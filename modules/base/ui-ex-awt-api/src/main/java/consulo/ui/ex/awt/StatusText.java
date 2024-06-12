@@ -3,14 +3,14 @@
 package consulo.ui.ex.awt;
 
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.UILocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
