@@ -1,16 +1,15 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.impl.internal;
 
-import consulo.build.ui.BuildBundle;
-import consulo.build.ui.impl.internal.event.*;
-import consulo.build.ui.progress.BuildProgress;
-import consulo.build.ui.progress.BuildProgressDescriptor;
-import consulo.build.ui.progress.BuildProgressListener;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.FinishBuildEvent;
 import consulo.build.ui.event.FinishEvent;
 import consulo.build.ui.event.StartEvent;
-
+import consulo.build.ui.impl.internal.event.*;
+import consulo.build.ui.localize.BuildLocalize;
+import consulo.build.ui.progress.BuildProgress;
+import consulo.build.ui.progress.BuildProgressDescriptor;
+import consulo.build.ui.progress.BuildProgressListener;
 import jakarta.annotation.Nonnull;
 
 public class BuildRootProgressImpl extends BuildProgressImpl {
@@ -30,13 +29,13 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
   @Override
   @Nonnull
   protected StartEvent createStartEvent(BuildProgressDescriptor descriptor) {
-    return new StartBuildEventImpl(descriptor.getBuildDescriptor(), BuildBundle.message("build.status.running"));
+    return new StartBuildEventImpl(descriptor.getBuildDescriptor(), BuildLocalize.buildStatusRunning().get());
   }
 
   @Override
   public @Nonnull
   BuildProgress<BuildProgressDescriptor> finish() {
-    return finish(System.currentTimeMillis(), false, BuildBundle.message("build.status.finished"));
+    return finish(System.currentTimeMillis(), false, BuildLocalize.buildStatusFinished().get());
   }
 
   @Nonnull
@@ -51,7 +50,7 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
   @Nonnull
   @Override
   public BuildProgress<BuildProgressDescriptor> fail() {
-    return fail(System.currentTimeMillis(), BuildBundle.message("build.status.failed"));
+    return fail(System.currentTimeMillis(), BuildLocalize.buildStatusFailed().get());
   }
 
   @Nonnull
@@ -66,7 +65,7 @@ public class BuildRootProgressImpl extends BuildProgressImpl {
   @Nonnull
   @Override
   public BuildProgress<BuildProgressDescriptor> cancel() {
-    return cancel(System.currentTimeMillis(), BuildBundle.message("build.status.cancelled"));
+    return cancel(System.currentTimeMillis(), BuildLocalize.buildStatusCancelled().get());
   }
 
   @Nonnull

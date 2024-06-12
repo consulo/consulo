@@ -30,8 +30,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static consulo.util.lang.SystemProperties.getUserHome;
-
 /**
  * @author VISTALL
  * @since 2019-12-07
@@ -379,7 +377,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
       paths.add(propertyValue);
     }
     paths.add(new File(getAppHomeDirectory(), "consulo.properties").getPath());
-    paths.add(getUserHome() + "/consulo.properties");
+    paths.add(Platform.current().user().homePath() + "/consulo.properties");
 
     File propFile = FileUtil.findFirstThatExist(ArrayUtil.toStringArray(paths));
 
@@ -437,7 +435,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
 
   private static String getAbsolutePath(String path) {
     if (path.startsWith("~/") || path.startsWith("~\\")) {
-      path = getUserHome() + path.substring(1);
+      path = Platform.current().user().homePath() + path.substring(1);
     }
     return new File(path).getAbsolutePath();
   }
@@ -445,7 +443,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   @Nonnull
   private static File getAbsoluteFile(String path) {
     if (path.startsWith("~/") || path.startsWith("~\\")) {
-      path = getUserHome() + path.substring(1);
+      path = Platform.current().user().homePath() + path.substring(1);
     }
     return new File(path);
   }

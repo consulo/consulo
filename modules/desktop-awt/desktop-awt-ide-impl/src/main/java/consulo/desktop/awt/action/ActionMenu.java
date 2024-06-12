@@ -317,15 +317,15 @@ public final class ActionMenu extends JMenu {
   private void clearItems() {
     if (isTopMenuBar()) {
       for (Component menuComponent : getMenuComponents()) {
-        if (menuComponent instanceof ActionMenu) {
-          ((ActionMenu)menuComponent).clearItems();
+        if (menuComponent instanceof ActionMenu actionMenu) {
+          actionMenu.clearItems();
           if (TopApplicationMenuUtil.isMacSystemMenu) {
             // hideNotify is not called on Macs
-            ((ActionMenu)menuComponent).uninstallSynchronizer();
+            actionMenu.uninstallSynchronizer();
           }
         }
-        else if (menuComponent instanceof ActionMenuItem) {
-          ((ActionMenuItem)menuComponent).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F24, 0));
+        else if (menuComponent instanceof ActionMenuItem actionMenuItem) {
+          actionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F24, 0));
         }
       }
     }

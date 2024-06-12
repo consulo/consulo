@@ -20,9 +20,9 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
-import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -30,9 +30,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 
 /**
  * User: Vassiliy.Kudryashov
@@ -64,7 +63,7 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
   @Nonnull
   @Override
   public String getDescription(MakeBeforeRunTaskNoErrorCheck task) {
-    return ExecutionBundle.message("before.launch.compile.step.no.error.check");
+    return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck().get();
   }
 
   @Override
@@ -97,7 +96,7 @@ public class CompileStepBeforeRunNoErrorCheck extends BeforeRunTaskProvider<Comp
   @Nonnull
   @Override
   public String getName() {
-    return ExecutionBundle.message("before.launch.compile.step.no.error.check");
+    return ExecutionLocalize.beforeLaunchCompileStepNoErrorCheck().get();
   }
 
   @Nonnull

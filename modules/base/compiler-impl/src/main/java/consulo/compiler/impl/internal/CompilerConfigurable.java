@@ -16,7 +16,7 @@
 package consulo.compiler.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.compiler.CompilerBundle;
+import consulo.compiler.localize.CompilerLocalize;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.SimpleConfigurable;
@@ -26,10 +26,10 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
+import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 @ExtensionImpl
@@ -44,10 +44,10 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     public Root() {
       myLayout = VerticalLayout.create();
 
-      myCbClearOutputDirectory = CheckBox.create(CompilerBundle.message("label.option.clear.output.directory.on.rebuild"));
+      myCbClearOutputDirectory = CheckBox.create(CompilerLocalize.labelOptionClearOutputDirectoryOnRebuild());
       myLayout.add(myCbClearOutputDirectory);
 
-      myCbAutoShowFirstError = CheckBox.create(CompilerBundle.message("label.option.autoshow.first.error"));
+      myCbAutoShowFirstError = CheckBox.create(CompilerLocalize.labelOptionAutoshowFirstError());
       myLayout.add(myCbAutoShowFirstError);
     }
 
@@ -103,7 +103,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
   @Nonnull
   @Override
   public String getDisplayName() {
-    return CompilerBundle.message("compiler.configurable.display.name");
+    return CompilerLocalize.compilerConfigurableDisplayName().get();
   }
 
   @Nonnull

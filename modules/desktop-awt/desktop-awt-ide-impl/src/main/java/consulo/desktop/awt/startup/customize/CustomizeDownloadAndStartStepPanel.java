@@ -15,25 +15,25 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.Application;
+import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.application.util.Restarter;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import java.util.Collections;
 import java.util.Set;
@@ -135,11 +135,13 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   }
 
   @Override
+  @NonNls
   protected String getTitle() {
     return myPluginsStepPanel == null ? getStartName() : "Download plugins";
   }
 
   @Override
+  @NonNls
   protected String getHTMLHeader() {
     Set<PluginDescriptor> pluginsForDownload =
             myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
@@ -152,13 +154,14 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
   }
 
   @Nonnull
+  @NonNls
   private static String getStartName() {
     boolean supported = Restarter.isSupported();
-    if(supported) {
-      return "Start using " + ApplicationNamesInfo.getInstance().getFullProductName();
+    if (supported) {
+      return "Start using " + Application.get().getName();
     }
     else {
-      return "Manual restart " + ApplicationNamesInfo.getInstance().getFullProductName();
+      return "Manual restart " + Application.get().getName();
     }
   }
 }

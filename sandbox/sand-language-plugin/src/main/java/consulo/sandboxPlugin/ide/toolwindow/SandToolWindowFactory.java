@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -58,7 +59,7 @@ public class SandToolWindowFactory implements ToolWindowFactory {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        Messages.showInfoMessage("Expand All", "Consulo");
+        Messages.showInfoMessage("Expand All", Application.get().getName().get());
       }
     });
 

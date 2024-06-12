@@ -26,6 +26,7 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Button;
 import consulo.ui.CheckBox;
 import consulo.ui.Component;
@@ -96,7 +97,7 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
     propertyBuilder.add(showWhitespaces, editorSettings::isWhitespacesShown, editorSettings::setWhitespacesShown);
     root.add(showWhitespaces);
 
-    CheckBox showVerticalIndents = CheckBox.create(LocalizeValue.localizeTODO("Show vertical indent guides"));
+    CheckBox showVerticalIndents = CheckBox.create(IdeLocalize.labelAppearanceShowVerticalIndentGuides());
     propertyBuilder.add(showVerticalIndents, editorSettings::isIndentGuidesShown, editorSettings::setIndentGuidesShown);
     root.add(showVerticalIndents);
 

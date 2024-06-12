@@ -15,7 +15,7 @@
  */
 package consulo.build.ui;
 
-import consulo.localize.LocalizeValue;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.project.ui.notification.NotificationGroup;
 
 /**
@@ -23,5 +23,5 @@ import consulo.project.ui.notification.NotificationGroup;
  * @since 08-Aug-22
  */
 public interface BuildNotificationsGroups {
-  NotificationGroup BUILD_ISSUES = NotificationGroup.balloonGroup("buildIssues", LocalizeValue.localizeTODO(BuildBundle.message("build.event.title.build.issues")));
+  NotificationGroup BUILD_ISSUES = NotificationGroup.balloonGroup("buildIssues", BuildLocalize.buildEventTitleBuildIssues());
 }

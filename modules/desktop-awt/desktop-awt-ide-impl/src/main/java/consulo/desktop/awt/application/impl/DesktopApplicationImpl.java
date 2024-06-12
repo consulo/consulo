@@ -18,7 +18,10 @@ package consulo.desktop.awt.application.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.*;
-import consulo.application.impl.internal.*;
+import consulo.application.impl.internal.BaseApplication;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressResult;
@@ -44,7 +47,6 @@ import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.diagnostic.LogEventException;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
@@ -52,10 +54,12 @@ import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
-import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
@@ -66,6 +70,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.EDT;
@@ -78,6 +83,7 @@ import consulo.util.lang.ref.SimpleReference;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -100,9 +106,11 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private volatile boolean myDisposeInProgress;
 
-  public DesktopApplicationImpl(ComponentBinding componentBinding,
-                                boolean isHeadless,
-                                @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+  public DesktopApplicationImpl(
+    ComponentBinding componentBinding,
+    boolean isHeadless,
+    @Nonnull SimpleReference<? extends StartupProgress> splashRef
+  ) {
     super(componentBinding, splashRef);
 
     ApplicationManager.setApplication(this);
@@ -240,22 +248,26 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public void invokeLater(@Nonnull final Runnable runnable,
-                          @Nonnull final consulo.ui.ModalityState state,
-                          @Nonnull final BooleanSupplier expired) {
+  public void invokeLater(
+    @Nonnull final Runnable runnable,
+    @Nonnull final consulo.ui.ModalityState state,
+    @Nonnull final BooleanSupplier expired
+  ) {
     Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
     LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null);
   }
 
   @RequiredUIAccess
   @Override
-  public boolean runProcessWithProgressSynchronously(@Nonnull final Runnable process,
-                                                     @Nonnull final String progressTitle,
-                                                     final boolean canBeCanceled,
-                                                     boolean shouldShowModalWindow,
-                                                     @Nullable final ComponentManager project,
-                                                     final JComponent parentComponent,
-                                                     final String cancelText) {
+  public boolean runProcessWithProgressSynchronously(
+    @Nonnull final Runnable process,
+    @Nonnull final String progressTitle,
+    final boolean canBeCanceled,
+    boolean shouldShowModalWindow,
+    @Nullable final ComponentManager project,
+    final JComponent parentComponent,
+    final String cancelText
+  ) {
     if (isDispatchThread() && isWriteAccessAllowed()
       // Disallow running process in separate thread from under write action.
       // The thread will deadlock trying to get read action otherwise.
@@ -271,11 +283,20 @@ public class DesktopApplicationImpl extends BaseApplication {
       return true;
     }
 
-    CompletableFuture<ProgressWindow> progress =
-      createProgressWindowAsyncIfNeeded(progressTitle, canBeCanceled, shouldShowModalWindow, project, parentComponent, cancelText);
+    CompletableFuture<ProgressWindow> progress = createProgressWindowAsyncIfNeeded(
+      progressTitle,
+      canBeCanceled,
+      shouldShowModalWindow,
+      project,
+      parentComponent,
+      cancelText
+    );
 
-    ProgressRunner<?> progressRunner =
-      new ProgressRunner<>(process).sync().onThread(ProgressRunner.ThreadToUse.POOLED).modal().withProgress(progress);
+    ProgressRunner<?> progressRunner = new ProgressRunner<>(process)
+      .sync()
+      .onThread(ProgressRunner.ThreadToUse.POOLED)
+      .modal()
+      .withProgress(progress);
 
     ProgressResult<?> result = progressRunner.submitAndGet();
 
@@ -287,26 +308,35 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Nonnull
-  public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(@Nonnull String progressTitle,
-                                                                                   boolean canBeCanceled,
-                                                                                   boolean shouldShowModalWindow,
-                                                                                   @Nullable ComponentManager project,
-                                                                                   @Nullable JComponent parentComponent,
-                                                                                   @Nullable String cancelText) {
+  public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(
+    @Nonnull String progressTitle,
+    boolean canBeCanceled,
+    boolean shouldShowModalWindow,
+    @Nullable ComponentManager project,
+    @Nullable JComponent parentComponent,
+    @Nullable String cancelText
+  ) {
     if (SwingUtilities.isEventDispatchThread()) {
-      return CompletableFuture.completedFuture(createProgressWindow(progressTitle,
-                                                                    canBeCanceled,
-                                                                    shouldShowModalWindow,
-                                                                    project,
-                                                                    parentComponent,
-                                                                    cancelText));
+      return CompletableFuture.completedFuture(createProgressWindow(
+        progressTitle,
+        canBeCanceled,
+        shouldShowModalWindow,
+        project,
+        parentComponent,
+        cancelText
+      ));
     }
-    return CompletableFuture.supplyAsync(() -> createProgressWindow(progressTitle,
-                                                                    canBeCanceled,
-                                                                    shouldShowModalWindow,
-                                                                    project,
-                                                                    parentComponent,
-                                                                    cancelText), this::invokeLater);
+    return CompletableFuture.supplyAsync(
+      () -> createProgressWindow(
+        progressTitle,
+        canBeCanceled,
+        shouldShowModalWindow,
+        project,
+        parentComponent,
+        cancelText
+      ),
+      this::invokeLater
+    );
   }
 
   @Override
@@ -382,7 +412,12 @@ public class DesktopApplicationImpl extends BaseApplication {
    */
   private static volatile boolean exiting = false;
 
-  public void exit(final boolean force, final boolean exitConfirmed, final boolean allowListenersToCancel, final boolean restart) {
+  public void exit(
+    final boolean force,
+    final boolean exitConfirmed,
+    final boolean allowListenersToCancel,
+    final boolean restart
+  ) {
     if (!force && exiting) {
       return;
     }
@@ -476,20 +511,24 @@ public class DesktopApplicationImpl extends BaseApplication {
 
       @Nonnull
       @Override
+      @NonNls
       public String getDoNotShowMessage() {
         return "Do not ask me again";
       }
     };
 
     if (hasUnsafeBgTasks || option.isToBeShown()) {
-      String message = ApplicationBundle.message(hasUnsafeBgTasks ? "exit.confirm.prompt.tasks" : "exit.confirm.prompt",
-                                                 ApplicationNamesInfo.getInstance().getFullProductName());
+      String message = hasUnsafeBgTasks
+        ? ApplicationLocalize.exitConfirmPromptTasks(Application.get().getName()).get()
+        : ApplicationLocalize.exitConfirmPrompt(Application.get().getName()).get();
 
-      if (MessageDialogBuilder.yesNo(ApplicationBundle.message("exit.confirm.title"), message)
-                              .yesText(ApplicationBundle.message("command.exit"))
-                              .noText(CommonBundle.message("button.cancel"))
-                              .doNotAsk(option)
-                              .show() != Messages.YES) {
+      if (
+        MessageDialogBuilder.yesNo(ApplicationLocalize.exitConfirmTitle().get(), message)
+          .yesText(ApplicationLocalize.commandExit().get())
+          .noText(CommonLocalize.buttonCancel().get())
+          .doNotAsk(option)
+          .show() != Messages.YES
+      ) {
         return false;
       }
     }
@@ -497,26 +536,32 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Override
-  public boolean runWriteActionWithNonCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                          @Nullable ComponentManager project,
-                                                                          @Nullable JComponent parentComponent,
-                                                                          @Nonnull Consumer<? super ProgressIndicator> action) {
+  public boolean runWriteActionWithNonCancellableProgressInDispatchThread(
+    @Nonnull String title,
+    @Nullable ComponentManager project,
+    @Nullable JComponent parentComponent,
+    @Nonnull Consumer<? super ProgressIndicator> action
+  ) {
     return runEdtProgressWriteAction(title, project, parentComponent, null, action);
   }
 
   @Override
-  public boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                       @Nullable ComponentManager project,
-                                                                       @Nullable JComponent parentComponent,
-                                                                       @Nonnull Consumer<? super ProgressIndicator> action) {
-    return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
+  public boolean runWriteActionWithCancellableProgressInDispatchThread(
+    @Nonnull String title,
+    @Nullable ComponentManager project,
+    @Nullable JComponent parentComponent,
+    @Nonnull Consumer<? super ProgressIndicator> action
+  ) {
+    return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop().get(), action);
   }
 
-  private boolean runEdtProgressWriteAction(@Nonnull String title,
-                                            @Nullable ComponentManager project,
-                                            @Nullable JComponent parentComponent,
-                                            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
-                                            @Nonnull Consumer<? super ProgressIndicator> action) {
+  private boolean runEdtProgressWriteAction(
+    @Nonnull String title,
+    @Nullable ComponentManager project,
+    @Nullable JComponent parentComponent,
+    @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
+    @Nonnull Consumer<? super ProgressIndicator> action
+  ) {
     // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
     return runWriteActionWithClass(action.getClass(), () -> {
       PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
@@ -526,12 +571,14 @@ public class DesktopApplicationImpl extends BaseApplication {
   }
 
   @Nonnull
-  private ProgressWindow createProgressWindow(@Nonnull String progressTitle,
-                                              boolean canBeCanceled,
-                                              boolean shouldShowModalWindow,
-                                              @Nullable ComponentManager project,
-                                              @Nullable JComponent parentComponent,
-                                              @Nullable String cancelText) {
+  private ProgressWindow createProgressWindow(
+    @Nonnull String progressTitle,
+    boolean canBeCanceled,
+    boolean shouldShowModalWindow,
+    @Nullable ComponentManager project,
+    @Nullable JComponent parentComponent,
+    @Nullable String cancelText
+  ) {
     ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project)project, parentComponent, cancelText);
     // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
     // does not have a chance to run, and as a result the progress won't be disposed
@@ -544,10 +591,13 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
-      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
-                "Current thread: " + describe(Thread.currentThread()),
-                "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
-                "SystemEventQueueThread: " + describe(getEventQueueThread()));
+      LOG.error(
+        "Read access is allowed from event dispatch thread or inside read-action only" +
+          " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
+        "Current thread: " + describe(Thread.currentThread()),
+        "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
+        "SystemEventQueueThread: " + describe(getEventQueueThread())
+      );
     }
   }
 
@@ -571,16 +621,15 @@ public class DesktopApplicationImpl extends BaseApplication {
   private void assertIsDispatchThread(@Nonnull String message) {
     if (isDispatchThread()) return;
     final Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
-    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-      EventQueue.isDispatchThread() +
-      " isDispatchThread()=" +
-      isDispatchThread() +
-      " Toolkit.getEventQueue()=" +
-      Toolkit.getDefaultToolkit().getSystemEventQueue() +
-      " Current thread: " +
-      describe(Thread.currentThread()) +
-      " SystemEventQueueThread: " +
-      describe(getEventQueueThread()), dump);
+    throw new LogEventException(
+      message,
+      " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
+        " isDispatchThread()=" + isDispatchThread() +
+        " Toolkit.getEventQueue()=" + Toolkit.getDefaultToolkit().getSystemEventQueue() +
+        " Current thread: " + describe(Thread.currentThread()) +
+        " SystemEventQueueThread: " + describe(getEventQueueThread()),
+      dump
+    );
   }
 
   @RequiredUIAccess
@@ -593,19 +642,17 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private void assertIsIsWriteThread(@Nonnull String message) {
     if (isWriteThread()) return;
-    final consulo.logging.attachment.Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
-    throw new LogEventException(message, " EventQueue.isDispatchThread()=" +
-      EventQueue.isDispatchThread() +
-      " isDispatchThread()=" +
-      isDispatchThread() +
-      " Toolkit.getEventQueue()=" +
-      Toolkit.getDefaultToolkit().getSystemEventQueue() +
-      " Write Thread=" +
-      myLock.writeThread +
-      " Current thread: " +
-      describe(Thread.currentThread()) +
-      " SystemEventQueueThread: " +
-      describe(getEventQueueThread()), dump);
+    final Attachment dump = AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString());
+    throw new LogEventException(
+      message,
+      " EventQueue.isDispatchThread()=" + EventQueue.isDispatchThread() +
+        " isDispatchThread()=" + isDispatchThread() +
+        " Toolkit.getEventQueue()=" + Toolkit.getDefaultToolkit().getSystemEventQueue() +
+        " Write Thread=" + myLock.writeThread +
+        " Current thread: " + describe(Thread.currentThread()) +
+        " SystemEventQueueThread: " + describe(getEventQueueThread()),
+      dump
+    );
   }
 
   @Override

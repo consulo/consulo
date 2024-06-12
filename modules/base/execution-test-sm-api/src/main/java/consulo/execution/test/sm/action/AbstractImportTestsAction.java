@@ -162,8 +162,8 @@ public abstract class AbstractImportTestsAction extends AnAction {
 
               final Executor executor = ExecutorRegistry.getInstance().getExecutorById(DefaultRunExecutor.EXECUTOR_ID);
               if (executor != null) {
-                if (myConfiguration instanceof SMRunnerConsolePropertiesProvider) {
-                  myProperties = ((SMRunnerConsolePropertiesProvider)myConfiguration).createTestConsoleProperties(executor);
+                if (myConfiguration instanceof SMRunnerConsolePropertiesProvider provider) {
+                  myProperties = provider.createTestConsoleProperties(executor);
                 }
               }
             }

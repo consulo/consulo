@@ -307,10 +307,13 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
         }
       }
 
-      if (action instanceof AnSeparator) {
+      if (action instanceof AnSeparator separator) {
         if (isLastElementSeparator) continue;
         if (i > 0 && i < actions.size() - 1) {
-          add(SEPARATOR_CONSTRAINT, new MySeparator(myShowSeparatorTitles ? ((AnSeparator)action).getTextValue() : LocalizeValue.empty()));
+          add(
+            SEPARATOR_CONSTRAINT,
+            new MySeparator(myShowSeparatorTitles ? separator.getTextValue() : LocalizeValue.empty())
+          );
           isLastElementSeparator = true;
           continue;
         }
@@ -772,7 +775,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     int maxRowWidth = Math.max(widthToFit, componentCount * maxWidth / 3);
     for (int i = 0; i < componentCount; i++) {
       final Component component = getComponent(i);
-      if (component instanceof JComponent && ((JComponent)component).getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
+      if (component instanceof JComponent jComponent && jComponent.getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
         maxRowWidth -= getChildPreferredSize(i).width;
       }
     }
@@ -812,7 +815,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
       Insets insets = getInsets();
       for (int i = getComponentCount() - 1, j = 1; i > 0; i--, j++) {
         final Component component = getComponent(i);
-        if (component instanceof JComponent && ((JComponent)component).getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
+        if (component instanceof JComponent jComponent && jComponent.getClientProperty(RIGHT_ALIGN_KEY) == Boolean.TRUE) {
           rightOffset += bounds.get(i).width;
           Rectangle r = bounds.get(bounds.size() - j);
           r.x = size2Fit.width - rightOffset;
@@ -1017,8 +1020,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbarEx, QuickA
     myMinimumButtonSize = size;
     for (int i = getComponentCount() - 1; i >= 0; i--) {
       final Component component = getComponent(i);
-      if (component instanceof ActionButtonImpl) {
-        final ActionButtonImpl button = (ActionButtonImpl)component;
+      if (component instanceof ActionButtonImpl button) {
         button.setMinimumButtonSize(size);
       }
     }

@@ -20,6 +20,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -130,7 +131,8 @@ public class SearchTextArea extends JPanel implements PropertyChangeListener {
           return new JBInsets(3, 0, 2, 0);
         }
         else {
-          int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 : UIUtil.isUnderDarcula() ? 1 : 0;
+          int bottom = (StringUtil.getLineBreakCount(myTextArea.getText()) > 0) ? 2 :
+            StyleManager.get().getCurrentStyle().isDark() ? 1 : 0;
           int top = myTextArea.getFontMetrics(myTextArea.getFont()).getHeight() <= 16 ? 2 : 1;
           if (JBUIScale.isUsrHiDPI()) {
             bottom = 0;

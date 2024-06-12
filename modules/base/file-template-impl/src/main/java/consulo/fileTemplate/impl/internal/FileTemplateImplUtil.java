@@ -70,7 +70,12 @@ public class FileTemplateImplUtil {
   }
 
   @Nonnull
-  public static FileTemplate createTemplate(@Nonnull String prefName, @Nonnull String extension, @Nonnull String content, FileTemplate[] templates) {
+  public static FileTemplate createTemplate(
+    @Nonnull String prefName,
+    @Nonnull String extension,
+    @Nonnull String content,
+    FileTemplate[] templates
+  ) {
     final Set<String> names = new HashSet<>();
     for (FileTemplate template : templates) {
       names.add(template.getName());
@@ -92,7 +97,11 @@ public class FileTemplateImplUtil {
     return handler.canCreate(dirs);
   }
 
-  private static String mergeTemplate(String templateContent, final VelocityContext context, boolean useSystemLineSeparators) throws IOException {
+  private static String mergeTemplate(
+    String templateContent,
+    final VelocityContext context,
+    boolean useSystemLineSeparators
+  ) throws IOException {
     final StringWriter stringWriter = new StringWriter();
     try {
       VelocityWrapper.evaluate(null, context, stringWriter, templateContent);
@@ -102,7 +111,9 @@ public class FileTemplateImplUtil {
     }
     catch (final VelocityException e) {
       LOG.error("Error evaluating template:\n" + templateContent, e);
-      ApplicationManager.getApplication().invokeLater(() -> Alerts.okError(FileTemplateBundle.message("error.parsing.file.template", e.getMessage())).showAsync());
+      ApplicationManager.getApplication().invokeLater(
+        () -> Alerts.okError(FileTemplateBundle.message("error.parsing.file.template", e.getMessage())).showAsync()
+      );
     }
     final String result = stringWriter.toString();
 
@@ -118,7 +129,12 @@ public class FileTemplateImplUtil {
 
   @Deprecated
   @DeprecationInfo("Use #calculateAttributes with Map parameter")
-  public static String[] calculateAttributes(String templateContent, Properties properties, boolean includeDummies, Project project) throws FileTemplateParseException {
+  public static String[] calculateAttributes(
+    String templateContent,
+    Properties properties,
+    boolean includeDummies,
+    Project project
+  ) throws FileTemplateParseException {
     Set<String> propertiesNames = new HashSet<>();
     for (Enumeration e = properties.propertyNames(); e.hasMoreElements(); ) {
       propertiesNames.add((String)e.nextElement());
@@ -126,16 +142,34 @@ public class FileTemplateImplUtil {
     return calculateAttributes(templateContent, propertiesNames, includeDummies, project);
   }
 
-  public static String[] calculateAttributes(String templateContent, Map<String, Object> properties, boolean includeDummies, Project project) throws FileTemplateParseException {
+  public static String[] calculateAttributes(
+    String templateContent,
+    Map<String, Object> properties,
+    boolean includeDummies,
+    Project project
+  ) throws FileTemplateParseException {
     return calculateAttributes(templateContent, properties.keySet(), includeDummies, project);
   }
 
-  private static String[] calculateAttributes(String templateContent, Set<String> propertiesNames, boolean includeDummies, Project project) throws FileTemplateParseException {
+  private static String[] calculateAttributes(
+    String templateContent,
+    Set<String> propertiesNames,
+    boolean includeDummies,
+    Project project
+  ) throws FileTemplateParseException {
     try {
       final Set<String> unsetAttributes = new LinkedHashSet<>();
       final Set<String> definedAttributes = new HashSet<>();
       SimpleNode template = VelocityWrapper.parse(new StringReader(templateContent), "MyTemplate");
-      collectAttributes(unsetAttributes, definedAttributes, template, propertiesNames, includeDummies, new HashSet<>(), project);
+      collectAttributes(
+        unsetAttributes,
+        definedAttributes,
+        template,
+        propertiesNames,
+        includeDummies,
+        new HashSet<>(),
+        project
+      );
       for (String definedAttribute : definedAttributes) {
         unsetAttributes.remove(definedAttribute);
       }
@@ -146,13 +180,15 @@ public class FileTemplateImplUtil {
     }
   }
 
-  private static void collectAttributes(Set<String> referenced,
-                                        Set<String> defined,
-                                        Node apacheNode,
-                                        final Set<String> propertiesNames,
-                                        final boolean includeDummies,
-                                        Set<String> visitedIncludes,
-                                        Project project) throws ParseException {
+  private static void collectAttributes(
+    Set<String> referenced,
+    Set<String> defined,
+    Node apacheNode,
+    final Set<String> propertiesNames,
+    final boolean includeDummies,
+    Set<String> visitedIncludes,
+    Project project
+  ) throws ParseException {
     int childCount = apacheNode.jjtGetNumChildren();
     for (int i = 0; i < childCount; i++) {
       Node apacheChild = apacheNode.jjtGetChild(i);
@@ -172,7 +208,11 @@ public class FileTemplateImplUtil {
           defined.add(attr);
         }
       }
-      else if (apacheChild instanceof ASTDirective && "parse".equals(((ASTDirective)apacheChild).getDirectiveName()) && apacheChild.jjtGetNumChildren() == 1) {
+      else if (
+        apacheChild instanceof ASTDirective astDirective
+          && "parse".equals(astDirective.getDirectiveName())
+          && apacheChild.jjtGetNumChildren() == 1
+      ) {
         Node literal = apacheChild.jjtGetChild(0);
         if (literal instanceof ASTStringLiteral && literal.jjtGetNumChildren() == 0) {
           Token firstToken = literal.getFirstToken();
@@ -180,8 +220,17 @@ public class FileTemplateImplUtil {
             String s = StringUtil.unquoteString(firstToken.toString());
             final FileTemplate includedTemplate = FileTemplateManager.getInstance(project).getTemplate(s);
             if (includedTemplate != null && visitedIncludes.add(s)) {
-              SimpleNode template = VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");
-              collectAttributes(referenced, defined, template, propertiesNames, includeDummies, visitedIncludes, project);
+              SimpleNode template =
+                VelocityWrapper.parse(new StringReader(includedTemplate.getText()), "MyTemplate");
+              collectAttributes(
+                referenced,
+                defined,
+                template,
+                propertiesNames,
+                includeDummies,
+                visitedIncludes,
+                project
+              );
             }
           }
         }
@@ -242,5 +291,4 @@ public class FileTemplateImplUtil {
     }
     return attrib;
   }
-
 }

@@ -24,18 +24,19 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.intention.SyntheticIntentionAction;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Alerts;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 
 public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
@@ -51,7 +52,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
   @Override
   @Nonnull
   public String getText() {
-    return CodeInsightBundle.message("rename.file.fix");
+    return CodeInsightLocalize.renameFileFix().get();
   }
 
   @Override
@@ -63,7 +64,7 @@ public class RenameFileFix implements SyntheticIntentionAction, LocalQuickFix {
   @Override
   @Nonnull
   public String getFamilyName() {
-    return CodeInsightBundle.message("rename.file.fix");
+    return CodeInsightLocalize.renameFileFix().get();
   }
 
   @Override

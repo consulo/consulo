@@ -76,7 +76,12 @@ public abstract class AnAction implements PossiblyDumbAware {
   @Deprecated
   @DeprecationInfo("Use constructors with LocalizeValue parameters")
   @SuppressWarnings("deprecation")
-  public static AnAction create(@Nonnull String text, @Nullable String description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
+  public static AnAction create(
+    @Nonnull String text,
+    @Nullable String description,
+    @Nullable Image image,
+    @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
+  ) {
     return new AnAction(text, description, image) {
       @RequiredUIAccess
       @Override
@@ -87,7 +92,12 @@ public abstract class AnAction implements PossiblyDumbAware {
   }
 
   @Nonnull
-  public static AnAction create(@Nonnull LocalizeValue text, @Nullable LocalizeValue description, @Nullable Image image, @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed) {
+  public static AnAction create(
+    @Nonnull LocalizeValue text,
+    @Nullable LocalizeValue description,
+    @Nullable Image image,
+    @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
+  ) {
     return new AnAction(text, description == null ? LocalizeValue.empty() : description, image) {
       @RequiredUIAccess
       @Override
@@ -194,7 +204,11 @@ public abstract class AnAction implements PossiblyDumbAware {
     registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(keyCode, modifiers)), component);
   }
 
-  public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component, @Nullable Disposable parentDisposable) {
+  public final void registerCustomShortcutSet(
+    @Nonnull ShortcutSet shortcutSet,
+    @Nullable JComponent component,
+    @Nullable Disposable parentDisposable
+  ) {
     setShortcutSet(shortcutSet);
     registerCustomShortcutSet(component, parentDisposable);
   }
