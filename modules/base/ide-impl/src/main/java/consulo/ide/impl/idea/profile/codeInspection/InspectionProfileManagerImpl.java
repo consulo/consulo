@@ -25,7 +25,7 @@ import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileConvertor;

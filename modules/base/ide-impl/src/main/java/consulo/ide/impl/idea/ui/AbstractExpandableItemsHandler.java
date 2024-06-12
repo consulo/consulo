@@ -15,15 +15,12 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
-import consulo.project.ui.internal.WindowManagerEx;
+import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.MovablePopup;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.MouseEventHandler;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
+import consulo.platform.Platform;
+import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.CustomLineBorder;
@@ -32,9 +29,12 @@ import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -273,8 +273,8 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   }
 
   private static boolean isHintsAllowed(Window window) {
-    if (window instanceof RootPaneContainer) {
-      final JRootPane pane = ((RootPaneContainer)window).getRootPane();
+    if (window instanceof RootPaneContainer rootPaneContainer) {
+      final JRootPane pane = rootPaneContainer.getRootPane();
       if (pane != null) {
         return Boolean.TRUE.equals(pane.getClientProperty(AbstractPopup.SHOW_HINTS));
       }
@@ -289,9 +289,9 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     if (focus == owner.getOwner()) {
       focus = null; // do not check intersection with parent
     }
-    boolean focused = SystemInfo.isWindows || owner.isFocused();
+    boolean focused = Platform.current().os().isWindows() || owner.isFocused();
     for (Window other : owner.getOwnedWindows()) {
-      if (!focused && !SystemInfo.isWindows) {
+      if (!focused && !Platform.current().os().isWindows()) {
         focused = other.isFocused();
       }
       if (popup != other && other.isVisible() && bounds.x + 10 >= other.getX() && bounds.intersects(other.getBounds())) {

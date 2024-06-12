@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.tools;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;

@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.platform.templates.github;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.ObjectUtil;

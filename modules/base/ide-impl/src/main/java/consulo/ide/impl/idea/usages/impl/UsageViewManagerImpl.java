@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.find.SearchInBackgroundOption;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.internal.TooManyUsagesStatus;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageInFile;

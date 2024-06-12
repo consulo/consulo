@@ -15,21 +15,19 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.UIBundle;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.localize.UILocalize;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,22 +61,20 @@ public abstract class OrderPanel<T> extends JPanel{
     myEntryTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
     myEntryTable.registerKeyboardAction(
-      new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          if(getCheckboxColumn() == -1) return;
+      e -> {
+        if(getCheckboxColumn() == -1) return;
 
-          final int[] selectedRows = myEntryTable.getSelectedRows();
-          boolean currentlyMarked = true;
-          for (int idx = 0; idx < selectedRows.length; idx++) {
-            final int selectedRow = selectedRows[idx];
-            if (selectedRow < 0 || !myEntryTable.isCellEditable(selectedRow, getCheckboxColumn())) {
-              return;
-            }
-            currentlyMarked &= ((Boolean)myEntryTable.getValueAt(selectedRow, getCheckboxColumn())).booleanValue();
+        final int[] selectedRows = myEntryTable.getSelectedRows();
+        boolean currentlyMarked = true;
+        for (int idx = 0; idx < selectedRows.length; idx++) {
+          final int selectedRow = selectedRows[idx];
+          if (selectedRow < 0 || !myEntryTable.isCellEditable(selectedRow, getCheckboxColumn())) {
+            return;
           }
-          for (int idx = 0; idx < selectedRows.length; idx++) {
-            myEntryTable.setValueAt(currentlyMarked? Boolean.FALSE : Boolean.TRUE, selectedRows[idx], getCheckboxColumn());
-          }
+          currentlyMarked &= ((Boolean)myEntryTable.getValueAt(selectedRow, getCheckboxColumn())).booleanValue();
+        }
+        for (int idx = 0; idx < selectedRows.length; idx++) {
+          myEntryTable.setValueAt(currentlyMarked? Boolean.FALSE : Boolean.TRUE, selectedRows[idx], getCheckboxColumn());
         }
       },
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
@@ -262,7 +258,7 @@ public abstract class OrderPanel<T> extends JPanel{
 
   public String getCheckboxColumnName() {
     if (CHECKBOX_COLUMN_NAME == null) {
-      CHECKBOX_COLUMN_NAME = UIBundle.message("order.entries.panel.export.column.name");
+      CHECKBOX_COLUMN_NAME = UILocalize.orderEntriesPanelExportColumnName().get();
     }
     return CHECKBOX_COLUMN_NAME;
   }
@@ -270,7 +266,7 @@ public abstract class OrderPanel<T> extends JPanel{
   public List<T> getEntries() {
     final TableModel model = myEntryTable.getModel();
     final int size = model.getRowCount();
-    List<T> result = new ArrayList<T>(size);
+    List<T> result = new ArrayList<>(size);
     for (int idx = 0; idx < size; idx++) {
       result.add(getValueAt(idx));
     }

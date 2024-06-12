@@ -16,42 +16,41 @@
 
 package consulo.ide.impl.idea.refactoring.lang;
 
-import consulo.language.editor.PsiEquivalenceUtil;
-import consulo.language.editor.highlight.HighlightManager;
-import consulo.find.FindManager;
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.language.psi.*;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.find.FindManager;
+import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.ide.impl.idea.ui.ReplacePromptDialog;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.PsiEquivalenceUtil;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.LanguageFileType;
+import consulo.language.psi.*;
+import consulo.language.psi.path.PsiFileSystemItemUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.psi.path.PsiFileSystemItemUtil;
-import consulo.language.editor.refactoring.action.RefactoringActionHandler;
-import consulo.language.editor.refactoring.RefactoringBundle;
-import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import consulo.ide.impl.idea.ui.ReplacePromptDialog;
-import consulo.language.util.IncorrectOperationException;
-import consulo.util.lang.function.PairConsumer;
-import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,44 +106,45 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
   protected abstract boolean verifyChildRange (final T first, final T last);
 
-  private void replaceDuplicates(final String includePath,
-                                   final List<IncludeDuplicate<T>> duplicates,
-                                   final Editor editor,
-                                   final Project project) {
+  private void replaceDuplicates(
+    final String includePath,
+    final List<IncludeDuplicate<T>> duplicates,
+    final Editor editor,
+    final Project project
+  ) {
     if (duplicates.size() > 0) {
-      final String message = RefactoringBundle.message("idea.has.found.fragments.that.can.be.replaced.with.include.directive",
-                                                  ApplicationNamesInfo.getInstance().getProductName());
+      final String message = RefactoringBundle.message(
+        "idea.has.found.fragments.that.can.be.replaced.with.include.directive",
+        Application.get().getName()
+      );
       final int exitCode = Messages.showYesNoDialog(project, message, getRefactoringName(), Messages.getInformationIcon());
       if (exitCode == Messages.YES) {
-        CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-          @Override
-          public void run() {
-            boolean replaceAll = false;
-            for (IncludeDuplicate<T> pair : duplicates) {
-              if (!replaceAll) {
+        CommandProcessor.getInstance().executeCommand(project, () -> {
+          boolean replaceAll = false;
+          for (IncludeDuplicate<T> pair : duplicates) {
+            if (!replaceAll) {
 
-                highlightInEditor(project, pair, editor);
+              highlightInEditor(project, pair, editor);
 
-                ReplacePromptDialog promptDialog = new ReplacePromptDialog(false, RefactoringBundle.message("replace.fragment"), project);
-                promptDialog.show();
-                final int promptResult = promptDialog.getExitCode();
-                if (promptResult == FindManager.PromptResult.SKIP) continue;
-                if (promptResult == FindManager.PromptResult.CANCEL) break;
+              ReplacePromptDialog promptDialog = new ReplacePromptDialog(false, RefactoringBundle.message("replace.fragment"), project);
+              promptDialog.show();
+              final int promptResult = promptDialog.getExitCode();
+              if (promptResult == FindManager.PromptResult.SKIP) continue;
+              if (promptResult == FindManager.PromptResult.CANCEL) break;
 
-                if (promptResult == FindManager.PromptResult.OK) {
-                  doReplaceRange(includePath, pair.getStart(), pair.getEnd());
-                }
-                else if (promptResult == FindManager.PromptResult.ALL) {
-                  doReplaceRange(includePath, pair.getStart(), pair.getEnd());
-                  replaceAll = true;
-                }
-                else {
-                  LOG.error("Unknown return status");
-                }
-              }
-              else {
+              if (promptResult == FindManager.PromptResult.OK) {
                 doReplaceRange(includePath, pair.getStart(), pair.getEnd());
               }
+              else if (promptResult == FindManager.PromptResult.ALL) {
+                doReplaceRange(includePath, pair.getStart(), pair.getEnd());
+                replaceAll = true;
+              }
+              else {
+                LOG.error("Unknown return status");
+              }
+            }
+            else {
+              doReplaceRange(includePath, pair.getStart(), pair.getEnd());
             }
           }
         }, RefactoringBundle.message("remove.duplicates.command"), null);
@@ -221,42 +221,28 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
       final PsiDirectory targetDirectory = dialog.getTargetDirectory();
       LOG.assertTrue(targetDirectory != null);
       final String targetfileName = dialog.getTargetFileName();
-      CommandProcessor.getInstance().executeCommand(project, new Runnable() {
-        @Override
-        public void run() {
-          ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                final List<IncludeDuplicate<T>> duplicates = new ArrayList<IncludeDuplicate<T>>();
-                final T first = children.getFirst();
-                final T second = children.getSecond();
-                PsiEquivalenceUtil.findChildRangeDuplicates(first, second, file, new PairConsumer<PsiElement, PsiElement>() {
-                  @Override
-                  public void consume(final PsiElement start, final PsiElement end) {
-                    duplicates.add(new IncludeDuplicate<T>((T) start, (T) end));
-                  }
-                });
-                final String includePath = processPrimaryFragment(first, second, targetDirectory, targetfileName, file);
-                editor.getCaretModel().moveToOffset(first.getTextRange().getStartOffset());
+      CommandProcessor.getInstance().executeCommand(
+        project,
+        () -> ApplicationManager.getApplication().runWriteAction(() -> {
+          try {
+            final List<IncludeDuplicate<T>> duplicates = new ArrayList<>();
+            final T first = children.getFirst();
+            final T second = children.getSecond();
+            PsiEquivalenceUtil.findChildRangeDuplicates(first, second, file, (start1, end1) -> duplicates.add(new IncludeDuplicate<>((T) start1, (T) end1)));
+            final String includePath = processPrimaryFragment(first, second, targetDirectory, targetfileName, file);
+            editor.getCaretModel().moveToOffset(first.getTextRange().getStartOffset());
 
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                  @Override
-                  public void run() {
-                    replaceDuplicates(includePath, duplicates, editor, project);
-                  }
-                });
-              }
-              catch (IncorrectOperationException e) {
-                CommonRefactoringUtil.showErrorMessage(getRefactoringName(), e.getMessage(), null, project);
-              }
+            ApplicationManager.getApplication().invokeLater(() -> replaceDuplicates(includePath, duplicates, editor, project));
+          }
+          catch (IncorrectOperationException e) {
+            CommonRefactoringUtil.showErrorMessage(getRefactoringName(), e.getMessage(), null, project);
+          }
 
-              editor.getSelectionModel().removeSelection();
-            }
-          });
-        }
-      }, getRefactoringName(), null);
-
+          editor.getSelectionModel().removeSelection();
+        }),
+        getRefactoringName(),
+        null
+      );
     }
   }
 

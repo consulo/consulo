@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui;
 
+import consulo.application.Application;
 import consulo.language.editor.impl.internal.inspection.scheme.InspectionProfileImpl;
 import consulo.application.AllIcons;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -34,6 +35,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StyleManager;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,28 +63,32 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     super.update(e);
     final InspectionProfileImpl inspectionProfile = getInspectionProfile();
     final Image icon = PlatformIconGroup.generalGearplain();
-    e.getPresentation().setIcon((inspectionProfile != null && inspectionProfile.isProfileLocked()) ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon);
+    e.getPresentation().setIcon(
+      (inspectionProfile != null && inspectionProfile.isProfileLocked())
+        ? ImageEffects.layered(icon, AllIcons.Nodes.Locked) : icon
+    );
   }
 
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final ListPopupImpl actionGroupPopup =
-            (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<MyAction>(null, ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())) {
-              @Override
-              public PopupStep onChosen(MyAction selectedValue, boolean finalChoice) {
-                if (selectedValue.enabled()) {
-                  selectedValue.actionPerformed();
-                }
-                return FINAL_CHOICE;
-              }
-            });
-    actionGroupPopup.getList().setCellRenderer(new ListCellRenderer() {
-      @Override
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return ((MyAction)value).createCustomComponent(isSelected);
+    final ListPopupImpl actionGroupPopup = (ListPopupImpl)JBPopupFactory.getInstance().createListPopup(
+      new BaseListPopupStep<MyAction>(
+        null,
+        ContainerUtil.list(new MyDisableNewInspectionsAction(), new MyResetAction())
+      ) {
+        @Override
+        public PopupStep onChosen(MyAction selectedValue, boolean finalChoice) {
+          if (selectedValue.enabled()) {
+            selectedValue.actionPerformed();
+          }
+          return FINAL_CHOICE;
+        }
       }
-    });
+    );
+    actionGroupPopup.getList().setCellRenderer(
+      (list, value, index, isSelected, cellHasFocus) -> ((MyAction)value).createCustomComponent(isSelected)
+    );
     final Component component = e.getInputEvent().getComponent();
     actionGroupPopup.show(new RelativePoint(component, new Point(component.getWidth() - 1, 0)));
   }
@@ -98,6 +105,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     }
 
     @Override
+    @NonNls
     protected JComponent createBaseComponent() {
       return installLeftIndentToLabel(new JLabel("Reset to Default Settings"));
     }
@@ -120,7 +128,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
 
   private class MyDisableNewInspectionsAction extends MyAction {
     public MyDisableNewInspectionsAction() {
-      super("New inspections may appear when " + ApplicationNamesInfo.getInstance().getFullProductName() + " is updated");
+      super("New inspections may appear when " + Application.get().getName() + " is updated");
     }
 
     @Override
@@ -173,9 +181,11 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
       panel.add(installLeftIndentToLabel(descriptionLabel));
       UIUtil.setEnabled(panel, enabled(), true);
 
-      panel.setBackground(selected ? UIUtil.getListSelectionBackground() : UIUtil.getListBackground());
-      descriptionLabel.setForeground(selected ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground());
-      baseComponent.setForeground(selected ? UIUtil.getListSelectionForeground() : UIUtil.getListForeground());
+      Color bgColor = selected ? UIUtil.getListSelectionBackground(true) : UIUtil.getListBackground();
+      Color fgColor = selected ? UIUtil.getListSelectionForeground(true) : UIUtil.getListForeground();
+      panel.setBackground(bgColor);
+      descriptionLabel.setForeground(fgColor);
+      baseComponent.setForeground(fgColor);
       return panel;
     }
   }
@@ -191,7 +201,7 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
     if (icon == null) {
       icon = UIManager.getIcon("CheckBox.icon");
     }
-    if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
+    if (StyleManager.get().getCurrentStyle().isDark() || UIUtil.isUnderIntelliJLaF()) {
       icon = EmptyIcon.create(20, 18);
     }
     if (icon != null) {
@@ -203,9 +213,20 @@ public abstract class AdvancedSettingsAction extends DumbAwareAction {
       r1.width = r.width - (i.right + r1.x);
       r1.height = r.height - (i.bottom + r1.y);
       final Rectangle iconRect = new Rectangle();
-      SwingUtilities.layoutCompoundLabel(checkBox, checkBox.getFontMetrics(checkBox.getFont()), checkBox.getText(), icon, checkBox.getVerticalAlignment(), checkBox.getHorizontalAlignment(),
-                                         checkBox.getVerticalTextPosition(), checkBox.getHorizontalTextPosition(), r1, new Rectangle(), iconRect,
-                                         checkBox.getText() == null ? 0 : checkBox.getIconTextGap());
+      SwingUtilities.layoutCompoundLabel(
+        checkBox,
+        checkBox.getFontMetrics(checkBox.getFont()),
+        checkBox.getText(),
+        icon,
+        checkBox.getVerticalAlignment(),
+        checkBox.getHorizontalAlignment(),
+        checkBox.getVerticalTextPosition(),
+        checkBox.getHorizontalTextPosition(),
+        r1,
+        new Rectangle(),
+        iconRect,
+        checkBox.getText() == null ? 0 : checkBox.getIconTextGap()
+      );
       indent = iconRect.x;
     }
     return indent + checkBox.getIconTextGap();

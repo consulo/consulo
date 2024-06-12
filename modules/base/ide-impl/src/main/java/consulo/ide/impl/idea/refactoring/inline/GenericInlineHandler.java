@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.refactoring.inline;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.Language;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;

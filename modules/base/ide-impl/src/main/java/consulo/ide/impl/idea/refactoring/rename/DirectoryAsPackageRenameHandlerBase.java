@@ -15,39 +15,38 @@
  */
 package consulo.ide.impl.idea.refactoring.rename;
 
-import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.TitledHandler;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.TitledHandler;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
 import consulo.language.editor.refactoring.rename.RenameDialog;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.editor.refactoring.rename.RenameUtil;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.psi.PsiPackageBase;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.psi.PsiPackageBase;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.editor.refactoring.BaseRefactoringProcessor;
-import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
-
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
@@ -117,10 +116,11 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     final PsiElement nameSuggestionContext = element;
     element = adjustForRename(dataContext, element);
     LOG.assertTrue(element != null);
-    Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     doRename(element, project, nameSuggestionContext, editor);
   }
 
+  @NonNls
   private void doRename(PsiElement element, final Project project, PsiElement nameSuggestionContext, Editor editor) {
     final PsiDirectory psiDirectory = (PsiDirectory)element;
     final T aPackage = getPackage(psiDirectory);
@@ -158,11 +158,15 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
                                        "\' contains directories in libraries which cannot be renamed. Do you want to rename " +
                                        (moduleDirs == null ? "current directory" : "current module directories");
           if (projectDirectories.length > 0) {
-            int ret = Messages
-              .showYesNoCancelDialog(project, promptMessage + " or all directories in project?", RefactoringBundle.message("warning.title"),
-                          RefactoringBundle.message("rename.current.directory"),
-                            RefactoringBundle.message("rename.directories"), CommonBundle.getCancelButtonText(),
-                          Messages.getWarningIcon());
+            int ret = Messages.showYesNoCancelDialog(
+              project,
+              promptMessage + " or all directories in project?",
+              RefactoringBundle.message("warning.title"),
+              RefactoringBundle.message("rename.current.directory"),
+              RefactoringBundle.message("rename.directories"),
+              CommonLocalize.buttonCancel().get(),
+              Messages.getWarningIcon()
+            );
             if (ret == 2) return;
             renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage,
                        ret == 0 ? (moduleDirs == null ? new PsiDirectory[]{psiDirectory} : moduleDirs) : projectDirectories);
@@ -180,10 +184,15 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
           buildMultipleDirectoriesInPackageMessage(message, getQualifiedName(aPackage), directories);
           message.append(RefactoringBundle.message("directories.and.all.references.to.package.will.be.renamed",
                                                    psiDirectory.getVirtualFile().getPresentableUrl()));
-          int ret = Messages.showYesNoCancelDialog(project, message.toString(), RefactoringBundle.message("warning.title"),
-                                        RefactoringBundle.message("rename.package.button.text"),
-                                          RefactoringBundle.message("rename.directory.button.text"), CommonBundle.getCancelButtonText(),
-                                        Messages.getWarningIcon());
+          int ret = Messages.showYesNoCancelDialog(
+            project,
+            message.toString(),
+            RefactoringBundle.message("warning.title"),
+            RefactoringBundle.message("rename.package.button.text"),
+            RefactoringBundle.message("rename.directory.button.text"),
+            CommonLocalize.buttonCancel().get(),
+            Messages.getWarningIcon()
+          );
           if (ret == 0) {
             PsiElementRenameHandler.rename(aPackage, project, nameSuggestionContext, editor);
           }
@@ -195,12 +204,14 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     }
   }
 
-  private void renameDirs(final Project project,
-                          final PsiElement nameSuggestionContext,
-                          final Editor editor,
-                          final PsiDirectory contextDirectory,
-                          final T aPackage,
-                          final PsiDirectory... dirsToRename) {
+  private void renameDirs(
+    final Project project,
+    final PsiElement nameSuggestionContext,
+    final Editor editor,
+    final PsiDirectory contextDirectory,
+    final T aPackage,
+    final PsiDirectory... dirsToRename
+  ) {
     final RenameDialog dialog = new RenameDialog(project, contextDirectory, nameSuggestionContext, editor) {
       @Override
       protected void doAction() {
@@ -213,9 +224,11 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     dialog.show();
   }
 
-  public static void buildMultipleDirectoriesInPackageMessage(StringBuffer message,
-                                                              String packageQname,
-                                                              PsiDirectory[] directories) {
+  public static void buildMultipleDirectoriesInPackageMessage(
+    StringBuffer message,
+    String packageQname,
+    PsiDirectory[] directories
+  ) {
     message.append(RefactoringBundle.message("multiple.directories.correspond.to.package"));
     message.append(packageQname);
     message.append(":\n\n");

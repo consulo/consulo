@@ -15,7 +15,8 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ui.style.StyleManager;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
@@ -76,7 +77,10 @@ class UsageViewTreeCellRenderer extends ColoredTreeCellRenderer {
     if (value instanceof Node && value != tree.getModel().getRoot()) {
       Node node = (Node)value;
       if (!node.isValid()) {
-        append(UsageViewBundle.message("node.invalid") + " ", UIUtil.isUnderDarcula() ? ourInvalidAttributesDarcula : ourInvalidAttributes);
+        append(
+          UsageViewBundle.message("node.invalid") + " ",
+          StyleManager.get().getCurrentStyle().isDark() ? ourInvalidAttributesDarcula : ourInvalidAttributes
+        );
       }
       if (myPresentation.isShowReadOnlyStatusAsRed() && node.isReadOnly()) {
         showAsReadOnly = true;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies.ui;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;

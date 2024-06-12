@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ui.popup;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
@@ -23,9 +22,9 @@ import consulo.ide.impl.idea.ui.popup.tree.TreePopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.ui.IdeEventQueueProxy;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.NotificationType;
@@ -65,7 +64,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
 
   @Override
   public <T> AWTPopupChooserBuilder<T> createListPopupBuilder(@Nonnull JList<T> list) {
-    return new PopupChooserBuilder<T>(list);
+    return new PopupChooserBuilder<>(list);
   }
 
   @Nonnull
@@ -77,7 +76,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
   @Nonnull
   @Override
   public ListPopup createConfirmation(String title, final Runnable onYes, int defaultOptionIndex) {
-    return createConfirmation(title, CommonBundle.getYesButtonText(), CommonBundle.getNoButtonText(), onYes, defaultOptionIndex);
+    return createConfirmation(title, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get(), onYes, defaultOptionIndex);
   }
 
   @Nonnull
@@ -230,13 +229,15 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
            maxRowCount);
     }
 
-    protected ActionGroupPopup(@Nullable WizardPopup aParent,
-                               @Nonnull ListPopupStep step,
-                               @Nullable Runnable disposeCallback,
-                               @Nonnull DataContext dataContext,
-                               @Nullable String actionPlace,
-                               int maxRowCount) {
-      super(dataContext.getData(CommonDataKeys.PROJECT), aParent, step, null);
+    protected ActionGroupPopup(
+      @Nullable WizardPopup aParent,
+      @Nonnull ListPopupStep step,
+      @Nullable Runnable disposeCallback,
+      @Nonnull DataContext dataContext,
+      @Nullable String actionPlace,
+      int maxRowCount
+    ) {
+      super(dataContext.getData(Project.KEY), aParent, step, null);
       setMaxRowCount(maxRowCount);
       myDisposeCallback = disposeCallback;
       myComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -518,7 +519,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
     JComponent focusOwner = component instanceof JComponent ? (JComponent)component : null;
 
     if (focusOwner == null) {
-      Project project = dataContext.getData(CommonDataKeys.PROJECT);
+      Project project = dataContext.getData(Project.KEY);
       JFrame frame = project == null ? null : WindowManager.getInstance().getFrame(project);
       focusOwner = frame == null ? null : frame.getRootPane();
       if (focusOwner == null) {
@@ -531,7 +532,7 @@ public class PopupFactoryImpl extends JBPopupFactory implements AWTPopupFactory 
       return new RelativePoint(focusOwner, point);
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor != null && focusOwner == editor.getContentComponent()) {
       return guessBestPopupLocation(editor);
     }

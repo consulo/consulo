@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.tools;
 
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.ui.NotificationType;

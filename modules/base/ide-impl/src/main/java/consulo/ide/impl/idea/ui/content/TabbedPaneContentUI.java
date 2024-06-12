@@ -17,9 +17,16 @@ package consulo.ide.impl.idea.ui.content;
 
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.TabFactoryBuilderImpl;
+import consulo.ide.impl.idea.ui.TabbedPaneImpl;
+import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
+import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.UIBundle;
+import consulo.platform.Platform;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPopupMenu;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.TabbedPane;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
@@ -29,20 +36,13 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.ui.ex.action.AnAction;
-import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
-import consulo.ide.impl.idea.ui.content.tabs.TabbedContentAction;
-import consulo.ui.ex.awt.IJSwingUtilities;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
+import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -209,7 +209,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
             hideMenu();
           }
         }
-        else if ((MouseEvent.BUTTON3_MASK & e.getModifiers()) > 0 && SystemInfo.isWindows) { // Right mouse button doesn't activate tab
+        else if ((MouseEvent.BUTTON3_MASK & e.getModifiers()) > 0 && Platform.current().os().isWindows()) { // Right mouse button doesn't activate tab
         }
         else {
           super.processMouseEvent(e);
@@ -355,13 +355,13 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   @Nonnull
   @Override
   public String getCloseActionName() {
-    return UIBundle.message("tabbed.pane.close.tab.action.name");
+    return UILocalize.tabbedPaneCloseTabActionName().get();
   }
 
   @Nonnull
   @Override
   public String getCloseAllButThisActionName() {
-    return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
+    return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
   }
 
   @Nonnull

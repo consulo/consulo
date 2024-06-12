@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.packageDependencies.actions;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.scope.AnalysisScopeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.packageDependencies.DependenciesBuilder;
 import consulo.ide.impl.idea.packageDependencies.ForwardDependenciesBuilder;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.*;
 
 /**
@@ -44,12 +44,15 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
 
   @Override
   protected String getProgressTitle() {
-    return AnalysisScopeBundle.message("package.dependencies.progress.title");
+    return AnalysisScopeLocalize.packageDependenciesProgressTitle().get();
   }
 
   @Override
   protected String getPanelDisplayName(AnalysisScope scope) {
-    return AnalysisScopeBundle.message("package.dependencies.on.toolwindow.title", scope.getDisplayName(), myTargetScope.getDisplayName());
+    return AnalysisScopeLocalize.packageDependenciesOnToolwindowTitle(
+      scope.getDisplayName(),
+      myTargetScope.getDisplayName()
+    ).get();
   }
 
   @Override
@@ -63,8 +66,9 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
     }
     final String source = StringUtil.decapitalize(builders.get(0).getScope().getDisplayName());
     final String target = StringUtil.decapitalize(myTargetScope.getDisplayName());
-    final String message = AnalysisScopeBundle.message("no.dependencies.found.message", source, target);
-    NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true).createNotification(message, NotificationType.INFORMATION).notify(myProject);
+    final String message = AnalysisScopeLocalize.noDependenciesFoundMessage(source, target).get();
+    NotificationGroup.toolWindowGroup("Dependencies", ToolWindowId.DEPENDENCIES, true)
+      .createNotification(message, NotificationType.INFORMATION).notify(myProject);
     return false;
   }
 
