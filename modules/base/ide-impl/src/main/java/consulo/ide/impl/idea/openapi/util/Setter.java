@@ -15,6 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
+
+@Deprecated
+@DeprecationInfo("Use Consumer")
 public interface Setter<T> {
   void set(T value);
 }
