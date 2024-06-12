@@ -16,10 +16,10 @@
 package consulo.content.bundle;
 
 import consulo.application.AllIcons;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,7 +59,7 @@ public class UnknownSdkType extends SdkType{
   @Nonnull
   @Override
   public String getPresentableName() {
-    return ProjectBundle.message("sdk.unknown.name");
+    return ProjectLocalize.sdkUnknownName().get();
   }
 
   @Nonnull

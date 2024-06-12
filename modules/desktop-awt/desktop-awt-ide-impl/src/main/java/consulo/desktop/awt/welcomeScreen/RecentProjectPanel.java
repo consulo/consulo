@@ -51,7 +51,6 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -115,7 +114,7 @@ public class RecentProjectPanel {
 
     final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false, isUseGroups());
 
-    myPathShortener = new UniqueNameBuilder<>(SystemProperties.getUserHome(), File.separator, 40);
+    myPathShortener = new UniqueNameBuilder<>(Platform.current().user().homePath().toString(), File.separator, 40);
 
     Collection<String> pathsToCheck = new HashSet<>();
     for (AnAction action : recentProjectActions) {
@@ -207,7 +206,7 @@ public class RecentProjectPanel {
     myTargetComponent = recentProjectActions.length == 0 ? myList : ListWithFilter.wrap(myList, myScrollPane, o -> {
       if (o instanceof ReopenProjectAction) {
         ReopenProjectAction item = (ReopenProjectAction)o;
-        String home = SystemProperties.getUserHome();
+        String home = Platform.current().user().homePath().toString();
         String path = item.getProjectPath();
         if (FileUtil.startsWith(path, home)) {
           path = path.substring(home.length());

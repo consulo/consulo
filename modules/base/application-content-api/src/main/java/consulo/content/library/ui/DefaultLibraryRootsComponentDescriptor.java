@@ -18,11 +18,11 @@ package consulo.content.library.ui;
 import consulo.application.Application;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.dataContext.DataContext;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -45,14 +45,16 @@ public class DefaultLibraryRootsComponentDescriptor extends LibraryRootsComponen
 
   private static class AttachUrlJavadocDescriptor extends AttachRootButtonDescriptor {
     private AttachUrlJavadocDescriptor() {
-      super(DocumentationOrderRootType.getInstance(), ProjectBundle.message("module.libraries.javadoc.url.button"));
+      super(DocumentationOrderRootType.getInstance(), ProjectLocalize.moduleLibrariesJavadocUrlButton().get());
     }
 
     @Override
-    public VirtualFile[] selectFiles(@Nonnull JComponent parent,
-                                     @Nullable VirtualFile initialSelection,
-                                     @Nullable DataContext dataContext,
-                                     @Nonnull LibraryEditor libraryEditor) {
+    public VirtualFile[] selectFiles(
+      @Nonnull JComponent parent,
+      @Nullable VirtualFile initialSelection,
+      @Nullable DataContext dataContext,
+      @Nonnull LibraryEditor libraryEditor
+    ) {
       final VirtualFile vFile = DocumentationUtil.showSpecifyJavadocUrlDialog(parent);
       if (vFile != null) {
         return new VirtualFile[]{vFile};

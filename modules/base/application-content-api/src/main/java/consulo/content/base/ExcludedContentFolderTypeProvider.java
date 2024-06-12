@@ -19,14 +19,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -35,8 +35,7 @@ import java.util.function.Supplier;
  */
 @ExtensionImpl
 public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
-  private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class
-  );
+  private static final Supplier<ExcludedContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
   private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 
@@ -64,7 +63,7 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
   @Nonnull
   @Override
   public String getName() {
-    return ProjectBundle.message("module.toggle.excluded.action");
+    return ProjectLocalize.moduleToggleExcludedAction().get();
   }
 
   @Nonnull

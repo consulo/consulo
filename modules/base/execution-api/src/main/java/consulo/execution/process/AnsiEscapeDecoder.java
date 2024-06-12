@@ -76,8 +76,8 @@ public class AnsiEscapeDecoder {
     if (pos < text.length()) {
       chunks = processTextChunk(chunks, text.substring(pos), outputType, textAcceptor);
     }
-    if (chunks != null && textAcceptor instanceof ColoredChunksAcceptor) {
-      ((ColoredChunksAcceptor)textAcceptor).coloredChunksAvailable(chunks);
+    if (chunks != null && textAcceptor instanceof ColoredChunksAcceptor coloredChunksAcceptor) {
+      coloredChunksAcceptor.coloredChunksAvailable(chunks);
     }
   }
 

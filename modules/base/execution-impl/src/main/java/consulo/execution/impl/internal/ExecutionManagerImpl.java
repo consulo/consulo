@@ -32,6 +32,7 @@ import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.impl.internal.configuration.RunManagerImpl;
 import consulo.execution.internal.RunManagerConfig;
 import consulo.execution.internal.RunManagerEx;
+import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
@@ -39,6 +40,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessHandlerStopper;
@@ -275,19 +277,20 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       Consumer<Throwable> errorHandler = e -> {
         if (!(e instanceof ProcessCanceledException)) {
           ExecutionException error = e instanceof ExecutionException ? (ExecutionException)e : new ExecutionException(e);
-          ExecutionUtil.handleExecutionError(project,
-                                             ExecutionManager.getInstance(project)
-                                                             .getContentManager()
-                                                             .getToolWindowIdByEnvironment(environment),
-                                             profile,
-                                             error);
+          ExecutionUtil.handleExecutionError(
+            project,
+            ExecutionManager.getInstance(project)
+              .getContentManager()
+              .getToolWindowIdByEnvironment(environment),
+            profile,
+            error
+          );
         }
         LOG.info(e);
         project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
       };
 
       try {
-
         starter.executeAsync(state, environment).doWhenDone(descriptor -> AppUIUtil.invokeOnEdt(() -> {
           if (descriptor != null) {
             RunInfo info = new RunInfo(descriptor, environment.getRunnerAndConfigurationSettings(), environment.getRunner(), executor);
@@ -329,10 +332,10 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
 
                 if (terminated) {
                   //noinspection ConstantConditions
-                  Integer exitCode = processHandler.getExitCode();
-                  listener.processTerminated(new ProcessEvent(processHandler,
-                                                              processHandler.isStartNotified() ? ObjectUtil.notNull(processHandler.getExitCode(),
-                                                                                                                    -1) : -1));
+                  listener.processTerminated(new ProcessEvent(
+                    processHandler,
+                    processHandler.isStartNotified() ? ObjectUtil.notNull(processHandler.getExitCode(), -1) : -1
+                  ));
                 }
               }
             }
@@ -357,12 +360,14 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
   }
 
   @Override
-  public void restartRunProfile(@Nonnull Project project,
-                                @Nonnull Executor executor,
-                                @Nonnull ExecutionTarget target,
-                                @Nullable RunnerAndConfigurationSettings configuration,
-                                @Nullable ProcessHandler processHandler,
-                                @Nonnull Consumer<ExecutionEnvironment> envCustomizer) {
+  public void restartRunProfile(
+    @Nonnull Project project,
+    @Nonnull Executor executor,
+    @Nonnull ExecutionTarget target,
+    @Nullable RunnerAndConfigurationSettings configuration,
+    @Nullable ProcessHandler processHandler,
+    @Nonnull Consumer<ExecutionEnvironment> envCustomizer
+  ) {
     ExecutionEnvironmentBuilder builder = createEnvironmentBuilder(project, executor, configuration);
     if (processHandler != null) {
       for (RunContentDescriptor descriptor : getContentManager().getAllDescriptors()) {
@@ -379,13 +384,17 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
   }
 
   @Nonnull
-  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(@Nonnull Project project,
-                                                                      @Nonnull Executor executor,
-                                                                      @Nullable RunnerAndConfigurationSettings configuration) {
+  private static ExecutionEnvironmentBuilder createEnvironmentBuilder(
+    @Nonnull Project project,
+    @Nonnull Executor executor,
+    @Nullable RunnerAndConfigurationSettings configuration
+  ) {
     ExecutionEnvironmentBuilder builder = new ExecutionEnvironmentBuilder(project, executor);
 
-    ProgramRunner runner =
-      RunnerRegistry.getInstance().getRunner(executor.getId(), configuration != null ? configuration.getConfiguration() : null);
+    ProgramRunner runner = RunnerRegistry.getInstance().getRunner(
+      executor.getId(),
+      configuration != null ? configuration.getConfiguration() : null
+    );
     if (runner == null && configuration != null) {
       LOG.error("Cannot find runner for " + configuration.getName());
     }
@@ -410,13 +419,8 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
   public void restartRunProfile(@Nonnull final ExecutionEnvironment environment) {
     RunnerAndConfigurationSettings configuration = environment.getRunnerAndConfigurationSettings();
 
-    List<RunContentDescriptor> runningIncompatible;
-    if (configuration == null) {
-      runningIncompatible = Collections.emptyList();
-    }
-    else {
-      runningIncompatible = getIncompatibleRunningDescriptors(configuration);
-    }
+    List<RunContentDescriptor> runningIncompatible =
+      configuration == null ? Collections.emptyList() : getIncompatibleRunningDescriptors(configuration);
 
     RunContentDescriptor contentToReuse = environment.getContentToReuse();
     final List<RunContentDescriptor> runningOfTheSameType = new SmartList<>();
@@ -435,9 +439,11 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
           !userApprovesStopForSameTypeConfigurations(environment.getProject(), configuration.getName(), runningOfTheSameType.size())) {
           return;
         }
-        if (!runningIncompatible.isEmpty() && !userApprovesStopForIncompatibleConfigurations(myProject,
-                                                                                             configuration.getName(),
-                                                                                             runningIncompatible)) {
+        if (!runningIncompatible.isEmpty() && !userApprovesStopForIncompatibleConfigurations(
+          myProject,
+          configuration.getName(),
+          runningIncompatible
+        )) {
           return;
         }
       }
@@ -502,21 +508,24 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       @Nonnull
       @Override
       public String getDoNotShowMessage() {
-        return CommonBundle.message("dialog.options.do.not.show");
+        return CommonLocalize.dialogOptionsDoNotShow().get();
       }
     };
-    return Messages.showOkCancelDialog(project,
-                                       ExecutionBundle.message("rerun.singleton.confirmation.message", configName, instancesCount),
-                                       ExecutionBundle.message("process.is.running.dialog.title", configName),
-                                       ExecutionBundle.message("rerun.confirmation.button.text"),
-                                       CommonBundle.message("button.cancel"),
-                                       Messages.getQuestionIcon(),
-                                       option) == Messages.OK;
+    return Messages.showOkCancelDialog(
+      project,
+      ExecutionLocalize.rerunSingletonConfirmationMessage(configName, instancesCount).get(),
+      ExecutionLocalize.processIsRunningDialogTitle(configName).get(),
+      ExecutionLocalize.rerunConfirmationButtonText().get(),
+      CommonLocalize.buttonCancel().get(),
+      Messages.getQuestionIcon(),
+      option) == Messages.OK;
   }
 
-  private static boolean userApprovesStopForIncompatibleConfigurations(Project project,
-                                                                       String configName,
-                                                                       List<RunContentDescriptor> runningIncompatibleDescriptors) {
+  private static boolean userApprovesStopForIncompatibleConfigurations(
+    Project project,
+    String configName,
+    List<RunContentDescriptor> runningIncompatibleDescriptors
+  ) {
     RunManagerImpl runManager = RunManagerImpl.getInstanceImpl(project);
     final RunManagerConfig config = runManager.getConfig();
     if (!config.isRestartRequiresConfirmation()) return true;
@@ -545,7 +554,7 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       @Nonnull
       @Override
       public String getDoNotShowMessage() {
-        return CommonBundle.message("dialog.options.do.not.show");
+        return CommonLocalize.dialogOptionsDoNotShow().get();
       }
     };
 
@@ -555,21 +564,26 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
       if (names.length() > 0) {
         names.append(", ");
       }
-      names.append(StringUtil.isEmpty(name) ? ExecutionBundle.message("run.configuration.no.name") : String.format("'%s'", name));
+      names.append(
+        StringUtil.isEmpty(name) ? ExecutionLocalize.runConfigurationNoName().get()
+          : String.format("'%s'", name)
+      );
     }
 
     //noinspection DialogTitleCapitalization
-    return Messages.showOkCancelDialog(project,
-                                       ExecutionBundle.message("stop.incompatible.confirmation.message",
-                                                               configName,
-                                                               names.toString(),
-                                                               runningIncompatibleDescriptors.size()),
-                                       ExecutionBundle.message("incompatible.configuration.is.running.dialog.title",
-                                                               runningIncompatibleDescriptors.size()),
-                                       ExecutionBundle.message("stop.incompatible.confirmation.button.text"),
-                                       CommonBundle.message("button.cancel"),
-                                       Messages.getQuestionIcon(),
-                                       option) == Messages.OK;
+    return Messages.showOkCancelDialog(
+      project,
+      ExecutionLocalize.stopIncompatibleConfirmationMessage(
+        configName,
+        names.toString(),
+        runningIncompatibleDescriptors.size()
+      ).get(),
+      ExecutionLocalize.incompatibleConfigurationIsRunningDialogTitle(runningIncompatibleDescriptors.size()).get(),
+      ExecutionLocalize.stopIncompatibleConfirmationButtonText().get(),
+      CommonLocalize.buttonCancel().get(),
+      Messages.getQuestionIcon(),
+      option
+    ) == Messages.OK;
   }
 
   @Nonnull

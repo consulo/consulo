@@ -23,11 +23,10 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.module.Module;
 import consulo.module.content.library.ModuleLibraryTablePresentation;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -41,7 +40,13 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
   private final String myLibraryName;
   private final ArtifactEditorContext myContext;
 
-  public LibraryElementPresentation(String libraryName, String level, @Nullable String moduleName, Library library, ArtifactEditorContext context) {
+  public LibraryElementPresentation(
+    String libraryName,
+    String level,
+    @Nullable String moduleName,
+    Library library,
+    ArtifactEditorContext context
+  ) {
     myLevel = level;
     myModuleName = moduleName;
     myLibrary = library;
@@ -65,15 +70,21 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(
+    @Nonnull PresentationData presentationData,
+    SimpleTextAttributes mainAttributes,
+    SimpleTextAttributes commentAttributes
+  ) {
     if (myLibrary != null) {
       presentationData.setIcon(AllIcons.Nodes.PpLib);
       presentationData.addText(myLibraryName, mainAttributes);
       presentationData.addText(getLibraryTableComment(myLibrary), commentAttributes);
     }
     else {
-      presentationData.addText(myLibraryName + " (" + (myModuleName != null ? "module '" + myModuleName + "'" : myLevel) + ")", 
-                               SimpleTextAttributes.ERROR_ATTRIBUTES);
+      presentationData.addText(
+        myLibraryName + " (" + (myModuleName != null ? "module '" + myModuleName + "'" : myLevel) + ")",
+        SimpleTextAttributes.ERROR_ATTRIBUTES
+      );
     }
   }
 
@@ -84,7 +95,8 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
 
   public static String getLibraryTableDisplayName(final Library library) {
     LibraryTable table = library.getTable();
-    LibraryTablePresentation presentation = table != null ? table.getPresentation() : ModuleLibraryTablePresentation.INSTANCE;
+    LibraryTablePresentation presentation = table != null
+      ? table.getPresentation() : ModuleLibraryTablePresentation.INSTANCE;
     return presentation.getDisplayName(false);
   }
 
@@ -112,7 +124,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
       return files[0].getName() + (includeTableName ? getLibraryTableComment(library) : "");
     }
     else {
-      return ProjectBundle.message("library.empty.item");
+      return ProjectLocalize.libraryEmptyItem().get();
     }
   }
 }

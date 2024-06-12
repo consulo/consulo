@@ -290,8 +290,9 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean test(OrderEntry orderEntry) {
-      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry && myOwnerModule.equals(orderEntry.getOwnerModule())) {
-        final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry moduleExtensionWithSdkOrderEntry
+        && myOwnerModule.equals(orderEntry.getOwnerModule())) {
+        final Sdk sdk = moduleExtensionWithSdkOrderEntry.getSdk();
         if (sdk == null || sdk.getSdkType() != mySdkType) {
           return true;
         }
@@ -312,8 +313,8 @@ public class ModuleChunk extends Chunk<Module> {
 
     @Override
     public boolean test(OrderEntry orderEntry) {
-      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry) {
-        final Sdk sdk = ((ModuleExtensionWithSdkOrderEntry)orderEntry).getSdk();
+      if (orderEntry instanceof ModuleExtensionWithSdkOrderEntry moduleExtensionWithSdkOrderEntry) {
+        final Sdk sdk = moduleExtensionWithSdkOrderEntry.getSdk();
         if (sdk == null || sdk.getSdkType() != mySdkType) {
           return true;
         }

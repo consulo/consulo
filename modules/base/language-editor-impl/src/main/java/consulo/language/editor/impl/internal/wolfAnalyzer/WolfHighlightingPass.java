@@ -18,16 +18,14 @@ package consulo.language.editor.impl.internal.wolfAnalyzer;
 
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.registry.Registry;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.impl.highlight.HighlightInfoProcessor;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -35,7 +33,7 @@ import jakarta.annotation.Nonnull;
  */
 class WolfHighlightingPass extends ProgressableTextEditorHighlightingPass implements DumbAware {
   WolfHighlightingPass(@Nonnull Project project, @Nonnull Document document, @Nonnull PsiFile file) {
-    super(project, document, DaemonBundle.message("pass.wolf"), file, null, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty());
+    super(project, document, DaemonLocalize.passWolf().get(), file, null, TextRange.EMPTY_RANGE, false, HighlightInfoProcessor.getEmpty());
   }
 
   @Override

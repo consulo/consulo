@@ -62,6 +62,7 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 
@@ -205,16 +206,13 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   private void collectRangeHighlighters(MarkupModelEx markupModel, final int visualLine, final Collection<RangeHighlighterEx> highlighters) {
     final int startOffset = getOffset(fitLineToEditor(visualLine - myPreviewLines), true);
     final int endOffset = getOffset(fitLineToEditor(visualLine + myPreviewLines), false);
-    markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
-      @Override
-      public boolean process(RangeHighlighterEx highlighter) {
-        if (highlighter.getErrorStripeMarkColor() != null) {
-          if (highlighter.getStartOffset() < endOffset && highlighter.getEndOffset() > startOffset) {
-            highlighters.add(highlighter);
-          }
+    markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
+      if (highlighter.getErrorStripeMarkColor() != null) {
+        if (highlighter.getStartOffset() < endOffset && highlighter.getEndOffset() > startOffset) {
+          highlighters.add(highlighter);
         }
-        return true;
       }
+      return true;
     });
   }
 
@@ -239,17 +237,14 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
   private void getNearestHighlighters(MarkupModelEx markupModel, final int scrollBarY, final Collection<RangeHighlighter> nearest) {
     int startOffset = yPositionToOffset(scrollBarY - myMinMarkHeight, true);
     int endOffset = yPositionToOffset(scrollBarY + myMinMarkHeight, false);
-    markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, new Processor<RangeHighlighterEx>() {
-      @Override
-      public boolean process(RangeHighlighterEx highlighter) {
-        if (highlighter.getErrorStripeMarkColor() != null) {
-          ProperTextRange range = offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
-          if (scrollBarY >= range.getStartOffset() - myMinMarkHeight * 2 && scrollBarY <= range.getEndOffset() + myMinMarkHeight * 2) {
-            nearest.add(highlighter);
-          }
+    markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
+      if (highlighter.getErrorStripeMarkColor() != null) {
+        ProperTextRange range = offsetsToYPositions(highlighter.getStartOffset(), highlighter.getEndOffset());
+        if (scrollBarY >= range.getStartOffset() - myMinMarkHeight * 2 && scrollBarY <= range.getEndOffset() + myMinMarkHeight * 2) {
+          nearest.add(highlighter);
         }
-        return true;
       }
+      return true;
     });
   }
 
@@ -652,7 +647,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               GraphicsUtil.setupAAPainting(g2);
               g2.setClip(new RoundRectangle2D.Double(0, 0, size.width - .5, size.height - .5, 2, 2));
               UIUtil.drawImage(g2, myCacheLevel1, 0, 0, this);
-              if (UIUtil.isUnderDarkTheme()) {
+              if (StyleManager.get().getCurrentStyle().isDark()) {
                 //Add glass effect
                 Shape s = new Rectangle(0, 0, size.width, size.height);
                 double cx = size.width / 2;
@@ -704,13 +699,10 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
       if (needDelay && !myShowInstantly) {
         myDelayed = true;
         Alarm alarm = new Alarm();
-        alarm.addRequest(new Runnable() {
-          @Override
-          public void run() {
-            if (myEditorPreviewHint == null || !myDelayed) return;
-            showEditorHint(hintManager, myPointHolder.get(), myHintHolder.get());
-            myDelayed = false;
-          }
+        alarm.addRequest(() -> {
+          if (myEditorPreviewHint == null || !myDelayed) return;
+          showEditorHint(hintManager, myPointHolder.get(), myHintHolder.get());
+          myDelayed = false;
         }, /*Registry.intValue("ide.tooltip.initialDelay")*/300);
       }
       else if (!myDelayed) {

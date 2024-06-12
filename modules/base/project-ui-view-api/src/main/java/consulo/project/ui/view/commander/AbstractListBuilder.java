@@ -97,9 +97,8 @@ public abstract class AbstractListBuilder {
 
   public final void drillDown() {
     final Object value = getSelectedValue();
-    if (value instanceof AbstractTreeNode) {
+    if (value instanceof AbstractTreeNode node) {
       try {
-        final AbstractTreeNode node = (AbstractTreeNode)value;
         buildList(node);
         ensureSelectionExist();
       }
@@ -127,8 +126,7 @@ public abstract class AbstractListBuilder {
       buildList(element);
 
       for (int i = 0; i < myModel.getSize(); i++) {
-        if (myModel.getElementAt(i) instanceof NodeDescriptor) {
-          final NodeDescriptor desc = (NodeDescriptor)myModel.getElementAt(i);
+        if (myModel.getElementAt(i) instanceof NodeDescriptor desc) {
           final Object elem = desc.getElement();
           if (oldParent.equals(elem)) {
             selectItem(i);
@@ -169,11 +167,9 @@ public abstract class AbstractListBuilder {
       buildList(parentElement);
 
       for (int i = 0; i < myModel.getSize(); i++) {
-        if (myModel.getElementAt(i) instanceof AbstractTreeNode) {
-          final AbstractTreeNode desc = (AbstractTreeNode)myModel.getElementAt(i);
-          if (desc.getValue() instanceof StructureViewTreeElement) {
-            StructureViewTreeElement treeelement = (StructureViewTreeElement)desc.getValue();
-            if (element.equals(treeelement.getValue())) {
+        if (myModel.getElementAt(i) instanceof AbstractTreeNode desc) {
+          if (desc.getValue() instanceof StructureViewTreeElement treeElement) {
+            if (element.equals(treeElement.getValue())) {
               selectItem(i);
               break;
             }

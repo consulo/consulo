@@ -17,7 +17,9 @@ package consulo.language.editor;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
@@ -44,9 +46,8 @@ public interface AutoImportHelper {
 
   @Nonnull
   default String getImportMessage(final boolean multiple, @Nonnull String name) {
-    final String messageKey = multiple ? "import.popup.multiple" : "import.popup.text";
-    String hintText = DaemonBundle.message(messageKey, name);
-    hintText += " " + KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
+    String hintText = multiple ? DaemonLocalize.importPopupMultiple(name).get() : DaemonLocalize.importPopupText(name).get();
+    hintText += " " + LocalizeValue.localizeTODO(KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS)));
     return hintText;
   }
 }
