@@ -16,11 +16,13 @@
 package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ui.UISettings;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.application.ui.UISettings;
-import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.platform.base.localize.KeyMapLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -34,25 +36,26 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
   public static final String ID = "appearance";
 
   private static final Collection<BooleanOptionDescription> ourOptions = ContainerUtil.immutableList(
-          appearance("UI: " + messageIde("checkboox.cyclic.scrolling.in.lists"), "CYCLE_SCROLLING"),
-          appearance("UI: " + messageIde("checkbox.show.icons.in.quick.navigation"), "SHOW_ICONS_IN_QUICK_NAVIGATION"),
-          appearance("UI: " + messageIde("checkbox.position.cursor.on.default.button"), "MOVE_MOUSE_ON_DEFAULT_BUTTON"),
-          appearance("UI: Hide navigation popups on focus loss", "HIDE_NAVIGATION_ON_FOCUS_LOSS"),
-          appearance("UI: Drag-n-Drop with ALT pressed only", "DND_WITH_PRESSED_ALT_ONLY"),
-          notifications("UI: Display balloon notifications", "SHOW_BALLOONS"),
-          appearance("Window: " + messageIde("checkbox.animate.windows"), "ANIMATE_WINDOWS"),
-          appearance("Window: " + messageIde("checkbox.show.memory.indicator"), "SHOW_MEMORY_INDICATOR"),
-          appearance("Window: " + messageKeyMap("disable.mnemonic.in.menu.check.box"), "DISABLE_MNEMONICS"),
-          appearance("Window: " + messageKeyMap("disable.mnemonic.in.controls.check.box"), "DISABLE_MNEMONICS_IN_CONTROLS"),
-          appearance("Window: " + messageIde("checkbox.show.icons.in.menu.items"), "SHOW_ICONS_IN_MENUS"),
-          appearance("Window: " + messageIde("checkbox.left.toolwindow.layout"), "LEFT_HORIZONTAL_SPLIT"),
-          appearance("Window: " + messageIde("checkbox.show.editor.preview.popup"), "SHOW_EDITOR_TOOLTIP"),
-          appearance("Window: " + messageIde("checkbox.show.tool.window.numbers"), "SHOW_TOOL_WINDOW_NUMBERS"),
-          appearance("Window: Allow merging buttons on dialogs", "ALLOW_MERGE_BUTTONS"),
-          appearance("Window: Small labels in editor tabs", "USE_SMALL_LABELS_ON_TABS"),
-          appearance("Window: " + messageIde("checkbox.widescreen.tool.window.layout"), "WIDESCREEN_SUPPORT"),
-          appearance("Window: " + messageIde("checkbox.right.toolwindow.layout"), "RIGHT_HORIZONTAL_SPLIT"),
-          appearance("Window: " + messageIde("checkbox.use.preview.window"), "NAVIGATE_TO_PREVIEW"));
+    appearance(message(IdeLocalize.labelOptionUi(IdeLocalize.checkbooxCyclicScrollingInLists())), "CYCLE_SCROLLING"),
+    appearance(message(IdeLocalize.labelOptionUi(IdeLocalize.checkboxShowIconsInQuickNavigation())), "SHOW_ICONS_IN_QUICK_NAVIGATION"),
+    appearance(message(IdeLocalize.labelOptionUi(IdeLocalize.checkboxPositionCursorOnDefaultButton())), "MOVE_MOUSE_ON_DEFAULT_BUTTON"),
+    appearance(message(IdeLocalize.labelOptionUi(IdeLocalize.ideHideNavigationOnFocusLossDescription())), "HIDE_NAVIGATION_ON_FOCUS_LOSS"),
+    appearance(message(IdeLocalize.labelOptionUi(IdeLocalize.dndWithAltPressedOnly())), "DND_WITH_PRESSED_ALT_ONLY"),
+    notifications(message(IdeLocalize.labelOptionUi(IdeLocalize.displayBalloonNotifications())), "SHOW_BALLOONS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxAnimateWindows())), "ANIMATE_WINDOWS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowMemoryIndicator())), "SHOW_MEMORY_INDICATOR"),
+    appearance(message(IdeLocalize.labelOptionWindow(KeyMapLocalize.disableMnemonicInMenuCheckBox())), "DISABLE_MNEMONICS"),
+    appearance(message(IdeLocalize.labelOptionWindow(KeyMapLocalize.disableMnemonicInControlsCheckBox())), "DISABLE_MNEMONICS_IN_CONTROLS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowIconsInMenuItems())), "SHOW_ICONS_IN_MENUS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxLeftToolwindowLayout())), "LEFT_HORIZONTAL_SPLIT"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowEditorPreviewPopup())), "SHOW_EDITOR_TOOLTIP"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowToolWindowNumbers())), "SHOW_TOOL_WINDOW_NUMBERS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.allowMergingDialogButtons())), "ALLOW_MERGE_BUTTONS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.smallLabelsInEditorTabs())), "USE_SMALL_LABELS_ON_TABS"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxWidescreenToolWindowLayout())), "WIDESCREEN_SUPPORT"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxRightToolwindowLayout())), "RIGHT_HORIZONTAL_SPLIT"),
+    appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxUsePreviewWindow())), "NAVIGATE_TO_PREVIEW")
+  );
 
   @Nonnull
   @Override
@@ -94,10 +97,10 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
 
   public static class Ex extends OptionsTopHitProvider implements CoveredByToggleActions {
     private static final Collection<BooleanOptionDescription> ourOptions = ContainerUtil.immutableList(
-            appearance("Window: " + "Hide Tool Window Bars", "HIDE_TOOL_STRIPES"),
-            appearance("View: Show Main Toolbar", "SHOW_MAIN_TOOLBAR"),
-            appearance("View: Show Status Bar", "SHOW_STATUS_BAR"),
-            appearance("View: Show Navigation Bar", "SHOW_NAVIGATION_BAR")
+      appearance(message(IdeLocalize.labelOptionWindow(IdeLocalize.optionHideToolWindowBars())), "HIDE_TOOL_STRIPES"),
+      appearance(message(IdeLocalize.labelOptionView(IdeLocalize.showMainToolbar())), "SHOW_MAIN_TOOLBAR"),
+      appearance(message(IdeLocalize.labelOptionView(IdeLocalize.showStatusBar())), "SHOW_STATUS_BAR"),
+      appearance(message(IdeLocalize.labelOptionView(IdeLocalize.showNavigationBar())), "SHOW_NAVIGATION_BAR")
     );
 
     @Nonnull

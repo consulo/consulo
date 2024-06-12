@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.ide.ui;
 
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.project.Project;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -32,45 +34,60 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
   private static final String ID = "editor";
 
   private static final Collection<BooleanOptionDescription> ourOptions = ContainerUtil.immutableList(
-          editor("Mouse: " + messageApp("checkbox.honor.camelhumps.words.settings.on.double.click"),
-                 "IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS"),
-          editor("Mouse: " + messageApp(SystemInfo.isMac
-                                        ? "checkbox.enable.ctrl.mousewheel.changes.font.size.macos"
-                                        : "checkbox.enable.ctrl.mousewheel.changes.font.size"), "IS_WHEEL_FONTCHANGE_ENABLED"),
-          editor("Mouse: " + messageApp("checkbox.enable.drag.n.drop.functionality.in.editor"), "IS_DND_ENABLED"),
-          new EditorOptionDescription(null, messageApp("checkbox.show.softwraps.only.for.caret.line.action.text"), "preferences.editor") {
-            @Override
-            public boolean isOptionEnabled() {
-              return !EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
-            }
+    editor(
+      message(IdeLocalize.labelOptionMouse(ApplicationLocalize.checkboxHonorCamelhumpsWordsSettingsOnDoubleClick())),
+      "IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS"
+    ),
+    editor(
+      message(IdeLocalize.labelOptionMouse(
+        Platform.current().os().isMac()
+          ? ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSizeMacos()
+          : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize()
+      )),
+      "IS_WHEEL_FONTCHANGE_ENABLED"
+    ),
+    editor(message(IdeLocalize.labelOptionMouse(ApplicationLocalize.checkboxEnableDragNDropFunctionalityInEditor())), "IS_DND_ENABLED"),
+    new EditorOptionDescription(
+      null,
+      message(ApplicationLocalize.checkboxShowSoftwrapsOnlyForCaretLineActionText()),
+      "preferences.editor"
+    ) {
+      @Override
+      public boolean isOptionEnabled() {
+        return !EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
+      }
 
-            @Override
-            public void setOptionState(boolean enabled) {
-              EditorSettingsExternalizable.getInstance().setAllSoftwrapsShown(!enabled);
-              fireUpdated();
-            }
-          },
-          editor("Virtual Space: " + messageApp("checkbox.allow.placement.of.caret.after.end.of.line"), "IS_VIRTUAL_SPACE"),
-          editor("Virtual Space: " + messageApp("checkbox.allow.placement.of.caret.inside.tabs"), "IS_CARET_INSIDE_TABS"),
-          editor("Virtual Space: " + messageApp("checkbox.show.virtual.space.at.file.bottom"), "ADDITIONAL_PAGE_AT_BOTTOM"),
-          editorUI("Appearance: " + messageIde("checkbox.use.antialiased.font.in.editor"), "ANTIALIASING_IN_EDITOR"),
-          editorApp("Appearance: Caret blinking", "IS_CARET_BLINKING"),
-          editorApp("Appearance: " + messageApp("checkbox.use.block.caret"), "IS_BLOCK_CURSOR"),
-          editorApp("Appearance: Show right margin", "IS_RIGHT_MARGIN_SHOWN"),
-          editorCode("Appearance: " + messageApp("checkbox.show.method.separators"), "SHOW_METHOD_SEPARATORS"),
-          editorApp("Appearance: " + messageApp("checkbox.show.whitespaces"), "IS_WHITESPACES_SHOWN"),
-          editorApp("Appearance: Show leading whitespaces", "IS_LEADING_WHITESPACES_SHOWN"),
-          editorApp("Appearance: Show inner whitespaces", "IS_INNER_WHITESPACES_SHOWN"),
-          editorApp("Appearance: Show trailing whitespaces", "IS_TRAILING_WHITESPACES_SHOWN"),
-          editorApp("Appearance: Show vertical indent guides", "IS_INDENT_GUIDES_SHOWN"),
-          option("Appearance: " + messageApp("checkbox.show.code.folding.outline"), "IS_FOLDING_OUTLINE_SHOWN", "editor.preferences.folding"),
-          editorTabs("Tabs: " + messageApp("checkbox.editor.tabs.in.single.row"), "SCROLL_TAB_LAYOUT_IN_EDITOR"),
-          editorTabs("Tabs: " + messageApp("checkbox.hide.file.extension.in.editor.tabs"), "HIDE_KNOWN_EXTENSION_IN_TABS"),
-          editorTabs("Tabs: Show directory in editor tabs for non-unique filenames", "SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES"),
-          editorTabs("Tabs: " + messageApp("checkbox.editor.tabs.show.close.button"), "SHOW_CLOSE_BUTTON"),
-          editorTabs("Tabs: " + messageApp("checkbox.mark.modified.tabs.with.asterisk"), "MARK_MODIFIED_TABS_WITH_ASTERISK"),
-          editorTabs("Tabs: " + messageApp("checkbox.show.tabs.tooltips"), "SHOW_TABS_TOOLTIPS"),
-          editorTabs("Tabs: " + messageApp("radio.close.non.modified.files.first"), "CLOSE_NON_MODIFIED_FILES_FIRST")
+      @Override
+      public void setOptionState(boolean enabled) {
+        EditorSettingsExternalizable.getInstance().setAllSoftwrapsShown(!enabled);
+        fireUpdated();
+      }
+    },
+    editor(message(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxAllowPlacementOfCaretAfterEndOfLine())), "IS_VIRTUAL_SPACE"),
+    editor(message(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxAllowPlacementOfCaretInsideTabs())), "IS_CARET_INSIDE_TABS"),
+    editor(message(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxShowVirtualSpaceAtFileBottom())), "ADDITIONAL_PAGE_AT_BOTTOM"),
+    editorUI(message(IdeLocalize.labelOptionAppearance(IdeLocalize.checkboxUseAntialiasedFontInEditor())), "ANTIALIASING_IN_EDITOR"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceCaretBlinking())), "IS_CARET_BLINKING"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxUseBlockCaret())), "IS_BLOCK_CURSOR"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowRightMargin())), "IS_RIGHT_MARGIN_SHOWN"),
+    editorCode(message(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowMethodSeparators())), "SHOW_METHOD_SEPARATORS"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowWhitespaces())), "IS_WHITESPACES_SHOWN"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowLeadingWhitespaces())), "IS_LEADING_WHITESPACES_SHOWN"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowInnerWhitespaces())), "IS_INNER_WHITESPACES_SHOWN"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowTrailingWhitespaces())), "IS_TRAILING_WHITESPACES_SHOWN"),
+    editorApp(message(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowVerticalIndentGuides())), "IS_INDENT_GUIDES_SHOWN"),
+    option(
+      message(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowCodeFoldingOutline())),
+      "IS_FOLDING_OUTLINE_SHOWN",
+      "editor.preferences.folding"
+    ),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxEditorTabsInSingleRow())), "SCROLL_TAB_LAYOUT_IN_EDITOR"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxHideFileExtensionInEditorTabs())), "HIDE_KNOWN_EXTENSION_IN_TABS"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(IdeLocalize.labelTabsShowDirectoryForNonUniqueFilenames())), "SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxEditorTabsShowCloseButton())), "SHOW_CLOSE_BUTTON"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxMarkModifiedTabsWithAsterisk())), "MARK_MODIFIED_TABS_WITH_ASTERISK"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxShowTabsTooltips())), "SHOW_TABS_TOOLTIPS"),
+    editorTabs(message(IdeLocalize.labelOptionTabs(ApplicationLocalize.radioCloseNonModifiedFilesFirst())), "CLOSE_NON_MODIFIED_FILES_FIRST")
   );
 
   @Nonnull
@@ -110,7 +127,7 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
 
   public static class Ex extends OptionsTopHitProvider implements CoveredByToggleActions {
     private static final Collection<BooleanOptionDescription> ourOptions = ContainerUtil.immutableList(
-            editorApp("Appearance: " + messageApp("checkbox.show.line.numbers"), "ARE_LINE_NUMBERS_SHOWN")
+      editorApp(message(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowLineNumbers())), "ARE_LINE_NUMBERS_SHOWN")
     );
 
     @Nonnull

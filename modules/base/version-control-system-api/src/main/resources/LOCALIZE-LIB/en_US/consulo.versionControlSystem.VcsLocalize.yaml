@@ -689,6 +689,10 @@ patch.apply.conflict.merged.version:
   text: Merge Result
 patch.apply.conflict.patched.version:
   text: Patched Version
+patch.apply.conflict.patched.somehow.version:
+  text: Result
+patch.apply.conflict.patch:
+  text: Patch
 patch.apply.select.title:
   text: Select Patch File
 patch.apply.select.base.directory.title:
