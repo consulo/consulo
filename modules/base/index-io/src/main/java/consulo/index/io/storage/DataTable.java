@@ -17,20 +17,21 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.index.io.Forceable;
 import consulo.index.io.PagePool;
 import consulo.index.io.RandomAccessDataFile;
-import consulo.disposer.Disposable;
-import consulo.index.io.Forceable;
-import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
-class DataTable implements Disposable, Forceable {
-  private static final Logger LOG = Logger.getInstance(DataTable.class);
+class DataTable implements Closeable, Forceable {
+  private static final Logger LOG = LoggerFactory.getLogger(DataTable.class);
 
   private static final int HEADER_SIZE = 32;
   private static final int DIRTY_MAGIC = 0x12ad34e4;
@@ -54,7 +55,7 @@ class DataTable implements Disposable, Forceable {
   }
 
   public boolean isCompactNecessary() {
-    return ((double)myWasteSize)/myFile.length() > 0.25 && myWasteSize > 3 * FileUtil.MEGABYTE;
+    return ((double)myWasteSize) / myFile.length() > 0.25 && myWasteSize > 3 * FileUtil.MEGABYTE;
   }
 
   private void readInHeader(File filePath) throws IOException {
@@ -86,8 +87,9 @@ class DataTable implements Disposable, Forceable {
     long newLenght = result + len;
     writeBytes(newLenght - 1, new byte[]{0});
     long actualLenght = myFile.length();
-    LOG.assertTrue(actualLenght == newLenght,
-                   "Failed to resize the storage at: " + myFile.getFile() + ". Required: " + newLenght + ", actual: " + actualLenght);
+    if (actualLenght != newLenght) {
+      LOG.error("Failed to resize the storage at: " + myFile.getFile() + ". Required: " + newLenght + ", actual: " + actualLenght);
+    }
     return result;
   }
 
@@ -98,13 +100,15 @@ class DataTable implements Disposable, Forceable {
     }
   }
 
-  public void dispose() {
+  @Override
+  public void close() {
     if (!myFile.isDisposed()) {
       markClean();
       myFile.dispose();
     }
   }
 
+  @Override
   public void force() {
     markClean();
     myFile.force();
@@ -119,6 +123,7 @@ class DataTable implements Disposable, Forceable {
     return false;
   }
 
+  @Override
   public boolean isDirty() {
     return myIsDirty || myFile.isDirty();
   }

@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io;
+package consulo.util.io;
 
 import jakarta.annotation.Nonnull;
 

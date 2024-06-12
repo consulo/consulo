@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing.impl.forward;
 
-import consulo.util.io.ThreadLocalCachedByteArray;
 import consulo.ide.impl.idea.util.indexing.impl.InputData;
 import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
-
+import consulo.util.io.ThreadLocalCachedByteArray;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 

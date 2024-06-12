@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
-import consulo.ide.impl.idea.util.io.BinaryOutputReader;
+import consulo.process.io.BinaryOutputReader;
 import consulo.process.BinaryProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;

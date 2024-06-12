@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.persistent;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.index.io.Forceable;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataOutputStream;
 import consulo.logging.Logger;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.FileUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.virtualFileSystem.RawFileLoader;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;

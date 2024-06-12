@@ -19,31 +19,27 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
+import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;
-import consulo.language.file.FileTypeManager;
+import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.ide.impl.idea.util.LineSeparator;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.language.file.FileTypeManager;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.ObjectUtil;
-import consulo.virtualFileSystem.LargeFileWriteRequestor;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.RawFileLoader;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;

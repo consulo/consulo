@@ -17,23 +17,24 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
 import consulo.index.io.Forceable;
 import consulo.index.io.PagePool;
 import consulo.index.io.RandomAccessDataFile;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-public abstract class AbstractRecordsTable implements Disposable, Forceable {
-  private static final Logger LOG = Logger.getInstance(AbstractRecordsTable.class);
+public abstract class AbstractRecordsTable implements Closeable, Forceable {
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractRecordsTable.class);
 
   private static final int HEADER_MAGIC_OFFSET = 0;
   private static final int HEADER_VERSION_OFFSET = 4;
@@ -209,7 +210,7 @@ public abstract class AbstractRecordsTable implements Disposable, Forceable {
   }
 
   @Override
-  public void dispose() {
+  public void close() {
     if (!myStorage.isDisposed()) {
       markClean();
       myStorage.dispose();

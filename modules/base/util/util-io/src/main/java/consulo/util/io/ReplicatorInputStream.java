@@ -17,9 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io;
-
-import consulo.util.io.BufferExposingByteArrayOutputStream;
+package consulo.util.io;
 
 import java.io.IOException;
 import java.io.InputStream;

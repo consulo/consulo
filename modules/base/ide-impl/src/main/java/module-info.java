@@ -768,7 +768,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.util.indexing.impl.forward;
   exports consulo.ide.impl.idea.util.indexing.provided;
   exports consulo.ide.impl.idea.util.io;
-  exports consulo.ide.impl.idea.util.io.storage;
   exports consulo.ide.impl.idea.util.net;
   exports consulo.ide.impl.idea.util.net.ssl;
   exports consulo.ide.impl.idea.util.properties;

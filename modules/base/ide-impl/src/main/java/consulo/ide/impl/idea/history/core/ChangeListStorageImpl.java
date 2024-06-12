@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.utils.LocalHistoryLog;
 import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
+import consulo.index.io.storage.AbstractStorage;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
@@ -72,7 +72,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
         LocalHistoryLog.LOG.info(MessageFormat.format("local history version mismatch (was: {0}, expected: {1}), rebuilding...", storedVersion, VERSION));
       }
       if (timestampMismatch) LocalHistoryLog.LOG.info("FS has been rebuild, rebuilding local history...");
-      result.dispose();
+      result.close();
       if (!FileUtil.delete(storageDir)) {
         throw new IOException("cannot clear storage dir: " + storageDir);
       }
@@ -114,7 +114,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
                               ")\n" +
                               message, e);
 
-    myStorage.dispose();
+    myStorage.close();
     try {
       FileUtil.delete(myStorageDir);
       initStorage(myStorageDir);
@@ -149,14 +149,17 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }), null);
   }
 
+  @Override
   public synchronized void close() {
-    myStorage.dispose();
+    myStorage.close();
   }
 
+  @Override
   public synchronized long nextId() {
     return ++myLastId;
   }
 
+  @Override
   @Nullable
   public synchronized ChangeSetHolder readPrevious(int id, IntSet recursionGuard) {
     if (isCompletelyBroken) return null;
@@ -218,6 +221,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
   }
 
+  @Override
   public synchronized void writeNextSet(ChangeSet changeSet) {
     if (isCompletelyBroken) return;
 
@@ -237,6 +241,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
     }
   }
 
+  @Override
   public synchronized void purge(long period, int intervalBetweenActivities, Consumer<ChangeSet> processor) {
     if (isCompletelyBroken) return;
 

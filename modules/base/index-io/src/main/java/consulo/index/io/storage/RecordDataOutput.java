@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-/*
- * @author max
- */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
+import java.io.DataOutput;
 import java.io.IOException;
 
-public class VersionMismatchException extends IOException {
+/**
+ * @author max
+ */ 
+public interface RecordDataOutput extends DataOutput {
+  int getRecordId();
+  void close() throws IOException;
 }

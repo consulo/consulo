@@ -17,29 +17,29 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.index.io.PagePool;
-import consulo.ide.impl.idea.util.io.RecordDataOutput;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.disposer.Disposable;
 import consulo.index.io.Forceable;
+import consulo.index.io.PagePool;
 import consulo.index.io.data.DataOutputStream;
-import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
+import consulo.util.io.FileUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
-public abstract class AbstractStorage implements Disposable, Forceable {
-  protected static final Logger LOG = Logger.getInstance(AbstractStorage.class);
+public abstract class AbstractStorage implements Closeable, Forceable {
+  protected static final Logger LOG = LoggerFactory.getLogger(AbstractStorage.class);
 
   @NonNls public static final String INDEX_EXTENSION = ".storageRecordIndex";
   @NonNls public static final String DATA_EXTENSION = ".storageData";
@@ -111,7 +111,7 @@ public abstract class AbstractStorage implements Disposable, Forceable {
     catch (IOException e) {
       LOG.info(e.getMessage());
       if (recordsTable != null) {
-        recordsTable.dispose();
+        recordsTable.close();
       }
 
       boolean deleted = deleteFiles(storageFilePath);
@@ -169,8 +169,8 @@ public abstract class AbstractStorage implements Disposable, Forceable {
           }
         }
 
-        myDataTable.dispose();
-        newDataTable.dispose();
+        myDataTable.close();
+        newDataTable.close();
 
         if (!FileUtil.delete(oldDataFile)) {
           throw new IOException("Can't delete file: " + oldDataFile);
@@ -328,10 +328,10 @@ public abstract class AbstractStorage implements Disposable, Forceable {
   }
 
   @Override
-  public void dispose() {
+  public void close() {
     synchronized (myLock) {
-      myRecordsTable.dispose();
-      myDataTable.dispose();
+      myRecordsTable.close();
+      myDataTable.close();
     }
   }
 

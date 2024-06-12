@@ -16,6 +16,7 @@ module consulo.index.io {
 
   exports consulo.index.io;
   exports consulo.index.io.data;
+  exports consulo.index.io.storage;
 
   exports consulo.index.io.internal to consulo.application.impl, consulo.ide.impl;
 

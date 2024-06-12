@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.index.io.PagePool;
-import consulo.ide.impl.idea.util.io.storage.AbstractRecordsTable;
-import consulo.ide.impl.idea.util.io.storage.RecordIdIterator;
+import consulo.index.io.storage.AbstractRecordsTable;
+import consulo.index.io.storage.RecordIdIterator;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;

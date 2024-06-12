@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
 import consulo.index.io.PagePool;
 

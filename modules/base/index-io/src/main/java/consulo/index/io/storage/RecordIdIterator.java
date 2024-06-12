@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2015 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.index.io.storage;
 
-package consulo.ide.impl.idea.util.io;
+import org.jetbrains.annotations.TestOnly;
 
-import java.io.DataOutput;
-import java.io.IOException;
+public interface RecordIdIterator {
+  boolean hasNextId();
 
-/**
- * @author max
- */ 
-public interface RecordDataOutput extends DataOutput {
-  int getRecordId();
-  void close() throws IOException;
+  int nextId();
+
+  @TestOnly
+  boolean validId();
 }

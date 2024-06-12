@@ -15,27 +15,28 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.index.io.PersistentHashMap;
-import consulo.language.psi.stub.FileBasedIndexExtension;
-import consulo.index.io.IndexExtension;
-import consulo.util.io.FileAccessorCache;
-import consulo.util.lang.ref.Ref;
-import consulo.util.lang.ShutDownTracker;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.util.lang.SystemProperties;
+import consulo.container.boot.ContainerPathManager;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.ID;
+import consulo.index.io.IndexExtension;
+import consulo.index.io.PersistentHashMap;
 import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.data.DataOutputStream;
-import consulo.ide.impl.idea.util.io.*;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
+import consulo.language.psi.stub.FileBasedIndexExtension;
+import consulo.logging.Logger;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.FileAccessorCache;
+import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.io.UnsyncByteArrayOutputStream;
+import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.ref.Ref;
 import gnu.trove.*;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.*;
 import java.util.Arrays;
 

@@ -16,13 +16,13 @@
 package consulo.ide.impl.plugins;
 
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.style.StyleManager;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.lazy.LazyValue;
 import jakarta.annotation.Nonnull;
 

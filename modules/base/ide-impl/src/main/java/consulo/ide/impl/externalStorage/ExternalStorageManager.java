@@ -37,8 +37,6 @@ import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import consulo.ide.impl.externalStorage.storage.InfoAllBeanResponse;
 import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -50,10 +48,12 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.io.StreamUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-
 import jakarta.annotation.Nonnull;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

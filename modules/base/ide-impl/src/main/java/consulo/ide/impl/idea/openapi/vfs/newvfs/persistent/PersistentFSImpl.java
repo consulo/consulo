@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.*;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.MostlySingularMultiMap;
-import consulo.ide.impl.idea.util.io.ReplicatorInputStream;
+import consulo.util.io.ReplicatorInputStream;
 import consulo.util.collection.CharSequenceHashingStrategy;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

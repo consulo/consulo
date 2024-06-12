@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io;
-
-import consulo.process.io.BaseDataReader;
+package consulo.process.io;
 
 import jakarta.annotation.Nonnull;
 

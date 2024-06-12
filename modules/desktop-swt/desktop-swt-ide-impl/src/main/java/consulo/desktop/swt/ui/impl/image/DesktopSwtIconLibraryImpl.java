@@ -15,10 +15,10 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.eclipse.nebula.cwt.svg.SvgDocument;

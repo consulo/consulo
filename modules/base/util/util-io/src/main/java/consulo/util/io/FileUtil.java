@@ -41,6 +41,9 @@ import java.util.regex.Pattern;
 public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
+  public static final int KILOBYTE = 1024;
+  public static final int MEGABYTE = KILOBYTE * KILOBYTE;
+
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
   private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consulo.fs.useChannels"));
   public static final HashingStrategy<String> PATH_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();

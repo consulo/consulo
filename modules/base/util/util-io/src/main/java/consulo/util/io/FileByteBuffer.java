@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.io;
+package consulo.util.io;
 
-import consulo.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class FileByteBuffer {
-  private static final Logger LOG = Logger.getInstance(FileByteBuffer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FileByteBuffer.class);
   
   private final RandomAccessFile myFile;
 
@@ -34,7 +36,7 @@ public class FileByteBuffer {
       return myFile.readByte();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -44,7 +46,7 @@ public class FileByteBuffer {
       myFile.write(b);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -55,7 +57,7 @@ public class FileByteBuffer {
       return myFile.readByte();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -66,7 +68,7 @@ public class FileByteBuffer {
       myFile.write(b);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -76,7 +78,7 @@ public class FileByteBuffer {
       return myFile.readChar();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -86,7 +88,7 @@ public class FileByteBuffer {
       myFile.writeChar(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -97,7 +99,7 @@ public class FileByteBuffer {
       return myFile.readChar();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -108,7 +110,7 @@ public class FileByteBuffer {
       myFile.writeChar(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -118,7 +120,7 @@ public class FileByteBuffer {
       return myFile.readShort();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -128,7 +130,7 @@ public class FileByteBuffer {
       myFile.writeShort(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -139,7 +141,7 @@ public class FileByteBuffer {
       return myFile.readShort();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -150,7 +152,7 @@ public class FileByteBuffer {
       myFile.writeShort(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -160,7 +162,7 @@ public class FileByteBuffer {
       return myFile.readInt();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -170,7 +172,7 @@ public class FileByteBuffer {
       myFile.writeInt(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -181,7 +183,7 @@ public class FileByteBuffer {
       return myFile.readInt();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -192,7 +194,7 @@ public class FileByteBuffer {
       myFile.writeInt(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -202,7 +204,7 @@ public class FileByteBuffer {
       return myFile.readLong();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -212,7 +214,7 @@ public class FileByteBuffer {
       myFile.writeLong(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -223,7 +225,7 @@ public class FileByteBuffer {
       return myFile.readLong();
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
       return 0;
     }
   }
@@ -234,7 +236,7 @@ public class FileByteBuffer {
       myFile.writeLong(value);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }
@@ -244,7 +246,7 @@ public class FileByteBuffer {
       myFile.seek(index);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
   }
 
@@ -253,7 +255,7 @@ public class FileByteBuffer {
       myFile.write(src, offset, length);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
   }
 
@@ -262,7 +264,7 @@ public class FileByteBuffer {
       myFile.read(dst, offset, length);
     }
     catch(IOException e){
-      LOG.error(e);
+      LOG.error("", e);
     }
     return this;
   }

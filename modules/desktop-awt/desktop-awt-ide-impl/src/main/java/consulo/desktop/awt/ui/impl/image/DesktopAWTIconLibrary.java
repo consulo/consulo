@@ -19,11 +19,11 @@ import com.github.weisj.jsvg.SVGDocument;
 import com.github.weisj.jsvg.parser.SVGLoader;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTPNGImageReference;
 import consulo.desktop.awt.ui.impl.image.reference.DesktopAWTSVGImageReference;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.logging.Logger;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

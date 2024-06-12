@@ -20,11 +20,11 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.SystemInfo;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.logging.Logger;
+import consulo.util.io.StreamUtil;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;

@@ -16,10 +16,9 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -290,7 +289,7 @@ public class ZipUtil {
       ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));
       try {
         os.putNextEntry(new ZipEntry(srcFile.getName()));
-        FileUtilRt.copy(is, os);
+        FileUtil.copy(is, os);
         os.closeEntry();
         return zipFile;
       }

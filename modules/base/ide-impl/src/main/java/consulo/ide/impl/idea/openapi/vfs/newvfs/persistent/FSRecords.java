@@ -1,41 +1,42 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
+import consulo.application.ApplicationManager;
+import consulo.application.HeavyProcessLatch;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import consulo.ide.impl.idea.util.*;
-import consulo.application.HeavyProcessLatch;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
-import consulo.ide.impl.idea.util.io.*;
-import consulo.ide.impl.idea.util.io.storage.*;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.index.io.*;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.container.boot.ContainerPathManager;
-import consulo.disposer.Disposer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
+import consulo.index.io.storage.*;
 import consulo.logging.Logger;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.FileAttributes;
+import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.virtualFileSystem.FileAttribute;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -478,12 +479,12 @@ public class FSRecords {
       }
 
       if (myAttributes != null) {
-        Disposer.dispose(myAttributes);
+        myAttributes.close();
         myAttributes = null;
       }
 
       if (myContents != null) {
-        Disposer.dispose(myContents);
+        myContents.close();
         myContents = null;
       }
 

@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.externalStorage.storage;
 
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.index.io.data.DataOutputStream;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayOutputStream;
+import consulo.util.io.StreamUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.lang.Pair;
+import jakarta.annotation.Nonnull;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;

@@ -26,13 +26,13 @@ import consulo.externalService.ExternalServiceConfiguration;
 import consulo.http.HTTPMethod;
 import consulo.http.HttpRequests;
 import consulo.ide.impl.external.api.UserAccount;
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.Alerts;
 import consulo.ui.UIAccess;
-
+import consulo.util.io.StreamUtil;
 import jakarta.annotation.Nonnull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;

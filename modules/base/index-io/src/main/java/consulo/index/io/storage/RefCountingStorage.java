@@ -17,18 +17,16 @@
 /*
  * @author max
  */
-package consulo.ide.impl.idea.util.io.storage;
+package consulo.index.io.storage;
 
-import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.ide.impl.idea.util.ConcurrencyUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.index.io.PagePool;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
-import consulo.language.util.IncorrectOperationException;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
-
+import consulo.util.io.StreamUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
 import jakarta.annotation.Nonnull;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -46,8 +44,8 @@ public class RefCountingStorage extends AbstractStorage {
 
   @Nonnull
   protected ExecutorService createExecutor() {
-    return new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS, new LinkedBlockingQueue<Runnable>(), ConcurrencyUtil
-            .newNamedThreadFactory("RefCountingStorage write content helper"));
+    return new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS, new LinkedBlockingQueue<Runnable>(), r -> new Thread(r,
+                                                                                                                            "RefCountingStorage write content helper"));
   }
 
   private final boolean myDoNotZipCaches;
@@ -134,7 +132,7 @@ public class RefCountingStorage extends AbstractStorage {
 
   @Override
   protected void appendBytes(int record, ByteArraySequence bytes) throws IOException {
-    throw new IncorrectOperationException("Appending is not supported");
+    throw new UnsupportedOperationException("Appending is not supported");
   }
 
   @Override
@@ -151,7 +149,8 @@ public class RefCountingStorage extends AbstractStorage {
       myPendingWriteRequestsSize += bytes.getLength();
       if (myPendingWriteRequestsSize > MAX_PENDING_WRITE_SIZE) {
         zipAndWrite(bytes, record, fixedSize);
-      } else {
+      }
+      else {
         myPendingWriteRequests.put(record, myPendingWriteRequestsExecutor.submit(new Callable<Object>() {
           @Override
           public Object call() throws IOException {
@@ -248,9 +247,9 @@ public class RefCountingStorage extends AbstractStorage {
   }
 
   @Override
-  public void dispose() {
+  public void close() {
     flushPendingWrites();
-    super.dispose();
+    super.close();
   }
 
   @Override
@@ -260,10 +259,11 @@ public class RefCountingStorage extends AbstractStorage {
   }
 
   private void flushPendingWrites() {
-    for(Map.Entry<Integer, Future<?>> entry:myPendingWriteRequests.entrySet()) {
+    for (Map.Entry<Integer, Future<?>> entry : myPendingWriteRequests.entrySet()) {
       try {
         entry.getValue().get();
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         throw new RuntimeException(e);
       }
     }

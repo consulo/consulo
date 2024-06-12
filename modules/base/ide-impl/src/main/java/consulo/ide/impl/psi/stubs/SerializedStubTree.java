@@ -19,18 +19,18 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import consulo.language.psi.stub.*;
-import consulo.util.lang.ThreadLocalCachedValue;
-import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.language.impl.DebugUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.io.DigestUtil;
-import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
+import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.util.collection.ArrayUtil;
+import consulo.util.io.BufferExposingByteArrayOutputStream;
+import consulo.util.io.DigestUtil;
+import consulo.util.io.UnsyncByteArrayInputStream;
+import consulo.util.lang.ThreadLocalCachedValue;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
