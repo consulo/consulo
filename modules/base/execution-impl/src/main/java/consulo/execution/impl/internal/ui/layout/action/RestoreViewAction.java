@@ -17,7 +17,7 @@
 package consulo.execution.impl.internal.ui.layout.action;
 
 import consulo.execution.impl.internal.ui.layout.CellTransform;
-import consulo.ui.ex.action.ActionsBundle;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -36,8 +36,8 @@ public class RestoreViewAction extends AnAction {
   @Override
   public void update(final AnActionEvent e) {
     Presentation p = e.getPresentation();
-    p.setText(ActionsBundle.message("action.Runner.RestoreView.text", myContent.getDisplayName()));
-    p.setDescription(ActionsBundle.message("action.Runner.RestoreView.description"));
+    p.setTextValue(ActionLocalize.actionRunnerRestoreviewText(myContent.getDisplayName()));
+    p.setDescriptionValue(ActionLocalize.actionRunnerRestoreviewDescription());
     p.setIcon(myContent.getIcon());
   }
 

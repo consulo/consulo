@@ -69,8 +69,8 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
     List<ExternalTaskExecutionInfo> result = new ArrayList<>();
     for (int i = 0; i < size(); i++) {
       Object e = getElementAt(i);
-      if (e instanceof ExternalTaskExecutionInfo) {
-        result.add((ExternalTaskExecutionInfo)e);
+      if (e instanceof ExternalTaskExecutionInfo externalTaskExecutionInfo) {
+        result.add(externalTaskExecutionInfo);
       }
     }
     return result;
@@ -98,8 +98,8 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
   public void forgetTasksFrom(@Nonnull String externalProjectPath) {
     for (int i = size() - 1; i >= 0; i--) {
       Object e = getElementAt(i);
-      if (e instanceof ExternalTaskExecutionInfo) {
-        String path = ((ExternalTaskExecutionInfo)e).getSettings().getExternalProjectPath();
+      if (e instanceof ExternalTaskExecutionInfo externalTaskExecutionInfo) {
+        String path = externalTaskExecutionInfo.getSettings().getExternalProjectPath();
         if (externalProjectPath.equals(path)
             || externalProjectPath.equals(ExternalSystemApiUtil.getRootProjectPath(path, myExternalSystemId, myProject)))
         {

@@ -16,13 +16,12 @@
 package consulo.language.editor.impl.internal.daemon;
 
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-
 import jakarta.annotation.Nonnull;
 
 /**
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ConfigureInspectionsAction extends DumbAwareAction {
   public ConfigureInspectionsAction() {
-    super(DaemonBundle.message("popup.action.configure.inspections"));
+    super(DaemonLocalize.popupActionConfigureInspections().get());
   }
 
   @RequiredUIAccess

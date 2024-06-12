@@ -19,7 +19,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.SystemProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
@@ -164,7 +163,7 @@ public class FirefoxUtil {
   }
 
   private static File[] getProfilesDirs() {
-    final String userHome = SystemProperties.getUserHome();
+    File userHome = Platform.current().user().homePath().toFile();
     if (Platform.current().os().isMac()) {
       return new File[] {
         new File(userHome, "Library" + File.separator + "Mozilla" + File.separator + "Firefox"),

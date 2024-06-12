@@ -16,14 +16,14 @@
  */
 package consulo.desktop.awt.tipOfDay;
 
-import consulo.application.CommonBundle;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -35,8 +35,8 @@ public class TipDialog extends DialogWrapper {
   public TipDialog() {
     super(true);
     setModal(false);
-    setTitle(IdeBundle.message("title.tip.of.the.day"));
-    setCancelButtonText(CommonBundle.getCloseButtonText());
+    setTitle(IdeLocalize.titleTipOfTheDay());
+    setCancelButtonText(CommonLocalize.buttonClose().get());
     myTipPanel = new TipPanel();
     myTipPanel.nextTip();
     setDoNotAskOption(myTipPanel);
@@ -73,7 +73,7 @@ public class TipDialog extends DialogWrapper {
 
   private class PreviousTipAction extends AbstractAction {
     public PreviousTipAction() {
-      super(IdeBundle.message("action.previous.tip"));
+      super(IdeLocalize.actionPreviousTip().get());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TipDialog extends DialogWrapper {
 
   private class NextTipAction extends AbstractAction {
     public NextTipAction() {
-      super(IdeBundle.message("action.next.tip"));
+      super(IdeLocalize.actionNextTip().get());
       putValue(DialogWrapper.DEFAULT_ACTION, Boolean.TRUE);
     }
 

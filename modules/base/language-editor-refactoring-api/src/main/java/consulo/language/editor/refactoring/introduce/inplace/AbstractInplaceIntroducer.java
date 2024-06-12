@@ -451,8 +451,8 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
           final PsiElement refVariableElement = containingFile.findElementAt(myLocalMarker.getStartOffset());
           if (refVariableElement != null) {
             final PsiElement parent = refVariableElement.getParent();
-            if (parent instanceof PsiNamedElement) {
-              ((PsiNamedElement)parent).setName(myLocalName);
+            if (parent instanceof PsiNamedElement namedElement) {
+              namedElement.setName(myLocalName);
             }
           }
 

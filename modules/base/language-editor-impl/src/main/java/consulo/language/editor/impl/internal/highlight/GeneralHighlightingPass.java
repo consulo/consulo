@@ -15,7 +15,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.HighlightRangeExtension;
 import consulo.language.editor.Pass;
@@ -26,6 +25,7 @@ import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerEx;
 import consulo.language.editor.impl.internal.daemon.FileStatusMapImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.impl.internal.wolfAnalyzer.ProblemImpl;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.editor.rawHighlight.*;
 import consulo.language.editor.wolfAnalyzer.Problem;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
@@ -53,7 +53,6 @@ import java.util.function.Supplier;
 
 public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingPass {
   private static final Logger LOG = Logger.getInstance(GeneralHighlightingPass.class);
-  private static final String PRESENTABLE_NAME = DaemonBundle.message("pass.syntax");
   private static final Key<Boolean> HAS_ERROR_ELEMENT = Key.create("HAS_ERROR_ELEMENT");
   public static final Predicate<PsiFile> SHOULD_HIGHLIGHT_FILTER = file -> HighlightingLevelManager.getInstance(file.getProject()).shouldHighlight(file);
   private static final Random RESTART_DAEMON_RANDOM = new Random();
@@ -69,16 +68,27 @@ public class GeneralHighlightingPass extends ProgressableTextEditorHighlightingP
   protected final EditorColorsScheme myGlobalScheme;
   private volatile Supplier<List<HighlightVisitorFactory>> myHighlightVisitorProducer;
 
-  public GeneralHighlightingPass(@Nonnull Project project,
-                                 @Nonnull PsiFile file,
-                                 @Nonnull Document document,
-                                 int startOffset,
-                                 int endOffset,
-                                 boolean updateAll,
-                                 @Nonnull ProperTextRange priorityRange,
-                                 @Nullable Editor editor,
-                                 @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
-    super(project, document, PRESENTABLE_NAME, file, editor, TextRange.create(startOffset, endOffset), true, highlightInfoProcessor);
+  public GeneralHighlightingPass(
+    @Nonnull Project project,
+    @Nonnull PsiFile file,
+    @Nonnull Document document,
+    int startOffset,
+    int endOffset,
+    boolean updateAll,
+    @Nonnull ProperTextRange priorityRange,
+    @Nullable Editor editor,
+    @Nonnull HighlightInfoProcessor highlightInfoProcessor
+  ) {
+    super(
+      project,
+      document,
+      DaemonLocalize.passSyntax().get(),
+      file,
+      editor,
+      TextRange.create(startOffset, endOffset),
+      true,
+      highlightInfoProcessor
+    );
     myUpdateAll = updateAll;
     myPriorityRange = priorityRange;
     myHighlightVisitorProducer = () -> project.getExtensionList(HighlightVisitorFactory.class);

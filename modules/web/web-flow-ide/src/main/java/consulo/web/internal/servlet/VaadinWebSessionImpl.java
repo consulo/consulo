@@ -15,6 +15,7 @@
  */
 package consulo.web.internal.servlet;
 
+import consulo.application.Application;
 import consulo.ui.Label;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
@@ -46,7 +47,10 @@ public class VaadinWebSessionImpl implements WebSession {
   @Override
   public void close() {
     myAccess.give(() -> {
-      Window window = Window.create("Consulo", WindowOptions.builder().disableResize().disableClose().build());
+      Window window = Window.create(
+        Application.get().getName().get(),
+        WindowOptions.builder().disableResize().disableClose().build()
+      );
       window.setContent(Label.create("Session Closed"));
 
       window.show();

@@ -16,7 +16,6 @@
 package consulo.sandboxPlugin.ide.remoteServer;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AllIcons;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
@@ -36,11 +35,10 @@ import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.image.Image;
-import org.jdom.Element;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,13 +92,15 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
   @Nonnull
   @Override
   public DeploymentConfigurator<?> createDeploymentConfigurator(Project project) {
-    return new DeploymentConfigurator<DeploymentConfiguration>() {
+    return new DeploymentConfigurator<>() {
       @Nonnull
       @Override
       public List<DeploymentSource> getAvailableDeploymentSources() {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         DeploymentSourceFactory deploymentSourceFactory = project.getInstance(DeploymentSourceFactory.class);
-        return Arrays.stream(modules).map(module -> deploymentSourceFactory.createModuleDeploymentSource(module)).collect(Collectors.toList());
+        return Arrays.stream(modules)
+          .map(module -> deploymentSourceFactory.createModuleDeploymentSource(module))
+          .collect(Collectors.toList());
       }
 
       @Nonnull
@@ -109,7 +109,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
         return new DeploymentConfiguration() {
           @Override
           public PersistentStateComponent<?> getSerializer() {
-            return new PersistentStateComponent<Object>() {
+            return new PersistentStateComponent<>() {
               @Nullable
               @Override
               public Object getState() {
@@ -136,7 +136,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
   @Nonnull
   @Override
   public ServerConnector<?> createConnector(@Nonnull SandServerConfiguration configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
-    return new ServerConnector<DeploymentConfiguration>() {
+    return new ServerConnector<>() {
       @Override
       public void connect(@Nonnull ConnectionCallback<DeploymentConfiguration> callback) {
         callback.errorOccurred("error");

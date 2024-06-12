@@ -232,12 +232,12 @@ public abstract class AbstractExternalFilter {
     }
     while (read != null && matchStart && !startSection.matcher(StringUtil.toUpperCase(read)).find());
 
-    if (input instanceof MyReader && contentEncoding != null && !contentEncoding.equalsIgnoreCase(CharsetToolkit.UTF8) &&
-      !contentEncoding.equals(((MyReader)input).getEncoding())) {
+    if (input instanceof MyReader myReader && contentEncoding != null && !contentEncoding.equalsIgnoreCase(CharsetToolkit.UTF8) &&
+      !contentEncoding.equals(myReader.getEncoding())) {
       //restart page parsing with correct encoding
       try {
         data.setLength(0);
-        doBuildFromStream(url, new MyReader(((MyReader)input).myInputStream, contentEncoding), data, false, true);
+        doBuildFromStream(url, new MyReader(myReader.myInputStream, contentEncoding), data, false, true);
       }
       catch (ProcessCanceledException e) {
         return;
@@ -247,10 +247,10 @@ public abstract class AbstractExternalFilter {
 
     if (read == null) {
       data.setLength(0);
-      if (matchStart && !settings.forcePatternSearch && input instanceof MyReader) {
+      if (matchStart && !settings.forcePatternSearch && input instanceof MyReader myReader) {
         try {
-          final MyReader reader = contentEncoding != null ? new MyReader(((MyReader)input).myInputStream, contentEncoding)
-            : new MyReader(((MyReader)input).myInputStream, ((MyReader)input).getEncoding());
+          final MyReader reader = contentEncoding != null ? new MyReader(myReader.myInputStream, contentEncoding)
+            : new MyReader(myReader.myInputStream, myReader.getEncoding());
           doBuildFromStream(url, reader, data, false, false);
         }
         catch (ProcessCanceledException ignored) {

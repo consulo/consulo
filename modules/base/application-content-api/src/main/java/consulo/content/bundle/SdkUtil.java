@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Alerts;
@@ -108,8 +109,7 @@ public class SdkUtil {
   @Nullable
   public static Sdk createAndAddSDK(final String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
     VirtualFile sdkHome = ApplicationManager.getApplication()
-                                            .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance()
-                                                                                                        .refreshAndFindFileByPath(path));
+      .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
       final Sdk newSdk = setupSdk(SdkTable.getInstance().getAllSdks(), sdkHome, sdkType, true, null, null, uiAccess);
       if (newSdk != null) {
@@ -182,13 +182,15 @@ public class SdkUtil {
   }
 
   @Nullable
-  public static Sdk setupLegacySdk(final Sdk[] allSdks,
-                                   final VirtualFile homeDir,
-                                   final SdkType sdkType,
-                                   final boolean silent,
-                                   @Nullable final SdkAdditionalData additionalData,
-                                   @Nullable final String customSdkSuggestedName,
-                                   @Nonnull UIAccess uiAccess) {
+  public static Sdk setupLegacySdk(
+    final Sdk[] allSdks,
+    final VirtualFile homeDir,
+    final SdkType sdkType,
+    final boolean silent,
+    @Nullable final SdkAdditionalData additionalData,
+    @Nullable final String customSdkSuggestedName,
+    @Nonnull UIAccess uiAccess
+  ) {
     final Sdk sdk;
     try {
       String sdkPath = sdkType.sdkPath(homeDir);

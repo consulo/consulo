@@ -16,6 +16,7 @@
 package consulo.builtinWebServer.impl.json;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.application.internal.ApplicationInfo;
 import consulo.builtinWebServer.json.JsonGetRequestHandler;
 import consulo.externalService.update.UpdateChannel;
@@ -42,9 +43,10 @@ public class AboutRestHandler extends JsonGetRequestHandler {
   @Nonnull
   @Override
   public JsonResponse handle() {
+    Application app = Application.get();
     ApplicationInfo info = ApplicationInfo.getInstance();
     AboutInfo data = new AboutInfo();
-    data.name = info.getName();
+    data.name = app.getName().get();
     data.build = info.getBuild().getBuildNumber();
     data.channel = UpdateSettings.getInstance().getChannel();
     return JsonResponse.asSuccess(data);

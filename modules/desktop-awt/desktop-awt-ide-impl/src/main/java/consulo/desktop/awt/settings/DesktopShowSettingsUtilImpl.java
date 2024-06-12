@@ -25,11 +25,11 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.content.bundle.SdkTable;
 import consulo.disposer.Disposer;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.impl.configurable.BaseProjectStructureShowSettingsUtil;
 import consulo.ide.impl.configurable.ConfigurablePreselectStrategy;
 import consulo.ide.impl.configurable.DefaultConfigurablePreselectStrategy;
+import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.Settings;
 import consulo.ide.setting.bundle.SettingsSdksModel;
@@ -48,6 +48,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,10 +83,13 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   }
 
   @SuppressWarnings("deprecation")
-  private AsyncResult<Void> showSettingsImpl(@Nullable Project tempProject,
-                                             @Nonnull Function<Project, Configurable[]> buildConfigurables,
-                                             @Nonnull ConfigurablePreselectStrategy strategy,
-                                             @Nonnull Consumer<DesktopSettingsDialog> onShow) {
+  @NonNls
+  private AsyncResult<Void> showSettingsImpl(
+    @Nullable Project tempProject,
+    @Nonnull Function<Project, Configurable[]> buildConfigurables,
+    @Nonnull ConfigurablePreselectStrategy strategy,
+    @Nonnull Consumer<DesktopSettingsDialog> onShow
+  ) {
     Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
     AsyncResult<Void> result = AsyncResult.undefined();
@@ -138,9 +142,11 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @SuppressWarnings("unchecked")
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project,
-                                                                         @Nonnull Class<T> configurableClass,
-                                                                         @Nonnull Consumer<T> afterSelect) {
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(
+    @Nullable Project project,
+    @Nonnull Class<T> configurableClass,
+    @Nonnull Consumer<T> afterSelect
+  ) {
     assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
     return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
@@ -154,31 +160,36 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
-    return showSettingsImpl(project,
-                            BaseShowSettingsUtil::buildConfigurables,
-                            ConfigurablePreselectStrategy.lastStored(project == null ? myDefaultProjectFactory.getDefaultProject() : project),
-                            dialog -> {
-                            });
+    return showSettingsImpl(
+      project,
+      BaseShowSettingsUtil::buildConfigurables,
+      ConfigurablePreselectStrategy.lastStored(project == null ? myDefaultProjectFactory.getDefaultProject() : project),
+      dialog -> {}
+    );
   }
 
   @Nonnull
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable final Project project, @Nonnull final String nameToSelect) {
-    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, configurables -> {
-      return DefaultConfigurablePreselectStrategy.getPreselectedByDisplayName(configurables, nameToSelect, project);
-    }, dialog -> {
-    });
+    return showSettingsImpl(
+      project,
+      BaseShowSettingsUtil::buildConfigurables,
+      configurables -> DefaultConfigurablePreselectStrategy.getPreselectedByDisplayName(configurables, nameToSelect, project),
+      dialog -> {}
+    );
   }
 
   @Nonnull
   @Override
   @RequiredUIAccess
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, final String id2Select, final String filter) {
-    return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables,
-                            configurables -> findConfigurable2Select(id2Select, configurables),
-                            dialog -> {
-                            });
+    return showSettingsImpl(
+      project,
+      BaseShowSettingsUtil::buildConfigurables,
+      configurables -> findConfigurable2Select(id2Select, configurables),
+      dialog -> {}
+    );
   }
 
   @Nullable
@@ -208,11 +219,12 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
-    return showSettingsImpl(project,
-                            BaseShowSettingsUtil::buildConfigurables,
-                            ConfigurablePreselectStrategy.preOrNotSelected(toSelect),
-                            dialog -> {
-                            });
+    return showSettingsImpl(
+      project,
+      BaseShowSettingsUtil::buildConfigurables,
+      ConfigurablePreselectStrategy.preOrNotSelected(toSelect),
+      dialog -> {}
+    );
   }
 
   @RequiredUIAccess
@@ -233,10 +245,12 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(@Nullable String title,
-                                            Project project,
-                                            String dimensionServiceKey,
-                                            @Nonnull Configurable configurable) {
+  public AsyncResult<Void> editConfigurable(
+    @Nullable String title,
+    Project project,
+    String dimensionServiceKey,
+    @Nonnull Configurable configurable
+  ) {
     return editConfigurable(null, project, configurable, title, dimensionServiceKey, null);
   }
 
@@ -254,19 +268,23 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> editConfigurable(final Component parent,
-                                            final Configurable configurable,
-                                            @Nullable final Runnable advancedInitialization) {
+  public AsyncResult<Void> editConfigurable(
+    final Component parent,
+    final Configurable configurable,
+    @Nullable final Runnable advancedInitialization
+  ) {
     return editConfigurable(parent, null, configurable, null, createDimensionKey(configurable), advancedInitialization);
   }
 
   @RequiredUIAccess
-  private static AsyncResult<Void> editConfigurable(@Nullable Component parent,
-                                                    @Nullable Project project,
-                                                    Configurable configurable,
-                                                    String title,
-                                                    String dimensionKey,
-                                                    @Nullable final Runnable advancedInitialization) {
+  private static AsyncResult<Void> editConfigurable(
+    @Nullable Component parent,
+    @Nullable Project project,
+    Configurable configurable,
+    String title,
+    String dimensionKey,
+    @Nullable final Runnable advancedInitialization
+  ) {
     SingleConfigurableEditor editor;
     if (parent != null) {
       editor = new SingleConfigurableEditor(parent, configurable, title, dimensionKey, true, DialogWrapper.IdeModalityType.IDE);

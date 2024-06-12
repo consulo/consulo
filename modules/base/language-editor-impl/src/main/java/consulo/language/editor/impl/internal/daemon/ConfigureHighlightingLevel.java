@@ -18,12 +18,12 @@ package consulo.language.editor.impl.internal.daemon;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.FileHighlightingSetting;
 import consulo.language.editor.highlight.HighlightLevelUtil;
 import consulo.language.editor.highlight.HighlightingLevelManager;
 import consulo.language.editor.impl.internal.markup.InspectionsLevel;
+import consulo.language.editor.localize.DaemonLocalize;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiFile;
@@ -35,9 +35,9 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.Set;
 
 /**
@@ -150,8 +150,14 @@ public class ConfigureHighlightingLevel {
 
     group.add(AnSeparator.create());
     group.add(new ConfigureInspectionsAction());
-    String title = DaemonBundle.message("popup.title.configure.highlighting.level", psi.getVirtualFile().getPresentableName());
 
-    return JBPopupFactory.getInstance().createActionGroupPopup(title, group, context, true, null, 100);
+    return JBPopupFactory.getInstance().createActionGroupPopup(
+      DaemonLocalize.popupTitleConfigureHighlightingLevel(psi.getVirtualFile().getPresentableName()).get(),
+      group,
+      context,
+      true,
+      null,
+      100
+    );
   }
 }

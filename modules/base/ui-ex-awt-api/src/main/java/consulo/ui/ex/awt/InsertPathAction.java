@@ -20,9 +20,9 @@ import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.UILocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
@@ -48,7 +48,7 @@ public class InsertPathAction extends AnAction {
   }
 
   private InsertPathAction(JTextComponent textField, FileChooserDescriptor descriptor) {
-    super(UIBundle.message("insert.file.path.to.text.action.name"));
+    super(UILocalize.insertFilePathToTextActionName());
     myTextField = textField;
     registerCustomShortcutSet(CTRL_F, myTextField);
     myDescriptor = descriptor;

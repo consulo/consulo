@@ -8,6 +8,7 @@ import consulo.build.ui.*;
 import consulo.build.ui.event.MessageEvent;
 import consulo.build.ui.impl.internal.event.FileNavigatable;
 import consulo.build.ui.issue.BuildIssue;
+import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.compiler.CompilerMessage;
@@ -119,8 +120,8 @@ public class BuildViewServiceImpl implements BuildViewService {
             if (navigatable instanceof OpenFileDescriptor) {
               return ((OpenFileDescriptor)navigatable).getFile();
             }
-            else if (navigatable instanceof FileNavigatable) {
-              OpenFileDescriptor fileDescriptor = ((FileNavigatable)navigatable).getFileDescriptor();
+            else if (navigatable instanceof FileNavigatable fileNavigatable) {
+              OpenFileDescriptor fileDescriptor = fileNavigatable.getFileDescriptor();
               return fileDescriptor != null ? fileDescriptor.getFile() : null;
             }
             return null;
@@ -204,27 +205,19 @@ public class BuildViewServiceImpl implements BuildViewService {
 
   @Override
   public void onEnd(Object sessionId, ExitStatus exitStatus, long endBuildStamp) {
-    String message;
+    LocalizeValue message;
     if (exitStatus == ExitStatus.ERRORS) {
-      message = BuildBundle.message("build.messages.failed", StringUtil.wordsToBeginFromLowerCase(myContentName));
-      myBuildProgress.fail(endBuildStamp, message);
+      message = BuildLocalize.buildMessagesFailed(StringUtil.wordsToBeginFromLowerCase(myContentName));
+      myBuildProgress.fail(endBuildStamp, message.get());
     }
     else if (exitStatus == ExitStatus.CANCELLED) {
-      message = BuildBundle.message("build.messages.cancelled", StringUtil.wordsToBeginFromLowerCase(myContentName));
-      myBuildProgress.cancel(endBuildStamp, message);
+      message = BuildLocalize.buildMessagesCancelled(StringUtil.wordsToBeginFromLowerCase(myContentName));
+      myBuildProgress.cancel(endBuildStamp, message.get());
     }
     else {
       boolean isUpToDate = exitStatus == ExitStatus.UP_TO_DATE;
-      //if (CompilerBundle.message("classes.up.to.date.check").equals(myContentName)) {
-      //  if (isUpToDate) {
-      //    myConsolePrinter.print(CompilerBundle.message("status.all.up.to.date"), MessageEvent.Kind.SIMPLE);
-      //  }
-      //  else {
-      //    myConsolePrinter.print(CompilerBundle.message("compiler.build.messages.classes.check.outdated"), MessageEvent.Kind.SIMPLE);
-      //  }
-      //}
-      message = BuildBundle.message("build.messages.finished", StringUtil.wordsToBeginFromLowerCase(myContentName));
-      myBuildProgress.finish(endBuildStamp, isUpToDate, message);
+      message = BuildLocalize.buildMessagesFinished(StringUtil.wordsToBeginFromLowerCase(myContentName));
+      myBuildProgress.finish(endBuildStamp, isUpToDate, message.get());
     }
   }
 
@@ -234,7 +227,14 @@ public class BuildViewServiceImpl implements BuildViewService {
     VirtualFile virtualFile = compilerMessage.getVirtualFile();
     Navigatable navigatable = compilerMessage.getNavigatable();
     String title = getMessageTitle(compilerMessage);
-    BuildIssue issue = buildIssue(compilerMessage.getModuleNames(), title, compilerMessage.getMessage(), kind, virtualFile, navigatable);
+    BuildIssue issue = buildIssue(
+      compilerMessage.getModuleNames(),
+      title,
+      compilerMessage.getMessage(),
+      kind,
+      virtualFile,
+      navigatable
+    );
     if (issue != null) {
       myBuildProgress.buildIssue(issue, kind);
     }
@@ -286,12 +286,14 @@ public class BuildViewServiceImpl implements BuildViewService {
   }
 
   @Nullable
-  private BuildIssue buildIssue(@Nonnull Collection<String> moduleNames,
-                                @Nonnull String title,
-                                @Nonnull String message,
-                                @Nonnull MessageEvent.Kind kind,
-                                @Nullable VirtualFile virtualFile,
-                                @Nullable Navigatable navigatable) {
+  private BuildIssue buildIssue(
+    @Nonnull Collection<String> moduleNames,
+    @Nonnull String title,
+    @Nonnull String message,
+    @Nonnull MessageEvent.Kind kind,
+    @Nullable VirtualFile virtualFile,
+    @Nullable Navigatable navigatable
+  ) {
     // TODO [VISTALL] use ep? like in idea
     return null;
   }

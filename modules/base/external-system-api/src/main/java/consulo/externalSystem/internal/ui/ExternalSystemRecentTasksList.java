@@ -60,8 +60,8 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     consulo.ui.image.Image icon = null;
-    if (manager instanceof ExternalSystemUiAware) {
-      icon = ((ExternalSystemUiAware)manager).getTaskIcon();
+    if (manager instanceof ExternalSystemUiAware externalSystemUiAware) {
+      icon = externalSystemUiAware.getTaskIcon();
     }
     if (icon == null) {
       icon = DefaultExternalSystemUiAware.INSTANCE.getTaskIcon();
@@ -151,8 +151,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
       if (value instanceof ExternalSystemRecentTaskListModel.MyEmptyDescriptor) {
         return EMPTY_RENDERER;
       }
-      else if (value instanceof ExternalTaskExecutionInfo) {
-        ExternalTaskExecutionInfo taskInfo = (ExternalTaskExecutionInfo)value;
+      else if (value instanceof ExternalTaskExecutionInfo taskInfo) {
         String text = null;
         if (myConfigurationType != null) {
           List<RunConfiguration> configurations = RunManager.getInstance(myProject).getConfigurationsList(myConfigurationType);
