@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.DeprecationInfo;
 import jakarta.annotation.Nullable;
 import java.util.function.Supplier;
 
+@Deprecated
+@DeprecationInfo("Use Supplier")
 public interface Getter<A> extends Supplier<A> {
   @Nullable
   A get();
