@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import jakarta.annotation.Nonnull;
 

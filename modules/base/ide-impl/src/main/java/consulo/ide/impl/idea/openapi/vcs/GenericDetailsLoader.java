@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.function.PairConsumer;
 

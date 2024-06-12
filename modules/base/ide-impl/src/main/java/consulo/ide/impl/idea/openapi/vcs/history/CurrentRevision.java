@@ -16,17 +16,17 @@
 package consulo.ide.impl.idea.openapi.vcs.history;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.application.util.function.Computable;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.RepositoryLocation;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.UIUtil;
 import jakarta.annotation.Nullable;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.util.Date;
 
 public class CurrentRevision implements VcsFileRevision {
   private final VirtualFile myFile;
-  public static final String CURRENT = VcsBundle.message("vcs.revision.name.current");
+  public static final String CURRENT = VcsLocalize.vcsRevisionNameCurrent().get();
   private final VcsRevisionNumber myRevisionNumber;
 
   public CurrentRevision(VirtualFile file, VcsRevisionNumber revision) {
@@ -75,12 +75,11 @@ public class CurrentRevision implements VcsFileRevision {
       }
     }
     catch (final IOException e) {
-      UIUtil.invokeLaterIfNeeded(new Runnable() {
-        @Override public void run() {
-          Messages.showMessageDialog(e.getLocalizedMessage(), VcsBundle.message("message.text.could.not.load.file.content"),
-                                     Messages.getErrorIcon());
-        }
-      });
+      UIUtil.invokeLaterIfNeeded(() -> Messages.showMessageDialog(
+        e.getLocalizedMessage(),
+        VcsLocalize.messageTextCouldNotLoadFileContent().get(),
+        Messages.getErrorIcon()
+      ));
       return null;
     }
 

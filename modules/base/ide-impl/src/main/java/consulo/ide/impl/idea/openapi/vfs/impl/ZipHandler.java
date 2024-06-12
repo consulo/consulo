@@ -20,7 +20,7 @@ import consulo.util.io.FileAttributes;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.io.FileAccessorCache;
 import consulo.util.lang.ByteArrayCharSequence;
 import consulo.virtualFileSystem.archive.ArchiveEntry;

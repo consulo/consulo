@@ -12,6 +12,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.module.content.layer.OrderEnumerator;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.collection.ContainerUtil;
@@ -121,7 +122,7 @@ public class VfsRootAccess {
       allowed.add(FileUtil.toSystemIndependentName(javaHome));
       allowed.add(FileUtil.toSystemIndependentName(new File(FileUtil.getTempDirectory()).getParent()));
       allowed.add(FileUtil.toSystemIndependentName(System.getProperty("java.io.tmpdir")));
-      allowed.add(FileUtil.toSystemIndependentName(SystemProperties.getUserHome()));
+      allowed.add(FileUtil.toSystemIndependentName(Platform.current().user().homePath().toString()));
       ContainerUtil.addAllNotNull(allowed, findInUserHome(".m2"));
       ContainerUtil.addAllNotNull(allowed, findInUserHome(".gradle"));
 
@@ -156,7 +157,9 @@ public class VfsRootAccess {
   private static String findInUserHome(@Nonnull String path) {
     try {
       // in case if we have a symlink like ~/.m2 -> /opt/.m2
-      return FileUtil.toSystemIndependentName(new File(SystemProperties.getUserHome(), path).getCanonicalPath());
+      return FileUtil.toSystemIndependentName(
+        new File(Platform.current().user().homePath().toFile(), path).getCanonicalPath()
+      );
     }
     catch (IOException e) {
       return null;

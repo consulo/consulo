@@ -15,32 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
-import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
+import consulo.ide.impl.idea.openapi.application.impl.ApplicationInfoImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
-import consulo.virtualFileSystem.NullVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.PathUtil;
+import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -306,7 +300,7 @@ class FilePointerPartNode {
       String path = VfsUtilCore.urlToPath(url);
       path = StringUtil.trimEnd(path, consulo.virtualFileSystem.archive.ArchiveFileSystem.ARCHIVE_SEPARATOR);
       String nameFromPath = PathUtil.getFileName(path);
-      if (!path.isEmpty() && nameFromPath.isEmpty() && SystemInfo.isUnix) {
+      if (!path.isEmpty() && nameFromPath.isEmpty() && Platform.current().os().isUnix()) {
         nameFromPath = "/";
       }
       assert StringUtilRt.equal(nameFromPath, name, SystemInfo.isFileSystemCaseSensitive) : "fileAndUrl: " +

@@ -12,7 +12,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.containers.ReadonlyList;
 import consulo.ide.impl.idea.util.containers.StepList;
 import consulo.util.lang.function.PairConsumer;

@@ -10,10 +10,10 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationAction;
-import consulo.ui.ex.action.ActionsBundle;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
@@ -30,11 +30,11 @@ import java.util.*;
 import java.util.function.Function;
 
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemDependentName;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.escapeXmlEntities;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_INVALID;
 import static consulo.ide.impl.idea.openapi.vcs.VcsNotificationIdsHolder.ROOTS_REGISTERED;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.*;
 import static consulo.ui.ex.awt.UIUtil.BR;
+import static consulo.util.lang.StringUtil.escapeXmlEntities;
 import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 
 /**
@@ -153,7 +153,7 @@ public final class VcsRootProblemNotifier {
   private NotificationAction getConfigureNotificationAction() {
     return NotificationAction.create(VcsBundle.message("action.NotificationAction.VcsRootProblemNotifier.text.configure"), (event, notification) -> {
       if (!myProject.isDisposed()) {
-        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionsBundle.message("group.VcsGroup.text"));
+        ShowSettingsUtil.getInstance().showSettingsDialog(myProject, ActionLocalize.groupVcsgroupText().get());
 
         BackgroundTaskUtil.executeOnPooledThread(myProject, () -> {
           Collection<VcsRootError> errorsAfterPossibleFix = new VcsRootProblemNotifier(myProject).scan();

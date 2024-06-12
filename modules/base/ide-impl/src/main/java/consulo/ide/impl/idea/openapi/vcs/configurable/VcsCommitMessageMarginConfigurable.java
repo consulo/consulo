@@ -15,19 +15,19 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.ui.ex.awt.JBCheckBox;
 import consulo.disposer.Disposable;
+import consulo.platform.base.localize.ApplicationLocalize;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-
+import consulo.ui.ex.awt.JBCheckBox;
+import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -44,7 +44,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
   public VcsCommitMessageMarginConfigurable(@Nonnull Project project, @Nonnull VcsConfiguration vcsConfiguration) {
     myConfiguration = vcsConfiguration;
     mySpinnerConfigurable = new MySpinnerConfigurable(project);
-    myWrapCheckbox = new JBCheckBox(ApplicationBundle.message("checkbox.wrap.typing.on.right.margin"), false);
+    myWrapCheckbox = new JBCheckBox(ApplicationLocalize.checkboxWrapTypingOnRightMargin().get(), false);
   }
 
   @RequiredUIAccess
@@ -84,7 +84,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
   private class MySpinnerConfigurable extends VcsCheckBoxWithSpinnerConfigurable {
 
     public MySpinnerConfigurable(Project project) {
-      super(project, VcsBundle.message("configuration.commit.message.margin.prompt"), "");
+      super(project, VcsLocalize.configurationCommitMessageMarginPrompt().get(), "");
     }
 
     @Override
@@ -99,11 +99,7 @@ public class VcsCommitMessageMarginConfigurable implements UnnamedConfigurable {
         return true;
       }
 
-      if (!Comparing.equal(myHighlightInterval.getValue(), myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE)) {
-        return true;
-      }
-
-      return false;
+      return !Comparing.equal(myHighlightInterval.getValue(), myConfiguration.COMMIT_MESSAGE_MARGIN_SIZE);
     }
 
     @Override

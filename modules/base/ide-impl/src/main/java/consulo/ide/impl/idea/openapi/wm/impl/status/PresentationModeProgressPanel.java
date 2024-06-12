@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.TransparentPanel;
 import consulo.util.collection.JBIterable;
 import consulo.ui.ex.awt.EmptyIcon;

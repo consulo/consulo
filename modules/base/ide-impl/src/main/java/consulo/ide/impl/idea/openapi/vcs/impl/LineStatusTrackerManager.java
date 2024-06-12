@@ -37,7 +37,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentBulkUpdateListener;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.VcsApplicationSettings;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusTracker;
 import consulo.versionControlSystem.history.VcsRevisionNumber;

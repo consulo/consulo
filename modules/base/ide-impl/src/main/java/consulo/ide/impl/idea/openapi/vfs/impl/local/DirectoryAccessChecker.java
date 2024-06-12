@@ -1,18 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
-import consulo.process.PathEnvironmentVariableUtil;
-import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.process.PathEnvironmentVariableUtil;
+import consulo.process.io.ProcessIOExecutorService;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.lang.Pair;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.*;
@@ -71,7 +70,7 @@ public class DirectoryAccessChecker {
   }
 
   private static DirectoryFilter getChain() {
-    return SystemInfo.isLinux ? LinuxDirectoryFilter.create() : DirectoryFilter.ACCEPTING_FILTER;
+    return Platform.current().os().isLinux() ? LinuxDirectoryFilter.create() : DirectoryFilter.ACCEPTING_FILTER;
   }
 
   private interface DirectoryFilter extends FilenameFilter {

@@ -12,18 +12,17 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.ide.IdeBundle;
+import consulo.fileEditor.statusBar.EditorBasedWidget;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
@@ -40,16 +39,17 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ImmutableMapBuilder;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -210,10 +210,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     Editor editor = getEditor();
     DataContext parent = DataManager.getInstance().getDataContext((Component)myStatusBar);
     VirtualFile selectedFile = getSelectedFile();
-    return SimpleDataContext.getSimpleContext(ImmutableMapBuilder.<Key, Object>newBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
-                                                                                  .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
-                                                                                  .put(CommonDataKeys.PROJECT, getProject())
-                                                                                  .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
+    return SimpleDataContext.getSimpleContext(ImmutableMapBuilder.<Key, Object>newBuilder()
+      .put(VirtualFile.KEY, selectedFile)
+      .put(VirtualFile.KEY_OF_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
+      .put(Project.KEY, getProject())
+      .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
   }
 
   @Override
@@ -346,7 +347,11 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
      */
     public static WidgetState getDumbModeState(@Nls String name, String widgetPrefix) {
       // todo: update accordingly to UX-252
-      return new WidgetState(ActionUtil.getUnavailableMessage(name, false), widgetPrefix + IdeBundle.message("progress.indexing.updating"), false);
+      return new WidgetState(
+        ActionUtil.getUnavailableMessage(name, false),
+        LocalizeValue.localizeTODO(widgetPrefix) + IdeLocalize.progressIndexingUpdating().get(),
+        false
+      );
     }
 
     public void setIcon(Image icon) {

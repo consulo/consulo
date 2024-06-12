@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.versionControlSystem.AbstractVcs;

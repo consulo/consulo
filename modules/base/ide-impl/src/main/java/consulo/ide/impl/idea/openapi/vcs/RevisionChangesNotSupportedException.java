@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class RevisionChangesNotSupportedException extends VcsException {
   public RevisionChangesNotSupportedException() {
-    super(VcsBundle.message("revision.changes.not.supported"));
+    super(VcsLocalize.revisionChangesNotSupported().get());
   }
 }

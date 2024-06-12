@@ -1,11 +1,11 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.ide.HelpTooltipManager;
 import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ide.impl.project.ui.impl.StatusWidgetBorders;
+import consulo.platform.Platform;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -80,7 +80,7 @@ public interface StatusBarWidgetWrapper {
 
     @Override
     public Font getFont() {
-      return SystemInfo.isMac ? JBUI.Fonts.label(11) : JBFont.label();
+      return Platform.current().os().isMac() ? JBUI.Fonts.label(11) : JBFont.label();
     }
 
     @RequiredUIAccess
