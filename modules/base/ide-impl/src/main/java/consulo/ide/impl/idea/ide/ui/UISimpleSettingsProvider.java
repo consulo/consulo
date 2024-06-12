@@ -18,8 +18,9 @@ package consulo.ide.impl.idea.ide.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 
 import java.util.function.Consumer;
 
@@ -37,11 +38,15 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
   private static OptionDescription HIDE_TOOL_STRIPES = AppearanceOptionsTopHitProvider.appearance("Hide Tool Window Bars",
                                                                                                   "HIDE_TOOL_STRIPES");
   private static OptionDescription SHOW_STATUS_BAR = AppearanceOptionsTopHitProvider.appearance("Show Status Bar", "SHOW_STATUS_BAR");
-  private static OptionDescription IS_BLOCK_CURSOR = EditorOptionsTopHitProvider.editor("Show Block Cursor", "IS_BLOCK_CURSOR");
-  private static OptionDescription IS_WHITESPACES_SHOWN = EditorOptionsTopHitProvider.editor("Show Whitespaces", "IS_WHITESPACES_SHOWN");
-  private static OptionDescription ARE_LINE_NUMBERS_SHOWN = EditorOptionsTopHitProvider.editor("Show Line Numbers",
+  private static OptionDescription IS_BLOCK_CURSOR =
+    EditorOptionsTopHitProvider.editor(LocalizeValue.localizeTODO("Show Block Cursor"), "IS_BLOCK_CURSOR");
+  private static OptionDescription IS_WHITESPACES_SHOWN =
+    EditorOptionsTopHitProvider.editor(LocalizeValue.localizeTODO("Show Whitespaces"), "IS_WHITESPACES_SHOWN");
+  private static OptionDescription ARE_LINE_NUMBERS_SHOWN = EditorOptionsTopHitProvider.editor(LocalizeValue.localizeTODO(
+                                                                                                 "Show Line Numbers"),
                                                                                                "ARE_LINE_NUMBERS_SHOWN");
-  private static OptionDescription SHOW_METHOD_SEPARATORS = new DaemonCodeAnalyzerOptionDescription("SHOW_METHOD_SEPARATORS", "Show Method Separators", "appearance");
+  private static OptionDescription SHOW_METHOD_SEPARATORS =
+    new DaemonCodeAnalyzerOptionDescription("SHOW_METHOD_SEPARATORS", "Show Method Separators", "appearance");
 
 
   @Override
@@ -49,24 +54,33 @@ public class UISimpleSettingsProvider implements SearchTopHitProvider, OptionsTo
     pattern = pattern.trim().toLowerCase();
     if (StringUtil.isBetween(pattern, "cyc", "cyclic ") || StringUtil.isBetween(pattern, "scr", "scroll ")) {
       collector.accept(CYCLING_SCROLLING);
-    } else if (patternContains(pattern, "memo")) {
+    }
+    else if (patternContains(pattern, "memo")) {
       collector.accept(MEMORY_INDICATOR);
-    } else if (StringUtil.isBetween(pattern, "nav", "navigation bar ") || StringUtil.isBetween(pattern, "navb", "navbar ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "nav", "navigation bar ") || StringUtil.isBetween(pattern, "navb", "navbar ")) {
       collector.accept(SHOW_NAVIGATION_BAR);
-    } else if (StringUtil.isBetween(pattern, "tool", "toolbar ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "tool", "toolbar ")) {
       collector.accept(SHOW_MAIN_TOOLBAR);
-    } else if (StringUtil.isBetween(pattern, "tool w", "tool window bars") || StringUtil.isBetween(pattern, "toolw", "toolwindow ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "tool w", "tool window bars") || StringUtil.isBetween(pattern, "toolw", "toolwindow ")) {
       collector.accept(HIDE_TOOL_STRIPES);
-    } else if (StringUtil.isBetween(pattern, "stat", "status bar ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "stat", "status bar ")) {
       collector.accept(SHOW_STATUS_BAR);
-    } else if (StringUtil.isBetween(pattern, "curs", "cursor ") || StringUtil.isBetween(pattern, "block ", "block cursor ")
-               || StringUtil.isBetween(pattern, "caret", "caret ") || StringUtil.isBetween(pattern, "block ", "block caret ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "curs", "cursor ") || StringUtil.isBetween(pattern, "block ", "block cursor ")
+      || StringUtil.isBetween(pattern, "caret", "caret ") || StringUtil.isBetween(pattern, "block ", "block caret ")) {
       collector.accept(IS_BLOCK_CURSOR);
-    } else if (StringUtil.isBetween(pattern, "whites", "whitespaces ") || StringUtil.isBetween(pattern, "show whi", "show whitespaces ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "whites", "whitespaces ") || StringUtil.isBetween(pattern, "show whi", "show whitespaces ")) {
       collector.accept(IS_WHITESPACES_SHOWN);
-    } else if (StringUtil.isBetween(pattern, "line ", "line numbers ") || StringUtil.isBetween(pattern, "show li", "show line numbers ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "line ", "line numbers ") || StringUtil.isBetween(pattern, "show li", "show line numbers ")) {
       collector.accept(ARE_LINE_NUMBERS_SHOWN);
-    } else if (StringUtil.isBetween(pattern, "separa ", "separators ") || StringUtil.isBetween(pattern, "method s", "method separators ")) {
+    }
+    else if (StringUtil.isBetween(pattern, "separa ", "separators ") || StringUtil.isBetween(pattern, "method s", "method separators ")) {
       collector.accept(SHOW_METHOD_SEPARATORS);
     }
   }

@@ -19,26 +19,29 @@ import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
+  protected static final BiFunction<LocalizeManager, String, String> HTML_STRIP = (localizeManager, s) -> StringUtil.stripHtml(s, false);
+
   @Nonnull
   public abstract Collection<BooleanOptionDescription> getOptions(@Nullable Project project);
 
   @Override
-  public final void consumeTopHits(@NonNls String pattern, Consumer<Object> collector, Project project) {
+  public final void consumeTopHits(String pattern, Consumer<Object> collector, Project project) {
     if (!pattern.startsWith("#")) return;
     pattern = pattern.substring(1);
     final List<String> parts = StringUtil.split(pattern, " ");
@@ -63,6 +66,7 @@ public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
     return true;
   }
 
+  @Deprecated
   static String message(LocalizeValue message) {
     return StringUtil.stripHtml(message.get(), false);
   }
