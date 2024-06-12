@@ -29,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ConfigureInspectionsAction extends DumbAwareAction {
   public ConfigureInspectionsAction() {
-    super(DaemonLocalize.popupActionConfigureInspections().get());
+    super(DaemonLocalize.popupActionConfigureInspections());
   }
 
   @RequiredUIAccess
