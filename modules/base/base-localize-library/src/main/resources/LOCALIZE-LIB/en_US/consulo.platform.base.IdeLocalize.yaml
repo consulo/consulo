@@ -2587,3 +2587,49 @@ progress.text.reloading.files:
   text: Reloading files...
 checkbox.use.preview.window:
   text: Navigate to preview
+ide.hide.navigation.on.focus.loss.description:
+  text: Hide navigation popups on focus loss
+dnd.with.alt.pressed.only:
+  text: Drag-n-Drop with ALT pressed only
+small.labels.in.editor.tabs:
+  text: Small labels in editor tabs
+allow.merging.dialog.buttons:
+  text: Allow merging buttons on dialogs
+display.balloon.notifications:
+  text: Display balloon notifications
+option.hide.tool.window.bars:
+  text: Hide Tool Window Bars
+show.main.toolbar:
+  text: Show Main Toolbar
+show.status.bar:
+  text: Show Status Bar
+show.navigation.bar:
+  text: Show Navigation Bar
+label.option.appearance:
+  text: "Appearance: {0}"
+label.option.mouse:
+  text: "Mouse: {0}"
+label.option.tabs:
+  text: "Tabs: {0}"
+label.option.ui:
+  text: "UI: {0}"
+label.option.view:
+  text: "View: {0}"
+label.option.virtual.space:
+  text: "Virtual Space: {0}"
+label.option.window:
+  text: "Window: {0}"
+label.appearance.caret.blinking:
+  text: Caret blinking
+label.appearance.show.right.margin:
+  text: Show right margin
+label.appearance.show.leading.whitespaces:
+  text: Show leading whitespaces
+label.appearance.show.inner.whitespaces:
+  text: Show inner whitespaces
+label.appearance.show.trailing.whitespaces:
+  text: Show trailing whitespaces
+label.appearance.show.vertical.indent.guides:
+  text: Show vertical indent guides
+label.tabs.show.directory.for.non.unique.filenames:
+  text: Show directory in editor tabs for non-unique filenames
