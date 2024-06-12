@@ -19,6 +19,7 @@ import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.IJSwingUtilities;
@@ -111,10 +112,10 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   }
 
   public static MessageTreeNode createEllipsisNode(XDebuggerTree tree, XDebuggerTreeNode parent, final int remaining) {
-    String message = remaining == -1
-      ? XDebuggerLocalize.nodeTextEllipsis0UnknownMoreNodesDoubleClickToShow().get()
-      : XDebuggerLocalize.nodeTextEllipsis0MoreNodesDoubleClickToShow(remaining).get();
-    return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, null);
+    LocalizeValue message = remaining == -1
+      ? XDebuggerLocalize.nodeTextEllipsis0UnknownMoreNodesDoubleClickToShow()
+      : XDebuggerLocalize.nodeTextEllipsis0MoreNodesDoubleClickToShow(remaining);
+    return new MessageTreeNode(tree, parent, message.get(), SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, null);
   }
 
   public static MessageTreeNode createMessageNode(
