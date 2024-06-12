@@ -17,7 +17,8 @@ package consulo.ide.impl.idea.xdebugger.impl.settings;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.*;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.util.collection.SmartList;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.breakpoint.XBreakpointType;
@@ -51,7 +52,7 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
 
   @Override
   public String getDisplayName() {
-    return XDebuggerBundle.message("debugger.configurable.display.name");
+    return XDebuggerLocalize.debuggerConfigurableDisplayName().get();
   }
 
   @Nullable
@@ -116,8 +117,11 @@ public class DebuggerConfigurable implements SearchableConfigurable.Parent, Appl
       Collection<Configurable> configurables = XDebuggerConfigurableProvider.getConfigurables(category);
       if (!configurables.isEmpty()) {
         String id = category.name().toLowerCase(Locale.ENGLISH);
-        result.add(new MergedCompositeConfigurable("debugger." + id, XDebuggerBundle.message("debugger." + id + ".display.name"),
-                                                   configurables.toArray(new Configurable[configurables.size()])));
+        result.add(new MergedCompositeConfigurable(
+          "debugger." + id,
+          XDebuggerBundle.message("debugger." + id + ".display.name"),
+          configurables.toArray(new Configurable[configurables.size()]))
+        );
       }
     }
   }

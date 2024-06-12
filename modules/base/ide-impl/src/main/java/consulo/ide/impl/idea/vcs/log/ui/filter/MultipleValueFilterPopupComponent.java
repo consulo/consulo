@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -25,7 +24,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.ide.impl.idea.vcs.log.data.MainVcsLogUiProperties;
 import jakarta.annotation.Nonnull;
@@ -132,7 +131,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getData(CommonDataKeys.PROJECT);
+      Project project = e.getData(Project.KEY);
       if (project == null) {
         return;
       }

@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
-
+import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -72,9 +72,6 @@ public enum LineSeparator {
 
   @Nonnull
   public static LineSeparator getSystemLineSeparator() {
-    if (SystemInfo.isWindows) {
-      return CRLF;
-    }
-    return LF;
+    return Platform.current().os().isWindows() ? CRLF : LF;
   }
 }

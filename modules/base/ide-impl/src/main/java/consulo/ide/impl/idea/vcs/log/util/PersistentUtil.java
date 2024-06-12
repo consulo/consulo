@@ -21,7 +21,7 @@ import consulo.index.io.PersistentBTreeEnumerator;
 import consulo.index.io.PersistentEnumeratorBase;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.PathUtil;

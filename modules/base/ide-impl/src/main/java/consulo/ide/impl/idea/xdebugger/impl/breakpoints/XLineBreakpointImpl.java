@@ -34,7 +34,7 @@ import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpointType;
 import consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver;
 import consulo.execution.debug.ui.DebuggerColors;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.action.AnAction;

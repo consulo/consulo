@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.textCompletion;
 import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.image.Image;
 
 import jakarta.annotation.Nonnull;

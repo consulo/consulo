@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
 import consulo.execution.debug.frame.presentation.XValueExtendedPresentation;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.execution.debug.ui.XNamedTreeNode;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.RestorableStateNode;

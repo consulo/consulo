@@ -21,7 +21,7 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.configurable.localize.ConfigurableLocalize;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerColors;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
@@ -39,7 +39,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   @Override
   @Nonnull
   public String getDisplayName() {
-    return XDebuggerBundle.message("xdebugger.colors.page.name");
+    return XDebuggerLocalize.xdebuggerColorsPageName().get();
   }
 
   @Override

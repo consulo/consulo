@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.grouping;
 
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ui.image.Image;

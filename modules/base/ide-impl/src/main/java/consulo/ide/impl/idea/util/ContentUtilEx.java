@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ui.ex.content.ContentsUtil;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;

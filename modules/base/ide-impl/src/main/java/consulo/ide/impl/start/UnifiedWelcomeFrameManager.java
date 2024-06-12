@@ -54,10 +54,12 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
   private final DataManager myDataManager;
 
   @Inject
-  public UnifiedWelcomeFrameManager(Application application,
-                                    ProjectManager projectManager,
-                                    RecentProjectsManager recentProjectsManager,
-                                    DataManager dataManager) {
+  public UnifiedWelcomeFrameManager(
+    Application application,
+    ProjectManager projectManager,
+    RecentProjectsManager recentProjectsManager,
+    DataManager dataManager
+  ) {
     super(application);
     myProjectManager = projectManager;
     myRecentProjectsManager = recentProjectsManager;
@@ -76,7 +78,7 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
   @Override
   public IdeFrame createFrame() {
     Window welcomeFrame = Window.create(FrameTitleUtil.buildTitle(), WindowOptions.builder().disableResize().build());
-    welcomeFrame.addListener(Window.CloseListener.class, () -> frameClosed());
+    welcomeFrame.addListener(Window.CloseListener.class, this::frameClosed);
     welcomeFrame.setSize(WelcomeFrameManager.getDefaultWindowSize());
     welcomeFrame.setContent(Label.create("Loading..."));
 
@@ -127,9 +129,10 @@ public class UnifiedWelcomeFrameManager extends WelcomeFrameManager {
       }
     }
 
-    projectActionLayout.add(Button.create("Settings", (e) -> {
-      ShowSettingsUtil.getInstance().showSettingsDialog(null);
-    }));
+    projectActionLayout.add(Button.create(
+      "Settings",
+      (e) -> ShowSettingsUtil.getInstance().showSettingsDialog(null)
+    ));
 
     layout.center(projectActionLayout);
 

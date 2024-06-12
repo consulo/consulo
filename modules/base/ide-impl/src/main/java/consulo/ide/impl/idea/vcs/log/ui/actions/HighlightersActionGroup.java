@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.component.extension.Extensions;
+import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.VcsLogHighlighterFactory;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -43,7 +43,7 @@ public class HighlightersActionGroup extends ActionGroup {
     if (e != null) {
       if (e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES) != null) {
         actions.add(new AnSeparator("Highlight"));
-        for (VcsLogHighlighterFactory factory : Extensions.getExtensions(VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP, e.getData(CommonDataKeys.PROJECT))) {
+        for (VcsLogHighlighterFactory factory : Extensions.getExtensions(VcsLogUiImpl.LOG_HIGHLIGHTER_FACTORY_EP, e.getData(Project.KEY))) {
           if (factory.showMenuItem()) {
             actions.add(new EnableHighlighterAction(factory));
           }

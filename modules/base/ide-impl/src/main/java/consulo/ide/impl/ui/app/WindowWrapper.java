@@ -17,6 +17,7 @@ package consulo.ide.impl.ui.app;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
@@ -27,7 +28,6 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.concurrent.AsyncResult;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -101,12 +101,12 @@ public abstract class WindowWrapper {
     dockLayout.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
 
     HorizontalLayout bottomLayout = HorizontalLayout.create();
-    myOkButton = Button.create("OK", e -> doOKAction());
+    myOkButton = Button.create(CommonLocalize.buttonOk(), e -> doOKAction());
     if (myPreOkEnabled != null) {
       myOkButton.setEnabled(myPreOkEnabled);
     }
     bottomLayout.add(myOkButton);
-    Button cancelButton = Button.create("Cancel", e -> doCancelAction());
+    Button cancelButton = Button.create(CommonLocalize.buttonCancel(), e -> doCancelAction());
     bottomLayout.add(cancelButton);
 
     bottomLayout.addBorders(BorderStyle.EMPTY, null, 5);

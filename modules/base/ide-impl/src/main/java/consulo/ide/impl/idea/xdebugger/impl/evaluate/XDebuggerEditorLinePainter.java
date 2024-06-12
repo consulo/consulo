@@ -24,7 +24,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.FileDocumentManager;
 import consulo.execution.debug.frame.presentation.XValueCompactPresentation;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -100,8 +100,10 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
       XDebugSession session = XDebugView.getSession(values.iterator().next().getTree());
       final int bpLine = getCurrentBreakPointLineInFile(session, file);
       boolean isTopFrame = session instanceof XDebugSessionImpl && ((XDebugSessionImpl)session).isTopFrameSelected();
-      final TextAttributes attributes =
-              bpLine == lineNumber && isTopFrame && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter() ? getTopFrameSelectedAttributes() : getNormalAttributes();
+      final TextAttributes attributes = bpLine == lineNumber && isTopFrame
+        && ((XDebuggerManagerImpl)XDebuggerManager.getInstance(project)).isFullLineHighlighter()
+        ? getTopFrameSelectedAttributes()
+        : getNormalAttributes();
 
       ArrayList<VariableText> result = new ArrayList<>();
       for (XValueNodeImpl value : values) {
@@ -183,7 +185,13 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static TextAttributes getNormalAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(61, 128, 101), new RGBColor(135, 135, 135)), null, null, null, Font.ITALIC);
+      return new TextAttributes(
+        new LightDarkEditorColor(new RGBColor(61, 128, 101), new RGBColor(135, 135, 135)),
+        null,
+        null,
+        null,
+        Font.ITALIC
+      );
     }
     return attributes;
   }
@@ -191,16 +199,29 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
   public static TextAttributes getChangedAttributes() {
     TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_MODIFIED);
     if (attributes == null || attributes.getForegroundColor() == null) {
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(161, 131, 10), new RGBColor(202, 128, 33)), null, null, null, Font.ITALIC);
+      return new TextAttributes(
+        new LightDarkEditorColor(new RGBColor(161, 131, 10), new RGBColor(202, 128, 33)),
+        null,
+        null,
+        null,
+        Font.ITALIC
+      );
     }
     return attributes;
   }
 
   private static TextAttributes getTopFrameSelectedAttributes() {
-    TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
+    TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme()
+      .getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
     if (attributes == null || attributes.getForegroundColor() == null) {
       //noinspection UseJBColor
-      return new TextAttributes(new LightDarkEditorColor(new RGBColor(255, 235, 9), new RGBColor(0, 255, 86)), null, null, null, Font.ITALIC);
+      return new TextAttributes(
+        new LightDarkEditorColor(new RGBColor(255, 235, 9), new RGBColor(0, 255, 86)),
+        null,
+        null,
+        null,
+        Font.ITALIC
+      );
     }
     return attributes;
   }

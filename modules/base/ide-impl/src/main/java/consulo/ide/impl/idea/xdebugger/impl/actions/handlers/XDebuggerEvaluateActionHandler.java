@@ -15,19 +15,12 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions.handlers;
 
-import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.util.AppUIUtil;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.ExpressionInfo;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
@@ -37,9 +30,15 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XDebuggerTreeActionBase;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.LanguageUtil;
+import consulo.project.Project;
+import consulo.project.ui.util.AppUIUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import java.util.function.Consumer;
 
 /**
  * @author nik
@@ -54,36 +53,33 @@ public class XDebuggerEvaluateActionHandler extends XDebuggerActionHandler {
       return;
     }
 
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
 
     EvaluationMode mode = EvaluationMode.EXPRESSION;
     String selectedText = editor != null ? editor.getSelectionModel().getSelectedText() : null;
     if (selectedText != null) {
       selectedText = evaluator.formatTextForEvaluation(selectedText);
-      mode = evaluator.getEvaluationMode(selectedText, editor.getSelectionModel().getSelectionStart(), editor.getSelectionModel().getSelectionEnd(), dataContext.getData(CommonDataKeys.PSI_FILE));
+      mode = evaluator.getEvaluationMode(
+        selectedText,
+        editor.getSelectionModel().getSelectionStart(),
+        editor.getSelectionModel().getSelectionEnd(),
+        dataContext.getData(PsiFile.KEY)
+      );
     }
     String text = selectedText;
 
     if (text == null && editor != null) {
-      text = getExpressionText(evaluator, dataContext.getData(CommonDataKeys.PROJECT), editor);
+      text = getExpressionText(evaluator, dataContext.getData(Project.KEY), editor);
     }
 
-    final VirtualFile file = dataContext.getData(CommonDataKeys.VIRTUAL_FILE);
+    final VirtualFile file = dataContext.getData(VirtualFile.KEY);
 
     if (text == null) {
       XValue value = XDebuggerTreeActionBase.getSelectedValue(dataContext);
       if (value != null) {
-        value.calculateEvaluationExpression().doWhenDone(new Consumer<XExpression>() {
-          @Override
-          public void accept(final XExpression expression) {
-            if (expression != null) {
-              AppUIUtil.invokeOnEdt(new Runnable() {
-                @Override
-                public void run() {
-                  showDialog(session, file, editorsProvider, stackFrame, evaluator, expression);
-                }
-              });
-            }
+        value.calculateEvaluationExpression().doWhenDone(expression -> {
+          if (expression != null) {
+            AppUIUtil.invokeOnEdt(() -> showDialog(session, file, editorsProvider, stackFrame, evaluator, expression));
           }
         });
         return;

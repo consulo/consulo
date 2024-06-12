@@ -15,38 +15,32 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
+import consulo.disposer.Disposable;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
+import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionEditor;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.breakpoint.XExpression;
-import consulo.execution.debug.XSourcePosition;
-import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
-import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerExpressionEditor;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.platform.base.icon.PlatformIconGroup;
-
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.PopupStep;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
@@ -56,27 +50,38 @@ public class ExpressionInputComponent extends EvaluationInputComponent {
   private final XDebuggerExpressionEditor myExpressionEditor;
   private final JPanel myMainPanel;
 
-  public ExpressionInputComponent(final @Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, final @Nullable XSourcePosition sourcePosition,
-                                  @Nullable XExpression expression, Disposable parentDisposable) {
-    super(XDebuggerBundle.message("xdebugger.dialog.title.evaluate.expression"));
+  public ExpressionInputComponent(
+    final @Nonnull Project project,
+    @Nonnull XDebuggerEditorsProvider editorsProvider,
+    final @Nullable XSourcePosition sourcePosition,
+    @Nullable XExpression expression,
+    Disposable parentDisposable
+  ) {
+    super(XDebuggerLocalize.xdebuggerDialogTitleEvaluateExpression().get());
     myMainPanel = new JPanel(new BorderLayout());
-    //myMainPanel.add(new JLabel(XDebuggerBundle.message("xdebugger.evaluate.label.expression")), BorderLayout.WEST);
-    myExpressionEditor = new XDebuggerExpressionEditor(project, editorsProvider, "evaluateExpression", sourcePosition,
-                                                       expression != null ? expression : XExpression.EMPTY_EXPRESSION, false, true, false);
+    myExpressionEditor = new XDebuggerExpressionEditor(
+      project,
+      editorsProvider,
+      "evaluateExpression",
+      sourcePosition,
+      expression != null ? expression : XExpression.EMPTY_EXPRESSION,
+      false,
+      true,
+      false
+    );
     myMainPanel.add(myExpressionEditor.getComponent(), BorderLayout.CENTER);
     JButton historyButton = new FixedSizeButton(myExpressionEditor.getComponent());
     historyButton.setIcon(TargetAWT.to(PlatformIconGroup.vcsHistory()));
-    historyButton.setToolTipText(XDebuggerBundle.message("xdebugger.evaluate.history.hint"));
-    historyButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        showHistory();
-      }
-    });
+    historyButton.setToolTipText(XDebuggerLocalize.xdebuggerEvaluateHistoryHint().get());
+    historyButton.addActionListener(e -> showHistory());
     myMainPanel.add(historyButton, BorderLayout.EAST);
-    final JBLabel help = new JBLabel(XDebuggerBundle.message("xdebugger.evaluate.addtowatches.hint",
-                                                             KeymapUtil.getKeystrokeText(XDebuggerEvaluationDialog.ADD_WATCH_KEYSTROKE)),
-                                     SwingConstants.RIGHT);
+    final JBLabel help = new JBLabel(
+      XDebuggerBundle.message(
+        "xdebugger.evaluate.addtowatches.hint",
+        KeymapUtil.getKeystrokeText(XDebuggerEvaluationDialog.ADD_WATCH_KEYSTROKE)
+      ),
+      SwingConstants.RIGHT
+    );
     help.setBorder(JBUI.Borders.empty(2, 0, 6, 0));
     help.setComponentStyle(UIUtil.ComponentStyle.SMALL);
     help.setFontColor(UIUtil.FontColor.BRIGHTER);

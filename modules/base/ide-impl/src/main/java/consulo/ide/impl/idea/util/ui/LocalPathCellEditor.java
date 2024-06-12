@@ -15,21 +15,21 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.application.util.SystemInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.PathUtil;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -94,7 +94,7 @@ public class LocalPathCellEditor extends AbstractTableCellEditor {
           @Override
           public void accept(VirtualFile file) {
             String path = file.getPresentableUrl();
-            if (SystemInfo.isWindows && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
+            if (Platform.current().os().isWindows() && path.length() == 2 && Character.isLetter(path.charAt(0)) && path.charAt(1) == ':') {
               path += "\\"; // make path absolute
             }
             myComponent.getChildComponent().setText(path);

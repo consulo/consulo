@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ide.impl.idea.ui.SoftWrapsEditorCustomization;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

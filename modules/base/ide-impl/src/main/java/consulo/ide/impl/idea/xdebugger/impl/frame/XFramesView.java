@@ -22,7 +22,7 @@ import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.PopupMenuListenerAdapter;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.logging.Logger;

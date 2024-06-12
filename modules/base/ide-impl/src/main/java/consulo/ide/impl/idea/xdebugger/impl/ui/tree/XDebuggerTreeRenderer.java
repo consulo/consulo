@@ -15,23 +15,23 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.AbstractExpandableItemsHandler;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.frame.ImmediateFullValueEvaluator;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.ide.impl.idea.ui.AbstractExpandableItemsHandler;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import consulo.logging.Logger;
-
+import consulo.project.Project;
+import consulo.ui.ex.ExpandableItemsHandler;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -56,20 +56,22 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
   }
 
   @Override
-  public void customizeCellRenderer(@Nonnull final JTree tree,
-                                    final Object value,
-                                    final boolean selected,
-                                    final boolean expanded,
-                                    final boolean leaf,
-                                    final int row,
-                                    final boolean hasFocus) {
+  public void customizeCellRenderer(
+    @Nonnull final JTree tree,
+    final Object value,
+    final boolean selected,
+    final boolean expanded,
+    final boolean leaf,
+    final int row,
+    final boolean hasFocus
+  ) {
     myHaveLink = false;
     myLink.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     XDebuggerTreeNode node = (XDebuggerTreeNode)value;
     node.appendToComponent(this);
     setIcon(node.getIcon());
 
-    Rectangle treeVisibleRect = tree.getParent() instanceof JViewport ? ((JViewport)tree.getParent()).getViewRect() : tree.getVisibleRect();
+    Rectangle treeVisibleRect = tree.getParent() instanceof JViewport viewport ? viewport.getViewRect() : tree.getVisibleRect();
     TreePath path = tree.getPathForRow(row);
     int rowX = path != null ? TreeUtil.getNodeRowX(tree, row) : 0;
 
@@ -158,13 +160,15 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     private int myHeight;
 
     @Override
-    public void customizeCellRenderer(@Nonnull JTree tree,
-                                      Object value,
-                                      boolean selected,
-                                      boolean expanded,
-                                      boolean leaf,
-                                      int row,
-                                      boolean hasFocus) {}
+    public void customizeCellRenderer(
+      @Nonnull JTree tree,
+      Object value,
+      boolean selected,
+      boolean expanded,
+      boolean leaf,
+      int row,
+      boolean hasFocus
+    ) {}
 
     @Override
     protected void doPaint(Graphics2D g) {
@@ -186,7 +190,7 @@ class XDebuggerTreeRenderer extends ColoredTreeCellRenderer {
     private Project myProject;
 
     public MyLongTextHyperlink() {
-      super(XDebuggerBundle.message("node.test.show.full.value"));
+      super(XDebuggerLocalize.nodeTestShowFullValue().get());
     }
 
     public void setupComponent(String text, Project project) {

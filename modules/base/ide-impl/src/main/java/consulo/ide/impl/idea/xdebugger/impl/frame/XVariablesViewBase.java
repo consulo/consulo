@@ -22,7 +22,7 @@ import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.document.util.TextRange;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.ExpressionInfo;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
@@ -30,14 +30,13 @@ import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XValueContainer;
 import consulo.execution.debug.frame.XValueMarkers;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ObjectLongHashMap;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerInlayUtil;
-import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.XValueHint;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
@@ -48,10 +47,11 @@ import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XStackFrameNode;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.XValueContainerNode;
 import consulo.project.Project;
 import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -67,10 +67,15 @@ public abstract class XVariablesViewBase extends XDebugView {
   private MySelectionListener mySelectionListener;
 
   protected XVariablesViewBase(@Nonnull Project project, @Nonnull XDebuggerEditorsProvider editorsProvider, @Nullable XValueMarkers<?, ?> markers) {
-    myTreePanel = new XDebuggerTreePanel(project, editorsProvider, this, null,
-                                         this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP,
-                                         markers);
-    getTree().getEmptyText().setText(XDebuggerBundle.message("debugger.variables.not.available"));
+    myTreePanel = new XDebuggerTreePanel(
+      project,
+      editorsProvider,
+      this,
+      null,
+      this instanceof XWatchesView ? XDebuggerActions.WATCHES_TREE_POPUP_GROUP : XDebuggerActions.VARIABLES_TREE_POPUP_GROUP,
+      markers
+    );
+    getTree().getEmptyText().setText(XDebuggerLocalize.debuggerVariablesNotAvailable().get());
     DnDManager.getInstance().registerSource(myTreePanel, getTree());
   }
 

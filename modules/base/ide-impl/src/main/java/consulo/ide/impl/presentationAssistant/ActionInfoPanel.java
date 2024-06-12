@@ -29,11 +29,12 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -89,7 +90,7 @@ class ActionInfoPanel extends NonOpaquePanel implements Disposable {
   private Alarm hideAlarm = new Alarm(this);
   private Animator animator;
   private Phase phase = Phase.FADING_IN;
-  private float hintAlpha = UIUtil.isUnderDarkTheme() ? 0.05f : 0.1f;
+  private float hintAlpha = StyleManager.get().getCurrentStyle().isDark() ? 0.05f : 0.1f;
 
   public ActionInfoPanel(Project project, List<Pair<String, Font>> textFragments) {
     super(new BorderLayout());

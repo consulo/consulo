@@ -16,30 +16,27 @@
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
 import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.RelativePoint;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ui.ex.awt.tree.TreeModelAdapter;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 /**
  * @author nik
@@ -51,21 +48,30 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
   private final Point myPoint;
   @Nullable private final Runnable myHideRunnable;
 
-  private DebuggerTreeWithHistoryPopup(@Nonnull D initialItem,
-                                       @Nonnull DebuggerTreeCreator<D> creator,
-                                       @Nonnull Editor editor,
-                                       @Nonnull Point point,
-                                       @Nonnull Project project,
-                                       @Nullable Runnable hideRunnable) {
+  private DebuggerTreeWithHistoryPopup(
+    @Nonnull D initialItem,
+    @Nonnull DebuggerTreeCreator<D> creator,
+    @Nonnull Editor editor,
+    @Nonnull Point point,
+    @Nonnull Project project,
+    @Nullable Runnable hideRunnable
+  ) {
     super(initialItem, creator, project);
     myEditor = editor;
     myPoint = point;
     myHideRunnable = hideRunnable;
   }
 
-  public static <D> void showTreePopup(@Nonnull DebuggerTreeCreator<D> creator, @Nonnull D initialItem, @Nonnull Editor editor,
-                                       @Nonnull Point point, @Nonnull Project project, Runnable hideRunnable) {
-    new DebuggerTreeWithHistoryPopup<D>(initialItem, creator, editor, point, project, hideRunnable).updateTree(initialItem);
+  public static <D> void showTreePopup(
+    @Nonnull DebuggerTreeCreator<D> creator,
+    @Nonnull D initialItem,
+    @Nonnull Editor editor,
+    @Nonnull Point point,
+    @Nonnull Project project,
+    Runnable hideRunnable
+  ) {
+    new DebuggerTreeWithHistoryPopup<>(initialItem, creator, editor, point, project, hideRunnable)
+      .updateTree(initialItem);
   }
 
   private TreeModelListener createTreeListener(final Tree tree) {
@@ -84,46 +90,40 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     }
     tree.getModel().addTreeModelListener(createTreeListener(tree));
     myPopup = JBPopupFactory.getInstance().createComponentPopupBuilder(createMainPanel(tree), tree)
-            .setRequestFocus(true)
-            .setTitle(title)
-            .setResizable(true)
-            .setMovable(true)
-            .setDimensionServiceKey(myProject, DIMENSION_SERVICE_KEY, false)
-            .setMayBeParent(true)
-            .setKeyEventHandler(new BooleanFunction<KeyEvent>() {
-              @Override
-              public boolean fun(KeyEvent event) {
-                if (AbstractPopup.isCloseRequest(event)) {
-                  // Do not process a close request if the tree shows a speed search popup
-                  SpeedSearchSupply supply = SpeedSearchSupply.getSupply(tree);
-                  return supply != null && StringUtil.isEmpty(supply.getEnteredPrefix());
-                }
-                return false;
-              }
-            })
-            .addListener(new JBPopupAdapter() {
-              @Override
-              public void onClosed(LightweightWindowEvent event) {
-                if (myHideRunnable != null) {
-                  myHideRunnable.run();
-                }
-              }
-            })
-            .setCancelCallback(new Computable<Boolean>() {
-              @Override
-              public Boolean compute() {
-                Window parent = SwingUtilities.getWindowAncestor(tree);
-                if (parent != null) {
-                  for (Window child : parent.getOwnedWindows()) {
-                    if (child.isShowing()) {
-                      return false;
-                    }
-                  }
-                }
-                return true;
-              }
-            })
-            .createPopup();
+      .setRequestFocus(true)
+      .setTitle(title)
+      .setResizable(true)
+      .setMovable(true)
+      .setDimensionServiceKey(myProject, DIMENSION_SERVICE_KEY, false)
+      .setMayBeParent(true)
+      .setKeyEventHandler(event -> {
+        if (AbstractPopup.isCloseRequest(event)) {
+          // Do not process a close request if the tree shows a speed search popup
+          SpeedSearchSupply supply = SpeedSearchSupply.getSupply(tree);
+          return supply != null && StringUtil.isEmpty(supply.getEnteredPrefix());
+        }
+        return false;
+      })
+      .addListener(new JBPopupAdapter() {
+        @Override
+        public void onClosed(LightweightWindowEvent event) {
+          if (myHideRunnable != null) {
+            myHideRunnable.run();
+          }
+        }
+      })
+      .setCancelCallback(() -> {
+        Window parent = SwingUtilities.getWindowAncestor(tree);
+        if (parent != null) {
+          for (Window child : parent.getOwnedWindows()) {
+            if (child.isShowing()) {
+              return false;
+            }
+          }
+        }
+        return true;
+      })
+      .createPopup();
 
     registerTreeDisposable(myPopup, tree);
 
@@ -147,10 +147,12 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     final Rectangle bounds = tree.getPathBounds(path);
     if (bounds == null) return;
 
-    final Rectangle targetBounds = new Rectangle(location.x,
-                                                 location.y,
-                                                 Math.max(Math.max(size.width, bounds.width) + 20, windowBounds.width),
-                                                 Math.max(tree.getRowCount() * bounds.height + 55, windowBounds.height));
+    final Rectangle targetBounds = new Rectangle(
+      location.x,
+      location.y,
+      Math.max(Math.max(size.width, bounds.width) + 20, windowBounds.width),
+      Math.max(tree.getRowCount() * bounds.height + 55, windowBounds.height)
+    );
     ScreenUtil.cropRectangleToFitTheScreen(targetBounds);
     popupWindow.setBounds(targetBounds);
     popupWindow.validate();
@@ -162,10 +164,12 @@ class DebuggerTreeWithHistoryPopup<D> extends DebuggerTreeWithHistoryContainer<D
     final Dimension size = tree.getPreferredSize();
     final Point location = popupWindow.getLocation();
     final Rectangle windowBounds = popupWindow.getBounds();
-    final Rectangle targetBounds = new Rectangle(location.x,
-                                                 location.y,
-                                                 Math.max(size.width + 250, windowBounds.width),
-                                                 Math.max(size.height, windowBounds.height));
+    final Rectangle targetBounds = new Rectangle(
+      location.x,
+      location.y,
+      Math.max(size.width + 250, windowBounds.width),
+      Math.max(size.height, windowBounds.height)
+    );
     ScreenUtil.cropRectangleToFitTheScreen(targetBounds);
     popupWindow.setBounds(targetBounds);
     popupWindow.validate();

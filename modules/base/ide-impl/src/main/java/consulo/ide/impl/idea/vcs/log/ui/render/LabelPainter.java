@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;

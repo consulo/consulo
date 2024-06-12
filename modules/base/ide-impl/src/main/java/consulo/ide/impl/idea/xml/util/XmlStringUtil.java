@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.xml.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import org.jdom.Verifier;
 import org.jetbrains.annotations.NonNls;
 import jakarta.annotation.Nonnull;

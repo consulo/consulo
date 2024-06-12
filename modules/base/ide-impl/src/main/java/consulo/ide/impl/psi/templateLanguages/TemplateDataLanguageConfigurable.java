@@ -16,10 +16,9 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.configurable.ProjectConfigurable;
 import consulo.configurable.StandardConfigurableIds;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
 import consulo.language.Language;
@@ -29,13 +28,13 @@ import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+import org.jetbrains.annotations.Nls;
 
 /**
  * @author peter
@@ -67,7 +66,7 @@ public class TemplateDataLanguageConfigurable extends PerFileConfigurableBase<La
 
   @Override
   protected <S> Object getParameter(@Nonnull Key<S> key) {
-    if (key == DESCRIPTION) return LangBundle.message("dialog.template.data.language.caption", ApplicationNamesInfo.getInstance().getFullProductName());
+    if (key == DESCRIPTION) return LangBundle.message("dialog.template.data.language.caption", Application.get().getName());
     if (key == MAPPING_TITLE) return LangBundle.message("template.data.language.configurable.tree.table.title");
     if (key == OVERRIDE_QUESTION) return LangBundle.message("template.data.language.override.warning.text");
     if (key == OVERRIDE_TITLE) return LangBundle.message("template.data.language.override.warning.title");

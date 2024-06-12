@@ -21,9 +21,9 @@ import consulo.execution.debug.frame.*;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.registry.Registry;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.ColoredTextContainer;
@@ -53,7 +53,7 @@ import java.util.Comparator;
  * @author nik
  */
 public class XValueNodeImpl extends XValueContainerNode<XValue>
-        implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
+  implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
   public static final Comparator<XValueNodeImpl> COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.getName(), o2.getName());
 
   private static final int MAX_NAME_LENGTH = 100;
@@ -78,7 +78,10 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
         myText.append(myName, XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES);
         myText.append(XDebuggerUIConstants.EQ_TEXT, SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
-      myText.append(XDebuggerUIConstants.COLLECTING_DATA_MESSAGE, XDebuggerUIConstants.COLLECTING_DATA_HIGHLIGHT_ATTRIBUTES);
+      myText.append(
+        XDebuggerUIConstants.COLLECTING_DATA_MESSAGE,
+        XDebuggerUIConstants.COLLECTING_DATA_HIGHLIGHT_ATTRIBUTES
+      );
     }
   }
 
@@ -88,11 +91,13 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   }
 
   @Override
-  public void setPresentation(@Nullable Image icon,
-                              @NonNls @Nullable String type,
-                              @NonNls @Nonnull String separator,
-                              @NonNls @Nullable String value,
-                              boolean hasChildren) {
+  public void setPresentation(
+    @Nullable Image icon,
+    @NonNls @Nullable String type,
+    @NonNls @Nonnull String separator,
+    @NonNls @Nullable String value,
+    boolean hasChildren
+  ) {
     XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
   }
 
@@ -198,7 +203,9 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
 
   private void appendName() {
     if (!StringUtil.isEmpty(myName)) {
-      SimpleTextAttributes attributes = myChanged ? XDebuggerUIConstants.CHANGED_VALUE_ATTRIBUTES : XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES;
+      SimpleTextAttributes attributes = myChanged
+        ? XDebuggerUIConstants.CHANGED_VALUE_ATTRIBUTES
+        : XDebuggerUIConstants.VALUE_NAME_ATTRIBUTES;
       XValuePresentationUtil.renderValue(myName, myText, attributes, MAX_NAME_LENGTH, null);
     }
   }
