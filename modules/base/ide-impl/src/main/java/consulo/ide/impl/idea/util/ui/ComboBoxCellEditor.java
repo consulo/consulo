@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 
 import javax.swing.*;
 import java.awt.*;

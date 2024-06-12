@@ -19,7 +19,7 @@ import consulo.execution.debug.evaluation.InlineDebuggerHelper;
 import consulo.execution.debug.frame.*;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -131,9 +131,11 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Nullable
-  private List<XValueGroupNodeImpl> createGroupNodes(List<XValueGroup> groups,
-                                                     @Nullable List<XValueGroupNodeImpl> prevNodes,
-                                                     List<XValueContainerNode<?>> newChildren) {
+  private List<XValueGroupNodeImpl> createGroupNodes(
+    List<XValueGroup> groups,
+    @Nullable List<XValueGroupNodeImpl> prevNodes,
+    List<XValueContainerNode<?>> newChildren
+  ) {
     if (groups.isEmpty()) return prevNodes;
 
     List<XValueGroupNodeImpl> nodes = prevNodes != null ? prevNodes : new SmartList<>();
@@ -174,20 +176,36 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void setErrorMessage(@Nonnull final String errorMessage, @Nullable final XDebuggerTreeNodeHyperlink link) {
-    setMessage(errorMessage, XDebuggerUIConstants.ERROR_MESSAGE_ICON, XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES, link);
+    setMessage(
+      errorMessage,
+      XDebuggerUIConstants.ERROR_MESSAGE_ICON,
+      XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES,
+      link
+    );
     invokeNodeUpdate(() -> setMessageNodes(Collections.emptyList(), true)); // clear temporary nodes
   }
 
   @Override
-  public void setMessage(@Nonnull final String message,
-                         final Image icon,
-                         @Nonnull final SimpleTextAttributes attributes,
-                         @Nullable final XDebuggerTreeNodeHyperlink link) {
-    invokeNodeUpdate(() -> setMessageNodes(MessageTreeNode.createMessages(myTree, this, message, link, icon, attributes), false));
+  public void setMessage(
+    @Nonnull final String message,
+    final Image icon,
+    @Nonnull final SimpleTextAttributes attributes,
+    @Nullable final XDebuggerTreeNodeHyperlink link
+  ) {
+    invokeNodeUpdate(
+      () -> setMessageNodes(
+        MessageTreeNode.createMessages(myTree, this, message, link, icon, attributes),
+        false)
+    );
   }
 
   public void setInfoMessage(@Nonnull String message, @Nullable HyperlinkListener hyperlinkListener) {
-    invokeNodeUpdate(() -> setMessageNodes(Collections.singletonList(MessageTreeNode.createInfoMessage(myTree, message, hyperlinkListener)), false));
+    invokeNodeUpdate(
+      () -> setMessageNodes(
+        Collections.singletonList(MessageTreeNode.createInfoMessage(myTree, message, hyperlinkListener)),
+        false
+      )
+    );
   }
 
   private void setTemporaryMessageNode(final MessageTreeNode messageNode) {
@@ -284,9 +302,11 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   @Nonnull
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
-    return ContainerUtil.concat(ObjectUtil.notNull(myTopGroups, empty),
-                                ObjectUtil.notNull(myValueChildren, empty),
-                                ObjectUtil.notNull(myBottomGroups, empty));
+    return ContainerUtil.concat(
+      ObjectUtil.notNull(myTopGroups, empty),
+      ObjectUtil.notNull(myValueChildren, empty),
+      ObjectUtil.notNull(myBottomGroups, empty)
+    );
   }
 
   public void setObsolete() {

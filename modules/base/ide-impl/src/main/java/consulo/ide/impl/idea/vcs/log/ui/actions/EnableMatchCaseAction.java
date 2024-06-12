@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogDataKeys;
 import consulo.versionControlSystem.log.VcsLogProperties;
@@ -46,22 +46,26 @@ public class EnableMatchCaseAction extends BooleanPropertyToggleAction {
     VcsLogUi ui = e.getData(VcsLogDataKeys.VCS_LOG_UI);
     VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
     if (ui != null && properties != null && properties.exists(MainVcsLogUiProperties.TEXT_FILTER_MATCH_CASE)) {
-      boolean regexEnabled =
-              properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX) && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
+      boolean regexEnabled = properties.exists(MainVcsLogUiProperties.TEXT_FILTER_REGEX)
+        && properties.get(MainVcsLogUiProperties.TEXT_FILTER_REGEX);
       if (!regexEnabled) {
         e.getPresentation().setText(MATCH_CASE);
       }
       else {
-        Collection<VcsLogProvider> providers = ContainerUtil.newLinkedHashSet(ui.getDataPack().getLogProviders().values());
+        Collection<VcsLogProvider> providers =
+          ContainerUtil.newLinkedHashSet(ui.getDataPack().getLogProviders().values());
         List<VcsLogProvider> supported =
-                ContainerUtil.filter(providers, p -> VcsLogProperties.get(p, VcsLogProperties.CASE_INSENSITIVE_REGEX));
+          ContainerUtil.filter(providers, p -> VcsLogProperties.get(p, VcsLogProperties.CASE_INSENSITIVE_REGEX));
         e.getPresentation().setVisible(true);
         e.getPresentation().setEnabled(!supported.isEmpty());
         if (providers.size() == supported.size() || supported.isEmpty()) {
           e.getPresentation().setText(MATCH_CASE);
         }
         else {
-          String supportedText = StringUtil.join(ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()), ", ");
+          String supportedText = StringUtil.join(
+            ContainerUtil.map(supported, p -> p.getSupportedVcs().getName().toLowerCase()),
+            ", "
+          );
           e.getPresentation().setText(MATCH_CASE + " (" + supportedText + " only)");
         }
       }

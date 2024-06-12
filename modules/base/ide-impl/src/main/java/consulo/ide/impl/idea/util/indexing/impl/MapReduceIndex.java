@@ -20,7 +20,7 @@ import consulo.index.io.internal.DebugAssertions;
 import consulo.index.io.internal.ValueContainerImpl;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.function.Computable;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.function.ThrowableComputable;

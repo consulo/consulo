@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.versionControlSystem.log.VcsLogBranchFilter;
 import consulo.logging.Logger;

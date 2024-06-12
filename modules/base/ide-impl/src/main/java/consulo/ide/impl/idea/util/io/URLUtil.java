@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;

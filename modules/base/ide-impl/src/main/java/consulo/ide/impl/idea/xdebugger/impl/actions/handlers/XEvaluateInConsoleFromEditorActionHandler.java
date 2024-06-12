@@ -4,13 +4,12 @@ import consulo.execution.ui.console.ConsoleExecuteAction;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.evaluation.ExpressionInfo;
@@ -44,7 +43,7 @@ public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFrom
 
   @Override
   protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
-    Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null || !(editor instanceof EditorEx)) {
       return;
     }

@@ -16,20 +16,19 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.application.WriteAction;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.ui.popup.util.DetailView;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.ide.impl.idea.ui.popup.util.DetailView;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.XLightBreakpointPropertiesPanel;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nullable;
 
 class XBreakpointItem extends BreakpointItem {
@@ -55,7 +54,8 @@ class XBreakpointItem extends BreakpointItem {
     if (plainView) {
       renderer.setIcon(getIcon());
     }
-    final SimpleTextAttributes attributes = myBreakpoint.isEnabled() ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
+    final SimpleTextAttributes attributes = myBreakpoint.isEnabled()
+      ? SimpleTextAttributes.SIMPLE_CELL_ATTRIBUTES : SimpleTextAttributes.GRAYED_ATTRIBUTES;
     renderer.append(StringUtil.notNullize(getDisplayText()), attributes);
     String description = getUserDescription();
     if (!StringUtil.isEmpty(description)) {
@@ -159,9 +159,7 @@ class XBreakpointItem extends BreakpointItem {
   @Override
   public void removed(Project project) {
     final XBreakpointManagerImpl breakpointManager = getManager();
-    WriteAction.run(() -> {
-      breakpointManager.removeBreakpoint(myBreakpoint);
-    });
+    WriteAction.run(() -> breakpointManager.removeBreakpoint(myBreakpoint));
   }
 
   @Override

@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.util.ui.tree;
 
 import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.component.util.Iconable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -14,19 +13,17 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.util.Setter;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.LangBundle;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.util.LanguagePerFileMappings;
 import consulo.language.impl.util.PerFileMappingsBase;
 import consulo.module.content.ProjectFileIndex;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleColoredText;
@@ -46,14 +43,17 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import gnu.trove.TIntArrayList;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.*;
@@ -669,8 +669,15 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     String question = param(OVERRIDE_QUESTION);
     String title = param(OVERRIDE_TITLE);
     if (question == null || title == null) return Messages.NO;
-    return Messages.showYesNoCancelDialog(myProject, question, title, LangBundle.message("button.override"), LangBundle.message("button.do.not.override"), CommonBundle.getCancelButtonText(),
-                                          Messages.getWarningIcon());
+    return Messages.showYesNoCancelDialog(
+      myProject,
+      question,
+      title,
+      LangBundle.message("button.override"),
+      LangBundle.message("button.do.not.override"),
+      CommonLocalize.buttonCancel().get(),
+      Messages.getWarningIcon()
+    );
   }
 
   private String renderValue(@Nullable Object value, @Nonnull String nullValue) {

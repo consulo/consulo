@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing.impl;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.index.io.internal.DebugAssertions;
 import consulo.util.lang.SystemProperties;
 import consulo.index.io.StorageException;

@@ -16,30 +16,24 @@
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataProvider;
-import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
-import consulo.execution.debug.XDebuggerUtil;
-import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.execution.debug.XDebuggerActions;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebugSessionTab;
 import consulo.ide.impl.idea.xdebugger.impl.ui.XDebuggerEditorBase;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.XDebuggerTreePanel;
 import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.EvaluatingExpressionRootNode;
-import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
@@ -51,11 +45,12 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
-import org.jetbrains.annotations.NonNls;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
+
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import java.awt.*;
@@ -70,7 +65,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
   public static final Key<XDebuggerEvaluationDialog> KEY = Key.create("DEBUGGER_EVALUATION_DIALOG");
 
   //can not use new SHIFT_DOWN_MASK etc because in this case ActionEvent modifiers do not match
-  private static final int ADD_WATCH_MODIFIERS = (SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
+  private static final int ADD_WATCH_MODIFIERS = (Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK) | InputEvent.SHIFT_MASK;
   static KeyStroke ADD_WATCH_KEYSTROKE = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ADD_WATCH_MODIFIERS);
 
   private final JPanel myMainPanel;
@@ -126,7 +121,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     new AnAction(){
       @Override
       public void update(AnActionEvent e) {
-        Project project = e.getData(CommonDataKeys.PROJECT);
+        Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(project != null && LookupManager.getInstance(project).getActiveLookup() == null);
       }
 

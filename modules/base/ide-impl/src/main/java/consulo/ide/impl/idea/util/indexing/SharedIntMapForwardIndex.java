@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.util.indexing;
 
 import consulo.index.io.*;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.indexing.impl.forward.IntForwardIndex;
 import consulo.index.io.data.IOUtil;
