@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.logging.Logger;
-import consulo.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -38,34 +39,32 @@ public class ZipUtil {
   }
 
   public interface FileContentProcessor {
-
-    FileContentProcessor STANDARD = new FileContentProcessor() {
-      @Override
-      public InputStream getContent(File file) throws IOException {
-        return new FileInputStream(file);
-      }
-    };
+    FileContentProcessor STANDARD = file -> new FileInputStream(file);
 
     InputStream getContent(File file) throws IOException;
   }
 
-  public static boolean addFileToZip(@Nonnull ZipOutputStream zos,
-                                     @Nonnull File file,
-                                     @Nonnull String relativeName,
-                                     @Nullable Set<String> writtenItemRelativePaths,
-                                     @Nullable FileFilter fileFilter) throws IOException {
+  public static boolean addFileToZip(
+    @Nonnull ZipOutputStream zos,
+    @Nonnull File file,
+    @Nonnull String relativeName,
+    @Nullable Set<String> writtenItemRelativePaths,
+    @Nullable FileFilter fileFilter
+  ) throws IOException {
     return addFileToZip(zos, file, relativeName, writtenItemRelativePaths, fileFilter, FileContentProcessor.STANDARD);
   }
 
   /*
    * Adds a new file entry to the ZIP output stream.
    */
-  public static boolean addFileToZip(@Nonnull ZipOutputStream zos,
-                                     @Nonnull File file,
-                                     @Nonnull String relativeName,
-                                     @Nullable Set<String> writtenItemRelativePaths,
-                                     @Nullable FileFilter fileFilter,
-                                     @Nonnull FileContentProcessor contentProcessor) throws IOException {
+  public static boolean addFileToZip(
+    @Nonnull ZipOutputStream zos,
+    @Nonnull File file,
+    @Nonnull String relativeName,
+    @Nullable Set<String> writtenItemRelativePaths,
+    @Nullable FileFilter fileFilter,
+    @Nonnull FileContentProcessor contentProcessor
+  ) throws IOException {
     while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
       relativeName = relativeName.substring(1);
     }
@@ -104,12 +103,14 @@ public class ZipUtil {
     return true;
   }
 
-  public static boolean addFileOrDirRecursively(@Nonnull ZipOutputStream zipOutputStream,
-                                                @Nullable File jarFile,
-                                                @Nonnull File file,
-                                                @Nonnull String relativePath,
-                                                @Nullable FileFilter fileFilter,
-                                                @Nullable Set<String> writtenItemRelativePaths) throws IOException {
+  public static boolean addFileOrDirRecursively(
+    @Nonnull ZipOutputStream zipOutputStream,
+    @Nullable File jarFile,
+    @Nonnull File file,
+    @Nonnull String relativePath,
+    @Nullable FileFilter fileFilter,
+    @Nullable Set<String> writtenItemRelativePaths
+  ) throws IOException {
     if (file.isDirectory()) {
       return addDirToZipRecursively(zipOutputStream, jarFile, file, relativePath, fileFilter, writtenItemRelativePaths);
     }
@@ -117,12 +118,14 @@ public class ZipUtil {
     return true;
   }
 
-  public static boolean addDirToZipRecursively(@Nonnull ZipOutputStream outputStream,
-                                               @Nullable File jarFile,
-                                               @Nonnull File dir,
-                                               @Nonnull String relativePath,
-                                               @Nullable FileFilter fileFilter,
-                                               @Nullable Set<String> writtenItemRelativePaths) throws IOException {
+  public static boolean addDirToZipRecursively(
+    @Nonnull ZipOutputStream outputStream,
+    @Nullable File jarFile,
+    @Nonnull File dir,
+    @Nonnull String relativePath,
+    @Nullable FileFilter fileFilter,
+    @Nullable Set<String> writtenItemRelativePaths
+  ) throws IOException {
     if (jarFile != null && FileUtil.isAncestor(dir, jarFile, false)) {
       return false;
     }
@@ -143,18 +146,31 @@ public class ZipUtil {
     extract(file, outputDir, filenameFilter, true);
   }
 
-  public static void extract(@Nonnull File file, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite) throws IOException {
+  public static void extract(
+    @Nonnull File file,
+    @Nonnull File outputDir,
+    @Nullable FilenameFilter filenameFilter,
+    boolean overwrite
+  ) throws IOException {
     try (ZipFile zipFile = new ZipFile(file)) {
       extract(zipFile, outputDir, filenameFilter, overwrite);
     }
   }
 
-  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter) throws IOException {
+  public static void extract(
+    final @Nonnull ZipFile zipFile,
+    @Nonnull File outputDir,
+    @Nullable FilenameFilter filenameFilter
+  ) throws IOException {
     extract(zipFile, outputDir, filenameFilter, true);
   }
 
-  public static void extract(final @Nonnull ZipFile zipFile, @Nonnull File outputDir, @Nullable FilenameFilter filenameFilter, boolean overwrite)
-          throws IOException {
+  public static void extract(
+    final @Nonnull ZipFile zipFile,
+    @Nonnull File outputDir,
+    @Nullable FilenameFilter filenameFilter,
+    boolean overwrite
+  ) throws IOException {
     final Enumeration entries = zipFile.entries();
     while (entries.hasMoreElements()) {
       ZipEntry entry = (ZipEntry)entries.nextElement();
@@ -289,7 +305,7 @@ public class ZipUtil {
       ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile));
       try {
         os.putNextEntry(new ZipEntry(srcFile.getName()));
-        FileUtil.copy(is, os);
+        FileUtilRt.copy(is, os);
         os.closeEntry();
         return zipFile;
       }

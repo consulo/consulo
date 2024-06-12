@@ -43,7 +43,7 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;

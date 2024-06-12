@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
@@ -64,12 +63,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     final MyXBreakpointListener listener1 = new MyXBreakpointListener(listener, breakpointManager);
     breakpointManager.addBreakpointListener(listener1);
     myListeners.add(listener1);
-    Disposer.register(disposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeListener(listener);
-      }
-    });
+    Disposer.register(disposable, () -> removeListener(listener));
   }
 
   @Override
@@ -113,7 +107,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
     if (breakpoint instanceof XLineBreakpointImpl) {
       RangeHighlighter highlighter = ((XLineBreakpointImpl)breakpoint).getHighlighter();
       if (highlighter != null) {
-        return (GutterIconRenderer)highlighter.getGutterIconRenderer();
+        return highlighter.getGutterIconRenderer();
       }
     }
     return null;
@@ -173,7 +167,7 @@ public class XBreakpointPanelProvider extends BreakpointPanelProvider<XBreakpoin
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-      myType.addBreakpoint(e == null ? null : e.getData(CommonDataKeys.PROJECT), null);
+      myType.addBreakpoint(e == null ? null : e.getData(Project.KEY), null);
     }
   }
 }

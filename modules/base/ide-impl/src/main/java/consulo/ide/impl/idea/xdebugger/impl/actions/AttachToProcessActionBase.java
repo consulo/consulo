@@ -7,13 +7,13 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.execution.ExecutionUtil;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.attach.*;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ide.impl.idea.openapi.ui.popup.ListPopupStepEx;
 import consulo.ide.impl.idea.ui.popup.async.AsyncPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.ProcessInfo;
 import consulo.process.ExecutionException;
@@ -58,12 +58,14 @@ public abstract class AttachToProcessActionBase extends AnAction {
   @Nonnull
   private final Supplier<? extends List<XAttachHostProvider>> myAttachHostProviderSupplier;
 
-  public AttachToProcessActionBase(@Nullable String text,
-                                   @Nullable String description,
-                                   @Nullable Image icon,
-                                   @Nonnull Supplier<? extends List<XAttachDebuggerProvider>> attachProvidersSupplier,
-                                   @Nonnull Supplier<? extends List<XAttachHostProvider>> attachHostProviderSupplier,
-                                   @Nonnull String attachActionsListTitle) {
+  public AttachToProcessActionBase(
+    @Nullable LocalizeValue text,
+    @Nullable LocalizeValue description,
+    @Nullable Image icon,
+    @Nonnull Supplier<? extends List<XAttachDebuggerProvider>> attachProvidersSupplier,
+    @Nonnull Supplier<? extends List<XAttachHostProvider>> attachHostProviderSupplier,
+    @Nonnull String attachActionsListTitle
+  ) {
     super(text, description, icon);
     myAttachProvidersSupplier = attachProvidersSupplier;
     myAttachActionsListTitle = attachActionsListTitle;
@@ -72,8 +74,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-
-    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    Project project = e == null ? null : e.getData(Project.KEY);
     int attachDebuggerProvidersNumber = myAttachProvidersSupplier.get().size();
     boolean enabled = project != null && attachDebuggerProvidersNumber > 0;
     e.getPresentation().setEnabledAndVisible(enabled);
@@ -82,18 +83,27 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Project project = e.getData(CommonDataKeys.PROJECT);
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
 
 
-    new Task.Backgroundable(project, XDebuggerBundle.message("xdebugger.attach.action.collectingItems"), true, PerformInBackgroundOption.DEAF) {
+    new Task.Backgroundable(
+      project,
+      XDebuggerLocalize.xdebuggerAttachActionCollectingitems().get(),
+      true,
+      PerformInBackgroundOption.DEAF
+    ) {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
 
         List<AttachItem> allItems = ContainerUtil.immutableList(getTopLevelItems(indicator, project));
 
         ApplicationManager.getApplication().invokeLater(() -> {
-          AttachListStep step = new AttachListStep(allItems, XDebuggerBundle.message("xdebugger.attach.popup.title.default"), project);
+          AttachListStep step = new AttachListStep(
+            allItems,
+            XDebuggerLocalize.xdebuggerAttachPopupTitleDefault().get(),
+            project
+          );
 
           final ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
           final JList mainList = ((ListPopupImpl)popup).getList();
@@ -108,16 +118,15 @@ public abstract class AttachToProcessActionBase extends AnAction {
               item = mainList.getSelectedValue();
             }
 
-            if (item instanceof AttachToProcessItem) {
-              popup.setCaption(((AttachToProcessItem)item).getSelectedDebugger().getDebuggerSelectedTitle());
+            if (item instanceof AttachToProcessItem attachToProcessItem) {
+              popup.setCaption(attachToProcessItem.getSelectedDebugger().getDebuggerSelectedTitle());
             }
 
-            if (item instanceof AttachHostItem) {
-              AttachHostItem hostItem = (AttachHostItem)item;
+            if (item instanceof AttachHostItem hostItem) {
               String attachHostName = hostItem.getText(project);
               attachHostName = StringUtil.shortenTextWithEllipsis(attachHostName, 50, 0);
 
-              popup.setCaption(XDebuggerBundle.message("xdebugger.attach.host.popup.title", attachHostName));
+              popup.setCaption(XDebuggerLocalize.xdebuggerAttachHostPopupTitle(attachHostName).get());
             }
           };
           popup.addListSelectionListener(listener);
@@ -185,10 +194,12 @@ public abstract class AttachToProcessActionBase extends AnAction {
   }
 
   @Nonnull
-  private static List<AttachToProcessItem> getRecentItems(@Nonnull List<? extends AttachToProcessItem> currentItems,
-                                                          @Nonnull XAttachHost host,
-                                                          @Nonnull Project project,
-                                                          @Nonnull UserDataHolder dataHolder) {
+  private static List<AttachToProcessItem> getRecentItems(
+    @Nonnull List<? extends AttachToProcessItem> currentItems,
+    @Nonnull XAttachHost host,
+    @Nonnull Project project,
+    @Nonnull UserDataHolder dataHolder
+  ) {
     final List<AttachToProcessItem> result = new ArrayList<>();
     final List<RecentItem> recentItems = getRecentItems(host, project);
 
@@ -222,8 +233,12 @@ public abstract class AttachToProcessActionBase extends AnAction {
       return host.getProcessList();
     }
     catch (ExecutionException e) {
-      Notifications.Bus.notify(new Notification(GROUP, XDebuggerBundle.message("xdebugger.attach.action.items.error.title"),
-                                                XDebuggerBundle.message("xdebugger.attach.action.items.error.message"), NotificationType.WARNING));
+      Notifications.Bus.notify(new Notification(
+        GROUP,
+        XDebuggerLocalize.xdebuggerAttachActionItemsErrorTitle().get(),
+        XDebuggerLocalize.xdebuggerAttachActionItemsErrorMessage().get(),
+        NotificationType.WARNING
+      ));
       LOG.warn("Error while getting attach items", e);
 
       return Collections.emptyList();
@@ -236,7 +251,11 @@ public abstract class AttachToProcessActionBase extends AnAction {
   }
 
   @Nonnull
-  public List<AttachToProcessItem> collectAttachProcessItems(@Nonnull final Project project, @Nonnull XAttachHost host, @Nonnull ProgressIndicator indicator) {
+  public List<AttachToProcessItem> collectAttachProcessItems(
+    @Nonnull final Project project,
+    @Nonnull XAttachHost host,
+    @Nonnull ProgressIndicator indicator
+  ) {
     return doCollectAttachProcessItems(project, host, getProcessInfos(host), indicator, getProvidersApplicableForHost(host));
   }
 
@@ -333,7 +352,12 @@ public abstract class AttachToProcessActionBase extends AnAction {
     }
 
     @TestOnly
-    public static RecentItem createRecentItem(@Nonnull XAttachHost host, @Nonnull ProcessInfo info, @Nonnull XAttachPresentationGroup group, @Nonnull String debuggerName) {
+    public static RecentItem createRecentItem(
+      @Nonnull XAttachHost host,
+      @Nonnull ProcessInfo info,
+      @Nonnull XAttachPresentationGroup group,
+      @Nonnull String debuggerName
+    ) {
       return new RecentItem(host, info, group, debuggerName);
     }
 
@@ -501,20 +525,42 @@ public abstract class AttachToProcessActionBase extends AnAction {
       myHost = host;
 
       if (debuggers.size() > 1) {
-        mySubItems = ContainerUtil.map(debuggers, debugger -> new AttachToProcessItem(myGroup, false, myHost, myInfo, Collections.singletonList(debugger), myProject, dataHolder));
+        mySubItems = ContainerUtil.map(
+          debuggers,
+          debugger -> new AttachToProcessItem(
+            myGroup,
+            false,
+            myHost,
+            myInfo,
+            Collections.singletonList(debugger),
+            myProject,
+            dataHolder
+          )
+        );
       }
       else {
         mySubItems = Collections.emptyList();
       }
     }
 
-    static AttachToProcessItem createRecentAttachItem(AttachToProcessItem item,
-                                                      boolean isFirstInGroup,
-                                                      List<XAttachDebugger> debuggers,
-                                                      int selectedDebugger,
-                                                      Project project, UserDataHolder dataHolder) {
-      return new AttachToProcessItem(item.getGroup(), isFirstInGroup, XDebuggerBundle.message("xdebugger.attach.toLocal.popup.recent"), item.getHost(), item.getProcessInfo(), debuggers,
-                                     selectedDebugger, project, dataHolder);
+    static AttachToProcessItem createRecentAttachItem(
+      AttachToProcessItem item,
+      boolean isFirstInGroup,
+      List<XAttachDebugger> debuggers,
+      int selectedDebugger,
+      Project project, UserDataHolder dataHolder
+    ) {
+      return new AttachToProcessItem(
+        item.getGroup(),
+        isFirstInGroup,
+        XDebuggerLocalize.xdebuggerAttachTolocalPopupRecent().get(),
+        item.getHost(),
+        item.getProcessInfo(),
+        debuggers,
+        selectedDebugger,
+        project,
+        dataHolder
+      );
     }
 
     @Nonnull
@@ -640,7 +686,7 @@ public abstract class AttachToProcessActionBase extends AnAction {
 
     @Override
     public void setEmptyText(@Nonnull StatusText emptyText) {
-      emptyText.setText(XDebuggerBundle.message("xdebugger.attach.popup.emptyText"));
+      emptyText.setText(XDebuggerLocalize.xdebuggerAttachPopupEmptytext().get());
     }
 
     @Override

@@ -22,11 +22,9 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.ide.impl.idea.ide.plugins.*;
 import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
-import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.plugins.InstalledPluginsState;
 import consulo.ide.impl.plugins.PluginActionListener;
@@ -41,10 +39,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
@@ -78,7 +77,10 @@ public class PlatformOrPluginDialog extends DialogWrapper {
 
           PluginDescriptor currentDescriptor = node.getCurrentDescriptor();
           if (currentDescriptor != null) {
-            myCategory.setText(currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " + (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion()));
+            myCategory.setText(
+              currentDescriptor.getVersion() + " " + UIUtil.rightArrow() + " " +
+                (node.getFutureDescriptor() == null ? "??" : pluginNode.getVersion())
+            );
           }
           else {
             myCategory.setText(pluginNode.getVersion());
@@ -147,15 +149,21 @@ public class PlatformOrPluginDialog extends DialogWrapper {
   @Nonnull
   private PlatformOrPluginUpdateResult.Type myType;
 
-  public PlatformOrPluginDialog(@Nullable Project project,
-                                @Nonnull PlatformOrPluginUpdateResult updateResult,
-                                @Nullable Predicate<PluginId> greenStrategy,
-                                @Nullable Consumer<Collection<PluginDescriptor>> afterCallback) {
+  public PlatformOrPluginDialog(
+    @Nullable Project project,
+    @Nonnull PlatformOrPluginUpdateResult updateResult,
+    @Nullable Predicate<PluginId> greenStrategy,
+    @Nullable Consumer<Collection<PluginDescriptor>> afterCallback
+  ) {
     super(project);
     myProject = project;
     myAfterCallback = afterCallback;
     myType = updateResult.getType();
-    setTitle(updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL ? IdeBundle.message("plugin.install.dialog.title") : IdeBundle.message("update.available.group"));
+    setTitle(
+      updateResult.getType() == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
+        ? IdeLocalize.pluginInstallDialogTitle()
+        : IdeLocalize.updateAvailableGroup()
+    );
 
     myNodes = updateResult.getPlugins();
 
@@ -219,107 +227,132 @@ public class PlatformOrPluginDialog extends DialogWrapper {
   public void doOKAction() {
     super.doOKAction();
 
-    PlatformOrPluginNode brokenPlugin = myNodes.stream().filter(c -> c.getFutureDescriptor() == null).findFirst().orElse(null);
+    PlatformOrPluginNode brokenPlugin = myNodes.stream()
+      .filter(c -> c.getFutureDescriptor() == null)
+      .findFirst()
+      .orElse(null);
     if (brokenPlugin != null) {
-      if (Messages.showOkCancelDialog(myProject, "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?", "Consulo", Messages.getErrorIcon()) != Messages.OK) {
+      if (Messages.showOkCancelDialog(
+        myProject,
+        "Few plugins will be not updated. Those plugins will be disabled after update. Are you sure?",
+        Application.get().getName().get(),
+        Messages.getErrorIcon()
+      ) != Messages.OK) {
         return;
       }
     }
 
     UIAccess uiAccess = UIAccess.current();
 
-    Task.Backgroundable.queue(myProject, IdeBundle.message("progress.download.plugins"), true, PluginManagerUISettings.getInstance(), indicator -> {
-      List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
+    Task.Backgroundable.queue(
+      myProject,
+      IdeLocalize.progressDownloadPlugins().get(),
+      true,
+      PluginManagerUISettings.getInstance(),
+      indicator -> {
+        List<PluginDescriptor> installed = new ArrayList<>(myNodes.size());
 
-      List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
-      for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
-        PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
-        // update list contains broken plugins
-        if (pluginDescriptor == null) {
-          continue;
-        }
-
-        try {
-          PluginDownloader downloader = PluginDownloader.createDownloader(pluginDescriptor, myPlatformVersion, myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL);
-
-          forInstall.add(downloader);
-
-          downloader.download(indicator);
-        }
-        catch (PluginDownloadFailedException e) {
-          uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
-          return;
-        }
-      }
-
-      indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
-
-      Application application = Application.get();
-      UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
-
-      InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
-      for (PluginDownloader downloader : forInstall) {
-        try {
-          // already was installed
-          if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
+        List<PluginDownloader> forInstall = new ArrayList<>(myNodes.size());
+        for (PlatformOrPluginNode platformOrPluginNode : myNodes) {
+          PluginDescriptor pluginDescriptor = platformOrPluginNode.getFutureDescriptor();
+          // update list contains broken plugins
+          if (pluginDescriptor == null) {
             continue;
           }
 
-          installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
+          try {
+            PluginDownloader downloader = PluginDownloader.createDownloader(
+              pluginDescriptor,
+              myPlatformVersion,
+              myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL
+            );
 
-          downloader.install(indicator, true);
+            forInstall.add(downloader);
 
-          PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+            downloader.download(indicator);
+          }
+          catch (PluginDownloadFailedException e) {
+            uiAccess.give(() -> Alerts.okError(e.getLocalizeMessage()).showAsync());
+            return;
+          }
+        }
 
-          if (pluginDescriptor instanceof PluginNode) {
-            ((PluginNode)pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+        indicator.setTextValue(IdeLocalize.progressInstallingPlugins());
 
-            if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
-              updateHistory.setShowExperimentalWarning(true);
+        Application application = Application.get();
+        UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
+
+        InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
+        for (PluginDownloader downloader : forInstall) {
+          try {
+            // already was installed
+            if (installedPluginsState.wasUpdated(downloader.getPluginId())) {
+              continue;
             }
+
+            installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
+
+            downloader.install(indicator, true);
+
+            PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+
+            if (pluginDescriptor instanceof PluginNode) {
+              ((PluginNode)pluginDescriptor).setInstallStatus(PluginNode.STATUS_DOWNLOADED);
+
+              if (myType == PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL && pluginDescriptor.isExperimental()) {
+                updateHistory.setShowExperimentalWarning(true);
+              }
+            }
+
+            installed.add(pluginDescriptor);
+          }
+          catch (IOException e) {
+            uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
+            return;
+          }
+        }
+
+        application.getMessageBus().syncPublisher(PluginActionListener.class).pluginsInstalled(
+          installed.stream()
+            .filter(it -> it instanceof PluginNode)
+            .map(PluginDescriptor::getPluginId)
+            .toArray(PluginId[]::new)
+        );
+
+        Map<String, String> pluginHistory = new HashMap<>();
+        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+          if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
+            continue;
           }
 
-          installed.add(pluginDescriptor);
-        }
-        catch (IOException e) {
-          uiAccess.give(() -> Alerts.okError(LocalizeValue.of(e.getLocalizedMessage())).showAsync());
-          return;
-        }
-      }
-
-      application.getMessageBus().syncPublisher(PluginActionListener.class)
-              .pluginsInstalled(installed.stream().filter(it -> it instanceof PluginNode).map(PluginDescriptor::getPluginId).toArray(PluginId[]::new));
-
-      Map<String, String> pluginHistory = new HashMap<>();
-      for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-        if (PluginIds.isPlatformPlugin(descriptor.getPluginId())) {
-          continue;
+          pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
         }
 
-        pluginHistory.put(descriptor.getPluginId().getIdString(), StringUtil.notNullize(descriptor.getVersion()));
+        pluginHistory.put(
+          PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(),
+          ApplicationInfo.getInstance().getBuild().toString()
+        );
+
+        updateHistory.replaceHistory(pluginHistory);
+
+        if (myAfterCallback != null) {
+          myAfterCallback.accept(installed);
+        }
+
+        if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
+          SwingUtilities.invokeLater(() -> {
+            UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
+            updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
+
+            SettingsEntryPointAction.updateState(updateSettings);
+
+            if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
+              Application.get().restart(true);
+            }
+          });
+        }
       }
-
-      pluginHistory.put(PlatformOrPluginUpdateChecker.getPlatformPluginId().getIdString(), ApplicationInfo.getInstance().getBuild().toString());
-
-      updateHistory.replaceHistory(pluginHistory);
-
-      if (myAfterCallback != null) {
-        myAfterCallback.accept(installed);
-      }
-
-      if (myType != PlatformOrPluginUpdateResult.Type.PLUGIN_INSTALL) {
-        SwingUtilities.invokeLater(() -> {
-          UpdateSettingsImpl updateSettings = UpdateSettingsImpl.getInstance();
-          updateSettings.setLastCheckResult(PlatformOrPluginUpdateResult.Type.RESTART_REQUIRED);
-
-          SettingsEntryPointAction.updateState(updateSettings);
-
-          if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
-            Application.get().restart(true);
-          }
-        });
-      }
-    });
+    );
   }
 
   @Nullable

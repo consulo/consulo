@@ -78,13 +78,13 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
 
   private final DetailController myDetailController = new DetailController(myMasterController);
 
-  private final Collection<BreakpointItem> myBreakpointItems = new ArrayList<BreakpointItem>();
+  private final Collection<BreakpointItem> myBreakpointItems = new ArrayList<>();
 
-  private final List<XBreakpointGroupingRule> myRulesAvailable = new ArrayList<XBreakpointGroupingRule>();
+  private final List<XBreakpointGroupingRule> myRulesAvailable = new ArrayList<>();
 
-  private final Set<XBreakpointGroupingRule> myRulesEnabled = new TreeSet<XBreakpointGroupingRule>(XBreakpointGroupingRule.PRIORITY_COMPARATOR);
+  private final Set<XBreakpointGroupingRule> myRulesEnabled = new TreeSet<>(XBreakpointGroupingRule.PRIORITY_COMPARATOR);
   private final Disposable myListenerDisposable = Disposable.newDisposable();
-  private final List<ToggleActionButton> myToggleRuleActions = new ArrayList<ToggleActionButton>();
+  private final List<ToggleActionButton> myToggleRuleActions = new ArrayList<>();
 
   private XBreakpointManagerImpl getBreakpointManager() {
     return (XBreakpointManagerImpl)XDebuggerManager.getInstance(myProject).getBreakpointManager();
@@ -268,9 +268,13 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     }
 
     ToolbarDecorator decorator = ToolbarDecorator.createDecorator(tree).
-            setAddAction(button -> JBPopupFactory.getInstance()
-                    .createActionGroupPopup(null, breakpointTypes, DataManager.getInstance().getDataContext(button.getContextComponent()),
-                                            JBPopupFactory.ActionSelectionAid.NUMBERING, false).show(button.getPreferredPopupPoint())).
+            setAddAction(button -> JBPopupFactory.getInstance().createActionGroupPopup(
+              null,
+              breakpointTypes,
+              DataManager.getInstance().getDataContext(button.getContextComponent()),
+              JBPopupFactory.ActionSelectionAid.NUMBERING,
+              false
+            ).show(button.getPreferredPopupPoint())).
             setRemoveAction(button -> myTreeController.removeSelectedBreakpoints(myProject)).
             setRemoveActionUpdater(e -> {
               boolean enabled = false;
@@ -353,7 +357,7 @@ public class BreakpointsDialog extends WholeWestDialogWrapper {
     final XBreakpointsDialogState dialogState = new XBreakpointsDialogState();
     final List<XBreakpointGroupingRule> rulesEnabled = ContainerUtil.filter(myRulesEnabled, rule -> !rule.isAlwaysEnabled());
 
-    dialogState.setSelectedGroupingRules(new HashSet<String>(ContainerUtil.map(rulesEnabled, rule -> rule.getId())));
+    dialogState.setSelectedGroupingRules(new HashSet<>(ContainerUtil.map(rulesEnabled, rule -> rule.getId())));
     getBreakpointManager().setBreakpointsDialogSettings(dialogState);
   }
 

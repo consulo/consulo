@@ -15,24 +15,21 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.completion.lookup.LookupManager;
-import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.LinkLabel;
-import consulo.ui.ex.awt.LinkListener;
 import consulo.execution.debug.XDebuggerActions;
+import consulo.ide.impl.idea.openapi.actionSystem.CompositeShortcutSet;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.util.lang.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,12 +47,9 @@ public class BreakpointEditor {
     AnAction action = ActionManager.getInstance().getAction(XDebuggerActions.VIEW_BREAKPOINTS);
     String shortcutText = action != null ? KeymapUtil.getFirstKeyboardShortcutText(action) : null;
     String text = shortcutText != null ? "More (" + shortcutText + ")" : "More";
-    myShowMoreOptionsLink = new LinkLabel(text, null, new LinkListener() {
-      @Override
-      public void linkSelected(LinkLabel aSource, Object aLinkData) {
-        if (myDelegate != null) {
-          myDelegate.more();
-        }
+    myShowMoreOptionsLink = new LinkLabel(text, null, (aSource, aLinkData) -> {
+      if (myDelegate != null) {
+        myDelegate.more();
       }
     });
   }
@@ -76,20 +70,14 @@ public class BreakpointEditor {
   private Delegate myDelegate;
 
   public BreakpointEditor() {
-    myDoneButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent actionEvent) {
-        done();
-      }
-    });
+    myDoneButton.addActionListener(actionEvent -> done());
 
     final AnAction doneAction = new AnAction() {
       @Override
       public void update(AnActionEvent e) {
         super.update(e);
-        boolean lookup = LookupManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT)).getActiveLookup() != null;
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+        boolean lookup = LookupManager.getInstance(e == null ? null : e.getData(Project.KEY)).getActiveLookup() != null;
+        Editor editor = e.getData(Editor.KEY);
         e.getPresentation().setEnabled(!lookup && (editor == null || StringUtil.isEmpty(editor.getSelectionModel().getSelectedText())) );
       }
 

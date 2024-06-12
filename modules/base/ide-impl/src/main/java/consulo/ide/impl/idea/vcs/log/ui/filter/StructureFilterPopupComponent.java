@@ -17,36 +17,33 @@ package consulo.ide.impl.idea.vcs.log.ui.filter;
 
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.FilePath;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.SizedIcon;
 import consulo.ide.impl.idea.ui.popup.KeepingPopupOpenAction;
 import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.ui.ColorIcon;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.versionControlSystem.log.VcsLogDataPack;
-import consulo.versionControlSystem.log.VcsLogRootFilter;
 import consulo.ide.impl.idea.vcs.log.VcsLogRootFilterImpl;
-import consulo.versionControlSystem.log.VcsLogStructureFilter;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogStructureFilterImpl;
-import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogColorManager;
 import consulo.ide.impl.idea.vcs.log.ui.frame.VcsLogGraphTable;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import org.intellij.lang.annotations.JdkConstants;
-
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.log.VcsLogDataPack;
+import consulo.versionControlSystem.log.VcsLogRootFilter;
+import consulo.versionControlSystem.log.VcsLogStructureFilter;
+import consulo.versionControlSystem.log.util.VcsLogUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.intellij.lang.annotations.JdkConstants;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -312,7 +309,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
 
     @JdkConstants.InputEventMask
     private int getMask() {
-      return SystemInfo.isMac ? InputEvent.META_MASK : InputEvent.CTRL_MASK;
+      return Platform.current().os().isMac() ? InputEvent.META_MASK : InputEvent.CTRL_MASK;
     }
 
     @Override
@@ -386,7 +383,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+      Project project = e.getRequiredData(Project.KEY);
       VcsLogDataPack dataPack = myFilterModel.getDataPack();
       VcsLogFileFilter filter = myFilterModel.getFilter();
 
@@ -412,7 +409,7 @@ class StructureFilterPopupComponent extends FilterPopupComponent<VcsLogFileFilte
 
     @Override
     public void update(AnActionEvent e) {
-      e.getPresentation().setEnabledAndVisible(e.getData(CommonDataKeys.PROJECT) != null);
+      e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null);
     }
   }
 

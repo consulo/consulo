@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

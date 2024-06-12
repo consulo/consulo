@@ -28,7 +28,7 @@ import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.VcsLogDataPack;

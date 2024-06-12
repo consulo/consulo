@@ -26,7 +26,6 @@ import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
 import consulo.execution.debug.event.XBreakpointListener;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl;
@@ -35,6 +34,7 @@ import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiValuesMap;
+import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
@@ -117,18 +117,22 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Override
   @Nonnull
-  public <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(final XBreakpointType<XBreakpoint<T>, T> type,
-                                                                        @Nullable final T properties) {
+  public <T extends XBreakpointProperties> XBreakpoint<T> addBreakpoint(
+    final XBreakpointType<XBreakpoint<T>, T> type,
+    @Nullable final T properties
+  ) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     XBreakpointBase<?, T, ?> breakpoint = createBreakpoint(type, properties, true, false);
     addBreakpoint(breakpoint, false, true);
     return breakpoint;
   }
 
-  private <T extends XBreakpointProperties> XBreakpointBase<?, T, ?> createBreakpoint(XBreakpointType<XBreakpoint<T>, T> type,
-                                                                                      T properties,
-                                                                                      final boolean enabled,
-                                                                                      boolean defaultBreakpoint) {
+  private <T extends XBreakpointProperties> XBreakpointBase<?, T, ?> createBreakpoint(
+    XBreakpointType<XBreakpoint<T>, T> type,
+    T properties,
+    final boolean enabled,
+    boolean defaultBreakpoint
+  ) {
     BreakpointState<?, T, ?> state =
       new BreakpointState<>(enabled, type.getId(), defaultBreakpoint ? 0 : myTime++, type.getDefaultSuspendPolicy());
     getBreakpointDefaults(type).applyDefaults(state);
@@ -136,12 +140,17 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     return new XBreakpointBase<XBreakpoint<T>, T, BreakpointState<?, T, ?>>(type, this, properties, state);
   }
 
-  private <T extends XBreakpointProperties> void addBreakpoint(final XBreakpointBase<?, T, ?> breakpoint,
-                                                               final boolean defaultBreakpoint,
-                                                               boolean initUI) {
+  private <T extends XBreakpointProperties> void addBreakpoint(
+    final XBreakpointBase<?, T, ?> breakpoint,
+    final boolean defaultBreakpoint,
+    boolean initUI
+  ) {
     XBreakpointType type = breakpoint.getType();
     if (defaultBreakpoint) {
-      LOG.assertTrue(!myDefaultBreakpoints.containsKey(type), "Cannot have more than one default breakpoint (type " + type.getId() + ")");
+      LOG.assertTrue(
+        !myDefaultBreakpoints.containsKey(type),
+        "Cannot have more than one default breakpoint (type " + type.getId() + ")"
+      );
       myDefaultBreakpoints.put(type, breakpoint);
     }
     else {
@@ -211,23 +220,34 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Override
   @Nonnull
-  public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(final XLineBreakpointType<T> type,
-                                                                                @Nonnull final String fileUrl,
-                                                                                final int line,
-                                                                                @Nullable final T properties) {
+  public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(
+    final XLineBreakpointType<T> type,
+    @Nonnull final String fileUrl,
+    final int line,
+    @Nullable final T properties
+  ) {
     return addLineBreakpoint(type, fileUrl, line, properties, false);
   }
 
   @Override
   @Nonnull
-  public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(final XLineBreakpointType<T> type,
-                                                                                @Nonnull final String fileUrl,
-                                                                                final int line,
-                                                                                @Nullable final T properties,
-                                                                                boolean temporary) {
+  public <T extends XBreakpointProperties> XLineBreakpoint<T> addLineBreakpoint(
+    final XLineBreakpointType<T> type,
+    @Nonnull final String fileUrl,
+    final int line,
+    @Nullable final T properties,
+    boolean temporary
+  ) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
-    LineBreakpointState<T> state =
-      new LineBreakpointState<>(true, type.getId(), fileUrl, line, temporary, myTime++, type.getDefaultSuspendPolicy());
+    LineBreakpointState<T> state = new LineBreakpointState<>(
+      true,
+      type.getId(),
+      fileUrl,
+      line,
+      temporary,
+      myTime++,
+      type.getDefaultSuspendPolicy()
+    );
     getBreakpointDefaults(type).applyDefaults(state);
     state.setGroup(myDefaultGroup);
     XLineBreakpointImpl<T> breakpoint = new XLineBreakpointImpl<>(type, this, properties, state);
@@ -261,7 +281,9 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Nonnull
   @Override
-  public <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass) {
+  public <B extends XBreakpoint<?>> Collection<? extends B> getBreakpoints(
+    @Nonnull Class<? extends XBreakpointType<B, ?>> typeClass
+  ) {
     XBreakpointType<B, ?> type = XDebuggerUtil.getInstance().findBreakpointType(typeClass);
     LOG.assertTrue(type != null, "Unregistered breakpoint type " + typeClass);
     return getBreakpoints(type);
@@ -276,9 +298,11 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Override
   @Nullable
-  public <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(@Nonnull final XLineBreakpointType<P> type,
-                                                                                   @Nonnull final VirtualFile file,
-                                                                                   final int line) {
+  public <P extends XBreakpointProperties> XLineBreakpoint<P> findBreakpointAtLine(
+    @Nonnull final XLineBreakpointType<P> type,
+    @Nonnull final VirtualFile file,
+    final int line
+  ) {
     Collection<XBreakpointBase<?, ?, ?>> breakpoints = myBreakpoints.get(type);
     if (breakpoints == null) return null;
 
@@ -298,7 +322,9 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
     return myDefaultBreakpoints.values().contains(breakpoint);
   }
 
-  private <T extends XBreakpointProperties> EventDispatcher<XBreakpointListener> getOrCreateDispatcher(final XBreakpointType<?, T> type) {
+  private <T extends XBreakpointProperties> EventDispatcher<XBreakpointListener> getOrCreateDispatcher(
+    final XBreakpointType<?, T> type
+  ) {
     EventDispatcher<XBreakpointListener> dispatcher = myDispatchers.get(type);
     if (dispatcher == null) {
       dispatcher = EventDispatcher.create(XBreakpointListener.class);
@@ -308,21 +334,27 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
   }
 
   @Override
-  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull final XBreakpointType<B, P> type,
-                                                                                                @Nonnull final XBreakpointListener<B> listener) {
+  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(
+    @Nonnull final XBreakpointType<B, P> type,
+    @Nonnull final XBreakpointListener<B> listener
+  ) {
     getOrCreateDispatcher(type).addListener(listener);
   }
 
   @Override
-  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(@Nonnull final XBreakpointType<B, P> type,
-                                                                                                   @Nonnull final XBreakpointListener<B> listener) {
+  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void removeBreakpointListener(
+    @Nonnull final XBreakpointType<B, P> type,
+    @Nonnull final XBreakpointListener<B> listener
+  ) {
     getOrCreateDispatcher(type).removeListener(listener);
   }
 
   @Override
-  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(@Nonnull final XBreakpointType<B, P> type,
-                                                                                                @Nonnull final XBreakpointListener<B> listener,
-                                                                                                final Disposable parentDisposable) {
+  public <B extends XBreakpoint<P>, P extends XBreakpointProperties> void addBreakpointListener(
+    @Nonnull final XBreakpointType<B, P> type,
+    @Nonnull final XBreakpointListener<B> listener,
+    final Disposable parentDisposable
+  ) {
     getOrCreateDispatcher(type).addListener(listener, parentDisposable);
   }
 
@@ -337,13 +369,19 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
   }
 
   @Override
-  public void addBreakpointListener(@Nonnull final XBreakpointListener<XBreakpoint<?>> listener,
-                                    @Nonnull final Disposable parentDisposable) {
+  public void addBreakpointListener(
+    @Nonnull final XBreakpointListener<XBreakpoint<?>> listener,
+    @Nonnull final Disposable parentDisposable
+  ) {
     myAllBreakpointsDispatcher.addListener(listener, parentDisposable);
   }
 
   @Override
-  public void updateBreakpointPresentation(@Nonnull XLineBreakpoint<?> breakpoint, @Nullable Image icon, @Nullable String errorMessage) {
+  public void updateBreakpointPresentation(
+    @Nonnull XLineBreakpoint<?> breakpoint,
+    @Nullable Image icon,
+    @Nullable String errorMessage
+  ) {
     XLineBreakpointImpl lineBreakpoint = (XLineBreakpointImpl)breakpoint;
     CustomizedBreakpointPresentation presentation = lineBreakpoint.getCustomizedPresentation();
     if (presentation == null) {
@@ -518,9 +556,11 @@ public class XBreakpointManagerImpl implements XBreakpointManager, PersistentSta
 
   @Nullable
   @RequiredWriteAction
-  <T extends XBreakpointProperties> XLineBreakpoint<T> copyLineBreakpoint(@Nonnull XLineBreakpoint<T> source,
-                                                                          @Nonnull String fileUrl,
-                                                                          int line) {
+  <T extends XBreakpointProperties> XLineBreakpoint<T> copyLineBreakpoint(
+    @Nonnull XLineBreakpoint<T> source,
+    @Nonnull String fileUrl,
+    int line
+  ) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     if (!(source instanceof XLineBreakpointImpl<?>)) {
       return null;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.progress.util.impl;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.localize.LocalizeValue;
@@ -67,7 +68,10 @@ public class UnifiedProgressDialog implements ProgressDialog {
   public void update() {
     if (myWindow != null) {
       myProject.getApplication().getLastUIAccess().give(() -> {
-        System.out.println("update " + myProgressWindow.getText() + " " + myProgressWindow.getText2() + " " + myProgressWindow.getFraction());
+        System.out.println(
+          "update " + myProgressWindow.getText() + " " +
+            myProgressWindow.getText2() + " " + myProgressWindow.getFraction()
+        );
         myTextLabel.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText())));
         myTextLabel2.setText(LocalizeValue.of(StringUtil.notNullize(myProgressWindow.getText2())));
         myProgressBar.setValue((int)myProgressWindow.getFraction() * 100);
@@ -84,7 +88,10 @@ public class UnifiedProgressDialog implements ProgressDialog {
       verticalLayout.add(myProgressBar = ProgressBar.create());
       verticalLayout.add(myTextLabel2 = Label.create());
 
-      myWindow = Window.create("Consulo", WindowOptions.builder().disableClose().disableResize().build());
+      myWindow = Window.create(
+        Application.get().getName().get(),
+        WindowOptions.builder().disableClose().disableResize().build()
+      );
       myWindow.setSize(new Size(288, 123));
       myWindow.setContent(verticalLayout);
       myWindow.show();

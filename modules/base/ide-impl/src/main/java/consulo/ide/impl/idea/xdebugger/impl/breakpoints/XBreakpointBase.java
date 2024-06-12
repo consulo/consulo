@@ -22,13 +22,11 @@ import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.*;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport;
@@ -44,13 +42,15 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -352,17 +352,17 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     }
 
     if (getSuspendPolicy() == SuspendPolicy.NONE) {
-      builder.append(BR_NBSP).append(XDebuggerBundle.message("xbreakpoint.tooltip.suspend.policy.none"));
+      builder.append(BR_NBSP).append(XDebuggerLocalize.xbreakpointTooltipSuspendPolicyNone());
     }
     else if (getType().isSuspendThreadSupported()) {
       builder.append(BR_NBSP);
       //noinspection EnumSwitchStatementWhichMissesCases
       switch (getSuspendPolicy()) {
         case ALL:
-          builder.append(XDebuggerBundle.message("xbreakpoint.tooltip.suspend.policy.all"));
+          builder.append(XDebuggerLocalize.xbreakpointTooltipSuspendPolicyAll());
           break;
         case THREAD:
-          builder.append(XDebuggerBundle.message("xbreakpoint.tooltip.suspend.policy.thread"));
+          builder.append(XDebuggerLocalize.xbreakpointTooltipSuspendPolicyThread());
           break;
       }
     }
@@ -370,19 +370,19 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     String condition = getCondition();
     if (!StringUtil.isEmpty(condition)) {
       builder.append(BR_NBSP);
-      builder.append(XDebuggerBundle.message("xbreakpoint.tooltip.condition"));
+      builder.append(XDebuggerLocalize.xbreakpointTooltipCondition());
       builder.append(CommonXmlStrings.NBSP);
       builder.append(XmlStringUtil.escapeString(condition));
     }
 
     if (isLogMessage()) {
-      builder.append(BR_NBSP).append(XDebuggerBundle.message("xbreakpoint.tooltip.log.message"));
+      builder.append(BR_NBSP).append(XDebuggerLocalize.xbreakpointTooltipLogMessage());
     }
 
     String logExpression = getLogExpression();
     if (!StringUtil.isEmpty(logExpression)) {
       builder.append(BR_NBSP);
-      builder.append(XDebuggerBundle.message("xbreakpoint.tooltip.log.expression"));
+      builder.append(XDebuggerLocalize.xbreakpointTooltipLogExpression());
       builder.append(CommonXmlStrings.NBSP);
       builder.append(XmlStringUtil.escapeString(logExpression));
     }
@@ -390,8 +390,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     XBreakpoint<?> masterBreakpoint = getBreakpointManager().getDependentBreakpointManager().getMasterBreakpoint(this);
     if (masterBreakpoint != null) {
       builder.append(BR_NBSP);
-      String str = XDebuggerBundle.message("xbreakpoint.tooltip.depends.on");
-      builder.append(str);
+      builder.append(XDebuggerLocalize.xbreakpointTooltipDependsOn());
       builder.append(CommonXmlStrings.NBSP);
       builder.append(XBreakpointUtil.getShortText(masterBreakpoint));
     }
@@ -535,7 +534,11 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     @Nullable
     @Override
     public AnAction getRightButtonClickAction() {
-      return new EditBreakpointAction.ContextAction(this, XBreakpointBase.this, DebuggerSupport.getDebuggerSupport(XDebuggerSupport.class));
+      return new EditBreakpointAction.ContextAction(
+        this,
+        XBreakpointBase.this,
+        DebuggerSupport.getDebuggerSupport(XDebuggerSupport.class)
+      );
     }
 
     @Nonnull

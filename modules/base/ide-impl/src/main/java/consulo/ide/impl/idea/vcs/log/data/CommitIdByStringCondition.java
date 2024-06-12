@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.data;
 
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.CommitId;
 import jakarta.annotation.Nonnull;
 

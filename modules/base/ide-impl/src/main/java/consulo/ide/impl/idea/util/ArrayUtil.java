@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.HashingStrategy;

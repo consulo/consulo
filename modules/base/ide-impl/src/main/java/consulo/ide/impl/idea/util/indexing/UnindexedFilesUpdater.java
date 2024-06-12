@@ -1,31 +1,31 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing;
 
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.application.impl.internal.performance.PerformanceWatcher;
-import consulo.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.project.*;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.CollectingContentIterator;
+import consulo.ide.impl.idea.openapi.project.CacheUpdateRunner;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.logging.Logger;
+import consulo.module.content.PushedFilePropertiesUpdater;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.content.internal.ProjectRootManagerEx;
-import consulo.module.content.PushedFilePropertiesUpdater;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
+import consulo.ui.UIAccess;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.RefreshQueue;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.logging.Logger;
-import consulo.ui.UIAccess;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -59,7 +59,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     if (trackResponsiveness) snapshot.logResponsivenessSinceCreation("Pushing properties");
 
     indicator.setIndeterminate(true);
-    indicator.setText(IdeBundle.message("progress.indexing.scanning"));
+    indicator.setTextValue(IdeLocalize.progressIndexingScanning());
 
     myIndex.clearIndicesIfNecessary();
 
@@ -86,7 +86,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     if (trackResponsiveness) LOG.info("Unindexed files update started: " + files.size() + " files to update");
 
     indicator.setIndeterminate(false);
-    indicator.setText(IdeBundle.message("progress.indexing.updating"));
+    indicator.setTextValue(IdeLocalize.progressIndexingUpdating());
 
     indexFiles(indicator, files);
 

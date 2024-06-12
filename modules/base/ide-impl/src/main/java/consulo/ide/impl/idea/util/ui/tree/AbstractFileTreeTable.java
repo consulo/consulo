@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -70,8 +70,8 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
         if (userObject == null) {
           return getProjectNodeText();
         }
-        if (userObject instanceof VirtualFile) {
-          return ((VirtualFile)userObject).getName();
+        if (userObject instanceof VirtualFile virtualFile) {
+          return virtualFile.getName();
         }
         return node.toString();
       }
@@ -138,15 +138,14 @@ public abstract class AbstractFileTreeTable<T> extends TreeTable {
   }
 
   public static void press(final Container comboComponent) {
-    if (comboComponent instanceof JButton) {
-      final JButton button = (JButton)comboComponent;
+    if (comboComponent instanceof JButton button) {
       button.doClick();
     }
     else {
       for (int i = 0; i < comboComponent.getComponentCount(); i++) {
         Component child = comboComponent.getComponent(i);
-        if (child instanceof Container) {
-          press((Container)child);
+        if (child instanceof Container container) {
+          press(container);
         }
       }
     }

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.presentation.XRegularValuePresentation;
@@ -31,20 +31,28 @@ import jakarta.annotation.Nullable;
 
 public final class XValueNodePresentationConfigurator {
   public interface ConfigurableXValueNode {
-    void applyPresentation(@Nullable Image icon,
-                           @Nonnull XValuePresentation valuePresenter,
-                           boolean hasChildren);
+    void applyPresentation(@Nullable Image icon, @Nonnull XValuePresentation valuePresenter, boolean hasChildren);
   }
 
   public static abstract class ConfigurableXValueNodeImpl implements ConfigurableXValueNode, XValueNode {
     @Override
-    public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String value, boolean hasChildren) {
+    public void setPresentation(
+      @Nullable Image icon,
+      @NonNls @Nullable String type,
+      @NonNls @Nonnull String value,
+      boolean hasChildren
+    ) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, value, hasChildren, this);
     }
 
     @Override
-    public void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull String separator,
-                                @NonNls @Nullable String value, boolean hasChildren) {
+    public void setPresentation(
+      @Nullable Image icon,
+      @NonNls @Nullable String type,
+      @NonNls @Nonnull String separator,
+      @NonNls @Nullable String value,
+      boolean hasChildren
+    ) {
       XValueNodePresentationConfigurator.setPresentation(icon, type, separator, value, hasChildren, this);
     }
 
@@ -54,38 +62,64 @@ public final class XValueNodePresentationConfigurator {
     }
   }
 
-  public static void setPresentation(@Nullable Image icon, @Nonnull XValuePresentation presentation, boolean hasChildren,
-                                     ConfigurableXValueNode node) {
+  public static void setPresentation(
+    @Nullable Image icon,
+    @Nonnull XValuePresentation presentation,
+    boolean hasChildren,
+    ConfigurableXValueNode node
+  ) {
     doSetPresentation(icon, presentation, hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Image icon,
-                                     @NonNls @Nullable String type,
-                                     @NonNls @Nonnull String value,
-                                     boolean hasChildren,
-                                     ConfigurableXValueNode node) {
+  public static void setPresentation(
+    @Nullable Image icon,
+    @NonNls @Nullable String type,
+    @NonNls @Nonnull String value,
+    boolean hasChildren,
+    ConfigurableXValueNode node
+  ) {
     doSetPresentation(icon, new XRegularValuePresentation(value, type), hasChildren, node);
   }
 
-  public static void setPresentation(@Nullable Image icon, @NonNls @Nullable String type, @NonNls @Nonnull final String separator,
-                                     @NonNls @Nullable String value, boolean hasChildren, ConfigurableXValueNode node) {
-    doSetPresentation(icon, new XRegularValuePresentation(StringUtil.notNullize(value), type, separator), hasChildren, node);
+  public static void setPresentation(
+    @Nullable Image icon,
+    @NonNls @Nullable String type,
+    @NonNls @Nonnull final String separator,
+    @NonNls @Nullable String value,
+    boolean hasChildren,
+    ConfigurableXValueNode node
+  ) {
+    doSetPresentation(
+      icon,
+      new XRegularValuePresentation(StringUtil.notNullize(value), type, separator),
+      hasChildren,
+      node
+    );
   }
 
-  public static void setPresentation(@Nullable Image icon,
-                                     @NonNls @Nullable String type,
-                                     @NonNls @Nonnull String value,
-                                     @Nullable NotNullFunction<String, String> valuePresenter,
-                                     boolean hasChildren, ConfigurableXValueNode node) {
-    doSetPresentation(icon,
-                      valuePresenter == null ? new XRegularValuePresentation(value, type) : new XValuePresentationAdapter(value, type, valuePresenter),
-                      hasChildren, node);
+  public static void setPresentation(
+    @Nullable Image icon,
+    @NonNls @Nullable String type,
+    @NonNls @Nonnull String value,
+    @Nullable NotNullFunction<String, String> valuePresenter,
+    boolean hasChildren, ConfigurableXValueNode node
+  ) {
+    doSetPresentation(
+      icon,
+      valuePresenter == null
+        ? new XRegularValuePresentation(value, type)
+        : new XValuePresentationAdapter(value, type, valuePresenter),
+      hasChildren,
+      node
+    );
   }
 
-  private static void doSetPresentation(@Nullable final Image icon,
-                                        @Nonnull final XValuePresentation presentation,
-                                        final boolean hasChildren,
-                                        final ConfigurableXValueNode node) {
+  private static void doSetPresentation(
+    @Nullable final Image icon,
+    @Nonnull final XValuePresentation presentation,
+    final boolean hasChildren,
+    final ConfigurableXValueNode node
+  ) {
     if (DebuggerUIUtil.isObsolete(node)) {
       return;
     }
@@ -95,14 +129,9 @@ public final class XValueNodePresentationConfigurator {
       node.applyPresentation(icon, presentation, hasChildren);
     }
     else {
-      Runnable updater = new Runnable() {
-        @Override
-        public void run() {
-          node.applyPresentation(icon, presentation, hasChildren);
-        }
-      };
-      if (node instanceof XDebuggerTreeNode) {
-        ((XDebuggerTreeNode)node).invokeNodeUpdate(updater);
+      Runnable updater = () -> node.applyPresentation(icon, presentation, hasChildren);
+      if (node instanceof XDebuggerTreeNode xDebuggerTreeNode) {
+        xDebuggerTreeNode.invokeNodeUpdate(updater);
       }
       else {
         application.invokeLater(updater);

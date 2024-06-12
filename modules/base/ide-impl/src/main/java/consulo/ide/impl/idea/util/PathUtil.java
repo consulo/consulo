@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.application.PathManager;
 import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.Contract;

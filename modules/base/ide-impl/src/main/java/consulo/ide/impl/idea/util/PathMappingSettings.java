@@ -15,17 +15,17 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.platform.Platform;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import org.jdom.Element;
-import org.jetbrains.annotations.Contract;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jdom.Element;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +67,7 @@ public class PathMappingSettings extends AbstractPathMapper implements Cloneable
 
   @Nonnull
   private static String normLocal(@Nonnull String path) {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       path = path.toLowerCase();
     }
 

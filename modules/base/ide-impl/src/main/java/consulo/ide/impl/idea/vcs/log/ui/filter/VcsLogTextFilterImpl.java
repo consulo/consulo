@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.ui.filter;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogTextFilter;

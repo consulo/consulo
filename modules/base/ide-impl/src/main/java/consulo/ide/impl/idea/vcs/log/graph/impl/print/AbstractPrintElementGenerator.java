@@ -121,8 +121,8 @@ public abstract class AbstractPrintElementGenerator implements PrintElementGener
   @Nonnull
   @Override
   public PrintElementWithGraphElement withGraphElement(@Nonnull PrintElement printElement) {
-    if (printElement instanceof PrintElementWithGraphElement) {
-      return (PrintElementWithGraphElement)printElement;
+    if (printElement instanceof PrintElementWithGraphElement graphElement) {
+      return graphElement;
     }
 
     int rowIndex = printElement.getRowIndex();

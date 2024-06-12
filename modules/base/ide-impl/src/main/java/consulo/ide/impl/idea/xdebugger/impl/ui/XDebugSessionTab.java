@@ -15,36 +15,37 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
-import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
-import consulo.execution.impl.internal.ui.layout.ViewImpl;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ui.util.AppUIUtil;
-import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
-import consulo.execution.debug.XDebuggerActions;
-import consulo.ide.impl.idea.xdebugger.impl.frame.*;
-import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
-import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugTabLayouter;
+import consulo.execution.impl.internal.ui.layout.RunnerContentUi;
+import consulo.execution.impl.internal.ui.layout.ViewImpl;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.xdebugger.impl.XDebugSessionImpl;
+import consulo.ide.impl.idea.xdebugger.impl.frame.*;
+import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
@@ -54,9 +55,9 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.SystemProperties;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -177,7 +178,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
       if (XDebugSession.DATA_KEY == dataId) {
         return mySession;
       }
-      else if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
+      else if (ConsoleView.KEY == dataId) {
         return mySession.getConsoleView();
       }
     }
@@ -194,8 +195,13 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
       variablesView = new XVariablesView(session);
     }
     registerView(DebuggerContentInfo.VARIABLES_CONTENT, variablesView);
-    Content result =
-            myUi.createContent(DebuggerContentInfo.VARIABLES_CONTENT, variablesView.getPanel(), XDebuggerBundle.message("debugger.session.tab.variables.title"), AllIcons.Debugger.Value, null);
+    Content result = myUi.createContent(
+      DebuggerContentInfo.VARIABLES_CONTENT,
+      variablesView.getPanel(),
+      XDebuggerLocalize.debuggerSessionTabVariablesTitle().get(),
+      AllIcons.Debugger.Value,
+      null
+    );
     result.setCloseable(false);
 
     ActionGroup group = getCustomizedActionGroup(XDebuggerActions.VARIABLES_TREE_TOOLBAR_GROUP);
@@ -206,9 +212,13 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   private Content createWatchesContent(@Nonnull XDebugSessionImpl session) {
     myWatchesView = new XWatchesViewImpl(session, myWatchesInVariables);
     registerView(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView);
-    Content watchesContent =
-            myUi.createContent(DebuggerContentInfo.WATCHES_CONTENT, myWatchesView.getPanel(), XDebuggerBundle.message("debugger.session.tab.watches.title"),
-                               PlatformIconGroup.debuggerWatch(), null);
+    Content watchesContent = myUi.createContent(
+      DebuggerContentInfo.WATCHES_CONTENT,
+      myWatchesView.getPanel(),
+      XDebuggerLocalize.debuggerSessionTabWatchesTitle().get(),
+      PlatformIconGroup.debuggerWatch(),
+      null
+    );
     watchesContent.setCloseable(false);
     return watchesContent;
   }
@@ -217,8 +227,13 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
   private Content createFramesContent() {
     XFramesView framesView = new XFramesView(myProject);
     registerView(DebuggerContentInfo.FRAME_CONTENT, framesView);
-    Content framesContent =
-            myUi.createContent(DebuggerContentInfo.FRAME_CONTENT, framesView.getMainPanel(), XDebuggerBundle.message("debugger.session.tab.frames.title"), AllIcons.Debugger.Frame, null);
+    Content framesContent = myUi.createContent(
+      DebuggerContentInfo.FRAME_CONTENT,
+      framesView.getMainPanel(),
+      XDebuggerLocalize.debuggerSessionTabFramesTitle().get(),
+      AllIcons.Debugger.Frame,
+      null
+    );
     framesContent.setCloseable(false);
     return framesContent;
   }
@@ -275,7 +290,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
 
     leftToolbar.add(myUi.getOptions().getLayoutActions());
     final AnAction[] commonSettings = myUi.getOptions().getSettingsActionsList();
-    DefaultActionGroup settings = new DefaultActionGroup(ActionsBundle.message("group.XDebugger.settings.text"), true);
+    DefaultActionGroup settings = new DefaultActionGroup(ActionLocalize.groupXdebuggerSettingsText().get(), true);
     settings.getTemplatePresentation().setIcon(myUi.getOptions().getSettingsActions().getTemplatePresentation().getIcon());
     settings.addAll(commonSettings);
     leftToolbar.add(settings);
