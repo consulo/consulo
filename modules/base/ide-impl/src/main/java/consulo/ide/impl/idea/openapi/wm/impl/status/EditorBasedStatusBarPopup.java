@@ -48,6 +48,7 @@ import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -345,11 +346,12 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
      * Use myConnection.subscribe(DumbService.DUMB_MODE, your_listener) inside registerCustomListeners,
      * and call update() inside listener callbacks, to refresh your widget state when indexes are loaded
      */
+    @NonNls
     public static WidgetState getDumbModeState(@Nls String name, String widgetPrefix) {
       // todo: update accordingly to UX-252
       return new WidgetState(
         ActionUtil.getUnavailableMessage(name, false),
-        LocalizeValue.localizeTODO(widgetPrefix) + IdeLocalize.progressIndexingUpdating().get(),
+        widgetPrefix + IdeLocalize.progressIndexingUpdating().get(),
         false
       );
     }

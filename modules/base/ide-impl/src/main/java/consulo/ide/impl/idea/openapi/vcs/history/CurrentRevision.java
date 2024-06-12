@@ -35,7 +35,6 @@ import java.util.Date;
 
 public class CurrentRevision implements VcsFileRevision {
   private final VirtualFile myFile;
-  public static final String CURRENT = VcsLocalize.vcsRevisionNameCurrent().get();
   private final VcsRevisionNumber myRevisionNumber;
 
   public CurrentRevision(VirtualFile file, VcsRevisionNumber revision) {
@@ -45,7 +44,7 @@ public class CurrentRevision implements VcsFileRevision {
 
   @Override
   public String getCommitMessage() {
-    return "[" + CURRENT + "]";
+    return "[" + VcsLocalize.vcsRevisionNameCurrent() + "]";
   }
 
   @Override

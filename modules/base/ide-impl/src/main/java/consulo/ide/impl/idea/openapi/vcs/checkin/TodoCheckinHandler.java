@@ -117,7 +117,7 @@ public class TodoCheckinHandler extends CheckinHandler {
 
       private void setFilterText(String filterName) {
         if (filterName == null) {
-          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(IdeLocalize.actionTodoShowAll().get()).get());
+          checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck(IdeLocalize.actionTodoShowAll()).get());
         } else {
           checkBox.setText(VcsLocalize.beforeCheckinNewTodoCheck("Filter: " + filterName).get());
         }

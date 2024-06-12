@@ -78,10 +78,8 @@ public class IssueNavigationConfigurationPanel implements SearchableConfigurable
     panel.add(
       new JLabel(
         XmlStringUtil.wrapInHtml(
-          LocalizeValue.localizeTODO(
-            Application.get().getName() + " will search for the specified patterns in " +
-              "checkin comments and link them to issues in your issue tracker:"
-          ).get()
+          Application.get().getName() + " will search for the specified patterns in " +
+            "checkin comments and link them to issues in your issue tracker:"
         )
       ),
       BorderLayout.NORTH

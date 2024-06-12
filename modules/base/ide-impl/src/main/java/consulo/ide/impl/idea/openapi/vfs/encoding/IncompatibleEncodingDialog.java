@@ -122,7 +122,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
                     : EncodingUtil.reasonToString(error, virtualFile)
                 )
             ),
-            LocalizeValue.localizeTODO("Incompatible Encoding: " + charset.displayName()).get(),
+            "Incompatible Encoding: " + charset.displayName(),
             new String[]{"Convert anyway", "Cancel"},
             1,
             AllIcons.General.WarningDialog

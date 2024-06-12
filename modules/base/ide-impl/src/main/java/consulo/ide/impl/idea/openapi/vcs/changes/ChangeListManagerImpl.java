@@ -90,6 +90,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import jakarta.annotation.Nonnull;
@@ -172,12 +173,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     return (ChangeListManagerImpl)project.getInstance(ChangeListManager.class);
   }
 
-
   @Inject
-  public ChangeListManagerImpl(Project project,
-                               VcsConfiguration config,
-                               ApplicationConcurrency applicationConcurrency,
-                               EditorNotifications editorNotifications) {
+  public ChangeListManagerImpl(
+    Project project,
+    VcsConfiguration config,
+    ApplicationConcurrency applicationConcurrency,
+    EditorNotifications editorNotifications
+  ) {
     myProject = project;
     myConfig = config;
     myFreezeName = new AtomicReference<>(null);
@@ -241,6 +243,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
    *
    * @return true if the changelists have to be deleted, false if not.
    */
+  @NonNls
   private boolean showRemoveEmptyChangeListsProposal(@Nonnull final VcsConfiguration config, @Nonnull Collection<? extends LocalChangeList> lists) {
     if (lists.isEmpty()) {
       return false;
@@ -368,11 +371,13 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
   }
 
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate,
-                                final InvokeAfterUpdateMode mode,
-                                final String title,
-                                final java.util.function.Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                final ModalityState state) {
+  public void invokeAfterUpdate(
+    final Runnable afterUpdate,
+    final InvokeAfterUpdateMode mode,
+    final String title,
+    final java.util.function.Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
+    final ModalityState state
+  ) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, dirtyScopeManagerFiller, state);
   }
 
@@ -1228,22 +1233,28 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
 
     if (moveRequired || syncUpdateRequired) {
       // find the changes for the added files and move them to the necessary changelist
-      InvokeAfterUpdateMode updateMode = syncUpdateRequired ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE;
+      InvokeAfterUpdateMode updateMode = syncUpdateRequired
+        ? InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE : InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE;
 
-      invokeAfterUpdate(() -> {
-        ApplicationManager.getApplication().runReadAction(() -> {
-          synchronized (myDataLock) {
-            List<Change> newChanges = findChanges(allProcessedFiles);
-            foundChanges.set(newChanges);
+      invokeAfterUpdate(
+        () -> {
+          ApplicationManager.getApplication().runReadAction(() -> {
+            synchronized (myDataLock) {
+              List<Change> newChanges = findChanges(allProcessedFiles);
+              foundChanges.set(newChanges);
 
-            if (moveRequired && !newChanges.isEmpty()) {
-              moveChangesTo(list, newChanges.toArray(new Change[newChanges.size()]));
+              if (moveRequired && !newChanges.isEmpty()) {
+                moveChangesTo(list, newChanges.toArray(new Change[newChanges.size()]));
+              }
             }
-          }
-        });
+          });
 
-        myChangesViewManager.scheduleRefresh();
-      }, updateMode, VcsLocalize.changeListsManagerAddUnversioned().get(), null);
+          myChangesViewManager.scheduleRefresh();
+        },
+        updateMode,
+        VcsLocalize.changeListsManagerAddUnversioned().get(),
+        null
+      );
 
       if (changesConsumer != null) {
         changesConsumer.accept(foundChanges.get());
