@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
@@ -43,7 +44,7 @@ import java.util.Collection;
  */
 public class ExtractArtifactAction extends LayoutTreeActionBase {
   public ExtractArtifactAction(ArtifactEditorEx editor) {
-    super(ProjectBundle.message("action.name.extract.artifact"), editor);
+    super(ProjectLocalize.actionNameExtractArtifact().get(), editor);
   }
 
   @Override

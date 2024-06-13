@@ -24,7 +24,7 @@ import consulo.fileEditor.text.TextEditorState;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.fileEditor.text.TextEditorProvider;

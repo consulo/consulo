@@ -27,10 +27,9 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
-import consulo.externalSystem.ExternalSystemBundle;
 import consulo.externalSystem.ExternalSystemManager;
+import consulo.externalSystem.localize.ExternalSystemLocalize;
 import consulo.externalSystem.model.DataNode;
-import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.model.ProjectKeys;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
@@ -40,8 +39,11 @@ import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.externalSystem.model.task.TaskCallback;
+import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.execution.AbstractExternalSystemTaskConfigurationType;
+import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.externalSystem.service.project.ProjectData;
+import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.externalSystem.setting.AbstractExternalSystemSettings;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.externalSystem.ui.awt.ExternalSystemUiUtil;
@@ -55,17 +57,15 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.ImportCanceledExcept
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemResolveProjectTask;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
-import consulo.externalSystem.service.notification.NotificationSource;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectStructureHelper;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager;
-import consulo.externalSystem.service.setting.ExternalSystemConfigLocator;
 import consulo.ide.impl.idea.openapi.roots.impl.libraries.ProjectLibraryTableImpl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -78,13 +78,14 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -276,9 +277,12 @@ public class ExternalSystemUtil {
       public void run() {
 
         final JPanel content = new JPanel(new GridBagLayout());
-        content.add(new JLabel(ExternalSystemBundle.message("orphan.modules.text", externalSystemId.getReadableName())), ExternalSystemUiUtil.getFillLineConstraints(0));
+        content.add(
+          new JLabel(ExternalSystemLocalize.orphanModulesText(externalSystemId.getReadableName()).get()),
+          ExternalSystemUiUtil.getFillLineConstraints(0)
+        );
 
-        final CheckBoxList<Module> orphanModulesList = new CheckBoxList<Module>();
+        final CheckBoxList<Module> orphanModulesList = new CheckBoxList<>();
         orphanModulesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         orphanModulesList.setItems(orphanModules, module -> module.getName());
         for (Module module : orphanModules) {
@@ -291,7 +295,7 @@ public class ExternalSystemUtil {
         DialogWrapper dialog = new DialogWrapper(project) {
 
           {
-            setTitle(ExternalSystemBundle.message("import.title", externalSystemId.getReadableName()));
+            setTitle(ExternalSystemLocalize.importTitle(externalSystemId.getReadableName()));
             init();
           }
 
@@ -328,8 +332,8 @@ public class ExternalSystemUtil {
   @Nullable
   private static String extractDetails(@Nonnull Throwable e) {
     final Throwable unwrapped = RemoteUtil.unwrap(e);
-    if (unwrapped instanceof ExternalSystemException) {
-      return ((ExternalSystemException)unwrapped).getOriginalReason();
+    if (unwrapped instanceof ExternalSystemException externalSystemException) {
+      return externalSystemException.getOriginalReason();
     }
     return null;
   }
@@ -389,7 +393,7 @@ public class ExternalSystemUtil {
 
         ExternalSystemProcessingManager processingManager = ServiceManager.getService(ExternalSystemProcessingManager.class);
         if (processingManager.findTask(ExternalSystemTaskType.RESOLVE_PROJECT, externalSystemId, externalProjectPath) != null) {
-          callback.onFailure(ExternalSystemBundle.message("error.resolve.already.running", externalProjectPath), null);
+          callback.onFailure(ExternalSystemLocalize.errorResolveAlreadyRunning(externalProjectPath).get(), null);
           return;
         }
 
@@ -455,38 +459,35 @@ public class ExternalSystemUtil {
       }
     };
 
-    UIUtil.invokeAndWaitIfNeeded(new Runnable() {
-      @Override
-      public void run() {
-        final String title;
-        switch (progressExecutionMode) {
-          case MODAL_SYNC:
-            title = ExternalSystemBundle.message("progress.import.text", projectName, externalSystemId.getReadableName());
-            new Task.Modal(project, title, true) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                refreshProjectStructureTask.execute(indicator);
-              }
-            }.queue();
-            break;
-          case IN_BACKGROUND_ASYNC:
-            title = ExternalSystemBundle.message("progress.refresh.text", projectName, externalSystemId.getReadableName());
-            new Task.Backgroundable(project, title) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                refreshProjectStructureTask.execute(indicator);
-              }
-            }.queue();
-            break;
-          case START_IN_FOREGROUND_ASYNC:
-            title = ExternalSystemBundle.message("progress.refresh.text", projectName, externalSystemId.getReadableName());
-            new Task.Backgroundable(project, title, true, PerformInBackgroundOption.DEAF) {
-              @Override
-              public void run(@Nonnull ProgressIndicator indicator) {
-                refreshProjectStructureTask.execute(indicator);
-              }
-            }.queue();
-        }
+    UIUtil.invokeAndWaitIfNeeded((Runnable) () -> {
+      final LocalizeValue title;
+      switch (progressExecutionMode) {
+        case MODAL_SYNC:
+          title = ExternalSystemLocalize.progressImportText(projectName, externalSystemId.getReadableName());
+          new Task.Modal(project, title.get(), true) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+              refreshProjectStructureTask.execute(indicator);
+            }
+          }.queue();
+          break;
+        case IN_BACKGROUND_ASYNC:
+          title = ExternalSystemLocalize.progressRefreshText(projectName, externalSystemId.getReadableName());
+          new Task.Backgroundable(project, title.get()) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+              refreshProjectStructureTask.execute(indicator);
+            }
+          }.queue();
+          break;
+        case START_IN_FOREGROUND_ASYNC:
+          title = ExternalSystemLocalize.progressRefreshText(projectName, externalSystemId.getReadableName());
+          new Task.Backgroundable(project, title.get(), true, PerformInBackgroundOption.DEAF) {
+            @Override
+            public void run(@Nonnull ProgressIndicator indicator) {
+              refreshProjectStructureTask.execute(indicator);
+            }
+          }.queue();
       }
     });
   }
@@ -495,21 +496,24 @@ public class ExternalSystemUtil {
     runTask(taskSettings, executorId, project, externalSystemId, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
   }
 
-  public static void runTask(@Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
-                             @Nonnull final String executorId,
-                             @Nonnull final Project project,
-                             @Nonnull final ProjectSystemId externalSystemId,
-                             @Nullable final TaskCallback callback,
-                             @Nonnull final ProgressExecutionMode progressExecutionMode) {
+  public static void runTask(
+    @Nonnull final ExternalSystemTaskExecutionSettings taskSettings,
+    @Nonnull final String executorId,
+    @Nonnull final Project project,
+    @Nonnull final ProjectSystemId externalSystemId,
+    @Nullable final TaskCallback callback,
+    @Nonnull final ProgressExecutionMode progressExecutionMode
+  ) {
     ExternalSystemApiUtil.runTask(taskSettings, executorId, project, externalSystemId, callback, progressExecutionMode);
   }
 
   @Nullable
-  public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(@Nonnull ExternalSystemTaskExecutionSettings taskSettings,
-                                                                       @Nonnull String executorId,
-                                                                       @Nonnull Project project,
-                                                                       @Nonnull ProjectSystemId externalSystemId) {
-
+  public static Pair<ProgramRunner, ExecutionEnvironment> createRunner(
+    @Nonnull ExternalSystemTaskExecutionSettings taskSettings,
+    @Nonnull String executorId,
+    @Nonnull Project project,
+    @Nonnull ProjectSystemId externalSystemId
+  ) {
     return ExternalSystemApiUtil.createRunner(taskSettings, executorId, project, externalSystemId);
   }
 
@@ -606,12 +610,14 @@ public class ExternalSystemUtil {
    * @param progressExecutionMode   identifies how progress bar will be represented for the current processing
    */
   @SuppressWarnings("UnusedDeclaration")
-  public static void linkExternalProject(@Nonnull final ProjectSystemId externalSystemId,
-                                         @Nonnull final ExternalProjectSettings projectSettings,
-                                         @Nonnull final Project project,
-                                         @Nullable final Consumer<Boolean> executionResultCallback,
-                                         boolean isPreviewMode,
-                                         @Nonnull final ProgressExecutionMode progressExecutionMode) {
+  public static void linkExternalProject(
+    @Nonnull final ProjectSystemId externalSystemId,
+    @Nonnull final ExternalProjectSettings projectSettings,
+    @Nonnull final Project project,
+    @Nullable final Consumer<Boolean> executionResultCallback,
+    boolean isPreviewMode,
+    @Nonnull final ProgressExecutionMode progressExecutionMode
+  ) {
     ExternalProjectRefreshCallback callback = new ExternalProjectRefreshCallback() {
       @SuppressWarnings("unchecked")
       @Override

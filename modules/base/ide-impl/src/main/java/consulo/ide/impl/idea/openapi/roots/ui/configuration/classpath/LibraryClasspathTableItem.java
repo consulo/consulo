@@ -23,15 +23,15 @@ import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.module.*;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
-
+import consulo.project.localize.ProjectLocalize;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -76,9 +76,9 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
 
     final String name = library.getName();
     if (name != null) {
-      final List<String> invalidUrls = ((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance());
+      final List<String> invalidUrls = library.getInvalidRootUrls(BinariesOrderRootType.getInstance());
       if (!invalidUrls.isEmpty()) {
-        return ProjectBundle.message("project.roots.tooltip.library.has.broken.paths", name, invalidUrls.size());
+        return ProjectLocalize.projectRootsTooltipLibraryHasBrokenPaths(name, invalidUrls.size()).get();
       }
     }
 

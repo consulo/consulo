@@ -21,7 +21,7 @@ import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 
@@ -36,12 +36,14 @@ public class EditExistingLibraryDialog extends LibraryEditorDialogBase {
   private boolean myCommitChanges;
   private LibraryTable.ModifiableModel myTableModifiableModel;
 
-  public static EditExistingLibraryDialog createDialog(Component parent,
-                                                       LibraryTableModifiableModelProvider modelProvider,
-                                                       Library library,
-                                                       @Nullable Project project,
-                                                       LibraryTablePresentation presentation,
-                                                       LibrariesConfigurator librariesConfigurator) {
+  public static EditExistingLibraryDialog createDialog(
+    Component parent,
+    LibraryTableModifiableModelProvider modelProvider,
+    Library library,
+    @Nullable Project project,
+    LibraryTablePresentation presentation,
+    LibrariesConfigurator librariesConfigurator
+  ) {
     LibraryTable.ModifiableModel modifiableModel = modelProvider.getModifiableModel();
     boolean commitChanges = false;
     ExistingLibraryEditor libraryEditor;
@@ -52,16 +54,26 @@ public class EditExistingLibraryDialog extends LibraryEditorDialogBase {
       libraryEditor = new ExistingLibraryEditor(library, librariesConfigurator);
       commitChanges = true;
     }
-    return new EditExistingLibraryDialog(parent, modifiableModel, project, libraryEditor, commitChanges, presentation, librariesConfigurator);
+    return new EditExistingLibraryDialog(
+      parent,
+      modifiableModel,
+      project,
+      libraryEditor,
+      commitChanges,
+      presentation,
+      librariesConfigurator
+    );
   }
 
-  private EditExistingLibraryDialog(Component parent,
-                                    LibraryTable.ModifiableModel tableModifiableModel,
-                                    @Nullable Project project,
-                                    ExistingLibraryEditor libraryEditor,
-                                    boolean commitChanges,
-                                    LibraryTablePresentation presentation,
-                                    LibrariesConfigurator librariesConfigurator) {
+  private EditExistingLibraryDialog(
+    Component parent,
+    LibraryTable.ModifiableModel tableModifiableModel,
+    @Nullable Project project,
+    ExistingLibraryEditor libraryEditor,
+    boolean commitChanges,
+    LibraryTablePresentation presentation,
+    LibrariesConfigurator librariesConfigurator
+  ) {
     super(parent, new LibraryRootsComponent(project, libraryEditor));
     setTitle("Configure " + presentation.getDisplayName(false));
     myTableModifiableModel = tableModifiableModel;

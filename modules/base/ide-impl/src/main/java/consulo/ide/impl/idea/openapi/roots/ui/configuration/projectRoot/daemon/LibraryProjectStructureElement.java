@@ -15,36 +15,37 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import consulo.dataContext.DataContext;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.setting.Settings;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.OrderRootType;
-import consulo.content.internal.LibraryEx;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.base.DocumentationOrderRootType;
+import consulo.content.base.SourcesOrderRootType;
 import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.ExistingLibraryEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibraryConfigurable;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.content.base.DocumentationOrderRootType;
-import consulo.content.base.SourcesOrderRootType;
+import consulo.ide.setting.Settings;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
 import consulo.util.concurrent.AsyncResult;
-
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import jakarta.annotation.Nonnull;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -85,22 +86,32 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
   }
 
-  private void reportInvalidRoots(Project project,
-                                  ProjectStructureProblemsHolder problemsHolder,
-                                  LibraryEx library,
-                                  final OrderRootType type,
-                                  String rootName,
-                                  final ProjectStructureProblemType problemType) {
+  private void reportInvalidRoots(
+    Project project,
+    ProjectStructureProblemsHolder problemsHolder,
+    LibraryEx library,
+    final OrderRootType type,
+    String rootName,
+    final ProjectStructureProblemType problemType
+  ) {
     final List<String> invalidUrls = library.getInvalidRootUrls(type);
     if (!invalidUrls.isEmpty()) {
       final String description = createInvalidRootsDescription(invalidUrls, rootName, library.getName());
       final PlaceInProjectStructure place = createPlace();
-      final String message = ProjectBundle.message("project.roots.error.message.invalid.roots", rootName, invalidUrls.size());
-      ProjectStructureProblemDescription.ProblemLevel level = library.getTable().getTableLevel().equals(LibraryTablesRegistrar.PROJECT_LEVEL)
-                                                              ? ProjectStructureProblemDescription.ProblemLevel.PROJECT
-                                                              : ProjectStructureProblemDescription.ProblemLevel.GLOBAL;
-      problemsHolder.registerProblem(
-              new ProjectStructureProblemDescription(message, description, place, problemType, level, List.of(new RemoveInvalidRootsQuickFix(project, library, type, invalidUrls)), true));
+      final LocalizeValue message = ProjectLocalize.projectRootsErrorMessageInvalidRoots(rootName, invalidUrls.size());
+      ProjectStructureProblemDescription.ProblemLevel level =
+        library.getTable().getTableLevel().equals(LibraryTablesRegistrar.PROJECT_LEVEL)
+          ? ProjectStructureProblemDescription.ProblemLevel.PROJECT
+          : ProjectStructureProblemDescription.ProblemLevel.GLOBAL;
+      problemsHolder.registerProblem(new ProjectStructureProblemDescription(
+        message.get(),
+        description,
+        place,
+        problemType,
+        level,
+        List.of(new RemoveInvalidRootsQuickFix(project, library, type, invalidUrls)),
+        true
+      ));
     }
   }
 

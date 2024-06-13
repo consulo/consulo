@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.paths;
 
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.ElementManipulator;
 import consulo.language.psi.PsiElement;

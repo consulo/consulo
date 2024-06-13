@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
@@ -68,7 +67,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
       return;
     }
 
-    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getData(CommonDataKeys.PROJECT)).getCompositeElementTypes();
+    final CompositePackagingElementType<?>[] types = PackagingElementFactory.getInstance(e.getData(Project.KEY)).getCompositeElementTypes();
     final List<PackagingElement<?>> selected = selection.getElements();
     if (types.length == 1) {
       surroundWith(types[0], parent, selected, treeComponent);
@@ -88,12 +87,7 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
 
         @Override
         public PopupStep onChosen(final CompositePackagingElementType selectedValue, boolean finalChoice) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              surroundWith(selectedValue, parent, selected, treeComponent);
-            }
-          });
+          ApplicationManager.getApplication().invokeLater(() -> surroundWith(selectedValue, parent, selected, treeComponent));
           return FINAL_CHOICE;
         }
       }).showInBestPositionFor(e.getDataContext());
@@ -109,17 +103,14 @@ public class SurroundElementWithAction extends LayoutTreeActionBase {
     final String baseName = PathUtil.suggestFileName(elementName);
     final CompositePackagingElement<?> newParent = type.createComposite(parent, baseName, myArtifactEditor.getContext());
     if (newParent != null) {
-      treeComponent.editLayout(new Runnable() {
-        @Override
-        public void run() {
-          for (PackagingElement<?> element : selected) {
-            newParent.addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
-          }
-          for (PackagingElement<?> element : selected) {
-            parent.removeChild(element);
-          }
-          parent.addOrFindChild(newParent);
+      treeComponent.editLayout(() -> {
+        for (PackagingElement<?> element : selected) {
+          newParent.addOrFindChild(ArtifactUtil.copyWithChildren(element, project));
         }
+        for (PackagingElement<?> element : selected) {
+          parent.removeChild(element);
+        }
+        parent.addOrFindChild(newParent);
       });
       treeComponent.rebuildTree();
     }

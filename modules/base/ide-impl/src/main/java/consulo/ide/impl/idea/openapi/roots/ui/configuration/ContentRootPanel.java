@@ -18,32 +18,32 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import consulo.application.util.SystemInfo;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
 import consulo.ide.impl.idea.ui.roots.FilePathClipper;
 import consulo.ide.impl.idea.ui.roots.IconActionComponent;
 import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
+import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.io.File;
 import java.util.Collection;
@@ -121,7 +121,7 @@ public abstract class ContentRootPanel extends JPanel {
 
   protected void addFolderGroupComponents() {
     final ContentFolder[] contentFolders = getContentEntry().getFolders(LanguageContentFolderScopes.all());
-    MultiMap<ContentFolderTypeProvider, ContentFolder> folderByType = new MultiMap<ContentFolderTypeProvider, ContentFolder>();
+    MultiMap<ContentFolderTypeProvider, ContentFolder> folderByType = new MultiMap<>();
     for (ContentFolder folder : contentFolders) {
       if (folder.isSynthetic()) {
         continue;
@@ -134,17 +134,19 @@ public abstract class ContentRootPanel extends JPanel {
     }
 
     Insets insets = new Insets(0, 0, 10, 0);
-    GridBagConstraints constraints = new GridBagConstraints(0,
-                                                            GridBagConstraints.RELATIVE,
-                                                            1,
-                                                            1,
-                                                            1.0,
-                                                            0.0,
-                                                            GridBagConstraints.NORTH,
-                                                            GridBagConstraints.HORIZONTAL,
-                                                            insets,
-                                                            0,
-                                                            0);
+    GridBagConstraints constraints = new GridBagConstraints(
+      0,
+      GridBagConstraints.RELATIVE,
+      1,
+      1,
+      1.0,
+      0.0,
+      GridBagConstraints.NORTH,
+      GridBagConstraints.HORIZONTAL,
+      insets,
+      0,
+      0
+    );
     for (Map.Entry<ContentFolderTypeProvider, Collection<ContentFolder>> entry : folderByType.entrySet()) {
       Collection<ContentFolder> folders = entry.getValue();
       if (folders.isEmpty()) continue;
@@ -152,10 +154,12 @@ public abstract class ContentRootPanel extends JPanel {
       ContentFolderTypeProvider contentFolderTypeProvider = entry.getKey();
 
       ContentFolder[] foldersArray = folders.toArray(new ContentFolder[folders.size()]);
-      final JComponent sourcesComponent = createFolderGroupComponent(contentFolderTypeProvider.getName(),
-                                                                     foldersArray,
-                                                                     TargetAWT.to(contentFolderTypeProvider.getGroupColor()),
-                                                                     contentFolderTypeProvider);
+      final JComponent sourcesComponent = createFolderGroupComponent(
+        contentFolderTypeProvider.getName(),
+        foldersArray,
+        TargetAWT.to(contentFolderTypeProvider.getGroupColor()),
+        contentFolderTypeProvider
+      );
       add(sourcesComponent, constraints);
     }
   }
@@ -168,88 +172,111 @@ public abstract class ContentRootPanel extends JPanel {
     if (getContentEntry().getFile() == null) {
       headerLabel.setForeground(Color.RED);
     }
-    final IconActionComponent deleteIconComponent =
-      new IconActionComponent(PlatformIconGroup.actionsClose(),
-                              PlatformIconGroup.actionsClosehovered(),
-                              ProjectBundle.message("module.paths.remove.content.tooltip"),
-                              myCallback::deleteContentEntry);
+    final IconActionComponent deleteIconComponent = new IconActionComponent(
+      PlatformIconGroup.actionsClose(),
+      PlatformIconGroup.actionsClosehovered(),
+      ProjectLocalize.modulePathsRemoveContentTooltip().get(),
+      myCallback::deleteContentEntry
+    );
     final ResizingWrapper wrapper = new ResizingWrapper(headerLabel);
-    panel.add(wrapper,
-              new GridBagConstraints(0,
-                                     GridBagConstraints.RELATIVE,
-                                     1,
-                                     1,
-                                     1.0,
-                                     1.0,
-                                     GridBagConstraints.NORTHWEST,
-                                     GridBagConstraints.HORIZONTAL,
-                                     new Insets(0, 2, 0, 0),
-                                     0,
-                                     0));
-    panel.add(deleteIconComponent,
-              new GridBagConstraints(1,
-                                     GridBagConstraints.RELATIVE,
-                                     1,
-                                     1,
-                                     0.0,
-                                     1.0,
-                                     GridBagConstraints.EAST,
-                                     GridBagConstraints.NONE,
-                                     new Insets(0, 0, 0, 2),
-                                     0,
-                                     0));
+    panel.add(
+      wrapper,
+      new GridBagConstraints(
+        0,
+        GridBagConstraints.RELATIVE,
+        1,
+        1,
+        1.0,
+        1.0,
+        GridBagConstraints.NORTHWEST,
+        GridBagConstraints.HORIZONTAL,
+        new Insets(0, 2, 0, 0),
+        0,
+        0
+      )
+    );
+    panel.add(
+      deleteIconComponent,
+      new GridBagConstraints(
+        1,
+        GridBagConstraints.RELATIVE,
+        1,
+        1,
+        0.0,
+        1.0,
+        GridBagConstraints.EAST,
+        GridBagConstraints.NONE,
+        new Insets(0, 0, 0, 2),
+        0,
+        0
+      )
+    );
     FilePathClipper.install(headerLabel, wrapper);
     return panel;
   }
 
-  protected JComponent createFolderGroupComponent(String title,
-                                                  ContentFolder[] folders,
-                                                  Color foregroundColor,
-                                                  @Nonnull ContentFolderTypeProvider editor) {
+  protected JComponent createFolderGroupComponent(
+    String title,
+    ContentFolder[] folders,
+    Color foregroundColor,
+    @Nonnull ContentFolderTypeProvider editor
+  ) {
     final JPanel panel = new JPanel(new GridLayoutManager(folders.length, 3, new Insets(1, 17, 0, 2), 0, 1));
     panel.setOpaque(false);
 
     for (int idx = 0; idx < folders.length; idx++) {
       final ContentFolder folder = folders[idx];
       final int verticalPolicy = idx == folders.length - 1 ? GridConstraints.SIZEPOLICY_CAN_GROW : GridConstraints.SIZEPOLICY_FIXED;
-      panel.add(createFolderComponent(folder, foregroundColor),
-                new GridConstraints(idx,
-                                    0,
-                                    1,
-                                    1,
-                                    GridConstraints.ANCHOR_NORTHWEST,
-                                    GridConstraints.FILL_HORIZONTAL,
-                                    GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK,
-                                    verticalPolicy,
-                                    null,
-                                    null,
-                                    null));
+      panel.add(
+        createFolderComponent(folder, foregroundColor),
+        new GridConstraints(
+          idx,
+          0,
+          1,
+          1,
+          GridConstraints.ANCHOR_NORTHWEST,
+          GridConstraints.FILL_HORIZONTAL,
+          GridConstraints.SIZEPOLICY_CAN_GROW | GridConstraints.SIZEPOLICY_CAN_SHRINK,
+          verticalPolicy,
+          null,
+          null,
+          null
+        )
+      );
 
-      panel.add(createFolderChangeOptionsComponent(folder, editor),
-                new GridConstraints(idx,
-                                    1,
-                                    1,
-                                    1,
-                                    GridConstraints.ANCHOR_CENTER,
-                                    GridConstraints.FILL_NONE,
-                                    GridConstraints.SIZEPOLICY_FIXED,
-                                    verticalPolicy,
-                                    null,
-                                    null,
-                                    null));
+      panel.add(
+        createFolderChangeOptionsComponent(folder, editor),
+        new GridConstraints(
+          idx,
+          1,
+          1,
+          1,
+          GridConstraints.ANCHOR_CENTER,
+          GridConstraints.FILL_NONE,
+          GridConstraints.SIZEPOLICY_FIXED,
+          verticalPolicy,
+          null,
+          null,
+          null
+        )
+      );
 
-      panel.add(createFolderDeleteComponent(folder, editor),
-                new GridConstraints(idx,
-                                    2,
-                                    1,
-                                    1,
-                                    GridConstraints.ANCHOR_EAST,
-                                    GridConstraints.FILL_NONE,
-                                    GridConstraints.SIZEPOLICY_FIXED,
-                                    verticalPolicy,
-                                    null,
-                                    null,
-                                    null));
+      panel.add(
+        createFolderDeleteComponent(folder, editor),
+        new GridConstraints(
+          idx,
+          2,
+          1,
+          1,
+          GridConstraints.ANCHOR_EAST,
+          GridConstraints.FILL_NONE,
+          GridConstraints.SIZEPOLICY_FIXED,
+          verticalPolicy,
+          null,
+          null,
+          null
+        )
+      );
     }
 
     final JLabel titleLabel = new JLabel(title);
@@ -281,12 +308,7 @@ public abstract class ContentRootPanel extends JPanel {
         folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
       HoverHyperlinkLabel hyperlinkLabel = new HoverHyperlinkLabel(path + properties, foreground);
       hyperlinkLabel.setMinimumSize(new Dimension(0, 0));
-      hyperlinkLabel.addHyperlinkListener(new HyperlinkListener() {
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent e) {
-          myCallback.navigateFolder(getContentEntry(), folder);
-        }
-      });
+      hyperlinkLabel.addHyperlinkListener(e -> myCallback.navigateFolder(getContentEntry(), folder));
       registerTextComponent(hyperlinkLabel, foreground);
       return new UnderlinedPathLabel(hyperlinkLabel);
     }
@@ -300,24 +322,32 @@ public abstract class ContentRootPanel extends JPanel {
     }
   }
 
-  private JComponent createFolderChangeOptionsComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-    return new IconActionComponent(PlatformIconGroup.generalInline_edit(),
-                                   PlatformIconGroup.generalInline_edit_hovered(), ProjectBundle.message("module.paths.properties.tooltip"),
-                                   () -> myCallback.showChangeOptionsDialog(getContentEntry(), folder));
+  private JComponent createFolderChangeOptionsComponent(
+    final ContentFolder folder,
+    @Nonnull ContentFolderTypeProvider editor
+  ) {
+    return new IconActionComponent(
+      PlatformIconGroup.generalInline_edit(),
+      PlatformIconGroup.generalInline_edit_hovered(),
+      ProjectLocalize.modulePathsPropertiesTooltip().get(),
+      () -> myCallback.showChangeOptionsDialog(getContentEntry(), folder)
+    );
   }
 
   private JComponent createFolderDeleteComponent(final ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
-    final String tooltipText;
+    final LocalizeValue tooltipText;
     if (folder.getFile() != null && getContentEntry().getFile() != null) {
-      tooltipText = ProjectBundle.message("module.paths.unmark.0.tooltip", editor.getName());
+      tooltipText = ProjectLocalize.modulePathsUnmark0Tooltip(editor.getName());
     }
     else {
-      tooltipText = ProjectBundle.message("module.paths.remove.tooltip");
+      tooltipText = ProjectLocalize.modulePathsRemoveTooltip();
     }
-    return new IconActionComponent(PlatformIconGroup.actionsClose(),
-                                   PlatformIconGroup.actionsClosehovered(),
-                                   tooltipText,
-                                   () -> myCallback.deleteContentFolder(getContentEntry(), folder));
+    return new IconActionComponent(
+      PlatformIconGroup.actionsClose(),
+      PlatformIconGroup.actionsClosehovered(),
+      tooltipText.get(),
+      () -> myCallback.deleteContentFolder(getContentEntry(), folder)
+    );
   }
 
   public boolean isExcludedOrUnderExcludedDirectory(final VirtualFile file) {
@@ -348,8 +378,8 @@ public abstract class ContentRootPanel extends JPanel {
   public void setSelected(boolean selected) {
     if (selected) {
       myHeader.setBackground(SELECTED_HEADER_COLOR);
-      setBackground(UIUtil.isUnderDarcula() ? UIUtil.getPanelBackground() : SELECTED_CONTENT_COLOR);
-      myBottom.setBackground(UIUtil.isUnderDarcula() ? UIUtil.getPanelBackground() : SELECTED_HEADER_COLOR);
+      setBackground(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getPanelBackground() : SELECTED_CONTENT_COLOR);
+      myBottom.setBackground(StyleManager.get().getCurrentStyle().isDark() ? UIUtil.getPanelBackground() : SELECTED_HEADER_COLOR);
       for (final JComponent component : myComponentToForegroundMap.keySet()) {
         component.setForeground(myComponentToForegroundMap.get(component));
       }
@@ -399,11 +429,11 @@ public abstract class ContentRootPanel extends JPanel {
       }
       */
       final Stroke saved = g.getStroke();
-      if (!SystemInfo.isMac && !UIUtil.isUnderDarcula()) {
+      if (!Platform.current().os().isMac() && !StyleManager.get().getCurrentStyle().isDark()) {
         g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, DASH, y1 % 2));
       }
 
-      if (UIUtil.isUnderDarcula()) {
+      if (StyleManager.get().getCurrentStyle().isDark()) {
         UIUtil.drawDottedLine(g, x1, y1, x2, y2, null, g.getColor());
       }
       else {
@@ -413,5 +443,4 @@ public abstract class ContentRootPanel extends JPanel {
       g.setStroke(saved);
     }
   }
-
 }

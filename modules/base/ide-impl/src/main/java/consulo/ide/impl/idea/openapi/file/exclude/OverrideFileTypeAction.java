@@ -1,20 +1,20 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.file.exclude;
 
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
@@ -30,9 +30,11 @@ public class OverrideFileTypeAction extends AnAction {
     VirtualFile[] files = getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) == null);
     boolean enabled = files.length != 0;
     Presentation presentation = e.getPresentation();
-    presentation.setDescription(enabled
-                                ? ActionsBundle.message("action.OverrideFileTypeAction.verbose.description", files[0].getName(), files.length - 1)
-                                : ActionsBundle.message("action.OverrideFileTypeAction.description"));
+    presentation.setDescriptionValue(
+      enabled
+        ? ActionLocalize.actionOverridefiletypeactionVerboseDescription(files[0].getName(), files.length - 1)
+        : ActionLocalize.actionOverridefiletypeactionDescription()
+    );
     presentation.setEnabledAndVisible(enabled);
   }
 
@@ -54,20 +56,26 @@ public class OverrideFileTypeAction extends AnAction {
                   ? null
                   : " (" +
                     (descriptor.isBundled()
-                     ? ActionsBundle.message("group.OverrideFileTypeAction.bundledPlugin")
-                     : ActionsBundle.message("group.OverrideFileTypeAction.fromNamedPlugin", descriptor.getName())) +
+                     ? ActionLocalize.groupOverridefiletypeactionBundledplugin()
+                     : ActionLocalize.groupOverridefiletypeactionFromnamedplugin(descriptor.getName())) +
                     ")";
       }
       String displayText = type.getDisplayName() + StringUtil.notNullize(dupHint);
       group.add(new ChangeToThisFileTypeAction(displayText, files, type));
     }
-    JBPopupFactory.getInstance().createActionGroupPopup(ActionsBundle.message("group.OverrideFileTypeAction.title"), group, e.getDataContext(), false, null, -1)
-            .showInBestPositionFor(e.getDataContext());
+    JBPopupFactory.getInstance().createActionGroupPopup(
+      ActionLocalize.groupOverridefiletypeactionTitle().get(),
+      group,
+      e.getDataContext(),
+      false,
+      null,
+      -1
+    ).showInBestPositionFor(e.getDataContext());
   }
 
   @Nonnull
   static VirtualFile[] getContextFiles(@Nonnull AnActionEvent e, @Nonnull Predicate<? super VirtualFile> additionalPredicate) {
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files == null) return VirtualFile.EMPTY_ARRAY;
     return Arrays.stream(files).filter(file -> file != null && !file.isDirectory()).filter(additionalPredicate).toArray(count -> VirtualFile.ARRAY_FACTORY.create(count));
   }
@@ -79,7 +87,11 @@ public class OverrideFileTypeAction extends AnAction {
     private final FileType myType;
 
     ChangeToThisFileTypeAction(@Nonnull String displayText, @Nonnull VirtualFile[] files, @Nonnull FileType type) {
-      super(displayText, ActionsBundle.message("action.ChangeToThisFileTypeAction.description", type.getDescription().get()), type.getIcon());
+      super(
+        displayText,
+        ActionLocalize.actionChangetothisfiletypeactionDescription(type.getDescription().get()).get(),
+        type.getIcon()
+      );
       myFiles = files;
       myType = type;
     }

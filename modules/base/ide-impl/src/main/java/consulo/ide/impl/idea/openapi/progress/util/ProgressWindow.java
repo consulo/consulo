@@ -29,7 +29,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.progress.util.ProgressDialog;
 import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import consulo.language.util.IncorrectOperationException;
@@ -220,10 +220,10 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
   public final boolean isCancellationEvent(@Nullable AWTEvent event) {
     return myShouldShowCancel &&
-      event instanceof KeyEvent &&
+      event instanceof KeyEvent keyEvent &&
       event.getID() == KeyEvent.KEY_PRESSED &&
-      ((KeyEvent)event).getKeyCode() == KeyEvent.VK_ESCAPE &&
-      ((KeyEvent)event).getModifiers() == 0;
+      keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE &&
+      keyEvent.getModifiers() == 0;
   }
 
   protected void showDialog() {

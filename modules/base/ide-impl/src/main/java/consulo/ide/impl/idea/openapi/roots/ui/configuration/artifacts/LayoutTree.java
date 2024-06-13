@@ -19,12 +19,10 @@ import consulo.application.ApplicationManager;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
@@ -33,6 +31,7 @@ import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -70,15 +69,12 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
 
   @Override
   protected void configureUiHelper(TreeUIHelper helper) {
-    final Convertor<TreePath, String> convertor = new Convertor<TreePath, String>() {
-      @Override
-      public String convert(final TreePath path) {
-        final SimpleNode node = getNodeFor(path);
-        if (node instanceof PackagingElementNode) {
-          return ((PackagingElementNode<?>)node).getElementPresentation().getSearchName();
-        }
-        return "";
+    final Convertor<TreePath, String> convertor = path -> {
+      final SimpleNode node = getNodeFor(path);
+      if (node instanceof PackagingElementNode) {
+        return ((PackagingElementNode<?>)node).getElementPresentation().getSearchName();
       }
+      return "";
     };
     new TreeSpeedSearch(this, convertor, true);
   }
@@ -103,7 +99,11 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     if (nodes.size() == 1) {
       return DnDAwareTree.getDragImage(this, getPathFor(nodes.get(0)), dragOrigin);
     }
-    return DnDAwareTree.getDragImage(this, ProjectBundle.message("drag.n.drop.text.0.packaging.elements", nodes.size()), dragOrigin);
+    return DnDAwareTree.getDragImage(
+      this,
+      ProjectLocalize.dragNDropText0PackagingElements(nodes.size()).get(),
+      dragOrigin
+    );
   }
 
   @Override
@@ -147,20 +147,17 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
   }
 
   public List<PackagingElementNode<?>> findNodes(final Collection<? extends PackagingElement<?>> elements) {
-    final List<PackagingElementNode<?>> nodes = new ArrayList<PackagingElementNode<?>>();
-    TreeUtil.traverseDepth(getRootNode(), new TreeUtil.Traverse() {
-      @Override
-      public boolean accept(Object node) {
-        final Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
-        if (userObject instanceof PackagingElementNode) {
-          final PackagingElementNode<?> packagingNode = (PackagingElementNode<?>)userObject;
-          final List<? extends PackagingElement<?>> nodeElements = packagingNode.getPackagingElements();
-          if (ContainerUtil.intersects(nodeElements, elements)) {
-            nodes.add(packagingNode);
-          }
+    final List<PackagingElementNode<?>> nodes = new ArrayList<>();
+    TreeUtil.traverseDepth(getRootNode(), node -> {
+      final Object userObject = ((DefaultMutableTreeNode)node).getUserObject();
+      if (userObject instanceof PackagingElementNode) {
+        final PackagingElementNode<?> packagingNode = (PackagingElementNode<?>)userObject;
+        final List<? extends PackagingElement<?>> nodeElements = packagingNode.getPackagingElements();
+        if (ContainerUtil.intersects(nodeElements, elements)) {
+          nodes.add(packagingNode);
         }
-        return true;
       }
+      return true;
     });
     return nodes;
   }
@@ -218,12 +215,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
       final boolean stopped = super.stopCellEditing();
       if (stopped && currentElement != null) {
         final RenameablePackagingElement finalCurrentElement = currentElement;
-        myArtifactsEditor.getLayoutTreeComponent().editLayout(new Runnable() {
-          @Override
-          public void run() {
-            finalCurrentElement.rename(newValue);
-          }
-        });
+        myArtifactsEditor.getLayoutTreeComponent().editLayout(() -> finalCurrentElement.rename(newValue));
         myArtifactsEditor.queueValidation();
         myArtifactsEditor.getLayoutTreeComponent().updatePropertiesPanel(true);
         addSubtreeToUpdate((DefaultMutableTreeNode)path.getLastPathComponent());
@@ -239,7 +231,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     }
 
     private void requestFocusToTree() {
-      ProjectIdeFocusManager.getInstance((Project)myArtifactsEditor.getContext().getProject()).requestFocus(LayoutTree.this, true);
+      ProjectIdeFocusManager.getInstance(myArtifactsEditor.getContext().getProject()).requestFocus(LayoutTree.this, true);
     }
   }
 }

@@ -15,26 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
-import consulo.ui.ex.awt.ChooseElementsDialog;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.component.ProcessCanceledException;
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.project.Project;
+import consulo.component.ProcessCanceledException;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryRootType;
+import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsDetector;
-import consulo.content.library.OrderRoot;
-import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ChooseElementsDialog;
 import consulo.ui.image.Image;
-
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -49,18 +49,29 @@ public class RootDetectionUtil {
   }
 
   @Nonnull
-  public static List<OrderRoot> detectRoots(@Nonnull final Collection<VirtualFile> rootCandidates,
-                                            @Nullable Component parentComponent,
-                                            @Nullable Project project,
-                                            @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor) {
-    return detectRoots(rootCandidates, parentComponent, project, rootsComponentDescriptor.getRootsDetector(),
-                       rootsComponentDescriptor.getRootTypes());
+  public static List<OrderRoot> detectRoots(
+    @Nonnull final Collection<VirtualFile> rootCandidates,
+    @Nullable Component parentComponent,
+    @Nullable Project project,
+    @Nonnull final LibraryRootsComponentDescriptor rootsComponentDescriptor
+  ) {
+    return detectRoots(
+      rootCandidates,
+      parentComponent,
+      project,
+      rootsComponentDescriptor.getRootsDetector(),
+      rootsComponentDescriptor.getRootTypes()
+    );
   }
 
   @Nonnull
-  public static List<OrderRoot> detectRoots(@Nonnull final Collection<VirtualFile> rootCandidates, @Nullable Component parentComponent,
-                                            @Nullable Project project, @Nonnull final LibraryRootsDetector detector,
-                                            @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected) {
+  public static List<OrderRoot> detectRoots(
+    @Nonnull final Collection<VirtualFile> rootCandidates,
+    @Nullable Component parentComponent,
+    @Nullable Project project,
+    @Nonnull final LibraryRootsDetector detector,
+    @Nonnull List<OrderRootType> rootTypesAllowedToBeSelectedByUserIfNothingIsDetected
+  ) {
     final List<OrderRoot> result = new ArrayList<>();
     final List<SuggestedChildRootInfo> suggestedRoots = new ArrayList<>();
     new Task.Modal(project, "Scanning for Roots", true) {
@@ -97,8 +108,8 @@ public class RootDetectionUtil {
 
     if (!suggestedRoots.isEmpty()) {
       final DetectedRootsChooserDialog dialog = parentComponent != null
-                                                ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
-                                                : new DetectedRootsChooserDialog(project, suggestedRoots);
+        ? new DetectedRootsChooserDialog(parentComponent, suggestedRoots)
+        : new DetectedRootsChooserDialog(project, suggestedRoots);
       dialog.show();
       if (!dialog.isOK()) {
         return Collections.emptyList();
@@ -125,8 +136,9 @@ public class RootDetectionUtil {
       List<String> names = new ArrayList<>(types.keySet());
       String title = "Choose Categories of Selected Files";
       String description = XmlStringUtil.wrapInHtml(
-              ApplicationNamesInfo.getInstance().getProductName() + " cannot determine what kind of files the chosen items contain.<br>" +
-              "Choose the appropriate categories from the list.");
+        Application.get().getName() + " cannot determine what kind of files the chosen items contain.<br>" +
+          "Choose the appropriate categories from the list."
+      );
       ChooseElementsDialog<String> dialog;
       if (parentComponent != null) {
         dialog = new ChooseRootTypeElementsDialog(parentComponent, names, title, description);

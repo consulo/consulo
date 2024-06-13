@@ -19,16 +19,16 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import jakarta.inject.Singleton;
-
+import consulo.platform.Platform;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
+
 import java.awt.*;
 import java.awt.im.InputContext;
 import java.util.Locale;
@@ -47,7 +47,7 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
 
   public static boolean isSupportedKeyboardLayout(@Nonnull Component component) {
     if (Registry.is("ide.keyboard.dvorak")) return true;
-    if (SystemInfo.isMac) return false;
+    if (Platform.current().os().isMac()) return false;
     String keyboardLayoutLanguage = getLanguageForComponent(component);
     for (String language : supportedNonEnglishLanguages) {
       if (language.equals(keyboardLayoutLanguage)) {

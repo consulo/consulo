@@ -16,26 +16,26 @@
 package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
 import consulo.application.AllIcons;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.project.Project;
-import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.ui.TitlePanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.ui.treeStructure.treetable.TreeColumnInfo;
+import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
+import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.treeStructure.treetable.TreeColumnInfo;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nullable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -63,7 +63,7 @@ import java.util.Map;
  */
 public class DetectedRootsChooserDialog extends DialogWrapper {
   private static final ColumnInfo ROOT_COLUMN = new TreeColumnInfo("");
-  private static final ColumnInfo<VirtualFileCheckedTreeNode, String> ROOT_TYPE_COLUMN = new ColumnInfo<VirtualFileCheckedTreeNode, String>("") {
+  private static final ColumnInfo<VirtualFileCheckedTreeNode, String> ROOT_TYPE_COLUMN = new ColumnInfo<>("") {
     @Override
     public String valueOf(VirtualFileCheckedTreeNode node) {
       final SuggestedChildRootInfo rootInfo = node.getRootInfo();
@@ -74,7 +74,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     public TableCellRenderer getRenderer(VirtualFileCheckedTreeNode node) {
       final SuggestedChildRootInfo rootInfo = node.getRootInfo();
       if (rootInfo != null && isCellEditable(node)) {
-        return new ComboBoxTableRenderer<String>(rootInfo.getRootTypeNames());
+        return new ComboBoxTableRenderer<>(rootInfo.getRootTypeNames());
       }
       return new DefaultTableCellRenderer();
     }
@@ -122,10 +122,12 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     init(suggestedRoots);
   }
 
+  @NonNls
   private void init(List<SuggestedChildRootInfo> suggestedRoots) {
-    myDescription = "<html><body>" + ApplicationNamesInfo.getInstance().getFullProductName() +
-                    " just scanned files and detected the following " + StringUtil.pluralize("root", suggestedRoots.size()) + ".<br>" +
-                    "Select items in the tree below or press Cancel to cancel operation.</body></html>";
+    myDescription = "<html><body>" + Application.get().getName().get() +
+      " just scanned files and detected the following " +
+      StringUtil.pluralize("root", suggestedRoots.size()) + ".<br>" +
+      "Select items in the tree below or press Cancel to cancel operation.</body></html>";
     myTreeTable = createTreeTable(suggestedRoots);
     myPane = ScrollPaneFactory.createScrollPane(myTreeTable);
     setTitle("Detected Roots");
@@ -136,13 +138,15 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     final CheckedTreeNode root = createRoot(suggestedRoots);
     CheckboxTreeTable treeTable = new CheckboxTreeTable(root, new CheckboxTree.CheckboxTreeCellRenderer(true) {
       @Override
-      public void customizeRenderer(JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
+      public void customizeRenderer(
+        JTree tree,
+        Object value,
+        boolean selected,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
+      ) {
         if (!(value instanceof VirtualFileCheckedTreeNode)) return;
         VirtualFileCheckedTreeNode node = (VirtualFileCheckedTreeNode)value;
         VirtualFile file = node.getFile();
@@ -204,7 +208,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
 
   private static CheckedTreeNode createRoot(List<SuggestedChildRootInfo> suggestedRoots) {
     CheckedTreeNode root = new CheckedTreeNode(null);
-    Map<VirtualFile, CheckedTreeNode> rootCandidateNodes = new HashMap<VirtualFile, CheckedTreeNode>();
+    Map<VirtualFile, CheckedTreeNode> rootCandidateNodes = new HashMap<>();
     for (SuggestedChildRootInfo rootInfo : suggestedRoots) {
       final VirtualFile rootCandidate = rootInfo.getRootCandidate();
       CheckedTreeNode parent = rootCandidateNodes.get(rootCandidate);
@@ -258,7 +262,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
 
     @Nullable
     private SuggestedChildRootInfo getRootInfo() {
-      return userObject instanceof SuggestedChildRootInfo ? (SuggestedChildRootInfo)userObject : null;
+      return userObject instanceof SuggestedChildRootInfo rootInfo ? rootInfo : null;
     }
   }
 }

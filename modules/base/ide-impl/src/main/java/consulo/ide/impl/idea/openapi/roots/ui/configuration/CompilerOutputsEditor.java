@@ -20,14 +20,12 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
-import consulo.project.ProjectBundle;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,6 +35,7 @@ import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
@@ -85,17 +84,22 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     myPerModuleCompilerOutput.addValueListener(listener);
 
     for (ContentFolderTypeProvider provider : ContentFolderTypeProvider.filter(myFilter)) {
-      CommitableFieldPanel panel = createOutputPathPanel("Select " + provider.getName() + " Output", provider, parentUIDisposable, url -> {
-        if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
-          return;
+      CommitableFieldPanel panel = createOutputPathPanel(
+        "Select " + provider.getName() + " Output",
+        provider,
+        parentUIDisposable,
+        url -> {
+          if (moduleCompilerPathsManager.isInheritedCompilerOutput()) {
+            return;
+          }
+          moduleCompilerPathsManager.setCompilerOutputUrl(provider, url);
         }
-        moduleCompilerPathsManager.setCompilerOutputUrl(provider, url);
-      });
+      );
 
       myOutputFields.put(provider, panel);
     }
 
-    myCbExcludeOutput = CheckBox.create(ProjectBundle.message("module.paths.exclude.output.checkbox"), moduleCompilerPathsManager.isExcludeOutput());
+    myCbExcludeOutput = CheckBox.create(ProjectLocalize.modulePathsExcludeOutputCheckbox(), moduleCompilerPathsManager.isExcludeOutput());
     myCbExcludeOutput.addValueListener(e -> moduleCompilerPathsManager.setExcludeOutput(myCbExcludeOutput.getValueOrError()));
 
     VerticalLayout panel = VerticalLayout.create();
@@ -172,7 +176,12 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
   }
 
   @RequiredUIAccess
-  private CommitableFieldPanel createOutputPathPanel(String title, ContentFolderTypeProvider provider, Disposable parentUIDisposable, Consumer<String> commitPathRunnable) {
+  private CommitableFieldPanel createOutputPathPanel(
+    String title,
+    ContentFolderTypeProvider provider,
+    Disposable parentUIDisposable,
+    Consumer<String> commitPathRunnable
+  ) {
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myProject);
     builder.dialogTitle(title);
     builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
@@ -224,7 +233,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
 
   @Override
   public String getDisplayName() {
-    return ProjectBundle.message("project.roots.path.tab.title");
+    return ProjectLocalize.projectRootsPathTabTitle().get();
   }
 
   @Override
@@ -304,7 +313,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         // should set only absolute paths
         String canonicalPath;
         try {
-          canonicalPath = FileUtil.resolveShortWindowsName(path);
+          canonicalPath = consulo.ide.impl.idea.openapi.util.io.FileUtil.resolveShortWindowsName(path);
         }
         catch (IOException e) {
           canonicalPath = path;

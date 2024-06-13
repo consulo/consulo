@@ -47,7 +47,7 @@ import java.util.List;
 import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
-import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
+import static consulo.util.lang.StringUtil.naturalCompare;
 import static consulo.ide.impl.idea.util.ReflectionUtil.getDeclaredMethod;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -90,14 +90,18 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
   public Object getUniqueID(@Nonnull TreePath path) {
     Object object = path.getLastPathComponent();
     TreePath parent = path.getParentPath();
-    return parent != null && object instanceof Node ? getUniqueID(parent, (Node)object, new ArrayDeque<>()) : parent != null || object != state ? null : state.toString();
+    return parent != null && object instanceof Node node
+      ? getUniqueID(parent, node, new ArrayDeque<>())
+      : parent != null || object != state ? null : state.toString();
   }
 
   private Object getUniqueID(TreePath path, Node node, ArrayDeque<? super String> deque) {
     deque.addFirst(node.getName());
     Object object = path.getLastPathComponent();
     TreePath parent = path.getParentPath();
-    return parent != null && object instanceof Node ? getUniqueID(parent, (Node)object, deque) : parent != null || object != state ? null : deque.toArray();
+    return parent != null && object instanceof Node node
+      ? getUniqueID(parent, node, deque)
+      : parent != null || object != state ? null : deque.toArray();
   }
 
   @Nonnull
@@ -119,8 +123,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
       if (roots == null) roots = state.getRoots();
       if (0 <= index && index < roots.size()) return roots.get(index);
     }
-    else if (object instanceof Node) {
-      Entry<Node> entry = getEntry((Node)object, true);
+    else if (object instanceof Node node) {
+      Entry<Node> entry = getEntry(node, true);
       if (entry != null) return entry.getChild(index);
     }
     return null;
@@ -132,8 +136,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
       if (roots == null) roots = state.getRoots();
       return roots.size();
     }
-    else if (object instanceof Node) {
-      Entry<Node> entry = getEntry((Node)object, true);
+    else if (object instanceof Node node) {
+      Entry<Node> entry = getEntry(node, true);
       if (entry != null) return entry.getChildCount();
     }
     return 0;
@@ -141,8 +145,8 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
 
   @Override
   public final boolean isLeaf(Object object) {
-    if (object != state && object instanceof Node) {
-      Entry<Node> entry = getEntry((Node)object, false);
+    if (object != state && object instanceof Node node) {
+      Entry<Node> entry = getEntry(node, false);
       if (entry != null) return entry.isLeaf();
     }
     return false;
@@ -156,9 +160,9 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
         if (child == roots.get(i)) return i;
       }
     }
-    else if (object instanceof Node && child instanceof Node) {
-      Entry<Node> entry = getEntry((Node)object, true);
-      if (entry != null) return entry.getIndexOf((Node)child);
+    else if (object instanceof Node node && child instanceof Node childNode) {
+      Entry<Node> entry = getEntry(node, true);
+      if (entry != null) return entry.getIndexOf(childNode);
     }
     return -1;
   }
@@ -202,16 +206,13 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
       if (event instanceof VFilePropertyChangeEvent) {
         if (hasEntry(event.getFile())) files.add(event.getFile());
       }
-      else if (event instanceof VFileCreateEvent) {
-        VFileCreateEvent create = (VFileCreateEvent)event;
+      else if (event instanceof VFileCreateEvent create) {
         if (hasEntry(create.getParent())) parents.add(create.getParent());
       }
-      else if (event instanceof VFileCopyEvent) {
-        VFileCopyEvent copy = (VFileCopyEvent)event;
+      else if (event instanceof VFileCopyEvent copy) {
         if (hasEntry(copy.getNewParent())) parents.add(copy.getNewParent());
       }
-      else if (event instanceof VFileMoveEvent) {
-        VFileMoveEvent move = (VFileMoveEvent)event;
+      else if (event instanceof VFileMoveEvent move) {
         if (hasEntry(move.getNewParent())) parents.add(move.getNewParent());
         if (hasEntry(move.getOldParent())) parents.add(move.getOldParent());
       }

@@ -27,7 +27,6 @@ import consulo.disposer.Disposer;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.newProject.ui.NewProjectDialog;
 import consulo.ide.impl.newProject.ui.NewProjectPanel;
@@ -39,6 +38,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.language.content.LanguageContentFolderScopes;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -49,18 +49,19 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -213,7 +214,13 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
         final String moduleName = moduleEditor.getName();
         final String previousName = contentRootToModuleNameMap.put(contentRoot, moduleName);
         if (previousName != null && !previousName.equals(moduleName)) {
-          throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.content.error", contentRoot.getPresentableUrl(), previousName, moduleName));
+          throw new ConfigurationException(
+            ProjectLocalize.modulePathsValidationDuplicateContentError(
+              contentRoot.getPresentableUrl(),
+              previousName,
+              moduleName
+            ).get()
+          );
         }
 
         final VirtualFile[] sourceAndTestFiles = contentEntry.getFolderFiles(LanguageContentFolderScopes.all(false));
@@ -230,7 +237,13 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
               problematicModule = contentRootToModuleNameMap.get(contentRoot);
               correctModule = contentRootToModuleNameMap.get(anotherContentRoot);
             }
-            throw new ConfigurationException(ProjectBundle.message("module.paths.validation.duplicate.source.root.error", problematicModule, srcRoot.getPresentableUrl(), correctModule));
+            throw new ConfigurationException(
+              ProjectLocalize.modulePathsValidationDuplicateSourceRootError(
+                problematicModule,
+                srcRoot.getPresentableUrl(),
+                correctModule
+              ).get()
+            );
           }
         }
       }
@@ -244,7 +257,13 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
       for (VirtualFile candidateContent = srcRoot; candidateContent != null && !candidateContent.equals(correspondingContent); candidateContent = candidateContent.getParent()) {
         final String moduleName = contentRootToModuleNameMap.get(candidateContent);
         if (moduleName != null && !moduleName.equals(expectedModuleName)) {
-          throw new ConfigurationException(ProjectBundle.message("module.paths.validation.source.root.belongs.to.another.module.error", srcRoot.getPresentableUrl(), expectedModuleName, moduleName));
+          throw new ConfigurationException(
+            ProjectLocalize.modulePathsValidationSourceRootBelongsToAnotherModuleError(
+              srcRoot.getPresentableUrl(),
+              expectedModuleName,
+              moduleName
+            ).get()
+          );
         }
       }
     }
@@ -360,7 +379,7 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
           return true;
         }
       };
-      fileChooserDescriptor.setTitle(ProjectBundle.message("choose.module.home"));
+      fileChooserDescriptor.withTitleValue(ProjectLocalize.chooseModuleHome());
 
       AsyncPromise<List<Module>> promise = new AsyncPromise<>();
 
@@ -396,15 +415,19 @@ public class ModulesConfiguratorImpl implements ModulesConfigurator, ModuleEdito
   }
 
   private boolean doRemoveModule(@Nonnull ModuleEditor selectedEditor) {
-
-    String question;
+    LocalizeValue question;
     if (myModuleEditors.size() == 1) {
-      question = ProjectBundle.message("module.remove.last.confirmation");
+      question = ProjectLocalize.moduleRemoveLastConfirmation();
     }
     else {
-      question = ProjectBundle.message("module.remove.confirmation", selectedEditor.getModule().getName());
+      question = ProjectLocalize.moduleRemoveConfirmation(selectedEditor.getModule().getName());
     }
-    int result = Messages.showYesNoDialog(myProject, question, ProjectBundle.message("module.remove.confirmation.title"), Messages.getQuestionIcon());
+    int result = Messages.showYesNoDialog(
+      myProject,
+      question.get(),
+      ProjectLocalize.moduleRemoveConfirmationTitle().get(),
+      Messages.getQuestionIcon()
+    );
     if (result != Messages.YES) {
       return false;
     }

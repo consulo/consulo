@@ -25,11 +25,11 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.macro.PathMacros;
 import consulo.ide.impl.idea.openapi.options.ex.SingleConfigurableEditor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.util.WaitForProgressToShow;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectBundle;
+import consulo.project.localize.ProjectLocalize;
+import consulo.project.util.WaitForProgressToShow;
+import consulo.util.lang.StringUtil;
 
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class ProjectMacrosUtil {
   }
 
   public static boolean showMacrosConfigurationDialog(Project project, final Collection<String> undefinedMacros) {
-    final String text = ProjectBundle.message("project.load.undefined.path.variables.message");
+    final String text = ProjectLocalize.projectLoadUndefinedPathVariablesMessage().get();
     final Application application = ApplicationManager.getApplication();
     if (application.isHeadlessEnvironment() || application.isUnitTestMode()) {
       throw new RuntimeException(text + ": " + StringUtil.join(undefinedMacros, ", "));
@@ -92,7 +92,7 @@ public class ProjectMacrosUtil {
   public static Set<String> getDefinedMacros() {
     final PathMacros pathMacros = PathMacros.getInstance();
 
-    Set<String> definedMacros = new HashSet<String>(pathMacros.getUserMacroNames());
+    Set<String> definedMacros = new HashSet<>(pathMacros.getUserMacroNames());
     definedMacros.addAll(pathMacros.getSystemMacroNames());
     definedMacros = Collections.unmodifiableSet(definedMacros);
     return definedMacros;

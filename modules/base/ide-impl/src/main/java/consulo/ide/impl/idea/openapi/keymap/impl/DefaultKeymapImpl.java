@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.platform.Platform;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.MouseShortcut;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.xml.serializer.InvalidDataException;
-import consulo.application.util.SystemInfo;
 import org.jdom.Element;
 
 import java.awt.event.MouseEvent;
@@ -41,7 +41,7 @@ class DefaultKeymapImpl extends KeymapImpl {
   public void readExternal(Element keymapElement, Keymap[] existingKeymaps) throws InvalidDataException {
     super.readExternal(keymapElement, existingKeymaps);
 
-    if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName()) && !SystemInfo.isXWindow) {
+    if (KeymapManager.DEFAULT_IDEA_KEYMAP.equals(getName()) && !Platform.current().os().isXWindow()) {
       addShortcut(IdeActions.ACTION_GOTO_DECLARATION, new MouseShortcut(MouseEvent.BUTTON2, 0, 1));
     }
   }

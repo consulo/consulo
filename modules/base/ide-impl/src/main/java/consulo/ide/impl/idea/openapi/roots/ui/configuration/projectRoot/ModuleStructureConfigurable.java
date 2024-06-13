@@ -18,46 +18,47 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.configurable.*;
-import consulo.project.ui.view.tree.ModuleGroup;
-import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
 import consulo.application.ApplicationManager;
-import consulo.dataContext.DataProvider;
-import consulo.language.editor.LangDataKeys;
-import consulo.module.ModifiableModuleModel;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.configurable.*;
+import consulo.configurable.internal.ConfigurableWeight;
 import consulo.content.library.Library;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.ide.projectView.impl.ModuleGroupUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ui.ex.awt.MasterDetailsStateService;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ide.moduleImport.ModuleImportProviders;
-import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
+import consulo.ide.moduleImport.ModuleImportProviders;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.LangDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.module.ModifiableModuleModel;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.Project;
+import consulo.project.localize.ProjectLocalize;
+import consulo.project.ui.view.tree.ModuleGroup;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.MasterDetailsStateService;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-import jakarta.inject.Inject;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -271,7 +272,11 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   public void apply() throws ConfigurationException {
     final Set<MyNode> roots = new HashSet<>();
     roots.add(myRoot);
-    checkApply(roots, ProjectBundle.message("rename.message.prefix.module"), ProjectBundle.message("rename.module.title"));
+    checkApply(
+      roots,
+      ProjectLocalize.renameMessagePrefixModule().get(),
+      ProjectLocalize.renameModuleTitle().get()
+    );
 
     if (getModulesConfigurator().isModified()) {
       getModulesConfigurator().apply();
@@ -307,7 +312,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   @Override
   public String getDisplayName() {
-    return ProjectBundle.message("project.roots.display.name");
+    return ProjectLocalize.projectRootsDisplayName().get();
   }
 
   public Project getProject() {
@@ -352,8 +357,12 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     final OrderEntry[] entries = modelProxy.getOrderEntries();
     for (OrderEntry entry : entries) {
       if (entry instanceof LibraryOrderEntry && Comparing.strEqual(entry.getPresentableName(), library.getName())) {
-        if (Messages.showYesNoDialog(parent, ProjectBundle.message("project.roots.replace.library.entry.message", entry.getPresentableName()),
-                                     ProjectBundle.message("project.roots.replace.library.entry.title"), Messages.getInformationIcon()) == Messages.YES) {
+        if (Messages.showYesNoDialog(
+          parent,
+          ProjectLocalize.projectRootsReplaceLibraryEntryMessage(entry.getPresentableName()).get(),
+          ProjectLocalize.projectRootsReplaceLibraryEntryTitle().get(),
+          Messages.getInformationIcon()
+        ) == Messages.YES) {
           modelProxy.removeOrderEntry(entry);
           break;
         }
@@ -435,8 +444,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   }
 
   private static TextConfigurable<ModuleGroup> createModuleGroupConfigurable(final ModuleGroup moduleGroup) {
-    return new TextConfigurable<>(moduleGroup, moduleGroup.toString(), ProjectBundle.message("module.group.banner.text", moduleGroup.toString()),
-                                  ProjectBundle.message("project.roots.module.groups.text"), AllIcons.Nodes.ModuleGroup);
+    return new TextConfigurable<>(
+      moduleGroup,
+      moduleGroup.toString(),
+      ProjectLocalize.moduleGroupBannerText(moduleGroup.toString()).get(),
+      ProjectLocalize.projectRootsModuleGroupsText().get(),
+      AllIcons.Nodes.ModuleGroup
+    );
   }
 
   @Override
@@ -491,12 +505,12 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     public void update(final AnActionEvent e) {
       super.update(e);
       final Presentation presentation = e.getPresentation();
-      String text = ProjectBundle.message("project.roots.plain.mode.action.text.disabled");
+      LocalizeValue text = ProjectLocalize.projectRootsPlainModeActionTextDisabled();
       if (myPlainMode) {
-        text = ProjectBundle.message("project.roots.plain.mode.action.text.enabled");
+        text = ProjectLocalize.projectRootsPlainModeActionTextEnabled();
       }
-      presentation.setText(text);
-      presentation.setDescription(text);
+      presentation.setTextValue(text);
+      presentation.setDescriptionValue(text);
 
       if (getModulesConfigurator() != null) {
         presentation.setVisible(getModulesConfigurator().getModuleModel().hasModuleGroups());
@@ -543,7 +557,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
   @Override
   protected AbstractAddGroup createAddAction() {
-    return new AbstractAddGroup(ProjectBundle.message("add.new.header.text")) {
+    return new AbstractAddGroup(ProjectLocalize.addNewHeaderText().get()) {
       @Override
       @Nonnull
       public AnAction[] getChildren(@Nullable final AnActionEvent e) {
@@ -578,7 +592,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
   @Override
   @Nullable
   protected String getEmptySelectionString() {
-    return ProjectBundle.message("empty.module.selection.string");
+    return ProjectLocalize.emptyModuleSelectionString().get();
   }
 
   public static boolean processModulesMoved(ModuleStructureConfigurable configurable, Module[] modules, @Nullable final ModuleGroup targetGroup) {
@@ -599,7 +613,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     private final boolean myImport;
 
     public AddModuleAction(boolean anImport) {
-      super(ProjectBundle.message("add.new.module.text.full"), null, AllIcons.Actions.Module);
+      super(ProjectLocalize.addNewModuleTextFull(), LocalizeValue.empty(), AllIcons.Actions.Module);
       myImport = anImport;
     }
 

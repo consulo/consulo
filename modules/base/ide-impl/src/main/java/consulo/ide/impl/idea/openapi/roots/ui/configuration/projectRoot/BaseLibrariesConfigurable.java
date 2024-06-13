@@ -15,38 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
-import consulo.application.CommonBundle;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.content.internal.LibraryEx;
+import consulo.configurable.MasterDetailsConfigurable;
 import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.CreateNewLibraryAction;
-import consulo.ide.setting.module.event.LibraryEditorListener;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
+import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
+import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.ide.setting.module.event.LibraryEditorListener;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.CommonLocalize;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.ui.NonEmptyInputValidator;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.configurable.MasterDetailsConfigurable;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import java.util.*;
@@ -329,7 +329,7 @@ public abstract class BaseLibrariesConfigurable extends BaseStructureConfigurabl
 
   private class CopyLibraryAction extends AnAction {
     private CopyLibraryAction() {
-      super(CommonBundle.message("button.copy"), CommonBundle.message("button.copy"), PlatformIconGroup.actionsCopy());
+      super(CommonLocalize.buttonCopy(), CommonLocalize.buttonCopy(), PlatformIconGroup.actionsCopy());
     }
 
     @RequiredUIAccess

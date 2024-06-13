@@ -24,23 +24,21 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.platform.base.localize.KeyMapLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.util.ListUtil;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import jakarta.inject.Inject;
-
+import consulo.util.lang.Comparing;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -72,12 +70,9 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
       myQuickListsModel.addElement(list);
     }
 
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        if (!myQuickListsModel.isEmpty()) {
-          myQuickListsList.setSelectedIndex(0);
-        }
+    SwingUtilities.invokeLater(() -> {
+      if (!myQuickListsModel.isEmpty()) {
+        myQuickListsList.setSelectedIndex(0);
       }
     });
   }
@@ -102,41 +97,32 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
     myQuickListsList = new JBList(myQuickListsModel);
     myQuickListsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     myQuickListsList.setCellRenderer(new MyQuickListCellRenderer());
-    myQuickListsList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        myRightPanel.removeAll();
-        final Object selectedValue = myQuickListsList.getSelectedValue();
-        if (selectedValue instanceof QuickList) {
-          final QuickList quickList = (QuickList)selectedValue;
-          updateRightPanel(quickList);
-          myQuickListsList.repaint();
-        }
-        else {
-          addDescriptionLabel();
-        }
-        myRightPanel.revalidate();
+    myQuickListsList.addListSelectionListener(e -> {
+      myRightPanel.removeAll();
+      final Object selectedValue = myQuickListsList.getSelectedValue();
+      if (selectedValue instanceof QuickList) {
+        final QuickList quickList = (QuickList)selectedValue;
+        updateRightPanel(quickList);
+        myQuickListsList.repaint();
       }
+      else {
+        addDescriptionLabel();
+      }
+      myRightPanel.revalidate();
     });
 
     addDescriptionLabel();
 
-    ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myQuickListsList).setAddAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        QuickList quickList = new QuickList(createUniqueName(), "", ArrayUtil.EMPTY_STRING_ARRAY, false);
-        myQuickListsModel.addElement(quickList);
-        myQuickListsList.clearSelection();
-        ScrollingUtil.selectItem(myQuickListsList, quickList);
-        myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
-      }
-    }).setRemoveAction(new AnActionButtonRunnable() {
-      @Override
-      public void run(AnActionButton button) {
-        ListUtil.removeSelectedItems(myQuickListsList);
-        myQuickListsList.repaint();
-        myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
-      }
+    ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(myQuickListsList).setAddAction(button -> {
+      QuickList quickList = new QuickList(createUniqueName(), "", ArrayUtil.EMPTY_STRING_ARRAY, false);
+      myQuickListsModel.addElement(quickList);
+      myQuickListsList.clearSelection();
+      ScrollingUtil.selectItem(myQuickListsList, quickList);
+      myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
+    }).setRemoveAction(button -> {
+      ListUtil.removeSelectedItems(myQuickListsList);
+      myQuickListsList.repaint();
+      myKeymapListener.processCurrentKeymapChanged(getCurrentQuickListIds());
     }).disableUpDownActions();
     return toolbarDecorator.setToolbarPosition(ActionToolbarPosition.TOP).setPanelBorder(JBUI.Borders.empty()).createPanel();
   }
@@ -149,8 +135,8 @@ public class QuickListsPanel implements SearchableConfigurable, Configurable.NoS
   }
 
   private String createUniqueName() {
-    String str = KeyMapBundle.message("unnamed.list.display.name");
-    final ArrayList<String> names = new ArrayList<String>();
+    String str = KeyMapLocalize.unnamedListDisplayName().get();
+    final ArrayList<String> names = new ArrayList<>();
     for (int i = 0; i < myQuickListsModel.getSize(); i++) {
       names.add(((QuickList)myQuickListsModel.getElementAt(i)).getName());
     }
