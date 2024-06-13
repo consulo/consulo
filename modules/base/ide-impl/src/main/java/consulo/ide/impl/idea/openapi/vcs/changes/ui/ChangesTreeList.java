@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
+import consulo.diff.localize.DiffLocalize;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewTree;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -28,9 +29,7 @@ import consulo.ide.impl.idea.ui.SmartExpander;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.platform.base.localize.DiffLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
@@ -191,8 +190,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
 
     setShowFlatten(PropertiesComponent.getInstance(myProject).isTrueValue(FLATTEN_OPTION_KEY));
 
-    LocalizeValue emptyText = StringUtil.capitalize(DiffLocalize.diffCountDifferencesStatusText(0));
-    setEmptyText(emptyText.get());
+    String emptyText = StringUtil.capitalize(DiffLocalize.diffCountDifferencesStatusText(0).get());
+    setEmptyText(emptyText);
 
     myTreeCopyProvider = new ChangesBrowserNodeCopyProvider(this);
   }
