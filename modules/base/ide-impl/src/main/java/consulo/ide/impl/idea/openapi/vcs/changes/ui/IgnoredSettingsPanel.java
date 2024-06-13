@@ -24,17 +24,20 @@ package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ListUtil;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.IgnoreSettingsType;
 import consulo.versionControlSystem.change.IgnoredFileBean;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.util.ListUtil;
-import org.jetbrains.annotations.Nls;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,12 +50,12 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   private final Project myProject;
   private DefaultListModel myModel;
   private final ChangeListManagerImpl myChangeListManager;
-  private final Set<String> myDirectoriesManuallyRemovedFromIgnored = new HashSet<String>();
+  private final Set<String> myDirectoriesManuallyRemovedFromIgnored = new HashSet<>();
 
   public IgnoredSettingsPanel(Project project) {
     myList = new JBList();
     myList.setCellRenderer(new MyCellRenderer());
-    myList.getEmptyText().setText(VcsBundle.message("no.ignored.files"));
+    myList.getEmptyText().setText(VcsLocalize.noIgnoredFiles().get());
 
     myProject = project;
     myChangeListManager = ChangeListManagerImpl.getInstanceImpl(myProject);
@@ -138,22 +141,11 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   public JComponent createComponent() {
     if (myPanel == null) {
       myPanel = ToolbarDecorator.createDecorator(myList)
-              .setAddAction(new AnActionButtonRunnable() {
-                @Override
-                public void run(AnActionButton button) {
-                  addItem();
-                }
-              }).setEditAction(new AnActionButtonRunnable() {
-                @Override
-                public void run(AnActionButton button) {
-                  editItem();
-                }
-              }).setRemoveAction(new AnActionButtonRunnable() {
-                @Override
-                public void run(AnActionButton button) {
-                  deleteItems();
-                }
-              }).disableUpDownActions().createPanel();
+        .setAddAction(button -> addItem())
+        .setEditAction(button -> editItem())
+        .setRemoveAction(button -> deleteItems())
+        .disableUpDownActions()
+        .createPanel();
     }
     return myPanel;
   }
@@ -191,14 +183,14 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
       final String path = bean.getPath();
       if (path != null) {
         if (path.endsWith("/")) {
-          append(VcsBundle.message("ignored.configure.item.directory", path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          append(VcsLocalize.ignoredConfigureItemDirectory(path).get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
         else {
-          append(VcsBundle.message("ignored.configure.item.file", path), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+          append(VcsLocalize.ignoredConfigureItemFile(path).get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
       }
       else if (bean.getMask() != null) {
-        append(VcsBundle.message("ignored.configure.item.mask", bean.getMask()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        append(VcsLocalize.ignoredConfigureItemMask(bean.getMask()).get(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
       }
     }
   }

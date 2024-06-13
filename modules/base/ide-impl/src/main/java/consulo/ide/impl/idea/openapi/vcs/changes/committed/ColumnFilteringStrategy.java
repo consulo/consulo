@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.versionControlSystem.ChangeListColumn;
-import consulo.versionControlSystem.CommittedChangesProvider;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.change.commited.ChangeListFilteringStrategy;
-import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
-import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriority;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.versionControlSystem.ChangeListColumn;
+import consulo.versionControlSystem.CommittedChangesProvider;
+import consulo.versionControlSystem.change.commited.ChangeListFilteringStrategy;
+import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
+import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriority;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -71,7 +71,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
           append(value.toString(), SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
         }
         else if (value.toString().length() == 0) {
-          append(VcsBundle.message("committed.changes.filter.none"), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+          append(VcsLocalize.committedChangesFilterNone().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
         }
         else {
           append(value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -190,7 +190,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
 
     public Object getElementAt(int index) {
       if (index == 0) {
-        return VcsBundle.message("committed.changes.filter.all");
+        return VcsLocalize.committedChangesFilterAll().get();
       }
       return myValues[index - 1];
     }

@@ -15,27 +15,27 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ui.ex.awt.tree.TreeState;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
 import consulo.ide.impl.idea.openapi.util.BooleanGetter;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNode;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowserNodeRenderer;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.TreeModelBuilder;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.commited.ChangeListFilteringStrategy;
 import consulo.versionControlSystem.change.commited.CommittedChangesFilterKey;
 import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriority;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -67,7 +67,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   public String toString() {
-    return VcsBundle.message("filter.structure.name");
+    return VcsLocalize.filterStructureName().get();
   }
 
   @jakarta.annotation.Nullable

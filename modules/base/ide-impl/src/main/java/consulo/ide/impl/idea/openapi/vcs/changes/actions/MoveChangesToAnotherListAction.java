@@ -15,37 +15,38 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.IdeActions;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.change.*;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangeListChooser;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesListView;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.lang.function.Condition;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.ObjectUtil;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.VcsToolWindow;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-
+import consulo.virtualFileSystem.status.FileStatus;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.util.*;
+
+import static consulo.language.editor.CommonDataKeys.PROJECT;
 
 /**
  * @author max
@@ -53,9 +54,11 @@ import java.util.*;
 public class MoveChangesToAnotherListAction extends AnAction implements DumbAware {
 
   public MoveChangesToAnotherListAction() {
-    super(ActionsBundle.actionText(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST),
-          ActionsBundle.actionDescription(IdeActions.MOVE_TO_ANOTHER_CHANGE_LIST),
-          AllIcons.Actions.MoveToAnotherChangelist);
+    super(
+      ActionLocalize.actionChangesviewMoveText(),
+      ActionLocalize.actionChangesviewMoveDescription(),
+      AllIcons.Actions.MoveToAnotherChangelist
+    );
   }
 
   public void update(@Nonnull AnActionEvent e) {
@@ -70,14 +73,14 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   protected boolean isEnabled(@Nonnull AnActionEvent e) {
-    Project project = e.getData(CommonDataKeys.PROJECT);
+    Project project = e.getData(PROJECT);
     if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
       return false;
     }
 
-    return !VcsUtil.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY)) ||
-           !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES)) ||
-           !ArrayUtil.isEmpty(e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY));
+    return !VcsUtil.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY))
+      || !ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES))
+      || !ArrayUtil.isEmpty(e.getData(VirtualFile.KEY_OF_ARRAY));
   }
 
   @Nonnull
@@ -129,7 +132,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    Project project = e.getRequiredData(CommonDataKeys.PROJECT);
+    Project project = e.getRequiredData(Project.KEY);
     List<Change> changesList = ContainerUtil.newArrayList();
 
     Change[] changes = e.getData(VcsDataKeys.CHANGES);
@@ -139,7 +142,7 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
 
     List<VirtualFile> unversionedFiles = ContainerUtil.newArrayList();
     final List<VirtualFile> changedFiles = ContainerUtil.newArrayList();
-    VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+    VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       changesList.addAll(getChangesForSelectedFiles(project, files, unversionedFiles, changedFiles));
     }
@@ -156,20 +159,18 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   }
 
   private static void selectAndShowFile(@Nonnull final Project project, @Nonnull final VirtualFile file) {
-    ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(ChangesViewContentManager.TOOLWINDOW_ID);
+    ToolWindow window = ToolWindowManager.getInstance(project).getToolWindow(VcsToolWindow.ID);
 
     if (!window.isVisible()) {
-      window.activate(new Runnable() {
-        public void run() {
-          ChangesViewManager.getInstance(project).selectFile(file);
-        }
-      });
+      window.activate(() -> ChangesViewManager.getInstance(project).selectFile(file));
     }
   }
 
-  public static boolean askAndMove(@Nonnull Project project,
-                                   @Nonnull Collection<Change> changes,
-                                   @Nonnull List<VirtualFile> unversionedFiles) {
+  public static boolean askAndMove(
+    @Nonnull Project project,
+    @Nonnull Collection<Change> changes,
+    @Nonnull List<VirtualFile> unversionedFiles
+  ) {
     if (changes.isEmpty() && unversionedFiles.isEmpty()) return false;
 
     LocalChangeList targetList = askTargetList(project, changes);
@@ -186,20 +187,25 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
     return false;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static LocalChangeList askTargetList(@Nonnull Project project, @Nonnull Collection<Change> changes) {
     ChangeListManagerImpl listManager = ChangeListManagerImpl.getInstanceImpl(project);
     List<LocalChangeList> preferredLists = getPreferredLists(listManager.getChangeListsCopy(), changes);
     List<LocalChangeList> listsForChooser =
-            preferredLists.isEmpty() ? Collections.singletonList(listManager.getDefaultChangeList()) : preferredLists;
-    ChangeListChooser chooser = new ChangeListChooser(project, listsForChooser, guessPreferredList(preferredLists),
-                                                      ActionsBundle.message("action.ChangesView.Move.text"), null);
+      preferredLists.isEmpty() ? Collections.singletonList(listManager.getDefaultChangeList()) : preferredLists;
+    ChangeListChooser chooser = new ChangeListChooser(
+      project,
+      listsForChooser,
+      guessPreferredList(preferredLists),
+      ActionLocalize.actionChangesviewMoveText().get(),
+      null
+    );
     chooser.show();
 
     return chooser.getSelectedList();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private static ChangeList guessPreferredList(@Nonnull List<LocalChangeList> lists) {
     LocalChangeList activeChangeList = ContainerUtil.find(lists, LocalChangeList::isDefault);
     if (activeChangeList != null) return activeChangeList;
@@ -213,11 +219,6 @@ public class MoveChangesToAnotherListAction extends AnAction implements DumbAwar
   private static List<LocalChangeList> getPreferredLists(@Nonnull List<LocalChangeList> lists, @Nonnull Collection<Change> changes) {
     final Set<Change> changesSet = ContainerUtil.newHashSet(changes);
 
-    return ContainerUtil.findAll(lists, new Condition<LocalChangeList>() {
-      @Override
-      public boolean value(@Nonnull LocalChangeList list) {
-        return !ContainerUtil.intersects(changesSet, list.getChanges());
-      }
-    });
+    return ContainerUtil.findAll(lists, list -> !ContainerUtil.intersects(changesSet, list.getChanges()));
   }
 }

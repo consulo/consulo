@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
+import consulo.application.util.DateFormatUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.CachingCommittedChangesProvider;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.versionControlSystem.change.commited.CommittedChangeListDecorator;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.application.util.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.image.Image;
-
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -119,7 +118,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     boolean partial = (changeList instanceof ReceivedChangeList) && ((ReceivedChangeList)changeList).isPartial();
     int descWidth = 0;
     if (partial) {
-      final String partialMarker = VcsBundle.message("committed.changes.partial.list") + " ";
+      final String partialMarker = VcsLocalize.committedChangesPartialList().get() + " ";
       append(partialMarker, SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES);
       descWidth += boldMetrics.stringWidth(partialMarker);
     }
@@ -148,7 +147,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
 
     if (description.isEmpty() && !truncated) {
-      append(VcsBundle.message("committed.changes.empty.comment"), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+      append(VcsLocalize.committedChangesEmptyComment().get(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else if (descMaxWidth < 0) {
@@ -159,7 +158,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else {
-      final String moreMarker = VcsBundle.message("changes.browser.details.marker");
+      final String moreMarker = VcsLocalize.changesBrowserDetailsMarker().get();
       int moreWidth = fontMetrics.stringWidth(moreMarker);
       int remainingWidth = descMaxWidth - moreWidth - numberWidth - branchWidth;
       description = truncateDescription(description, fontMetrics, remainingWidth);

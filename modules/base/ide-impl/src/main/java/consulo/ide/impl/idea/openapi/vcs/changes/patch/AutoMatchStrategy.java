@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.MultiMap;
 import jakarta.annotation.Nullable;

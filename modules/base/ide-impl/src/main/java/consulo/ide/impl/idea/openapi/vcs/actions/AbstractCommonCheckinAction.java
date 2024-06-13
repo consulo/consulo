@@ -15,21 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitChangeListDialog;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.versionControlSystem.change.*;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.action.VcsContext;
-
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.versionControlSystem.util.VcsUtil;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -53,9 +52,12 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
     else {
       FilePath[] roots = prepareRootsForCommit(getRoots(context), project);
-      ChangeListManager.getInstance(project)
-              .invokeAfterUpdate(() -> performCheckIn(context, project, roots), InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
-                                 VcsBundle.message("waiting.changelists.update.for.show.commit.dialog.message"), IdeaModalityState.current());
+      ChangeListManager.getInstance(project).invokeAfterUpdate(
+        () -> performCheckIn(context, project, roots),
+        InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
+        VcsLocalize.waitingChangelistsUpdateForShowCommitDialogMessage().get(),
+        IdeaModalityState.current()
+      );
     }
   }
 

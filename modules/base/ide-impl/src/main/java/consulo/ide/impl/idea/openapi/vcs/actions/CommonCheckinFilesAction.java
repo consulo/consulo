@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -26,6 +26,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.checkin.CheckinEnvironment;
 import consulo.versionControlSystem.VcsBundle;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
@@ -48,10 +49,10 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
   @Override
   protected String getActionName(@Nonnull VcsContext dataContext) {
     String actionName = Optional.ofNullable(dataContext.getProject())
-            .map(project -> getCommonVcs(getRootsStream(dataContext), project))
-            .map(AbstractVcs::getCheckinEnvironment)
-            .map(CheckinEnvironment::getCheckinOperationName)
-            .orElse(VcsBundle.message("vcs.command.name.checkin"));
+      .map(project -> getCommonVcs(getRootsStream(dataContext), project))
+      .map(AbstractVcs::getCheckinEnvironment)
+      .map(CheckinEnvironment::getCheckinOperationName)
+      .orElse(VcsLocalize.vcsCommandNameCheckin().get());
 
     return modifyCheckinActionName(dataContext, actionName);
   }
@@ -70,7 +71,7 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
 
   @Override
   protected String getMnemonicsFreeActionName(@Nonnull VcsContext context) {
-    return modifyCheckinActionName(context, VcsBundle.message("vcs.command.name.checkin.no.mnemonics"));
+    return modifyCheckinActionName(context, VcsLocalize.vcsCommandNameCheckinNoMnemonics().get());
   }
 
   @Nullable
@@ -98,9 +99,9 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
     FileStatusManager manager = FileStatusManager.getInstance(dataContext.getProject());
 
     return getRootsStream(dataContext)
-            .map(FilePath::getVirtualFile)
-            .filter(Objects::nonNull)
-            .anyMatch(file -> isApplicableRoot(file, manager.getStatus(file), dataContext));
+      .map(FilePath::getVirtualFile)
+      .filter(Objects::nonNull)
+      .anyMatch(file -> isApplicableRoot(file, manager.getStatus(file), dataContext));
   }
 
   protected boolean isApplicableRoot(@Nonnull VirtualFile file, @Nonnull FileStatus status, @Nonnull VcsContext dataContext) {
@@ -125,10 +126,10 @@ public class CommonCheckinFilesAction extends AbstractCommonCheckinAction {
   @Nullable
   private static AbstractVcs getCommonVcs(@Nonnull Stream<FilePath> roots, @Nonnull Project project) {
     return getIfSingle(
-            roots.map(root -> VcsUtil.getVcsFor(project, root))
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
+      roots.map(root -> VcsUtil.getVcsFor(project, root))
+        .filter(Objects::nonNull)
+        .distinct()
+        .limit(Math.min(2, ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length))
     );
   }
 }

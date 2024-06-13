@@ -16,17 +16,19 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.diff.DiffContext;
-import consulo.ide.impl.idea.diff.merge.*;
-import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.RelativePoint;
+import consulo.ide.impl.idea.diff.DiffContext;
+import consulo.ide.impl.idea.diff.merge.MergeContext;
+import consulo.ide.impl.idea.diff.merge.MergeTool;
+import consulo.ide.impl.idea.diff.merge.MergeUtil;
+import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.DiffLocalize;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.Messages;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -88,11 +90,12 @@ public class ApplyPatchMergeTool implements MergeTool {
         public void actionPerformed(ActionEvent e) {
           if (result == MergeResult.RESOLVED) {
             int unresolved = getUnresolvedCount();
-            if (unresolved != 0 &&
-                Messages.showYesNoDialog(getComponent().getRootPane(),
-                                         DiffBundle.message("apply.patch.partially.resolved.changes.confirmation.message", unresolved),
-                                         DiffBundle.message("apply.partially.resolved.merge.dialog.title"),
-                                         Messages.getQuestionIcon()) != Messages.YES) {
+            if (unresolved != 0 && Messages.showYesNoDialog(
+              getComponent().getRootPane(),
+              DiffLocalize.applyPatchPartiallyResolvedChangesConfirmationMessage(unresolved).get(),
+              DiffLocalize.applyPartiallyResolvedMergeDialogTitle().get(),
+              Messages.getQuestionIcon()
+            ) != Messages.YES) {
               return;
             }
           }
@@ -128,7 +131,7 @@ public class ApplyPatchMergeTool implements MergeTool {
           int yOffset = new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
           RelativePoint point = new RelativePoint(component, new Point(component.getWidth() / 2, yOffset));
 
-          String message = DiffBundle.message("apply.patch.all.changes.processed.message.text");
+          String message = DiffLocalize.applyPatchAllChangesProcessedMessageText().get();
           DiffUtil.showSuccessPopup(message, point, this, () -> {
             if (isDisposed()) return;
             myMergeContext.finishMerge(MergeResult.RESOLVED);

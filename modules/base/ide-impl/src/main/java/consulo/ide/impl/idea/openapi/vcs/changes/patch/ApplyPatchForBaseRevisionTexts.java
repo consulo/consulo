@@ -21,18 +21,17 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class ApplyPatchForBaseRevisionTexts {
   private final CharSequence myLocal;
@@ -57,12 +56,14 @@ public class ApplyPatchForBaseRevisionTexts {
     }
   }
 
-  private ApplyPatchForBaseRevisionTexts(final DefaultPatchBaseVersionProvider provider,
-                                         final FilePath pathBeforeRename,
-                                         final TextFilePatch patch,
-                                         final VirtualFile file,
-                                         Getter<CharSequence> baseContents) {
-    myWarnings = new ArrayList<String>();
+  private ApplyPatchForBaseRevisionTexts(
+    final DefaultPatchBaseVersionProvider provider,
+    final FilePath pathBeforeRename,
+    final TextFilePatch patch,
+    final VirtualFile file,
+    Getter<CharSequence> baseContents
+  ) {
+    myWarnings = new ArrayList<>();
     final FileDocumentManager fileDocumentManager = FileDocumentManager.getInstance();
     Document document = fileDocumentManager.getDocument(file);
     if (document != null) {
@@ -74,16 +75,14 @@ public class ApplyPatchForBaseRevisionTexts {
 
     if (provider != null) {
       try {
-        provider.getBaseVersionContent(pathBeforeRename, new Predicate<CharSequence>() {
-          public boolean test(final CharSequence text) {
-            final GenericPatchApplier applier = new GenericPatchApplier(text, hunks);
-            if (! applier.execute()) {
-              return true;
-            }
-            myBase = text;
-            setPatched(applier.getAfter());
-            return false;
+        provider.getBaseVersionContent(pathBeforeRename, text -> {
+          final GenericPatchApplier applier = new GenericPatchApplier(text, hunks);
+          if (! applier.execute()) {
+            return true;
           }
+          myBase = text;
+          setPatched(applier.getAfter());
+          return false;
         }, myWarnings);
       }
       catch (VcsException e) {
@@ -130,6 +129,6 @@ public class ApplyPatchForBaseRevisionTexts {
   }
 
   public static String getCannotLoadBaseMessage(final String filePatch) {
-    return VcsBundle.message("patch.load.base.revision.error", filePatch,"");
+    return VcsLocalize.patchLoadBaseRevisionError(filePatch,"").get();
   }
 }

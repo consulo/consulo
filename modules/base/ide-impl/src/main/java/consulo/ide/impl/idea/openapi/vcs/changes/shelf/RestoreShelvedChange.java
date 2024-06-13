@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.versionControlSystem.VcsBundle;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.localize.VcsLocalize;
 
 public class RestoreShelvedChange extends AnAction {
   public RestoreShelvedChange() {
@@ -30,8 +30,8 @@ public class RestoreShelvedChange extends AnAction {
   public void update(final AnActionEvent e) {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     final ShelvedChangeList[] recycledChanges = e.getData(ShelvedChangesViewManager.SHELVED_RECYCLED_CHANGELIST_KEY);
-    e.getPresentation().setText(VcsBundle.message("vcs.shelf.action.restore.text"));
-    e.getPresentation().setDescription(VcsBundle.message("vcs.shelf.action.restore.description"));
+    e.getPresentation().setTextValue(VcsLocalize.vcsShelfActionRestoreText());
+    e.getPresentation().setDescriptionValue(VcsLocalize.vcsShelfActionRestoreDescription());
     e.getPresentation().setEnabled((project != null) && ((recycledChanges != null) && (recycledChanges.length == 1)));
   }
 

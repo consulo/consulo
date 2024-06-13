@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.ui.playback.commands;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 
 import javax.swing.*;

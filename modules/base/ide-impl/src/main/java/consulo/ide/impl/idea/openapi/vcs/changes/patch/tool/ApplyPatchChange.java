@@ -29,19 +29,19 @@ import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.diff.comparison.ByWord;
 import consulo.ide.impl.idea.diff.merge.MergeModelBase;
 import consulo.ide.impl.idea.diff.util.*;
-import consulo.ide.impl.idea.openapi.diff.DiffBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStatus;
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.function.PairConsumer;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -323,26 +323,28 @@ class ApplyPatchChange {
 
   @Nullable
   private GutterIconRenderer createApplyRenderer() {
-    return createIconRenderer(DiffBundle.message("merge.dialog.apply.change.action.name"), DiffUtil.getArrowIcon(Side.RIGHT), () -> {
-      myViewer.executeCommand("Accept change", () -> {
-        myViewer.replaceChange(this);
-      });
-    });
+    return createIconRenderer(
+      DiffLocalize.mergeDialogApplyChangeActionName().get(),
+      DiffUtil.getArrowIcon(Side.RIGHT),
+      () -> myViewer.executeCommand("Accept change", () -> myViewer.replaceChange(this))
+    );
   }
 
   @Nullable
   private GutterIconRenderer createIgnoreRenderer() {
-    return createIconRenderer(DiffBundle.message("merge.dialog.ignore.change.action.name"), AllIcons.Diff.Remove, () -> {
-      myViewer.executeCommand("Ignore change", () -> {
-        myViewer.markChangeResolved(this);
-      });
-    });
+    return createIconRenderer(
+      DiffLocalize.mergeDialogIgnoreChangeActionName().get(),
+      AllIcons.Diff.Remove,
+      () -> myViewer.executeCommand("Ignore change", () -> myViewer.markChangeResolved(this))
+    );
   }
 
   @Nonnull
-  private static GutterIconRenderer createIconRenderer(@Nonnull final String text,
-                                                       @Nonnull final Image icon,
-                                                       @Nonnull final Runnable perform) {
+  private static GutterIconRenderer createIconRenderer(
+    @Nonnull final String text,
+    @Nonnull final Image icon,
+    @Nonnull final Runnable perform
+  ) {
     final String tooltipText = DiffUtil.createTooltipText(text, null);
     return new DiffGutterRenderer(icon, tooltipText) {
       @Override

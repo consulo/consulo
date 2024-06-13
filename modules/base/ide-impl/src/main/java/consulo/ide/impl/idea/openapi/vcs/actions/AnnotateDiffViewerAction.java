@@ -44,7 +44,6 @@ import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestP
 import consulo.ide.impl.idea.openapi.vcs.impl.BackgroundableActionLock;
 import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsBackgroundableActions;
-import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
@@ -120,7 +119,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
     if (viewer.getProject() == null) return null;
     if (viewer.isDisposed()) return null;
 
-    Editor editor = e.getData(CommonDataKeys.EDITOR);
+    Editor editor = e.getData(Editor.KEY);
     if (editor == null) return null;
 
     ViewerAnnotator annotator = getAnnotator(viewer, editor);
@@ -226,9 +225,11 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
   }
 
   @Nullable
-  private static FileAnnotationLoader createThreesideAnnotationsLoader(@Nonnull Project project,
-                                                                       @Nonnull DiffRequest request,
-                                                                       @Nonnull ThreeSide side) {
+  private static FileAnnotationLoader createThreesideAnnotationsLoader(
+    @Nonnull Project project,
+    @Nonnull DiffRequest request,
+    @Nonnull ThreeSide side
+  ) {
     if (request instanceof ContentDiffRequest) {
       ContentDiffRequest requestEx = (ContentDiffRequest)request;
       if (requestEx.getContents().size() == 3) {
@@ -251,8 +252,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
       if (revision != null) {
         AbstractVcs vcs = ChangesUtil.getVcsForChange(change, project);
 
-        if (revision instanceof CurrentContentRevision) {
-          VirtualFile file = ((CurrentContentRevision)revision).getVirtualFile();
+        if (revision instanceof CurrentContentRevision currentContentRevision) {
+          VirtualFile file = currentContentRevision.getVirtualFile();
           FileAnnotationLoader loader = doCreateAnnotationsLoader(project, vcs, file);
           if (loader != null) return loader;
         }
@@ -263,8 +264,7 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
       }
     }
 
-    if (request instanceof ContentDiffRequest) {
-      ContentDiffRequest requestEx = (ContentDiffRequest)request;
+    if (request instanceof ContentDiffRequest requestEx) {
       if (requestEx.getContents().size() == 2) {
         DiffContent content = side.select(requestEx.getContents());
         return createAnnotationsLoader(project, content);
@@ -276,8 +276,8 @@ public class AnnotateDiffViewerAction extends ToggleAction implements DumbAware 
 
   @Nullable
   private static FileAnnotationLoader createAnnotationsLoader(@Nonnull Project project, @Nonnull DiffContent content) {
-    if (content instanceof FileContent) {
-      VirtualFile file = ((FileContent)content).getFile();
+    if (content instanceof FileContent fileContent) {
+      VirtualFile file = fileContent.getFile();
       AbstractVcs vcs = VcsUtil.getVcsFor(project, file);
       FileAnnotationLoader loader = doCreateAnnotationsLoader(project, vcs, file);
       if (loader != null) return loader;
