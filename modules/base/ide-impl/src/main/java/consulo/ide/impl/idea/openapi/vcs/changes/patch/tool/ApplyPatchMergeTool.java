@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.patch.tool;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
+import consulo.diff.localize.DiffLocalize;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.ide.impl.idea.diff.DiffContext;
@@ -26,7 +27,6 @@ import consulo.ide.impl.idea.diff.merge.MergeUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.localize.LocalizeValue;
-import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
