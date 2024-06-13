@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.ModalityStateImpl;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.diff.DiffDialogHints;
@@ -27,6 +26,7 @@ import consulo.ide.impl.idea.openapi.fileChooser.actions.VirtualFileDeleteProvid
 import consulo.ide.impl.idea.openapi.vcs.changes.RemoteRevisionsCache;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
@@ -35,7 +35,6 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.action.CheckboxAction;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.AbstractVcs;
@@ -339,7 +338,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   private static boolean isInFrame() {
-    return IdeaModalityState.current().equals(ModalityStateImpl.NON_MODAL);
+    return IdeaModalityState.current().equals(IdeaModalityState.NON_MODAL);
   }
 
   protected List<AnAction> createDiffActions() {

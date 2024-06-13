@@ -94,7 +94,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
       updateFromAction(vcsToActionMap.get(currentVcses.iterator().next()), presentation);
     }
     else {
-      DefaultActionGroup composite = new DefaultActionGroup(VcsLocalize.groupNameVersionControl().get(), true);
+      DefaultActionGroup composite = new DefaultActionGroup(VcsLocalize.groupNameVersionControl(), true);
       for (AnAction aMyChildren : myChildren) {
         StandardVcsGroup child = (StandardVcsGroup)aMyChildren;
         String vcsName = child.getVcsName(project);

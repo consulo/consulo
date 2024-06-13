@@ -59,8 +59,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static consulo.language.editor.CommonDataKeys.PROJECT;
-
 public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
@@ -71,7 +69,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   public static boolean isEnabled(final DataContext dc) {
-    final Project project = dc.getData(PROJECT);
+    final Project project = dc.getData(Project.KEY);
     if (project == null) return false;
 
     ShelvedChangeList[] changeLists = dc.getData(ShelvedChangesViewManager.SHELVED_CHANGELIST_KEY);
@@ -84,7 +82,7 @@ public class DiffShelvedChangesAction extends AnAction implements DumbAware {
   }
 
   public static void showShelvedChangesDiff(final DataContext dc) {
-    final Project project = dc.getData(PROJECT);
+    final Project project = dc.getData(Project.KEY);
     if (project == null) return;
     if (ChangeListManager.getInstance(project).isFreezedWithNotification(null)) return;
 

@@ -30,8 +30,6 @@ import java.util.function.Consumer;
  * @author Konstantin Bulenkov
  */
 class SwitchAnnotationSourceAction extends AnAction {
-  private final static String ourShowMerged = VcsLocalize.annotationSwitchToMergedText().get();
-  private final static String ourHideMerged = VcsLocalize.annotationSwitchToOriginalText().get();
   private final AnnotationSourceSwitcher mySwitcher;
   private final EditorGutterComponentEx myGutter;
   private final List<Consumer<AnnotationSource>> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -49,7 +47,11 @@ class SwitchAnnotationSourceAction extends AnAction {
 
   @Override
   public void update(final AnActionEvent e) {
-    e.getPresentation().setText(myShowMerged ? ourHideMerged : ourShowMerged);
+    e.getPresentation().setTextValue(
+      myShowMerged
+        ? VcsLocalize.annotationSwitchToOriginalText()
+        : VcsLocalize.annotationSwitchToMergedText()
+    );
   }
 
   public void actionPerformed(AnActionEvent e) {

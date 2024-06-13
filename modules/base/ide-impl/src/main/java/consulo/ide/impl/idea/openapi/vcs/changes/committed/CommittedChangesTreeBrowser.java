@@ -1,41 +1,39 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.application.impl.internal.ModalityStateImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.awt.tree.DefaultTreeExpander;
-import consulo.ui.ex.TreeExpander;
-import consulo.ui.ex.action.ContextHelpAction;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.tree.TreeState;
 import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.project.Project;
-import consulo.util.lang.Comparing;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.ide.impl.idea.ui.TreeCopyProvider;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.DefaultTreeExpander;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeState;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.action.CollapseAllAction;
+import consulo.ui.ex.awt.tree.action.ExpandAllAction;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.versionControlSystem.change.commited.*;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.tree.action.CollapseAllAction;
-import consulo.ui.ex.awt.tree.action.ExpandAllAction;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -46,8 +44,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author yole
@@ -155,7 +153,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
 
   private void updateGrouping() {
     if (myGroupingStrategy.changedSinceApply()) {
-      ApplicationManager.getApplication().invokeLater(() -> updateModel(), ModalityStateImpl.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(() -> updateModel(), IdeaModalityState.NON_MODAL);
     }
   }
 
@@ -504,7 +502,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   }
 
   public void setLoading(final boolean value) {
-    new AbstractCalledLater(myProject, ModalityStateImpl.NON_MODAL) {
+    new AbstractCalledLater(myProject, IdeaModalityState.NON_MODAL) {
       public void run() {
         myChangesTree.setPaintBusy(value);
       }

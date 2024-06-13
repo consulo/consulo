@@ -623,8 +623,8 @@ public abstract class ChangesTreeList<T> extends Tree implements TypeSafeDataPro
   public class ToggleShowDirectoriesAction extends ToggleAction implements DumbAware {
     public ToggleShowDirectoriesAction() {
       super(
-        VcsLocalize.changesActionShowDirectoriesText().get(),
-        VcsLocalize.changesActionShowDirectoriesDescription().get(),
+        VcsLocalize.changesActionShowDirectoriesText(),
+        VcsLocalize.changesActionShowDirectoriesDescription(),
         AllIcons.Actions.GroupByPackage
       );
     }
