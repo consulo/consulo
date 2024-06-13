@@ -8,7 +8,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.module.content.ProjectFileIndex;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

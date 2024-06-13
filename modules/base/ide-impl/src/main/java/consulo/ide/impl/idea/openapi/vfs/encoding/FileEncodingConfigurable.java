@@ -3,7 +3,7 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.ProjectConfigurable;
@@ -11,10 +11,9 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.ObjectUtil;
 import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.language.LangBundle;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -24,15 +23,17 @@ import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
-import jakarta.inject.Inject;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -63,9 +64,16 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     myExplanationLabel.setHyperlinkTarget("https://en.wikipedia.org/wiki/Byte_order_mark#UTF-8");
     EncodingManager app = EncodingManager.getInstance();
     EncodingProjectManagerImpl prj = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
-    myProjectMapping = Trinity.create(IdeBundle.message("file.encoding.option.global.encoding"), () -> app.getDefaultCharsetName().isEmpty() ? null : app.getDefaultCharset(),
-                                      o -> app.setDefaultCharsetName(getCharsetName(o)));
-    myGlobalMapping = Trinity.create(IdeBundle.message("file.encoding.option.project.encoding"), prj::getConfiguredDefaultCharset, o -> prj.setDefaultCharsetName(getCharsetName(o)));
+    myProjectMapping = Trinity.create(
+      IdeLocalize.fileEncodingOptionGlobalEncoding().get(),
+      () -> app.getDefaultCharsetName().isEmpty() ? null : app.getDefaultCharset(),
+      o -> app.setDefaultCharsetName(getCharsetName(o))
+    );
+    myGlobalMapping = Trinity.create(
+      IdeLocalize.fileEncodingOptionProjectEncoding().get(),
+      prj::getConfiguredDefaultCharset,
+      o -> prj.setDefaultCharsetName(getCharsetName(o))
+    );
   }
 
   @Override
@@ -80,17 +88,17 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
 
   private void updateExplanationLabelText() {
     EncodingProjectManagerImpl.BOMForNewUTF8Files item = (EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem();
-    String I = ApplicationNamesInfo.getInstance().getProductName();
+    String I = Application.get().getName().get();
     if (item != null) {
       switch (item) {
         case ALWAYS:
-          myExplanationLabel.setHtmlText(IdeBundle.message("file.encoding.option.warning.always", I));
+          myExplanationLabel.setHtmlText(IdeLocalize.fileEncodingOptionWarningAlways(I).get());
           break;
         case NEVER:
-          myExplanationLabel.setHtmlText(IdeBundle.message("file.encoding.option.warning.never", I));
+          myExplanationLabel.setHtmlText(IdeLocalize.fileEncodingOptionWarningNever(I).get());
           break;
         case WINDOWS_ONLY:
-          myExplanationLabel.setHtmlText(IdeBundle.message("file.encoding.option.warning.windows.only", I));
+          myExplanationLabel.setHtmlText(IdeLocalize.fileEncodingOptionWarningWindowsOnly(I).get());
           break;
       }
     }
@@ -99,7 +107,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
   @Nonnull
   @Override
   public String getDisplayName() {
-    return IdeBundle.message("file.encodings.configurable");
+    return IdeLocalize.fileEncodingsConfigurable().get();
   }
 
   @Override
@@ -116,12 +124,12 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
 
   @Override
   protected <S> Object getParameter(@Nonnull Key<S> key) {
-    if (key == DESCRIPTION) return IdeBundle.message("encodings.dialog.caption", ApplicationNamesInfo.getInstance().getFullProductName());
-    if (key == MAPPING_TITLE) return IdeBundle.message("file.encoding.option.encoding.column");
-    if (key == TARGET_TITLE) return IdeBundle.message("file.encoding.option.path.column");
+    if (key == DESCRIPTION) return IdeLocalize.encodingsDialogCaption(Application.get().getName()).get();
+    if (key == MAPPING_TITLE) return IdeLocalize.fileEncodingOptionEncodingColumn().get();
+    if (key == TARGET_TITLE) return IdeLocalize.fileEncodingOptionPathColumn().get();
     if (key == OVERRIDE_QUESTION) return null;
     if (key == OVERRIDE_TITLE) return null;
-    if (key == EMPTY_TEXT) return IdeBundle.message("file.encodings.not.configured");
+    if (key == EMPTY_TEXT) return IdeLocalize.fileEncodingsNotConfigured().get();
     return null;
   }
 
@@ -166,7 +174,8 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
   @Override
   @Nullable
   protected String getNullValueText(@Nullable Object target) {
-    return target != null ? super.getNullValueText(target) : IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName());
+    return target != null ? super.getNullValueText(target) :
+      IdeBundle.message("encoding.name.system.default", CharsetToolkit.getDefaultSystemCharset().displayName());
   }
 
   @Nonnull
@@ -179,7 +188,7 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
   @Override
   public JComponent createComponent() {
     myTablePanel.add(super.createComponent(), BorderLayout.CENTER);
-    JPanel p = createActionPanel(null, new Value<Charset>() {
+    JPanel p = createActionPanel(null, new Value<>() {
       @Override
       public void commit() {
       }
@@ -213,9 +222,9 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
   public boolean isModified() {
     if (super.isModified()) return true;
     EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
-    boolean same = Comparing.equal(encodingManager.getDefaultCharsetForPropertiesFiles(null), myPropsCharset) &&
-                   encodingManager.isNative2AsciiForPropertiesFiles() == myTransparentNativeToAsciiCheckBox.isSelected() &&
-                   encodingManager.getBOMForNewUTF8Files() == myBOMForUTF8Combo.getSelectedItem();
+    boolean same = Comparing.equal(encodingManager.getDefaultCharsetForPropertiesFiles(null), myPropsCharset)
+      && encodingManager.isNative2AsciiForPropertiesFiles() == myTransparentNativeToAsciiCheckBox.isSelected()
+      && encodingManager.getBOMForNewUTF8Files() == myBOMForUTF8Combo.getSelectedItem();
     return !same;
   }
 
@@ -230,8 +239,10 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
     EncodingProjectManagerImpl encodingManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(myProject);
     encodingManager.setDefaultCharsetForPropertiesFiles(null, myPropsCharset);
     encodingManager.setNative2AsciiForPropertiesFiles(null, myTransparentNativeToAsciiCheckBox.isSelected());
-    EncodingProjectManagerImpl.BOMForNewUTF8Files option =
-            ObjectUtil.notNull((EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem(), EncodingProjectManagerImpl.BOMForNewUTF8Files.NEVER);
+    EncodingProjectManagerImpl.BOMForNewUTF8Files option = ObjectUtil.notNull(
+      (EncodingProjectManagerImpl.BOMForNewUTF8Files)myBOMForUTF8Combo.getSelectedItem(),
+      EncodingProjectManagerImpl.BOMForNewUTF8Files.NEVER
+    );
     encodingManager.setBOMForNewUtf8Files(option);
   }
 
@@ -246,13 +257,14 @@ class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> implemen
 
   @Override
   protected boolean canEditTarget(@Nullable Object target, Charset value) {
-    return target == null || target instanceof VirtualFile && (((VirtualFile)target).isDirectory() || EncodingUtil.checkCanConvertAndReload((VirtualFile)target) == null);
+    return target == null || target instanceof VirtualFile virtualFile
+      && (virtualFile.isDirectory() || EncodingUtil.checkCanConvertAndReload(virtualFile) == null);
   }
 
   @Nonnull
   private static PerFileMappingsEx<Charset> createMappings(@Nonnull Project project) {
     EncodingProjectManagerImpl prjManager = (EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project);
-    return new PerFileMappingsEx<Charset>() {
+    return new PerFileMappingsEx<>() {
       @Nonnull
       @Override
       public Map<VirtualFile, Charset> getMappings() {

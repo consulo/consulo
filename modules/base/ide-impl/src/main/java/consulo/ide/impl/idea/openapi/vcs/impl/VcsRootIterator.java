@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.versionControlSystem.AbstractVcs;

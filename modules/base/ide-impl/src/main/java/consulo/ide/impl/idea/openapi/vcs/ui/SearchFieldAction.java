@@ -22,6 +22,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
+import consulo.ui.style.StyleManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -62,7 +63,7 @@ public abstract class SearchFieldAction extends AnAction implements CustomCompon
     Border border = myField.getBorder();
     Border emptyBorder = IdeBorderFactory.createEmptyBorder(3, 0, 2, 0);
     if (border instanceof CompoundBorder) {
-      if (!UIUtil.isUnderDarcula()) {
+      if (!StyleManager.get().getCurrentStyle().isDark()) {
         myField.setBorder(new CompoundBorder(emptyBorder, ((CompoundBorder)border).getInsideBorder()));
       }
     }
@@ -77,7 +78,11 @@ public abstract class SearchFieldAction extends AnAction implements CustomCompon
     if (text.length() > 0) {
       final JLabel label = new JLabel(text);
       //label.setFont(label.getFont().deriveFont(Font.ITALIC));
-      label.setForeground(UIUtil.isUnderDarcula() ? UIUtil.getLabelForeground() : UIUtil.getInactiveTextColor());
+      label.setForeground(
+        StyleManager.get().getCurrentStyle().isDark()
+          ? UIUtil.getLabelForeground()
+          : UIUtil.getInactiveTextColor()
+      );
       label.setBorder(BorderFactory.createEmptyBorder(0,3,0,0));
       myComponent.add(label);
     }

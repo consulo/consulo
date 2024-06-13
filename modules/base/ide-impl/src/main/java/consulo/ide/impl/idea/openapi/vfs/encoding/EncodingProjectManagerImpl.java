@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -15,13 +14,14 @@ import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.util.collection.HashingStrategy;
@@ -368,7 +368,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
         return true;
       }
-      ProgressManager.progress(IdeBundle.message("progress.text.reloading.files"), file.getPresentableUrl());
+      ProgressManager.progress(IdeLocalize.progressTextReloadingFiles().get(), file.getPresentableUrl());
       TransactionGuard.submitTransaction(ApplicationManager.getApplication(), () -> clearAndReload(file, project));
       return true;
     };
@@ -426,7 +426,12 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     Boolean suppress = SUPPRESS_RELOAD.get();
     if (suppress == Boolean.TRUE) return;
     FileDocumentManager.getInstance().saveAllDocuments();  // consider all files as unmodified
-    ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> suppressReloadDuring(reloadAction), IdeBundle.message("progress.title.reload.files"), false, myProject);
+    ProgressManager.getInstance().runProcessWithProgressSynchronously(
+      () -> suppressReloadDuring(reloadAction),
+      IdeLocalize.progressTitleReloadFiles().get(),
+      false,
+      myProject
+    );
   }
 
   private void reloadAllFilesUnder(@Nullable final VirtualFile root) {
@@ -434,7 +439,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
       if (!(file instanceof VirtualFileSystemEntry)) return true;
       Document cachedDocument = FileDocumentManager.getInstance().getCachedDocument(file);
       if (cachedDocument != null) {
-        ProgressManager.progress(IdeBundle.message("progress.text.reloading.file"), file.getPresentableUrl());
+        ProgressManager.progress(IdeLocalize.progressTextReloadingFile().get(), file.getPresentableUrl());
         TransactionGuard.submitTransaction(myProject, () -> reload(file, myProject, (FileDocumentManagerImpl)FileDocumentManager.getInstance()));
       }
       // for not loaded files deep under project, reset encoding to give them chance re-detect the right one later
@@ -547,7 +552,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
       case NEVER:
         return false;
       case WINDOWS_ONLY:
-        return SystemInfo.isWindows;
+        return Platform.current().os().isWindows();
       default:
         throw new IllegalStateException(myBomForNewUtf8Files.toString());
     }

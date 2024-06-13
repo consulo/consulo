@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.versionControlSystem.FilePathComparator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

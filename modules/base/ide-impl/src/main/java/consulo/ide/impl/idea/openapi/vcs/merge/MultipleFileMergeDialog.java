@@ -17,7 +17,6 @@
 package consulo.ide.impl.idea.openapi.vcs.merge;
 
 import consulo.application.ApplicationManager;
-import consulo.application.CommonBundle;
 import consulo.diff.DiffManager;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
@@ -28,9 +27,9 @@ import consulo.ide.impl.idea.diff.InvalidDiffRequestException;
 import consulo.ide.impl.idea.diff.merge.MergeUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -39,10 +38,11 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.merge.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
@@ -51,11 +51,8 @@ import jakarta.annotation.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -102,7 +99,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     }
 
     List<ColumnInfo> columns = new ArrayList<>();
-    columns.add(new ColumnInfo<VirtualFile, VirtualFile>(VcsBundle.message("multiple.file.merge.column.name")) {
+    columns.add(new ColumnInfo<VirtualFile, VirtualFile>(VcsLocalize.multipleFileMergeColumnName().get()) {
       @Override
       public VirtualFile valueOf(final VirtualFile virtualFile) {
         return virtualFile;
@@ -113,17 +110,17 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         return myVirtualFileRenderer;
       }
     });
-    columns.add(new ColumnInfo<VirtualFile, String>(VcsBundle.message("multiple.file.merge.column.type")) {
+    columns.add(new ColumnInfo<VirtualFile, String>(VcsLocalize.multipleFileMergeColumnType().get()) {
       @Override
       public String valueOf(final VirtualFile virtualFile) {
         return myBinaryFiles.contains(virtualFile)
-               ? VcsBundle.message("multiple.file.merge.type.binary")
-               : VcsBundle.message("multiple.file.merge.type.text");
+          ? VcsLocalize.multipleFileMergeTypeBinary().get()
+          : VcsLocalize.multipleFileMergeTypeText().get();
       }
 
       @Override
       public String getMaxStringValue() {
-        return VcsBundle.message("multiple.file.merge.type.binary");
+        return VcsLocalize.multipleFileMergeTypeBinary().get();
       }
 
       @Override
@@ -145,24 +142,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
     myTable.setRowHeight(myVirtualFileRenderer.getPreferredSize().height);
     setTitle(myMergeDialogCustomizer.getMultipleFileDialogTitle());
     init();
-    myAcceptYoursButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        acceptRevision(true);
-      }
-    });
-    myAcceptTheirsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        acceptRevision(false);
-      }
-    });
-    myTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(@Nonnull final ListSelectionEvent e) {
-        updateButtonState();
-      }
-    });
+    myAcceptYoursButton.addActionListener(e -> acceptRevision(true));
+    myAcceptTheirsButton.addActionListener(e -> acceptRevision(false));
+    myTable.getSelectionModel().addListSelectionListener(e -> updateButtonState());
     for (VirtualFile file : files) {
       if (file.getFileType().isBinary() || provider.isBinary(file)) {
         myBinaryFiles.add(file);
@@ -204,7 +186,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
   @Override
   protected Action getCancelAction() {
     Action action = super.getCancelAction();
-    action.putValue(Action.NAME, CommonBundle.getCloseButtonText());
+    action.putValue(Action.NAME, CommonLocalize.buttonClose().get());
     return action;
   }
 
@@ -233,35 +215,27 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     for (final VirtualFile file : files) {
       final Ref<Exception> ex = new Ref<>();
-      ApplicationManager.getApplication().runWriteAction(new Runnable() {
-        @Override
-        public void run() {
-          CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
-            @Override
-            public void run() {
-              try {
-                if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
-                  if (!DiffUtil.makeWritable(myProject, file)) {
-                    throw new IOException("File is read-only: " + file.getPresentableName());
-                  }
-                  MergeData data = myProvider.loadRevisions(file);
-                  if (isCurrent) {
-                    file.setBinaryContent(data.CURRENT);
-                  }
-                  else {
-                    file.setBinaryContent(data.LAST);
-                    checkMarkModifiedProject(file);
-                  }
-                }
-                markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
-              }
-              catch (Exception e) {
-                ex.set(e);
-              }
+      ApplicationManager.getApplication().runWriteAction(() -> CommandProcessor.getInstance().executeCommand(myProject, () -> {
+        try {
+          if (!(myProvider instanceof MergeProvider2) || myMergeSession.canMerge(file)) {
+            if (!DiffUtil.makeWritable(myProject, file)) {
+              throw new IOException("File is read-only: " + file.getPresentableName());
             }
-          }, "Accept " + (isCurrent ? "Yours" : "Theirs"), null);
+            MergeData data = myProvider.loadRevisions(file);
+            if (isCurrent) {
+              file.setBinaryContent(data.CURRENT);
+            }
+            else {
+              file.setBinaryContent(data.LAST);
+              checkMarkModifiedProject(file);
+            }
+          }
+          markFileProcessed(file, isCurrent ? MergeSession.Resolution.AcceptedYours : MergeSession.Resolution.AcceptedTheirs);
         }
-      });
+        catch (Exception e) {
+          ex.set(e);
+        }
+      }, "Accept " + (isCurrent ? "Yours" : "Theirs"), null));
       if (!ex.isNull()) {
         //noinspection ThrowableResultOfMethodCallIgnored
         Messages.showErrorDialog(myRootPanel, "Error saving merged data: " + ex.get().getMessage());
@@ -329,21 +303,13 @@ public class MultipleFileMergeDialog extends DialogWrapper {
       final List<byte[]> byteContents = ContainerUtil.list(mergeData.CURRENT, mergeData.ORIGINAL, mergeData.LAST);
       List<String> contentTitles = ContainerUtil.list(leftTitle, baseTitle, rightTitle);
 
-      Consumer<MergeResult> callback = new Consumer<>() {
-        @Override
-        public void accept(final MergeResult result) {
-          Document document = FileDocumentManager.getInstance().getCachedDocument(file);
-          if (document != null) FileDocumentManager.getInstance().saveDocument(document);
-          checkMarkModifiedProject(file);
+      Consumer<MergeResult> callback = result -> {
+        Document document = FileDocumentManager.getInstance().getCachedDocument(file);
+        if (document != null) FileDocumentManager.getInstance().saveDocument(document);
+        checkMarkModifiedProject(file);
 
-          if (result != MergeResult.CANCEL) {
-            ApplicationManager.getApplication().runWriteAction(new Runnable() {
-              @Override
-              public void run() {
-                markFileProcessed(file, getSessionResolution(result));
-              }
-            });
-          }
+        if (result != MergeResult.CANCEL) {
+          ApplicationManager.getApplication().runWriteAction(() -> markFileProcessed(file, getSessionResolution(result)));
         }
       };
 

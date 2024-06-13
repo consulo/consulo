@@ -15,12 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs.impl;
 
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.util.IntSLRUCache;
 import consulo.ide.impl.idea.util.containers.IntObjectLRUMap;
+import consulo.platform.Platform;
 import consulo.util.lang.ByteArrayCharSequence;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import java.io.File;
@@ -55,7 +55,7 @@ public class FileNameCache {
   private static void assertShortFileName(@Nonnull String name) {
     if (name.length() <= 1) return;
     int start = 0;
-    if (SystemInfo.isWindows && name.startsWith("//")) {  // Windows UNC: //Network/Ubuntu
+    if (Platform.current().os().isWindows() && name.startsWith("//")) {  // Windows UNC: //Network/Ubuntu
       final int idx = name.indexOf('/', 2);
       start = idx == -1 ? 2 : idx + 1;
     }

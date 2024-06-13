@@ -10,7 +10,7 @@ import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ide.impl.idea.util.LineSeparator;

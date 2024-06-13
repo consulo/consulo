@@ -21,10 +21,10 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.util.dataholder.Key;
@@ -267,6 +267,6 @@ public abstract class ArchiveFileSystem extends NewVirtualFileSystem {
    */
   protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
     FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getNameSequence());
-    return fileType instanceof ArchiveFileType && ((ArchiveFileType)fileType).getFileSystem() == this;
+    return fileType instanceof ArchiveFileType archiveFileType && archiveFileType.getFileSystem() == this;
   }
 }

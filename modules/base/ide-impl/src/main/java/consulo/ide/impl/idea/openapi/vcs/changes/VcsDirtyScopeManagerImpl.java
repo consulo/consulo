@@ -19,7 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

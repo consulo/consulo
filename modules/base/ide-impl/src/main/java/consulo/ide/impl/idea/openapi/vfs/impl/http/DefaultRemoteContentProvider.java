@@ -15,17 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
-import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.application.util.UrlConnectionUtil;
+import consulo.logging.Logger;
+import consulo.platform.base.localize.IdeLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.UrlConnectionUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.RemoteContentProvider;
-
 import jakarta.annotation.Nonnull;
 
 import java.io.*;
@@ -69,7 +68,7 @@ public class DefaultRemoteContentProvider extends RemoteContentProvider {
 
       final int responseCode = connection.getResponseCode();
       if (responseCode != HttpURLConnection.HTTP_OK) {
-        throw new IOException(IdeBundle.message("error.connection.failed.with.http.code.N", responseCode));
+        throw new IOException(IdeLocalize.errorConnectionFailedWithHttpCodeN(responseCode).get());
       }
 
       final int size = connection.getContentLength();

@@ -15,17 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.application.Application;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowConfirmationOptionImpl;
+import consulo.ide.impl.idea.openapi.vcs.VcsShowOptionsSettingImpl;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.versionControlSystem.*;
-
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsShowConfirmationOption;
+import consulo.versionControlSystem.VcsShowSettingOption;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OptionsAndConfirmations {
   private final Map<String, VcsShowOptionsSettingImpl> myOptions;
@@ -44,17 +48,27 @@ public class OptionsAndConfirmations {
     createSettingFor(VcsConfiguration.StandardOption.STATUS);
     createSettingFor(VcsConfiguration.StandardOption.EDIT);
 
-    myConfirmations.put(VcsConfiguration.StandardConfirmation.ADD.getId(), new VcsShowConfirmationOptionImpl(
-            VcsConfiguration.StandardConfirmation.ADD.getId(),
-            VcsBundle.message("label.text.when.files.created.with.idea", ApplicationNamesInfo.getInstance().getProductName()),
-            VcsBundle.message("radio.after.creation.do.not.add"), VcsBundle.message("radio.after.creation.show.options"),
-            VcsBundle.message("radio.after.creation.add.silently")));
+    myConfirmations.put(
+      VcsConfiguration.StandardConfirmation.ADD.getId(),
+      new VcsShowConfirmationOptionImpl(
+        VcsConfiguration.StandardConfirmation.ADD.getId(),
+        VcsLocalize.labelTextWhenFilesCreatedWithIdea(Application.get().getName()).get(),
+        VcsLocalize.radioAfterCreationDoNotAdd().get(),
+        VcsLocalize.radioAfterCreationShowOptions().get(),
+        VcsLocalize.radioAfterCreationAddSilently().get()
+      )
+    );
 
-    myConfirmations.put(VcsConfiguration.StandardConfirmation.REMOVE.getId(), new VcsShowConfirmationOptionImpl(
+    myConfirmations.put(
       VcsConfiguration.StandardConfirmation.REMOVE.getId(),
-      VcsBundle.message("label.text.when.files.are.deleted.with.idea", ApplicationNamesInfo.getInstance().getProductName()),
-      VcsBundle.message("radio.after.deletion.do.not.remove"), VcsBundle.message("radio.after.deletion.show.options"),
-      VcsBundle.message("radio.after.deletion.remove.silently")));
+      new VcsShowConfirmationOptionImpl(
+        VcsConfiguration.StandardConfirmation.REMOVE.getId(),
+        VcsLocalize.labelTextWhenFilesAreDeletedWithIdea(Application.get().getName()).get(),
+        VcsLocalize.radioAfterDeletionDoNotRemove().get(),
+        VcsLocalize.radioAfterDeletionShowOptions().get(),
+        VcsLocalize.radioAfterDeletionRemoveSilently().get()
+      )
+    );
 
     restoreReadConfirm(VcsConfiguration.StandardConfirmation.ADD, initOptions);
     restoreReadConfirm(VcsConfiguration.StandardConfirmation.REMOVE, initOptions);
@@ -85,11 +99,11 @@ public class OptionsAndConfirmations {
   }
 
   public List<VcsShowOptionsSettingImpl> getAllOptions() {
-    return new ArrayList<VcsShowOptionsSettingImpl>(myOptions.values());
+    return new ArrayList<>(myOptions.values());
   }
 
   public List<VcsShowConfirmationOptionImpl> getAllConfirmations() {
-    return new ArrayList<VcsShowConfirmationOptionImpl>(myConfirmations.values());
+    return new ArrayList<>(myConfirmations.values());
   }
 
   @Nonnull

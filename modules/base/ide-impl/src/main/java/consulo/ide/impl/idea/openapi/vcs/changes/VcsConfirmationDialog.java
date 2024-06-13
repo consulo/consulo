@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.application.util.SystemInfo;
-import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.OptionsDialog;
-
+import consulo.versionControlSystem.VcsShowConfirmationOption;
 import jakarta.annotation.Nonnull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -104,6 +104,6 @@ class VcsConfirmationDialog extends OptionsDialog {
         doCancelAction();
       }
     };
-    return SystemInfo.isMac ? new Action[] {cancelAction, okAction} : new Action[] {okAction, cancelAction};
+    return Platform.current().os().isMac() ? new Action[] {cancelAction, okAction} : new Action[] {okAction, cancelAction};
   }
 }

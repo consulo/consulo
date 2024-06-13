@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 
 import java.io.File;

@@ -4,17 +4,18 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.TaskInfo;
 import consulo.disposer.Disposable;
-import consulo.ide.IdeBundle;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.InplaceButton;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.popup.IconButton;
 import consulo.ui.image.Image;
+import consulo.ui.style.StyleManager;
 import consulo.util.collection.JBIterable;
+import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -51,7 +52,9 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       myComponent.setLayout(new BorderLayout(2, 0));
       createCompactTextAndProgress();
       myComponent.add(createButtonPanel(myEastButtons.map(b -> b.button)), BorderLayout.EAST);
-      myComponent.setToolTipText(processInfo.getTitle() + ". " + IdeBundle.message("progress.text.clickToViewProgressWindow"));
+      myComponent.setToolTipText(
+        processInfo.getTitle() + ". " + IdeLocalize.progressTextClicktoviewprogresswindow()
+      );
     }
     else {
       myComponent.setLayout(new BorderLayout());
@@ -251,7 +254,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
       g.setColor(UIUtil.getPanelBackground());
       g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
 
-      if (!UIUtil.isUnderDarcula()) {
+      if (!StyleManager.get().getCurrentStyle().isDark()) {
         bg = ColorUtil.toAlpha(bg.darker().darker(), 230);
         g.setColor(bg);
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import java.util.Collections;
 import java.util.Iterator;

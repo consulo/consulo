@@ -15,20 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.application.dumb.DumbAware;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.annotation.Nonnull;
 
 public class MaximizeToolWindowAction extends AnAction implements DumbAware {
   public MaximizeToolWindowAction() {
-    super(ActionsBundle.message("action.ResizeToolWindowMaximize.text"));
+    super(ActionLocalize.actionResizetoolwindowmaximizeText());
   }
 
   @Override
@@ -55,8 +55,10 @@ public class MaximizeToolWindowAction extends AnAction implements DumbAware {
       return;
     }
     ToolWindowManager manager = ToolWindowManager.getInstance(project);
-    e.getPresentation().setText(manager.isMaximized(toolWindow) ?
-                                ActionsBundle.message("action.ResizeToolWindowMaximize.text.alternative") :
-                                ActionsBundle.message("action.ResizeToolWindowMaximize.text"));
+    e.getPresentation().setTextValue(
+      manager.isMaximized(toolWindow)
+        ? ActionLocalize.actionResizetoolwindowmaximizeTextAlternative()
+        : ActionLocalize.actionResizetoolwindowmaximizeText()
+    );
   }
 }

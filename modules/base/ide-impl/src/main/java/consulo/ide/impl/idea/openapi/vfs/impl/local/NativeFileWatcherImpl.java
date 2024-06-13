@@ -2,13 +2,11 @@
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.application.Application;
-import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.util.NativeFileLoader;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;
@@ -17,6 +15,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.impl.internal.local.FileWatcherNotificationSink;
@@ -73,13 +72,13 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       LOG.info("Native file watcher is disabled");
     }
     else if (myExecutable == PLATFORM_NOT_SUPPORTED) {
-      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.exists"));
+      notifyOnFailure(ApplicationLocalize.watcherExeNotExists().get());
     }
     else if (!Files.exists(myExecutable)) {
-      notifyOnFailure(ApplicationBundle.message("watcher.exe.not.found"));
+      notifyOnFailure(ApplicationLocalize.watcherExeNotFound().get());
     }
     else if (!Files.isExecutable(myExecutable)) {
-      String message = ApplicationBundle.message("watcher.exe.not.exe", myExecutable);
+      String message = ApplicationLocalize.watcherExeNotExe(myExecutable).get();
       notifyOnFailure(message);
     }
     else {
@@ -89,7 +88,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       }
       catch (IOException e) {
         LOG.warn(e.getMessage());
-        notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"));
+        notifyOnFailure(ApplicationLocalize.watcherFailedToStart().get());
       }
     }
   }
@@ -161,7 +160,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     if (myStartAttemptCount.incrementAndGet() > MAX_PROCESS_LAUNCH_ATTEMPT_COUNT) {
-      notifyOnFailure(ApplicationBundle.message("watcher.failed.to.start"));
+      notifyOnFailure(ApplicationLocalize.watcherFailedToStart().get());
       return;
     }
 
@@ -254,7 +253,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   }
 
   private static final Charset CHARSET =
-    SystemInfo.isWindows || SystemInfo.isMac ? StandardCharsets.UTF_8 : CharsetToolkit.getPlatformCharset();
+    Platform.current().os().isWindows() || Platform.current().os().isMac() ? StandardCharsets.UTF_8 : CharsetToolkit.getPlatformCharset();
 
   private static final BaseOutputReader.Options READER_OPTIONS = new BaseOutputReader.Options() {
     @Override
@@ -356,7 +355,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         }
 
         if (watcherOp == WatcherOp.GIVEUP) {
-          notifyOnFailure(ApplicationBundle.message("watcher.gave.up"));
+          notifyOnFailure(ApplicationLocalize.watcherGaveUp().get());
           myIsShuttingDown = true;
         }
         else if (watcherOp == WatcherOp.RESET) {
@@ -407,7 +406,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     private void processChange(@Nonnull String path, @Nonnull WatcherOp op) {
-      if (SystemInfo.isWindows && op == WatcherOp.RECDIRTY) {
+      if (Platform.current().os().isWindows() && op == WatcherOp.RECDIRTY) {
         myNotificationSink.notifyReset(path);
         return;
       }
@@ -417,7 +416,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         return;
       }
 
-      if (SystemInfo.isMac) {
+      if (Platform.current().os().isMac()) {
         path = Normalizer.normalize(path, Normalizer.Form.NFC);
       }
 

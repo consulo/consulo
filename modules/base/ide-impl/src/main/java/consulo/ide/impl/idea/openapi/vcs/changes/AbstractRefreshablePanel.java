@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.BackgroundTaskQueue;
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.ide.impl.idea.openapi.vcs.Details;
 import consulo.ide.impl.idea.openapi.vcs.GenericDetailsLoader;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
