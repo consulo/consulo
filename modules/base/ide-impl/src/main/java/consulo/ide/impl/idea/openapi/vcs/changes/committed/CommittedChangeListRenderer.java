@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.application.util.DateFormatUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.UIUtil;
@@ -30,6 +31,7 @@ import consulo.versionControlSystem.change.commited.CommittedChangeListDecorator
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import jakarta.annotation.Nonnull;
+import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -88,6 +90,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
   }
 
+  @NonNls
   public void renderChangeList(JComponent tree, CommittedChangeList changeList) {
     final Container parent = tree.getParent();
     final int rowX = getRowX(myTree, 2);
@@ -158,16 +161,16 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
       appendFixedTextFragmentWidth(descMaxWidth);
     }
     else {
-      final String moreMarker = VcsLocalize.changesBrowserDetailsMarker().get();
-      int moreWidth = fontMetrics.stringWidth(moreMarker);
+      final LocalizeValue moreMarker = VcsLocalize.changesBrowserDetailsMarker();
+      int moreWidth = fontMetrics.stringWidth(moreMarker.get());
       int remainingWidth = descMaxWidth - moreWidth - numberWidth - branchWidth;
       description = truncateDescription(description, fontMetrics, remainingWidth);
       myRenderer.appendTextWithLinks(description);
       if (!StringUtil.isEmpty(description)) {
         append(" ", SimpleTextAttributes.REGULAR_ATTRIBUTES);
-        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       } else if (remainingWidth > 0) {
-        append(moreMarker, SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
+        append(moreMarker.get(), SimpleTextAttributes.LINK_ATTRIBUTES, new CommittedChangesTreeBrowser.MoreLauncher(myProject, changeList));
       }
       // align value is for the latest added piece
       appendFixedTextFragmentWidth(descMaxWidth);

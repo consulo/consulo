@@ -132,8 +132,7 @@ public class ApplyPatchAction extends DumbAwareAction {
     VirtualFile vFile = VfsUtil.findFileByIoFile(file, true);
     String patchPath = file.getPath();
     if (vFile == null) {
-      VcsNotifier.getInstance(project)
-        .notifyWeakError(LocalizeValue.localizeTODO("Can't find patch file " + patchPath).get());
+      VcsNotifier.getInstance(project).notifyWeakError("Can't find patch file " + patchPath);
       return false;
     }
     if (!isPatchFile(file)) {

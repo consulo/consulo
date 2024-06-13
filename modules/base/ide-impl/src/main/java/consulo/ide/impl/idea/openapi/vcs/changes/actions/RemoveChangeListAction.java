@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
@@ -95,14 +96,14 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
       return confirmActiveChangeListRemoval(project, lists, haveNoChanges);
     }
 
-    String message = lists.size() == 1
-      ? VcsLocalize.changesRemovechangelistWarningText(lists.get(0).getName()).get()
-      : VcsLocalize.changesRemovechangelistMultipleWarningText(lists.size()).get();
+    LocalizeValue message = lists.size() == 1
+      ? VcsLocalize.changesRemovechangelistWarningText(lists.get(0).getName())
+      : VcsLocalize.changesRemovechangelistMultipleWarningText(lists.size());
 
     return haveNoChanges ||
       Messages.YES == Messages.showYesNoDialog(
         project,
-        message,
+        message.get(),
         VcsLocalize.changesRemovechangelistWarningTitle().get(),
         Messages.getQuestionIcon()
       );
@@ -122,8 +123,7 @@ public class RemoveChangeListAction extends AnAction implements DumbAware {
     String[] remainingListsNames = remainingLists.stream().map(ChangeList::getName).toArray(String[]::new);
     int nameIndex = Messages.showChooseDialog(
       project,
-      empty ? VcsLocalize.changesRemoveActiveEmptyPrompt().get()
-        : VcsLocalize.changesRemoveActivePrompt().get(),
+      empty ? VcsLocalize.changesRemoveActiveEmptyPrompt().get() : VcsLocalize.changesRemoveActivePrompt().get(),
       VcsLocalize.changesRemoveActiveTitle().get(),
       Messages.getQuestionIcon(),
       remainingListsNames,

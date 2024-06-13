@@ -25,6 +25,7 @@ import consulo.ide.impl.idea.diff.merge.MergeTool;
 import consulo.ide.impl.idea.diff.merge.MergeUtil;
 import consulo.ide.impl.idea.diff.util.DiffUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.DiffLocalize;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
@@ -131,8 +132,8 @@ public class ApplyPatchMergeTool implements MergeTool {
           int yOffset = new RelativePoint(getResultEditor().getComponent(), new Point(0, JBUI.scale(5))).getPoint(component).y;
           RelativePoint point = new RelativePoint(component, new Point(component.getWidth() / 2, yOffset));
 
-          String message = DiffLocalize.applyPatchAllChangesProcessedMessageText().get();
-          DiffUtil.showSuccessPopup(message, point, this, () -> {
+          LocalizeValue message = DiffLocalize.applyPatchAllChangesProcessedMessageText();
+          DiffUtil.showSuccessPopup(message.get(), point, this, () -> {
             if (isDisposed()) return;
             myMergeContext.finishMerge(MergeResult.RESOLVED);
           });
