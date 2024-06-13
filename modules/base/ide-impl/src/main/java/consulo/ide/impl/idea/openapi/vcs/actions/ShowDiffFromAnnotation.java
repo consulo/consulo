@@ -15,36 +15,36 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.diff.DiffDialogHints;
-import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.annotate.FileAnnotation;
-import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
-import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
-import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesComparator;
-import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import consulo.ide.impl.idea.util.containers.CacheOneStepIterator;
-import consulo.versionControlSystem.util.VcsUtil;
 import consulo.application.AllIcons;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.diff.DiffDialogHints;
+import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
+import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
+import consulo.ide.impl.idea.openapi.vcs.annotate.UpToDateLineNumberListener;
+import consulo.ide.impl.idea.openapi.vcs.changes.BackgroundFromStartOption;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction;
+import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffContext;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesComparator;
+import consulo.ide.impl.idea.util.containers.CacheOneStepIterator;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.versionControlSystem.*;
+import consulo.versionControlSystem.annotate.FileAnnotation;
+import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
+import consulo.versionControlSystem.util.VcsUtil;
+import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-
 import jakarta.annotation.Nonnull;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,9 +61,11 @@ class ShowDiffFromAnnotation extends DumbAwareAction implements UpToDateLineNumb
   private boolean myEnabled;
 
   ShowDiffFromAnnotation(final FileAnnotation fileAnnotation, final AbstractVcs vcs, final VirtualFile file) {
-    super(ActionsBundle.message("action.Diff.UpdatedFiles.text"),
-          ActionsBundle.message("action.Diff.UpdatedFiles.description"),
-          AllIcons.Actions.Diff);
+    super(
+      ActionLocalize.actionDiffUpdatedfilesText(),
+      ActionLocalize.actionDiffUpdatedfilesDescription(),
+      AllIcons.Actions.Diff
+    );
     myFileAnnotation = fileAnnotation;
     myVcs = vcs;
     myFile = file;

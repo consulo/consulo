@@ -16,14 +16,14 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
 import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.BinaryContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.RawFileLoader;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -71,7 +71,7 @@ public class ShelvedBinaryContentRevision implements BinaryContentRevision {
     return new VcsRevisionNumber() {
       @Override
       public String asString() {
-        return VcsBundle.message("shelved.version.name");
+        return VcsLocalize.shelvedVersionName().get();
       }
 
       @Override

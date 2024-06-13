@@ -15,20 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.BasePresentationFactory;
 import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.action.StandardVcsGroup;
 import consulo.versionControlSystem.action.VcsContext;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.*;
@@ -98,7 +94,7 @@ public class VcsGroupsWrapper extends DefaultActionGroup implements DumbAware {
       updateFromAction(vcsToActionMap.get(currentVcses.iterator().next()), presentation);
     }
     else {
-      DefaultActionGroup composite = new DefaultActionGroup(VcsBundle.message("group.name.version.control"), true);
+      DefaultActionGroup composite = new DefaultActionGroup(VcsLocalize.groupNameVersionControl(), true);
       for (AnAction aMyChildren : myChildren) {
         StandardVcsGroup child = (StandardVcsGroup)aMyChildren;
         String vcsName = child.getVcsName(project);

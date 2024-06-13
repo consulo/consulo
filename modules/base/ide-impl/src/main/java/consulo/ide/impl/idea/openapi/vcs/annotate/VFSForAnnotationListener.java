@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.annotate;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;

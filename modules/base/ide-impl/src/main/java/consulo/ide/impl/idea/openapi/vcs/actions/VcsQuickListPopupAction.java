@@ -1,16 +1,16 @@
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
-import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.ui.ex.action.*;
 import consulo.versionControlSystem.action.VcsQuickListContentProvider;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 
@@ -140,7 +140,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
   }
 
   private void addLocalHistoryActions(DefaultActionGroup group) {
-    addSeparator(group, VcsBundle.message("vcs.quicklist.pupup.section.local.history"));
+    addSeparator(group, VcsLocalize.vcsQuicklistPupupSectionLocalHistory().get());
 
     addAction("LocalHistory.ShowHistory", group);
     addAction("LocalHistory.PutLabel", group);
@@ -199,7 +199,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
   }
 
   protected String getPopupTitle(AnActionEvent e) {
-    return VcsBundle.message("vcs.quicklist.popup.title");
+    return VcsLocalize.vcsQuicklistPopupTitle().get();
   }
 
   public enum SupportedVCS {

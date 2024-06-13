@@ -15,14 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
-import consulo.application.CommonBundle;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsConfiguration;
 import consulo.ui.ex.awt.OptionsDialog;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
@@ -38,14 +37,14 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
   public ChangelistMoveOfferDialog(VcsConfiguration config) {
     super(false);
     myConfig = config;
-    setTitle(VcsBundle.message("changes.commit.partial.offer.to.move.title"));
+    setTitle(VcsLocalize.changesCommitPartialOfferToMoveTitle());
     init();
   }
 
   @Nonnull
   protected Action[] createActions() {
-    setOKButtonText(CommonBundle.getYesButtonText());
-    setCancelButtonText(CommonBundle.getNoButtonText());
+    setOKButtonText(CommonLocalize.buttonYes().get());
+    setCancelButtonText(CommonLocalize.buttonNo().get());
     return new Action[] {getOKAction(), getCancelAction()};
   }
 
@@ -63,7 +62,7 @@ public class ChangelistMoveOfferDialog extends OptionsDialog {
 
   protected JComponent createCenterPanel() {
     final JPanel panel = new JPanel(new BorderLayout());
-    final JLabel label = new JLabel(VcsBundle.message("changes.commit.partial.offer.to.move.text"));
+    final JLabel label = new JLabel(VcsLocalize.changesCommitPartialOfferToMoveText().get());
     label.setUI(new MultiLineLabelUI());
     label.setIconTextGap(10);
     label.setIcon(TargetAWT.to(Messages.getQuestionIcon()));

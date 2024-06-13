@@ -17,14 +17,12 @@ package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.SystemInfo;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.update.UpdateSettings;
 import consulo.http.HttpRequests;
-import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.ide.impl.idea.util.io.ZipUtil;
@@ -32,6 +30,7 @@ import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
 import consulo.ide.impl.updateSettings.impl.PluginDownloadFailedException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
@@ -49,7 +48,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -178,10 +176,10 @@ public class PluginDownloader {
 
     if (myIsPlatform) {
       if (indicator != null) {
-        indicator.setText2(IdeBundle.message("progress.extracting.platform"));
+        indicator.setText2Value(IdeLocalize.progressExtractingPlatform());
       }
 
-      String prefix = SystemInfo.isMac ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
+      String prefix = Platform.current().os().isMac() ? "Consulo.app/Contents/platform/" : "Consulo/platform/";
 
       File platformDirectory = ContainerPathManager.get().getExternalPlatformDirectory();
 
@@ -258,21 +256,23 @@ public class PluginDownloader {
   }
 
   @Nonnull
-  private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator,
-                                            String expectedChecksum,
-                                            int tryIndex) throws IOException {
+  private Pair<File, String> downloadPlugin(
+    @Nonnull ProgressIndicator indicator,
+    String expectedChecksum,
+    int tryIndex
+  ) throws IOException {
     File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
     if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
-      throw new IOException(IdeBundle.message("error.cannot.create.temp.dir", pluginsTemp));
+      throw new IOException(IdeLocalize.errorCannotCreateTempDir(pluginsTemp).get());
     }
     final File file = FileUtil.createTempFile(pluginsTemp, "plugin_", "_download", true, false);
 
     indicator.checkCanceled();
     if (myIsPlatform) {
-      indicator.setText2(IdeBundle.message("progress.downloading.platform"));
+      indicator.setText2Value(IdeLocalize.progressDownloadingPlatform());
     }
     else {
-      indicator.setText2(IdeBundle.message("progress.downloading.plugin", getPluginName()));
+      indicator.setText2Value(IdeLocalize.progressDownloadingPlugin(getPluginName()));
     }
 
     LOG.info("Downloading plugin: " + myPluginId + ", try: " + tryIndex + ", checksum: " + expectedChecksum);

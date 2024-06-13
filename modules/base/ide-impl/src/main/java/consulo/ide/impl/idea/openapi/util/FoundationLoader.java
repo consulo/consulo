@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.mac.foundation.Foundation;
-
-import consulo.application.util.SystemInfo;
+import consulo.platform.Platform;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,7 +30,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class FoundationLoader {
   public FoundationLoader() {
-    if (SystemInfo.isMac) {
+    if (Platform.current().os().isMac()) {
       Foundation.init();
     }
   }

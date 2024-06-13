@@ -16,34 +16,36 @@
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.versionControlSystem.AbstractVcs;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsConfiguration;
-import consulo.versionControlSystem.VcsDataKeys;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.dataContext.DataManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ide.impl.idea.openapi.vcs.changes.UnversionedViewDialog;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackDialogAction;
-import consulo.versionControlSystem.change.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.Condition;
+import consulo.versionControlSystem.AbstractVcs;
+import consulo.versionControlSystem.VcsConfiguration;
+import consulo.versionControlSystem.VcsDataKeys;
+import consulo.versionControlSystem.change.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -416,7 +418,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
       myChooser.setEditable(false);
       add(myChooser, BorderLayout.CENTER);
 
-      JLabel label = new JLabel(VcsBundle.message("commit.dialog.changelist.label"));
+      JLabel label = new JLabel(VcsLocalize.commitDialogChangelistLabel().get());
       label.setLabelFor(myChooser);
       add(label, BorderLayout.WEST);
     }

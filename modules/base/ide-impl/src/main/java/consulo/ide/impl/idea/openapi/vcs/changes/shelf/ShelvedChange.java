@@ -22,29 +22,28 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.shelf;
 
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchSyntaxException;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.TextFilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.TextRevisionNumber;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.vcs.changes.*;
+import consulo.util.lang.Comparing;
+import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.base.FilePathImpl;
+import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
+import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.change.CurrentContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import consulo.versionControlSystem.FilePath;
-import consulo.versionControlSystem.VcsBundle;
-import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.Change;
-import consulo.versionControlSystem.change.ContentRevision;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.logging.Logger;
 import consulo.virtualFileSystem.status.FileStatus;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
@@ -144,7 +143,7 @@ public class ShelvedChange {
           @Override
           @Nonnull
           public VcsRevisionNumber getRevisionNumber() {
-            return new TextRevisionNumber(VcsBundle.message("local.version.title"));
+            return new TextRevisionNumber(VcsLocalize.localVersionTitle().get());
           }
         };
       }
@@ -270,7 +269,7 @@ public class ShelvedChange {
     @Override
     @Nonnull
     public VcsRevisionNumber getRevisionNumber() {
-      return new TextRevisionNumber(VcsBundle.message("shelved.version.name"));
+      return new TextRevisionNumber(VcsLocalize.shelvedVersionName().get());
     }
   }
 

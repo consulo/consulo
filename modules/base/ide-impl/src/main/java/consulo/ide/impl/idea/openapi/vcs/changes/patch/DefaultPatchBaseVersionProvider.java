@@ -31,6 +31,7 @@ import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.*;
+import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsRunnable;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -68,7 +69,11 @@ public class DefaultPatchBaseVersionProvider {
     myRevisionPattern = null;
   }
 
-  public void getBaseVersionContent(final FilePath filePath, final Predicate<CharSequence> processor, final List<String> warnings) throws VcsException {
+  public void getBaseVersionContent(
+    final FilePath filePath,
+    final Predicate<CharSequence> processor,
+    final List<String> warnings
+  ) throws VcsException {
     if (myVcs == null) {
       return;
     }
@@ -83,12 +88,14 @@ public class DefaultPatchBaseVersionProvider {
         final VcsRevisionNumber finalRevision = revision;
         final Boolean[] loadedExactRevision = new Boolean[1];
 
-        if (historyProvider instanceof VcsBaseRevisionAdviser) {
-          final boolean success = VcsUtil.runVcsProcessWithProgress(new VcsRunnable() {
-            public void run() throws VcsException {
-              loadedExactRevision[0] = ((VcsBaseRevisionAdviser)historyProvider).getBaseVersionContent(filePath, processor, finalRevision.asString(), warnings);
-            }
-          }, VcsBundle.message("progress.text2.loading.revision", revision.asString()), true, myProject);
+        if (historyProvider instanceof VcsBaseRevisionAdviser vcsBaseRevisionAdviser) {
+          final boolean success = VcsUtil.runVcsProcessWithProgress(
+            () -> loadedExactRevision[0] =
+              vcsBaseRevisionAdviser.getBaseVersionContent(filePath, processor, finalRevision.asString(), warnings),
+            VcsLocalize.progressText2LoadingRevision(revision.asString()).get(),
+            true,
+            myProject
+          );
           // was cancelled
           if (!success) return;
         }
@@ -98,11 +105,12 @@ public class DefaultPatchBaseVersionProvider {
           if (diffProvider != null && filePath.getVirtualFile() != null) {
             final ContentRevision fileContent = diffProvider.createFileContent(finalRevision, filePath.getVirtualFile());
 
-            final boolean success = VcsUtil.runVcsProcessWithProgress(new VcsRunnable() {
-              public void run() throws VcsException {
-                loadedExactRevision[0] = !processor.test(fileContent.getContent());
-              }
-            }, VcsBundle.message("progress.text2.loading.revision", revision.asString()), true, myProject);
+            final boolean success = VcsUtil.runVcsProcessWithProgress(
+              () -> loadedExactRevision[0] = !processor.test(fileContent.getContent()),
+              VcsLocalize.progressText2LoadingRevision(revision.asString()).get(),
+              true,
+              myProject
+            );
             // was cancelled
             if (!success) return;
           }
@@ -130,11 +138,12 @@ public class DefaultPatchBaseVersionProvider {
     }
     try {
       final Ref<VcsHistorySession> ref = new Ref<>();
-      boolean result = VcsUtil.runVcsProcessWithProgress(new VcsRunnable() {
-        public void run() throws VcsException {
-          ref.set(historyProvider.createSessionFor(filePath));
-        }
-      }, VcsBundle.message("loading.file.history.progress"), true, myProject);
+      boolean result = VcsUtil.runVcsProcessWithProgress(
+        () -> ref.set(historyProvider.createSessionFor(filePath)),
+        VcsLocalize.loadingFileHistoryProgress().get(),
+        true,
+        myProject
+      );
       //if not found or cancelled
       if (ref.isNull() || !result) return;
       final VcsHistorySession session = ref.get();
@@ -146,7 +155,8 @@ public class DefaultPatchBaseVersionProvider {
           found = fileRevision.getRevisionNumber().compareTo(revision) <= 0;
         }
         else {
-          final Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific ? ((VcsFileRevisionDvcsSpecific)fileRevision).getDateForRevisionsOrdering() : fileRevision.getRevisionDate();
+          final Date date = fileRevision instanceof VcsFileRevisionDvcsSpecific vcsFileRevisionDvcsSpecific
+            ? vcsFileRevisionDvcsSpecific.getDateForRevisionsOrdering() : fileRevision.getRevisionDate();
           found = (date != null) && (date.before(versionDate) || date.equals(versionDate));
         }
 

@@ -16,30 +16,31 @@
 package consulo.ide.impl.idea.openapi.util.io;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.CommonBundle;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.idea.util.text.FilePathHashingStrategy;
 import consulo.ide.impl.idea.util.text.StringFactory;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
+import consulo.util.io.URLUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.PairProcessor;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -59,7 +60,7 @@ public class FileUtil extends FileUtilRt {
   public static final HashingStrategy<String> PATH_HASHING_STRATEGY = FilePathHashingStrategy.create();
   public static final HashingStrategy<CharSequence> PATH_CHAR_SEQUENCE_HASHING_STRATEGY = FilePathHashingStrategy.createForCharSequence();
 
-  public static final HashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<File>() {
+  public static final HashingStrategy<File> FILE_HASHING_STRATEGY = SystemInfo.isFileSystemCaseSensitive ? ContainerUtil.<File>canonicalStrategy() : new HashingStrategy<>() {
     @Override
     public int hashCode(File object) {
       return fileHashCode(object);
@@ -381,7 +382,7 @@ public class FileUtil extends FileUtilRt {
       }
     }
 
-    if (SystemInfo.isUnix && fromFile.canExecute()) {
+    if (Platform.current().os().isUnix() && fromFile.canExecute()) {
       FileSystemUtil.clonePermissionsToExecute(fromFile.getPath(), toFile.getPath());
     }
   }
@@ -472,8 +473,12 @@ public class FileUtil extends FileUtilRt {
       return;
     }
     File[] files = fromDir.listFiles();
-    if (files == null) throw new IOException(CommonBundle.message("exception.directory.is.invalid", fromDir.getPath()));
-    if (!fromDir.canRead()) throw new IOException(CommonBundle.message("exception.directory.is.not.readable", fromDir.getPath()));
+    if (files == null) {
+      throw new IOException(CommonLocalize.exceptionDirectoryIsInvalid(fromDir.getPath()).get());
+    }
+    if (!fromDir.canRead()) {
+      throw new IOException(CommonLocalize.exceptionDirectoryIsNotReadable(fromDir.getPath()).get());
+    }
     for (File file : files) {
       if (filter != null && !filter.accept(file)) {
         continue;
@@ -489,7 +494,7 @@ public class FileUtil extends FileUtilRt {
 
   public static void ensureExists(@Nonnull File dir) throws IOException {
     if (!dir.exists() && !dir.mkdirs()) {
-      throw new IOException(CommonBundle.message("exception.directory.can.not.create", dir.getPath()));
+      throw new IOException(CommonLocalize.exceptionDirectoryCanNotCreate(dir.getPath()).get());
     }
   }
 
@@ -611,7 +616,7 @@ public class FileUtil extends FileUtilRt {
   public static String normalize(@Nonnull String path) {
     int start = 0;
     boolean separator = false;
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       if (path.startsWith("//")) {
         start = 2;
         separator = true;
@@ -645,7 +650,7 @@ public class FileUtil extends FileUtilRt {
     final StringBuilder result = new StringBuilder(path.length());
     result.append(path, 0, prefixEnd);
     int start = prefixEnd;
-    if (start == 0 && SystemInfo.isWindows && (path.startsWith("//") || path.startsWith("\\\\"))) {
+    if (start == 0 && Platform.current().os().isWindows() && (path.startsWith("//") || path.startsWith("\\\\"))) {
       start = 2;
       result.append("//");
       separator = true;
@@ -761,7 +766,7 @@ public class FileUtil extends FileUtilRt {
 
   @Nonnull
   public static String resolveShortWindowsName(@Nonnull String path) throws IOException {
-    return SystemInfo.isWindows && containsWindowsShortName(path) ? new File(path).getCanonicalPath() : path;
+    return Platform.current().os().isWindows() && containsWindowsShortName(path) ? new File(path).getCanonicalPath() : path;
   }
 
   public static boolean containsWindowsShortName(@Nonnull String path) {
